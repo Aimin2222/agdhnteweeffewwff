@@ -1,0 +1,51 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: #f0f0f0; /* 優しいグレーに変更 */
+}
+.left-panel {
+    width: 60%; /* ボタンエリアを広くしました */
+    background-color: #e0e0e0; /* 左側パネルの背景色を明るいグレーに */
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+.right-panel {
+    width: 50%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: #e0e0e0; /* 右側パネルも左と同じ背景色に変更 */
+}
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.button {
+    flex: 1 1 calc(20% - 10px); /* 横に5個並べる設定、横幅を広げる */
+    max-width: calc(20% - 10px); /* ボタンの最大横幅を設定 */
+    padding: 15px 10px; /* ボタン内の余白 */
+    background-color: #6C8EBF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px; /* フォントサイズ */
+    box-sizing: border-box;
+    white-space: nowrap; /* 折り返しを防ぐ */
+    overflow: hidden; /* 文字がはみ出さないように */
+    text-overflow: ellipsis; /* 文字がはみ出す場合、…にする */
+}
+
+.button:hover {
+    background-color: #5A7B9B; /* 優しい青色のホバー */
+}
+.character-info {
+    font-size: 16px;
+    color: #333333; /* 文字色を濃いグレーに変更して読みやすく */
+}
