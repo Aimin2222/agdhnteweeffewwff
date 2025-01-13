@@ -49,3 +49,29 @@ body {
     font-size: 16px;
     color: #333333; /* 文字色を濃いグレーに変更して読みやすく */
 }
+@media (max-width: 768px) {
+    .left-panel, .right-panel {
+        width: 100%;
+        box-shadow: none; /* シャドウを削除してすっきりさせる */
+    }
+    .left-panel {
+        order: 2; /* ボタンリストを下に表示 */
+        padding: 10px;
+    }
+    .right-panel {
+        order: 1; /* キャラクター情報を上に表示 */
+        padding: 10px;
+    }
+    .button-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2列に調整 */
+        gap: 8px;
+    }
+    .button {
+        font-size: 14px; /* ボタン文字サイズを小さく */
+        padding: 10px; /* 余白を小さく */
+    }
+    .character-info {
+        font-size: 14px; /* テキストサイズを調整 */
+    }
+}
