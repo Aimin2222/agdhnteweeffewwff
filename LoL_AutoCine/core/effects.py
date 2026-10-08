@@ -143,6 +143,7 @@ class Template:
     reference_dna: dict = field(default_factory=dict)
     reference_sources: list = field(default_factory=list)
     template_origin: str = "builtin"
+    scene_keyframes: list = field(default_factory=list)  # append to preserve legacy positional fields
 
     def amp(self) -> float:
         return INTENSITY.get(self.intensity, 1.0)

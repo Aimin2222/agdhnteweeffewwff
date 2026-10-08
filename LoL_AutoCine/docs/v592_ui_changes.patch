@@ -1,0 +1,682 @@
+--- /dev/null
++++ b/README_v5.9.2_JA.md
+@@ -0,0 +1,37 @@
++# LoL AutoCine v5.9.2 — Scene Keyframes / FX / Thumbnails
++
++## このバージョンで追加したもの
++
++1. **カメラキーフレーム**：シーン選択後「時刻s / 回転° / 寄り% / FOV°」を入力し「追加 / 選択を更新」。時刻はキル瞬間を0秒とした相対時間。最大40件で滑らかに補間。空のままなら従来のカメラ制御。
++2. **実際の動画へ反映**：シーン別演出ONで「このシーンに保存」したキーフレームは、既存のCameraPlanに渡り、キャラ中心のOrbit・視線・距離・FOVを同期して動かします。カメラの実機での最終的な高さ・角度は引き続き要確認。
++3. **シーン別色/エフェクト**：「このシーンだけ色・エフェクトを上書き」をONにした場合のみ、色温度、ブルーム、Focus Blur、DOFぼかしを個別設定。OFFなら全体テンプレートを継承します。
++4. **シーンサムネイル**：選択シーンへ移動→LoLミラーで場面を確認→「ミラーの現在画面をサムネイルに保存」。サムネイルはprojects/thumbnails/へ保存。映像を自動でseek/録画する機能ではありません。
++5. **編集プロジェクト互換性**：schema_version 3。v5.9.0のv1、v5.9.1のv2を読み込み可能。新機能はUndo/Redo・保存/読み込みに対応（保存の確定操作が必要）。
++
++## 変えていないもの
++
++- 既存のワンクリック作成、シーン選択、並べ替え、カメラ自動推薦、LoL音声録音。
++- GPUパイプライン/FFmpeg実行部/Native Audio Helper（`core/gpu_pipeline.py`, `core/audio*.py`, `core/procloop.py`, `core/recorder.py`等）。
++- `core/effects.py` はTemplateにフィールド1件追加のみ。エフェクト計算本体は無変更。
++
++## PCで実際にテストしてほしいこと
++
++1. v5.9.2を新規フォルダに展開し、START.batで起動。v5.9.1は別途バックアップ。
++2. スキャンで1シーン選択 → シーン別演出をON → キーフレームを -2秒, 0秒, +2秒に追加（例: 回転 -12/15/0°、寄り 0/12/0%、FOV 0/-4/0°）→「このシーンに保存」。
++3. グラフが変わることを確認し、1シーンを書き出す。キル前後にカメラが滑らかに動き、対象が画面内にいるか確認。
++4. 色・FXの上書きをON → ブルーム0.2、色温度0.2、Focus Blur0.15などを指定 → 保存 → 1シーン書き出す（負荷が高いなら1つずつ）。
++5. Undo/RedoとJSON保存・読み込みでキーフレームおよび色/FXが復元されるか確認。
++6. シーンへ移動しLoLミラーを表示 → サムネイル保存 → 別シーンを選択し戻った時に同じ画像が表示されるか確認。
++7. シーン別演出OFFでも前と同じ挙動、チェックした2シーン・音声・カラー・モンタージュも問題ないか確認。
++8. エラーが出た場合は diagnostics/ をZIPにして共有。手動のCPU/GPU計測は不要。
++
++## 既知の制約
++
++- 「動きをプレビュー」は曲線グラフの更新。実機カメラプレビューは従来の「▶再生」を使用し、保存済みのシーン設定に限って反映します。
++- サムネイルは**現在ミラーに映っているフレーム**です。自動で正確なキル瞬間へ移動してサムネイルを取得するものではありません。JSON外の `projects/thumbnails` に保存されるため、別PCへ移行する場合はフォルダもコピーしてください。
++- Windows/LoL Replay API/GPU実機での書き出しはこの環境では検証できません。カメラ位置の以前の問題は今回の修正対象ではありません。
++- 背景の色調整、ビデオエフェクトはGPUに変換されていません。Codex側で最適化する想定です。
++
++## 自動テスト
++
++Linux/Xvfbの pytest 一式 43件通過。Windows録画の実機試験はこれからです。
+--- a/VERSION.txt
++++ b/VERSION.txt
+@@ -1 +1 @@
+-5.9.1 - Scene Sequence Editor
++LoL AutoCine v5.9.2 Scene Keyframes + Scene FX + Thumbnails
+--- a/core/camera.py
++++ b/core/camera.py
+@@ -161,8 +161,28 @@
+     motion_arc: float = 0.0           # Lolnam風の自動回り込み最大角
+     motion_dolly: float = 0.0          # Lolnam風の追加ドリー量(%)
+     motion_profile: str = "cinematic" # smooth / cinematic / dynamic / auto
++    scene_keyframes: tuple = ()       # validated relative seconds, offsets; empty=legacy camera
+     height: float = 0.0                # FPS系の安全高さ補正
+     sel_name: str = ""
++
++    def keyframe_values(self, t: float) -> tuple[float, float, float]:
++        """Get smooth (yaw degrees, zoom %, FOV degrees) from validated shot markers."""
++        frames = self.scene_keyframes
++        if not frames or self.style not in THIRD_STYLES:
++            return (0.0, 0.0, 0.0)
++        local_t = t - self.kill_time
++        if local_t <= frames[0]['time']:
++            mark = frames[0]
++            return (mark['yaw'], mark['zoom'], mark['fov'])
++        if local_t >= frames[-1]['time']:
++            mark = frames[-1]
++            return (mark['yaw'], mark['zoom'], mark['fov'])
++        for left, right in zip(frames, frames[1:]):
++            if left['time'] <= local_t <= right['time']:
++                span = right['time'] - left['time']
++                k = smoothstep((local_t - left['time']) / span) if span > 0 else 1.0
++                return tuple(left[ch] + (right[ch] - left[ch]) * k for ch in ('yaw','zoom','fov'))
++        return (0.0, 0.0, 0.0)
+ 
+     def _cue(self, t: float, span=(-2.0, -0.4, 0.4, 1.8)) -> float:
+         ks = tuple(self.kill_times) or (self.kill_time,)
+@@ -178,6 +198,10 @@
+         return 1.0 + (slow - 1.0) * w
+ 
+     def fov_at(self, t: float) -> float:
++        base = self._base_fov_at(t)
++        return max(32.0, min(100.0, base + self.keyframe_values(t)[2]))
++
++    def _base_fov_at(self, t: float) -> float:
+         w = self._cue(t, (-2.0, -0.4, 0.4, 1.8))
+         if self.style == "cinema_top":
+             return self.base_fov - 7.0 * self.intensity * w
+@@ -217,7 +241,12 @@
+             # TRUE ORBIT: キャラクターを中心に「キャラ→カメラ」の水平位置ベクトルを
+             # x-z平面で回転させる。これはカメラ自身をその場で回すのではなく、
+             # カメラがキャラの周囲を公転する動き。Yは高さとして固定する。
+-            orbit = math.radians(float(self.third_yaw))
++            extra_yaw, zoom, _ = self.keyframe_values(t)
++            dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
++            sin_e = max(math.sin(e), MIN_CAM_HEIGHT / max(dist, 1.0))
++            sin_e = min(0.98, sin_e)
++            e = math.asin(sin_e)
++            orbit = math.radians(float(self.third_yaw) + extra_yaw)
+             c, s = math.cos(orbit), math.sin(orbit)
+             rhx = hx * c - hz * s
+             rhz = hx * s + hz * c
+@@ -253,12 +282,14 @@
+             dist = self.third_dist * (1.0 - 0.30 * a * w)
+             orbit_delta = 0.0
+ 
++        extra_yaw, zoom, _ = self.keyframe_values(t)
++        dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
+         elev = max(12.0, min(58.0, elev))
+         sin_e = max(math.sin(math.radians(elev)), MIN_CAM_HEIGHT / max(dist, 1.0))
+         sin_e = min(0.98, sin_e)
+         eang = math.asin(sin_e)
+         hx, hz = self.rig.h if self.rig else (0.0, -1.0)
+-        yaw = math.radians(float(self.third_yaw) + orbit_delta)
++        yaw = math.radians(float(self.third_yaw) + orbit_delta + extra_yaw)
+         rhx = hx * math.cos(yaw) - hz * math.sin(yaw)
+         rhz = hx * math.sin(yaw) + hz * math.cos(yaw)
+         return ((rhx * dist * math.cos(eang), dist * sin_e, rhz * dist * math.cos(eang)), math.degrees(eang))
+@@ -298,7 +329,7 @@
+                 base_yaw = float(self.rig.rot.get(yaw_axis, 0.0))
+             except Exception:
+                 base_yaw = 0.0
+-            yaw_delta = -float(self.third_yaw)
++            yaw_delta = -(float(self.third_yaw) + self.keyframe_values(t)[0])
+             rot[yaw_axis] = base_yaw + yaw_delta
+             return rot
+         return self._lolnam_rotation_at(t)
+@@ -318,7 +349,7 @@
+             base_yaw = float(rot.get(yaw_axis, 0.0))
+         except Exception:
+             base_yaw = 0.0
+-        yaw_delta = float(self.third_yaw)
++        yaw_delta = float(self.third_yaw) + self.keyframe_values(t)[0]
+         if self.style == "lolnam_cinema":
+             ks = tuple(self.kill_times) or (self.kill_time,)
+             multi = max(1, len(ks))
+--- a/core/effects.py
++++ b/core/effects.py
+@@ -125,6 +125,7 @@
+     motion_arc: float = 0.0            # 自動カメラ回り込み角（度）
+     motion_dolly: float = 0.0           # 自動ドリー量（%）
+     motion_profile: str = "cinematic"   # smooth / cinematic / dynamic / auto
++    scene_keyframes: list = field(default_factory=list)  # optional per-scene camera channels
+     fog_enabled: bool = False
+     fog_preset: str = "teal"
+     fog_strength: float = 0.0
+--- a/core/jobs.py
++++ b/core/jobs.py
+@@ -103,7 +103,8 @@
+                       third_elev=getattr(tpl, "third_elev", 28.0), third_dist=getattr(tpl, "third_dist", 950.0),
+                        third_yaw=getattr(tpl, "third_yaw", 0.0),
+                       motion_arc=getattr(tpl, "motion_arc", 0.0), motion_dolly=getattr(tpl, "motion_dolly", 0.0),
+-                      motion_profile=getattr(tpl, "motion_profile", "cinematic"), rig=rig,
++                      motion_profile=getattr(tpl, "motion_profile", "cinematic"),
++                      scene_keyframes=tuple(getattr(tpl, 'scene_keyframes', ()) or ()), rig=rig,
+                       sel_name=player.selection_name or player.champion)
+     if rig.mode == "top" and tpl.style in ("cinema", "follow"):
+         plan.style = "cinema_top" if tpl.style == "cinema" else "top"   # 実際に使えるモードに合わせる
+--- /dev/null
++++ b/docs/CODEX_INTEGRATION_v592_JA.md
+@@ -0,0 +1,33 @@
++# v5.9.2 Codex統合ガイド
++
++## 共通基準
++
++ChatGPT側 v5.9.1 Scene Sequence / Codex handoffを起点に、今回の**差分だけ**を取り込んでください。Codex側で別途変更されたGPUエフェクトを失わないよう、フル版ZIPを上書きしないでください。
++
++## 変更したファイル
++
++- `legacy_app.py` UI: キーフレーム編集、シーン別FX、ミラーからサムネイル保存
++- `ui/scene_project.py` schema v3: Shot項目、検証、適用、v1/v2読込
++- `ui/motion_graph.py` 実際のCameraPlanを使ったキーフレーム可視化
++- `core/camera.py` Keyframe smoothstep補間、TargetLock座標系を変えず追加Orbit/Zoom/FOVの適用
++- `core/jobs.py` Scene TemplateのキーフレームをCameraPlanへ渡すだけ
++- `core/effects.py` Template.scene_keyframesフィールド追加のみ（FFmpegフィルタ本体は未変更）
++- `tests/test_scene_keyframes_v592.py` 新規テスト
++- `tests/test_scene_sequence.py`, `tests/test_scene_studio.py` schema v3による期待値更新
++
++## Codexへの依頼
++
++1. 手持ちのCodexブランチで変更をコミット/バックアップする。
++2. パッチ `docs/v592_ui_changes.patch` を `git apply --check` で確認。Codexで変更済みの core/effects.py と衝突する場合は **1フィールド追加だけ**を手動でマージし、既存GPU処理のコードを優先する。
++3. `legacy_app.py` は現在のUIを保持し、場面編集部分を統合。
++4. `python -m pytest -q tests` を実行。GUIテストはLinuxなら `xvfb-run -a python -m pytest -q tests`。
++5. Windows実機でカメラの向き/キャラクター追従、音声、カラーを確認。
++
++## 既存機能は必ず維持
++
++- camera TargetLockのキャラ中心Orbit、実際の座標系
++- Native Process LoopbackによるLoL音声録音
++- NVENC優先/CPU fallback
++- モンタージュ並べ替え、チェック済みシーン出力
++
++パッチはUTF-8。`git apply --check` に失敗したら強制適用せず衝突行を確認してください。
+--- a/legacy_app.py
++++ b/legacy_app.py
+@@ -9,6 +9,7 @@
+ import time
+ import traceback
+ import faulthandler
++import hashlib
+ import tkinter as tk
+ from dataclasses import fields
+ from pathlib import Path
+@@ -653,6 +654,17 @@
+                   style="CardMuted.TLabel", wraplength=770).pack(anchor="w")
+         self.scene_selected_label = ttk.Label(scene_card, text="シーン未選択（スキャン後に右の一覧を選択）", style="Card.TLabel")
+         self.scene_selected_label.pack(anchor="w", pady=(6,3))
++        thumbs = ttk.Frame(scene_card, style="Card.TFrame")
++        thumbs.pack(fill="x", pady=(2,6))
++        self.scene_thumbnail = ttk.Label(thumbs, text="サムネイル未保存", style="CardMuted.TLabel")
++        self.scene_thumbnail.pack(side="left", padx=(0,8))
++        thumb_buttons = ttk.Frame(thumbs, style="Card.TFrame")
++        thumb_buttons.pack(side="left", fill="x", expand=True)
++        ttk.Button(thumb_buttons, text="選択シーンへ移動", command=self.on_jump_selected).pack(anchor="w", pady=2)
++        ttk.Button(thumb_buttons, text="ミラーの現在画面をサムネイルに保存", command=self.on_capture_scene_thumbnail).pack(anchor="w", pady=2)
++        ttk.Label(thumb_buttons, text="移動後にミラーを確認して保存。自動で別の場面を撮影しません。",
++                  style="CardMuted.TLabel", wraplength=480).pack(anchor="w")
++        self._scene_thumbnail_photo = None
+         sr = ttk.Frame(scene_card, style="Card.TFrame"); sr.pack(fill="x", pady=2)
+         self.var_shot_profile = tk.StringVar(value="cinematic")
+         ttk.Label(sr, text="動き", style="Card.TLabel").pack(side="left")
+@@ -673,6 +685,47 @@
+             ttk.Spinbox(segment, from_=lo,to=hi,increment=0.5,textvariable=self.scene_vars[key],width=7).pack(side="right")
+         self.shot_motion_graph=ShotMotionGraph(scene_card, self._scene_shot_from_ui)
+         self.shot_motion_graph.pack(fill="x",pady=(5,2))
++
++        # v5.9.2: Optional camera keyframe lane, relative to the kill event.
++        kf_head = ttk.Frame(scene_card, style="Card.TFrame"); kf_head.pack(fill="x", pady=(8,3))
++        ttk.Label(kf_head, text="◈ カメラキーフレーム（キル瞬間 = 0秒）", style="Section.TLabel").pack(side="left")
++        ttk.Label(scene_card, text="回転・寄り・FOVの補正値。空なら従来の自動カメラ。変更後は『このシーンに保存』で確定。",
++                  style="CardMuted.TLabel", wraplength=760).pack(anchor="w")
++        self._edit_keyframes = []
++        self.kf_list = tk.Listbox(scene_card, height=4, exportselection=False,
++                                  bg="#FFFFFF", fg="#172033", selectbackground="#BFDBFE", relief="flat")
++        self.kf_list.pack(fill="x", pady=(3,3))
++        self.kf_list.bind('<<ListboxSelect>>', self.on_keyframe_selection)
++        kf_inputs = ttk.Frame(scene_card, style="Card.TFrame"); kf_inputs.pack(fill="x")
++        self.kf_vars = {}
++        for title, field_name, lo, hi, value in (("時刻s", "time", -15, 15, 0),
++            ("回転°", "yaw", -70, 70, 0), ("寄り%", "zoom", -30, 30, 0),
++            ("FOV°", "fov", -15, 15, 0)):
++            ttk.Label(kf_inputs, text=title, style="Card.TLabel").pack(side="left", padx=(5,2))
++            self.kf_vars[field_name] = tk.DoubleVar(value=value)
++            ttk.Spinbox(kf_inputs, from_=lo, to=hi, increment=0.5,
++                        textvariable=self.kf_vars[field_name], width=6).pack(side="left", padx=(0,5))
++        kf_actions=ttk.Frame(scene_card,style="Card.TFrame"); kf_actions.pack(fill="x",pady=(4,4))
++        ttk.Button(kf_actions,text="＋ 追加 / 選択を更新",command=self.on_keyframe_upsert).pack(side="left")
++        ttk.Button(kf_actions,text="－ 選択を削除",command=self.on_keyframe_remove).pack(side="left",padx=5)
++        ttk.Button(kf_actions,text="動きをプレビュー",command=self.on_keyframe_preview).pack(side="left")
++
++        fx_head = ttk.Frame(scene_card,style="Card.TFrame"); fx_head.pack(fill="x",pady=(8,3))
++        ttk.Label(fx_head,text="◈ シーンごとの色・エフェクト",style="Section.TLabel").pack(side="left")
++        self.var_scene_fx_enabled = tk.BooleanVar(value=False)
++        ttk.Checkbutton(scene_card,text="このシーンだけ色・エフェクトを上書き（OFFは全体設定を引き継ぐ）",
++                        variable=self.var_scene_fx_enabled).pack(anchor="w")
++        self.scene_fx_vars={}
++        for label,key,lo,hi,default in (("色温度", "temperature",-1,1,0),
++                                       ("ブルーム", "bloom",0,1,0.25),
++                                       ("Focus Blur", "focus_blur",0,1,0),
++                                       ("DOFぼかし", "dof_blur",0,20,0)):
++            fx_row=ttk.Frame(scene_card,style="Card.TFrame");fx_row.pack(fill="x",pady=1)
++            ttk.Label(fx_row,text=label,width=14,style="Card.TLabel").pack(side="left")
++            v=tk.DoubleVar(value=default);self.scene_fx_vars[key]=v
++            ttk.Scale(fx_row,variable=v,from_=lo,to=hi).pack(side="left",fill="x",expand=True,padx=5)
++            ttk.Spinbox(fx_row,from_=lo,to=hi,increment=0.05,textvariable=v,width=7).pack(side="left")
++
+         for _variable in (self.var_shot_profile,self.var_shot_intensity,*self.scene_vars.values()):
+             _variable.trace_add('write',lambda *_: self.shot_motion_graph.redraw())
+         actions=ttk.Frame(scene_card,style="Card.TFrame");actions.pack(fill="x",pady=(7,2))
+@@ -1399,16 +1452,123 @@
+             self.var_shot_intensity.set(shot.intensity)
+             for field, var in self.scene_vars.items():
+                 var.set(getattr(shot, field))
++            self._edit_keyframes = [dict(frame) for frame in shot.keyframes]
++            self._refresh_keyframe_list()
++            self.var_scene_fx_enabled.set(shot.fx_override)
++            for field, var in self.scene_fx_vars.items():
++                var.set(getattr(shot, field))
++            self.shot_motion_graph.redraw()
++            self._show_scene_thumbnail(key)
+             self.scene_selected_label.configure(text=(
+                 f"{kill.time:.1f}秒 / {kill.victim} / {'保存済み編集' if key in self.scene_project.shots else '自動推薦値（未保存）'}"))
+         finally:
+             self._scene_loading = False
+ 
++    def _scene_thumbnail_path(self, key):
++        digest = hashlib.sha256(key.encode('utf-8')).hexdigest()[:24]
++        return ROOT / 'projects' / 'thumbnails' / f'{digest}.png'
++
++    def _show_scene_thumbnail(self, key):
++        path=self._scene_thumbnail_path(key)
++        if not path.is_file():
++            self._scene_thumbnail_photo = None
++            self.scene_thumbnail.configure(image='', text='サムネイル未保存')
++            return
++        try:
++            with Image.open(path) as original:
++                image=original.convert('RGB')
++                image.thumbnail((220,124), Image.Resampling.LANCZOS)
++                photo=ImageTk.PhotoImage(image)
++            self._scene_thumbnail_photo=photo
++            self.scene_thumbnail.configure(image=photo, text='')
++        except Exception as exc:
++            self._scene_thumbnail_photo=None
++            self.scene_thumbnail.configure(image='', text='画像を開けません')
++            self.log(f'サムネイル表示失敗: {exc}')
++
++    def on_capture_scene_thumbnail(self):
++        if self.busy:
++            self.log('書き出し中はサムネイルを保存できません。')
++            return
++        kill=self._current_scene()
++        if kill is None:
++            messagebox.showinfo(APP,'保存先のシーンを選んでください。')
++            return
++        rgb, _=self._current_frame_rgb(480,270)
++        if rgb is None:
++            messagebox.showinfo(APP,'LoLミラーが映っている状態で実行してください。')
++            return
++        try:
++            path=self._scene_thumbnail_path(scene_key(kill))
++            path.parent.mkdir(parents=True,exist_ok=True)
++            Image.fromarray(rgb).convert('RGB').save(path, format='PNG')
++            self._show_scene_thumbnail(scene_key(kill))
++            self.log(f'シーンサムネイルを保存: {kill.time:.1f}s / {path.name}')
++        except Exception as exc:
++            messagebox.showerror(APP,f'サムネイル保存失敗: {exc}')
++
+     def _scene_shot_from_ui(self) -> Shot:
+         raw = {'profile': self.var_shot_profile.get(), 'intensity': self.var_shot_intensity.get()}
+         for key, variable in self.scene_vars.items():
+             raw[key] = variable.get()
++        raw['keyframes'] = [dict(f) for f in getattr(self, '_edit_keyframes', [])]
++        raw['fx_override'] = self.var_scene_fx_enabled.get()
++        for key, variable in self.scene_fx_vars.items():
++            raw[key] = variable.get()
+         return Shot.validated(raw)
++
++    def _refresh_keyframe_list(self, select_time=None):
++        if not hasattr(self, 'kf_list'):
++            return
++        self.kf_list.delete(0,'end')
++        frames = getattr(self, '_edit_keyframes', [])
++        for f in frames:
++            self.kf_list.insert('end',f"{f['time']:+.1f}s   回転 {f['yaw']:+.1f}°  寄り {f['zoom']:+.1f}%  FOV {f['fov']:+.1f}°")
++        if select_time is not None:
++            for i, frame in enumerate(frames):
++                if frame['time']==select_time:
++                    self.kf_list.selection_set(i)
++                    self.kf_list.see(i)
++                    break
++        self.shot_motion_graph.redraw()
++
++    def on_keyframe_selection(self, _event=None):
++        selection=self.kf_list.curselection()
++        if not selection or selection[0]>=len(self._edit_keyframes):
++            return
++        for key, value in self._edit_keyframes[selection[0]].items():
++            if key in self.kf_vars:
++                self.kf_vars[key].set(value)
++
++    def on_keyframe_upsert(self):
++        if self.busy:
++            return
++        try:
++            from ui.scene_project import validate_keyframes
++            frame={key:var.get() for key,var in self.kf_vars.items()}
++            selection=self.kf_list.curselection()
++            frames=list(self._edit_keyframes)
++            if selection and selection[0]<len(frames):
++                frames.pop(selection[0])
++            frames.append(frame)
++            self._edit_keyframes=validate_keyframes(frames)
++            self._refresh_keyframe_list(select_time=round(frame['time'],2))
++        except Exception as exc:
++            messagebox.showerror(APP,f'キーフレーム設定: {exc}')
++
++    def on_keyframe_remove(self):
++        if self.busy:
++            return
++        selection=self.kf_list.curselection()
++        if selection and selection[0]<len(self._edit_keyframes):
++            del self._edit_keyframes[selection[0]]
++            self._refresh_keyframe_list()
++
++    def on_keyframe_preview(self):
++        self.shot_motion_graph.redraw()
++        kill=self._current_scene()
++        if kill is not None:
++            self.log(f'キーフレーム曲線を更新: {len(self._edit_keyframes)}点 / 保存ボタンで確定')
+ 
+     def _schedule_project_save(self):
+         if self._project_autosave_token is not None:
+--- /dev/null
++++ b/tests/test_scene_keyframes_v592.py
+@@ -0,0 +1,154 @@
++# -*- coding: utf-8 -*-
++"""v5.9.2 tests: UI, serialization, actual CameraPlan and effect Template coupling."""
++from dataclasses import asdict
++from math import hypot, isclose
++from types import SimpleNamespace
++import tkinter as tk
++import pytest
++from core.camera import CameraPlan, RigInfo, MIN_CAM_HEIGHT
++from core.effects import Template
++from core.scanner import Kill
++from core.players import Player
++from ui.scene_project import SceneProject, Shot, scene_key, apply_shot
++from ui.scene_batch import build_scene_templates
++from legacy_app import App
++
++FRAMES = [
++    {'time': -2, 'yaw': -30, 'zoom': -20, 'fov': 10},
++    {'time': 0, 'yaw': 30, 'zoom': 25, 'fov': -8},
++    {'time': 2, 'yaw': 0, 'zoom': 0, 'fov': 0},
++]
++
++
++def test_keyframes_camera_interpolation_and_target_framing():
++    shot=Shot.validated({'keyframes': FRAMES})
++    rig=RigInfo(mode='fps',third=True,h=(0,-1),rot={'x':0.0,'y':0.0,'z':0.0},pitch_axis='x',pitch_sign=-1)
++    base=CameraPlan(style='lolnam_cinema',kill_time=100,kill_times=(100,),rig=rig,
++                    third_dist=950,motion_arc=12,motion_dolly=3)
++    plan=CameraPlan(style='lolnam_cinema',kill_time=100,kill_times=(100,),rig=rig,
++                    third_dist=950,motion_arc=12,motion_dolly=3,scene_keyframes=tuple(shot.keyframes))
++    assert plan.keyframe_values(98)==(-30,-20,10)
++    assert plan.keyframe_values(100)==(30,25,-8)
++    assert plan.keyframe_values(99)==(0,2.5,1)  # smooth midpoint
++    assert plan.keyframe_values(102)==(0,0,0)
++    assert plan.fov_at(100)==pytest.approx(base.fov_at(100)-8)
++    assert plan.fov_at(98)==pytest.approx(base.fov_at(98)+10)
++    assert plan.keyframe_values(100)==plan.keyframe_values(100)
++    for i in range(81):
++        t=97+i*.1
++        pos,_=plan.third_pose_at(t)
++        assert pos[1] >= MIN_CAM_HEIGHT-0.0001
++        assert all(abs(x)<10000 for x in pos)
++        assert plan.rotation_at(t) is not None
++    # Do not silently change camera without keyframes.
++    empty=CameraPlan(style='lolnam_cinema',kill_time=100,kill_times=(100,),rig=rig,
++                     third_dist=950,motion_arc=12,motion_dolly=3,scene_keyframes=())
++    assert empty.third_pose_at(100)==base.third_pose_at(100)
++    assert empty.fov_at(100)==base.fov_at(100)
++
++
++def test_color_effects_optional_and_isolated():
++    template=Template(game_audio=True,temperature=-.1,bloom=.1,dof_enabled=True,dof_blur=4)
++    template.video_effects['focus_blur']=.05
++    base=Shot.validated({'keyframes': FRAMES, 'fx_override': False, 'temperature': .8})
++    unchanged=apply_shot(template,base)
++    assert unchanged.temperature==-.1
++    assert unchanged.dof_blur==4
++    assert unchanged.video_effects['focus_blur']==.05
++    modified=apply_shot(template,Shot.validated({'fx_override':True,'temperature':.5,
++                   'bloom':.75,'focus_blur':.42,'dof_blur':12,'keyframes':FRAMES}))
++    assert modified.temperature==.5
++    assert modified.bloom==.75
++    assert modified.video_effects['focus_blur']==.42
++    assert modified.dof_enabled and modified.dof_blur==12
++    assert modified.game_audio and template.game_audio
++    assert template.temperature==-.1 and template.bloom==.1 and template.dof_blur==4
++    assert len(modified.scene_keyframes)==3
++
++
++def test_backward_compat_validation_history(tmp_path):
++    shot=Shot.validated({'keyframes':list(reversed(FRAMES)), 'fx_override':True})
++    assert [f['time'] for f in shot.keyframes]==[-2,0,2]
++    project=SceneProject()
++    project.put('K',shot)
++    project.save(tmp_path/'scene.json')
++    saved=SceneProject.load(tmp_path/'scene.json')
++    assert saved.to_dict()['schema_version']==3
++    assert saved.shots['K'].keyframes==shot.keyframes
++    assert saved.undo() is False  # ephemeral undo history not persisted
++    assert project.undo()
++    assert 'K' not in project.shots
++    assert project.redo()
++    assert project.shots['K'].keyframes==shot.keyframes
++    for version in (1,2):
++        old=SceneProject.from_dict({'schema_version':version,'shots':{'K':{'arc':10}},'sequence':[]})
++        assert old.shots['K'].keyframes==[] and not old.shots['K'].fx_override
++    with pytest.raises(ValueError):
++        Shot.validated({'keyframes':[{}]*41})
++    with pytest.raises(ValueError):
++        Shot.validated({'keyframes':'bad'})
++
++
++def test_keyframes_in_per_scene_render_template():
++    k=Kill(1,100,'Aimin','Enemy',[])
++    base=Template(style='third_cinema')
++    shots={scene_key(k):asdict(Shot.validated({'keyframes':FRAMES,'fx_override':True,'bloom':.6}))}
++    output=list(build_scene_templates([k],base,shots,auto=False))
++    assert len(output)==1
++    assert output[0][1].style=='lolnam_cinema'
++    assert output[0][1].scene_keyframes[1]['yaw']==30
++    assert output[0][1].bloom==.6
++    assert base.style=='third_cinema' and base.scene_keyframes==[]
++
++
++def test_gui_create_keyframes_and_save(tmp_path):
++    root=tk.Tk()
++    try:
++        app=App(root)
++        app.scene_project_path=tmp_path/'scene.json'
++        app.locked=Player(1,'Aimin','Aimin#1','Aimin','Lee Sin','ORDER')
++        app.kills=[Kill(1,100,'Aimin','Enemy',[])]
++        app.checked_kills={0}
++        app._fill_kills()
++        app.lb_kills.selection_set(0)
++        app.on_scene_selection()
++        app.kf_vars['time'].set(-1)
++        app.kf_vars['yaw'].set(20)
++        app.kf_vars['zoom'].set(10)
++        app.kf_vars['fov'].set(-4)
++        app.on_keyframe_upsert()
++        app.var_scene_fx_enabled.set(True)
++        app.scene_fx_vars['bloom'].set(.8)
++        app.on_save_scene()
++        key=scene_key(app.kills[0])
++        assert app.scene_project.shots[key].keyframes[0]['yaw']==20
++        assert app.scene_project.shots[key].fx_override
++        assert app.scene_project.shots[key].bloom==.8
++        app._autosave_project()
++        reloaded=SceneProject.load(app.scene_project_path)
++        assert reloaded.shots[key].keyframes[0]['yaw']==20
++        assert app.scene_project.undo() and key not in app.scene_project.shots
++        assert app.scene_project.redo() and key in app.scene_project.shots
++    finally:
++        root.destroy()
++
++
++def test_scene_thumbnail_is_opt_in_and_written_from_mirror(tmp_path,monkeypatch):
++    import numpy as np
++    import legacy_app as module
++    monkeypatch.setattr(module,'ROOT',tmp_path)
++    root=tk.Tk()
++    try:
++        app=App(root)
++        app.kills=[Kill(1,100,'Aimin','Enemy',[])]
++        app._fill_kills()
++        app.lb_kills.selection_set(0)
++        app.on_scene_selection()
++        key=scene_key(app.kills[0])
++        assert not app._scene_thumbnail_path(key).exists()
++        app._current_frame_rgb=lambda w,h:(np.full((90,160,3),[20,90,180],dtype=np.uint8),'mirror')
++        app.on_capture_scene_thumbnail()
++        assert app._scene_thumbnail_path(key).is_file()
++        assert app._scene_thumbnail_photo is not None
++    finally:
++        root.destroy()
+--- a/tests/test_scene_sequence.py
++++ b/tests/test_scene_sequence.py
+@@ -33,7 +33,7 @@
+     target = tmp_path / 'project.json'
+     p.save(target)
+     restored = SceneProject.load(target)
+-    assert restored.to_dict()['schema_version'] == 2
++    assert restored.to_dict()['schema_version'] == 3
+     assert restored.ordered_keys(keys)[0] == keys[1]
+     assert restored.shots[keys[1]].arc == 40
+     # v5.9.0 (v1 schema) loads without an order, with all camera settings intact.
+--- a/tests/test_scene_studio.py
++++ b/tests/test_scene_studio.py
+@@ -23,7 +23,7 @@
+     f=tmp_path/'project.json';p.save(f)
+     loaded=SceneProject.load(f)
+     assert loaded.shots[k].arc == 7
+-    assert loaded.to_dict()['schema_version'] == 2
++    assert loaded.to_dict()['schema_version'] == 3
+     assert len(loaded.to_dict()['shots'])==1
+     assert SceneProject.from_dict(loaded.to_dict()).shots[k].profile=='smooth'
+ 
+--- a/ui/motion_graph.py
++++ b/ui/motion_graph.py
+@@ -16,6 +16,7 @@
+     plan=CameraPlan(style='lolnam_cinema',intensity=amp,kill_time=0,
+                     kill_times=(0,),third_dist=base_distance,third_yaw=shot.yaw,
+                     motion_arc=shot.arc,motion_dolly=shot.dolly,motion_profile=shot.profile,
++                    scene_keyframes=tuple(shot.keyframes),
+                     rig=RigInfo(mode='fps',third=True,h=(0.0,-1.0)))
+     points=[]
+     for i in range(samples):
+@@ -53,7 +54,13 @@
+         kill_x=left+(right-left)*shot.pre/(shot.pre+shot.post)
+         self.create_line(kill_x,top,kill_x,bottom,fill='#F97316',dash=(3,3))
+         self.create_text(kill_x,13,text='KILL',fill='#C2410C',font=('Meiryo UI',8))
+-        self.create_text(left,h-8,text=f'-{shot.pre:g}s',fill='#64748B',font=('Meiryo UI',8))
++        for frame in shot.keyframes:
++            rel = frame['time'] + shot.pre
++            if 0 <= rel <= (shot.pre + shot.post):
++                x = left + (right-left) * rel / (shot.pre + shot.post)
++                self.create_line(x, top, x, bottom, fill='#94A3B8', dash=(2, 3))
++                self.create_oval(x-3, top+2, x+3, top+8, fill='#334155', outline='')
++        self.create_text(left,h-8,text=f'-{shot.pre:g}s' ,fill='#64748B',font=('Meiryo UI',8))
+         self.create_text(right,h-8,text=f'+{shot.post:g}s',fill='#64748B',anchor='e',font=('Meiryo UI',8))
+         metrics=[('FOV',1,'#2563EB'),('距離',2,'#16A34A'),('Orbit',3,'#9A49C5')]
+         for m,col,color in metrics:
+--- a/ui/scene_project.py
++++ b/ui/scene_project.py
+@@ -9,8 +9,27 @@
+ import os
+ import tempfile
+ 
+-VERSION = 2
++VERSION = 3
+ PROFILES = ('auto', 'smooth', 'cinematic', 'dynamic')
++
++
++def validate_keyframes(frames):
++    """Relative-to-kill keyframes: time, additive yaw, distance zoom %, and FOV delta."""
++    if frames is None:
++        return []
++    if not isinstance(frames, list) or len(frames) > 40:
++        raise ValueError('キーフレーム数は40件までです')
++    clean = {}
++    for frame in frames:
++        if not isinstance(frame, dict):
++            raise ValueError('キーフレーム形式が不正です')
++        t = bound(frame.get('time'), -15, 15, 0)
++        clean[t] = {'time': t,
++                    'yaw': bound(frame.get('yaw'), -70, 70, 0),
++                    'zoom': bound(frame.get('zoom'), -30, 30, 0),
++                    'fov': bound(frame.get('fov'), -15, 15, 0)}
++    return [clean[t] for t in sorted(clean)]
++
+ 
+ 
+ def bound(value, lower: float, upper: float, default: float) -> float:
+@@ -39,6 +58,12 @@
+     pre: float = 4.0
+     post: float = 3.0
+     intensity: str = 'standard'
++    keyframes: list = field(default_factory=list)
++    fx_override: bool = False
++    temperature: float = 0.0
++    bloom: float = 0.25
++    focus_blur: float = 0.0
++    dof_blur: float = 0.0
+ 
+     @classmethod
+     def validated(cls, data):
+@@ -51,7 +76,13 @@
+             yaw=bound(data.get('yaw'), -180, 180, 0),
+             pre=bound(data.get('pre'), 1, 15, 4),
+             post=bound(data.get('post'), 1, 15, 3),
+-            intensity=data.get('intensity') if data.get('intensity') in ('natural','standard','strong') else 'standard'
++            intensity=data.get('intensity') if data.get('intensity') in ('natural','standard','strong') else 'standard',
++            keyframes=validate_keyframes(data.get('keyframes', [])),
++            fx_override=data.get('fx_override') is True,
++            temperature=bound(data.get('temperature'), -1.0, 1.0, 0.0),
++            bloom=bound(data.get('bloom'), 0.0, 1.0, 0.25),
++            focus_blur=bound(data.get('focus_blur'), 0.0, 1.0, 0.0),
++            dof_blur=bound(data.get('dof_blur'), 0.0, 20.0, 0.0)
+         )
+ 
+ 
+@@ -78,6 +109,16 @@
+     t.pre = s.pre
+     t.post = s.post
+     t.intensity = s.intensity
++    # Reuse the existing camera and effect pipelines; no renderer duplication.
++    t.scene_keyframes = copy.deepcopy(s.keyframes)
++    if s.fx_override:
++        t.temperature = s.temperature
++        t.bloom = s.bloom
++        effects = dict(getattr(t, 'video_effects', {}) or {})
++        effects['focus_blur'] = s.focus_blur
++        t.video_effects = effects
++        t.dof_enabled = s.dof_blur > 0
++        t.dof_blur = s.dof_blur
+     return t
+ 
+ 
+@@ -197,7 +238,7 @@
+ 
+     @classmethod
+     def from_dict(cls, data):
+-        if not isinstance(data,dict) or data.get('schema_version') not in (1, VERSION):
++        if not isinstance(data,dict) or data.get('schema_version') not in (1, 2, VERSION):
+             raise ValueError('未対応の編集プロジェクト形式です')
+         obj = data.get('shots',{})
+         if not isinstance(obj,dict) or len(obj)>5000:

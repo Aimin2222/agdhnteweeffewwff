@@ -23,7 +23,7 @@ def test_save_history_roundtrip(tmp_path):
     f=tmp_path/'project.json';p.save(f)
     loaded=SceneProject.load(f)
     assert loaded.shots[k].arc == 7
-    assert loaded.to_dict()['schema_version'] == 1
+    assert loaded.to_dict()['schema_version'] == 3
     assert len(loaded.to_dict()['shots'])==1
     assert SceneProject.from_dict(loaded.to_dict()).shots[k].profile=='smooth'
 
