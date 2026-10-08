@@ -49,10 +49,11 @@ GitHub保存用リポジトリをそのまま開発する場合は、作業デ�
 詳細な結果と既知の未解決事項は `LoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.9.2_JA.md` を参照してください。
 
 前回の取得用ブランチを保持し、新しいブランチにv5.9.1の順序編集とv5.9.2のキー・FX・サムネイルを保存します。
-push・PR作成の成功は別々に確認します。mainへのマージは行いません。PRの比較先は前回の取得用ブランチです。
+GitHubへのpushとリモートの保存を確認し、Draft PR #2を作成しました。
+mainへはマージしていません。PRの比較先は前回の取得用ブランチです。
 
-GitHubのWeb画面でPRを作る場合は次のページを使えます。
-https://github.com/Aimin2222/agdhnteweeffewwff/pull/new/codex/lol-autocine-v592-handoff
+作成済みDraft PR:
+https://github.com/Aimin2222/agdhnteweeffewwff/pull/2
 
 本文案は同じフォルダの `PULL_REQUEST_BODY_JA.md` に保存しています。
 チャットの生成ZIPリンクは使用しません。
