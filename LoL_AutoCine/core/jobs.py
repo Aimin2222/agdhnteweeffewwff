@@ -160,6 +160,8 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
             take.duration = rec.elapsed
             recorder_error = e
         take.cam_errors = director.errors
+        log(f"カメラ動作診断: API送信 {director.api_calls}回 / 25ms超 {director.api_slow_calls}回 / "
+            f"最大API待ち {director.max_api_latency_ms:.1f}ms / 最大時刻ずれ {director.max_clock_drift:.3f}s")
         if audio is not None:
             try:
                 stopped_dur = audio.stop()

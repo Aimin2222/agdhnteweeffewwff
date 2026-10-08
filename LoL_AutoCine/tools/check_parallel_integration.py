@@ -17,8 +17,9 @@ GPU_FILES = {"core/effects.py", "core/gpu_pipeline.py", "core/recorder.py",
 UI_FILES = {"legacy_app.py", "tests/test_editor_ui_contract.py",
             "tests/test_checked_dispatch.py", "tests/gui_smoke.py",
             "tests/test_scene_studio.py", "tests/test_scene_studio_gui.py",
-            "tests/test_scene_sequence.py", "tests/test_scene_keyframes_v592.py"}
-SHARED_FILES = {"core/jobs.py", "core/camera.py", "core/audio.py",
+            "tests/test_scene_sequence.py", "tests/test_scene_keyframes_v592.py",
+            "tests/test_v593_mode_camera.py"}
+SHARED_FILES = {"core/jobs.py", "core/camera.py", "core/camera_clock.py", "core/audio.py",
                 "core/scanner.py", "app.py", "requirements.txt",
                 "core/procloop.py", "core/audio_worker.py", "core/capture.py"}
 INFRA_FILES = {"tools/check_parallel_integration.py", "tests/test_parallel_integration.py"}
