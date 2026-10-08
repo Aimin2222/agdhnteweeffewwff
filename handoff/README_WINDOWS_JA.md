@@ -28,4 +28,7 @@ git branch --all
 
 詳細: LoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.9.7_JA.md。
 個人設定・プロジェクト・録画・音声・.venvは含みません。HUDの名前非表示はLoL側設定が必要です。
-取得用比較ブランチはcodex/lol-autocine-v596-handoff。既存PRとmainを保持し、新しいDraft PRへ保存します。
+取得用比較ブランチはcodex/lol-autocine-v596-handoff。既存PRとmainを保持し、Draft PR #7へ保存しました。
+https://github.com/Aimin2222/agdhnteweeffewwff/pull/7
+
+GitHubから別フォルダへ復元し、191ファイルと全21ブランチの一致、GUIと新モンタージュ回帰41テスト、共有変更ガードの成功を確認しました。
