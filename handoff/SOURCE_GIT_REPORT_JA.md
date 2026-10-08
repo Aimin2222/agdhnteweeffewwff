@@ -1,4 +1,4 @@
-# AutoCine v5.9.7 ソースGit報告
+# AutoCine v5.9.8 ソースGit報告
 
 保存場所: /workspace/LoL_AutoCine
 取得用リポジトリ: /workspace/agdhnteweeffewwff
@@ -11,9 +11,9 @@
 ## git log -3 --oneline
 
 ```
-01e05ff Record v5.9.7 studio and real montage validation
-99c0027 Merge v5.9.7 studio UI without replacing GPU or camera files
-ff4b8c9 Merge reviewed v5.9.7 montage integration and ownership guard
+81433fd Record v5.9.8 smart editing and real pulse validation
+73edb79 Merge explicit smart action isolation and version display
+6aa85b3 Keep regular one click on the legacy planner after smart use
 ```
 
 ## git remote -v
@@ -24,33 +24,30 @@ origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-完全ソース191ファイル、全21ブランチを同梱bundleで保持。個人設定・プロジェクト・ログ・音声・録画・.venvは追跡しない。mainへマージしない。
+完全ソース201ファイル、全23ブランチを同梱bundleで保持。個人設定・プロジェクト・ログ・音声・録画・.venvは追跡しない。mainへマージしない。
 
-## v5.9.6から実際に追加・変更したファイル
+## v5.9.7から実際に追加・変更したファイル
 
 ```
-A	README_v5.9.7_JA.md
+A	README_v5.9.8_JA.md
 M	VERSION.txt
 M	core/effects.py
-M	core/jobs.py
-A	core/montage_fx.py
-A	docs/CHANGELOG_v5.9.7_JA.md
-A	docs/CODEX_INTEGRATION_RESULTS_v5.9.7_JA.md
-A	docs/CODEX_INTEGRATION_v597_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_v5.9.7.json
-A	docs/CODEX_SHARED_API_REVIEW_v5.9.7_JA.md
-A	docs/v597_CHANGED_FILES.txt
-A	docs/v597_changes.patch
+A	core/highlight_pulse.py
+A	docs/CODEX_GPU_REVIEW_v5.9.8_JA.md
+A	docs/CODEX_INTEGRATION_RESULTS_v5.9.8_JA.md
+A	docs/CODEX_INTEGRATION_v598_JA.md
+A	docs/v598_CHANGED_FILES.txt
+A	docs/v598_changes.patch
 M	legacy_app.py
-A	tests/test_gpu_montage_v597.py
+A	tests/test_gpu_highlight_v598.py
+M	tests/test_gpu_montage_v597.py
 M	tests/test_gpu_shared_camera_contract.py
 M	tests/test_parallel_integration.py
-A	tests/test_v597_studio.py
+A	tests/test_v598_highlight_director.py
 M	tools/check_parallel_integration.py
-M	ui/motion_graph.py
+A	ui/highlight_director.py
 M	ui/scene_batch.py
-M	ui/scene_timeline.py
-A	ui/studio_localization.py
+M	ui/scene_project.py
 ```
 
 ## 元のv5.8.5から実際に追加・変更したファイル
@@ -65,10 +62,12 @@ A	README_v5.9.4_JA.md
 A	README_v5.9.5_JA.md
 A	README_v5.9.6_JA.md
 A	README_v5.9.7_JA.md
+A	README_v5.9.8_JA.md
 M	VERSION.txt
 M	core/camera.py
 A	core/camera_clock.py
 M	core/effects.py
+A	core/highlight_pulse.py
 M	core/jobs.py
 A	core/montage_fx.py
 A	docs/CHANGELOG_v5.8.6_JA.md
@@ -79,6 +78,7 @@ A	docs/CHANGELOG_v5.9.7_JA.md
 A	docs/CODEX_ARCHITECTURE_JA.md
 A	docs/CODEX_AUDIT_RESULTS_JA.md
 A	docs/CODEX_GPU_ANALYSIS_JA.md
+A	docs/CODEX_GPU_REVIEW_v5.9.8_JA.md
 A	docs/CODEX_INTEGRATION_CONTRACT_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.0_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.2_JA.md
@@ -87,11 +87,13 @@ A	docs/CODEX_INTEGRATION_RESULTS_v5.9.4_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.5_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.6_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.7_JA.md
+A	docs/CODEX_INTEGRATION_RESULTS_v5.9.8_JA.md
 A	docs/CODEX_INTEGRATION_v592_JA.md
 A	docs/CODEX_INTEGRATION_v593_JA.md
 A	docs/CODEX_INTEGRATION_v595_JA.md
 A	docs/CODEX_INTEGRATION_v596_JA.md
 A	docs/CODEX_INTEGRATION_v597_JA.md
+A	docs/CODEX_INTEGRATION_v598_JA.md
 A	docs/CODEX_LOCAL_DEVELOPMENT_JA.md
 A	docs/CODEX_MERGE_NOTICE_v5.9.4_JA.md
 A	docs/CODEX_MERGE_PROMPT_JA.md
@@ -119,9 +121,12 @@ A	docs/v593_ui_camera_changes.patch
 A	docs/v596_base_sha256.json
 A	docs/v597_CHANGED_FILES.txt
 A	docs/v597_changes.patch
+A	docs/v598_CHANGED_FILES.txt
+A	docs/v598_changes.patch
 M	legacy_app.py
 A	patches/v594_to_v595.patch
 A	tests/test_editor_ui_contract.py
+A	tests/test_gpu_highlight_v598.py
 A	tests/test_gpu_montage_v597.py
 A	tests/test_gpu_shared_camera_contract.py
 A	tests/test_gpu_shared_camera_v593.py
@@ -136,8 +141,10 @@ A	tests/test_v594_live_preview.py
 A	tests/test_v595_workspace.py
 A	tests/test_v596_hud_batch.py
 A	tests/test_v597_studio.py
+A	tests/test_v598_highlight_director.py
 A	tools/check_parallel_integration.py
 A	ui/__init__.py
+A	ui/highlight_director.py
 A	ui/hud_presets.py
 A	ui/motion_graph.py
 A	ui/scene_batch.py

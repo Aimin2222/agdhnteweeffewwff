@@ -13,6 +13,7 @@ import subprocess
 
 GPU_FILES = {"core/effects.py", "core/gpu_pipeline.py", "core/recorder.py",
              "core/montage_fx.py",
+             "core/highlight_pulse.py",
              "core/performance_diagnostics.py", "tests/test_v585_filters.py",
              "tests/test_v585_diagnostics.py", "tests/test_v31_regressions.py"}
 UI_FILES = {"legacy_app.py", "tests/test_editor_ui_contract.py",
@@ -21,7 +22,7 @@ UI_FILES = {"legacy_app.py", "tests/test_editor_ui_contract.py",
             "tests/test_scene_sequence.py", "tests/test_scene_keyframes_v592.py",
             "tests/test_v593_mode_camera.py", "tests/test_v594_live_preview.py",
             "tests/test_v595_workspace.py", "tests/test_v596_hud_batch.py",
-            "tests/test_v597_studio.py"}
+            "tests/test_v597_studio.py", "tests/test_v598_highlight_director.py"}
 SHARED_FILES = {"core/jobs.py", "core/camera.py", "core/camera_clock.py", "core/audio.py",
                 "core/scanner.py", "app.py", "requirements.txt",
                 "core/procloop.py", "core/audio_worker.py", "core/capture.py"}

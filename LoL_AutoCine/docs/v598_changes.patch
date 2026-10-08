@@ -1,0 +1,217 @@
+--- a/legacy_app.py
++++ b/legacy_app.py
+@@ -37,6 +37,7 @@
+ from ui.scene_timeline import SceneTimeline                     # noqa: E402
+ from ui.scene_project import SceneProject, Shot, scene_key, recommend, apply_shot  # noqa: E402
+ from ui.scene_batch import render_scenes                      # noqa: E402
++from ui.highlight_director import SMART_STYLES, SMART_STYLES_REVERSE, recommend_highlight  # noqa: E402
+ from ui.motion_graph import ShotMotionGraph                  # noqa: E402
+ from ui.hud_presets import (HUD_MODES, hud_mode_from_flags, hud_flags, hud_summary)  # noqa: E402
+ from ui.studio_localization import (EFFECT_LABEL_JA, FOG_LABEL_JA, SHOT_PROFILE_JA,
+@@ -377,6 +378,8 @@
+         self.var_pre = tk.DoubleVar(value=4.0)
+         self.var_post = tk.DoubleVar(value=3.0)
+         self.var_auto_director = tk.BooleanVar(value=False)  # preserve old one-click default
++        self.var_smart_highlight_style = tk.StringVar(value=SMART_STYLES['auto'])
++        self.var_smart_highlight_enabled = tk.BooleanVar(value=False)
+         self.var_scene_mode = tk.BooleanVar(value=False)    # opt-in per-scene rendering
+         self.var_edit_mode = tk.StringVar(value="easy")  # view only: never silently change rendering state
+         # A single HUD preset drives the legacy render flags. LoL player-name visibility is an in-game setting.
+@@ -698,7 +701,14 @@
+         ttk.Label(eh, text="難しい設定は後から変更できます", style="CardMuted.TLabel").pack(side="right")
+         ttk.Label(easy, text="① リプレイを開く → ② 対象プレイヤーを選ぶ → ③ ボタン1つでキル/アシストを検出して動画を作成", style="CardMuted.TLabel", wraplength=900).pack(anchor="w", pady=(4, 7))
+         ttk.Button(easy, text="★ これで自動作成（おすすめ）", style="Accent.TButton", command=self.on_one_click).pack(fill="x", ipady=4)
+-        ttk.Button(easy, text="✨ スマート自動編集：全シーンに個別カメラ演出 → 作成", command=self.on_smart_one_click).pack(fill="x", pady=(4,0))
++        ttk.Button(easy, text="✨ スマート自動編集：カメラ＋キル瞬間の演出を自動作成", command=self.on_smart_one_click).pack(fill="x", pady=(4,0))
++        smart_row = ttk.Frame(easy, style="Card.TFrame")
++        smart_row.pack(fill="x", pady=(6,2))
++        ttk.Label(smart_row, text="自動カメラ演出", style="Card.TLabel", width=16).pack(side="left")
++        ttk.Combobox(smart_row, state="readonly", textvariable=self.var_smart_highlight_style,
++                     values=list(SMART_STYLES.values()), width=31).pack(side="left", fill="x", expand=True)
++        ttk.Label(easy, text="戦闘を見せる→キル直前に寄る→瞬間を短く強調→自然に戻る。通常の自動作成には影響しません。",
++                  style="CardMuted.TLabel", wraplength=850).pack(anchor="w")
+         quick_presets = ttk.Frame(easy, style="Card.TFrame")
+         quick_presets.pack(fill="x", pady=(10, 3))
+         ttk.Label(quick_presets, text="仕上がり", style="Card.TLabel").pack(side="left", padx=(0, 6))
+@@ -825,17 +835,21 @@
+         for label,key,lo,hi,default in (("色温度", "temperature",-1,1,0),
+                                        ("ブルーム", "bloom",0,1,0.25),
+                                        ("Focus Blur", "focus_blur",0,1,0),
+-                                       ("DOFぼかし", "dof_blur",0,20,0)):
++                                       ("DOFぼかし", "dof_blur",0,20,0),
++                                       ("キル瞬間の強調", "highlight_pulse",0,1,0)):
+             fx_row=ttk.Frame(scene_card,style="Card.TFrame");fx_row.pack(fill="x",pady=1)
+             ttk.Label(fx_row,text=label,width=14,style="Card.TLabel").pack(side="left")
+             v=tk.DoubleVar(value=default);self.scene_fx_vars[key]=v
+             ttk.Scale(fx_row,variable=v,from_=lo,to=hi).pack(side="left",fill="x",expand=True,padx=5)
+             ttk.Spinbox(fx_row,from_=lo,to=hi,increment=0.05,textvariable=v,width=7).pack(side="left")
+ 
++        ttk.Label(scene_card, text="キル瞬間の強調は短時間だけ明るさ・彩度を上げます（0で無効）。カメラ曲線と同じキル時刻に同期します。",
++                  style="CardMuted.TLabel", wraplength=870).pack(anchor="w", pady=(2,4))
+         for _variable in (self.var_shot_profile,self.var_shot_intensity,*self.scene_vars.values()):
+             _variable.trace_add('write',lambda *_: self.shot_motion_graph.redraw())
+         actions=ttk.Frame(scene_card,style="Card.TFrame");actions.pack(fill="x",pady=(7,2))
+-        ttk.Button(scene_card,text="全シーンの演出を自動推薦（現在のスキャン結果）", command=self.on_recommend_all).pack(fill="x",pady=3)
++        ttk.Button(scene_card,text="全シーンの演出を自動推薦（従来型）", command=self.on_recommend_all).pack(fill="x",pady=3)
++        ttk.Button(scene_card,text="★ 全シーンに参考動画風のカメラ＋キル強調を設定", command=self.on_highlight_plan_all).pack(fill="x",pady=3)
+         for label,handler in (("このシーンに保存",self.on_save_scene),
+                               ("自動演出を設定",self.on_recommend_scene),
+                               ("上書きを解除",self.on_clear_scene),
+@@ -1996,10 +2010,28 @@
+         self._refresh_scene_list()
+         self.log(f'全シーンにカメラ自動演出を設定: {len(plan)}件')
+ 
+-    def on_smart_one_click(self):
+-        """Explicit enhanced one-click path; normal one click remains unchanged."""
++    def on_highlight_plan_all(self):
++        """Explicitly replace all scan-local shot settings; Undo restores previous edits."""
++        if not self.kills:
++            messagebox.showinfo(APP, '先にシーンをスキャンしてください。')
++            return
++        style = SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto')
++        plan = {scene_key(k): recommend_highlight(k, self.var_pre.get(), self.var_post.get(), style)
++                for k in self.kills}
++        self.scene_project.put_many(plan)
+         self.var_scene_mode.set(True)
+         self.var_auto_director.set(True)
++        self.var_smart_highlight_enabled.set(True)
++        self._schedule_project_save()
++        self._refresh_scene_list()
++        self.log(f'スマート演出を{len(plan)}シーンに設定: {SMART_STYLES[style]}（Undoで戻せます）')
++
++    def on_smart_one_click(self):
++        """Only this explicit action opts in to new timed highlight effects."""
++        self.var_scene_mode.set(True)
++        self.var_auto_director.set(True)
++        self.var_smart_highlight_enabled.set(True)
++        self.log('スマート自動編集: ターゲット固定のカメラ演出とキル瞬間の強調を有効にします')
+         self.on_one_click(smart=True)
+ 
+     def on_clear_scene(self):
+@@ -2274,6 +2306,8 @@
+         t.dof_far_distance = float(self.sl.get("dof_far_distance", tk.DoubleVar(value=t.dof_far_distance)).get())
+         t.video_effects = self._get_video_effects()
+         t.effect_preset = self.var_effect_preset.get() if hasattr(self, "var_effect_preset") else "なし"
++        t.smart_highlight_enabled = bool(self.var_smart_highlight_enabled.get())
++        t.smart_highlight_style = SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto')
+         # LoLミラー/カメラは144Hzで内部サンプリングし、最終出力FPSだけUI選択値へ合わせる。
+         # これで60fps書き出しでも、カメラ演出の元データを144Hzで保持できる。
+         t.capture_fps = 144
+@@ -2324,6 +2358,9 @@
+             self._apply_panel_widths()
+             if d.get("hud_mode") in HUD_MODES:
+                 self._set_hud_mode(d["hud_mode"])
++            style_id = d.get('smart_highlight_style', 'auto')
++            if style_id in SMART_STYLES:
++                self.var_smart_highlight_style.set(SMART_STYLES[style_id])
+             if d.get("montage_fx") in ("cut", "flash", "dark"):
+                 self.var_montage_fx.set({"cut": "なし（従来の高速連結）",
+                                          "flash": "光るカット（白い閃光）",
+@@ -2344,6 +2381,7 @@
+                                              "left_width": int(self.var_left_width.get()),
+                                              "right_width": int(self.var_right_width.get()),
+                                              "edit_mode": self.var_edit_mode.get(),
++                                             "smart_highlight_style": SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto'),
+                                              "hud_mode": self.var_hud_mode.get(),
+                                              "montage_fx": {"なし（従来の高速連結）":"cut", "光るカット（白い閃光）":"flash", "暗転カット（シネマ）":"dark"}.get(self.var_montage_fx.get(),"cut")}, ensure_ascii=False), encoding="utf-8")
+         except Exception:
+--- a/VERSION.txt
++++ b/VERSION.txt
+@@ -1 +1 @@
+-5.9.7
++5.9.8
+--- a/ui/scene_project.py
++++ b/ui/scene_project.py
+@@ -64,6 +64,7 @@
+     bloom: float = 0.25
+     focus_blur: float = 0.0
+     dof_blur: float = 0.0
++    highlight_pulse: float = 0.0  # 0=off, kill-timed warm/white accent
+ 
+     @classmethod
+     def validated(cls, data):
+@@ -82,7 +83,8 @@
+             temperature=bound(data.get('temperature'), -1.0, 1.0, 0.0),
+             bloom=bound(data.get('bloom'), 0.0, 1.0, 0.25),
+             focus_blur=bound(data.get('focus_blur'), 0.0, 1.0, 0.0),
+-            dof_blur=bound(data.get('dof_blur'), 0.0, 20.0, 0.0)
++            dof_blur=bound(data.get('dof_blur'), 0.0, 20.0, 0.0),
++            highlight_pulse=bound(data.get('highlight_pulse'), 0.0, 1.0, 0.0)
+         )
+ 
+ 
+@@ -111,6 +113,7 @@
+     t.intensity = s.intensity
+     # Reuse the existing camera and effect pipelines; no renderer duplication.
+     t.scene_keyframes = copy.deepcopy(s.keyframes)
++    t.highlight_pulse = s.highlight_pulse
+     if s.fx_override:
+         t.temperature = s.temperature
+         t.bloom = s.bloom
+--- a/ui/scene_batch.py
++++ b/ui/scene_batch.py
+@@ -11,6 +11,7 @@
+ from pathlib import Path
+ from typing import Callable
+ from .scene_project import SceneProject, Shot, recommend, scene_key, apply_shot
++from .highlight_director import recommend_highlight, decide_style
+ 
+ @dataclass
+ class BatchResult:
+@@ -35,13 +36,18 @@
+         if key in overrides:
+             shot=Shot.validated(overrides[key])
+         elif auto:
+-            shot=recommend(kill, tpl.pre, tpl.post)
++            shot = (recommend_highlight(kill, tpl.pre, tpl.post,
++                       getattr(tpl, 'smart_highlight_style', 'auto'))
++                    if getattr(tpl, 'smart_highlight_enabled', False)
++                    else recommend(kill, tpl.pre, tpl.post))
+         else:
+             yield kill, copy.deepcopy(tpl)
+             continue
+         scene_template = apply_shot(tpl,shot)
+         # Only third-person modes are adapted to Lolnam-style motion. Respect FPS/top modes.
+-        if scene_template.style in ('third', 'third_cinema'):
++        if scene_template.style in ('third', 'third_cinema') or (
++            auto and getattr(tpl, 'smart_highlight_enabled', False) and scene_template.style == 'cinema'
++        ):
+             scene_template.style = 'lolnam_cinema'
+         yield kill, scene_template
+ 
+@@ -67,7 +73,9 @@
+             log('中止しました。');break
+         log(f'SCENE_PLAN {i}/{len(scenes)} event={getattr(kill,"event_id", "?")} '
+             f'camera={scene_tpl.motion_profile} arc={scene_tpl.motion_arc:g} dolly={scene_tpl.motion_dolly:g} '
+-            f'pre={scene_tpl.pre:g} post={scene_tpl.post:g}')
++            f'pre={scene_tpl.pre:g} post={scene_tpl.post:g} '
++            f'highlight={getattr(scene_tpl, "highlight_pulse", 0.0):.2f} '
++            f'keyframes={len(getattr(scene_tpl, "scene_keyframes", ()))}')
+         def child_progress(_done,_total,pct,message):
+             if progress:
+                 progress(i-1,len(scenes),100*(i-1+pct/100)/max(1,len(scenes)),f'{i}/{len(scenes)} {message}')
+--- a/core/effects.py
++++ b/core/effects.py
+@@ -127,6 +127,9 @@
+     motion_dolly: float = 0.0           # 自動ドリー量（%）
+     motion_profile: str = "cinematic"   # smooth / cinematic / dynamic / auto
+     scene_keyframes: list = field(default_factory=list)  # optional per-scene camera channels
++    smart_highlight_enabled: bool = False  # opt-in; normal rendering remains unchanged
++    smart_highlight_style: str = 'auto'
++    highlight_pulse: float = 0.0  # per-scene transient highlight, not a constant grade
+     fog_enabled: bool = False
+     fog_preset: str = "teal"
+     fog_strength: float = 0.0
+@@ -402,6 +405,12 @@
+     if cf:
+         f.append(cf)
+     f.extend(_build_video_effect_filters(t, duration, effect_events or [], still))
++    # Short, color-preserving highlight around each kill. Never a full-clip flash.
++    # Work in the existing CPU filter graph; GPU/NVENC/audio paths are untouched.
++    pulse = max(0.0, min(1.0, float(getattr(t, 'highlight_pulse', 0.0))))
++    if pulse > 0.001 and not still and effect_events:
++        from .highlight_pulse import pulse_filters
++        f.extend(pulse_filters(effect_events, pulse))
+     if t.dof_enabled and t.dof_blur > 0.01:
+         # Replay APIから画素ごとの深度バッファは取得できないため、
+         # 2D映像の上下位置を「奥行きの代理値」として使うDOF近似。
