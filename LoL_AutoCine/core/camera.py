@@ -163,6 +163,26 @@ class CameraPlan:
     motion_profile: str = "cinematic" # smooth / cinematic / dynamic / auto
     height: float = 0.0                # FPS系の安全高さ補正
     sel_name: str = ""
+    scene_keyframes: tuple = ()       # append to preserve legacy positional fields
+
+    def keyframe_values(self, t: float) -> tuple[float, float, float]:
+        """Get smooth (yaw degrees, zoom %, FOV degrees) from validated shot markers."""
+        frames = self.scene_keyframes
+        if not frames or self.style not in THIRD_STYLES:
+            return (0.0, 0.0, 0.0)
+        local_t = t - self.kill_time
+        if local_t <= frames[0]['time']:
+            mark = frames[0]
+            return (mark['yaw'], mark['zoom'], mark['fov'])
+        if local_t >= frames[-1]['time']:
+            mark = frames[-1]
+            return (mark['yaw'], mark['zoom'], mark['fov'])
+        for left, right in zip(frames, frames[1:]):
+            if left['time'] <= local_t <= right['time']:
+                span = right['time'] - left['time']
+                k = smoothstep((local_t - left['time']) / span) if span > 0 else 1.0
+                return tuple(left[ch] + (right[ch] - left[ch]) * k for ch in ('yaw','zoom','fov'))
+        return (0.0, 0.0, 0.0)
 
     def _cue(self, t: float, span=(-2.0, -0.4, 0.4, 1.8)) -> float:
         ks = tuple(self.kill_times) or (self.kill_time,)
@@ -178,6 +198,12 @@ class CameraPlan:
         return 1.0 + (slow - 1.0) * w
 
     def fov_at(self, t: float) -> float:
+        base = self._base_fov_at(t)
+        if not self.scene_keyframes or self.style not in THIRD_STYLES:
+            return base
+        return max(32.0, min(100.0, base + self.keyframe_values(t)[2]))
+
+    def _base_fov_at(self, t: float) -> float:
         w = self._cue(t, (-2.0, -0.4, 0.4, 1.8))
         if self.style == "cinema_top":
             return self.base_fov - 7.0 * self.intensity * w
@@ -217,7 +243,12 @@ class CameraPlan:
             # TRUE ORBIT: キャラクターを中心に「キャラ→カメラ」の水平位置ベクトルを
             # x-z平面で回転させる。これはカメラ自身をその場で回すのではなく、
             # カメラがキャラの周囲を公転する動き。Yは高さとして固定する。
-            orbit = math.radians(float(self.third_yaw))
+            extra_yaw, zoom, _ = self.keyframe_values(t)
+            dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
+            sin_e = max(math.sin(e), MIN_CAM_HEIGHT / max(dist, 1.0))
+            sin_e = min(0.98, sin_e)
+            e = math.asin(sin_e)
+            orbit = math.radians(float(self.third_yaw) + extra_yaw)
             c, s = math.cos(orbit), math.sin(orbit)
             rhx = hx * c - hz * s
             rhz = hx * s + hz * c
@@ -253,12 +284,14 @@ class CameraPlan:
             dist = self.third_dist * (1.0 - 0.30 * a * w)
             orbit_delta = 0.0
 
+        extra_yaw, zoom, _ = self.keyframe_values(t)
+        dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
         elev = max(12.0, min(58.0, elev))
         sin_e = max(math.sin(math.radians(elev)), MIN_CAM_HEIGHT / max(dist, 1.0))
         sin_e = min(0.98, sin_e)
         eang = math.asin(sin_e)
         hx, hz = self.rig.h if self.rig else (0.0, -1.0)
-        yaw = math.radians(float(self.third_yaw) + orbit_delta)
+        yaw = math.radians(float(self.third_yaw) + orbit_delta + extra_yaw)
         rhx = hx * math.cos(yaw) - hz * math.sin(yaw)
         rhz = hx * math.sin(yaw) + hz * math.cos(yaw)
         return ((rhx * dist * math.cos(eang), dist * sin_e, rhz * dist * math.cos(eang)), math.degrees(eang))
@@ -298,7 +331,7 @@ class CameraPlan:
                 base_yaw = float(self.rig.rot.get(yaw_axis, 0.0))
             except Exception:
                 base_yaw = 0.0
-            yaw_delta = -float(self.third_yaw)
+            yaw_delta = -(float(self.third_yaw) + self.keyframe_values(t)[0])
             rot[yaw_axis] = base_yaw + yaw_delta
             return rot
         return self._lolnam_rotation_at(t)
@@ -318,7 +351,7 @@ class CameraPlan:
             base_yaw = float(rot.get(yaw_axis, 0.0))
         except Exception:
             base_yaw = 0.0
-        yaw_delta = float(self.third_yaw)
+        yaw_delta = float(self.third_yaw) + self.keyframe_values(t)[0]
         if self.style == "lolnam_cinema":
             ks = tuple(self.kill_times) or (self.kill_time,)
             multi = max(1, len(ks))

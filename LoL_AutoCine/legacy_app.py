@@ -9,6 +9,7 @@ import threading
 import time
 import traceback
 import faulthandler
+import hashlib
 import tkinter as tk
 from dataclasses import fields
 from pathlib import Path
@@ -653,6 +654,17 @@ class App:
                   style="CardMuted.TLabel", wraplength=770).pack(anchor="w")
         self.scene_selected_label = ttk.Label(scene_card, text="シーン未選択（スキャン後に右の一覧を選択）", style="Card.TLabel")
         self.scene_selected_label.pack(anchor="w", pady=(6,3))
+        thumbs = ttk.Frame(scene_card, style="Card.TFrame")
+        thumbs.pack(fill="x", pady=(2,6))
+        self.scene_thumbnail = ttk.Label(thumbs, text="サムネイル未保存", style="CardMuted.TLabel")
+        self.scene_thumbnail.pack(side="left", padx=(0,8))
+        thumb_buttons = ttk.Frame(thumbs, style="Card.TFrame")
+        thumb_buttons.pack(side="left", fill="x", expand=True)
+        ttk.Button(thumb_buttons, text="選択シーンへ移動", command=self.on_jump_selected).pack(anchor="w", pady=2)
+        ttk.Button(thumb_buttons, text="ミラーの現在画面をサムネイルに保存", command=self.on_capture_scene_thumbnail).pack(anchor="w", pady=2)
+        ttk.Label(thumb_buttons, text="移動後にミラーを確認して保存。自動で別の場面を撮影しません。",
+                  style="CardMuted.TLabel", wraplength=480).pack(anchor="w")
+        self._scene_thumbnail_photo = None
         sr = ttk.Frame(scene_card, style="Card.TFrame"); sr.pack(fill="x", pady=2)
         self.var_shot_profile = tk.StringVar(value="cinematic")
         ttk.Label(sr, text="動き", style="Card.TLabel").pack(side="left")
@@ -673,6 +685,47 @@ class App:
             ttk.Spinbox(segment, from_=lo,to=hi,increment=0.5,textvariable=self.scene_vars[key],width=7).pack(side="right")
         self.shot_motion_graph=ShotMotionGraph(scene_card, self._scene_shot_from_ui)
         self.shot_motion_graph.pack(fill="x",pady=(5,2))
+
+        # v5.9.2: Optional camera keyframe lane, relative to the kill event.
+        kf_head = ttk.Frame(scene_card, style="Card.TFrame"); kf_head.pack(fill="x", pady=(8,3))
+        ttk.Label(kf_head, text="◈ カメラキーフレーム（キル瞬間 = 0秒）", style="Section.TLabel").pack(side="left")
+        ttk.Label(scene_card, text="回転・寄り・FOVの補正値。空なら従来の自動カメラ。変更後は『このシーンに保存』で確定。",
+                  style="CardMuted.TLabel", wraplength=760).pack(anchor="w")
+        self._edit_keyframes = []
+        self.kf_list = tk.Listbox(scene_card, height=4, exportselection=False,
+                                  bg="#FFFFFF", fg="#172033", selectbackground="#BFDBFE", relief="flat")
+        self.kf_list.pack(fill="x", pady=(3,3))
+        self.kf_list.bind('<<ListboxSelect>>', self.on_keyframe_selection)
+        kf_inputs = ttk.Frame(scene_card, style="Card.TFrame"); kf_inputs.pack(fill="x")
+        self.kf_vars = {}
+        for title, field_name, lo, hi, value in (("時刻s", "time", -15, 15, 0),
+            ("回転°", "yaw", -70, 70, 0), ("寄り%", "zoom", -30, 30, 0),
+            ("FOV°", "fov", -15, 15, 0)):
+            ttk.Label(kf_inputs, text=title, style="Card.TLabel").pack(side="left", padx=(5,2))
+            self.kf_vars[field_name] = tk.DoubleVar(value=value)
+            ttk.Spinbox(kf_inputs, from_=lo, to=hi, increment=0.5,
+                        textvariable=self.kf_vars[field_name], width=6).pack(side="left", padx=(0,5))
+        kf_actions=ttk.Frame(scene_card,style="Card.TFrame"); kf_actions.pack(fill="x",pady=(4,4))
+        ttk.Button(kf_actions,text="＋ 追加 / 選択を更新",command=self.on_keyframe_upsert).pack(side="left")
+        ttk.Button(kf_actions,text="－ 選択を削除",command=self.on_keyframe_remove).pack(side="left",padx=5)
+        ttk.Button(kf_actions,text="動きをプレビュー",command=self.on_keyframe_preview).pack(side="left")
+
+        fx_head = ttk.Frame(scene_card,style="Card.TFrame"); fx_head.pack(fill="x",pady=(8,3))
+        ttk.Label(fx_head,text="◈ シーンごとの色・エフェクト",style="Section.TLabel").pack(side="left")
+        self.var_scene_fx_enabled = tk.BooleanVar(value=False)
+        ttk.Checkbutton(scene_card,text="このシーンだけ色・エフェクトを上書き（OFFは全体設定を引き継ぐ）",
+                        variable=self.var_scene_fx_enabled).pack(anchor="w")
+        self.scene_fx_vars={}
+        for label,key,lo,hi,default in (("色温度", "temperature",-1,1,0),
+                                       ("ブルーム", "bloom",0,1,0.25),
+                                       ("Focus Blur", "focus_blur",0,1,0),
+                                       ("DOFぼかし", "dof_blur",0,20,0)):
+            fx_row=ttk.Frame(scene_card,style="Card.TFrame");fx_row.pack(fill="x",pady=1)
+            ttk.Label(fx_row,text=label,width=14,style="Card.TLabel").pack(side="left")
+            v=tk.DoubleVar(value=default);self.scene_fx_vars[key]=v
+            ttk.Scale(fx_row,variable=v,from_=lo,to=hi).pack(side="left",fill="x",expand=True,padx=5)
+            ttk.Spinbox(fx_row,from_=lo,to=hi,increment=0.05,textvariable=v,width=7).pack(side="left")
+
         for _variable in (self.var_shot_profile,self.var_shot_intensity,*self.scene_vars.values()):
             _variable.trace_add('write',lambda *_: self.shot_motion_graph.redraw())
         actions=ttk.Frame(scene_card,style="Card.TFrame");actions.pack(fill="x",pady=(7,2))
@@ -687,6 +740,25 @@ class App:
         ttk.Button(project_bar,text="編集プロジェクトを保存",command=self.on_scene_export).pack(side="left")
         ttk.Button(project_bar,text="読み込み",command=self.on_scene_import).pack(side="left",padx=5)
         ttk.Label(project_bar,text="自動保存 / Undo・Redo（最大100回） / ON時は1シーン1クリップ",style="CardMuted.TLabel").pack(side="right")
+        order_header=ttk.Frame(scene_card,style="Card.TFrame")
+        order_header.pack(fill="x",pady=(10,2))
+        ttk.Label(order_header,text="◈ モンタージュの再生順",style="Section.TLabel").pack(side="left")
+        ttk.Label(order_header,text="シーン別演出ONの場合のみ適用",style="CardMuted.TLabel").pack(side="right")
+        order_body=ttk.Frame(scene_card,style="Card.TFrame");order_body.pack(fill="x")
+        self.scene_order_list=tk.Listbox(order_body,height=5,exportselection=False,
+                                         bg="#FFFFFF",fg="#172033",selectbackground="#BFDBFE",
+                                         selectforeground="#172033",relief="flat",font=("Meiryo UI",9))
+        self.scene_order_list.pack(side="left",fill="x",expand=True)
+        self.scene_order_list.bind('<<ListboxSelect>>', self.on_order_selection)
+        self._drag_order_index = None
+        self.scene_order_list.bind('<ButtonPress-1>', self._on_order_drag_start, add='+')
+        self.scene_order_list.bind('<ButtonRelease-1>', self._on_order_drag_end, add='+')
+        order_buttons=ttk.Frame(order_body,style="Card.TFrame");order_buttons.pack(side="right",padx=(7,0))
+        ttk.Button(order_buttons,text="▲ 上へ",command=lambda:self.on_move_scene(-1)).pack(fill="x",pady=(0,4))
+        ttk.Button(order_buttons,text="▼ 下へ",command=lambda:self.on_move_scene(1)).pack(fill="x",pady=(0,4))
+        ttk.Button(order_buttons,text="時刻順に戻す",command=self.on_reset_scene_order).pack(fill="x")
+        ttk.Label(scene_card,text="ドラッグまたは▲▼で順序変更。プロジェクトJSONに保存され、Undo/Redoできます。",
+                  style="CardMuted.TLabel",wraplength=760).pack(anchor="w",pady=(4,0))
 
         cam = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
         cam.pack(fill="x", pady=(0, 8))
@@ -1122,7 +1194,7 @@ class App:
             return
         self._run_bg(self._make_selected, self.kills[idx[0]], self.current_template(), *self._scene_render_config())
 
-    def _make_selected(self, kill, tpl: Template, scene_mode=False, shots=None, auto=False) -> None:
+    def _make_selected(self, kill, tpl: Template, scene_mode=False, shots=None, auto=False, order=None) -> None:
         p = self.locked
         if p is None:
             return
@@ -1132,7 +1204,7 @@ class App:
             if tpl.game_audio:
                 factory = (lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else (lambda path: PreferredGameAudio(path))
             res = self._render_with_optional_scene_mode(src, p, [kill], tpl, False, factory,
-                                                        scene_mode, shots or {}, auto)
+                                                        scene_mode, shots or {}, auto, order)
             self.log(f"選択キルの作成完了: {len(res.outputs)}本")
         finally:
             if own:
@@ -1260,14 +1332,100 @@ class App:
 
     def _fill_kills(self) -> None:
         self.lb_kills.delete(0, "end")
+        ordered=self.scene_project.ordered_keys(scene_key(k) for k in self.kills)
+        ranks={k:i+1 for i,k in enumerate(ordered)}
         for i, k in enumerate(self.kills):
             m = {1: "", 2: " DOUBLE", 3: " TRIPLE", 4: " QUADRA"}.get(k.multikill, " PENTA" if k.multikill >= 5 else "")
             role = "⚔ KILL" if getattr(k, "role", "kill") == "kill" else "＋ ASSIST"
             mark = "☑" if i in self.checked_kills else "☐"
             edited = " ✎" if scene_key(k) in self.scene_project.shots else ""
-            self.lb_kills.insert("end", f"{mark}{edited}  {int(k.time // 60):02d}:{k.time % 60:04.1f}  [{role}] {k.killer} → {k.victim}{m}")
+            self.lb_kills.insert("end", f"{mark}{edited}  #{ranks[scene_key(k)]:02d}  {int(k.time // 60):02d}:{k.time % 60:04.1f}  [{role}] {k.killer} → {k.victim}{m}")
+
+        self._refresh_order_list()
 
     # ---------------- scene direction (UI thread only) --------------------
+    def _refresh_order_list(self):
+        if not hasattr(self, 'scene_order_list'):
+            return
+        selected_key=None
+        selected=self.scene_order_list.curselection()
+        current=getattr(self,'_ordered_scene_keys',[])
+        if selected and selected[0]<len(current):
+            selected_key=current[selected[0]]
+        keys=self.scene_project.ordered_keys(scene_key(k) for k in self.kills)
+        self._ordered_scene_keys=keys
+        descriptions={scene_key(k):f"{k.time:.1f}s  {k.killer} → {k.victim}" for k in self.kills}
+        self.scene_order_list.delete(0,'end')
+        for index,key in enumerate(keys,1):
+            self.scene_order_list.insert('end',f"{index:02d}. {descriptions.get(key,key)}")
+        if selected_key in keys:
+            self.scene_order_list.selection_set(keys.index(selected_key))
+
+    def on_order_selection(self,_event=None):
+        pos=self.scene_order_list.curselection()
+        if not pos or pos[0] >= len(getattr(self,'_ordered_scene_keys',[])):
+            return
+        key=self._ordered_scene_keys[pos[0]]
+        for index,kill in enumerate(self.kills):
+            if scene_key(kill)==key:
+                self.lb_kills.selection_clear(0,'end')
+                self.lb_kills.selection_set(index)
+                self.lb_kills.see(index)
+                self.on_scene_selection()
+                return
+
+    def _on_order_drag_start(self,event):
+        self._drag_order_index = (self.scene_order_list.nearest(event.y), event.y)
+
+    def _on_order_drag_end(self,event):
+        drag=self._drag_order_index
+        self._drag_order_index=None
+        if self.busy or drag is None or abs(event.y-drag[1]) < 8:
+            return
+        initial=self._ordered_scene_keys
+        start=drag[0]
+        if not 0 <= start < len(initial):
+            return
+        key=initial[start]
+        target=self.scene_order_list.nearest(event.y)
+        if self.scene_project.move_to(key,(scene_key(k) for k in self.kills),target):
+            self.var_scene_mode.set(True)
+            self._schedule_project_save()
+            self._refresh_scene_list()
+            pos=self._ordered_scene_keys.index(key)
+            self.scene_order_list.selection_clear(0,'end')
+            self.scene_order_list.selection_set(pos)
+            self.scene_order_list.see(pos)
+            self.log(f'シーンをドラッグ移動: {start+1}番目 → {pos+1}番目')
+
+    def on_move_scene(self,step):
+        if self.busy:
+            self.log('作成中はシーンの順序を変更できません。')
+            return
+        kill=self._current_scene()
+        if kill is None:
+            messagebox.showinfo(APP,'先に右のシーン一覧、または再生順リストでシーンを選択してください。')
+            return
+        key=scene_key(kill)
+        if self.scene_project.move(key,(scene_key(k) for k in self.kills),step):
+            self.var_scene_mode.set(True)
+            self._schedule_project_save()
+            self._refresh_scene_list()
+            keys=self._ordered_scene_keys
+            if key in keys:
+                self.scene_order_list.selection_clear(0,'end')
+                self.scene_order_list.selection_set(keys.index(key))
+                self.scene_order_list.see(keys.index(key))
+            self.log(f'モンタージュ順序変更: {kill.time:.1f}秒 → {keys.index(key)+1}番目')
+
+    def on_reset_scene_order(self):
+        if self.busy:
+            return
+        if self.scene_project.reset_order(scene_key(k) for k in self.kills):
+            self._schedule_project_save()
+            self._refresh_scene_list()
+            self.log('モンタージュ順序を検出時刻順へ戻しました。')
+
     def _current_scene(self):
         selection = self.lb_kills.curselection()
         if not selection or selection[0] >= len(self.kills):
@@ -1294,16 +1452,123 @@ class App:
             self.var_shot_intensity.set(shot.intensity)
             for field, var in self.scene_vars.items():
                 var.set(getattr(shot, field))
+            self._edit_keyframes = [dict(frame) for frame in shot.keyframes]
+            self._refresh_keyframe_list()
+            self.var_scene_fx_enabled.set(shot.fx_override)
+            for field, var in self.scene_fx_vars.items():
+                var.set(getattr(shot, field))
+            self.shot_motion_graph.redraw()
+            self._show_scene_thumbnail(key)
             self.scene_selected_label.configure(text=(
                 f"{kill.time:.1f}秒 / {kill.victim} / {'保存済み編集' if key in self.scene_project.shots else '自動推薦値（未保存）'}"))
         finally:
             self._scene_loading = False
 
+    def _scene_thumbnail_path(self, key):
+        digest = hashlib.sha256(key.encode('utf-8')).hexdigest()[:24]
+        return ROOT / 'projects' / 'thumbnails' / f'{digest}.png'
+
+    def _show_scene_thumbnail(self, key):
+        path=self._scene_thumbnail_path(key)
+        if not path.is_file():
+            self._scene_thumbnail_photo = None
+            self.scene_thumbnail.configure(image='', text='サムネイル未保存')
+            return
+        try:
+            with Image.open(path) as original:
+                image=original.convert('RGB')
+                image.thumbnail((220,124), Image.Resampling.LANCZOS)
+                photo=ImageTk.PhotoImage(image)
+            self._scene_thumbnail_photo=photo
+            self.scene_thumbnail.configure(image=photo, text='')
+        except Exception as exc:
+            self._scene_thumbnail_photo=None
+            self.scene_thumbnail.configure(image='', text='画像を開けません')
+            self.log(f'サムネイル表示失敗: {exc}')
+
+    def on_capture_scene_thumbnail(self):
+        if self.busy:
+            self.log('書き出し中はサムネイルを保存できません。')
+            return
+        kill=self._current_scene()
+        if kill is None:
+            messagebox.showinfo(APP,'保存先のシーンを選んでください。')
+            return
+        rgb, _=self._current_frame_rgb(480,270)
+        if rgb is None:
+            messagebox.showinfo(APP,'LoLミラーが映っている状態で実行してください。')
+            return
+        try:
+            path=self._scene_thumbnail_path(scene_key(kill))
+            path.parent.mkdir(parents=True,exist_ok=True)
+            Image.fromarray(rgb).convert('RGB').save(path, format='PNG')
+            self._show_scene_thumbnail(scene_key(kill))
+            self.log(f'シーンサムネイルを保存: {kill.time:.1f}s / {path.name}')
+        except Exception as exc:
+            messagebox.showerror(APP,f'サムネイル保存失敗: {exc}')
+
     def _scene_shot_from_ui(self) -> Shot:
         raw = {'profile': self.var_shot_profile.get(), 'intensity': self.var_shot_intensity.get()}
         for key, variable in self.scene_vars.items():
             raw[key] = variable.get()
+        raw['keyframes'] = [dict(f) for f in getattr(self, '_edit_keyframes', [])]
+        raw['fx_override'] = self.var_scene_fx_enabled.get()
+        for key, variable in self.scene_fx_vars.items():
+            raw[key] = variable.get()
         return Shot.validated(raw)
+
+    def _refresh_keyframe_list(self, select_time=None):
+        if not hasattr(self, 'kf_list'):
+            return
+        self.kf_list.delete(0,'end')
+        frames = getattr(self, '_edit_keyframes', [])
+        for f in frames:
+            self.kf_list.insert('end',f"{f['time']:+.1f}s   回転 {f['yaw']:+.1f}°  寄り {f['zoom']:+.1f}%  FOV {f['fov']:+.1f}°")
+        if select_time is not None:
+            for i, frame in enumerate(frames):
+                if frame['time']==select_time:
+                    self.kf_list.selection_set(i)
+                    self.kf_list.see(i)
+                    break
+        self.shot_motion_graph.redraw()
+
+    def on_keyframe_selection(self, _event=None):
+        selection=self.kf_list.curselection()
+        if not selection or selection[0]>=len(self._edit_keyframes):
+            return
+        for key, value in self._edit_keyframes[selection[0]].items():
+            if key in self.kf_vars:
+                self.kf_vars[key].set(value)
+
+    def on_keyframe_upsert(self):
+        if self.busy:
+            return
+        try:
+            from ui.scene_project import validate_keyframes
+            frame={key:var.get() for key,var in self.kf_vars.items()}
+            selection=self.kf_list.curselection()
+            frames=list(self._edit_keyframes)
+            if selection and selection[0]<len(frames):
+                frames.pop(selection[0])
+            frames.append(frame)
+            self._edit_keyframes=validate_keyframes(frames)
+            self._refresh_keyframe_list(select_time=round(frame['time'],2))
+        except Exception as exc:
+            messagebox.showerror(APP,f'キーフレーム設定: {exc}')
+
+    def on_keyframe_remove(self):
+        if self.busy:
+            return
+        selection=self.kf_list.curselection()
+        if selection and selection[0]<len(self._edit_keyframes):
+            del self._edit_keyframes[selection[0]]
+            self._refresh_keyframe_list()
+
+    def on_keyframe_preview(self):
+        self.shot_motion_graph.redraw()
+        kill=self._current_scene()
+        if kill is not None:
+            self.log(f'キーフレーム曲線を更新: {len(self._edit_keyframes)}点 / 保存ボタンで確定')
 
     def _schedule_project_save(self):
         if self._project_autosave_token is not None:
@@ -1396,20 +1661,20 @@ class App:
                 self.scene_project = SceneProject.load(target)
                 self.var_scene_mode.set(True)
                 self._schedule_project_save()
-                self.on_scene_selection()
+                self._refresh_scene_list()
                 self.log(f'編集プロジェクトを読み込みました: {len(self.scene_project.shots)} シーン')
             except Exception as exc: messagebox.showerror(APP,f'読み込み失敗: {exc}')
 
     def _scene_render_config(self):
         """Called in UI thread: worker receives only plain snapshots."""
-        return bool(self.var_scene_mode.get()), self.scene_project.snapshot(), bool(self.var_auto_director.get())
+        return bool(self.var_scene_mode.get()), self.scene_project.snapshot(), bool(self.var_auto_director.get()), list(self.scene_project.sequence)
 
     def _render_with_optional_scene_mode(self, src, player, kills, tpl, montage, factory,
-                                         scene_mode: bool, shots: dict, auto: bool):
+                                         scene_mode: bool, shots: dict, auto: bool, order=None):
         if scene_mode:
             return render_scenes(self.api,src,player,kills,tpl,self.out_root,montage,shots,auto=auto,
                                  progress=lambda *a:self.q.put(('job',*a)),stop=self.stop_ev,
-                                 log=self.log,audio_factory=factory)
+                                 log=self.log,audio_factory=factory,order=order)
         return run_auto_edit(self.api,src,player,kills,tpl,self.out_root,montage,
                              progress=lambda *a:self.q.put(('job',*a)),stop=self.stop_ev,
                              log=self.log,audio_factory=factory)
@@ -1467,7 +1732,7 @@ class App:
             _diag_write(CRASH_LOG, "CHECKED_CALLBACK_ERROR\n" + traceback.format_exc())
             self.log("チェック済みシーン開始時にエラーが発生しました。diagnostics/crash.log を確認してください。")
 
-    def _make_list(self, selected, tpl: Template, montage: bool, scene_mode=False, shots=None, auto=False) -> None:
+    def _make_list(self, selected, tpl: Template, montage: bool, scene_mode=False, shots=None, auto=False, order=None) -> None:
         """Worker only: never read Tk variables in this function."""
         _diag_write(RUN_LOG, "CHECKED_STAGE worker_enter")
         p = self.locked
@@ -1485,7 +1750,7 @@ class App:
                 factory = (lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else (lambda path: PreferredGameAudio(path))
             _diag_write(RUN_LOG, "CHECKED_STAGE render_begin")
             res = self._render_with_optional_scene_mode(src, p, list(selected), tpl, montage, factory,
-                                                        scene_mode, shots or {}, auto)
+                                                        scene_mode, shots or {}, auto, order)
             _diag_write(RUN_LOG, f"CHECKED_STAGE render_complete outputs={len(res.outputs)} failed={len(res.failed)}")
             self.log(f"チェック済みシーンの作成完了: {len(res.outputs)}本" +
                      (f" / 失敗 {len(res.failed)}本" if res.failed else ""))
@@ -1935,7 +2200,7 @@ class App:
         self._run_bg(self._make, True, self.current_template(), bool(self.var_montage.get()), self.var_event_mode.get(), *self._scene_render_config())
 
     def _make(self, scan_first: bool, tpl: Template, montage: bool, event_mode: str = "キル",
-              scene_mode=False, shots=None, auto=False) -> None:
+              scene_mode=False, shots=None, auto=False, order=None) -> None:
         # Tk変数はUIスレッドで読み取り済み (tpl/montage は引数で受け取る)
         _diag_write(RUN_LOG, f"\n===== ALL_KILL_BEGIN {time.strftime('%Y-%m-%d %H:%M:%S')} player={getattr(self.locked, 'name', '?')} =====")
         p = self.locked                      # ジョブ開始時に固定 (UI選択が変わっても影響しない)
@@ -1956,7 +2221,7 @@ class App:
                 factory = (lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else (lambda path: PreferredGameAudio(path))
             try:
                 res = self._render_with_optional_scene_mode(src, p, list(self.kills), tpl, montage, factory,
-                                                            scene_mode, shots or {}, auto)
+                                                            scene_mode, shots or {}, auto, order)
             except Exception as e:
                 # 全キル処理全体の例外をUI/プロセスへ漏らさず、診断情報を残す。
                 self.log(f"全キル作成を安全停止: {type(e).__name__}: {e}")
