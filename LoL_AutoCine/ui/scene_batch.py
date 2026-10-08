@@ -11,6 +11,7 @@ import copy
 from pathlib import Path
 from typing import Callable
 from .scene_project import SceneProject, Shot, recommend, scene_key, apply_shot
+from .highlight_director import recommend_highlight, decide_style
 
 @dataclass
 class BatchResult:
@@ -35,13 +36,18 @@ def build_scene_templates(kills, tpl, overrides: dict, *, auto: bool, order=None
         if key in overrides:
             shot=Shot.validated(overrides[key])
         elif auto:
-            shot=recommend(kill, tpl.pre, tpl.post)
+            shot = (recommend_highlight(kill, tpl.pre, tpl.post,
+                       getattr(tpl, 'smart_highlight_style', 'auto'))
+                    if getattr(tpl, 'smart_highlight_enabled', False)
+                    else recommend(kill, tpl.pre, tpl.post))
         else:
             yield kill, copy.deepcopy(tpl)
             continue
         scene_template = apply_shot(tpl,shot)
         # Only third-person modes are adapted to Lolnam-style motion. Respect FPS/top modes.
-        if scene_template.style in ('third', 'third_cinema'):
+        if scene_template.style in ('third', 'third_cinema') or (
+            auto and getattr(tpl, 'smart_highlight_enabled', False) and scene_template.style == 'cinema'
+        ):
             scene_template.style = 'lolnam_cinema'
         yield kill, scene_template
 
@@ -67,7 +73,9 @@ def render_scenes(api,source,player,kills,tpl,out_root,make_montage,
             log('中止しました。');break
         log(f'SCENE_PLAN {i}/{len(scenes)} event={getattr(kill,"event_id", "?")} '
             f'camera={scene_tpl.motion_profile} arc={scene_tpl.motion_arc:g} dolly={scene_tpl.motion_dolly:g} '
-            f'pre={scene_tpl.pre:g} post={scene_tpl.post:g}')
+            f'pre={scene_tpl.pre:g} post={scene_tpl.post:g} '
+            f'highlight={getattr(scene_tpl, "highlight_pulse", 0.0):.2f} '
+            f'keyframes={len(getattr(scene_tpl, "scene_keyframes", ()))}')
         def child_progress(_done,_total,pct,message):
             if progress:
                 progress(i-1,len(scenes),100*(i-1+pct/100)/max(1,len(scenes)),f'{i}/{len(scenes)} {message}')

@@ -145,6 +145,9 @@ class Template:
     template_origin: str = "builtin"
     scene_keyframes: list = field(default_factory=list)  # append to preserve legacy positional fields
     montage_fx: str = "cut"  # append; optional final montage effect, legacy defaults unchanged
+    smart_highlight_enabled: bool = False  # explicit automatic planning only
+    smart_highlight_style: str = "auto"
+    highlight_pulse: float = 0.0  # kill-timed accent, legacy graph unchanged when zero
 
     def amp(self) -> float:
         return INTENSITY.get(self.intensity, 1.0)
@@ -402,6 +405,11 @@ def build_graph(t: Template, duration: float, has_title: bool, still: bool = Fal
     if cf:
         f.append(cf)
     f.extend(_build_video_effect_filters(t, duration, effect_events or [], still))
+    # Optional CPU accent uses existing kill timestamps, independently of NVENC.
+    pulse = max(0.0, min(1.0, float(getattr(t, "highlight_pulse", 0.0))))
+    if pulse > 0.001 and not still and effect_events:
+        from .highlight_pulse import pulse_filters
+        f.extend(pulse_filters(effect_events, pulse))
     if t.dof_enabled and t.dof_blur > 0.01:
         # Replay APIから画素ごとの深度バッファは取得できないため、
         # 2D映像の上下位置を「奥行きの代理値」として使うDOF近似。

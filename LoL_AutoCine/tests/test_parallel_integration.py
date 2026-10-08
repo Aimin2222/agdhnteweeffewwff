@@ -41,6 +41,7 @@ def history(root, gpu_file, ui_file):
     "tests/test_scene_sequence.py", "tests/test_scene_keyframes_v592.py",
     "tests/test_v593_mode_camera.py", "tests/test_v594_live_preview.py",
     "tests/test_v595_workspace.py", "tests/test_v596_hud_batch.py", "tests/test_v597_studio.py",
+    "tests/test_v598_highlight_director.py",
 ])
 def test_independent_changes_preserve_checkout(tmp_path, ui_file):
     history(tmp_path, "core/effects.py", ui_file)
@@ -66,6 +67,8 @@ def test_independent_changes_preserve_checkout(tmp_path, ui_file):
     ("tests/test_v596_hud_batch.py", "docs/ui.md", "gpu_changed_ui_files"),
     ("tests/test_v597_studio.py", "docs/ui.md", "gpu_changed_ui_files"),
     ("docs/gpu.md", "core/montage_fx.py", "ui_changed_gpu_files"),
+    ("tests/test_v598_highlight_director.py", "docs/ui.md", "gpu_changed_ui_files"),
+    ("docs/gpu.md", "core/highlight_pulse.py", "ui_changed_gpu_files"),
     ("core/effects.py", "core/jobs.py", "shared_files_requiring_review"),
 ])
 def test_ownership_and_shared_api_are_blocked(tmp_path, gpu_file, ui_file, key):

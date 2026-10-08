@@ -37,6 +37,7 @@ from core.scanner import scan_kills                                # noqa: E402
 from ui.scene_timeline import SceneTimeline                     # noqa: E402
 from ui.scene_project import SceneProject, Shot, scene_key, recommend, apply_shot  # noqa: E402
 from ui.scene_batch import render_scenes                      # noqa: E402
+from ui.highlight_director import SMART_STYLES, SMART_STYLES_REVERSE, recommend_highlight  # noqa: E402
 from ui.motion_graph import ShotMotionGraph                  # noqa: E402
 from ui.hud_presets import (HUD_MODES, hud_mode_from_flags, hud_flags, hud_summary)  # noqa: E402
 from ui.studio_localization import (EFFECT_LABEL_JA, FOG_LABEL_JA, SHOT_PROFILE_JA,
@@ -337,7 +338,7 @@ class DofViz(tk.Canvas):
 class App:
     def __init__(self, root: tk.Tk):
         self.root = root
-        root.title(f"{APP} v5.9.7 - スタジオ編集 / モンタージュ演出")
+        root.title(f"{APP} v5.9.8 - スマートハイライト / スタジオ編集")
         sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
         root.geometry(f"{min(1560, sw - 40)}x{min(960, sh - 90)}+10+10")
         root.option_add("*Font", FONT)
@@ -377,6 +378,8 @@ class App:
         self.var_pre = tk.DoubleVar(value=4.0)
         self.var_post = tk.DoubleVar(value=3.0)
         self.var_auto_director = tk.BooleanVar(value=False)  # preserve old one-click default
+        self.var_smart_highlight_style = tk.StringVar(value=SMART_STYLES['auto'])
+        self.var_smart_highlight_enabled = tk.BooleanVar(value=False)
         self.var_scene_mode = tk.BooleanVar(value=False)    # opt-in per-scene rendering
         self.var_edit_mode = tk.StringVar(value="easy")  # view only: never silently change rendering state
         # A single HUD preset drives the legacy render flags. LoL player-name visibility is an in-game setting.
@@ -474,7 +477,7 @@ class App:
         top.pack(fill="x")
         brand_box = ttk.Frame(top)
         brand_box.pack(side="left")
-        ttk.Label(brand_box, text="◈  LoL AutoCine v5.9.7", style="CompactTitle.TLabel").pack(anchor="w")
+        ttk.Label(brand_box, text="◈  LoL AutoCine v5.9.8", style="CompactTitle.TLabel").pack(anchor="w")
 
         nav = ttk.Frame(top)
         nav.pack(side="left", padx=(15, 0))
@@ -698,7 +701,14 @@ class App:
         ttk.Label(eh, text="難しい設定は後から変更できます", style="CardMuted.TLabel").pack(side="right")
         ttk.Label(easy, text="① リプレイを開く → ② 対象プレイヤーを選ぶ → ③ ボタン1つでキル/アシストを検出して動画を作成", style="CardMuted.TLabel", wraplength=900).pack(anchor="w", pady=(4, 7))
         ttk.Button(easy, text="★ これで自動作成（おすすめ）", style="Accent.TButton", command=self.on_one_click).pack(fill="x", ipady=4)
-        ttk.Button(easy, text="✨ スマート自動編集：全シーンに個別カメラ演出 → 作成", command=self.on_smart_one_click).pack(fill="x", pady=(4,0))
+        ttk.Button(easy, text="✨ スマート自動編集：カメラ＋キル瞬間の演出を自動作成", command=self.on_smart_one_click).pack(fill="x", pady=(4,0))
+        smart_row = ttk.Frame(easy, style="Card.TFrame")
+        smart_row.pack(fill="x", pady=(6,2))
+        ttk.Label(smart_row, text="自動カメラ演出", style="Card.TLabel", width=16).pack(side="left")
+        ttk.Combobox(smart_row, state="readonly", textvariable=self.var_smart_highlight_style,
+                     values=list(SMART_STYLES.values()), width=31).pack(side="left", fill="x", expand=True)
+        ttk.Label(easy, text="戦闘を見せる→キル直前に寄る→瞬間を短く強調→自然に戻る。通常の自動作成には影響しません。",
+                  style="CardMuted.TLabel", wraplength=850).pack(anchor="w")
         quick_presets = ttk.Frame(easy, style="Card.TFrame")
         quick_presets.pack(fill="x", pady=(10, 3))
         ttk.Label(quick_presets, text="仕上がり", style="Card.TLabel").pack(side="left", padx=(0, 6))
@@ -825,17 +835,21 @@ class App:
         for label,key,lo,hi,default in (("色温度", "temperature",-1,1,0),
                                        ("ブルーム", "bloom",0,1,0.25),
                                        ("Focus Blur", "focus_blur",0,1,0),
-                                       ("DOFぼかし", "dof_blur",0,20,0)):
+                                       ("DOFぼかし", "dof_blur",0,20,0),
+                                       ("キル瞬間の強調", "highlight_pulse",0,1,0)):
             fx_row=ttk.Frame(scene_card,style="Card.TFrame");fx_row.pack(fill="x",pady=1)
             ttk.Label(fx_row,text=label,width=14,style="Card.TLabel").pack(side="left")
             v=tk.DoubleVar(value=default);self.scene_fx_vars[key]=v
             ttk.Scale(fx_row,variable=v,from_=lo,to=hi).pack(side="left",fill="x",expand=True,padx=5)
             ttk.Spinbox(fx_row,from_=lo,to=hi,increment=0.05,textvariable=v,width=7).pack(side="left")
 
+        ttk.Label(scene_card, text="キル瞬間の強調は短時間だけ明るさ・彩度を上げます（0で無効）。カメラ曲線と同じキル時刻に同期します。",
+                  style="CardMuted.TLabel", wraplength=870).pack(anchor="w", pady=(2,4))
         for _variable in (self.var_shot_profile,self.var_shot_intensity,*self.scene_vars.values()):
             _variable.trace_add('write',lambda *_: self.shot_motion_graph.redraw())
         actions=ttk.Frame(scene_card,style="Card.TFrame");actions.pack(fill="x",pady=(7,2))
-        ttk.Button(scene_card,text="全シーンの演出を自動推薦（現在のスキャン結果）", command=self.on_recommend_all).pack(fill="x",pady=3)
+        ttk.Button(scene_card,text="全シーンの演出を自動推薦（従来型）", command=self.on_recommend_all).pack(fill="x",pady=3)
+        ttk.Button(scene_card,text="★ 全シーンに参考動画風のカメラ＋キル強調を設定", command=self.on_highlight_plan_all).pack(fill="x",pady=3)
         for label,handler in (("このシーンに保存",self.on_save_scene),
                               ("自動演出を設定",self.on_recommend_scene),
                               ("上書きを解除",self.on_clear_scene),
@@ -1999,10 +2013,28 @@ class App:
         self._refresh_scene_list()
         self.log(f'全シーンにカメラ自動演出を設定: {len(plan)}件')
 
-    def on_smart_one_click(self):
-        """Explicit enhanced one-click path; normal one click remains unchanged."""
+    def on_highlight_plan_all(self):
+        """Explicitly replace all scan-local shot settings; Undo restores previous edits."""
+        if not self.kills:
+            messagebox.showinfo(APP, '先にシーンをスキャンしてください。')
+            return
+        style = SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto')
+        plan = {scene_key(k): recommend_highlight(k, self.var_pre.get(), self.var_post.get(), style)
+                for k in self.kills}
+        self.scene_project.put_many(plan)
         self.var_scene_mode.set(True)
         self.var_auto_director.set(True)
+        self.var_smart_highlight_enabled.set(True)
+        self._schedule_project_save()
+        self._refresh_scene_list()
+        self.log(f'スマート演出を{len(plan)}シーンに設定: {SMART_STYLES[style]}（Undoで戻せます）')
+
+    def on_smart_one_click(self):
+        """Only this explicit action opts in to new timed highlight effects."""
+        self.var_scene_mode.set(True)
+        self.var_auto_director.set(True)
+        self.var_smart_highlight_enabled.set(True)
+        self.log('スマート自動編集: ターゲット固定のカメラ演出とキル瞬間の強調を有効にします')
         self.on_one_click(smart=True)
 
     def on_clear_scene(self):
@@ -2277,6 +2309,8 @@ class App:
         t.dof_far_distance = float(self.sl.get("dof_far_distance", tk.DoubleVar(value=t.dof_far_distance)).get())
         t.video_effects = self._get_video_effects()
         t.effect_preset = self.var_effect_preset.get() if hasattr(self, "var_effect_preset") else "なし"
+        t.smart_highlight_enabled = bool(self.var_smart_highlight_enabled.get())
+        t.smart_highlight_style = SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto')
         # LoLミラー/カメラは144Hzで内部サンプリングし、最終出力FPSだけUI選択値へ合わせる。
         # これで60fps書き出しでも、カメラ演出の元データを144Hzで保持できる。
         t.capture_fps = 144
@@ -2327,6 +2361,9 @@ class App:
             self._apply_panel_widths()
             if d.get("hud_mode") in HUD_MODES:
                 self._set_hud_mode(d["hud_mode"])
+            style_id = d.get('smart_highlight_style', 'auto')
+            if style_id in SMART_STYLES:
+                self.var_smart_highlight_style.set(SMART_STYLES[style_id])
             if d.get("montage_fx") in ("cut", "flash", "dark"):
                 self.var_montage_fx.set({"cut": "なし（従来の高速連結）",
                                          "flash": "光るカット（白い閃光）",
@@ -2347,6 +2384,7 @@ class App:
                                              "left_width": int(self.var_left_width.get()),
                                              "right_width": int(self.var_right_width.get()),
                                              "edit_mode": self.var_edit_mode.get(),
+                                             "smart_highlight_style": SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto'),
                                              "hud_mode": self.var_hud_mode.get(),
                                              "montage_fx": {"なし（従来の高速連結）":"cut", "光るカット（白い閃光）":"flash", "暗転カット（シネマ）":"dark"}.get(self.var_montage_fx.get(),"cut")}, ensure_ascii=False), encoding="utf-8")
         except Exception:
@@ -2596,7 +2634,9 @@ class App:
         # smart action is used. This does not discard advanced saved edits.
         if self.var_edit_mode.get() == "easy" and not smart:
             scene_cfg = (False, scene_cfg[1], False, scene_cfg[3])
-        self._run_bg(self._make, True, self.current_template(), bool(self.var_montage.get()), self.var_event_mode.get(), *scene_cfg)
+        template = self.current_template()
+        template.smart_highlight_enabled = bool(smart)
+        self._run_bg(self._make, True, template, bool(self.var_montage.get()), self.var_event_mode.get(), *scene_cfg)
 
     def _make(self, scan_first: bool, tpl: Template, montage: bool, event_mode: str = "キル",
               scene_mode=False, shots=None, auto=False, order=None) -> None:
