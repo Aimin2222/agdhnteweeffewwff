@@ -33,5 +33,10 @@ ZIPを先に取得した場合も、展開フォルダの同じbundleからclone
 - ウィンドウタイトルも受領版でv5.9.5へ更新されています。
 
 詳細はLoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.9.5_JA.mdを参照してください。
-前回の取得用codex/lol-autocine-v594-handoffとの比較用に新しいDraft PRを作成します。
-既存PR #1〜#4を保持し、mainへはマージしません。
+前回の取得用codex/lol-autocine-v594-handoffとの比較用に新しいDraft PR #5を作成しました。
+既存PR #1〜#4を保持し、mainへはマージしていません。
+
+作成済みDraft PR #5:
+https://github.com/Aimin2222/agdhnteweeffewwff/pull/5
+
+169ファイルと全17ブランチのコミットがbundleから正しく復元されることを確認しました。
