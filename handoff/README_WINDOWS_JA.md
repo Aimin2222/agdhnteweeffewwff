@@ -1,62 +1,37 @@
-# LoL AutoCine v5.9.4をWindowsへ取得する
+# LoL AutoCine v5.9.5をWindowsへ取得する
 
-このブランチはユーザーの引き渡し依頼による保存用ブランチです。
-最新の前回取得用ブランチを基準にし、AutoCineを `LoL_AutoCine/` に更新しています。
-前回ブランチに他の変更が追加されていたことを確認し、その変更も保持しています。
-mainへマージする必要はありません。
+GitHubの `codex/lol-autocine-v595-handoff` ブランチで **Code → Download ZIP** を選び、Windows PCへ展開してください。
+その中の **LoL_AutoCineフォルダ** が完全なプロジェクトです。旧版は別フォルダに保管して、既存の `START.bat` で起動してください。
+チャットの生成ZIPリンクは使用しません。mainへのマージやクラウド環境設定の操作は、Windowsでの取得には不要です。
 
-## Gitを使わず取得する
+## Git履歴と担当ブランチを復元する
 
-GitHubでこのリポジトリの `codex/lol-autocine-v594-handoff` ブランチを開き、
-**Code → Download ZIP** を選んでWindows PCへ展開してください。
-その中の **LoL_AutoCineフォルダ** が完全なプロジェクトです。
-従来のWindows起動バッチ・Native Audio Helper構築フローを含んでいます。
-元の動作版は別フォルダに保管し、既存の `START.bat` で起動してください。
-UIOnly ZIPだけを単体で起動する必要はありません。
-
-## Git履歴と並行開発ブランチを復元する
-
-WindowsにGitがある場合、PowerShellまたはGit Bashで実行できます。
-以下の保存先フォルダが既にある場合は、別の名前を使ってください。
+Gitがある場合、以下をPowerShellまたはGit Bashで実行できます。保存先が既にある場合は別の名前を使ってください。
 
 ```sh
-git clone --single-branch --branch codex/lol-autocine-v594-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_Handoff
-git clone --branch integration/v5.9.4 LoL_AutoCine_Handoff/handoff/LoL_AutoCine_v5.9.4_all_branches.bundle LoL_AutoCine_Dev
+git clone --single-branch --branch codex/lol-autocine-v595-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_Handoff
+git clone --branch integration/v5.9.5 LoL_AutoCine_Handoff/handoff/LoL_AutoCine_v5.9.5_all_branches.bundle LoL_AutoCine_Dev
 cd LoL_AutoCine_Dev
 git status --short
 git branch --all
 ```
 
-`LoL_AutoCine_Dev` が元のAutoCineのGit履歴を持つ開発用プロジェクトです。
-15ブランチはclone後の `origin/*` にも復元され、必要な担当ブランチへ切り替えられます。
-このcloneのoriginはPC上のbundleへのパスです。GitHubへの同期先が必要な場合は、
-AutoCine用のリポジトリを別途指定してください。
+`LoL_AutoCine_Dev` が元の開発Gitです。全17ブランチがorigin/*にも復元されます。
+UI担当はfeature/ui-workspace-v595、GPU担当はfeature/gpu-engine、統合版はintegration/v5.9.5です。
+このcloneのoriginはPC上のbundleです。GitHubへ同期する場合はAutoCine用のリポジトリを別途指定してください。
+ZIPを先に取得した場合も、展開フォルダの同じbundleからcloneできます。
+取得用リポジトリ自体を開発する場合は、作業ディレクトリがLoL_AutoCine/になる点に注意してください。
 
-ZIPを先に取得した場合も、展開フォルダ内の同じbundleからcloneできます。
-GitHub保存用リポジトリをそのまま開発する場合は、作業ディレクトリが `LoL_AutoCine/` になる点に注意してください。
+## 保存内容と今回の確認
 
-## 保存内容と確認結果
+- 元ソースの追跡済み169ファイルと全17ブランチを保存。Git状態と変更一覧はSOURCE_GIT_REPORT_JA.md、コミットとSHA256はMANIFEST.json。
+- 過去のbundleとmanifestを保持。個人設定、ログ、録画、音声、.venvは含めません。
+- UIワークスペースと未保存設定のコピー・貼り付けを統合。かんたん編集に戻る際の右側出力設定の表示漏れだけ3行修正。
+- 93テスト成功。実Tkのコピー・貼り付け・Undo/Redo・自動保存・4区分切替と、モックAPIまでのプレビューを確認。
+- core/とui/の27ファイル、録画/音声/GPU/カメラ処理を維持。GPU高速化そのものは未実装。
+- 今回はFFmpeg通し出力を再実行せず、前回v5.9.4の結果を保持。Windows・実LoL・GPU・専用録音は今回未検証。
+- ウィンドウタイトルも受領版でv5.9.5へ更新されています。
 
-- ソース: `integration/v5.9.4` の追跡済み163ファイル。元ファイルとバイト単位で一致を確認。
-- Git履歴: `LoL_AutoCine_v5.9.4_all_branches.bundle`。全15ブランチを復元してコミット一致を確認。
-- `MANIFEST.json`: 元コミット、全ブランチのコミット、bundleのSHA256。
-- `SOURCE_GIT_REPORT_JA.md`: 元プロジェクトのGit状態と元v5.8.5からの差分一覧。
-- 個人設定、ログ、録画、音声、Python仮想環境は含めていません。
-- 86テスト成功。合成映像・音声を使った60fpsの新旧経路の機能検証も成功。
-- Windows・実LoL・GPU・Native Audio Helperの実機動作は未検証。
-- GPUエフェクト処理本体は維持し、共有APIにはレビュー済みのキーフレーム接続・連続時刻補間・診断を追加しています。GPU高速化の実装はまだ行っていません。
-
-詳細な結果と既知の未解決事項は `LoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.9.4_JA.md` を参照してください。
-
-前回の取得用ブランチとPR #1/#2/#3を保持し、v5.9.4を新しいブランチへ保存しました。
-比較先は `codex/lol-autocine-v593-handoff` です。mainへはマージしていません。
-PR本文は `PULL_REQUEST_BODY_JA.md` に保存しています。
-
-画面タイトルとブランド表示は受領版どおりv5.9.3ですが、VERSION.txtと実際の統合版はv5.9.4です。
-旧v5.9.0/v5.9.2/v5.9.3のbundleとmanifestも保持しています。
-チャット生成ZIPのダウンロードリンクは使用しません。
-
-作成済みDraft PR #4:
-https://github.com/Aimin2222/agdhnteweeffewwff/pull/4
-
-163ファイルと全15ブランチのコミットがbundleから正しく復元されることを確認しました。
+詳細はLoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.9.5_JA.mdを参照してください。
+前回の取得用codex/lol-autocine-v594-handoffとの比較用に新しいDraft PRを作成します。
+既存PR #1〜#4を保持し、mainへはマージしません。

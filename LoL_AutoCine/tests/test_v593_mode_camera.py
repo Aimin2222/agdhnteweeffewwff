@@ -58,7 +58,10 @@ def test_ui_mode_toggle_keeps_scene_state_and_view(monkeypatch, tmp_path):
         app.var_edit_mode.set('advanced')
         app._apply_edit_mode(log=False)
         assert not app._mode_easy_section.winfo_manager()
-        assert all(panel.winfo_manager()=='pack' for panel in app._mode_detail_sections)
+        assert app._editor_timeline.winfo_manager() == 'pack'
+        assert app._editor_scene.winfo_manager() == 'pack'
+        assert not app._editor_camera.winfo_manager()
+        assert not app._editor_advanced.winfo_manager()
         assert app.var_scene_mode.get() is True
         assert app.checked_kills=={1,3}
         assert app.canvas.winfo_manager()=='pack'

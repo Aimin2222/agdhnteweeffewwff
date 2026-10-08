@@ -18,7 +18,8 @@ UI_FILES = {"legacy_app.py", "tests/test_editor_ui_contract.py",
             "tests/test_checked_dispatch.py", "tests/gui_smoke.py",
             "tests/test_scene_studio.py", "tests/test_scene_studio_gui.py",
             "tests/test_scene_sequence.py", "tests/test_scene_keyframes_v592.py",
-            "tests/test_v593_mode_camera.py", "tests/test_v594_live_preview.py"}
+            "tests/test_v593_mode_camera.py", "tests/test_v594_live_preview.py",
+            "tests/test_v595_workspace.py"}
 SHARED_FILES = {"core/jobs.py", "core/camera.py", "core/camera_clock.py", "core/audio.py",
                 "core/scanner.py", "app.py", "requirements.txt",
                 "core/procloop.py", "core/audio_worker.py", "core/capture.py"}
@@ -34,7 +35,7 @@ def owner(path: str) -> str:
         return "shared"
     if path in INFRA_FILES or path.startswith("docs/") or path in {"VERSION.txt", ".gitignore"}:
         return "metadata"
-    if path.startswith(("README", "CODEX_")) or path == "ui_changes_v5.9.1.patch":
+    if path.startswith(("README", "CODEX_")) or path in {"ui_changes_v5.9.1.patch", "patches/v594_to_v595.patch"}:
         return "metadata"
     return "shared"
 
