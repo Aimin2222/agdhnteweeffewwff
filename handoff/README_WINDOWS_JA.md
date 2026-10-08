@@ -29,4 +29,7 @@ git branch --all
 実機では通常→スマート4種→通常の切替、個別設定優先、全推薦Undo/Redo、保存復元、チェック2シーンのカラー・LoLのみ音声・HUD・対象追従・fpsを確認してください。HUDの名前非表示はLoL側の設定が必要です。
 詳細: LoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.9.8_JA.md。
 個人設定・プロジェクト・ログ・録画・音声・.venvは含みません。
-比較先はcodex/lol-autocine-v597-handoff。既存PRとmainを保持し、新しいDraft PRへ保存します。
+比較先はcodex/lol-autocine-v597-handoff。既存PRとmainを保持し、Draft PR #8へ保存しました。
+https://github.com/Aimin2222/agdhnteweeffewwff/pull/8
+
+GitHubから別フォルダへ復元し、201ファイルと全23ブランチの一致、GUI/新旧演出56テスト、共有変更ガードの成功を確認しました。
