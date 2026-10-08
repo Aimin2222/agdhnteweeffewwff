@@ -38,6 +38,7 @@ from ui.scene_timeline import SceneTimeline                     # noqa: E402
 from ui.scene_project import SceneProject, Shot, scene_key, recommend, apply_shot  # noqa: E402
 from ui.scene_batch import render_scenes                      # noqa: E402
 from ui.motion_graph import ShotMotionGraph                  # noqa: E402
+from ui.hud_presets import (HUD_MODES, hud_mode_from_flags, hud_flags, hud_summary)  # noqa: E402
 
 APP = "LoL AutoCine"
 FONT = ("Meiryo UI", 10)
@@ -312,7 +313,7 @@ class DofViz(tk.Canvas):
 class App:
     def __init__(self, root: tk.Tk):
         self.root = root
-        root.title(f"{APP} v5.9.5 - かんたん / 詳細ワークスペース")
+        root.title(f"{APP} v5.9.6 - HUDプリセット / シーン一括編集")
         sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
         root.geometry(f"{min(1560, sw - 40)}x{min(960, sh - 90)}+10+10")
         root.option_add("*Font", FONT)
@@ -354,6 +355,10 @@ class App:
         self.var_auto_director = tk.BooleanVar(value=False)  # preserve old one-click default
         self.var_scene_mode = tk.BooleanVar(value=False)    # opt-in per-scene rendering
         self.var_edit_mode = tk.StringVar(value="easy")  # view only: never silently change rendering state
+        # A single HUD preset drives the legacy render flags. LoL player-name visibility is an in-game setting.
+        self.var_hud_mode = tk.StringVar(value="hidden")
+        self.var_hud = tk.BooleanVar(value=True)
+        self.var_bars = tk.BooleanVar(value=False)
         self.scene_project = SceneProject()
         self.scene_project_path = ROOT / 'projects' / 'scene_project.json'
         self._project_autosave_token = None
@@ -436,6 +441,8 @@ class App:
         # 上部ナビからも同じ設定・処理を操作できるようにする。
         self.var_tpl = tk.StringVar(value=list(self.templates)[0])
         self.var_int = tk.StringVar(value="standard")
+        self.var_hud_choice = tk.StringVar(value=HUD_MODES['hidden'])
+        self.var_hud_summary = tk.StringVar(value=hud_summary('hidden'))
 
         top = ttk.Frame(r, padding=(12, 3, 12, 3))
         top.pack(fill="x")
@@ -680,6 +687,15 @@ class App:
                         variable=self.var_auto_director).pack(anchor="w", pady=(6, 1))
         ttk.Label(easy, text="ONなら自動作成前に既存のOrbit/ドリー設定を調整します。OFFでは以前の挙動のまま。",
                   style="CardMuted.TLabel").pack(anchor="w")
+        hud_easy = ttk.Frame(easy, style="Card.TFrame")
+        hud_easy.pack(fill="x", pady=(12, 2))
+        ttk.Label(hud_easy, text="映像に残すHUD", style="Card.TLabel", width=16).pack(side="left")
+        cb_hud_easy = ttk.Combobox(hud_easy, state="readonly", values=list(HUD_MODES.values()),
+                                   textvariable=self.var_hud_choice, width=25)
+        cb_hud_easy.pack(side="left", padx=(4, 8))
+        cb_hud_easy.bind("<<ComboboxSelected>>", self._on_hud_choice)
+        ttk.Button(hud_easy, text="名前を消すには？", command=self.on_hud_name_help).pack(side="left")
+        ttk.Label(easy, textvariable=self.var_hud_summary, style="CardMuted.TLabel", wraplength=700).pack(anchor="w")
 
         self._mode_detail_sections = []
         timeline = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
@@ -794,7 +810,8 @@ class App:
             ttk.Button(actions,text=label,command=handler).pack(side="left",padx=(0,4))
         project_bar=ttk.Frame(scene_card,style="Card.TFrame");project_bar.pack(fill="x",pady=(3,0))
         ttk.Button(project_bar,text="設定をコピー",command=self.on_copy_scene_settings).pack(side="left", padx=(0, 4))
-        ttk.Button(project_bar,text="設定を貼り付け",command=self.on_paste_scene_settings).pack(side="left", padx=(0, 10))
+        ttk.Button(project_bar,text="設定を貼り付け",command=self.on_paste_scene_settings).pack(side="left", padx=(0, 4))
+        ttk.Button(project_bar,text="☑ チェックした全シーンに適用",command=self.on_apply_shot_to_checked).pack(side="left", padx=(0, 10))
         ttk.Button(project_bar,text="編集プロジェクトを保存",command=self.on_scene_export).pack(side="left")
         ttk.Button(project_bar,text="読み込み",command=self.on_scene_import).pack(side="left",padx=5)
         ttk.Label(project_bar,text="自動保存 / Undo・Redo（最大100回） / ON時は1シーン1クリップ",style="CardMuted.TLabel").pack(side="right")
@@ -1017,6 +1034,16 @@ class App:
         ttk.Label(rl, textvariable=self.var_lut, style="CardMuted.TLabel").pack(side="left", padx=5)
         slider(output,"game_volume","ゲーム音量",0,1.5)
         slider(output,"bgm_volume","BGM音量",0,1.0)
+        hud_export = ttk.LabelFrame(output, text="HUD・名前表示（映像に残す情報）", padding=9)
+        hud_export.pack(fill="x", pady=(10, 5))
+        hud_row = ttk.Frame(hud_export, style="Card.TFrame"); hud_row.pack(fill="x")
+        ttk.Label(hud_row, text="HUDの表示", style="Card.TLabel").pack(side="left", padx=(0, 8))
+        cb_hud_output = ttk.Combobox(hud_row, state="readonly", values=list(HUD_MODES.values()),
+                                     textvariable=self.var_hud_choice, width=30)
+        cb_hud_output.pack(side="left", fill="x", expand=True)
+        cb_hud_output.bind("<<ComboboxSelected>>", self._on_hud_choice)
+        ttk.Button(hud_export, text="名前を消すためのLoL設定を確認", command=self.on_hud_name_help).pack(anchor="w", pady=(6, 2))
+        ttk.Label(hud_export, textvariable=self.var_hud_summary, style="CardMuted.TLabel", wraplength=530).pack(anchor="w")
         ttk.Label(output, text="出力先", style="Card.TLabel").pack(anchor="w", pady=(5,2))
         self.lbl_out=ttk.Label(output, text=str(self.out_root), style="CardMuted.TLabel", wraplength=560); self.lbl_out.pack(fill="x")
         ttk.Button(output, text="出力フォルダを変更", command=self.on_pick_out).pack(fill="x", pady=3)
@@ -1127,8 +1154,10 @@ class App:
             ttk.Checkbutton(f, text=text, variable=tk.BooleanVar(value=True)).pack(anchor="w")
 
         f = card(right, "⚙  その他の設定")
-        self.var_hud=tk.BooleanVar(value=True); ttk.Checkbutton(f, text="HUD非表示", variable=self.var_hud).pack(anchor="w", pady=2)
-        self.var_bars=tk.BooleanVar(value=False); ttk.Checkbutton(f, text="チャンピオンHPバーだけ残す", variable=self.var_bars).pack(anchor="w", pady=2)
+        ttk.Label(f, text="HUDは『出力』ゾーンと、かんたん編集に集約しました。",
+                  style="CardMuted.TLabel", wraplength=300).pack(anchor="w", pady=2)
+        ttk.Label(f, textvariable=self.var_hud_choice, style="Card.TLabel").pack(anchor="w", pady=2)
+        ttk.Button(f, text="HUD表示を変更", command=lambda: self._focus_editor_zone("output")).pack(fill="x", pady=(2,5))
         self.var_dof_blur=tk.DoubleVar(value=0.0); self.var_dof_focus_distance=tk.DoubleVar(value=5510.0); self.var_dof_near_distance=tk.DoubleVar(value=10000.0); self.var_dof_far_distance=tk.DoubleVar(value=10000.0)
         ttk.Checkbutton(f, text="音声クラッシュ防止", variable=tk.BooleanVar(value=True)).pack(anchor="w", pady=2)
         # Quick-output duplicates stay available from the scene/camera/color zones,
@@ -1261,6 +1290,35 @@ class App:
         self.var_editor_zone.set(zone)
         self._apply_edit_mode(log=False)
 
+    def _on_hud_choice(self, _event=None) -> None:
+        mode = next((m for m, title in HUD_MODES.items() if title == self.var_hud_choice.get()), "hidden")
+        self.var_hud_mode.set(mode)
+        hide, bars = hud_flags(mode)
+        self.var_hud.set(hide)
+        self.var_bars.set(bars)
+        self.var_hud_summary.set(hud_summary(mode))
+        if _event is not None:
+            self._save_settings()
+            self.log(f"HUDモード: {HUD_MODES[mode]}" +
+                     ("（名前非表示はLoLのゲーム内設定が別途必要）" if mode == 'health' else ""))
+
+    def _set_hud_mode(self, mode: str, *, save: bool = False) -> None:
+        mode = mode if mode in HUD_MODES else 'hidden'
+        self.var_hud_choice.set(HUD_MODES[mode])
+        self._on_hud_choice()
+        if save:
+            self._save_settings()
+
+    def on_hud_name_help(self) -> None:
+        messagebox.showinfo("体力バーの名前を非表示にする方法",
+            "【体力バーだけ表示】は、Replay APIのHUD/HPバー制御を利用します。\n\n"
+            "チャンピオン名・プレイヤー名の表示はLoL側の設定が必要です。\n"
+            "LoLのリプレイ中に Esc → インターフェース（表示設定）を開き、\n"
+            "『体力バーの上の名前表示』に相当する項目を『なし』にしてください。\n\n"
+            "項目名や位置はLoLのバージョン・言語で異なります。\n"
+            "AutoCineはゲーム内の名前表示設定を自動変更しません。\n"
+            "録画前にミラーで名前が消えているか確認してください。")
+
     def on_copy_scene_settings(self) -> None:
         """Copy current UNSAVED shot values to a safe in-app clipboard."""
         if self._current_scene() is None:
@@ -1295,6 +1353,31 @@ class App:
             self.log(f'シーン設定を貼り付け: {kill.time:.1f}秒 / Undoで戻せます。')
         except (ValueError, TypeError, tk.TclError) as exc:
             self.log(f'設定貼り付け失敗: {exc}')
+
+    def on_apply_shot_to_checked(self) -> None:
+        """Apply the current (including unsaved) shot to checked scenes in ONE Undo step."""
+        if self.busy:
+            self.log("書き出し中はシーン設定を一括変更できません。")
+            return
+        if self._current_scene() is None:
+            self.log("一括適用: 最初に右側でコピー元シーンを選んでください。")
+            return
+        targets = [self.kills[i] for i in sorted(self.checked_kills) if 0 <= i < len(self.kills)]
+        if not targets:
+            self.log("一括適用: 右側の一覧で対象シーンにチェックを入れてください。")
+            return
+        try:
+            shot = Shot.validated(__import__('dataclasses').asdict(self._scene_shot_from_ui()))
+        except (ValueError, TypeError, tk.TclError) as exc:
+            self.log(f"一括適用の設定値が不正: {exc}")
+            return
+        if not messagebox.askyesno(APP, f"チェックした {len(targets)} シーンに、現在の編集値をまとめて適用しますか？\nUndoで一度に戻せます。"):
+            return
+        self.scene_project.put_many({scene_key(k): shot for k in targets})
+        self.var_scene_mode.set(True)
+        self._schedule_project_save()
+        self._refresh_scene_list()
+        self.log(f"シーン設定を一括適用: {len(targets)}シーン（Undoでまとめて戻せます）")
 
     def on_camera_safe_pose(self) -> None:
         """Restore conservative 3rd-person framing without deleting shot edits."""
@@ -2101,8 +2184,7 @@ class App:
         self.var_pre.set(t.pre)
         self.var_post.set(t.post)
         self.var_merge.set(t.merge_multikill)
-        self.var_hud.set(t.hide_hud)
-        self.var_bars.set(t.keep_champion_bars)
+        self._set_hud_mode(hud_mode_from_flags(t.hide_hud, t.keep_champion_bars))
         self.var_gaudio.set(t.game_audio)
         self.var_fog.set(t.fog_enabled)
         self.var_fog_preset.set(FOG_PRESETS.get(t.fog_preset, t.fog_preset))
@@ -2137,7 +2219,7 @@ class App:
         t.bgm_path, t.lut_path = self.var_bgm.get(), self.var_lut.get()
         # 空欄ならタイトルを一切表示しない。自動KILL文字は生成しない。
         t.title_auto = False
-        t.hide_hud, t.keep_champion_bars = bool(self.var_hud.get()), bool(self.var_bars.get())
+        t.hide_hud, t.keep_champion_bars = hud_flags(self.var_hud_mode.get())
         t.game_audio = bool(self.var_gaudio.get())
         t.fog_enabled = bool(self.var_fog.get())
         t.fog_preset = rev(FOG_PRESETS).get(self.var_fog_preset.get(), "teal")
@@ -2198,10 +2280,15 @@ class App:
             if d.get("right_width"):
                 self.var_right_width.set(int(d["right_width"]))
             self._apply_panel_widths()
+            if d.get("hud_mode") in HUD_MODES:
+                self._set_hud_mode(d["hud_mode"])
             restored_mode = d.get("edit_mode", "easy")
             if restored_mode in ("easy", "advanced"):
                 self.var_edit_mode.set(restored_mode)
                 self._apply_edit_mode(log=False)
+            # A prior _apply_panel_widths() call also saves settings; persist
+            # the fully restored edit/HUD modes to avoid erasing preferences.
+            self._save_settings()
         except Exception:
             pass
 
@@ -2210,7 +2297,8 @@ class App:
             SETTINGS.write_text(json.dumps({"out_root": str(self.out_root),
                                              "left_width": int(self.var_left_width.get()),
                                              "right_width": int(self.var_right_width.get()),
-                                             "edit_mode": self.var_edit_mode.get()}, ensure_ascii=False), encoding="utf-8")
+                                             "edit_mode": self.var_edit_mode.get(),
+                                             "hud_mode": self.var_hud_mode.get()}, ensure_ascii=False), encoding="utf-8")
         except Exception:
             pass
 
