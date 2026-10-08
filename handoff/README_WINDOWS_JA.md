@@ -34,4 +34,9 @@ ZIPを先に取得した場合も、展開フォルダの同じbundleからclone
 - 今回はFFmpeg通し出力を再実行していません。以前の合成出力検証は過去記録を参照してください。
 
 詳細はLoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.9.6_JA.mdへ保存。
-前回のcodex/lol-autocine-v595-handoffとの比較用Draft PRを作成します。既存PR #1〜#5を保持し、mainへマージしません。
+前回のcodex/lol-autocine-v595-handoffとの比較用Draft PR #6を作成しました。既存PR #1〜#5を保持し、mainへマージしていません。
+
+作成済みDraft PR #6:
+https://github.com/Aimin2222/agdhnteweeffewwff/pull/6
+
+179ファイルと全19ブランチのコミットがbundleから正しく復元されることを確認しました。
