@@ -1,38 +1,61 @@
-# AutoCine 保存元のGit状態と差分
+# AutoCine v5.9.7 ソースGit報告
 
-保存場所: `/workspace/LoL_AutoCine`
-
-取得用コピー: `/workspace/agdhnteweeffewwff/LoL_AutoCine`
-
-ソースブランチ: `integration/v5.9.6`
+保存場所: /workspace/LoL_AutoCine
+取得用リポジトリ: /workspace/agdhnteweeffewwff
+ソースはローカルGitでremoteなし。取得用origin: https://github.com/Aimin2222/agdhnteweeffewwff.git
 
 ## git status --short
 
-```text
-(未コミット変更なし)
-```
+空（未コミットの変更なし、取得用コピー更新前に確認）。
 
 ## git log -3 --oneline
 
-```text
-964e2fc Record v5.9.6 HUD and batch integration validation
-ed46d7f Integrate v5.9.6 HUD and batch editing without replacing GPU or camera code
-4489763 Merge reviewed HUD log and v5.9.6 ownership guard
+```
+01e05ff Record v5.9.7 studio and real montage validation
+99c0027 Merge v5.9.7 studio UI without replacing GPU or camera files
+ff4b8c9 Merge reviewed v5.9.7 montage integration and ownership guard
 ```
 
 ## git remote -v
 
-```text
-(remoteなし: ローカルGit)
+ソース: 空。取得用:
+```
+origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
+origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-取得用origin: https://github.com/Aimin2222/agdhnteweeffewwff.git 。mainへマージしない。
+完全ソース191ファイル、全21ブランチを同梱bundleで保持。個人設定・プロジェクト・ログ・音声・録画・.venvは追跡しない。mainへマージしない。
 
-## 元v5.8.5から実際に追加・変更したファイル
+## v5.9.6から実際に追加・変更したファイル
 
-A=追加、M=変更。
+```
+A	README_v5.9.7_JA.md
+M	VERSION.txt
+M	core/effects.py
+M	core/jobs.py
+A	core/montage_fx.py
+A	docs/CHANGELOG_v5.9.7_JA.md
+A	docs/CODEX_INTEGRATION_RESULTS_v5.9.7_JA.md
+A	docs/CODEX_INTEGRATION_v597_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.9.7.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.9.7_JA.md
+A	docs/v597_CHANGED_FILES.txt
+A	docs/v597_changes.patch
+M	legacy_app.py
+A	tests/test_gpu_montage_v597.py
+M	tests/test_gpu_shared_camera_contract.py
+M	tests/test_parallel_integration.py
+A	tests/test_v597_studio.py
+M	tools/check_parallel_integration.py
+M	ui/motion_graph.py
+M	ui/scene_batch.py
+M	ui/scene_timeline.py
+A	ui/studio_localization.py
+```
 
-```text
+## 元のv5.8.5から実際に追加・変更したファイル
+
+```
 A	README_v5.8.6_JA.md
 A	README_v5.9.0_JA.md
 A	README_v5.9.1_JA.md
@@ -41,15 +64,18 @@ A	README_v5.9.3_JA.md
 A	README_v5.9.4_JA.md
 A	README_v5.9.5_JA.md
 A	README_v5.9.6_JA.md
+A	README_v5.9.7_JA.md
 M	VERSION.txt
 M	core/camera.py
 A	core/camera_clock.py
 M	core/effects.py
 M	core/jobs.py
+A	core/montage_fx.py
 A	docs/CHANGELOG_v5.8.6_JA.md
 A	docs/CHANGELOG_v5.9.4_JA.md
 A	docs/CHANGELOG_v5.9.5_JA.md
 A	docs/CHANGELOG_v5.9.6_JA.md
+A	docs/CHANGELOG_v5.9.7_JA.md
 A	docs/CODEX_ARCHITECTURE_JA.md
 A	docs/CODEX_AUDIT_RESULTS_JA.md
 A	docs/CODEX_GPU_ANALYSIS_JA.md
@@ -60,10 +86,12 @@ A	docs/CODEX_INTEGRATION_RESULTS_v5.9.3_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.4_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.5_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.6_JA.md
+A	docs/CODEX_INTEGRATION_RESULTS_v5.9.7_JA.md
 A	docs/CODEX_INTEGRATION_v592_JA.md
 A	docs/CODEX_INTEGRATION_v593_JA.md
 A	docs/CODEX_INTEGRATION_v595_JA.md
 A	docs/CODEX_INTEGRATION_v596_JA.md
+A	docs/CODEX_INTEGRATION_v597_JA.md
 A	docs/CODEX_LOCAL_DEVELOPMENT_JA.md
 A	docs/CODEX_MERGE_NOTICE_v5.9.4_JA.md
 A	docs/CODEX_MERGE_PROMPT_JA.md
@@ -78,6 +106,8 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.9.4.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.9.4_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.9.6.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.9.6_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.9.7.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.9.7_JA.md
 A	docs/DESIGN_SCENESTUDIO_JA.md
 A	docs/DIAGNOSTIC_FINDINGS_v5.9.4_JA.md
 A	docs/REQUIREMENTS_SCENESTUDIO_JA.md
@@ -87,9 +117,12 @@ A	docs/v5.9.5_to_v5.9.6.patch
 A	docs/v592_ui_changes.patch
 A	docs/v593_ui_camera_changes.patch
 A	docs/v596_base_sha256.json
+A	docs/v597_CHANGED_FILES.txt
+A	docs/v597_changes.patch
 M	legacy_app.py
 A	patches/v594_to_v595.patch
 A	tests/test_editor_ui_contract.py
+A	tests/test_gpu_montage_v597.py
 A	tests/test_gpu_shared_camera_contract.py
 A	tests/test_gpu_shared_camera_v593.py
 A	tests/test_gpu_shared_camera_v594.py
@@ -102,6 +135,7 @@ A	tests/test_v593_mode_camera.py
 A	tests/test_v594_live_preview.py
 A	tests/test_v595_workspace.py
 A	tests/test_v596_hud_batch.py
+A	tests/test_v597_studio.py
 A	tools/check_parallel_integration.py
 A	ui/__init__.py
 A	ui/hud_presets.py
@@ -109,29 +143,6 @@ A	ui/motion_graph.py
 A	ui/scene_batch.py
 A	ui/scene_project.py
 A	ui/scene_timeline.py
+A	ui/studio_localization.py
 A	ui_changes_v5.9.1.patch
 ```
-
-## 前回v5.9.5からの差分
-
-A=追加、M=変更。
-
-```text
-A	README_v5.9.6_JA.md
-M	VERSION.txt
-M	core/jobs.py
-A	docs/CHANGELOG_v5.9.6_JA.md
-A	docs/CODEX_INTEGRATION_RESULTS_v5.9.6_JA.md
-A	docs/CODEX_INTEGRATION_v596_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_v5.9.6.json
-A	docs/CODEX_SHARED_API_REVIEW_v5.9.6_JA.md
-A	docs/v5.9.5_to_v5.9.6.patch
-A	docs/v596_base_sha256.json
-M	legacy_app.py
-M	tests/test_parallel_integration.py
-A	tests/test_v596_hud_batch.py
-M	tools/check_parallel_integration.py
-A	ui/hud_presets.py
-```
-
-全19ブランチのコミットとbundleのSHA256はMANIFEST.jsonに保存。旧bundle/manifestを保持。

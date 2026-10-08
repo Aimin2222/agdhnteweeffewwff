@@ -67,7 +67,7 @@ class SceneTimeline(tk.Canvas):
         self.create_rectangle(start,38,kill,65,fill='#BFDBFE',outline='')
         self.create_rectangle(kill,38,end,65,fill='#FDE68A',outline='')
         self.create_line(kill,31,kill,76,fill='#F97316',width=2)
-        for x,txt,color in ((start,f'-{pre:g}s','#2563EB'),(kill,'KILL','#C2410C'),(end,f'+{post:g}s','#9A6700')):
+        for x,txt,color in ((start,f'-{pre:g}秒','#2563EB'),(kill,'キル','#C2410C'),(end,f'+{post:g}秒','#9A6700')):
             self.create_line(x,34,x,71,fill=color,width=3)
             self.create_text(x,83,text=txt,fill=color,font=('Meiryo UI',9,'bold'))
         self.create_oval(start-6,44,start+6,58,fill='white',outline='#2563EB',width=2)

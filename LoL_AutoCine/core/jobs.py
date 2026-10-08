@@ -307,7 +307,11 @@ def run_auto_edit(api: ReplayAPI, source: FrameSource, player: Player, kills: li
     if make_montage and len(res.outputs) >= 2:
         try:
             m = unique_path(out_dir / "montage.mp4")
-            concat_clips(res.outputs, m)
+            if getattr(tpl, "montage_fx", "cut") == "cut":
+                concat_clips(res.outputs, m)
+            else:
+                from .montage_fx import render_montage
+                render_montage(res.outputs, m, tpl.montage_fx, logger=log)
             res.montage = m
             log(f"モンタージュ保存: {m.name}")
         except Exception as ex:

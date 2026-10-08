@@ -86,7 +86,11 @@ def render_scenes(api,source,player,kills,tpl,out_root,make_montage,
             from core.jobs import safe_name
             out_dir=Path(out_root)/f'{safe_name(player.name)}_{safe_name(player.champion)}'
             target=unique_path(out_dir/'montage.mp4')
-            concat(out.outputs,target)
+            if getattr(tpl, 'montage_fx', 'cut') == 'cut':
+                concat(out.outputs,target)
+            else:
+                from core.montage_fx import render_montage
+                render_montage(out.outputs,target, tpl.montage_fx, concat=concat, logger=log)
             out.montage=target
             log(f'シーン別モンタージュ保存: {target.name}')
         except Exception as e:

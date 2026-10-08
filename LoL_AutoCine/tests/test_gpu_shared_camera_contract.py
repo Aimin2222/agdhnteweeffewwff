@@ -36,7 +36,7 @@ def test_legacy_camera_positional_arguments_are_preserved():
 def test_legacy_template_positional_arguments_and_new_default_isolation():
     legacy = Template(fog_enabled=True, dof_enabled=True, template_origin="custom")
     old_values = [getattr(legacy, field.name) for field in fields(Template)
-                  if field.name != "scene_keyframes"]
+                  if field.name not in {"scene_keyframes", "montage_fx"}]
     restored = Template(*old_values)
     assert restored.fog_enabled and restored.dof_enabled
     assert restored.template_origin == "custom" and restored.scene_keyframes == []
