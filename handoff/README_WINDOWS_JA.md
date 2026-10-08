@@ -47,4 +47,12 @@ GitHub保存用リポジトリをそのまま開発する場合は、作業デ�
 
 詳細な結果と既知の未解決事項は `LoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.9.0_JA.md` を参照してください。
 
-チャットの生成ZIPリンクは使用しません。GitHubブランチへのpush成功とPR作成成功は別々に確認します。
+GitHubへのpushに成功し、リモートのブランチを読み直して保存を確認しました。
+PR作成も実行しましたが、`api.github.com/graphql` への通信がネットワークプロキシの403で拒否され、PRは未作成です。
+mainへのマージは行っていません。PRがなくてもこのブランチから取得できます。
+
+GitHubのWeb画面でPRを作る場合は次のページを使えます。
+https://github.com/Aimin2222/agdhnteweeffewwff/pull/new/codex/lol-autocine-v590-handoff
+
+本文案は同じフォルダの `PULL_REQUEST_BODY_JA.md` に保存しています。
+チャットの生成ZIPリンクは使用しません。
