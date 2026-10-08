@@ -23,6 +23,7 @@ from typing import Callable, Optional
 
 from .players import Player
 from .replay_api import ReplayAPI, ReplayApiError
+from .camera_clock import SmoothReplayClock
 
 INTENSITY = {"natural": 0.6, "standard": 1.0, "strong": 1.4}
 INTENSITY_JP = {"natural": "自然め", "standard": "標準", "strong": "強め"}
@@ -165,6 +166,33 @@ class CameraPlan:
     sel_name: str = ""
     scene_keyframes: tuple = ()       # append to preserve legacy positional fields
 
+    @staticmethod
+    def _keyframe_channel(frames, left_idx: int, key: str, local_t: float) -> float:
+        """Shape-preserving cubic for three or more keyframes (continuous velocity).
+
+        Smoothstep at each pair used to set the velocity to zero at *every*
+        marker. This produced visible stops in an otherwise continuous orbit.
+        Interior slopes use harmonic interpolation, avoiding overshoot.
+        """
+        def slope(i):
+            if i <= 0 or i >= len(frames) - 1:
+                return 0.0   # ease at shot boundaries
+            a, b, c = frames[i-1], frames[i], frames[i+1]
+            d0 = (b[key] - a[key]) / max(0.001, b['time'] - a['time'])
+            d1 = (c[key] - b[key]) / max(0.001, c['time'] - b['time'])
+            if d0 * d1 <= 0.0:
+                return 0.0
+            h0, h1 = b['time'] - a['time'], c['time'] - b['time']
+            w0, w1 = 2.0*h1 + h0, h1 + 2.0*h0
+            return (w0 + w1) / (w0/d0 + w1/d1)
+
+        a, b = frames[left_idx], frames[left_idx + 1]
+        h = b['time'] - a['time']
+        u = max(0.0, min(1.0, (local_t - a['time']) / max(0.001, h)))
+        if len(frames) == 2:
+            return a[key] + (b[key] - a[key]) * smoothstep(u)
+        return _hermite(a[key], b[key], h*slope(left_idx), h*slope(left_idx + 1), u)
+
     def keyframe_values(self, t: float) -> tuple[float, float, float]:
         """Get smooth (yaw degrees, zoom %, FOV degrees) from validated shot markers."""
         frames = self.scene_keyframes
@@ -177,11 +205,10 @@ class CameraPlan:
         if local_t >= frames[-1]['time']:
             mark = frames[-1]
             return (mark['yaw'], mark['zoom'], mark['fov'])
-        for left, right in zip(frames, frames[1:]):
+        for i, (left, right) in enumerate(zip(frames, frames[1:])):
             if left['time'] <= local_t <= right['time']:
-                span = right['time'] - left['time']
-                k = smoothstep((local_t - left['time']) / span) if span > 0 else 1.0
-                return tuple(left[ch] + (right[ch] - left[ch]) * k for ch in ('yaw','zoom','fov'))
+                return tuple(self._keyframe_channel(frames, i, ch, local_t)
+                             for ch in ('yaw', 'zoom', 'fov'))
         return (0.0, 0.0, 0.0)
 
     def _cue(self, t: float, span=(-2.0, -0.4, 0.4, 1.8)) -> float:
@@ -386,6 +413,10 @@ class CameraDirector:
         self.errors = 0
         self.min_cam_height: Optional[float] = None
         self.heartbeats = 0
+        self.max_clock_drift = 0.0
+        self.max_api_latency_ms = 0.0
+        self.api_slow_calls = 0
+        self.api_calls = 0
         self._playback_t0 = 0.0
         self._wall_t0 = 0.0
         self._last_sync = 0.0
@@ -400,6 +431,7 @@ class CameraDirector:
             self._playback_t0 = float(pb.get("time", 0.0))
         except ReplayApiError:
             self._playback_t0 = float(self.plan.kill_time) - 0.001
+        self._clock = SmoothReplayClock(self._playback_t0)
         self._wall_t0 = time.perf_counter()
         self._last_sync = self._wall_t0
         self._last_api_send = 0.0
@@ -417,30 +449,29 @@ class CameraDirector:
 
     def _run(self) -> None:
         next_tick = time.perf_counter()
-        sim_t = self._playback_t0
         last_now = next_tick
         current_speed = 1.0
+        clock = self._clock
         while not self._stop.is_set():
             now = time.perf_counter()
-            real_dt = max(0.0, min(0.05, now - last_now))
-            last_now = now
             try:
-                # 144Hz simulation: do not block every tick on the HTTPS API.
+                # HTTPS playback observations never modify camera time in steps.
+                # Only a real external seek resets the continuous clock.
                 if self._last_sync <= 0.0 or now - self._last_sync >= 0.25:
                     try:
                         pb = self.api.playback()
-                        actual = float(pb.get("time", sim_t))
-                        # A small correction is blended in instead of snapping to the API value.
-                        err = actual - sim_t
-                        sim_t += max(-0.08, min(0.08, err * 0.35))
-                        self._last_sync = now
+                        if clock.observe(pb.get("time", clock.time)):
+                            # A seek is exceptional: avoid interpolating across a cut.
+                            self._smooth_fov = self._smooth_offset = self._smooth_rot = None
+                        self.max_clock_drift = max(self.max_clock_drift, abs(clock.drift))
                     except ReplayApiError:
                         self.errors += 1
-                        self._last_sync = now
-
-                # Integrate replay time locally. Camera motion therefore stays continuous even when HTTP is slow.
-                sim_t += current_speed * real_dt
-                t = sim_t
+                    self._last_sync = time.perf_counter()
+                # Include HTTP latency rather than dropping it from the clock.
+                now = time.perf_counter()
+                real_dt = max(0.0, min(0.08, now - last_now))
+                last_now = now
+                t = clock.advance(real_dt, current_speed)
                 plan, rig = self.plan, self.plan.rig
                 target_speed = float(plan.speed_at(t))
                 speed_alpha = 1.0 - math.exp(-real_dt / 0.12)
@@ -480,8 +511,14 @@ class CameraDirector:
                     self.heartbeats += 1
 
                 if body and (now - self._last_api_send >= self.api_dt):
+                    api_t0 = time.perf_counter()
                     self.api.set_render(**body)
-                    self._last_api_send = now
+                    api_ms = (time.perf_counter() - api_t0) * 1000.0
+                    self.api_calls += 1
+                    self.max_api_latency_ms = max(self.max_api_latency_ms, api_ms)
+                    if api_ms >= 25.0:
+                        self.api_slow_calls += 1
+                    self._last_api_send = time.perf_counter()
 
                 # Speed is also smoothed; only send meaningful changes.
                 if self._sent_speed is None or abs(current_speed - self._sent_speed) > 0.01:

@@ -312,7 +312,7 @@ class DofViz(tk.Canvas):
 class App:
     def __init__(self, root: tk.Tk):
         self.root = root
-        root.title(f"{APP} v5.9.0 - かんたんLoLシネマ編集")
+        root.title(f"{APP} v5.9.3 - シンプル / 詳細編集")
         sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
         root.geometry(f"{min(1560, sw - 40)}x{min(960, sh - 90)}+10+10")
         root.option_add("*Font", FONT)
@@ -353,6 +353,7 @@ class App:
         self.var_post = tk.DoubleVar(value=3.0)
         self.var_auto_director = tk.BooleanVar(value=False)  # preserve old one-click default
         self.var_scene_mode = tk.BooleanVar(value=False)    # opt-in per-scene rendering
+        self.var_edit_mode = tk.StringVar(value="easy")  # view only: never silently change rendering state
         self.scene_project = SceneProject()
         self.scene_project_path = ROOT / 'projects' / 'scene_project.json'
         self._project_autosave_token = None
@@ -405,6 +406,8 @@ class App:
         style.configure("Section.TLabel", background=panel, foreground="#111827", font=("Meiryo UI", 11, "bold"))
         style.configure("BigTitle.TLabel", background=bg, foreground="#0F172A", font=("Meiryo UI", 18, "bold"))
         style.configure("SmallTitle.TLabel", background=bg, foreground=muted, font=("Meiryo UI", 9))
+        style.configure("Mode.TRadiobutton", background="#EAF3FF", foreground="#174EA6", font=("Meiryo UI", 11, "bold"), padding=(12, 9))
+        style.map("Mode.TRadiobutton", background=[("active", "#D9EAFE")])
         style.configure("Nav.TButton", background=bg, foreground="#596780", padding=(14, 11), borderwidth=0, font=("Meiryo UI", 10, "bold"))
         style.map("Nav.TButton", background=[("active", "#EAF3FF")], foreground=[("active", accent)])
         style.configure("TButton", background="#FFFFFF", foreground="#344054", padding=(10, 7), bordercolor=line, lightcolor=line, darkcolor=line)
@@ -438,7 +441,7 @@ class App:
         top.pack(fill="x")
         brand_box = ttk.Frame(top)
         brand_box.pack(side="left")
-        ttk.Label(brand_box, text="◈  LoL AutoCine v5.8.6", style="BigTitle.TLabel").pack(anchor="w")
+        ttk.Label(brand_box, text="◈  LoL AutoCine v5.9.3", style="BigTitle.TLabel").pack(anchor="w")
         ttk.Label(brand_box, text="", style="SmallTitle.TLabel").pack(anchor="w", pady=(0, 1))
 
         nav = ttk.Frame(top)
@@ -462,6 +465,17 @@ class App:
         ttk.Button(right_top, text="＋", width=3, command=self.on_quick_prepare).pack(side="left", padx=5)
         ttk.Button(right_top, text="☼", width=3, command=lambda: None).pack(side="left")
 
+        # View switch is UI-only. Project, checkmarks, templates and the render mode
+        # are never reset when the user changes between easy/detailed views.
+        mode_bar = ttk.Frame(r, padding=(20, 5, 20, 7))
+        mode_bar.pack(fill="x")
+        ttk.Label(mode_bar, text="編集モード", style="Muted.TLabel").pack(side="left", padx=(0, 12))
+        for title, mode_id in (("★ かんたん編集", "easy"), ("⚙ 詳細編集", "advanced")):
+            ttk.Radiobutton(mode_bar, text=title, value=mode_id,
+                            variable=self.var_edit_mode, style="Mode.TRadiobutton",
+                            command=self._apply_edit_mode).pack(side="left", padx=(0, 8))
+        self.edit_mode_hint = ttk.Label(mode_bar, style="Muted.TLabel")
+        self.edit_mode_hint.pack(side="left", padx=12)
         ttk.Separator(r).pack(fill="x")
 
         # ---- main three-pane layout ----------------------------------------
@@ -511,9 +525,11 @@ class App:
         right = self.right_scroll.inner
 
         # panel helper
+        self._mode_sidecards = []
         def card(parent, title, subtitle=None):
             f = ttk.Frame(parent, style="Card.TFrame", padding=(12, 10))
             f.pack(fill="x", pady=(0, 8))
+            self._mode_sidecards.append((f, parent, title))
             head = ttk.Frame(f, style="Card.TFrame")
             head.pack(fill="x", pady=(0, 7))
             ttk.Label(head, text=title, style="Section.TLabel").pack(side="left")
@@ -626,6 +642,7 @@ class App:
         ttk.Label(split_hint, text="編集エリア　↕ 上下にドラッグして高さを変更　／　ミラーは上段に固定表示", style="CardMuted.TLabel").pack(anchor="center")
 
         easy = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
+        self._mode_easy_section = easy
         easy.pack(fill="x", pady=(5, 8))
         eh = ttk.Frame(easy, style="Card.TFrame"); eh.pack(fill="x")
         ttk.Label(eh, text="★ かんたん作成", style="Section.TLabel").pack(side="left")
@@ -633,12 +650,24 @@ class App:
         ttk.Label(easy, text="① リプレイを開く → ② 対象プレイヤーを選ぶ → ③ ボタン1つでキル/アシストを検出して動画を作成", style="CardMuted.TLabel", wraplength=900).pack(anchor="w", pady=(4, 7))
         ttk.Button(easy, text="★ これで自動作成（おすすめ）", style="Accent.TButton", command=self.on_one_click).pack(fill="x", ipady=4)
         ttk.Button(easy, text="✨ スマート自動編集：全シーンに個別カメラ演出 → 作成", command=self.on_smart_one_click).pack(fill="x", pady=(4,0))
+        quick_presets = ttk.Frame(easy, style="Card.TFrame")
+        quick_presets.pack(fill="x", pady=(10, 3))
+        ttk.Label(quick_presets, text="仕上がり", style="Card.TLabel").pack(side="left", padx=(0, 6))
+        for title, key in (("自然", "三人称 自然め"),
+                           ("シネマ", "Lolnam風スムーズ"),
+                           ("ダイナミック", "Lolnam風ダイナミック")):
+            ttk.Button(quick_presets, text=title,
+                       command=lambda k=key: self._choose_easy_preset(k)).pack(side="left", padx=3, fill="x", expand=True)
+        self.lbl_easy_preset = ttk.Label(easy, textvariable=self.var_tpl, style="CardMuted.TLabel")
+        self.lbl_easy_preset.pack(anchor="w", pady=(0, 3))
         ttk.Checkbutton(easy, text="自動ディレクター：キル数に合わせてカメラ演出を自動調整（任意）",
                         variable=self.var_auto_director).pack(anchor="w", pady=(6, 1))
         ttk.Label(easy, text="ONなら自動作成前に既存のOrbit/ドリー設定を調整します。OFFでは以前の挙動のまま。",
                   style="CardMuted.TLabel").pack(anchor="w")
 
+        self._mode_detail_sections = []
         timeline = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
+        self._mode_detail_sections.append(timeline)
         timeline.pack(fill="x", pady=(0, 8))
         ttk.Label(timeline, text="◈  カメラ動作タイムライン", style="Section.TLabel").pack(anchor="w")
         self.scene_timeline = SceneTimeline(timeline, self.var_pre, self.var_post)
@@ -646,6 +675,7 @@ class App:
         ttk.Label(timeline, text="左・右のハンドルをドラッグ。下の「基本」タブのキル前/後（秒）と連動します。", style="CardMuted.TLabel").pack(anchor="w")
         # Per-scene direction controls live in the center editor (GPU code unchanged).
         scene_card = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
+        self._mode_detail_sections.append(scene_card)
         scene_card.pack(fill="x", pady=(0, 8))
         ttk.Label(scene_card, text="◈ シーン別ディレクター / 編集プロジェクト", style="Section.TLabel").pack(anchor="w")
         ttk.Checkbutton(scene_card, text="シーン別演出を使用（各クリップにカメラ設定を反映）",
@@ -709,6 +739,14 @@ class App:
         ttk.Button(kf_actions,text="＋ 追加 / 選択を更新",command=self.on_keyframe_upsert).pack(side="left")
         ttk.Button(kf_actions,text="－ 選択を削除",command=self.on_keyframe_remove).pack(side="left",padx=5)
         ttk.Button(kf_actions,text="動きをプレビュー",command=self.on_keyframe_preview).pack(side="left")
+        preset_actions = ttk.Frame(scene_card, style="Card.TFrame")
+        preset_actions.pack(fill="x", pady=(4, 3))
+        ttk.Label(preset_actions, text="キーフレームの型", style="Card.TLabel").pack(side="left", padx=(0, 6))
+        for caption, pattern in (("自然な回り込み", "soft_orbit"),
+                                 ("寄って戻る", "push_pull"),
+                                 ("キル瞬間を強調", "impact")):
+            ttk.Button(preset_actions, text=caption,
+                       command=lambda p=pattern: self.on_keyframe_preset(p)).pack(side="left", padx=3)
 
         fx_head = ttk.Frame(scene_card,style="Card.TFrame"); fx_head.pack(fill="x",pady=(8,3))
         ttk.Label(fx_head,text="◈ シーンごとの色・エフェクト",style="Section.TLabel").pack(side="left")
@@ -761,6 +799,7 @@ class App:
                   style="CardMuted.TLabel",wraplength=760).pack(anchor="w",pady=(4,0))
 
         cam = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
+        self._mode_detail_sections.append(cam)
         cam.pack(fill="x", pady=(0, 8))
         ttk.Label(cam, text="◈  カメラ設定", style="Section.TLabel").pack(anchor="w", pady=(0, 7))
         mode_row = ttk.Frame(cam, style="Card.TFrame"); mode_row.pack(fill="x", pady=(0, 7))
@@ -774,6 +813,8 @@ class App:
                            command=lambda v=val: (self.var_style.set(STYLES[v]), self.log(f"カメラスタイル: {STYLES[v]}")))
             b.pack(side="left", padx=3, fill="x", expand=True)
             self.mode_buttons.append(b)
+        ttk.Button(cam, text="↺ 追従カメラを安定設定に戻す（高さ・距離・Yawのみ）",
+                   command=self.on_camera_safe_pose).pack(fill="x", pady=(1, 8))
 
         target_row = ttk.Frame(cam, style="Card.TFrame"); target_row.pack(fill="x", pady=3)
         ttk.Label(target_row, text="カメラの追従対象", width=11, style="Card.TLabel").pack(side="left")
@@ -843,6 +884,7 @@ class App:
 
         # Keep existing advanced controls reachable below the main camera card.
         advanced = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
+        self._mode_detail_sections.append(advanced)
         advanced.pack(fill="x", pady=(0, 8))
         ttk.Label(advanced, text="詳細編集", style="Section.TLabel").pack(anchor="w")
         nb = ttk.Notebook(advanced); nb.pack(fill="x", pady=(7, 0))
@@ -1095,12 +1137,83 @@ class App:
         self.txt.configure(yscrollcommand=log_sb.set)
         self.txt.pack(side="left", fill="both", expand=True)
         log_sb.pack(side="right", fill="y")
+        self._mode_sidecards.append((log_card, right, "log"))
 
         # Initialize all template-backed controls.
         self.apply_template(self.var_tpl.get())
+        self._apply_edit_mode(log=False)
 
         # A compact log window is available from the settings/diagnostics button.
         self._build_log_dialog = None
+
+    def _apply_edit_mode(self, log: bool = True) -> None:
+        """Switch visible editor controls only; never alter underlying render settings.
+
+        A complete pack rebuild is necessary: pack_forget() followed by pack()
+        otherwise moves the restored card after the persistent log card.
+        """
+        mode = self.var_edit_mode.get()
+        easy = mode != "advanced"
+        if hasattr(self, "_mode_easy_section"):
+            self._mode_easy_section.pack_forget()
+            for panel in self._mode_detail_sections:
+                panel.pack_forget()
+            if easy:
+                self._mode_easy_section.pack(fill="x", pady=(0, 8))
+            else:
+                for panel in self._mode_detail_sections:
+                    panel.pack(fill="x", pady=(0, 8))
+        if hasattr(self, "_mode_sidecards"):
+            for panel, _, _ in self._mode_sidecards:
+                panel.pack_forget()
+            for panel, parent, title in self._mode_sidecards:
+                # Keep replay/player/template and results accessible in easy mode;
+                # hide specialist edit/FX blocks while keeping them instantiated.
+                if easy and (title.startswith(("▶  参考", "◉  参考", "◈  カラー", "◈  カメラ詳細", "◈  LoLnam", "✧  自動"))):
+                    continue
+                panel.pack(in_=parent, fill="x", pady=(0, 8))
+        if hasattr(self, "edit_mode_hint"):
+            self.edit_mode_hint.configure(text=(
+                "リプレイ→対象選択→自動作成。難しい設定は隠れています。" if easy else
+                "シーン・タイムライン・キーフレーム・カラーまで調整できます。"))
+        if log and hasattr(self, "txt"):
+            self.log("編集画面を切替: " + ("かんたん編集" if easy else "詳細編集"))
+
+    def on_camera_safe_pose(self) -> None:
+        """Restore conservative 3rd-person framing without deleting shot edits."""
+        self.var_style.set(STYLES["third_cinema"])
+        for key, value in (("third_elev", 28.0), ("third_dist", 950.0),
+                           ("third_yaw", 0.0), ("motion_arc", 10.0),
+                           ("motion_dolly", 3.0), ("dist_scale", 0.8)):
+            if key in self.sl:
+                self.sl[key].set(value)
+        self.log("三人称カメラの追従距離・仰角・Yawを安定設定へ戻しました。既存のシーン別設定は保持しています。")
+
+    def _choose_easy_preset(self, name: str) -> None:
+        if name not in self.templates:
+            return
+        self.var_tpl.set(name)
+        self.apply_template(name)
+        self.log("かんたん編集の仕上がり: " + name)
+
+    def on_keyframe_preset(self, preset: str) -> None:
+        """Editable motion starting points, never silently save/overwrite a scene."""
+        from ui.scene_project import validate_keyframes
+        patterns = {
+            "soft_orbit": [(-2.5, -9, 0, 0), (-1.1, -3, 2, -1),
+                           (0, 9, 7, -3), (1.5, 4, 3, -1), (2.8, 0, 0, 0)],
+            "push_pull": [(-2.5, 0, -8, 3), (-1.0, 0, -2, 1),
+                          (0, 0, 12, -4), (1.0, 0, 6, -2), (2.5, 0, 0, 0)],
+            "impact": [(-2.2, -8, 0, 0), (-0.75, -2, 1, -1),
+                        (0, 10, 9, -4), (0.8, 5, 5, -2), (2.4, 0, 0, 0)],
+        }
+        if preset not in patterns:
+            return
+        self._edit_keyframes = validate_keyframes([
+            {"time": t, "yaw": y, "zoom": z, "fov": f}
+            for t, y, z, f in patterns[preset]])
+        self._refresh_keyframe_list()
+        self.log(f"キーフレームの型を適用: {preset}（未保存。『このシーンに保存』で確定）")
 
     def _focus_home(self):
         self.canvas.focus_set()
@@ -1626,7 +1739,7 @@ class App:
         """Explicit enhanced one-click path; normal one click remains unchanged."""
         self.var_scene_mode.set(True)
         self.var_auto_director.set(True)
-        self.on_one_click()
+        self.on_one_click(smart=True)
 
     def on_clear_scene(self):
         kill=self._current_scene()
@@ -1947,6 +2060,10 @@ class App:
             if d.get("right_width"):
                 self.var_right_width.set(int(d["right_width"]))
             self._apply_panel_widths()
+            restored_mode = d.get("edit_mode", "easy")
+            if restored_mode in ("easy", "advanced"):
+                self.var_edit_mode.set(restored_mode)
+                self._apply_edit_mode(log=False)
         except Exception:
             pass
 
@@ -1954,7 +2071,8 @@ class App:
         try:
             SETTINGS.write_text(json.dumps({"out_root": str(self.out_root),
                                              "left_width": int(self.var_left_width.get()),
-                                             "right_width": int(self.var_right_width.get())}, ensure_ascii=False), encoding="utf-8")
+                                             "right_width": int(self.var_right_width.get()),
+                                             "edit_mode": self.var_edit_mode.get()}, ensure_ascii=False), encoding="utf-8")
         except Exception:
             pass
 
@@ -2192,12 +2310,17 @@ class App:
             profile, arc, dolly = "auto", 10.0, 3.0
         self._set_camera_motion(profile, arc, dolly)
 
-    def on_one_click(self) -> None:
+    def on_one_click(self, smart: bool = False) -> None:
         if not self._need_lock():
             return
         if self.var_auto_director.get():
             self._apply_auto_director()
-        self._run_bg(self._make, True, self.current_template(), bool(self.var_montage.get()), self.var_event_mode.get(), *self._scene_render_config())
+        scene_cfg = self._scene_render_config()
+        # Basic auto-create uses a plain template unless the explicitly named
+        # smart action is used. This does not discard advanced saved edits.
+        if self.var_edit_mode.get() == "easy" and not smart:
+            scene_cfg = (False, scene_cfg[1], False, scene_cfg[3])
+        self._run_bg(self._make, True, self.current_template(), bool(self.var_montage.get()), self.var_event_mode.get(), *scene_cfg)
 
     def _make(self, scan_first: bool, tpl: Template, montage: bool, event_mode: str = "キル",
               scene_mode=False, shots=None, auto=False, order=None) -> None:
