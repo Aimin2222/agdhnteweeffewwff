@@ -39,6 +39,8 @@ from ui.scene_project import SceneProject, Shot, scene_key, recommend, apply_sho
 from ui.scene_batch import render_scenes                      # noqa: E402
 from ui.motion_graph import ShotMotionGraph                  # noqa: E402
 from ui.hud_presets import (HUD_MODES, hud_mode_from_flags, hud_flags, hud_summary)  # noqa: E402
+from ui.studio_localization import (EFFECT_LABEL_JA, FOG_LABEL_JA, SHOT_PROFILE_JA,
+                                    SHOT_INTENSITY_JA, convert_label, reverse_label)  # noqa: E402
 
 APP = "LoL AutoCine"
 FONT = ("Meiryo UI", 10)
@@ -289,31 +291,53 @@ class FogViz(tk.Canvas):
         for i in range(21):
             x=i/20; y=(x*x)*v; pts.append((18+x*222,68-y*50))
         for a,b in zip(pts,pts[1:]):self.create_line(*a,*b,fill="#0EA5A4",width=3)
-        self.create_text(12,8,text="FOG  深度 →",anchor="nw",fill="#667085",font=("Meiryo UI",8))
+        self.create_text(12,8,text="霧  距離 →",anchor="nw",fill="#667085",font=("Meiryo UI",8))
         self.create_text(240,78,text=f"強度 {v:.2f}",anchor="e",fill="#0F766E",font=("Meiryo UI",8,"bold"))
 
 class DofViz(tk.Canvas):
+    """Conceptual DOF range. Distances reflect UI variables, NOT rendered depth."""
     def __init__(self, master, blur_var, focus_var, near_var, far_var, **kw):
-        super().__init__(master,width=260,height=90,bg='#F8FAFC',highlightthickness=1,highlightbackground='#D0D5DD',**kw)
+        opts={'height':125,'bg':'#F8FAFC','highlightthickness':1,'highlightbackground':'#D0D5DD'}
+        opts.update(kw)
+        super().__init__(master,**opts)
         self.vars=(blur_var,focus_var,near_var,far_var)
-        for v in self.vars:v.trace_add('write',lambda *_:self.draw())
+        for v in self.vars:
+            v.trace_add('write',lambda *_:self.draw())
+        self.bind('<Configure>', lambda _e:self.draw())
         self.draw()
+
     def draw(self):
-        self.delete('all'); w=int(self.winfo_width() or 260); h=90
-        try:b=float(self.vars[0].get()); f=float(self.vars[1].get()); n=float(self.vars[2].get()); far=float(self.vars[3].get())
-        except Exception:return
-        span=max(1,n+f+far); fx=18+min(w-36,(f/span)*(w-36)); nx=18+min(w-36,((f-n)/span)*(w-36)); rx=18+min(w-36,((f+far)/span)*(w-36))
-        self.create_rectangle(18,25,w-18,65,fill='#E5E7EB',outline='')
-        self.create_rectangle(max(18,nx),25,min(w-18,fx),65,fill='#CBD5E1',outline='')
-        self.create_rectangle(fx-3,20,fx+3,70,fill='#2563EB',outline='')
-        self.create_text(fx,12,text='FOCUS',fill='#2563EB',font=('Meiryo UI',8,'bold'))
-        self.create_text(18,78,text=f'近 {n:.0f}',anchor='w',fill='#667085',font=('Meiryo UI',8))
-        self.create_text(w-18,78,text=f'遠 {far:.0f}',anchor='e',fill='#667085',font=('Meiryo UI',8))
+        self.delete('all')
+        w=max(280,self.winfo_width() or 280)
+        try:
+            blur=max(0,float(self.vars[0].get()))
+            focus=max(0,float(self.vars[1].get()))
+            near=max(0,float(self.vars[2].get()))
+            far=max(0,float(self.vars[3].get()))
+        except (tk.TclError, TypeError, ValueError):
+            return
+        lo=max(0.0,focus-near)
+        hi=focus+far
+        axis=max(20000.0,hi*1.02,focus*1.05)
+        left,right=25,w-25
+        def x(d): return left+(right-left)*max(0.0,min(1.0,d/axis))
+        self.create_text(left,10,anchor='w',text='ピント位置とくっきり見せたい範囲（距離の目安）',
+                         fill='#475569',font=('Meiryo UI',9,'bold'))
+        self.create_rectangle(left,38,right,69,fill='#DBDEE5',outline='#ADB8C6')
+        self.create_rectangle(x(lo),38,x(hi),69,fill='#A7F3D0',outline='')
+        self.create_line(x(focus),30,x(focus),76,fill='#2563EB',width=3)
+        # Labels are kept below the bar so close/far extremes cannot collide.
+        self.create_text(left,83,anchor='w',text=f'近側  {lo:.0f}',fill='#047857',font=('Meiryo UI',9))
+        self.create_text(w/2,83,anchor='center',text=f'ピント {focus:.0f}',fill='#1D4ED8',font=('Meiryo UI',9,'bold'))
+        self.create_text(right,83,anchor='e',text=f'遠側  {hi:.0f}',fill='#047857',font=('Meiryo UI',9))
+        self.create_text(left,112,anchor='w',text='灰：ぼかし領域　／　緑：ピント範囲　／　青線：ピント位置',
+                         fill='#475569',font=('Meiryo UI',8))
+        self.create_text(right,112,anchor='e',text=f'ぼかし強度 {blur:.1f}',fill='#475569',font=('Meiryo UI',8))
 
 class App:
     def __init__(self, root: tk.Tk):
         self.root = root
-        root.title(f"{APP} v5.9.6 - HUDプリセット / シーン一括編集")
+        root.title(f"{APP} v5.9.7 - スタジオ編集 / モンタージュ演出")
         sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
         root.geometry(f"{min(1560, sw - 40)}x{min(960, sh - 90)}+10+10")
         root.option_add("*Font", FONT)
@@ -343,8 +367,8 @@ class App:
         self._photo = None
         self._checked_watchdog_active = False
         self.out_root = Path(os.path.expanduser("~")) / "Videos" / "LoL_AutoCine"
-        self.var_left_width = tk.IntVar(value=310)
-        self.var_right_width = tk.IntVar(value=390)
+        self.var_left_width = tk.IntVar(value=280)
+        self.var_right_width = tk.IntVar(value=310)
         self.var_format = tk.StringVar(value="MP4（1080p）")
         # UI再構成前から存在するテンプレート設定変数。_build() の複数パネルから共有するため先に初期化する。
         self.var_style = tk.StringVar(value=STYLES.get("cinema", "Cinematic"))
@@ -410,8 +434,9 @@ class App:
         style.configure("CardMuted.TLabel", background=panel, foreground=muted)
         style.configure("Section.TLabel", background=panel, foreground="#111827", font=("Meiryo UI", 11, "bold"))
         style.configure("BigTitle.TLabel", background=bg, foreground="#0F172A", font=("Meiryo UI", 18, "bold"))
+        style.configure("CompactTitle.TLabel", background=bg, foreground="#0F172A", font=("Meiryo UI", 14, "bold"))
         style.configure("SmallTitle.TLabel", background=bg, foreground=muted, font=("Meiryo UI", 9))
-        style.configure("Mode.TRadiobutton", background="#EAF3FF", foreground="#174EA6", font=("Meiryo UI", 11, "bold"), padding=(10, 5))
+        style.configure("Mode.TRadiobutton", background="#EAF3FF", foreground="#174EA6", font=("Meiryo UI", 11, "bold"), padding=(7, 2))
         style.map("Mode.TRadiobutton", background=[("active", "#D9EAFE")])
         style.configure("Nav.TButton", background=bg, foreground="#596780", padding=(9, 6), borderwidth=0, font=("Meiryo UI", 10, "bold"))
         style.map("Nav.TButton", background=[("active", "#EAF3FF")], foreground=[("active", accent)])
@@ -443,12 +468,13 @@ class App:
         self.var_int = tk.StringVar(value="standard")
         self.var_hud_choice = tk.StringVar(value=HUD_MODES['hidden'])
         self.var_hud_summary = tk.StringVar(value=hud_summary('hidden'))
+        self.var_montage_fx = tk.StringVar(value="なし（従来の高速連結）")
 
-        top = ttk.Frame(r, padding=(12, 3, 12, 3))
+        top = ttk.Frame(r, padding=(9, 1, 9, 0))
         top.pack(fill="x")
         brand_box = ttk.Frame(top)
         brand_box.pack(side="left")
-        ttk.Label(brand_box, text="◈  LoL AutoCine v5.9.5", style="BigTitle.TLabel").pack(anchor="w")
+        ttk.Label(brand_box, text="◈  LoL AutoCine v5.9.7", style="CompactTitle.TLabel").pack(anchor="w")
 
         nav = ttk.Frame(top)
         nav.pack(side="left", padx=(15, 0))
@@ -468,11 +494,11 @@ class App:
         ttk.Combobox(right_top, state="readonly", width=9, textvariable=self.var_fps_ui,
                      values=["60 FPS", "144 FPS"]).pack(side="left")
         ttk.Button(right_top, text="＋", width=3, command=self.on_quick_prepare).pack(side="left", padx=5)
-        ttk.Button(right_top, text="☼", width=3, command=lambda: None).pack(side="left")
+        ttk.Button(right_top, text="ログ", width=4, command=self.on_show_diagnostics).pack(side="left")
 
         # View switch is UI-only. Project, checkmarks, templates and the render mode
         # are never reset when the user changes between easy/detailed views.
-        mode_bar = ttk.Frame(r, padding=(12, 2, 12, 3))
+        mode_bar = ttk.Frame(r, padding=(9, 0, 9, 1))
         mode_bar.pack(fill="x")
         ttk.Label(mode_bar, text="編集モード", style="Muted.TLabel").pack(side="left", padx=(0, 12))
         for title, mode_id in (("★ かんたん編集", "easy"), ("⚙ 詳細編集", "advanced")):
@@ -487,51 +513,51 @@ class App:
         self.edit_mode_hint.pack(side="left", padx=12)
         ttk.Separator(r).pack(fill="x")
 
-        # ---- main three-pane layout ----------------------------------------
-        body = ttk.Frame(r, padding=(8, 4, 8, 3))
+        # ---- v5.9.7: full-width lower studio, three compact upper panels ------
+        # Sash divides upper replay/preview/scene selection from a full-width
+        # editor.  No tkinter widgets are destroyed when switching modes.
+        body = ttk.Frame(r, padding=(7, 2, 7, 2))
         body.pack(fill="both", expand=True)
+        studio_split = tk.PanedWindow(body, orient="vertical", sashwidth=9,
+            sashrelief="raised", bd=0, relief="flat", bg="#CFD8E5", opaqueresize=True)
+        studio_split.pack(fill="both", expand=True)
+        topdeck = ttk.Frame(studio_split, style="Card.TFrame")
+        edit_host = ttk.Frame(studio_split, style="Card.TFrame")
+        studio_split.add(topdeck, minsize=260, stretch="always")
+        studio_split.add(edit_host, minsize=240, stretch="always")
+        self.studio_split = studio_split
+        self.center_split = studio_split   # compatible attribute name
+        self._center_split_initialized = False
 
-        self.left_scroll = ScrollFrame(body, 310)
+        self.left_scroll = ScrollFrame(topdeck, 280)
         self.left_scroll.pack(side="left", fill="y")
         left = self.left_scroll.inner
+        center = ttk.Frame(topdeck, style="Card.TFrame")
+        center.pack(side="left", fill="both", expand=True, padx=7)
+        preview_host = ttk.Frame(center, style="Card.TFrame")
+        preview_host.pack(fill="both", expand=True)
+        self.right_scroll = ScrollFrame(topdeck, 310)
+        self.right_scroll.pack(side="right", fill="y")
+        right = self.right_scroll.inner
 
-        # 中央は「マルチ分割 + 上下リサイズ」。
-        # 上段のLoLミラーと下段の編集エリアを境界ドラッグで上下に移動できる。
-        # 編集エリアだけスクロールするため、設定を下へ送ってもミラーを見失わない。
-        center = ttk.Frame(body, style="Card.TFrame")
-        center.pack(side="left", fill="both", expand=True, padx=9)
-        center_split = tk.PanedWindow(
-            center, orient="vertical", sashwidth=8, sashrelief="raised",
-            bd=0, relief="flat", bg="#E4E7EC", opaqueresize=True
-        )
-        center_split.pack(fill="both", expand=True)
-        preview_host = ttk.Frame(center_split, style="Card.TFrame")
-        edit_host = ttk.Frame(center_split, style="Card.TFrame")
-        center_split.add(preview_host, minsize=360, stretch="always")
-        center_split.add(edit_host, minsize=250, stretch="always")
         center_edit_scroll = ScrollFrame(edit_host, 0)
         center_edit_scroll.pack(fill="both", expand=True)
         center_edit = center_edit_scroll.inner
-        self.center_split = center_split
         self.center_preview_host = preview_host
         self.center_edit_host = edit_host
-        self._center_split_initialized = False
+        self.center_edit_scroll = center_edit_scroll
 
         def _init_center_split(_event=None):
             if self._center_split_initialized:
                 return
             try:
-                h = center_split.winfo_height()
-                if h > 640:
-                    center_split.sash_place(0, 0, max(360, min(h - 260, int(h * 0.56))))
+                h = studio_split.winfo_height()
+                if h > 510:
+                    studio_split.sash_place(0, 0, max(260, min(h - 240, int(h * 0.48))))
                     self._center_split_initialized = True
             except tk.TclError:
                 pass
-        center_split.bind("<Configure>", _init_center_split)
-
-        self.right_scroll = ScrollFrame(body, 390)
-        self.right_scroll.pack(side="right", fill="y")
-        right = self.right_scroll.inner
+        studio_split.bind("<Configure>", _init_center_split)
 
         # panel helper
         self._mode_sidecards = []
@@ -618,7 +644,7 @@ class App:
         ttk.Button(f, text="＋  新しいテンプレート", command=self.on_make_reference_template).pack(fill="x", pady=(5, 0))
 
         # ---- center: preview / timeline / camera --------------------------
-        preview_card = ttk.Frame(preview_host, style="Card.TFrame", padding=(10, 10))
+        preview_card = ttk.Frame(preview_host, style="Card.TFrame", padding=(6, 5))
         preview_card.pack(fill="both", expand=True, pady=(0, 8))
         ph = ttk.Frame(preview_card, style="Card.TFrame")
         ph.pack(fill="x", pady=(0, 7))
@@ -637,19 +663,19 @@ class App:
         ttk.Button(tools, text="■ 停止", command=self.on_preview_stop).pack(side="right", padx=4)
         ttk.Button(tools, text="1枚だけ更新", command=self.on_exact_still).pack(side="right", padx=4)
 
-        self.canvas = tk.Canvas(preview_card, bg="#111827", width=760, height=360, highlightthickness=0)
+        self.canvas = tk.Canvas(preview_card, bg="#111827", width=560, height=230, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
-        ttk.Label(preview_card, text="上：LoLミラー / 下：編集設定　　↕ 境界をドラッグして表示領域を上下調整",
+        ttk.Label(preview_card, text="上段：準備・プレビュー・検出シーン　／　下段：全幅エディタ（境界ドラッグで高さ調整）",
                   style="CardMuted.TLabel").pack(anchor="w", pady=(4,0))
 
         player_bar = ttk.Frame(preview_card, style="Card.TFrame", padding=(4, 5, 4, 0))
         player_bar.pack(fill="x")
-        ttk.Label(player_bar, text="実際の再生位置はLoLリプレイ側で操作できます", style="CardMuted.TLabel").pack(side="left")
-        ttk.Label(player_bar, text="LoL音声のみ  |  カメラ操作は『動きをプレビュー』から", style="CardMuted.TLabel").pack(side="right")
+        ttk.Label(player_bar, text="再生位置はLoLリプレイと同期", style="CardMuted.TLabel").pack(side="left")
+        ttk.Label(player_bar, text="ゲーム音のみ・カメラ演出は下段で編集", style="CardMuted.TLabel").pack(side="right")
 
         split_hint = ttk.Frame(edit_host, style="Card.TFrame")
         split_hint.pack(fill="x", padx=8, pady=(5, 0))
-        ttk.Label(split_hint, text="編集エリア　↕ 上下にドラッグして高さを変更　／　ミラーは上段に固定表示", style="CardMuted.TLabel").pack(anchor="center")
+        ttk.Label(split_hint, text="広い編集エリア：シーン・カメラ・カラー・出力のタブで切替。上側のミラーは常に表示", style="CardMuted.TLabel").pack(anchor="center")
 
         # v5.9.5: DaVinci / NLE-like focused edit workspaces. View only: no value resets.
         self.var_editor_zone = tk.StringVar(value="scene")
@@ -696,6 +722,12 @@ class App:
         cb_hud_easy.bind("<<ComboboxSelected>>", self._on_hud_choice)
         ttk.Button(hud_easy, text="名前を消すには？", command=self.on_hud_name_help).pack(side="left")
         ttk.Label(easy, textvariable=self.var_hud_summary, style="CardMuted.TLabel", wraplength=700).pack(anchor="w")
+        easy_montage_row = ttk.Frame(easy, style="Card.TFrame")
+        easy_montage_row.pack(fill="x", pady=(7,1))
+        ttk.Label(easy_montage_row, text="動画のつなぎ目", style="Card.TLabel", width=16).pack(side="left")
+        ttk.Combobox(easy_montage_row, state="readonly", textvariable=self.var_montage_fx,
+                     values=["なし（従来の高速連結）", "光るカット（白い閃光）", "暗転カット（シネマ）"],
+                     width=28).pack(side="left", fill="x", expand=True)
 
         self._mode_detail_sections = []
         timeline = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
@@ -730,14 +762,14 @@ class App:
                   style="CardMuted.TLabel", wraplength=480).pack(anchor="w")
         self._scene_thumbnail_photo = None
         sr = ttk.Frame(scene_card, style="Card.TFrame"); sr.pack(fill="x", pady=2)
-        self.var_shot_profile = tk.StringVar(value="cinematic")
-        ttk.Label(sr, text="動き", style="Card.TLabel").pack(side="left")
+        self.var_shot_profile = tk.StringVar(value=SHOT_PROFILE_JA["cinematic"])
+        ttk.Label(sr, text="カメラの動き", style="Card.TLabel").pack(side="left")
         ttk.Combobox(sr, textvariable=self.var_shot_profile, state="readonly", width=13,
-                     values=["auto", "smooth", "cinematic", "dynamic"]).pack(side="left", padx=(4,10))
-        self.var_shot_intensity = tk.StringVar(value="standard")
+                     values=list(SHOT_PROFILE_JA.values())).pack(side="left", padx=(4,10))
+        self.var_shot_intensity = tk.StringVar(value=SHOT_INTENSITY_JA["standard"])
         ttk.Label(sr, text="演出強度", style="Card.TLabel").pack(side="left")
         ttk.Combobox(sr, textvariable=self.var_shot_intensity, state="readonly", width=12,
-                     values=["natural", "standard", "strong"]).pack(side="left", padx=(4,10))
+                     values=list(SHOT_INTENSITY_JA.values())).pack(side="left", padx=(4,10))
         self.scene_vars = {}
         for title,key,lo,hi,initial in (("Orbit°", "arc",0,75,10),("Dolly%","dolly",0,15,3),
                                          ("Yaw°","yaw",-180,180,0),("キル前s","pre",1,15,4),
@@ -749,6 +781,8 @@ class App:
             ttk.Spinbox(segment, from_=lo,to=hi,increment=0.5,textvariable=self.scene_vars[key],width=7).pack(side="right")
         self.shot_motion_graph=ShotMotionGraph(scene_card, self._scene_shot_from_ui)
         self.shot_motion_graph.pack(fill="x",pady=(5,2))
+        ttk.Label(scene_card, text="横軸はキルまでの時間。青=画角 / 緑=カメラ距離 / 紫=回り込み角。線は見やすいよう各項目を別々に拡大しています。",
+                  style="CardMuted.TLabel", wraplength=1100).pack(anchor="w", pady=(0,4))
 
         # v5.9.2: Optional camera keyframe lane, relative to the kill event.
         kf_head = ttk.Frame(scene_card, style="Card.TFrame"); kf_head.pack(fill="x", pady=(8,3))
@@ -811,7 +845,7 @@ class App:
         project_bar=ttk.Frame(scene_card,style="Card.TFrame");project_bar.pack(fill="x",pady=(3,0))
         ttk.Button(project_bar,text="設定をコピー",command=self.on_copy_scene_settings).pack(side="left", padx=(0, 4))
         ttk.Button(project_bar,text="設定を貼り付け",command=self.on_paste_scene_settings).pack(side="left", padx=(0, 4))
-        ttk.Button(project_bar,text="☑ チェックした全シーンに適用",command=self.on_apply_shot_to_checked).pack(side="left", padx=(0, 10))
+        ttk.Button(project_bar,text="✓ チェックした全シーンに適用",command=self.on_apply_shot_to_checked).pack(side="left", padx=(0, 10))
         ttk.Button(project_bar,text="編集プロジェクトを保存",command=self.on_scene_export).pack(side="left")
         ttk.Button(project_bar,text="読み込み",command=self.on_scene_import).pack(side="left",padx=5)
         ttk.Label(project_bar,text="自動保存 / Undo・Redo（最大100回） / ON時は1シーン1クリップ",style="CardMuted.TLabel").pack(side="right")
@@ -964,7 +998,7 @@ class App:
         for args in (("grade_strength","色の強さ",0,1.4),("temperature","色温度",-1,1),("contrast","コントラスト",0.6,1.6),("exposure","露出",-0.3,0.3),("vibrance","自然な彩度",-1,1.5),("vignette","ビネット",0,1),("grain","グレイン",0,1),("bloom","ブルーム",0,1),("bars","シネマ枠",0,1)):
             slider(color,*args)
         self.var_fog=tk.BooleanVar(value=False); ttk.Checkbutton(color, text="Fogを有効化", variable=self.var_fog).pack(anchor="w", pady=(6,2))
-        self.var_fog_preset=tk.StringVar(value="Teal"); ttk.Combobox(color, state="readonly", textvariable=self.var_fog_preset, values=list(FOG_PRESETS.values())).pack(fill="x")
+        self.var_fog_preset=tk.StringVar(value=FOG_LABEL_JA["teal"]); ttk.Combobox(color, state="readonly", textvariable=self.var_fog_preset, values=list(FOG_LABEL_JA.values())).pack(fill="x")
         slider(color,"fog_strength","Fog強度",0,1)
         self.fog_viz = FogViz(color, self.sl["fog_strength"])
         self.fog_viz.pack(fill="x", pady=(0,4))
@@ -972,7 +1006,7 @@ class App:
         self.var_curve_points=tk.StringVar(value="0/0 0.25/0.20 0.50/0.50 0.75/0.80 1/1")
         curve_head = ttk.Frame(color, style="Card.TFrame"); curve_head.pack(fill="x", pady=(4,2))
         ttk.Label(curve_head, text="トーンカーブ（LoLnam風）", style="CardMuted.TLabel").pack(side="left")
-        ttk.Button(curve_head, text="Reset", command=lambda: self.curve_editor.reset()).pack(side="right")
+        ttk.Button(curve_head, text="初期値に戻す", command=lambda: self.curve_editor.reset()).pack(side="right")
         self.curve_editor = CurveEditor(color, self.var_curve_points, self.var_curve_points.get(), height=230)
         self.curve_editor.pack(fill="x", pady=(0,4))
         ttk.Label(color, text="点をクリックで追加 / ドラッグで移動。数値は x/y（0.000〜1.000）で入力できます。",
@@ -983,9 +1017,11 @@ class App:
         slider(color,"dof_focus_distance","フォーカス距離",500,12000)
         slider(color,"dof_near_distance","近距離",100,20000)
         slider(color,"dof_far_distance","遠距離",100,20000)
-        ttk.Label(color, text="DOFフォーカス範囲（概念プレビュー）", style="CardMuted.TLabel").pack(anchor="w", pady=(5,2))
+        ttk.Label(color, text="ピントの合う範囲の図（距離の目安・実際のLoL映像ではありません）", style="CardMuted.TLabel").pack(anchor="w", pady=(5,2))
         self.dof_viz = DofViz(color, self.sl["dof_blur"], self.sl["dof_focus_distance"], self.sl["dof_near_distance"], self.sl["dof_far_distance"])
         self.dof_viz.pack(fill="x", pady=(0,4))
+        ttk.Label(color, text="緑＝比較的くっきり／灰色＝ぼかし。フォーカス距離を中心に、近・遠の範囲を確認できます。",
+                  style="CardMuted.TLabel", wraplength=1000).pack(anchor="w", pady=(0, 5))
 
         # Premiere/AE系の演出。難しい編集を覚えなくても、チェックを入れるだけで使える。
         fx_box = ttk.LabelFrame(color, text="映像演出（チェックするだけでOK）", padding=8)
@@ -1002,7 +1038,7 @@ class App:
         self.effect_vars = {}
         self.effect_strength_vars = {}
         for category, items in VIDEO_EFFECT_CATEGORIES.items():
-            sec = ttk.LabelFrame(fx_box, text=category, padding=5)
+            sec = ttk.LabelFrame(fx_box, text="変形・ミラー" if category == "Transformers" else category, padding=5)
             sec.pack(fill="x", pady=3)
             for col in range(2):
                 sec.columnconfigure(col, weight=1)
@@ -1011,7 +1047,7 @@ class App:
                 cell = ttk.Frame(sec, style="Card.TFrame"); cell.grid(row=row_idx, column=col_idx, sticky="ew", padx=4, pady=2)
                 var = tk.BooleanVar(value=False); sval = tk.DoubleVar(value=float(VIDEO_EFFECT_DEFAULTS.get(key, 0.25)))
                 self.effect_vars[key] = var; self.effect_strength_vars[key] = sval
-                ttk.Checkbutton(cell, text=label, variable=var).pack(side="left")
+                ttk.Checkbutton(cell, text=EFFECT_LABEL_JA.get(key, label), variable=var).pack(side="left")
                 ttk.Scale(cell, from_=0.05, to=1.0, variable=sval, length=70).pack(side="left", fill="x", expand=True, padx=4)
                 ttk.Entry(cell, textvariable=sval, width=5, justify="right").pack(side="right")
         ttk.Button(fx_box, text="全エフェクトOFF", command=self._clear_video_effects).pack(fill="x", pady=(5, 0))
@@ -1023,7 +1059,13 @@ class App:
         self.lbl_gpu.pack(anchor="w", pady=(2,4))
         self.root.after(200, self._refresh_gpu_status)
         ttk.Label(output, text="プレビュー/カメラ制御は最大144Hz。最終MP4は1080p・60fpsを標準。", style="CardMuted.TLabel", wraplength=520).pack(anchor="w", pady=(0,4))
-        self.var_montage=tk.BooleanVar(value=True); ttk.Checkbutton(output, text="最後に全キルを1本へ連結", variable=self.var_montage).pack(anchor="w", pady=4)
+        self.var_montage=tk.BooleanVar(value=True); ttk.Checkbutton(output, text="完成クリップを1本のモンタージュにする", variable=self.var_montage).pack(anchor="w", pady=4)
+        ttk.Label(output, text="モンタージュ専用の切替演出", style="Card.TLabel").pack(anchor="w", pady=(5,2))
+        ttk.Combobox(output, state="readonly", textvariable=self.var_montage_fx,
+                     values=["なし（従来の高速連結）", "光るカット（白い閃光）", "暗転カット（シネマ）"],
+                     width=29).pack(fill="x", pady=(0,2))
+        ttk.Label(output, text="クリップのつなぎ目だけに適用。『なし』は再エンコードせず高速に連結します。",
+                  style="CardMuted.TLabel", wraplength=950).pack(anchor="w", pady=(0,4))
         ttk.Label(output, text="BGM（任意）", style="Card.TLabel").pack(anchor="w", pady=(5,2))
         self.var_bgm=tk.StringVar(); rb=ttk.Frame(output, style="Card.TFrame"); rb.pack(fill="x")
         ttk.Button(rb, text="選択", command=lambda:self._pick(self.var_bgm,[('音声','*.mp3 *.wav *.m4a *.aac')])).pack(side="left")
@@ -1052,19 +1094,19 @@ class App:
         # Keep scene selection and render progress at the top of the inspector, even
         # when the user switches to camera/color/output editing zones.
         f = card(right, "◉  検出シーン")
-        ttk.Label(f, text="☑ = 作成対象 / ☐ = 除外。行を選んで「チェック切替」。", style="CardMuted.TLabel", wraplength=280).pack(anchor="w", pady=(0, 5))
+        ttk.Label(f, text="[✓] 作成する ／ [  ] 作成しない。シーンを選んで切り替え。", style="CardMuted.TLabel", wraplength=280).pack(anchor="w", pady=(0, 5))
         self.lb_kills = tk.Listbox(f, height=7, bg="#FFFFFF", fg=fg, selectbackground=selected, selectforeground="#111827", relief="flat", highlightthickness=1, highlightbackground=line, activestyle="none", font=("Meiryo UI", 9))
         kills_sb=ttk.Scrollbar(f, orient="vertical", command=self.lb_kills.yview); self.lb_kills.configure(yscrollcommand=kills_sb.set)
         self.lb_kills.pack(fill="x", expand=False, pady=(0, 2)); kills_sb.pack(side="right", fill="y")
         self.lb_kills.bind('<<ListboxSelect>>', self.on_scene_selection)
         kb=ttk.Frame(f, style="Card.TFrame"); kb.pack(fill="x", pady=(6,0))
-        ttk.Button(kb, text="✓ チェック切替", command=self.on_toggle_checked).pack(side="left", fill="x", expand=True, padx=(0,3))
+        ttk.Button(kb, text="選択シーンを ✓ ON/OFF", command=self.on_toggle_checked).pack(side="left", fill="x", expand=True, padx=(0,3))
         ttk.Button(kb, text="↳ 選択シーンへ移動", command=self.on_jump_selected).pack(side="left", fill="x", expand=True, padx=(3,0))
         kb2=ttk.Frame(f, style="Card.TFrame"); kb2.pack(fill="x", pady=(5,0))
         ttk.Button(kb2, text="全選択", command=self.on_check_all).pack(side="left", fill="x", expand=True, padx=(0,3))
         ttk.Button(kb2, text="全解除", command=self.on_uncheck_all).pack(side="left", fill="x", expand=True, padx=(3,0))
         ttk.Button(f, text="▶ 選択シーンを作成", command=self.on_make_selected).pack(fill="x", pady=(5,0), ipady=3)
-        ttk.Button(f, text="☑ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
+        ttk.Button(f, text="✓ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
 
         f = card(right, "☁  出力状況")
@@ -1101,7 +1143,7 @@ class App:
         ttk.Checkbutton(fx_row, text="DOF", variable=self.var_dof).pack(side="left")
         ttk.Label(f, text="Fogプリセット", style="CardMuted.TLabel").pack(anchor="w", pady=(6, 2))
         ttk.Combobox(f, state="readonly", textvariable=self.var_fog_preset,
-                     values=list(FOG_PRESETS.values())).pack(fill="x")
+                     values=list(FOG_LABEL_JA.values())).pack(fill="x")
         row = ttk.Frame(f, style="Card.TFrame"); row.pack(fill="x", pady=2)
         ttk.Label(row, text="Fog強度", width=11, style="Card.TLabel").pack(side="left")
         ttk.Scale(row, from_=0, to=1, variable=self.sl["fog_strength"]).pack(side="left", fill="x", expand=True, padx=4)
@@ -1159,7 +1201,7 @@ class App:
         ttk.Label(f, textvariable=self.var_hud_choice, style="Card.TLabel").pack(anchor="w", pady=2)
         ttk.Button(f, text="HUD表示を変更", command=lambda: self._focus_editor_zone("output")).pack(fill="x", pady=(2,5))
         self.var_dof_blur=tk.DoubleVar(value=0.0); self.var_dof_focus_distance=tk.DoubleVar(value=5510.0); self.var_dof_near_distance=tk.DoubleVar(value=10000.0); self.var_dof_far_distance=tk.DoubleVar(value=10000.0)
-        ttk.Checkbutton(f, text="音声クラッシュ防止", variable=tk.BooleanVar(value=True)).pack(anchor="w", pady=2)
+        ttk.Label(f, text="ゲーム音声はLoLプロセスの録音を使用します。", style="CardMuted.TLabel", wraplength=280).pack(anchor="w", pady=2)
         # Quick-output duplicates stay available from the scene/camera/color zones,
         # but are hidden when the full output workspace is open in the center.
         quick_output = ttk.Frame(f, style="Card.TFrame")
@@ -1648,9 +1690,9 @@ class App:
         ordered=self.scene_project.ordered_keys(scene_key(k) for k in self.kills)
         ranks={k:i+1 for i,k in enumerate(ordered)}
         for i, k in enumerate(self.kills):
-            m = {1: "", 2: " DOUBLE", 3: " TRIPLE", 4: " QUADRA"}.get(k.multikill, " PENTA" if k.multikill >= 5 else "")
-            role = "⚔ KILL" if getattr(k, "role", "kill") == "kill" else "＋ ASSIST"
-            mark = "☑" if i in self.checked_kills else "☐"
+            m = {1: "", 2: " ダブルキル", 3: " トリプルキル", 4: " クアドラキル"}.get(k.multikill, " ペンタキル" if k.multikill >= 5 else "")
+            role = "⚔ キル" if getattr(k, "role", "kill") == "kill" else "＋ アシスト"
+            mark = "[✓]" if i in self.checked_kills else "[  ]"
             edited = " ✎" if scene_key(k) in self.scene_project.shots else ""
             self.lb_kills.insert("end", f"{mark}{edited}  #{ranks[scene_key(k)]:02d}  {int(k.time // 60):02d}:{k.time % 60:04.1f}  [{role}] {k.killer} → {k.victim}{m}")
 
@@ -1761,8 +1803,8 @@ class App:
         shot = self.scene_project.shots.get(key) or recommend(kill, self.var_pre.get(), self.var_post.get())
         self._scene_loading = True
         try:
-            self.var_shot_profile.set(shot.profile)
-            self.var_shot_intensity.set(shot.intensity)
+            self.var_shot_profile.set(convert_label(shot.profile, SHOT_PROFILE_JA))
+            self.var_shot_intensity.set(convert_label(shot.intensity, SHOT_INTENSITY_JA))
             for field, var in self.scene_vars.items():
                 var.set(getattr(shot, field))
             self._edit_keyframes = [dict(frame) for frame in shot.keyframes]
@@ -1821,7 +1863,8 @@ class App:
             messagebox.showerror(APP,f'サムネイル保存失敗: {exc}')
 
     def _scene_shot_from_ui(self) -> Shot:
-        raw = {'profile': self.var_shot_profile.get(), 'intensity': self.var_shot_intensity.get()}
+        raw = {'profile': reverse_label(self.var_shot_profile.get(), SHOT_PROFILE_JA),
+               'intensity': reverse_label(self.var_shot_intensity.get(), SHOT_INTENSITY_JA)}
         for key, variable in self.scene_vars.items():
             raw[key] = variable.get()
         raw['keyframes'] = [dict(f) for f in getattr(self, '_edit_keyframes', [])]
@@ -2181,13 +2224,14 @@ class App:
         for k, v in self.sl.items():
             v.set(getattr(t, k))
         self.var_tr.set(TRANSITIONS.get(t.transition, t.transition))
+        self.var_montage_fx.set({"cut":"なし（従来の高速連結）", "flash":"光るカット（白い閃光）", "dark":"暗転カット（シネマ）"}.get(getattr(t,"montage_fx","cut"), "なし（従来の高速連結）"))
         self.var_pre.set(t.pre)
         self.var_post.set(t.post)
         self.var_merge.set(t.merge_multikill)
         self._set_hud_mode(hud_mode_from_flags(t.hide_hud, t.keep_champion_bars))
         self.var_gaudio.set(t.game_audio)
         self.var_fog.set(t.fog_enabled)
-        self.var_fog_preset.set(FOG_PRESETS.get(t.fog_preset, t.fog_preset))
+        self.var_fog_preset.set(FOG_LABEL_JA.get(t.fog_preset, t.fog_preset))
         self.var_curve.set(t.curve_enabled)
         self.var_curve_points.set(t.curve_points)
         self.var_dof.set(t.dof_enabled)
@@ -2213,6 +2257,7 @@ class App:
         for k, v in self.sl.items():
             setattr(t, k, float(v.get()))
         t.transition = rev(TRANSITIONS).get(self.var_tr.get(), "fade")
+        t.montage_fx = {"なし（従来の高速連結）":"cut", "光るカット（白い閃光）":"flash", "暗転カット（シネマ）":"dark"}.get(self.var_montage_fx.get(),"cut")
         t.pre, t.post = float(self.var_pre.get()), float(self.var_post.get())
         t.merge_multikill = bool(self.var_merge.get())
         t.title_text = self.var_title.get().strip()
@@ -2222,7 +2267,7 @@ class App:
         t.hide_hud, t.keep_champion_bars = hud_flags(self.var_hud_mode.get())
         t.game_audio = bool(self.var_gaudio.get())
         t.fog_enabled = bool(self.var_fog.get())
-        t.fog_preset = rev(FOG_PRESETS).get(self.var_fog_preset.get(), "teal")
+        t.fog_preset = reverse_label(self.var_fog_preset.get(), FOG_LABEL_JA)
         t.curve_enabled = bool(self.var_curve.get())
         t.curve_points = self.var_curve_points.get().strip()
         t.dof_enabled = bool(self.var_dof.get())
@@ -2282,6 +2327,10 @@ class App:
             self._apply_panel_widths()
             if d.get("hud_mode") in HUD_MODES:
                 self._set_hud_mode(d["hud_mode"])
+            if d.get("montage_fx") in ("cut", "flash", "dark"):
+                self.var_montage_fx.set({"cut": "なし（従来の高速連結）",
+                                         "flash": "光るカット（白い閃光）",
+                                         "dark": "暗転カット（シネマ）"}[d["montage_fx"]])
             restored_mode = d.get("edit_mode", "easy")
             if restored_mode in ("easy", "advanced"):
                 self.var_edit_mode.set(restored_mode)
@@ -2298,7 +2347,8 @@ class App:
                                              "left_width": int(self.var_left_width.get()),
                                              "right_width": int(self.var_right_width.get()),
                                              "edit_mode": self.var_edit_mode.get(),
-                                             "hud_mode": self.var_hud_mode.get()}, ensure_ascii=False), encoding="utf-8")
+                                             "hud_mode": self.var_hud_mode.get(),
+                                             "montage_fx": {"なし（従来の高速連結）":"cut", "光るカット（白い閃光）":"flash", "暗転カット（シネマ）":"dark"}.get(self.var_montage_fx.get(),"cut")}, ensure_ascii=False), encoding="utf-8")
         except Exception:
             pass
 

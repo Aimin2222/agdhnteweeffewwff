@@ -144,6 +144,7 @@ class Template:
     reference_sources: list = field(default_factory=list)
     template_origin: str = "builtin"
     scene_keyframes: list = field(default_factory=list)  # append to preserve legacy positional fields
+    montage_fx: str = "cut"  # append; optional final montage effect, legacy defaults unchanged
 
     def amp(self) -> float:
         return INTENSITY.get(self.intensity, 1.0)
