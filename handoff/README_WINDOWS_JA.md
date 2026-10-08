@@ -48,10 +48,15 @@ GitHub保存用リポジトリをそのまま開発する場合は、作業デ�
 
 詳細な結果と既知の未解決事項は `LoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.9.4_JA.md` を参照してください。
 
-前回の取得用ブランチとPR #1/#2/#3を保持し、v5.9.4を新しいブランチへ保存します。
-比較先は `codex/lol-autocine-v593-handoff` です。mainへはマージしません。
+前回の取得用ブランチとPR #1/#2/#3を保持し、v5.9.4を新しいブランチへ保存しました。
+比較先は `codex/lol-autocine-v593-handoff` です。mainへはマージしていません。
 PR本文は `PULL_REQUEST_BODY_JA.md` に保存しています。
 
 画面タイトルとブランド表示は受領版どおりv5.9.3ですが、VERSION.txtと実際の統合版はv5.9.4です。
 旧v5.9.0/v5.9.2/v5.9.3のbundleとmanifestも保持しています。
 チャット生成ZIPのダウンロードリンクは使用しません。
+
+作成済みDraft PR #4:
+https://github.com/Aimin2222/agdhnteweeffewwff/pull/4
+
+163ファイルと全15ブランチのコミットがbundleから正しく復元されることを確認しました。
