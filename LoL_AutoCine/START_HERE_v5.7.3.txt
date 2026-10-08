@@ -1,0 +1,23 @@
+LoL AutoCine v5.7.3 - Audio helper build flow
+
+IMPORTANT:
+Do NOT manually guess whether the native helper built successfully.
+
+Recommended first step:
+  00_AUDIO_TEST.bat
+
+The test will:
+  1. Check tools\bin\lol_audio_helper.exe
+  2. If missing, automatically run BUILD_AUDIO_HELPER.bat
+  3. Save build output to diagnostics\native_audio_build.log
+  4. Verify the helper exists before starting audio capture
+  5. Run the LoL-only audio capture test
+
+If it fails:
+  - Open diagnostics\native_audio_build.log
+  - Do not repeatedly run the main app yet
+
+Required to build the native helper:
+  - Visual Studio Build Tools / Visual Studio
+  - Desktop development with C++
+  - Windows 10/11 SDK
