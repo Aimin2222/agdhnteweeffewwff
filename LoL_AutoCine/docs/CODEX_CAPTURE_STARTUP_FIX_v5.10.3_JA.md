@@ -1,0 +1,33 @@
+# v5.10.3 GPUFX CaptureFix — キャプチャ開始の無限待機を分離
+
+## 今回の診断で確認できたこと
+
+ユーザーはチェック済み2シーンの作成で応答なしとなり、手動で終了した。スキャンは完了していた。runtime.logはcapture_startで止まり、35秒の監視スタックはwindows_capture.start_free_threaded内の待機を示した。メインスレッドはTk mainloop。FFmpeg/録画/エフェクト開始・成功の記録はない。これはGPUエフェクトが失敗した証拠ではなく、Windows画面取得の初期化が完了していない証拠。ユーザー名・パス・プレイヤー情報・原ZIPを配布しない。
+
+Python3.14で実行していた。スタックのライブラリ行は公式windows-capture2.0.1のPythonラッパーと一致するが、元ZIPにはパッケージのバージョン情報がないので同一版とは断定しない。公式PyPIソースの1.4.4/1.5.0/2.0.1を配布SHA256と照合して監査し、2.0.1はネイティブ開始待ちでGILを解放していることを確認した。したがって今回を古い版のGILデッドロックと断定しない。GPUドライバー/Windows側のWGC開始待ちの詳細原因は実機検証が必要。
+
+## 修正
+
+WGCWindowSourceの公開start/stop/latest/frame_count/runningとBGRA入力形式は維持する。ネイティブwindows-captureの読み込みと開始は、GUIやFFmpegを読み込まない独立Pythonプロセスのメインスレッドで実行する。ホスト側のフレーム受信はdaemonで、UIは最新の所有済み配列を読む。LoLウィンドウを確認し、対応版ではそのHWNDを指定する。デスクトップ/モニターへのフォールバックは追加しない。
+
+開始は最初のフレームを8秒以内に受信できるかで判断する。開始待ち/受信失敗/子プロセス異常終了をCaptureErrorとして返し、待機した子プロセスを終了し共有メモリを解放して再試行を可能にする。終了も時間を区切り、ネイティブ開始待ちやstopにホスト側が巻き込まれない。Windows Job Objectを割り当てられた場合、親がタスクマネージャーで終了しても子を終了する。割当不可は診断に記録する。通常終了時のatexitによる子プロセス回収もある。停止対象はアプリが起動したキャプチャ子だけで、LoLや他のプロセスを終了しない。
+
+フレームは共有メモリで最新1枚だけ保持。ネイティブコールバック中にBGRAをコピーし、親の受信側も所有する配列へコピーする。転送中の連番は奇数、完了は偶数で、コピー前後の連番が一致しなければ混在フレームを捨てる。フレームキューを増やさない。コピーは最大60回/秒、バッファは4K BGRA相当まで。Pythonが画面を毎フレーム読む既存のCPU転送は残り、今回の分離だけでGPU性能が改善したとは主張しない。
+
+起動/停止段階をdiagnostics/capture.logへ、Python/windows-capture版とnative_start_begin/ready/初フレーム/例外/待機スタックを試行別capture_worker_*.logへ保存する。開始時に6秒監視を設定し、初フレーム受信後は解除するので正常録画を待機異常として記録しない。元COLLECT_DIAGNOSTICS.batで収集可能。
+
+既存GPUエフェクト/FFmpeg選択/NVENC/録画時刻/カメラ/LoL専用録音/UI/HangFix/START_GPU/元START.bat/依存宣言は保持する。録画中に子が終了した場合は古いフレームを録り続けず、latestのCaptureErrorを既存録画スレッドがエラーとして扱う。カメラ位置/実時間同期/音声APIを変更しない。
+
+## 並行開発の共有APIレビュー
+
+変更する共有ファイルはcore/capture.pyと新core/capture_process.py/core/capture_worker.py。新モジュールは内部のプロセス/共有メモリ境界で、UIへ新しい引数やTk操作を要求しない。既存FrameSource/SyntheticSourceの処理は維持、WGCのみを置換する。Win64 HWNDの戻り値型も正しく設定する。
+
+担当ブランチはfeature/capture-startup-v5103（既存GPUブランチから分岐）。レビューJSON docs/CODEX_SHARED_API_REVIEW_CAPTURE_v5.10.3.jsonは、この3ファイルの正確なblobと既存jobs/camera/camera_clockの承認だけを指定する。共有ガードに--gpu feature/capture-startup-v5103を渡す。古いv5.10.1承認は保持し、別の編集まで無条件で承認しない。
+
+## Windowsで確認する
+
+GPUFX CaptureFix取得ブランチを旧版と別フォルダへ展開してSTART_GPU.batで起動。LoLリプレイを表示し、最小化を解除してチェック1シーンを作成する。次にチェック2シーン、全検出シーン。色/LoLだけの音声/同期/fps/対象追従/円形DOF/Bloomを旧版と比較する。
+
+開始できない場合は8秒程度でエラーへ戻ることと、同じアプリで再試行できることを確認する。COLLECT_DIAGNOSTICS.batで新しいcapture.log/capture_worker_*.log/last_errorを収集する。キャプチャが開始しない場合はGPU FXをON/OFFしても直らない可能性があり、キャプチャ側の段階ログを優先する。
+
+Linuxで実際のサブプロセスと共有メモリを使って、正常BGRA受信/フレーム所有/待機タイムアウト/子終了/停止中断/再試行/リソース回収を検査する。ネイティブWGCだけは合成実装に置き換える。実Windows・LoL・GPUドライバーでの修復成功は未検証。全回帰と配布検証の件数はhandoffのVERIFICATIONに記録する。大規模なUI/カメラ/GPUエンジンの作り直しは行わない。
