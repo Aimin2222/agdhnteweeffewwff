@@ -1,0 +1,85 @@
+{
+  "source_head": "c19c467c15db9c995b7259011dd37155bd5a2271",
+  "source_files": 243,
+  "python_files": 88,
+  "branches": 35,
+  "pytest": {
+    "passed": 259,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 14.55
+  },
+  "related_tests_passed": 20,
+  "ui_wait_reproduction": {
+    "api_lock_ui_block_seconds": 0.661,
+    "gpu_probe_ui_block_seconds": 0.64,
+    "scope": "Linux/Tk with controlled waits; not the Windows crash"
+  },
+  "new_ui_cases": 6,
+  "all_core_native_and_start_files_unchanged": true,
+  "pip_check": true,
+  "compileall": true,
+  "git_diff_check": true,
+  "parallel_guard": "ok",
+  "package": {
+    "full_files": 241,
+    "diff_files": 5,
+    "patched_source_files": 243,
+    "zip_integrity": true,
+    "untracked_private_files_excluded": true,
+    "patch_base": "v5.10.3",
+    "all_source_bytes_match_after_patch": true,
+    "sha256": {
+      "LoL_AutoCine_v5.10.3_HangFix_Windows_Full.zip": "bbf6bcdb467ac40abc309e23ee2181ae0be833c24b89177157525dd571859e19",
+      "LoL_AutoCine_v5.10.3_HangFix_Codex_MergeChanges.zip": "46c92683095e22e17728783f5a0c1204bf68f2cc98179fa4103190cde4547b8e"
+    }
+  },
+  "github_package": {
+    "source_files": 243,
+    "both_git_layout_packages_match": true,
+    "github_layout_patch_all_source_match": true,
+    "all_core_native_and_start_files_unchanged": true
+  },
+  "fresh_restore": {
+    "source_files": 243,
+    "branches": 35,
+    "head": "c19c467c15db9c995b7259011dd37155bd5a2271",
+    "all_files_and_branch_refs_match": true,
+    "git_status_clean": true
+  },
+  "fresh_pytest": {
+    "passed": 117,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 5.86
+  },
+  "fresh_pip_compile_tk_guard": true,
+  "installer_repeat_passed": true,
+  "configuration": {
+    "readback_exact": true,
+    "preserved_fields": [
+      "base_version_id",
+      "repositories",
+      "network_policy",
+      "secrets",
+      "runtime_requirements",
+      "pending_runtime_requirements"
+    ],
+    "preserved_settings_match": true,
+    "requires_publish": true,
+    "revision": 18
+  },
+  "bundle_payload_commit": "1694743477d98ce0e711f0d8cd748c8c6fb85725",
+  "bundle_sha256": "f1f441a87dab25d5a414194bab7645ea02c9a0361b6db35ada45abd6f0549cdb",
+  "pull_request": {
+    "number": 15,
+    "draft": true,
+    "base": "codex/lol-autocine-v5103-handoff",
+    "merged": false,
+    "url": "https://github.com/Aimin2222/agdhnteweeffewwff/pull/15"
+  },
+  "main_unchanged": "c2a79ac3e7816c74b7d7fb15a5a32a32dd8fa16b",
+  "windows_crash_same_cause_confirmed": false,
+  "windows_native_lol_gpu_execution_tested": false,
+  "fresh_restore_scope": "separate folder in this execution environment; not a new cloud task startup"
+}

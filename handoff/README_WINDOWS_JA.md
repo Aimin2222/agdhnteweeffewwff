@@ -31,3 +31,5 @@ git branch --all
 全35ブランチをorigin/*へ復元します。cloneのoriginはPC上のbundleでGitHubではありません。UIはfeature/ui-dispatch-hangfix-v5103、GPUはfeature/gpu-engine。共有ガードにはdocs/CODEX_SHARED_API_REVIEW_v5.10.1.jsonを使います。元v5.10.3はintegration/v5.10.3として残しています。
 
 詳細はLoL_AutoCine/docs/CODEX_ALL_SCENES_HANG_FIX_v5.10.3_JA.md、Git状態・実変更一覧はSOURCE_GIT_REPORT_JA.md、検証はVERIFICATION_v5.10.3_HangFix.jsonを参照してください。
+
+GitHubから243ファイル/全35ローカルref/HEADを別フォルダへ復元し一致。依存/構文/Tk/共有ガードと代表117テスト成功、installer再実行も追跡変更なし。次回クラウド用設定は保存・読み戻し一致、他設定を保持。反映は環境設定の確認・保存・Publishが必要ですがWindows取得には不要です。新クラウドタスク起動の保証ではありません。
