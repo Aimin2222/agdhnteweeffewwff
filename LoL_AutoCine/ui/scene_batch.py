@@ -69,17 +69,11 @@ def render_scenes(api,source,player,kills,tpl,out_root,make_montage,
     out=BatchResult()
     scenes=list(build_scene_templates(kills,tpl,overrides,auto=auto,order=order))
     if auto and getattr(tpl, 'smart_highlight_enabled', False) and getattr(tpl, 'smart_montage', False) and not order:
-        # Build toward the strongest multi-kill at the end. Never discard
-        # clips or change an explicitly saved sequence.
-        def dramatic_score(item):
-            kill, _scene_tpl = item
-            try:
-                count = max(1, int(getattr(kill, 'multikill', 1)))
-            except (TypeError, ValueError):
-                count = 1
-            return (count, getattr(kill, 'role', 'kill') == 'kill', float(getattr(kill, 'time', 0.0)))
-        scenes.sort(key=dramatic_score)
-        log('スマートモンタージュ: 序盤からクライマックスへ自動並べ替え（クリップ削除なし）')
+        from .smart_montage import choose_scenes
+        before = len(scenes)
+        scenes = choose_scenes(scenes, limit=12)
+        log(f'スマートモンタージュ: {before}候補から{len(scenes)}見せ場を構成。'
+            '徐々に盛り上げてクライマックスへ。手動で保存した順番は変更しません。')
     for i,(kill,scene_tpl) in enumerate(scenes,1):
         if stop is not None and stop.is_set():
             log('中止しました。');break
