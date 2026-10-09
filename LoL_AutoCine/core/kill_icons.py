@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-"""Kill-feed decoration as an optional post-render overlay.
+"""Original optional right-side kill-feed overlays for 16:9 LoL highlights.
 
-The original HUD is not modified. We render original geometric badges with PIL,
-then time them to the clip's actual kill events in FFmpeg. No LoL HUD textures
-or third-party assets are copied. The four templates work with HUD hidden.
+Do not touch the game's HUD. A transparent PNG is composed into the exported
+clip at the exact scene event times, so this works with HUD-hidden recordings.
+All editor-supplied options are normalized here, before they reach FFmpeg.
 """
 from __future__ import annotations
 
+import math
 from pathlib import Path
 
 STYLES = {
@@ -17,6 +18,13 @@ STYLES = {
     "impact": "インパクト・レッド",
 }
 REVERSE_STYLES = {label: code for code, label in STYLES.items()}
+POSITIONS = {
+    "right-top": "右上（おすすめ）",
+    "right-bottom": "右下",
+    "left-top": "左上",
+    "left-bottom": "左下",
+}
+REVERSE_POSITIONS = {label: code for code, label in POSITIONS.items()}
 COLORS = {
     "simple": (196, 208, 223),
     "cinema": (247, 197, 102),
@@ -29,12 +37,20 @@ def normalize(style: str) -> str:
     return str(style) if style in STYLES else "off"
 
 
-def make_badge(path: Path, style: str, count: int = 1) -> Path:
-    """Build a transparent kill-feed card; fonts/icons are self-contained.
+def normalize_options(position="right-top", scale=1.0, seconds=1.55, opacity=1.0):
+    """Pure validation: keep FFmpeg expressions bounded and injection-safe."""
+    def finite(value, fallback, lower, upper):
+        try:
+            val = float(value)
+        except (TypeError, ValueError, OverflowError):
+            val = fallback
+        return max(lower, min(upper, val)) if math.isfinite(val) else fallback
+    pos = position if position in POSITIONS else "right-top"
+    return pos, finite(scale, 1.0, .5, 1.8), finite(seconds, 1.55, .45, 4.0), finite(opacity, 1.0, .25, 1.0)
 
-    Count describes events in the current merged clip, not the player's
-    lifetime kill count.
-    """
+
+def make_badge(path: Path, style: str, count: int = 1) -> Path:
+    """Draw a self-contained transparent badge using original geometric art."""
     from PIL import Image, ImageDraw, ImageFont, ImageFilter
     style = normalize(style)
     if style == "off":
@@ -48,13 +64,13 @@ def make_badge(path: Path, style: str, count: int = 1) -> Path:
     gd = ImageDraw.Draw(glow)
     if style != "simple":
         gd.rounded_rectangle((16, 15, 368, 102), radius=18, outline=(*color, 160), width=8)
-        glow = glow.filter(ImageFilter.GaussianBlur(12))
-        base = Image.alpha_composite(base, glow)
+        base = Image.alpha_composite(base, glow.filter(ImageFilter.GaussianBlur(12)))
     d = ImageDraw.Draw(base)
-    fill = (13, 19, 30, 190 if style == "simple" else 215)
-    d.rounded_rectangle((17, 17, 367, 100), radius=16, fill=fill, outline=(*color, 225), width=3)
-    d.rounded_rectangle((26, 26, 93, 91), radius=14, fill=(*color, 45), outline=(*color, 255), width=2)
-    # Two crossed blades: an original, resolution-independent KILL symbol.
+    d.rounded_rectangle((17, 17, 367, 100), radius=16,
+                        fill=(13, 19, 30, 190 if style == "simple" else 215),
+                        outline=(*color, 225), width=3)
+    d.rounded_rectangle((26, 26, 93, 91), radius=14, fill=(*color, 45),
+                        outline=(*color, 255), width=2)
     d.line((44, 44, 77, 78), fill=(*color, 255), width=6)
     d.line((77, 44, 44, 78), fill=(*color, 255), width=6)
     d.ellipse((41, 41, 49, 49), fill=(255, 255, 255, 235))
@@ -66,8 +82,9 @@ def make_badge(path: Path, style: str, count: int = 1) -> Path:
         font = ImageFont.load_default()
         subfont = ImageFont.load_default()
     n = max(1, min(99, int(count)))
-    d.text((109, 33), f"KILL  x{n}", font=font, fill=(255, 255, 255, 255), stroke_width=0)
-    d.text((111, 74), {"simple": "HIGHLIGHT", "cinema": "CINEMATIC", "neon": "NEON FINISH", "impact": "IMPACT"}[style],
+    d.text((109, 33), f"KILL  x{n}", font=font, fill=(255, 255, 255, 255))
+    d.text((111, 74), {"simple": "HIGHLIGHT", "cinema": "CINEMATIC",
+                       "neon": "NEON FINISH", "impact": "IMPACT"}[style],
            font=subfont, fill=(*color, 245))
     if style == "impact":
         d.rectangle((344, 26, 351, 90), fill=(*color, 230))
@@ -77,21 +94,46 @@ def make_badge(path: Path, style: str, count: int = 1) -> Path:
     return path
 
 
-def with_badge(graph: str, badge_input: int, events, *, duration: float) -> str:
-    """Add a timed compositing stage to an existing [vout] filter graph."""
+def with_badge(graph: str, badge_input: int, events, *, duration: float,
+               position: str = "right-top", scale: float = 1.0,
+               seconds: float = 1.55, opacity: float = 1.0,
+               style: str = "simple") -> str:
+    """Append a bounded, kill-synchronized overlay after the existing [vout].
+
+    The output is still named [vout]. No audio graph or gameplay frames change.
+    """
     if not graph.endswith("[vout]"):
         raise ValueError("Existing video graph has no [vout]")
-    clauses = []
-    for start, _end in list(events or [])[:12]:
-        center = max(0.0, min(float(duration), float(start)))
-        lo = max(0.0, center - 0.14)
-        hi = min(float(duration), center + 1.55)
-        if hi > lo:
-            clauses.append(f"between(t,{lo:.3f},{hi:.3f})")
-    if not clauses:
+    position, scale, seconds, opacity = normalize_options(position, scale, seconds, opacity)
+    valid_duration = max(0.0, float(duration))
+    times = []
+    for event in list(events or [])[:24]:
+        try:
+            t = float(event[0])
+        except (ValueError, TypeError, IndexError):
+            continue
+        if math.isfinite(t) and 0 <= t <= valid_duration:
+            times.append(t)
+    if not times:
         return graph
+    spans = []
+    for center in times:
+        lo = max(0.0, center - 0.10)
+        hi = min(valid_duration, center + seconds)
+        if hi > lo:
+            spans.append(f"between(t,{lo:.3f},{hi:.3f})")
+    if not spans:
+        return graph
+    y = "62" if position.endswith("top") else "H-h-62"
+    x = "W-w-32" if position.startswith("right") else "32"
+    if normalize(style) == "impact":
+        # Small, damped kick rather than a disorienting screen shake.
+        kick = "+".join(f"7*sin(35*(t-{center:.3f}))*exp(-11*abs(t-{center:.3f}))" for center in times[:6])
+        x += "+" + kick
     return (graph[:-6] + "[pre_kill_badge];"
-            + f"[{int(badge_input)}:v]format=rgba[kill_badge];"
+            + f"[{int(badge_input)}:v]format=rgba,"
+            + f"scale=w='trunc(iw*{scale:.3f}/2)*2':h='trunc(ih*{scale:.3f}/2)*2',"
+            + f"colorchannelmixer=aa={opacity:.3f}[kill_badge];"
             + "[pre_kill_badge][kill_badge]"
-            + f"overlay=x=W-w-32:y=62:format=auto:shortest=1:enable='{'+'.join(clauses)}',"
-            + "format=yuv420p[vout]")
+            + f"overlay=x='{x}':y='{y}':format=auto:shortest=1:"
+            + f"enable='{'+'.join(spans)}',format=yuv420p[vout]")
