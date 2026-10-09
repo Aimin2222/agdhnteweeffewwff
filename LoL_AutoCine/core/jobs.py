@@ -54,6 +54,7 @@ class ClipTake:
     audio_offset: float = 0.0
     rig: Optional[RigInfo] = None
     cam_errors: int = 0
+    effect_events: Optional[list] = None  # optional recording-time event coordinates
 
 
 @dataclass
@@ -64,7 +65,7 @@ class JobResult:
 
 
 def _play_until(api: ReplayAPI, end: float, start: float, tpl: Template, rec: Optional[ClipRecorder], stop,
-                limit_extra: float = 25.0) -> None:
+                limit_extra: float = 25.0, observe=None) -> None:
     """end まで再生しつつ、停止検知 (同じ画面を録り続けない) を行う。"""
     t_begin = time.time()
     last_t, last_move = -1.0, time.time()
@@ -74,6 +75,8 @@ def _play_until(api: ReplayAPI, end: float, start: float, tpl: Template, rec: Op
         if stop is not None and stop.is_set():
             return
         t = float(api.playback().get("time", 0.0))
+        if observe is not None:
+            observe(t, time.perf_counter())
         if t >= end:
             return
         if t > last_t + 0.02:
@@ -104,11 +107,32 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                        third_yaw=getattr(tpl, "third_yaw", 0.0),
                       motion_arc=getattr(tpl, "motion_arc", 0.0), motion_dolly=getattr(tpl, "motion_dolly", 0.0),
                       motion_profile=getattr(tpl, "motion_profile", "cinematic"),
-                      scene_keyframes=tuple(getattr(tpl, 'scene_keyframes', ()) or ()), rig=rig,
+                      scene_keyframes=tuple(getattr(tpl, 'scene_keyframes', ()) or ()),
+                       smart_composition=bool(getattr(tpl, 'smart_composition', False)),
+                       smart_impact=(float(getattr(tpl, 'highlight_pulse', 0.0))
+                                     if getattr(tpl, 'smart_highlight_enabled', False) else 0.0), rig=rig,
                       sel_name=player.selection_name or player.champion)
     if rig.mode == "top" and tpl.style in ("cinema", "follow"):
         plan.style = "cinema_top" if tpl.style == "cinema" else "top"   # 実際に使えるモードに合わせる
     return plan, rig
+
+
+def _recording_event_observer(kills, replay_start, wall_start, events):
+    """Interpolate existing playback observations onto the normalized video clock."""
+    pending = sorted(float(k.time) for k in kills)
+    previous = [float(replay_start), float(wall_start)]
+    def observe(replay_time, wall_time):
+        old_replay, old_wall = previous
+        if replay_time <= old_replay:
+            return
+        while pending and pending[0] <= replay_time:
+            target = pending.pop(0)
+            if target >= old_replay:
+                fraction = (target - old_replay) / (replay_time - old_replay)
+                center = max(0.0, old_wall + fraction * (wall_time - old_wall) - wall_start)
+                events.append((center, center + .42))
+        previous[:] = [float(replay_time), float(wall_time)]
+    return observe
 
 
 def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Template,
@@ -149,7 +173,12 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
         rec.start()
         director.start()
         api.set_playback(paused=False, speed=1.0)
-        _play_until(api, end, start, tpl, rec, stop)
+        observe = None
+        if (getattr(tpl, "kill_icon_style", "off") != "off"
+                or getattr(tpl, "smart_composition", False)):
+            take.effect_events = []
+            observe = _recording_event_observer(kills, start, rec.started_perf, take.effect_events)
+        _play_until(api, end, start, tpl, rec, stop, observe=observe)
     finally:
         director.stop()
         recorder_error = None
@@ -276,8 +305,9 @@ def run_auto_edit(api: ReplayAPI, source: FrameSource, player: Player, kills: li
                     log("カメラ: " + (take.rig.note or take.rig.mode))
                 if progress:
                     progress(i - 1, total, 100.0 * (i - 0.5) / total, f"クリップ {i}/{total} にエフェクト適用中…")
+                timing = {"effect_events": take.effect_events} if take.effect_events is not None else {}
                 apply_effects(raw, final, tpl, take.duration, ks, game_wav=take.audio_path,
-                              audio_trim=take.audio_offset)
+                              audio_trim=take.audio_offset, **timing)
                 res.outputs.append(final)
                 log(f"保存: {final.name} ({take.duration:.1f}s, {len(ks)}キル"
                     + (", 音声あり" if take.audio_path else "") + ")")

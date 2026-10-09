@@ -21,6 +21,7 @@ except ImportError:
     # Fall back to a system ffmpeg so the rest of the UI can still start.
     FFMPEG = shutil.which("ffmpeg") or shutil.which("ffmpeg.exe")
 
+from .kill_icons import make_badge, with_badge, normalize as kill_style_normalize
 from .camera import INTENSITY
 from .gpu_pipeline import detect as detect_gpu, gpu_prefix, backend_name as gpu_backend_name
 
@@ -148,6 +149,13 @@ class Template:
     smart_highlight_enabled: bool = False  # explicit automatic planning only
     smart_highlight_style: str = "auto"
     highlight_pulse: float = 0.0  # kill-timed accent, legacy graph unchanged when zero
+    kill_icon_style: str = "off"  # off/simple/cinema/neon/impact
+    kill_icon_position: str = "right-top"
+    kill_icon_scale: float = 1.0
+    kill_icon_duration: float = 1.55
+    kill_icon_opacity: float = 1.0
+    smart_composition: bool = False  # safer distance/elevation around the locked player
+    smart_montage: bool = False  # only smart auto-edit reorders unpinned scenes
 
     def amp(self) -> float:
         return INTENSITY.get(self.intensity, 1.0)
@@ -575,7 +583,8 @@ def _mux_game_audio(video_path: Path, wav_path: Path, dst: Path, duration: float
 def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: list,
                    size: Optional[tuple] = None, game_wav: Optional[Path] = None,
                    audio_trim: float = 0.0, game_audio: Optional[Path] = None,
-                   audio_offset: Optional[float] = None) -> None:
+                   audio_offset: Optional[float] = None,
+                   effect_events: Optional[list] = None) -> None:
     """録画クリップへ映像エフェクトを適用し、必要ならLoL音声を後段muxする。
 
     GPU優先: 実機OpenCLプローブに成功した効果のみGPUへ回し、それ以外はCPUで処理。
@@ -599,7 +608,12 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
     gpu_prefix_graph, consumed_gpu = gpu_prefix(t.video_effects, caps)
     scale = f"scale={OUTPUT_W}:{OUTPUT_H}:flags=lanczos"
     pre = ",".join([x for x in (gpu_prefix_graph, scale) if x])
-    events = _effect_events(kills, t, duration)
+    events = _effect_events(kills, t, duration) if effect_events is None else list(effect_events)
+    badge_png = None
+    badge_style = kill_style_normalize(getattr(t, "kill_icon_style", "off"))
+    if badge_style != "off":
+        badge_png = make_badge(dst.with_suffix(".killbadge.png"), badge_style, len(kills))
+    badge_idx = 1 + int(png is not None)
     original_effects = t.video_effects
     if consumed_gpu:
         remaining = dict(original_effects)
@@ -608,6 +622,11 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
         t.video_effects = remaining
     try:
         graph = build_graph(t, duration, png is not None, pre_filters=pre, effect_events=events)
+        if badge_png is not None:
+            graph = with_badge(graph, badge_idx, events, duration=duration,
+                                    position=t.kill_icon_position, scale=t.kill_icon_scale,
+                                    seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
+                                    style=badge_style)
     finally:
         t.video_effects = original_effects
     cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error"]
@@ -618,6 +637,9 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
     idx = 1
     if png is not None:
         cmd += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(png)]
+        idx += 1
+    if badge_png is not None:
+        cmd += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(badge_png)]
         idx += 1
 
     # ゲーム音だけの標準経路は後段mux。BGMを使う場合のみ従来の同時ミックスを使う。
@@ -652,6 +674,11 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
         "bloom_level": t.bloom,
         "dof_blur_level": t.dof_blur if t.dof_enabled else 0,
         "filter_graph": graph,
+        "kill_icon_style": badge_style,
+        "kill_icon_position": getattr(t, "kill_icon_position", "right-top"),
+        "kill_icon_scale": getattr(t, "kill_icon_scale", 1.0),
+        "kill_icon_duration": getattr(t, "kill_icon_duration", 1.55),
+        "kill_icon_opacity": getattr(t, "kill_icon_opacity", 1.0),
         "video_resolution": "1920x1080",
         "output_fps": t.fps,
         "duration_s": duration,
@@ -666,10 +693,18 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
         t.video_effects = fallback
         try:
             graph_cpu = build_graph(t, duration, png is not None, pre_filters=scale, effect_events=events)
+            if badge_png is not None:
+                graph_cpu = with_badge(graph_cpu, badge_idx, events, duration=duration,
+                                    position=t.kill_icon_position, scale=t.kill_icon_scale,
+                                    seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
+                                    style=badge_style)
             cpu_cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error", "-i", str(src)]
             idx2 = 1
             if png is not None:
                 cpu_cmd += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(png)]
+                idx2 += 1
+            if badge_png is not None:
+                cpu_cmd += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(badge_png)]
                 idx2 += 1
             if mix_audio_in_graph:
                 if t.game_audio and has_wav:
@@ -692,11 +727,6 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
                                           "filter_graph": graph_cpu})
         finally:
             t.video_effects = original_effects
-    if png is not None:
-        try:
-            os.remove(png)
-        except OSError:
-            pass
     if r.returncode != 0:
         raise RuntimeError("ffmpeg エフェクト適用に失敗: " + r.stderr[-1200:])
     if not dst.exists() or dst.stat().st_size < 1024:
@@ -716,10 +746,18 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
                 t.video_effects = remaining
                 try:
                     graph_cpu = build_graph(t, duration, png is not None, pre_filters=scale, effect_events=events)
+                    if badge_png is not None:
+                        graph_cpu = with_badge(graph_cpu, badge_idx, events, duration=duration,
+                                    position=t.kill_icon_position, scale=t.kill_icon_scale,
+                                    seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
+                                    style=badge_style)
                     cpu_cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error", "-i", str(src)]
                     idxc = 1
                     if png is not None:
                         cpu_cmd += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(png)]
+                        idxc += 1
+                    if badge_png is not None:
+                        cpu_cmd += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(badge_png)]
                         idxc += 1
                     if mix_audio_in_graph:
                         gi = None
@@ -742,6 +780,13 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
                         raise RuntimeError("色保持用CPU再描画に失敗: " + rr.stderr[-1000:])
                 finally:
                     t.video_effects = original_effects
+
+    for temporary in (png, badge_png):
+        if temporary is not None:
+            try:
+                Path(temporary).unlink(missing_ok=True)
+            except OSError:
+                pass
 
     if t.game_audio and not mix_audio_in_graph:
         if not has_wav:
