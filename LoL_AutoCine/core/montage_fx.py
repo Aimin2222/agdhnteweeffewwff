@@ -69,7 +69,7 @@ def montage_filter(style: str, cuts: list[float]) -> str:
 
 
 def render_montage(clips, dst, style="cut", *, concat=None, ffmpeg=None,
-                   ffprobe="ffprobe", encoder=None, logger=None) -> str:
+                   ffprobe="ffprobe", encoder=None, logger=None, encoder_policy='auto') -> str:
     """Create montage and report which path was *actually* applied.
 
     Fail-safe: if optional transition rendering fails, preserve previously
@@ -96,7 +96,7 @@ def render_montage(clips, dst, style="cut", *, concat=None, ffmpeg=None,
             # Default app path prioritizes NVENC when installed; if it fails,
             # automatically retry software encoder without changing audio.
             if encoder is None:
-                args = encoder_args(60)
+                args = encoder_args(60) if encoder_policy == 'auto' else encoder_args(60, policy=encoder_policy)
                 # The original clip FPS must be preserved: remove any forced -r.
                 if "-r" in args:
                     n = args.index("-r")
@@ -104,17 +104,15 @@ def render_montage(clips, dst, style="cut", *, concat=None, ffmpeg=None,
             cmd = [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-i", str(raw),
                    "-vf", filt, "-map", "0:v:0", "-map", "0:a?", *args,
                    "-c:a", "copy", "-movflags", "+faststart", str(dst)]
-            result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=900)
-            used_encoder = args[args.index("-c:v") + 1] if "-c:v" in args else "custom"
-            if result.returncode and encoder is None and used_encoder == "h264_nvenc":
+            from .performance_diagnostics import run_render, _encoder_name
+            result = run_render(cmd, output=dst, gpu_effects=[], effect_values={}, timeout=900,
+                                allow_encoder_retry=encoder is None,
+                                pipeline_info={'stage':'montage','encoder_policy':encoder_policy,
+                                               'cpu_video_effects':['eq'],'montage_style':style})
+            used_encoder = _encoder_name(result.args)
+            if result.encoder_retry_reason:
                 if logger:
-                    logger("モンタージュGPUエンコード失敗 → CPUで再試行: " + result.stderr[-250:])
-                alt = ["-c:v", "libx264", "-preset", "veryfast", "-crf", "19", "-pix_fmt", "yuv420p"]
-                cmd = [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-i", str(raw),
-                       "-vf", filt, "-map", "0:v:0", "-map", "0:a?", *alt,
-                       "-c:a", "copy", "-movflags", "+faststart", str(dst)]
-                result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=900)
-                used_encoder = "libx264"
+                    logger("モンタージュ: " + result.encoder_retry_reason)
             if result.returncode or not dst.is_file() or dst.stat().st_size < 1024:
                 raise RuntimeError(result.stderr[-800:] or "モンタージュ演出の生成に失敗")
             if logger:

@@ -10,7 +10,9 @@ from core.kill_icons import _player_for_name, _icon_id, make_event_badges, with_
 
 def test_previous_template_positions_and_roster_isolation():
     old = Template(smart_composition=True, kill_icon_style='neon')
-    values = [getattr(old, f.name) for f in fields(Template) if f.name != 'kill_icon_players']
+    appended={'kill_icon_players','encoder_policy','kill_frame_color','kill_glow_color',
+              'kill_glow_enabled','kill_glow_strength','kill_frame_width','kill_mark_style'}
+    values = [getattr(old, f.name) for f in fields(Template) if f.name not in appended]
     copy = Template(*values)
     assert copy.smart_composition and copy.kill_icon_style == 'neon'
     copy.kill_icon_players.append({'name': 'Test'})

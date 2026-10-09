@@ -13,7 +13,7 @@ import hashlib
 import tkinter as tk
 from dataclasses import fields
 from pathlib import Path
-from tkinter import filedialog, messagebox, simpledialog, ttk
+from tkinter import filedialog, messagebox, simpledialog, colorchooser, ttk
 
 import numpy as np
 from PIL import Image, ImageTk
@@ -24,6 +24,7 @@ sys.path.insert(0, str(ROOT))
 from core import paths                                             # noqa: E402
 from core.kill_icons import STYLES as KILL_ICON_STYLES, REVERSE_STYLES as KILL_ICON_REVERSE
 from core.kill_icons import POSITIONS as KILL_ICON_POSITIONS, REVERSE_POSITIONS as KILL_ICON_REVERSE_POSITIONS
+from core.kill_icons import REVERSE_MARK_STYLES as KILL_MARK_REVERSE
 from core.camera import INTENSITY_JP, STYLES                       # noqa: E402
 from core.capture import CaptureError, SyntheticSource, WGCWindowSource   # noqa: E402
 from core.effects import (FOG_PRESETS, GRADE_JP, TRANSITIONS, Template, one_click_templates, gpu_encoder_available, gpu_pipeline_status,
@@ -136,6 +137,12 @@ class ScrollFrame(ttk.Frame):
     def _global_wheel(self, e) -> None:
         if not self._pointer_inside(e):
             return
+        # Inner listboxes and text editors already have native scroll handlers.
+        if isinstance(e.widget, (tk.Listbox, tk.Text)):
+            return
+        self.scroll_wheel(e)
+
+    def scroll_wheel(self, e) -> None:
         delta = getattr(e, "delta", 0)
         if delta:
             units = -max(-8, min(8, int(delta / 120)))
@@ -144,6 +151,17 @@ class ScrollFrame(ttk.Frame):
         else:
             units = 3
         self.canvas.yview_scroll(units, "units")
+
+    def scroll_to(self, widget) -> None:
+        """Place an existing functional card at the top of its scroll panel."""
+        self.update_idletasks()
+        try:
+            offset = widget.winfo_rooty() - self.inner.winfo_rooty()
+            bbox = self.canvas.bbox('all')
+            total = max(1, (bbox[3] - bbox[1]) if bbox else 1)
+            self.canvas.yview_moveto(max(0, min(1, offset / total)))
+        except tk.TclError:
+            pass
 
     def set_width(self, width: int) -> None:
         width = max(260, min(620, int(width)))
@@ -340,7 +358,7 @@ class DofViz(tk.Canvas):
 class App:
     def __init__(self, root: tk.Tk):
         self.root = root
-        root.title(f"{APP} v5.9.9 - キル装飾 / スマートモンタージュ")
+        root.title(f"{APP} v5.10.0 - UI/GPU/キルフレーム改善")
         sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
         root.geometry(f"{min(1560, sw - 40)}x{min(960, sh - 90)}+10+10")
         root.option_add("*Font", FONT)
@@ -387,6 +405,13 @@ class App:
         self.var_kill_icon_scale = tk.DoubleVar(value=1.0)
         self.var_kill_icon_duration = tk.DoubleVar(value=1.55)
         self.var_kill_icon_opacity = tk.DoubleVar(value=1.0)
+        self.var_kill_frame_color = tk.StringVar(value='')
+        self.var_kill_glow_color = tk.StringVar(value='')
+        self.var_kill_glow_enabled = tk.BooleanVar(value=True)
+        self.var_kill_glow_strength = tk.DoubleVar(value=.65)
+        self.var_kill_frame_width = tk.IntVar(value=3)
+        self.var_kill_mark_style = tk.StringVar(value='テンプレートに合わせる')
+        self.var_encoder_policy = tk.StringVar(value='自動（NVENC優先・失敗時CPU）')
         self.var_smart_montage = tk.BooleanVar(value=True)
         self.var_smart_composition = tk.BooleanVar(value=False)
         self.var_scene_mode = tk.BooleanVar(value=False)    # opt-in per-scene rendering
@@ -400,6 +425,7 @@ class App:
         self._project_autosave_token = None
         self._scene_loading = False
         self._build()
+        self._register_scrolling_controls()
         self._load_settings()
         try:
             if self.scene_project_path.exists():
@@ -486,14 +512,14 @@ class App:
         top.pack(fill="x")
         brand_box = ttk.Frame(top)
         brand_box.pack(side="left")
-        ttk.Label(brand_box, text="◈  LoL AutoCine v5.9.9", style="CompactTitle.TLabel").pack(anchor="w")
+        ttk.Label(brand_box, text="◈  LoL AutoCine v5.10.0", style="CompactTitle.TLabel").pack(anchor="w")
 
         nav = ttk.Frame(top)
         nav.pack(side="left", padx=(15, 0))
         ttk.Button(nav, text="⌂  ホーム", style="Nav.TButton", command=lambda: self._focus_home()).pack(side="left")
         ttk.Button(nav, text="▣  テンプレート", style="Nav.TButton", command=lambda: self._focus_template()).pack(side="left")
         ttk.Button(nav, text="▰  参考動画", style="Nav.TButton", command=lambda: self._focus_reference()).pack(side="left")
-        ttk.Button(nav, text="⚙  設定", style="Nav.TButton", command=self.on_show_diagnostics).pack(side="left")
+        ttk.Button(nav, text="⚙  設定", style="Nav.TButton", command=self._focus_settings).pack(side="left")
 
         right_top = ttk.Frame(top)
         right_top.pack(side="right")
@@ -586,6 +612,7 @@ class App:
 
         # ---- left: references / workflow / templates ----------------------
         f = card(left, "1  リプレイ準備")
+        self._nav_home_card = f
         ttk.Button(f, text="① Replay APIを自動設定", command=self.on_fix_cfg).pack(fill="x", pady=2)
         ttk.Button(f, text="② リプレイ（.rofl）を開く", command=self.on_open_replay).pack(fill="x", pady=2)
         self.cb_recent = ttk.Combobox(f, state="readonly", values=[p.name for p in paths.list_replays()[:30]])
@@ -618,6 +645,7 @@ class App:
 
         # 参考映像とテンプレートは準備・スキャンの後に配置する。
         f = card(left, "▶  参考動画の追加")
+        self._nav_reference_card = f
         mode = ttk.Frame(f, style="Card.TFrame")
         mode.pack(fill="x", pady=(0, 7))
         ttk.Button(mode, text="X / YouTube / URLから追加", command=self.on_add_reference_url).pack(side="left", fill="x", expand=True)
@@ -642,6 +670,7 @@ class App:
         self.lbl_reference.pack(fill="x", pady=(5, 0))
 
         f = card(left, "▣  テンプレート")
+        self._nav_template_card = f
         self.tpl_combo = ttk.Combobox(f, state="readonly", textvariable=self.var_tpl, values=list(self.templates))
         self.tpl_combo.pack(fill="x", pady=(0, 7))
         self.tpl_combo.bind("<<ComboboxSelected>>", lambda _e: self.apply_template(self.var_tpl.get()))
@@ -1093,6 +1122,13 @@ class App:
         self.var_gaudio=tk.BooleanVar(value=True); ttk.Checkbutton(output, text="LoLの音だけを優先して録音", variable=self.var_gaudio).pack(anchor="w", pady=4)
         self.lbl_gpu = ttk.Label(output, text="GPU優先: NVIDIA / NVENC を確認中…", style="CardMuted.TLabel", wraplength=520)
         self.lbl_gpu.pack(anchor="w", pady=(2,4))
+        ttk.Label(output, text="映像エンコーダの選択（GPUエフェクトとは別）", style="Card.TLabel").pack(anchor="w")
+        ttk.Combobox(output, state="readonly", textvariable=self.var_encoder_policy,
+                     values=["自動（NVENC優先・失敗時CPU）", "GPU優先（NVENC）", "CPU優先（libx264）"]).pack(fill="x", pady=(2,4))
+        self.lbl_gpu_latest = ttk.Label(output, text="直近の書き出し状況を読み込み中…",
+                                        style="CardMuted.TLabel", wraplength=650)
+        self.lbl_gpu_latest.pack(fill="x", pady=(0,2))
+        ttk.Button(output, text="GPU・書き出し履歴を更新", command=self._refresh_gpu_status).pack(fill="x", pady=(0,4))
         self.root.after(200, self._refresh_gpu_status)
         ttk.Label(output, text="プレビュー/カメラ制御は最大144Hz。最終MP4は1080p・60fpsを標準。", style="CardMuted.TLabel", wraplength=520).pack(anchor="w", pady=(0,4))
         self.var_montage=tk.BooleanVar(value=True); ttk.Checkbutton(output, text="完成クリップを1本のモンタージュにする", variable=self.var_montage).pack(anchor="w", pady=4)
@@ -1113,6 +1149,28 @@ class App:
             ttk.Label(part, text=caption, style="Card.TLabel").pack(side="top")
             ttk.Spinbox(part, from_=lower, to=upper, increment=inc,
                         textvariable=variable, width=7).pack(side="top")
+        ttk.Label(output, text="キルフレームの色・発光・中央マーク", style="Card.TLabel").pack(anchor="w", pady=(6,3))
+        frame_style_row = ttk.Frame(output, style="Card.TFrame")
+        frame_style_row.pack(fill="x", pady=2)
+        ttk.Button(frame_style_row, text="枠の色", command=lambda: self._choose_kill_color(self.var_kill_frame_color)).pack(side="left")
+        ttk.Entry(frame_style_row, textvariable=self.var_kill_frame_color, width=10).pack(side="left", padx=4)
+        ttk.Button(frame_style_row, text="発光色", command=lambda: self._choose_kill_color(self.var_kill_glow_color)).pack(side="left", padx=(8,0))
+        ttk.Entry(frame_style_row, textvariable=self.var_kill_glow_color, width=10).pack(side="left", padx=4)
+        ttk.Button(frame_style_row, text="色を標準に戻す", command=lambda: (self.var_kill_frame_color.set(''), self.var_kill_glow_color.set(''))).pack(side="left", padx=5)
+        frame_fx_row = ttk.Frame(output, style="Card.TFrame")
+        frame_fx_row.pack(fill="x", pady=3)
+        ttk.Checkbutton(frame_fx_row, text="発光ON", variable=self.var_kill_glow_enabled).pack(side="left")
+        ttk.Label(frame_fx_row, text="発光の強さ", style="Card.TLabel").pack(side="left", padx=(10,3))
+        ttk.Spinbox(frame_fx_row, from_=0, to=1, increment=.1, width=5,
+                    textvariable=self.var_kill_glow_strength).pack(side="left")
+        ttk.Label(frame_fx_row, text="枠の太さ", style="Card.TLabel").pack(side="left", padx=(10,3))
+        ttk.Spinbox(frame_fx_row, from_=1, to=8, increment=1, width=5,
+                    textvariable=self.var_kill_frame_width).pack(side="left")
+        ttk.Label(output, text="アイコン間の装飾", style="Card.TLabel").pack(anchor="w", pady=(3,1))
+        from core.kill_icons import MARK_STYLES
+        ttk.Combobox(output, state="readonly", textvariable=self.var_kill_mark_style,
+                     values=list(MARK_STYLES.values()), width=27).pack(fill="x", pady=(0,4))
+        ttk.Button(output, text="この画面の設定を保存", command=self._save_settings).pack(fill="x", pady=(0,6))
         ttk.Checkbutton(output, text="スマートモンタージュで見せ場を後半に配置（自動編集時のみ）",
                         variable=self.var_smart_montage).pack(anchor="w", pady=(0,5))
         ttk.Label(output, text="モンタージュ専用の切替演出", style="Card.TLabel").pack(anchor="w", pady=(5,2))
@@ -1154,6 +1212,7 @@ class App:
         kills_sb=ttk.Scrollbar(f, orient="vertical", command=self.lb_kills.yview); self.lb_kills.configure(yscrollcommand=kills_sb.set)
         self.lb_kills.pack(fill="x", expand=False, pady=(0, 2)); kills_sb.pack(side="right", fill="y")
         self.lb_kills.bind('<<ListboxSelect>>', self.on_scene_selection)
+        self.lb_kills.bind('<Button-1>', self._on_kill_list_click, add='+')
         kb=ttk.Frame(f, style="Card.TFrame"); kb.pack(fill="x", pady=(6,0))
         ttk.Button(kb, text="選択シーンを ✓ ON/OFF", command=self.on_toggle_checked).pack(side="left", fill="x", expand=True, padx=(0,3))
         ttk.Button(kb, text="↳ 選択シーンへ移動", command=self.on_jump_selected).pack(side="left", fill="x", expand=True, padx=(3,0))
@@ -1513,13 +1572,74 @@ class App:
         self.log(f"キーフレームの型を適用: {preset}（未保存。『このシーンに保存』で確定）")
 
     def _focus_home(self):
-        self.canvas.focus_set()
+        self.left_scroll.scroll_to(self._nav_home_card)
+        self.log('ホーム: 左側のリプレイ準備・プレイヤー選択へ移動しました')
 
     def _focus_template(self):
+        self.left_scroll.scroll_to(self._nav_template_card)
         self.tpl_combo.focus_set()
+        self.log('テンプレート: 左側のプリセット選択へ移動しました')
 
     def _focus_reference(self):
-        self.lb_reference.focus_set()
+        # Reference cards are intentionally hidden in easy mode; reveal them.
+        if self.var_edit_mode.get() != 'advanced':
+            self.var_edit_mode.set('advanced')
+            self._apply_edit_mode(log=False)
+        self.left_scroll.scroll_to(self._nav_reference_card)
+        self.log('参考動画: 左側の参考動画追加・一覧へ移動しました')
+
+    def _focus_settings(self):
+        """Open the real export/settings workspace, not an unrelated log dialog."""
+        self.var_edit_mode.set('advanced')
+        self._apply_edit_mode(log=False)
+        self.var_editor_zone.set('output')
+        self._apply_editor_zone()
+        self.center_edit_scroll.canvas.yview_moveto(0)
+        self._refresh_gpu_status()
+        self.log('設定: 詳細編集 → 出力へ移動（GPU・キルフレーム・出力先）')
+
+    def _register_scrolling_controls(self):
+        """Mousewheel scrolls containing panel; never changes a closed combobox."""
+        def intercept(event):
+            for panel in (self.left_scroll, self.right_scroll, self.center_edit_scroll):
+                if panel._pointer_inside(event):
+                    panel.scroll_wheel(event)
+                    break
+            return 'break'  # prevents Tk's combobox/spinbox class binding
+        def visit(parent):
+            for widget in parent.winfo_children():
+                if isinstance(widget, (ttk.Combobox, ttk.Spinbox, tk.Spinbox)):
+                    for sequence in ('<MouseWheel>', '<Button-4>', '<Button-5>'):
+                        widget.bind(sequence, intercept, add=False)
+                visit(widget)
+        visit(self.root)
+
+    def _choose_kill_color(self, variable):
+        _, chosen = colorchooser.askcolor(initialcolor=variable.get() or '#E3B975', parent=self.root)
+        if chosen:
+            variable.set(chosen.upper())
+            self._save_settings()
+
+    def _on_kill_list_click(self, event):
+        """Only a click inside the visually displayed [✓] column toggles it."""
+        if not self.kills:
+            return None
+        idx = self.lb_kills.nearest(event.y)
+        if not 0 <= idx < len(self.kills):
+            return None
+        bbox = self.lb_kills.bbox(idx)
+        if not bbox or not (bbox[1] <= event.y <= bbox[1] + bbox[3]):
+            return None
+        import tkinter.font as tkfont
+        width = tkfont.Font(font=self.lb_kills.cget('font')).measure('[✓]') + 9
+        if event.x < 0 or event.x > width:
+            return None
+        self.lb_kills.selection_clear(0, 'end')
+        self.lb_kills.selection_set(idx)
+        self.lb_kills.activate(idx)
+        self.on_toggle_checked()
+        self.on_scene_selection()
+        return 'break'
 
     def _select_template_by_text(self, needle: str):
         for name in self.templates:
@@ -1676,6 +1796,8 @@ class App:
                     self._refresh_status()
                 elif kind == "busy":
                     self.busy = a[0]
+                    if not self.busy:
+                        self._refresh_gpu_status()
                 elif kind == "reference_url_done":
                     path, url = a[0], a[1]
                     if path not in self.reference_videos:
@@ -2307,6 +2429,16 @@ class App:
         self.var_kill_icon_scale.set(float(getattr(t, "kill_icon_scale", 1.0)))
         self.var_kill_icon_duration.set(float(getattr(t, "kill_icon_duration", 1.55)))
         self.var_kill_icon_opacity.set(float(getattr(t, "kill_icon_opacity", 1.0)))
+        from core.kill_icons import MARK_STYLES
+        self.var_kill_frame_color.set(getattr(t, 'kill_frame_color', ''))
+        self.var_kill_glow_color.set(getattr(t, 'kill_glow_color', ''))
+        self.var_kill_glow_enabled.set(bool(getattr(t, 'kill_glow_enabled', True)))
+        self.var_kill_glow_strength.set(float(getattr(t, 'kill_glow_strength', .65)))
+        self.var_kill_frame_width.set(int(getattr(t, 'kill_frame_width', 3)))
+        self.var_kill_mark_style.set(MARK_STYLES.get(getattr(t, 'kill_mark_style', 'auto'), MARK_STYLES['auto']))
+        self.var_encoder_policy.set({'auto':'自動（NVENC優先・失敗時CPU）',
+                                     'gpu':'GPU優先（NVENC）',
+                                     'cpu':'CPU優先（libx264）'}.get(getattr(t,'encoder_policy','auto'), '自動（NVENC優先・失敗時CPU）'))
         self.var_pre.set(t.pre)
         self.var_post.set(t.post)
         self.var_merge.set(t.merge_multikill)
@@ -2367,6 +2499,13 @@ class App:
         (_pos, t.kill_icon_scale, t.kill_icon_duration, t.kill_icon_opacity) = normalize_options(
             t.kill_icon_position, self.var_kill_icon_scale.get(),
             self.var_kill_icon_duration.get(), self.var_kill_icon_opacity.get())
+        from core.kill_icons import normalize_design, REVERSE_MARK_STYLES
+        (t.kill_frame_color, t.kill_glow_color, t.kill_glow_enabled, t.kill_glow_strength,
+         t.kill_frame_width, t.kill_mark_style) = normalize_design(
+            self.var_kill_frame_color.get(), self.var_kill_glow_color.get(),
+            self.var_kill_glow_enabled.get(), self.var_kill_glow_strength.get(),
+            self.var_kill_frame_width.get(), REVERSE_MARK_STYLES.get(self.var_kill_mark_style.get(), 'auto'))
+        t.encoder_policy = {'GPU優先（NVENC）':'gpu', 'CPU優先（libx264）':'cpu'}.get(self.var_encoder_policy.get(),'auto')
         t.kill_icon_players = [p.to_dict() for p in self.players]
         t.smart_montage = bool(self.var_smart_montage.get())
         t.smart_composition = bool(self.var_smart_composition.get())
@@ -2385,7 +2524,11 @@ class App:
         try:
             ok = bool(gpu_encoder_available())
             if hasattr(self, "lbl_gpu"):
-                self.lbl_gpu.configure(text=(gpu_pipeline_status() + " / UIプレビューはCPU合成" if ok else gpu_pipeline_status() + " / UIプレビューはCPU合成"))
+                self.lbl_gpu.configure(text=("FFmpeg NVENC登録あり" if ok else "FFmpeg NVENC未検出") +
+                                       " / " + gpu_pipeline_status() + " / プレビューCPU合成")
+            if hasattr(self, 'lbl_gpu_latest'):
+                from core.performance_diagnostics import latest_render_summary
+                self.lbl_gpu_latest.configure(text=latest_render_summary())
         except Exception as e:
             if hasattr(self, "lbl_gpu"):
                 self.lbl_gpu.configure(text=f"GPU状態: 判定できません ({type(e).__name__})")
@@ -2429,6 +2572,19 @@ class App:
             self.var_kill_icon_scale.set(badge_scale)
             self.var_kill_icon_duration.set(badge_duration)
             self.var_kill_icon_opacity.set(badge_opacity)
+            from core.kill_icons import normalize_design, MARK_STYLES
+            fc,gc,enabled,strength,width,mark=normalize_design(
+                d.get('kill_frame_color'), d.get('kill_glow_color'), d.get('kill_glow_enabled', True),
+                d.get('kill_glow_strength', .65), d.get('kill_frame_width', 3), d.get('kill_mark_style','auto'))
+            self.var_kill_frame_color.set(fc)
+            self.var_kill_glow_color.set(gc)
+            self.var_kill_glow_enabled.set(enabled)
+            self.var_kill_glow_strength.set(strength)
+            self.var_kill_frame_width.set(width)
+            self.var_kill_mark_style.set(MARK_STYLES[mark])
+            self.var_encoder_policy.set({'auto':'自動（NVENC優先・失敗時CPU）',
+                                         'gpu':'GPU優先（NVENC）',
+                                         'cpu':'CPU優先（libx264）'}.get(d.get('encoder_policy'),'自動（NVENC優先・失敗時CPU）'))
             if isinstance(d.get("smart_montage"), bool):
                 self.var_smart_montage.set(d["smart_montage"])
             if isinstance(d.get("smart_composition"), bool):
@@ -2465,6 +2621,13 @@ class App:
                                              "kill_icon_scale": float(self.var_kill_icon_scale.get()),
                                              "kill_icon_duration": float(self.var_kill_icon_duration.get()),
                                              "kill_icon_opacity": float(self.var_kill_icon_opacity.get()),
+                                             "kill_frame_color": self.var_kill_frame_color.get(),
+                                             "kill_glow_color": self.var_kill_glow_color.get(),
+                                             "kill_glow_enabled": bool(self.var_kill_glow_enabled.get()),
+                                             "kill_glow_strength": float(self.var_kill_glow_strength.get()),
+                                             "kill_frame_width": int(self.var_kill_frame_width.get()),
+                                             "kill_mark_style": KILL_MARK_REVERSE.get(self.var_kill_mark_style.get(),'auto'),
+                                             "encoder_policy": {'GPU優先（NVENC）':'gpu','CPU優先（libx264）':'cpu'}.get(self.var_encoder_policy.get(),'auto'),
                                              "smart_montage": bool(self.var_smart_montage.get()),
                                              "smart_composition": bool(self.var_smart_composition.get()),
                                              "montage_fx": {"なし（従来の高速連結）":"cut", "光るカット（白い閃光）":"flash", "暗転カット（シネマ）":"dark"}.get(self.var_montage_fx.get(),"cut")}, ensure_ascii=False), encoding="utf-8")
@@ -2486,7 +2649,11 @@ class App:
         self.log(f"参考動画を追加: {len(files)}本 / 合計 {len(self.reference_videos)}本（まだ解析していません）")
 
     def on_add_reference_url(self) -> None:
-        url = simpledialog.askstring("参考動画URL", "X / Twitter / YouTube などの動画URLを貼り付けてください。\nyt-dlp対応サイトから動画を取得して参考動画に追加します:")
+        entered = self.ref_url_hint.get().strip() if hasattr(self, 'ref_url_hint') else ''
+        # The visible field is an actual input, not just a decorative example.
+        url = entered if entered.startswith(('https://', 'http://')) and 'watch?v=...' not in entered else None
+        if not url:
+            url = simpledialog.askstring("参考動画URL", "X / Twitter / YouTube などの動画URLを貼り付けてください。\nyt-dlp対応サイトから動画を取得して参考動画に追加します:")
         if not url:
             return
         url = url.strip()
