@@ -68,6 +68,12 @@ def render_scenes(api,source,player,kills,tpl,out_root,make_montage,
         from core.jobs import unique_path as unique_path
     out=BatchResult()
     scenes=list(build_scene_templates(kills,tpl,overrides,auto=auto,order=order))
+    if auto and getattr(tpl, 'smart_highlight_enabled', False) and getattr(tpl, 'smart_montage', False) and not order:
+        from .smart_montage import choose_scenes
+        before = len(scenes)
+        scenes = choose_scenes(scenes, limit=12)
+        log(f'スマートモンタージュ: {before}候補から{len(scenes)}見せ場を構成。'
+            '徐々に盛り上げてクライマックスへ。手動で保存した順番は変更しません。')
     for i,(kill,scene_tpl) in enumerate(scenes,1):
         if stop is not None and stop.is_set():
             log('中止しました。');break
@@ -94,11 +100,15 @@ def render_scenes(api,source,player,kills,tpl,out_root,make_montage,
             from core.jobs import safe_name
             out_dir=Path(out_root)/f'{safe_name(player.name)}_{safe_name(player.champion)}'
             target=unique_path(out_dir/'montage.mp4')
-            if getattr(tpl, 'montage_fx', 'cut') == 'cut':
+            montage_style = getattr(tpl, 'montage_fx', 'cut')
+            if (auto and getattr(tpl, 'smart_highlight_enabled', False)
+                    and getattr(tpl, 'smart_montage', False) and montage_style == 'cut'):
+                montage_style = 'dark'  # restrained automatic seam; audio is copied
+            if montage_style == 'cut':
                 concat(out.outputs,target)
             else:
                 from core.montage_fx import render_montage
-                render_montage(out.outputs,target, tpl.montage_fx, concat=concat, logger=log)
+                render_montage(out.outputs,target, montage_style, concat=concat, logger=log)
             out.montage=target
             log(f'シーン別モンタージュ保存: {target.name}')
         except Exception as e:

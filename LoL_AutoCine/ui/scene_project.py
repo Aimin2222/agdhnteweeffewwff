@@ -65,6 +65,7 @@ class Shot:
     focus_blur: float = 0.0
     dof_blur: float = 0.0
     highlight_pulse: float = 0.0  # 0=off, kill-timed warm/white accent
+    kill_icon_style: str = 'inherit'  # per-scene decoration, inherits global by default
 
     @classmethod
     def validated(cls, data):
@@ -84,7 +85,8 @@ class Shot:
             bloom=bound(data.get('bloom'), 0.0, 1.0, 0.25),
             focus_blur=bound(data.get('focus_blur'), 0.0, 1.0, 0.0),
             dof_blur=bound(data.get('dof_blur'), 0.0, 20.0, 0.0),
-            highlight_pulse=bound(data.get('highlight_pulse'), 0.0, 1.0, 0.0)
+            highlight_pulse=bound(data.get('highlight_pulse'), 0.0, 1.0, 0.0),
+            kill_icon_style=data.get('kill_icon_style') if data.get('kill_icon_style') in ('inherit', 'off', 'simple', 'cinema', 'neon', 'impact') else 'inherit'
         )
 
 
@@ -114,6 +116,8 @@ def apply_shot(base, shot: Shot):
     # Reuse the existing camera and effect pipelines; no renderer duplication.
     t.scene_keyframes = copy.deepcopy(s.keyframes)
     t.highlight_pulse = s.highlight_pulse
+    if s.kill_icon_style != 'inherit':
+        t.kill_icon_style = s.kill_icon_style
     if s.fx_override:
         t.temperature = s.temperature
         t.bloom = s.bloom

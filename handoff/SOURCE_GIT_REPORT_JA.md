@@ -1,4 +1,4 @@
-# AutoCine v5.9.8 ソースGit報告
+# AutoCine v5.9.9 ソースGit報告
 
 保存場所: /workspace/LoL_AutoCine
 取得用リポジトリ: /workspace/agdhnteweeffewwff
@@ -11,9 +11,9 @@
 ## git log -3 --oneline
 
 ```
-81433fd Record v5.9.8 smart editing and real pulse validation
-73edb79 Merge explicit smart action isolation and version display
-6aa85b3 Keep regular one click on the legacy planner after smart use
+0d05c09 Record v5.9.9 integration and verified regressions
+d6e82cb Merge package application instructions
+463fc07 Clarify patch application for both source layouts
 ```
 
 ## git remote -v
@@ -24,30 +24,35 @@ origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-完全ソース201ファイル、全23ブランチを同梱bundleで保持。個人設定・プロジェクト・ログ・音声・録画・.venvは追跡しない。mainへマージしない。
+完全ソース213ファイル、全25ブランチを同梱bundleで保持。個人設定・プロジェクト・ログ・音声・録画・.venvは追跡しない。mainへマージしない。
 
-## v5.9.7から実際に追加・変更したファイル
+## v5.9.8から実際に追加・変更したファイル
 
 ```
-A	README_v5.9.8_JA.md
+A	README_v5.9.9_JA.md
 M	VERSION.txt
+M	core/camera.py
 M	core/effects.py
-A	core/highlight_pulse.py
-A	docs/CODEX_GPU_REVIEW_v5.9.8_JA.md
-A	docs/CODEX_INTEGRATION_RESULTS_v5.9.8_JA.md
-A	docs/CODEX_INTEGRATION_v598_JA.md
-A	docs/v598_CHANGED_FILES.txt
-A	docs/v598_changes.patch
+M	core/jobs.py
+A	core/kill_icons.py
+A	docs/CODEX_INTEGRATION_RESULTS_v5.9.9_JA.md
+A	docs/CODEX_INTEGRATION_v599_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.9.9.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.9.9_JA.md
+A	docs/HANDOFF_MASTER_2026-10-09_JA.md
+A	docs/v599_changes.patch
 M	legacy_app.py
-A	tests/test_gpu_highlight_v598.py
+M	tests/test_gpu_highlight_v598.py
+A	tests/test_gpu_killbadges_v599.py
 M	tests/test_gpu_montage_v597.py
 M	tests/test_gpu_shared_camera_contract.py
 M	tests/test_parallel_integration.py
-A	tests/test_v598_highlight_director.py
+A	tests/test_v599_automontage_killbadges.py
 M	tools/check_parallel_integration.py
-A	ui/highlight_director.py
+A	tools/package_v599.py
 M	ui/scene_batch.py
 M	ui/scene_project.py
+A	ui/smart_montage.py
 ```
 
 ## 元のv5.8.5から実際に追加・変更したファイル
@@ -63,12 +68,14 @@ A	README_v5.9.5_JA.md
 A	README_v5.9.6_JA.md
 A	README_v5.9.7_JA.md
 A	README_v5.9.8_JA.md
+A	README_v5.9.9_JA.md
 M	VERSION.txt
 M	core/camera.py
 A	core/camera_clock.py
 M	core/effects.py
 A	core/highlight_pulse.py
 M	core/jobs.py
+A	core/kill_icons.py
 A	core/montage_fx.py
 A	docs/CHANGELOG_v5.8.6_JA.md
 A	docs/CHANGELOG_v5.9.4_JA.md
@@ -88,12 +95,14 @@ A	docs/CODEX_INTEGRATION_RESULTS_v5.9.5_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.6_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.7_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.8_JA.md
+A	docs/CODEX_INTEGRATION_RESULTS_v5.9.9_JA.md
 A	docs/CODEX_INTEGRATION_v592_JA.md
 A	docs/CODEX_INTEGRATION_v593_JA.md
 A	docs/CODEX_INTEGRATION_v595_JA.md
 A	docs/CODEX_INTEGRATION_v596_JA.md
 A	docs/CODEX_INTEGRATION_v597_JA.md
 A	docs/CODEX_INTEGRATION_v598_JA.md
+A	docs/CODEX_INTEGRATION_v599_JA.md
 A	docs/CODEX_LOCAL_DEVELOPMENT_JA.md
 A	docs/CODEX_MERGE_NOTICE_v5.9.4_JA.md
 A	docs/CODEX_MERGE_PROMPT_JA.md
@@ -110,8 +119,11 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.9.6.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.9.6_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.9.7.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.9.7_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.9.9.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.9.9_JA.md
 A	docs/DESIGN_SCENESTUDIO_JA.md
 A	docs/DIAGNOSTIC_FINDINGS_v5.9.4_JA.md
+A	docs/HANDOFF_MASTER_2026-10-09_JA.md
 A	docs/REQUIREMENTS_SCENESTUDIO_JA.md
 A	docs/TEST_PLAN_v5.9.0_JA.md
 A	docs/changes_v5.9.4.patch
@@ -123,10 +135,12 @@ A	docs/v597_CHANGED_FILES.txt
 A	docs/v597_changes.patch
 A	docs/v598_CHANGED_FILES.txt
 A	docs/v598_changes.patch
+A	docs/v599_changes.patch
 M	legacy_app.py
 A	patches/v594_to_v595.patch
 A	tests/test_editor_ui_contract.py
 A	tests/test_gpu_highlight_v598.py
+A	tests/test_gpu_killbadges_v599.py
 A	tests/test_gpu_montage_v597.py
 A	tests/test_gpu_shared_camera_contract.py
 A	tests/test_gpu_shared_camera_v593.py
@@ -142,7 +156,9 @@ A	tests/test_v595_workspace.py
 A	tests/test_v596_hud_batch.py
 A	tests/test_v597_studio.py
 A	tests/test_v598_highlight_director.py
+A	tests/test_v599_automontage_killbadges.py
 A	tools/check_parallel_integration.py
+A	tools/package_v599.py
 A	ui/__init__.py
 A	ui/highlight_director.py
 A	ui/hud_presets.py
@@ -150,6 +166,7 @@ A	ui/motion_graph.py
 A	ui/scene_batch.py
 A	ui/scene_project.py
 A	ui/scene_timeline.py
+A	ui/smart_montage.py
 A	ui/studio_localization.py
 A	ui_changes_v5.9.1.patch
 ```
