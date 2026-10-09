@@ -10,11 +10,9 @@ import subprocess
 from dataclasses import dataclass
 from functools import lru_cache
 
-try:
-    import imageio_ffmpeg
-    FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
-except Exception:
-    FFMPEG = "ffmpeg"
+from .gpu_binary import ffmpeg_exe
+from .gpu_bloom import OPENCL_DEVICE, shader_source
+FFMPEG = ffmpeg_exe()
 
 
 @dataclass(frozen=True)
@@ -28,6 +26,9 @@ class GPUCapabilities:
     overlay_cuda: bool = False
     chromakey_cuda: bool = False
     opencl_runtime_ok: bool = False
+    program_opencl: bool = False
+    rgba_gpu_runtime_ok: bool = False
+    rgba_probe_reason: str = ''
 
 
 def _run(args: list[str], timeout: float = 10.0) -> tuple[int, str]:
@@ -58,7 +59,7 @@ def _opencl_probe() -> bool:
     # exact NV12 upload, filter and NV12 download path used by the renderer.
     candidates = [
         [FFMPEG, "-hide_banner", "-loglevel", "error",
-         "-init_hw_device", "opencl=ocl:0.0", "-filter_hw_device", "ocl",
+         "-init_hw_device", OPENCL_DEVICE, "-filter_hw_device", "ocl",
          "-f", "lavfi", "-i", "color=c=0x4080c0:s=64x64:d=0.1",
          "-vf", "format=nv12,hwupload,avgblur_opencl=sizeX=3:sizeY=3:planes=1,hwdownload,format=nv12",
          "-frames:v", "1", "-f", "null", "-"],
@@ -68,6 +69,25 @@ def _opencl_probe() -> bool:
         if rc == 0:
             return True
     return False
+
+
+@lru_cache(maxsize=1)
+def _rgba_probe():
+    import tempfile
+    from pathlib import Path
+    from types import SimpleNamespace
+    if 'program_opencl' not in _filters_text():
+        return False, 'ffmpeg_missing_program_opencl'
+    source = shader_source(SimpleNamespace(dof_blur=1,bloom=.25))
+    with tempfile.TemporaryDirectory(prefix='autocine-opencl-probe-') as folder:
+        path = Path(folder)/'probe.cl'
+        path.write_text(source,encoding='utf-8')
+        escaped = str(path).replace('\\','/').replace(':',r'\:').replace("'",r"\'")
+        rc, text = _run([FFMPEG,'-hide_banner','-loglevel','error','-init_hw_device',OPENCL_DEVICE,
+                        '-filter_hw_device','ocl','-f','lavfi','-i','color=c=0x4080c0:s=64x64:d=0.1',
+                        '-vf',f"format=rgba,hwupload,program_opencl=source='{escaped}':kernel=copy_rgba,hwdownload,format=rgba",
+                        '-frames:v','1','-f','null','-'],timeout=12)
+    return rc == 0, '' if rc == 0 else text[-1000:]
 
 
 @lru_cache(maxsize=1)
@@ -81,6 +101,7 @@ def detect() -> GPUCapabilities:
     unsharp_opencl = "unsharp_opencl" in f
     opencl = "opencl" in f
     runtime_ok = _opencl_probe() if gblur_opencl else False
+    rgba_ok, rgba_reason = _rgba_probe()
     return GPUCapabilities(
         nvenc=nvenc,
         cuda=nvenc or scale_cuda or "hwupload_cuda" in f,
@@ -91,16 +112,19 @@ def detect() -> GPUCapabilities:
         overlay_cuda="overlay_cuda" in f,
         chromakey_cuda="chromakey_cuda" in f,
         opencl_runtime_ok=runtime_ok,
+        program_opencl='program_opencl' in f,
+        rgba_gpu_runtime_ok=rgba_ok,
+        rgba_probe_reason=rgba_reason,
     )
 
 
 def backend_name(c: GPUCapabilities | None = None) -> str:
     c = c or detect()
-    if c.nvenc and c.opencl_runtime_ok:
-        return "NVIDIA OpenCL Effects (verified) + NVENC"
+    if c.nvenc and (c.opencl_runtime_ok or c.rgba_gpu_runtime_ok):
+        return "OpenCL GPU Effects (verified) + NVIDIA NVENC"
     if c.nvenc:
         return "NVIDIA NVENC + CPU Effects fallback"
-    if c.opencl_runtime_ok:
+    if c.opencl_runtime_ok or c.rgba_gpu_runtime_ok:
         return "OpenCL GPU Effects + CPU Encode fallback"
     return "CPU Effects / CPU Encode"
 

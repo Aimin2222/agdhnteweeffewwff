@@ -12,6 +12,7 @@ import subprocess
 
 
 GPU_FILES = {"core/effects.py", "core/gpu_pipeline.py", "core/recorder.py",
+             "tools/setup_gpu_ffmpeg.py", "START_GPU.bat",
              "core/focus_fx.py", "core/preview.py",
              "core/montage_fx.py",
              "core/highlight_pulse.py",
@@ -31,7 +32,7 @@ UI_FILES = {"legacy_app.py", "tests/test_editor_ui_contract.py",
 SHARED_FILES = {"core/jobs.py", "core/camera.py", "core/camera_clock.py", "core/audio.py",
                 "core/scanner.py", "app.py", "requirements.txt",
                 "core/procloop.py", "core/audio_worker.py", "core/capture.py"}
-INFRA_FILES = {"tools/check_parallel_integration.py", "tests/test_parallel_integration.py", "tools/package_v599.py", "tools/package_v5100.py", "tools/package_v5101.py", "tools/package_v5103.py", "tools/package_v5103_hangfix.py"}
+INFRA_FILES = {"tools/check_parallel_integration.py", "tests/test_parallel_integration.py", "tools/package_v599.py", "tools/package_v5100.py", "tools/package_v5101.py", "tools/package_v5103.py", "tools/package_v5103_hangfix.py", "tools/package_v5103_gpu.py"}
 
 
 def owner(path: str) -> str:

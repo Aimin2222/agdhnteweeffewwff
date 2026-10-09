@@ -1,44 +1,49 @@
-# AutoCine v5.10.3 応答停止対策版 Git報告
+# GPUFX版の保存・実変更
 
-ソース保存先: /workspace/LoL_AutoCine
-取得用保存先: /workspace/agdhnteweeffewwff
-ソースはローカルGit（remoteなし）。取得用originはhttps://github.com/Aimin2222/agdhnteweeffewwff.git。
+ソース保存先: /workspace/LoL_AutoCine。ローカルGit、remoteなし。
+取得用保存先: /workspace/agdhnteweeffewwff。origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
+ソースHEAD: 16074dc72bce28cfc5daeb93ad34fdd073fa6beb。ブランチ: integration/v5.10.3-gpu-effects。
+取得用ブランチ: codex/lol-autocine-v5103-gpu-effects-handoff。mainへマージしない。
 
-## git status --short
-
-ソース・取得用とも更新開始前は空。最終コミット/push後も空を検証。無視ファイル（.venv/個人設定/プロジェクト/診断/生成dist）はローカルに保持し配布しない。
+開始時の両Gitのgit status --shortは空。最終コミット/push後の状態はVERIFICATION_v5.10.3_GPUFX.jsonに記録する。無視ファイル（.venv/個人設定/診断/録画/生成dist）をローカルに保持し配布しない。
 
 ## ソースgit log -3 --oneline
 
 ```
-c19c467 Record safe shutdown lifetime of display check workers
-9670d7d Merge branch 'feature/ui-dispatch-hangfix-v5103' into integration/v5.10.3-hangfix
-8f19493 Keep background display checks independent of Tk object lifetime
+16074dc Record separate DOF-only and combined OpenCL reference measurements
+dacf009 Integrate GPU Bloom and DOF while preserving v5.10.3 HangFix UI
+eb8cb75 Add GPU-only OpenCL Bloom and circular DOF with verified Windows FFmpeg setup
 ```
 
 ## git remote -v
 
-ソースは空。取得用:
+ソース: 空。取得用:
+
 ```
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-ソース243ファイル/Python88・全35ブランチをbundle保存。core以下・Native Helper・START.batは前回とバイト一致。mainへマージしない。
-
-## 元v5.10.3からの実変更一覧
+## 前回HangFix版からの追加・変更
 
 ```
-A	docs/CODEX_ALL_SCENES_HANG_FIX_v5.10.3_JA.md
-M	legacy_app.py
-A	tests/test_v5103_nonblocking_dispatch.py
+M	.gitignore
+A	START_GPU.bat
+M	core/effects.py
+A	core/gpu_binary.py
+A	core/gpu_bloom.py
+M	core/gpu_pipeline.py
+A	docs/CODEX_GPU_EFFECTS_v5.10.3_JA.md
+A	tests/test_gpu_opencl_bloom.py
 M	tools/check_parallel_integration.py
-A	tools/package_v5103_hangfix.py
+A	tools/package_v5103_gpu.py
+A	tools/setup_gpu_ffmpeg.py
 ```
 
-## 元v5.8.5からの実変更一覧
+## 元v5.8.5からの追加・変更
 
 ```
+M	.gitignore
 A	README_v5.10.0_JA.md
 A	README_v5.10.1_JA.md
 A	README_v5.10.3_JA.md
@@ -54,12 +59,16 @@ A	README_v5.9.7_JA.md
 A	README_v5.9.8_JA.md
 A	README_v5.9.9_ChampionPairFix_JA.md
 A	README_v5.9.9_JA.md
+A	START_GPU.bat
 M	VERSION.txt
 A	assets/champion_icons/README_JA.txt
 M	core/camera.py
 A	core/camera_clock.py
 M	core/effects.py
 A	core/focus_fx.py
+A	core/gpu_binary.py
+A	core/gpu_bloom.py
+M	core/gpu_pipeline.py
 A	core/highlight_pulse.py
 M	core/jobs.py
 A	core/kill_icons.py
@@ -77,6 +86,7 @@ A	docs/CODEX_ARCHITECTURE_JA.md
 A	docs/CODEX_AUDIT_RESULTS_JA.md
 A	docs/CODEX_CHAMPION_PAIR_RESULTS_v5.9.9_JA.md
 A	docs/CODEX_GPU_ANALYSIS_JA.md
+A	docs/CODEX_GPU_EFFECTS_v5.10.3_JA.md
 A	docs/CODEX_GPU_REVIEW_v5.9.8_JA.md
 A	docs/CODEX_INTEGRATION_CONTRACT_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.10.0_JA.md
@@ -146,6 +156,7 @@ A	tests/test_gpu_encoding_v510.py
 A	tests/test_gpu_highlight_v598.py
 A	tests/test_gpu_killbadges_v599.py
 A	tests/test_gpu_montage_v597.py
+A	tests/test_gpu_opencl_bloom.py
 A	tests/test_gpu_replay_warmup_v5101.py
 A	tests/test_gpu_shared_camera_contract.py
 A	tests/test_gpu_shared_camera_v593.py
@@ -171,8 +182,10 @@ A	tools/check_parallel_integration.py
 A	tools/package_v5100.py
 A	tools/package_v5101.py
 A	tools/package_v5103.py
+A	tools/package_v5103_gpu.py
 A	tools/package_v5103_hangfix.py
 A	tools/package_v599.py
+A	tools/setup_gpu_ffmpeg.py
 A	ui/__init__.py
 A	ui/highlight_director.py
 A	ui/hud_presets.py
@@ -184,3 +197,5 @@ A	ui/smart_montage.py
 A	ui/studio_localization.py
 A	ui_changes_v5.9.1.patch
 ```
+
+250ソースファイル/Python93、全36ブランチをbundle保存。UI/カメラ/録画/LoL専用録音/Native Helper/元START.bat/依存宣言はHangFix版とバイト一致。全旧ブランチ・ZIP・bundleを保持。
