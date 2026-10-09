@@ -30,10 +30,18 @@ def run(memory_name, title):
     closed = threading.Event()
     failed = threading.Event()
     last_copy = 0.0
-    kwargs = dict(cursor_capture=False, draw_border=False, window_name=title,
-                  minimum_update_interval=16)
-    if 'window_hwnd' in inspect.signature(WindowsCapture).parameters:
+    parameters = inspect.signature(WindowsCapture).parameters
+    kwargs = dict(cursor_capture=False, draw_border=False)
+    # The native API accepts exactly ONE target. Passing both the name and
+    # HWND raises before the capture can start (windows-capture 2.0.1).
+    if 'window_hwnd' in parameters:
         kwargs['window_hwnd'] = hwnd
+    else:
+        kwargs['window_name'] = title
+    if 'monitor_index' in parameters:
+        kwargs['monitor_index'] = None
+    if 'minimum_update_interval' in parameters:
+        kwargs['minimum_update_interval'] = 16
     cap = WindowsCapture(**kwargs)
     @cap.event
     def on_frame_arrived(frame, control):

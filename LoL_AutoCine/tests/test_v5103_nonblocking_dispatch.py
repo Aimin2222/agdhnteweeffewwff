@@ -204,3 +204,97 @@ def test_all_scene_watchdog_cancelled_on_capture_failure(gui, monkeypatch, tmp_p
     _until(root, lambda: not app.busy)
     assert armed == cancelled == [True]
     assert not app._checked_watchdog_active
+    assert '書き出し失敗: No frames' in app.lbl_job.cget('text')
+
+
+def test_mirror_wait_and_stop_do_not_block_tk_and_cancelled_result_stays_off(gui, monkeypatch):
+    import legacy_app as ui
+    app, root = gui
+    owner = threading.get_ident()
+    entered, release, stopped = (threading.Event() for _ in range(3))
+    sources = []
+
+    class Source:
+        running = False
+        def __init__(self):
+            sources.append(self)
+        def start(self):
+            assert threading.get_ident() != owner
+            if len(sources) == 1:
+                entered.set()
+                assert release.wait(3)
+            self.running = True
+        def latest(self):
+            return None
+        def stop(self):
+            assert threading.get_ident() != owner
+            self.running = False
+            stopped.set()
+
+    monkeypatch.setattr(ui, 'FAKE_CAPTURE', False)
+    monkeypatch.setattr(ui, 'WGCWindowSource', Source)
+    original_get, original_set = tk.Variable.get, tk.Variable.set
+    def checked_get(var):
+        assert threading.get_ident() == owner
+        return original_get(var)
+    def checked_set(var, value):
+        assert threading.get_ident() == owner
+        return original_set(var, value)
+    monkeypatch.setattr(tk.Variable, 'get', checked_get)
+    monkeypatch.setattr(tk.Variable, 'set', checked_set)
+    try:
+        begin = time.monotonic()
+        app.on_mirror_toggle()
+        assert time.monotonic() - begin < .2 and entered.wait(1)
+        assert app._mirror.pending and app.var_mirror.get()
+        ticks = []
+        root.after(0, lambda: ticks.append(True))
+        _until(root, lambda: bool(ticks))
+        app.on_mirror_toggle()
+        assert not app.var_mirror.get() and app.source is None
+        assert stopped.wait(1)
+        # A new attempt succeeds before the old worker delivers its result.
+        app.on_mirror_toggle()
+        _until(root, lambda: app.source is sources[1])
+        release.set()
+        _until(root, lambda: not sources[0].running)
+        root.update()
+        assert app.source is sources[1] and app.var_mirror.get()
+        app.on_mirror_toggle()
+        assert app.source is None and not app.var_mirror.get()
+    finally:
+        release.set()
+        app._mirror.stop()
+
+
+def test_mirror_failure_returns_off_and_allows_retry(gui, monkeypatch):
+    import legacy_app as ui
+    app, root = gui
+    class Source:
+        running = False
+        def start(self):
+            raise ui.CaptureError('You can only specify one of')
+        def stop(self):
+            pass
+    monkeypatch.setattr(ui, 'FAKE_CAPTURE', False)
+    monkeypatch.setattr(ui, 'WGCWindowSource', Source)
+    for _ in range(2):
+        app.on_mirror_toggle()
+        _until(root, lambda: not app._mirror.pending)
+        assert app.source is None and not app.var_mirror.get()
+    assert 'ミラー開始失敗: You can only specify one of' in ui.RUN_LOG.read_text()
+
+
+def test_checked_capture_failure_replaces_preparing_label(gui, monkeypatch):
+    import legacy_app as ui
+    app, root = gui
+    app.locked = SimpleNamespace(name='A')
+    app.kills = [SimpleNamespace(time=10)]
+    app.checked_kills = {0}
+    app.lbl_job.configure(text='開始準備中…')
+    def fail():
+        raise ui.CaptureError('native target rejected')
+    monkeypatch.setattr(app, '_ensure_source', fail)
+    app.on_make_checked()
+    _until(root, lambda: not app.busy)
+    assert '書き出し失敗: native target rejected' in app.lbl_job.cget('text')

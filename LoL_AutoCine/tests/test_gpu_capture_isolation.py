@@ -32,14 +32,16 @@ from core.capture_process import SharedFrame
 import numpy as np
 bridge=SharedFrame({name!r})
 mode={mode!r}
-if mode=='native':
+if mode in ('native','native-old'):
  import types
  import core.capture_worker as worker
  worker.find_lol_hwnd=lambda:123
  worker.importlib.metadata.version=lambda _: 'test-native'
  class WindowsCapture:
   def __init__(self, cursor_capture=False,draw_border=False,window_name=None,minimum_update_interval=None,window_hwnd=None):
-   assert window_name==worker.LOL_WINDOW_TITLE and window_hwnd==123
+   if window_name is not None and window_hwnd is not None:
+    raise Exception('You can only specify one of: monitor_index, window_name, or window_hwnd')
+   assert window_name is None and window_hwnd==123
    assert not cursor_capture and not draw_border and minimum_update_interval==16
    self.handlers={{}}
   def event(self,fn):self.handlers[fn.__name__]=fn;return fn
@@ -54,12 +56,22 @@ if mode=='native':
    threading.Thread(target=frames,daemon=True).start()
    return object()
  import threading
+ if mode=='native-old':
+  class OldWindowsCapture(WindowsCapture):
+   def __init__(self,cursor_capture=False,draw_border=False,monitor_index=None,window_name=None):
+    assert window_name==worker.LOL_WINDOW_TITLE and monitor_index is None
+    assert not cursor_capture and not draw_border
+    self.handlers={{}}
+  WindowsCapture=OldWindowsCapture
  sys.modules['windows_capture']=types.SimpleNamespace(WindowsCapture=WindowsCapture)
  worker.run({name!r},worker.LOL_WINDOW_TITLE)
 if mode=='blocked':
  time.sleep(120)
 if mode=='crash':
  os._exit(17)
+if mode=='target-error':
+ print('Exception: You can only specify one of: monitor_index, window_name, or window_hwnd',file=sys.stderr,flush=True)
+ os._exit(2)
 for i in range(3000):
  bridge.write(np.full((32,48,4),[10,20,30,255],dtype=np.uint8))
  if mode=='later-crash' and i==10:os._exit(18)
@@ -97,7 +109,7 @@ def test_shared_frame_owns_pixels_and_rejects_incomplete_or_invalid_frames():
     finally:bridge.close()
 
 
-@pytest.mark.parametrize('mode',['frames','native'])
+@pytest.mark.parametrize('mode',['frames','native','native-old'])
 def test_actual_process_delivers_bgra_without_importing_native_capture(worker,mode):
     worker(mode);source=WGCWindowSource()
     try:
@@ -139,6 +151,13 @@ def test_child_failure_before_first_frame_is_reported_and_cleaned(worker):
     worker('frames')
     try:source.start();assert source.running
     finally:source.stop()
+
+
+def test_native_exception_is_visible_without_opening_worker_log(worker):
+    worker('target-error');source=WGCWindowSource()
+    with pytest.raises(CaptureError,match='You can only specify one of'):
+        source.start()
+    assert not source.running and source._session is None
 
 
 def test_child_exit_after_start_propagates_instead_of_recording_stale_frame(worker):

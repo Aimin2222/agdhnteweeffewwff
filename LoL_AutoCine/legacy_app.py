@@ -38,6 +38,7 @@ from core.players import Player, parse_players                     # noqa: E402
 from core.replay_api import ReplayAPI                              # noqa: E402
 from core.scanner import scan_kills                                # noqa: E402
 from ui.scene_timeline import SceneTimeline                     # noqa: E402
+from ui.mirror_capture import MirrorCapture                     # noqa: E402
 from ui.scene_project import SceneProject, Shot, scene_key, recommend, apply_shot  # noqa: E402
 from ui.scene_batch import render_scenes                      # noqa: E402
 from ui.highlight_director import SMART_STYLES, SMART_STYLES_REVERSE, recommend_highlight  # noqa: E402
@@ -415,6 +416,7 @@ class App:
             except Exception:
                 pass
         self.q: queue.Queue = queue.Queue()
+        self._mirror = MirrorCapture(self.q)
         self.stop_ev = threading.Event()
         self.busy = False
         self._closing = False
@@ -1766,12 +1768,13 @@ class App:
             os.startfile(str(d))  # type: ignore[attr-defined]
 
     def on_mirror_toggle(self) -> None:
-        if self.source is not None and getattr(self.source, "running", False):
+        if self.busy:
+            self.log("処理中はミラーを切り替えできません。中止後に操作してください。")
+            return
+        if self._mirror.pending or self.source is not None:
             self.on_mirror_stop()
-            self.var_mirror.set(False)
         else:
             self.on_mirror_start()
-            self.var_mirror.set(self.source is not None)
 
     def on_jump_selected(self) -> None:
         if not self._need_lock():
@@ -1826,12 +1829,8 @@ class App:
             self._status_poll_token = None
         try:
             self.stop_ev.set()
-            if self.source is not None:
-                try:
-                    self.source.stop()
-                except Exception as e:
-                    _diag_write(CRASH_LOG, f"close source stop: {e}")
-                self.source = None
+            self._mirror.stop()
+            self.source = None
             self._save_settings()
             self._autosave_project()
         finally:
@@ -1884,6 +1883,16 @@ class App:
                     self._gpu_refresh_pending = False
                     self.lbl_gpu.configure(text=a[0])
                     self.lbl_gpu_latest.configure(text=a[1])
+                elif kind == "mirror_ready":
+                    token, source, error = a
+                    if self._mirror.accept(token, source, error):
+                        self.source = self._mirror.source
+                        self.var_mirror.set(self.source is not None)
+                        self.log(f"ミラー開始失敗: {error}" if error else "ミラー開始 (LoLウィンドウのみ)。")
+                elif kind == "mirror_stop_error":
+                    self.log(f"ミラー停止エラー: {a[0]}")
+                elif kind == "job_error":
+                    self.lbl_job.configure(text="書き出し失敗: " + str(a[0]))
                 elif kind == "busy":
                     self.busy = a[0]
                     if not self.busy:
@@ -2496,6 +2505,7 @@ class App:
                 _diag_write(RUN_LOG, f"BG_STAGE worker_finished fn={name}")
             except Exception as e:
                 self.log(f"エラー: {e}")
+                self.q.put(("job_error", str(e)))
                 (ROOT / "diagnostics").mkdir(exist_ok=True)
                 (ROOT / "diagnostics" / "last_error.txt").write_text(traceback.format_exc(), encoding="utf-8")
                 _diag_write(RUN_LOG, f"BG_STAGE worker_error fn={name}: {type(e).__name__}: {e}")
@@ -3019,6 +3029,9 @@ class App:
                  + ("" if res.complete else " (途中で中断)"))
 
     def _ensure_source(self):
+        if self._mirror.pending:
+            raise CaptureError("ミラー開始準備中です。映像が表示されてから書き出してください。")
+        self.q.put(("job", 0, 0, 0, "LoL映像入力を準備中（初フレーム待ち・上限8秒）"))
         if self.source is not None and self.source.running:
             return self.source, False
         if FAKE_CAPTURE:
@@ -3117,6 +3130,7 @@ class App:
             _diag_write(RUN_LOG, f"ALL_STAGE capture_ready own={own}")
         except CaptureError as e:
             self.log(f"映像入力エラー: {e}")
+            self.q.put(("job_error", str(e)))
             return
         res = None
         try:
@@ -3131,6 +3145,7 @@ class App:
             except Exception as e:
                 # 全キル処理全体の例外をUI/プロセスへ漏らさず、診断情報を残す。
                 self.log(f"全キル作成を安全停止: {type(e).__name__}: {e}")
+                self.q.put(("job_error", str(e)))
                 (ROOT / "diagnostics").mkdir(exist_ok=True)
                 (ROOT / "diagnostics" / "last_error.txt").write_text(traceback.format_exc(), encoding="utf-8")
                 return
@@ -3164,22 +3179,27 @@ class App:
 
     # ミラー (LoLウィンドウのみ)
     def on_mirror_start(self) -> None:
+        if self._closing or self.busy or self._mirror.pending:
+            return
+        if self.source is not None:
+            if self.source.running:
+                return
+            self.on_mirror_stop()
         try:
-            if FAKE_CAPTURE:
-                self.source = SyntheticSource(time_fn=lambda: time.time() % 600)
-            else:
-                self.source = WGCWindowSource()
-            self.source.start()
-            self.log("ミラー開始 (LoLウィンドウのみ)。")
-        except CaptureError as e:
-            self.source = None
+            source = (SyntheticSource(time_fn=lambda: time.time() % 600)
+                      if FAKE_CAPTURE else WGCWindowSource())
+            self._mirror.start(source)
+            self.var_mirror.set(True)
+            self.log("ミラー開始準備中…（初フレーム待ち・上限8秒）。もう一度押すと中止します。")
+        except Exception as e:
+            self.var_mirror.set(False)
             self.log(f"ミラー開始失敗: {e}")
 
     def on_mirror_stop(self) -> None:
-        if self.source:
-            self.source.stop()
-            self.source = None
-            self.canvas.delete("all")
+        self._mirror.stop()
+        self.source = None
+        self.canvas.delete("all")
+        self.log("ミラーOFF。")
         if hasattr(self, "var_mirror"):
             self.var_mirror.set(False)
 

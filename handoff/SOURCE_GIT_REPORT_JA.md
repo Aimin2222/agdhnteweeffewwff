@@ -1,18 +1,18 @@
-# v5.10.3 GPUFX CaptureFix 保存報告
+# v5.10.3 GPUFX MirrorFix 保存報告
 
 ソース保存先: /workspace/LoL_AutoCine、ローカルGitでremoteなし。
 取得用保存先: /workspace/agdhnteweeffewwff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
-ソースHEAD: 86a1165658082daaff902649dd56eb7a4895ed09、ブランチ: integration/v5.10.3-capturefix。
-取得用ブランチ: codex/lol-autocine-v5103-capturefix-handoff。mainへマージしない。
+ソースHEAD: 8a844a91f63ed20fcf932aef913c31580d0b79d5、ブランチ: integration/v5.10.3-mirrorfix。
+取得用ブランチ: codex/lol-autocine-v5103-mirrorfix-handoff。mainへマージしない。
 
-更新開始前の両Gitのgit status --shortは空。最終コミット/push後も空を確認してVERIFICATIONへ記録する。個人設定・ログ・診断・録画・生成dist・.venvはローカルに保持し配布しない。
+更新開始前の両Gitのgit status --shortは空。最終コミット/push後も空を確認してVERIFICATIONへ記録。個人設定・ログ・診断・録画・生成dist・.venvはローカルに保持し配布しない。
 
 ## ソースgit log -3 --oneline
 
 ```
-86a1165 Integrate bounded WGC capture without changing GPU effects or UI
-f6cb590 Record exact capture API review and reproducible CaptureFix packaging
-df4318a Isolate LoL WGC startup in a bounded child process with shared BGRA frames
+8a844a9 Record MirrorFix integration contract and packaging
+8f4fa69 Document MirrorFix API review and preserve packaging and branch checks
+590227f Integrate asynchronous mirror lifecycle and export failure status
 ```
 
 ## git remote -v
@@ -24,17 +24,19 @@ origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-## 前回GPUFX版からの実変更
+## 前回CaptureFix版からの実変更
 
 ```
-M	core/capture.py
-A	core/capture_process.py
-A	core/capture_worker.py
-A	docs/CODEX_CAPTURE_STARTUP_FIX_v5.10.3_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_CAPTURE_v5.10.3.json
-A	tests/test_gpu_capture_isolation.py
+M	core/capture_process.py
+M	core/capture_worker.py
+A	docs/CODEX_MIRROR_TARGET_FIX_v5.10.3_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_MIRROR_v5.10.3.json
+M	legacy_app.py
+M	tests/test_gpu_capture_isolation.py
+M	tests/test_v5103_nonblocking_dispatch.py
 M	tools/check_parallel_integration.py
-A	tools/package_v5103_capturefix.py
+A	tools/package_v5103_mirrorfix.py
+A	ui/mirror_capture.py
 ```
 
 ## 元v5.8.5からの実変更
@@ -114,8 +116,10 @@ A	docs/CODEX_MERGE_NOTICE_v5.9.4_JA.md
 A	docs/CODEX_MERGE_PROMPT_JA.md
 A	docs/CODEX_MERGE_v5.9.0_JA.md
 A	docs/CODEX_MERGE_v5.9.1_JA.md
+A	docs/CODEX_MIRROR_TARGET_FIX_v5.10.3_JA.md
 A	docs/CODEX_PARALLEL_INTEGRATION_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_CAPTURE_v5.10.3.json
+A	docs/CODEX_SHARED_API_REVIEW_MIRROR_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1.json
@@ -188,11 +192,13 @@ A	tools/package_v5103.py
 A	tools/package_v5103_capturefix.py
 A	tools/package_v5103_gpu.py
 A	tools/package_v5103_hangfix.py
+A	tools/package_v5103_mirrorfix.py
 A	tools/package_v599.py
 A	tools/setup_gpu_ffmpeg.py
 A	ui/__init__.py
 A	ui/highlight_director.py
 A	ui/hud_presets.py
+A	ui/mirror_capture.py
 A	ui/motion_graph.py
 A	ui/scene_batch.py
 A	ui/scene_project.py
@@ -202,4 +208,4 @@ A	ui/studio_localization.py
 A	ui_changes_v5.9.1.patch
 ```
 
-256ソース/Python97・全38ブランチをbundle保存。GPUエフェクト/FFmpeg/NVENC/録画/カメラ/LoL専用音声/UI/HangFix/Native/START類/依存宣言は前回GPUFXとバイト一致。変更する共有キャプチャAPIの正確な3blobはdocs/CODEX_SHARED_API_REVIEW_CAPTURE_v5.10.3.jsonへ記録した。旧版/旧PR/旧ZIP/bundleを保持。
+260ソース/Python99・全41ブランチをbundle保存。GPU/エンコード/録画/カメラ/LoL専用音声/Native/START/依存など26ファイルは前回CaptureFixとバイト一致。共有API変更なし、内部2モジュールは正確なblobをdocs/CODEX_SHARED_API_REVIEW_MIRROR_v5.10.3.jsonへ記録。UIレイアウト/変数を維持し開始/停止/失敗表示だけをUIブランチに分離した。旧版/旧PR/旧ZIP/bundleを保持。

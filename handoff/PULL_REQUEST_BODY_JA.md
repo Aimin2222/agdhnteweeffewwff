@@ -1,9 +1,9 @@
-チェック済み2シーンの作成がcapture_startで止まり、35秒監視スタックはwindows_capture.start_free_threadedの待機を示していました。ユーザーは応答なしを手動終了しています。FFmpeg/録画/エフェクト開始の記録はなく、GPUエンコード失敗とは断定できません。Python3.14で実行していましたが、Windows/ドライバー内部の待機原因は未確定です。
+ミラーON/OFFと書き出しが前回CaptureFixで失敗していました。新診断の14試行すべてがwindows-capture 2.0.1のコンストラクターで、window_nameとwindow_hwndを同時指定したためcode=2で終了。GPU処理/FFmpegを開始する前の不具合です。また書き出し入力の失敗がログにだけ出て、「開始準備中」が残っていました。
 
-ネイティブWGCをGUI/FFmpegを読み込まない独立Pythonプロセスのメインスレッドへ移し、8秒以内の初フレーム受信で開始を判定します。開始待ち・子異常終了・受信失敗はCaptureErrorへ戻し、子と共有メモリを回収して再試行可能にします。BGRAは最新1枚の共有メモリから親の所有配列へ受信し、コピー前後の連番で不完全フレームを捨てます。子が終了した場合は古いフレームを録画し続けません。通常終了時の回収と可能なWindows Job Objectによる親終了時の子終了、試行別の段階・版・例外・待機スタック診断を追加します。LoLウィンドウだけを対象にしデスクトップへのフォールバックはありません。
+キャプチャ対象をHWNDかLoLタイトルの一方だけにし、旧版に非対応の更新間隔引数を渡さず、子の具体的例外をUIに伝えます。ミラー開始/停止はTkから切り離し、準備中の再クリックで中止、古い結果による再ONを防止、失敗時OFFへ戻して再試行できます。書き出しの映像入力準備/失敗を進捗ラベルへ反映します。録画中のミラー切替は案内して拒否します。
 
-WGCWindowSourceの公開API/BGRA形式を維持し、変更する共有capture.pyと新しい内部capture_process.py/capture_worker.pyの正確なblobレビューを記録。Win64 HWND型を設定します。既存GPU Bloom/DOF/OpenCL/NVENC/CPU再試行・カメラ・録画/時刻・LoL専用音声・UI/HangFix・Native/START類・依存宣言は前回GPUFXとバイト一致。
+UIの配置/変数/カメラ操作を維持。GPUエフェクト/FFmpeg/NVENC/録画/TargetLock/LoL専用録音/Native/START類/依存など26ファイルは前回CaptureFixとバイト一致。UI/GPU変更を別ブランチへコミットして統合し、共有内部2モジュールの正確なblobを検査。公開capture API/BGRA/8秒初フレーム上限/回収を維持します。
 
-検証: 全pytest278件成功（22.03秒）、新10ケース。実サブプロセス/共有メモリで正常BGRA/所有/待機タイムアウト/子異常終了/中断/再試行/回収、待機中の実Tkイベント継続を検査。ネイティブWGCのみ合成実装で、Windows/実LoL/実GPUでの修復成功は未検証。担当/共有blob/統合一致ガード、構文/空白、完全版254/差分8と差分適用後全256ソース一致・個人ファイル除外を確認。全38ブランチbundleと全旧版を保存。
+検証: 全pytest283件成功（22.60秒、失敗/skipなし）、追加5ケース、ブランチ検査48件成功。実Tkの操作継続/中止/再試行/旧結果の無効化/失敗表示、実サブプロセス/共有メモリを検査。公式ライブラリ4版のPythonラッパーで単一対象指定を検証、前回コードの同じエラーを再現。native Windows/GPUは代替実装でWindows/LoL実機成功は未検証。構文・担当/共有blob/統合一致・完全版258/差分10・差分適用後全260ソース一致・個人ファイル除外を確認。全41ブランチbundleと全旧版を保存。
 
-前回GPUFXを比較先にしたDraft PRでmainへマージしません。WindowsはこのブランチのCode→Download ZIP→別フォルダ展開→LoL_AutoCine/START_GPU.bat。LoLリプレイを表示/最小化解除してチェック1シーン→2シーンを試し、開始しなければ8秒程度でエラー/再試行へ戻るか確認。COLLECT_DIAGNOSTICS.batでcapture.log/capture_worker_*.log/last_errorを収集できます。Windows取得に環境Publishは不要です。
+前回CaptureFixを比較先とするDraft PRでmainへマージしません。WindowsはブランチのCode→Download ZIP→別フォルダ展開→LoL_AutoCine/START_GPU.bat。ミラーON→OFF→ON、チェック1シーン→2シーンを再確認し、失敗すれば新診断を採取してください。Windows取得にクラウド環境Publishは不要です。
