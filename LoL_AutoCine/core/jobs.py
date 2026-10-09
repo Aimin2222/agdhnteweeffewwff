@@ -104,7 +104,9 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                        third_yaw=getattr(tpl, "third_yaw", 0.0),
                       motion_arc=getattr(tpl, "motion_arc", 0.0), motion_dolly=getattr(tpl, "motion_dolly", 0.0),
                       motion_profile=getattr(tpl, "motion_profile", "cinematic"),
-                      scene_keyframes=tuple(getattr(tpl, 'scene_keyframes', ()) or ()), rig=rig,
+                      scene_keyframes=tuple(getattr(tpl, 'scene_keyframes', ()) or ()),
+                       smart_composition=bool(getattr(tpl, 'smart_composition', False)),
+                       smart_impact=float(getattr(tpl, 'highlight_pulse', 0.0)), rig=rig,
                       sel_name=player.selection_name or player.champion)
     if rig.mode == "top" and tpl.style in ("cinema", "follow"):
         plan.style = "cinema_top" if tpl.style == "cinema" else "top"   # 実際に使えるモードに合わせる
