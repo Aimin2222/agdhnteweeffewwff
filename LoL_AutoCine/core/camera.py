@@ -282,8 +282,8 @@ class CameraPlan:
             if self.smart_composition:
                 # Conservative framing: back away instead of allowing extreme
                 # close-ups and raise the viewpoint to reduce terrain occlusion.
-                dist = max(dist, self.third_dist * 0.77)
-                e = max(e, math.radians(24.0))
+                dist = max(dist, self.third_dist * 0.88)
+                e = max(e, math.radians(31.0))
             sin_e = max(math.sin(e), MIN_CAM_HEIGHT / max(dist, 1.0))
             sin_e = min(0.98, sin_e)
             e = math.asin(sin_e)
@@ -327,8 +327,10 @@ class CameraPlan:
         dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
         elev = max(12.0, min(58.0, elev))
         if self.smart_composition:
-            dist = max(dist, self.third_dist * 0.76)
-            elev = max(elev, 24.0)
+            dist = max(dist, self.third_dist * 0.88)
+            elev = max(elev, 31.0)
+            # Avoid whipping the camera around terrain during a kill.
+            orbit_delta = max(-22.0, min(22.0, orbit_delta))
         sin_e = max(math.sin(math.radians(elev)), MIN_CAM_HEIGHT / max(dist, 1.0))
         sin_e = min(0.98, sin_e)
         eang = math.asin(sin_e)
@@ -440,6 +442,7 @@ class CameraDirector:
         self._last_speed = None
         self._sent_speed = None
         self._last_heartbeat = 0.0
+        self._last_speed_send = 0.0
 
     def start(self) -> None:
         try:
@@ -452,6 +455,7 @@ class CameraDirector:
         self._last_sync = self._wall_t0
         self._last_api_send = 0.0
         self._last_heartbeat = 0.0
+        self._last_speed_send = 0.0
         self._adaptive_api_dt = self.api_dt
         self._th = threading.Thread(target=self._run, daemon=True)
         self._th.start()
@@ -474,7 +478,7 @@ class CameraDirector:
             try:
                 # HTTPS playback observations never modify camera time in steps.
                 # Only a real external seek resets the continuous clock.
-                if self._last_sync <= 0.0 or now - self._last_sync >= 0.25:
+                if self._last_sync <= 0.0 or now - self._last_sync >= 0.50:
                     try:
                         pb = self.api.playback()
                         if clock.observe(pb.get("time", clock.time)):
@@ -536,16 +540,21 @@ class CameraDirector:
                     self.max_api_latency_ms = max(self.max_api_latency_ms, api_ms)
                     # Keep slow HTTP calls from monopolizing the animation loop.
                     # Recover gradually if the Replay API becomes responsive.
-                    desired = max(self.api_dt, min(0.085, api_ms * 0.00115))
+                    desired = max(self.api_dt, min(0.140, api_ms * 0.00130))
                     self._adaptive_api_dt += (desired - self._adaptive_api_dt) * 0.22
                     if api_ms >= 25.0:
                         self.api_slow_calls += 1
                     self._last_api_send = time.perf_counter()
 
-                # Speed is also smoothed; only send meaningful changes.
-                if self._sent_speed is None or abs(current_speed - self._sent_speed) > 0.01:
+                # Protect Replay API from two alternating high-frequency
+                # write streams (render + playback). Sudden speed changes
+                # remain interpolated locally between bounded writes.
+                if (self._sent_speed is None or
+                        ((now - self._last_speed_send) >= 0.085 and
+                         abs(current_speed - self._sent_speed) > 0.018)):
                     self.api.set_playback(speed=round(current_speed, 3))
                     self._sent_speed = current_speed
+                    self._last_speed_send = time.perf_counter()
             except ReplayApiError:
                 self.errors += 1
             next_tick += self.dt
