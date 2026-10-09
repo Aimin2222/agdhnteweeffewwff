@@ -8,7 +8,7 @@ from core.highlight_pulse import pulse_filters
 def test_v597_positional_arguments_stay_in_place():
     template = Template(fog_enabled=True, montage_fx='dark',
                         scene_keyframes=[{'time': 0, 'yaw': 4}])
-    new = {'smart_highlight_enabled', 'smart_highlight_style', 'highlight_pulse'}
+    new = {'smart_highlight_enabled', 'smart_highlight_style', 'highlight_pulse'} | {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration', 'kill_icon_opacity', 'smart_composition', 'smart_montage'}
     previous = [getattr(template, field.name) for field in fields(Template) if field.name not in new]
     restored = Template(*previous)
     assert restored.fog_enabled and restored.montage_fx == 'dark'
