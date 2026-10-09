@@ -33,7 +33,8 @@ def test_badge_is_real_transparent_png(tmp_path, style):
     dest = make_badge(tmp_path / f"{style}.png", style, 2)
     with Image.open(dest) as img:
         assert img.mode == "RGBA" and img.size == (385, 116)
-        assert img.getpixel((0, 0))[3] == 0
+        # Blurred neon/gold glow can leave a barely visible edge pixel.
+        assert img.getpixel((0, 0))[3] <= 3
         assert img.getpixel((30, 40))[3] > 0
 
 
@@ -155,3 +156,38 @@ def test_easy_controls_create_valid_template():
         assert app.current_template().smart_composition
     finally:
         root.destroy()
+
+
+def test_ffmpeg_can_render_kill_badge_into_real_mp4(tmp_path):
+    import shutil
+    import subprocess
+    ffmpeg = shutil.which("ffmpeg")
+    if ffmpeg is None:
+        pytest.skip("System ffmpeg is not available")
+    badge = make_badge(tmp_path / "badge.png", "neon", 1)
+    graph = with_badge("[0:v]format=yuv420p[vout]", 1, [(1.0, 1.4)],
+                       duration=2.0, position="right-top", scale=.7)
+    dst = tmp_path / "badge_smoke.mp4"
+    cmd = [ffmpeg, "-y", "-hide_banner", "-loglevel", "error",
+           "-f", "lavfi", "-i", "color=c=blue:s=640x360:r=24:d=2",
+           "-loop", "1", "-t", "2", "-i", str(badge),
+           "-filter_complex", graph, "-map", "[vout]",
+           "-c:v", "libx264", "-preset", "ultrafast",
+           "-t", "2", "-pix_fmt", "yuv420p", str(dst)]
+    p = subprocess.run(cmd, capture_output=True, text=True, timeout=45)
+    assert p.returncode == 0, p.stderr[-1600:]
+    assert dst.stat().st_size > 1000
+    # Ensure the icon actually changed output pixels during the kill window,
+    # rather than just producing a video file without compositing.
+    def frame(ts):
+        result = subprocess.run(
+            [ffmpeg, "-hide_banner", "-loglevel", "error", "-ss", str(ts),
+             "-i", str(dst), "-frames:v", "1", "-f", "rawvideo",
+             "-pix_fmt", "rgb24", "-"],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=20)
+        assert result.returncode == 0, result.stderr[-300:]
+        return result.stdout
+    before = frame(.4)
+    decorated = frame(1.2)
+    assert len(before) == len(decorated) == 640*360*3
+    assert sum(a != b for a, b in zip(before, decorated)) > 400
