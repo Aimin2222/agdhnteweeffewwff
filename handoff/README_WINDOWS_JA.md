@@ -26,8 +26,14 @@ git clone --branch integration/v5.10.3 LoL_AutoCine_Handoff/handoff/LoL_AutoCine
 cd LoL_AutoCine_Dev
 git status --short
 git branch --all
+git branch stable/v5.8.5 origin/stable/v5.8.5
+git branch feature/gpu-engine origin/feature/gpu-engine
+git branch feature/ui-circle-v5103 origin/feature/ui-circle-v5103
+git branch integration/v5.10.1 origin/integration/v5.10.1
 ```
 
-全33ブランチはorigin/*へ復元されます。UIはfeature/ui-circle-v5103、GPUはfeature/gpu-engine。必要なブランチを `git switch --track origin/feature/ui-circle-v5103` などでローカルへ作ります。パッケージ作成には `git branch integration/v5.10.1 origin/integration/v5.10.1` で差分基準も作ってください。このcloneのoriginはPC上のbundleでGitHubではありません。
+全33ブランチはorigin/*へ復元されます。UIはfeature/ui-circle-v5103、GPUはfeature/gpu-engine。上のgit branchコマンドは共有ガードとパッケージ作成の基準・担当ブランチをローカルへ作ります。以後UI開発では `git switch feature/ui-circle-v5103`、GPU開発では `git switch feature/gpu-engine` を使います。このcloneのoriginはPC上のbundleでGitHubではありません。
 
 実変更一覧・Git状態はSOURCE_GIT_REPORT_JA.md、詳細はLoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.10.3_JA.md、検証証跡はVERIFICATION_v5.10.3.jsonを参照してください。クラウド再セットアップ設定のPublishは将来のクラウド利用にのみ関係します。
+
+GitHubから別フォルダへ240ファイル/全33ローカルref/HEADの一致を確認し、依存・構文・Tk・共有ガードと代表111テストが成功。installer再実行も追跡変更なし。新クラウドタスク起動の保証ではありません。再セットアップ設定は保存・読み戻し一致、他の設定を保持。将来反映時のみ環境設定で確認・保存後Publishしてください。
