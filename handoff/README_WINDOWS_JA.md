@@ -34,3 +34,11 @@ git branch --all
 全31ブランチがorigin/*へ復元される。UIはfeature/ui-scroll-v5101、GPUはfeature/gpu-engine。このcloneのoriginはPC上のbundleでGitHubではない。
 
 詳細はLoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.10.1_JA.md。Git状態と元v5.8.5/前回v5.10.0からの実変更一覧はSOURCE_GIT_REPORT_JA.md。mainへマージしない。
+
+## GitHub保存とクラウド復元
+
+Draft PR #13: https://github.com/Aimin2222/agdhnteweeffewwff/pull/13 。比較先はcodex/lol-autocine-v5100-handoff、mainは未変更。ソース/取得用ともgit status --shortは空で、全てコミット済み。
+
+GitHubの固定コミット1361ec873ca8946b58ab874551aa599bef3262d2からbundleを取得・SHA256検証し、別フォルダへ新規復元。233ソース/31ローカルブランチ/HEADの完全一致、依存/構文/Tk/Xvfb/共有ガードと代表107テストを確認。既存対象へのセットアップ再実行も成功して追跡変更なし。新クラウドタスク自体を起動した試験とは区別する。
+
+セットアップスクリプトと開始手順を環境設定ドラフトへ保存し、読み戻しの一致を確認。リポジトリ設定・ネットワーク許可・プリセット・認証要件は保持。ドラフト保存は現在環境への実行/公開と別。将来のクラウド環境へ反映する場合だけ、環境設定で確認・保存してPublishする。Windowsダウンロード/起動には不要。

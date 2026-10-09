@@ -7,3 +7,7 @@ WGC録画は初回だけ自動プレロールし、API時刻の進行とフレ�
 検証: pytest229件、依存/構文/実Git担当・共有ガード。実Tkの動的ホイール/パネルスクロール/ネイティブ選択/シーン位置/起動・再接続と、停止/失敗/古いフレーム阻止。実FFmpeg・模擬WGC・モックHTTP APIでスマートON/OFF各2クリップ＋モンタージュ、1080p/60fps・カラー/音声あり、初回だけ準備、手動逆順/対象/録画時刻転送を確認。Windows/実LoL/実GPU/NVENC成功/Native音声は未検証、Bloom/DOF高速化は未実装です。
 
 ソース233ファイル・全31ブランチbundle、完全版231/差分13ファイルのZIP/ハッシュ、Windows取得/Git状態/実変更一覧を保存。差分適用後233ソース一致と個人ファイル除外を確認。前回v5.10.0と旧版を保持するDraft PRで、mainへマージしません。Windows取得にPublishは不要です。
+
+取得先: https://github.com/Aimin2222/agdhnteweeffewwff/tree/codex/lol-autocine-v5101-handoff （Code → Download ZIP → LoL_AutoCine/START.bat）。
+
+GitHub保存bundleから別フォルダへ復元し、233ソース/31ローカルブランチ/HEAD一致、依存/構文/Tk/Xvfb/共有ガード、代表107テスト、既存対象へのinstaller再実行を確認。セットアップ/開始手順の環境ドラフト保存と読み戻し一致も確認し、他設定は保持。将来のクラウド反映にだけ確認・保存・Publishが必要です。
