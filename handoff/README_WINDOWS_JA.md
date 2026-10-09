@@ -1,44 +1,33 @@
-# LoL AutoCine v5.10.1をWindowsへ取得
+# LoL AutoCine v5.10.3をWindowsへ取得
 
-GitHubの `codex/lol-autocine-v5101-handoff` ブランチで **Code → Download ZIP**。旧v5.10.0は別フォルダへ保管し、新フォルダへ展開して **LoL_AutoCine/START.bat** を起動する。Windows取得にmainマージ・環境Publishは不要。
+GitHubの `codex/lol-autocine-v5103-handoff` ブランチで **Code → Download ZIP**。旧版は別フォルダへ保管し、新フォルダに展開して **LoL_AutoCine/START.bat** を起動してください。mainへのマージや環境PublishはWindows取得に不要です。
 
-`handoff/LoL_AutoCine_v5.10.1_Windows_Full.zip` は起動用完全版。GitHubで開いて **Download raw file** でも取得できる。Codex_MergeChanges.zipは前回v5.10.0基準の統合用差分で単体起動用ではない。
+`handoff/LoL_AutoCine_v5.10.3_Windows_Full.zip` は起動用完全版。GitHubでファイルを開いて **Download raw file** でも取得できます。`Codex_MergeChanges.zip` はCodex保存版v5.10.1基準の差分で単体起動用ではありません。受領ZIPのv5.10.2基準パッチとは異なります。
 
-## 保存した変更と確認
+円形DOF、中心X/Y・半径・境界の調整、日本語FX説明、2カラーと4プリセットを統合。円形モザイクは導入せず、旧JSONに残るcenter_mosaicだけを除去します。円形DOFは画面固定の2D CPU処理で、実深度/人物追跡やGPU高速化ではありません。旧上下DOFはbandとして残ります。形状指定のない旧JSONはcircleが既定値になります。
 
-- ホイールの値変更防止を動的コントロールへ拡張し、シーンのチェック/全選択/全解除でもスクロール位置・選択を保持する。
-- WGCの最初の録画に自動プレロールを追加。API時刻の進行とフレーム更新を確認し、カメラ反映後の新フレームを待つ。失敗/停止では録画前に中断、新リプレイ/再接続は再準備する。
-- 受領jobsフルファイルを上書きせず、effect_events実時間補正とsmart_highlight_enabled条件、NVENC/CPU方針、LoL専用音声/TargetLockを保持。GPU処理/エンコード/カメラ/音声/Native Helperは前回とバイト一致。
-- pytest229件成功。実Tkのホイール・実パネルスクロール・ネイティブドロップダウン選択・シーン位置・新起動/再接続と、停止/失敗/古いフレームの防止を確認。
-- 実FFmpeg・模擬WGC・モックHTTP Replay APIで初回だけ準備し、スマートON/OFF各2クリップ＋モンタージュへ1080p/60fps・カラー/音声ありで出力。手動逆順/対象/Template/録画時刻転送を保持。Windows Native Captureを実行した試験ではない。
-- ソース233ファイル/Python81ファイル・全31ブランチ、完全版231/差分13ファイルのZIPとSHA256を保持。差分適用後233ソースの一致、未追跡個人ファイル除外を確認。旧ZIP/bundle/manifest/ハッシュは残す。
+キル時刻補正、NVENC拒否時のCPU再試行、WGC初回準備、ホイール・一覧位置、三人称カメラとLoL専用音声を保持。受領の古いeffectsフルファイルで上書きしていません。Windows起動バッチとNative Helperを残しています。
 
-## Windowsで確認すること
+pytest253件成功。実FFmpegで円形マスクの縦横比/内外の模様、4プリセット、1080p/60fps・合成音声とNVENC拒否→CPU再試行を確認。通常CPU出力と再試行のAACは完全一致、AV末尾差0秒。Windows/実LoL/Native録音/実GPU成功は未検証です。
 
-スキャン後、手動プレビューを一度も再生せず、チェックした最初の1クリップを作成する。冒頭がネクサスでなく現場か、対象追従/キル時刻/色/LoLのみ音声/同期/fpsを確認。続けて2クリップ/モンタージュ、ホイール、シーンチェック位置、準備中の停止、再接続/新リプレイを確認する。
+240ソースファイル/Python86ファイル・全33ブランチをbundleに保存。完全版238/差分21ファイル、ハッシュ付き。個人設定・プロジェクト・録画・診断・画像キャッシュは含めません。旧ZIP/bundle/manifest/ハッシュを保持しています。
 
-フレーム更新とAPI時刻はゲーム映像内容の画像認識ではない。Windows/実LoLのネクサス問題解消、実GPU/NVENC成功、Native音声は未確認。Bloom/DOFのGPU高速化は未実装。公式画像の実取得は現在クラウドプロキシ403で未確認。未取得時はペア装飾を省略する。Windows公式画像キャッシュは `%LOCALAPPDATA%/LoL_AutoCine/champion_icons`。手動 `assets/champion_icons/<ChampionID>.png` も使える。
+## Windowsでの確認
+
+円形DOFをONにして内側の鮮明さと外側のぼかし、位置/半径変更を確認します。4プリセットを1クリップずつ試し、TargetLock/HUD/カラー/LoLだけの音声/60fps/同期を旧版と比較してください。手動再生なしの初回クリップ、ホイール、一覧チェック位置、複数クリップの順序・音ズレも確認します。
 
 ## ローカルGit開発
 
-保存先が存在しないことを確認して実行:
+保存先がまだ存在しないことを確認して実行します。
 
 ```sh
-git clone --single-branch --branch codex/lol-autocine-v5101-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_Handoff
-git clone --branch integration/v5.10.1 LoL_AutoCine_Handoff/handoff/LoL_AutoCine_v5.10.1_all_branches.bundle LoL_AutoCine_Dev
+git clone --single-branch --branch codex/lol-autocine-v5103-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_Handoff
+git clone --branch integration/v5.10.3 LoL_AutoCine_Handoff/handoff/LoL_AutoCine_v5.10.3_all_branches.bundle LoL_AutoCine_Dev
 cd LoL_AutoCine_Dev
 git status --short
 git branch --all
 ```
 
-全31ブランチがorigin/*へ復元される。UIはfeature/ui-scroll-v5101、GPUはfeature/gpu-engine。このcloneのoriginはPC上のbundleでGitHubではない。
+全33ブランチはorigin/*へ復元されます。UIはfeature/ui-circle-v5103、GPUはfeature/gpu-engine。必要なブランチを `git switch --track origin/feature/ui-circle-v5103` などでローカルへ作ります。パッケージ作成には `git branch integration/v5.10.1 origin/integration/v5.10.1` で差分基準も作ってください。このcloneのoriginはPC上のbundleでGitHubではありません。
 
-詳細はLoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.10.1_JA.md。Git状態と元v5.8.5/前回v5.10.0からの実変更一覧はSOURCE_GIT_REPORT_JA.md。mainへマージしない。
-
-## GitHub保存とクラウド復元
-
-Draft PR #13: https://github.com/Aimin2222/agdhnteweeffewwff/pull/13 。比較先はcodex/lol-autocine-v5100-handoff、mainは未変更。ソース/取得用ともgit status --shortは空で、全てコミット済み。
-
-GitHubの固定コミット1361ec873ca8946b58ab874551aa599bef3262d2からbundleを取得・SHA256検証し、別フォルダへ新規復元。233ソース/31ローカルブランチ/HEADの完全一致、依存/構文/Tk/Xvfb/共有ガードと代表107テストを確認。既存対象へのセットアップ再実行も成功して追跡変更なし。新クラウドタスク自体を起動した試験とは区別する。
-
-セットアップスクリプトと開始手順を環境設定ドラフトへ保存し、読み戻しの一致を確認。リポジトリ設定・ネットワーク許可・プリセット・認証要件は保持。ドラフト保存は現在環境への実行/公開と別。将来のクラウド環境へ反映する場合だけ、環境設定で確認・保存してPublishする。Windowsダウンロード/起動には不要。
+実変更一覧・Git状態はSOURCE_GIT_REPORT_JA.md、詳細はLoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.10.3_JA.md、検証証跡はVERIFICATION_v5.10.3.jsonを参照してください。クラウド再セットアップ設定のPublishは将来のクラウド利用にのみ関係します。

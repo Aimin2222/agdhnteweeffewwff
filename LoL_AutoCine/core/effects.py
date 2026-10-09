@@ -22,6 +22,7 @@ except ImportError:
     FFMPEG = shutil.which("ffmpeg") or shutil.which("ffmpeg.exe")
 
 from .kill_icons import make_event_badges, with_badges, normalize as kill_style_normalize
+from .focus_fx import circular_dof_filter, focus_settings
 from .camera import INTENSITY
 from .gpu_pipeline import detect as detect_gpu, gpu_prefix, backend_name as gpu_backend_name
 
@@ -40,10 +41,14 @@ GRADES: dict = {
                        rh=0.12, gh=0.04, bh=-0.10),
     "neon":       dict(contrast=1.2, saturation=1.6, rs=0.05, bs=0.10, gm=-0.03, rh=0.08, bh=0.06),
     "purple":     dict(contrast=1.08, saturation=1.1, rm=0.07, bm=0.10, gm=-0.05, rs=0.05, bs=0.08),
+    "iceblue":    dict(contrast=1.13, saturation=1.07, rs=-0.04, bs=0.06, rm=-0.04, gm=0.01,
+                       bm=0.10, rh=0.02, gh=0.03, bh=0.08),
+    "golden":     dict(contrast=1.10, saturation=1.06, rs=0.02, bs=-0.025, rm=0.06, gm=0.025,
+                       bm=-0.045, rh=0.09, gh=0.04, bh=-0.07),
 }
 GRADE_JP = {
     "standard": "標準", "film": "フィルム", "noir": "ノワール", "dark": "ダーク", "sunset": "夕日",
-    "midnight": "深夜青", "tealorange": "ティール&オレンジ", "neon": "ネオン", "purple": "紫霧",
+    "midnight": "深夜青", "tealorange": "ティール&オレンジ", "neon": "ネオン", "purple": "紫霧", "iceblue": "アイスブルー", "golden": "シネマゴールド",
 }
 
 TRANSITIONS = {"cut": "カット", "fade": "フェード", "flash": "フラッシュ"}
@@ -157,19 +162,36 @@ class Template:
     smart_composition: bool = False  # safer distance/elevation around the locked player
     smart_montage: bool = False  # only smart auto-edit reorders unpinned scenes
     kill_icon_players: list = field(default_factory=list)  # transient replay roster for real champion portraits
-    encoder_policy: str = 'auto'  # video encoding policy; independent of GPU effects
+    # v5.10.0: appended to preserve historical positional Template arguments.
+    encoder_policy: str = 'auto'  # auto/gpu/cpu; GPU refers to *encoding*, not the FX graph
     kill_frame_color: str = ''
     kill_glow_color: str = ''
     kill_glow_enabled: bool = True
     kill_glow_strength: float = .65
     kill_frame_width: int = 3
     kill_mark_style: str = 'auto'
+    # v5.10.2: image-space focus; values appended for project compatibility.
+    dof_shape: str = 'circle'  # circle (default) or band (old height approximation)
+    dof_center_x: float = .50  # 0..1, approx TargetLock subject's screen position
+    dof_center_y: float = .54
+    dof_radius: float = .29   # normalized by screen height, not screen width
+    dof_feather: float = .12  # soft circular edge
+
+    def __post_init__(self) -> None:
+        # v5.10.3: preserve older project JSON but retire the accidentally-added
+        # circular pixelation effect. Never expose or export it again.
+        if isinstance(self.video_effects, dict):
+            self.video_effects = {k: v for k, v in self.video_effects.items() if k != 'center_mosaic'}
 
     def amp(self) -> float:
         return INTENSITY.get(self.intensity, 1.0)
 
     def to_dict(self) -> dict:
-        return asdict(self)
+        data = asdict(self)
+        # Saved templates may have been edited in memory after __post_init__.
+        if isinstance(data.get('video_effects'), dict):
+            data['video_effects'].pop('center_mosaic', None)
+        return data
 
 
 def one_click_templates() -> dict:
@@ -216,6 +238,27 @@ def one_click_templates() -> dict:
         "ヴィンテージ・フィルム": T(name="ヴィンテージ・フィルム", style="follow", intensity="natural", grade="film",
                             grade_strength=1.0, temperature=0.25, contrast=1.05, vignette=0.6, grain=0.55, bloom=0.2,
                             bars=0.07, transition="fade", exposure=0.03),
+        # v5.10.2: tasteful preset additions, no new camera coordinates or FPS assumptions.
+        "クリア・アクション（視認性重視）": T(name="クリア・アクション（視認性重視）",
+                          style="third_cinema", intensity="natural", grade="standard",
+                          grade_strength=.0, vignette=.08, grain=.0, bloom=.10,
+                          bars=.0, transition="cut", motion_profile="smooth",
+                          motion_arc=7.0, motion_dolly=2.0),
+        "アイスブルー・シネマ": T(name="アイスブルー・シネマ",
+                          style="lolnam_cinema", intensity="standard", grade="iceblue",
+                          grade_strength=.65, vignette=.22, grain=.08, bloom=.22,
+                          bars=.02, transition="fade", motion_profile="smooth",
+                          motion_arc=10.0, motion_dolly=3.0),
+        "ゴールド・フィニッシュ": T(name="ゴールド・フィニッシュ",
+                          style="third_cinema", intensity="standard", grade="golden",
+                          grade_strength=.70, vignette=.27, grain=.09, bloom=.23,
+                          bars=.04, transition="flash", motion_profile="cinematic",
+                          motion_arc=13.0, motion_dolly=4.0),
+        "エピック・チームファイト": T(name="エピック・チームファイト",
+                          style="cinema_top", intensity="standard", grade="tealorange",
+                          grade_strength=.55, vignette=.20, grain=.05, bloom=.20,
+                          bars=.02, transition="cut", motion_profile="smooth",
+                          motion_arc=5.0, motion_dolly=2.0, smart_composition=True),
     }
 
 
@@ -427,30 +470,36 @@ def build_graph(t: Template, duration: float, has_title: bool, still: bool = Fal
         from .highlight_pulse import pulse_filters
         f.extend(pulse_filters(effect_events, pulse))
     if t.dof_enabled and t.dof_blur > 0.01:
-        # Replay APIから画素ごとの深度バッファは取得できないため、
-        # 2D映像の上下位置を「奥行きの代理値」として使うDOF近似。
-        # 画面全体へ一律blurする旧実装とは違い、フォーカス帯だけを元画像で保持する。
-        blur = max(0.0, min(20.0, float(t.dof_blur)))
-        near = max(1.0, float(t.dof_near_distance))
-        focus = max(near, float(t.dof_focus_distance))
-        far = max(focus + 1.0, float(t.dof_far_distance))
-        # 近/遠の範囲を 0..1 に正規化し、focus をその中心に置く。
-        fnear = max(0.02, min(0.48, (focus - near) / max(focus + far, 1.0)))
-        ffar = max(0.02, min(0.48, (far - focus) / max(focus + far, 1.0)))
-        fc = max(0.05, min(0.95, focus / max(near + focus + far, 1.0)))
-        # y/H からfocusまでの距離を作り、focus帯の外側だけblur画像をmaskedmergeする。
-        sigma = max(1.0, min(18.0, blur * 1.15))
-        depth = f"clip((Y/H)*1.0,0,1)"
-        mask_expr = (f"255*clip(abs({depth}-{fc:.5f})/{max(min(fnear, ffar),0.02):.5f}-1,0,1)")
-        f.append(
-            f"split=3[dofsrc][dofblur][dofmask];[dofblur]scale=960:540:flags=bilinear,gblur=sigma={sigma:.2f}:steps=1,scale=1920:1080:flags=bilinear[dofb];"
-            f"[dofsrc]format=rgba[dofa];[dofb]format=rgba[dofc];"
-            # The depth mask is a smooth image-space gradient. Compute it at
-            # 1/4 resolution then upscale; far fewer geq evaluations.
-            f"[dofmask]scale=480:270:flags=bilinear,format=gray,geq=lum='clip({mask_expr},0,255)',"
-            f"scale=1920:1080:flags=bilinear[dofm];"
-            f"[dofc][dofa][dofm]maskedmerge"
-        )
+        if getattr(t, 'dof_shape', 'circle') != 'band':
+            # Circular 2D focus, independent of nonexistent per-pixel replay depth.
+            # The camera locks its target close to screen center; manual x/y offset
+            # remains available when unusual angles move the target.
+            f.append(circular_dof_filter(t))
+        else:
+            # Replay APIから画素ごとの深度バッファは取得できないため、
+            # 2D映像の上下位置を「奥行きの代理値」として使うDOF近似。
+            # 画面全体へ一律blurする旧実装とは違い、フォーカス帯だけを元画像で保持する。
+            blur = max(0.0, min(20.0, float(t.dof_blur)))
+            near = max(1.0, float(t.dof_near_distance))
+            focus = max(near, float(t.dof_focus_distance))
+            far = max(focus + 1.0, float(t.dof_far_distance))
+            # 近/遠の範囲を 0..1 に正規化し、focus をその中心に置く。
+            fnear = max(0.02, min(0.48, (focus - near) / max(focus + far, 1.0)))
+            ffar = max(0.02, min(0.48, (far - focus) / max(focus + far, 1.0)))
+            fc = max(0.05, min(0.95, focus / max(near + focus + far, 1.0)))
+            # y/H からfocusまでの距離を作り、focus帯の外側だけblur画像をmaskedmergeする。
+            sigma = max(1.0, min(18.0, blur * 1.15))
+            depth = f"clip((Y/H)*1.0,0,1)"
+            mask_expr = (f"255*clip(abs({depth}-{fc:.5f})/{max(min(fnear, ffar),0.02):.5f}-1,0,1)")
+            f.append(
+                f"split=3[dofsrc][dofblur][dofmask];[dofblur]scale=960:540:flags=bilinear,gblur=sigma={sigma:.2f}:steps=1,scale=1920:1080:flags=bilinear[dofb];"
+                f"[dofsrc]format=rgba[dofa];[dofb]format=rgba[dofc];"
+                # The depth mask is a smooth image-space gradient. Compute it at
+                # 1/4 resolution then upscale; far fewer geq evaluations.
+                f"[dofmask]scale=480:270:flags=bilinear,format=gray,geq=lum='clip({mask_expr},0,255)',"
+                f"scale=1920:1080:flags=bilinear[dofm];"
+                f"[dofc][dofa][dofm]maskedmerge"
+            )
     if t.bloom > 0:
         # Expensive 1080p sigma=22 gblur used to dominate CPU render time.
         # A 540p sigma=11 convolution has approximately the same screen-space
@@ -699,6 +748,9 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
         "dof_mask_cpu_optimized": bool(t.dof_enabled and t.dof_blur > 0.01),
         "bloom_level": t.bloom,
         "dof_blur_level": t.dof_blur if t.dof_enabled else 0,
+        "dof_shape": getattr(t, "dof_shape", "circle"),
+        "dof_center": focus_settings(t)[:2],
+        "dof_radius": focus_settings(t)[2],
         "filter_graph": graph,
         "kill_icon_style": badge_style,
         "kill_icon_pairs_resolved": len(badge_entries),

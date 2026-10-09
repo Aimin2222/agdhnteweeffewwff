@@ -19,7 +19,7 @@ def test_v598_template_positions_are_preserved():
     previous = Template(smart_highlight_enabled=True, highlight_pulse=.7, montage_fx='dark')
     new = {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration',
            'kill_icon_opacity', 'smart_composition', 'smart_montage', 'kill_icon_players'} | {'encoder_policy', 'kill_frame_color', 'kill_glow_color', 'kill_glow_enabled', 'kill_glow_strength', 'kill_frame_width', 'kill_mark_style'}
-    values = [getattr(previous, f.name) for f in fields(Template) if f.name not in new]
+    values = [getattr(previous, f.name) for f in fields(Template) if f.name not in new | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather'}]
     restored = Template(*values)
     assert restored.smart_highlight_enabled and restored.highlight_pulse == .7
     assert restored.montage_fx == 'dark' and restored.kill_icon_style == 'off'

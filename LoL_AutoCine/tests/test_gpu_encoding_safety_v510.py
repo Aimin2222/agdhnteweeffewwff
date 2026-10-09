@@ -16,7 +16,7 @@ def test_v599_pair_template_positions_are_preserved():
     before=Template(kill_icon_players=[{'name':'One'}],smart_composition=True)
     added={'encoder_policy','kill_frame_color','kill_glow_color','kill_glow_enabled',
            'kill_glow_strength','kill_frame_width','kill_mark_style'}
-    restored=Template(*(getattr(before,f.name) for f in fields(Template) if f.name not in added))
+    restored=Template(*(getattr(before,f.name) for f in fields(Template) if f.name not in added | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather'}))
     assert restored.kill_icon_players==before.kill_icon_players
     assert restored.smart_composition and restored.encoder_policy=='auto'
 
