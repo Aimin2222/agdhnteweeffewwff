@@ -1,5 +1,7 @@
 # LoL AutoCine v5.9.9をWindowsへ取得する
 
+保存先: [Draft PR #10](https://github.com/Aimin2222/agdhnteweeffewwff/pull/10)。mainへマージしていません。
+
 GitHubの `codex/lol-autocine-v599-handoff` ブランチで **Code → Download ZIP**。旧版を別フォルダに保管し、新しいフォルダへ展開して **LoL_AutoCine/START.bat** を起動してください。LoL_AutoCine/は完全版です。添付の差分ZIP単体は起動用ではありません。
 Windowsへの取得にmainのマージや環境Publishは不要です。チャットの生成ZIPリンクは使用しません。
 
@@ -33,3 +35,9 @@ git branch --all
 詳細: LoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.9.9_JA.md。
 個人設定・プロジェクト・ログ・録画・音声・.venvは含みません。
 比較先はcodex/lol-autocine-v598-handoff。既存PRとmainを保持し、新しいDraft PRへ保存します。
+
+## クラウド復元の確認
+
+GitHubに保存したbundleから別フォルダへソース213ファイルと全25ローカルブランチを復元し、一致を確認しました。依存・構文・Tk/Xvfb・共有ガード、代表58テストが成功。既存フォルダへのセットアップ再実行も成功し、未コミットの変更はありません。新しいクラウドタスクの起動そのものは別の確認になります。
+
+完全版/差分ZIPは保存済みソースに一致します。単体Git・GitHub取得用構成の双方でパッケージ作成を確認し、差分適用後の213ファイル一致も確認しました。受領パッチを記録したdocs/v599_changes.patchの文脈行には元の空白を保持しているため、外側のパッチ適用で17行の空白警告が出ます。適用検査と内容一致は成功し、アプリコードの空白検査も成功しています。
