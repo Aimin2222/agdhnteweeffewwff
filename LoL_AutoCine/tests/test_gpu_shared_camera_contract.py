@@ -37,7 +37,7 @@ def test_legacy_template_positional_arguments_and_new_default_isolation():
     legacy = Template(fog_enabled=True, dof_enabled=True, template_origin="custom")
     old_values = [getattr(legacy, field.name) for field in fields(Template)
                   if field.name not in {"scene_keyframes", "montage_fx", "smart_highlight_enabled",
-                                        "smart_highlight_style", "highlight_pulse"}]
+                                        "smart_highlight_style", "highlight_pulse"} | {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration', 'kill_icon_opacity', 'smart_composition', 'smart_montage'}]
     restored = Template(*old_values)
     assert restored.fog_enabled and restored.dof_enabled
     assert restored.template_origin == "custom" and restored.scene_keyframes == []
