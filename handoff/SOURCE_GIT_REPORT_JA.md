@@ -2,7 +2,7 @@
 
 ソース保存先: /workspace/LoL_AutoCine。ローカルGit、remoteなし。
 取得用保存先: /workspace/agdhnteweeffewwff。origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
-ソースHEAD: dacf0093402d49e869327b347406982af266c3a9。ブランチ: integration/v5.10.3-gpu-effects。
+ソースHEAD: 16074dc72bce28cfc5daeb93ad34fdd073fa6beb。ブランチ: integration/v5.10.3-gpu-effects。
 取得用ブランチ: codex/lol-autocine-v5103-gpu-effects-handoff。mainへマージしない。
 
 開始時の両Gitのgit status --shortは空。最終コミット/push後の状態はVERIFICATION_v5.10.3_GPUFX.jsonに記録する。無視ファイル（.venv/個人設定/診断/録画/生成dist）をローカルに保持し配布しない。
@@ -10,9 +10,9 @@
 ## ソースgit log -3 --oneline
 
 ```
+16074dc Record separate DOF-only and combined OpenCL reference measurements
 dacf009 Integrate GPU Bloom and DOF while preserving v5.10.3 HangFix UI
 eb8cb75 Add GPU-only OpenCL Bloom and circular DOF with verified Windows FFmpeg setup
-c19c467 Record safe shutdown lifetime of display check workers
 ```
 
 ## git remote -v
