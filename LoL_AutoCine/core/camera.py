@@ -228,7 +228,7 @@ class CameraPlan:
         if self.smart_impact > 0.001:
             # Audio/video durations are still determined by the Replay API;
             # change playback speed only inside the pre-existing cinematic cue.
-            speed = min(speed, 1.0 - 0.33 * min(1.0, self.smart_impact) * w)
+            speed *= 1.0 - 0.16 * min(1.0, self.smart_impact) * w
         return max(0.40, speed)
 
     def fov_at(self, t: float) -> float:
