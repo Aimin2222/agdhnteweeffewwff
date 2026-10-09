@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Reproducible v5.9.9 full & Codex-diff ZIPs. Run from a Git checkout.
+"""Reproducible v5.9.9.1 full & Codex-diff ZIPs. Run from a Git checkout.
 
 Usage: python LoL_AutoCine/tools/package_v599.py
 Prerequisite: git fetch origin codex/lol-autocine-v598-handoff
@@ -18,8 +18,8 @@ DIST = REPO / "dist"
 STABLE = "origin/codex/lol-autocine-v598-handoff"
 EXCLUDED_DIRS = {".git", ".venv", ".pytest_cache", "__pycache__", "node_modules", "output", "outputs"}
 EXCLUDED_SUFFIXES = {".mp4", ".mkv", ".wav", ".avi", ".mov", ".webm", ".pyc", ".log", ".tmp"}
-FULL_ZIP = DIST / "LoL_AutoCine_v5.9.9_Windows_Full.zip"
-DIFF_ZIP = DIST / "LoL_AutoCine_v5.9.9_Codex_MergeChanges.zip"
+FULL_ZIP = DIST / "LoL_AutoCine_v5.9.9.1_Windows_Full.zip"
+DIFF_ZIP = DIST / "LoL_AutoCine_v5.9.9.1_Codex_MergeChanges.zip"
 
 
 def run_git(*args: str) -> str:
@@ -43,8 +43,8 @@ def write_manifest(z: ZipFile, files: list[Path]) -> None:
 
 def build() -> tuple[Path, Path]:
     version = (APP / "VERSION.txt").read_text(encoding="utf-8").strip()
-    if not version.startswith("5.9.9"):
-        raise RuntimeError(f"VERSION.txt is not 5.9.9: {version}")
+    if version != "5.9.9.1":
+        raise RuntimeError(f"VERSION.txt is not 5.9.9.1: {version}")
     DIST.mkdir(exist_ok=True)
     allfiles = sorted(f for f in APP.rglob("*") if in_package(f))
     assert len(allfiles) >= 90, f"Suspiciously incomplete source: {len(allfiles)} files"
@@ -54,13 +54,13 @@ def build() -> tuple[Path, Path]:
     diff_names = run_git("diff", "--name-only", f"{STABLE}...HEAD", "--", "LoL_AutoCine").splitlines()
     changed = [REPO / name for name in diff_names if (REPO / name).is_file()]
     if not changed or not any(p.name == "kill_icons.py" for p in changed):
-        raise RuntimeError("Expected v5.9.9 source changes are missing in the diff")
+        raise RuntimeError("Expected v5.9.9.1 source changes are missing in the diff")
     patch = run_git("diff", "--binary", f"{STABLE}...HEAD", "--", "LoL_AutoCine")
-    instructions = """# v5.9.9 Codex統合用差分
+    instructions = """# v5.9.9.1 Codex統合用差分
 
 - 基準: `codex/lol-autocine-v598-handoff`（v5.9.8）
 - 変更ファイル: このZIPに含まれる `LoL_AutoCine/` 以下
-- Git推奨: 既存変更をコミットしてから `git apply --check CHANGES_v5.9.9.patch` → `git apply CHANGES_v5.9.9.patch`
+- Git推奨: 既存変更をコミットしてから `git apply --check CHANGES_v5.9.9.1.patch` → `git apply CHANGES_v5.9.9.1.patch`
 - Gitを使わない場合: 一覧を比較してから各ファイルをマージ（自動上書きは推奨しない）
 - Codexが別途編集した `core/effects.py`、`core/gpu_pipeline.py`、`core/jobs.py`、`core/camera.py` 等はコンフリクト確認必須
 - 音声のProcess Loopback、NVENC、TargetLock、UI設定の回帰テストを実施
@@ -68,7 +68,7 @@ def build() -> tuple[Path, Path]:
 """
     with ZipFile(DIFF_ZIP, "w", ZIP_DEFLATED, compresslevel=6) as z:
         write_manifest(z, sorted(changed))
-        z.writestr("CHANGES_v5.9.9.patch", patch)
+        z.writestr("CHANGES_v5.9.9.1.patch", patch)
         z.writestr("MERGE_INSTRUCTIONS_JA.md", instructions)
     for f in (FULL_ZIP, DIFF_ZIP):
         with ZipFile(f) as z:
