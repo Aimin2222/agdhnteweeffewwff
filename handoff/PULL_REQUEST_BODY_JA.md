@@ -1,9 +1,9 @@
-GPU優先で全検出シーンの一括作成を押した直後にUIが応答しなくなる報告に対応します。接続表示はUIで録画側のReplayAPIロックとHTTP応答を待ち、GPU表示もUIでFFmpeg/OpenCL確認を待っていました。Linux/Tkで両方のUI停止を再現しましたが、Windowsでの異常終了と同一原因かは未確定です。
+NVENCでエンコードできてもBloomをCPUで処理しており、ユーザー診断では9秒/13秒の素材の最終効果処理に約81秒/122秒かかっていました。Bloomと円形DOFのぼかし・焦点マスク・合成をOpenCL GPUへ移し、両方有効なら同じGPUメモリで連続処理します。この区間のアップロード/ダウンロードは各1回。色補正/装飾/音声/UIなどCPU処理も残ります。
 
-接続/GPU確認を別スレッドへ移し、文字列だけをキューでUIへ戻します。確認スレッドと接続タイマーの重複を防ぎ、エラー後も再確認可能。確認スレッドはApp/Tk変数を保持せず、終了時にUIで通信待ち/joinしません。一括作成は設定読み取り前のbusy確認、開始準備中の表示、段階ログ、周期スタック採取と終了時解除を追加します。
+START_GPU.batで公式固定SHA256のWindows FFmpegを別途追加。元同梱版・START.bat・Native Audio Helperのフローは保持します。フィルター列挙だけでなくGPU種別を限定したRGBA実行プローブ後に採用し、CPU OpenCLを除外。実行失敗/不意なモノクロ化は同じイベント時刻・肖像・タイトル・音声マップ・fpsでCPU再描画し、診断を修正します。明示FFmpeg指定、既存NVENC失敗時のCPUエンコード再試行を保持。
 
-検証: 全pytest259件成功（14.55秒）、依存/構文/空白/担当ガード。実TkでAPI/GPU待機中の全5シーン・GPU方針・ゲーム音・モンタージュ転送、画面更新/中止/二重起動防止、実APIロック競合、エラー復帰、タイマー一本、不正設定と映像入力失敗の診断を確認。core/GPU/録画/カメラ/LoL専用音声/Native Helper/START.batは元v5.10.3とバイト一致。Windows/実LoL/Native/GPU実行の確認は別途必要です。
+検証: 全pytest268件成功（13.83秒）、新GPU9ケース。CPU PoCLで実OpenCLカーネルによる1080pのBloom/円形DOF/併用を実行し、RGB平均絶対誤差0.64〜0.69/255、色と円形焦点を確認。これはGPU実機成功や高速化の証拠ではありません。GPU専用プローブがCPU OpenCLを拒否することを確認。Windows/GTX 1070 Ti/実LoL/Native録音/Windows FFmpeg実行と速度は未検証。追加FFmpegの新NVENCとドライバー互換性も実機確認が必要です。
 
-243ソースファイル/Python88・全35ブランチbundle、完全版241/差分5ファイルのHangFix ZIPとハッシュを保存。v5.10.3基準の差分適用で全ソース一致、個人ファイル除外を確認。旧版/旧PRを保持したDraft PRでmainへマージしません。WindowsはこのブランチのCode→Download ZIP→LoL_AutoCine/START.bat。環境Publishは不要です。
+UI/HangFix/カメラ/録画/LoL専用録音/Native/元START.bat/共有API/依存宣言を保持し、担当・共有blob・統合一致ガード成功。250ソース/Python93・全36ブランチbundle、完全版248/差分11ファイル、SHA256、差分適用後の全ソース一致を確認。個人診断/設定/録画と200MBのFFmpegをGitへ入れません。前回HangFixを比較先にしたDraft PRで、mainへマージしません。
 
-GitHubから243ファイル/全35ローカルref/HEADを別フォルダへ復元し一致。依存/構文/Tk/共有ガードと代表117テスト成功、installer再実行も追跡変更なし。次回クラウド用設定は保存・読み戻し一致、他設定を保持。反映は環境設定の確認・保存・Publishが必要ですがWindows取得には不要です。新クラウドタスク起動の保証ではありません。
+WindowsはこのブランチのCode→Download ZIP→LoL_AutoCine/START_GPU.bat。実行後の診断でgpu_effects_confirmed=trueとpipeline.gpu_blur_effectsのbloom/dof、NVENCはencoder=h264_nvencを別に確認し、同じ素材で速度を比較します。環境PublishはWindows取得に不要です。

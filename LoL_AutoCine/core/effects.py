@@ -13,16 +13,12 @@ from dataclasses import dataclass, field, replace, asdict
 from pathlib import Path
 from typing import Optional
 
-try:
-    import imageio_ffmpeg
-    FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
-except ImportError:
-    # Direct execution can happen before requirements are installed.
-    # Fall back to a system ffmpeg so the rest of the UI can still start.
-    FFMPEG = shutil.which("ffmpeg") or shutil.which("ffmpeg.exe")
+from .gpu_binary import ffmpeg_exe
+FFMPEG = ffmpeg_exe()
 
 from .kill_icons import make_event_badges, with_badges, normalize as kill_style_normalize
 from .focus_fx import circular_dof_filter, focus_settings
+from .gpu_bloom import GPUBlurStage, OPENCL_DEVICE
 from .camera import INTENSITY
 from .gpu_pipeline import detect as detect_gpu, gpu_prefix, backend_name as gpu_backend_name
 
@@ -442,7 +438,8 @@ def _build_video_effect_filters(t: Template, duration: float, events: list[tuple
 
 
 def build_graph(t: Template, duration: float, has_title: bool, still: bool = False,
-                pre_filters: str = "", effect_events: Optional[list[tuple[float,float]]] = None) -> str:
+                pre_filters: str = "", effect_events: Optional[list[tuple[float,float]]] = None,
+                gpu_blur_stage=None) -> str:
     """録画クリップ(60fps)に適用する filter_complex。入力0=動画 / 入力1=タイトルPNG(任意)。出力ラベル [vout]。
     still=True はプレビュー用の1枚絵 (フェード/BPM明滅なし)。pre_filters は先頭に挟む前処理 (拡大縮小/カメラ疑似)。"""
     f: list = []
@@ -469,7 +466,13 @@ def build_graph(t: Template, duration: float, has_title: bool, still: bool = Fal
     if pulse > 0.001 and not still and effect_events:
         from .highlight_pulse import pulse_filters
         f.extend(pulse_filters(effect_events, pulse))
-    if t.dof_enabled and t.dof_blur > 0.01:
+    gpu_blurs = gpu_blur_stage.effects if gpu_blur_stage else set()
+    if gpu_blurs:
+        # Keep grade/custom CPU effects before DOF/Bloom as in the legacy graph.
+        # A band DOF stays on CPU and must precede the GPU Bloom stage below.
+        if 'dof' in gpu_blurs or not (t.dof_enabled and t.dof_blur > .01):
+            f.append(gpu_blur_stage.graph)
+    if t.dof_enabled and t.dof_blur > 0.01 and 'dof' not in gpu_blurs:
         if getattr(t, 'dof_shape', 'circle') != 'band':
             # Circular 2D focus, independent of nonexistent per-pixel replay depth.
             # The camera locks its target close to screen center; manual x/y offset
@@ -500,7 +503,9 @@ def build_graph(t: Template, duration: float, has_title: bool, still: bool = Fal
                 f"scale=1920:1080:flags=bilinear[dofm];"
                 f"[dofc][dofa][dofm]maskedmerge"
             )
-    if t.bloom > 0:
+    if gpu_blurs and 'dof' not in gpu_blurs and t.dof_enabled and t.dof_blur > .01:
+        f.append(gpu_blur_stage.graph)
+    if t.bloom > 0 and 'bloom' not in gpu_blurs:
         # Expensive 1080p sigma=22 gblur used to dominate CPU render time.
         # A 540p sigma=11 convolution has approximately the same screen-space
         # radius; composite remains full-resolution and keeps the RGB pipeline.
@@ -595,6 +600,8 @@ def gpu_capabilities() -> dict:
         "nvenc": c.nvenc, "cuda": c.cuda, "scale_cuda": c.scale_cuda,
         "opencl": c.opencl, "gblur_opencl": c.gblur_opencl,
         "unsharp_opencl": c.unsharp_opencl, "opencl_runtime_ok": c.opencl_runtime_ok,
+        "program_opencl": c.program_opencl, "rgba_gpu_runtime_ok": c.rgba_gpu_runtime_ok,
+        "rgba_probe_reason": c.rgba_probe_reason,
     }
 
 def gpu_pipeline_status() -> str:
@@ -644,6 +651,25 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
                    audio_trim: float = 0.0, game_audio: Optional[Path] = None,
                    audio_offset: Optional[float] = None,
                    effect_events: Optional[list] = None) -> None:
+    """Keep the original API and release GPU shader files on every exit/retry."""
+    caps = detect_gpu()
+    stage = None
+    try:
+        stage = GPUBlurStage(t, caps)
+    except (OSError, ValueError) as e:
+        import logging
+        logging.getLogger(__name__).warning('GPU blur setup failed; using CPU: %s', e)
+    try:
+        _apply_effects(src,dst,t,duration,kills,size,game_wav,audio_trim,game_audio,
+                       audio_offset,effect_events,caps,stage)
+    finally:
+        if stage is not None:
+            stage.close()
+
+
+def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
+                   audio_trim=0.0, game_audio=None, audio_offset=None,
+                   effect_events=None, caps=None, gpu_blur_stage=None):
     """録画クリップへ映像エフェクトを適用し、必要ならLoL音声を後段muxする。
 
     GPU優先: 実機OpenCLプローブに成功した効果のみGPUへ回し、それ以外はCPUで処理。
@@ -663,8 +689,9 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
     # GPU Effects Engine: GPU-native effects run in a dedicated GPU stage.
     # Unsupported effects remain on the CPU. The frame is downloaded at most
     # once before the legacy CPU filter graph, then NVENC encodes the result.
-    caps = detect_gpu()
+    caps = caps or detect_gpu()
     gpu_prefix_graph, consumed_gpu = gpu_prefix(t.video_effects, caps)
+    consumed_gpu = set(consumed_gpu) | (gpu_blur_stage.effects if gpu_blur_stage else set())
     scale = f"scale={OUTPUT_W}:{OUTPUT_H}:flags=lanczos"
     pre = ",".join([x for x in (gpu_prefix_graph, scale) if x])
     events = _effect_events(kills, t, duration) if effect_events is None else list(effect_events)
@@ -697,18 +724,19 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
     original_effects = t.video_effects
     if consumed_gpu:
         remaining = dict(original_effects)
-        for key in consumed_gpu:
+        for key in consumed_gpu & set(original_effects):
             remaining[key] = 0.0
         t.video_effects = remaining
     try:
-        graph = build_graph(t, duration, png is not None, pre_filters=pre, effect_events=events)
+        graph = build_graph(t, duration, png is not None, pre_filters=pre, effect_events=events,
+                            gpu_blur_stage=gpu_blur_stage)
         graph = add_pair_graph(graph)
     finally:
         t.video_effects = original_effects
     cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error"]
     if consumed_gpu:
         # hwupload without a filter device is not usable on Windows.
-        cmd += ["-init_hw_device", "opencl=ocl:0.0", "-filter_hw_device", "ocl"]
+        cmd += ["-init_hw_device", OPENCL_DEVICE, "-filter_hw_device", "ocl"]
     cmd += ["-i", str(src)]
     idx = 1
     if png is not None:
@@ -737,15 +765,20 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
     pipeline_info = {
         "gpu_backend": gpu_backend_name(caps),
         "gpu_effects_unavailable_reason": (
+            None if consumed_gpu else
+            caps.rgba_probe_reason if t.bloom > 0 or t.dof_enabled else
             "bundled_ffmpeg_missing_avgblur_opencl" if not caps.gblur_opencl else
             "opencl_device_or_filter_probe_failed" if not caps.opencl_runtime_ok else
             "no_supported_gpu_effect_enabled" if not consumed_gpu else None),
         "gpu_capabilities": gpu_capabilities(),
+        "ffmpeg_executable": FFMPEG,
+        "gpu_opencl_device": OPENCL_DEVICE if consumed_gpu else None,
+        "gpu_blur_effects": sorted(gpu_blur_stage.effects) if gpu_blur_stage else [],
         "gpu_effects_selected": sorted(consumed_gpu),
         "cpu_video_effects": sorted(k for k, value in original_effects.items()
                                     if float(value or 0) > 0.001 and k not in consumed_gpu),
-        "bloom_cpu_optimized": bool(t.bloom > 0),
-        "dof_mask_cpu_optimized": bool(t.dof_enabled and t.dof_blur > 0.01),
+        "bloom_cpu_optimized": bool(t.bloom > 0 and 'bloom' not in consumed_gpu),
+        "dof_mask_cpu_optimized": bool(t.dof_enabled and t.dof_blur > 0.01 and 'dof' not in consumed_gpu),
         "bloom_level": t.bloom,
         "dof_blur_level": t.dof_blur if t.dof_enabled else 0,
         "dof_shape": getattr(t, "dof_shape", "circle"),
@@ -770,7 +803,7 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
     # GPU effect runtimeが不安定な環境では、同じ設定をCPUエフェクト経路で自動再試行。
     if r.returncode != 0 and consumed_gpu:
         fallback = dict(t.video_effects)
-        for key in consumed_gpu:
+        for key in consumed_gpu & set(original_effects):
             fallback[key] = float(original_effects.get(key, 0.0))
         t.video_effects = fallback
         try:
@@ -800,6 +833,12 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
             cpu_cmd += ["-t", f"{duration:.3f}"] + encoder_args(t.fps, policy=t.encoder_policy) + ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", str(dst)]
             r = run_render(cpu_cmd, output=dst, gpu_effects=[], effect_values=original_effects, fallback_reason="GPU render failed",
                            pipeline_info={**pipeline_info, "gpu_effects_selected": [],
+                                          "gpu_backend": "CPU Effects fallback",
+                                          "gpu_effects_unavailable_reason": "gpu_render_failed",
+                                          "gpu_opencl_device": None,
+                                          "gpu_blur_effects": [],
+                                          "bloom_cpu_optimized": bool(t.bloom > 0),
+                                          "dof_mask_cpu_optimized": bool(t.dof_enabled and t.dof_blur > .01),
                                           "cpu_video_effects": sorted(k for k,v in original_effects.items() if float(v or 0)>0.001),
                                           "filter_graph": graph_cpu})
         finally:
@@ -847,6 +886,13 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
                     cpu_cmd += ["-t", f"{duration:.3f}"] + encoder_args(t.fps, policy=t.encoder_policy) + ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", str(dst)]
                     rr = run_render(cpu_cmd, output=dst, gpu_effects=[], effect_values=original_effects, fallback_reason="color preservation retry",
                                     pipeline_info={**pipeline_info, "gpu_effects_selected": [],
+                                                   "gpu_backend": "CPU Effects fallback",
+                                                   "gpu_effects_unavailable_reason": "color_preservation_retry",
+                                                   "gpu_opencl_device": None,
+                                                   "gpu_blur_effects": [],
+                                                   "bloom_cpu_optimized": bool(t.bloom > 0),
+                                                   "dof_mask_cpu_optimized": bool(t.dof_enabled and t.dof_blur > .01),
+                                                   "cpu_video_effects": sorted(k for k,v in original_effects.items() if float(v or 0)>0.001),
                                                    "filter_graph": graph_cpu})
                     if rr.returncode != 0:
                         raise RuntimeError("色保持用CPU再描画に失敗: " + rr.stderr[-1000:])
