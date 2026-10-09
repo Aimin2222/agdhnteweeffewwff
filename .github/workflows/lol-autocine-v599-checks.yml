@@ -1,0 +1,35 @@
+name: LoL AutoCine v5.9.9 regression checks
+
+on:
+  push:
+    branches:
+      - autocine/v5.9.9-chatgpt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: LoL_AutoCine
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Linux headless test dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb python3-tk ffmpeg
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pytest
+      - name: Compile all Python sources
+        run: python -m compileall -q .
+      - name: Run v5.9.9 new tests under virtual display
+        run: xvfb-run -a python -m pytest -q tests/test_v599_automontage_killbadges.py
+      - name: Run full existing regression suite
+        run: xvfb-run -a python -m pytest -q tests
