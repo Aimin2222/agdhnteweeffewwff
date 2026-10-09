@@ -1,9 +1,9 @@
-NVENCでエンコードできてもBloomをCPUで処理しており、ユーザー診断では9秒/13秒の素材の最終効果処理に約81秒/122秒かかっていました。Bloomと円形DOFのぼかし・焦点マスク・合成をOpenCL GPUへ移し、両方有効なら同じGPUメモリで連続処理します。この区間のアップロード/ダウンロードは各1回。色補正/装飾/音声/UIなどCPU処理も残ります。
+チェック済み2シーンの作成がcapture_startで止まり、35秒監視スタックはwindows_capture.start_free_threadedの待機を示していました。ユーザーは応答なしを手動終了しています。FFmpeg/録画/エフェクト開始の記録はなく、GPUエンコード失敗とは断定できません。Python3.14で実行していましたが、Windows/ドライバー内部の待機原因は未確定です。
 
-START_GPU.batで公式固定SHA256のWindows FFmpegを別途追加。元同梱版・START.bat・Native Audio Helperのフローは保持します。フィルター列挙だけでなくGPU種別を限定したRGBA実行プローブ後に採用し、CPU OpenCLを除外。実行失敗/不意なモノクロ化は同じイベント時刻・肖像・タイトル・音声マップ・fpsでCPU再描画し、診断を修正します。明示FFmpeg指定、既存NVENC失敗時のCPUエンコード再試行を保持。
+ネイティブWGCをGUI/FFmpegを読み込まない独立Pythonプロセスのメインスレッドへ移し、8秒以内の初フレーム受信で開始を判定します。開始待ち・子異常終了・受信失敗はCaptureErrorへ戻し、子と共有メモリを回収して再試行可能にします。BGRAは最新1枚の共有メモリから親の所有配列へ受信し、コピー前後の連番で不完全フレームを捨てます。子が終了した場合は古いフレームを録画し続けません。通常終了時の回収と可能なWindows Job Objectによる親終了時の子終了、試行別の段階・版・例外・待機スタック診断を追加します。LoLウィンドウだけを対象にしデスクトップへのフォールバックはありません。
 
-検証: 全pytest268件成功（13.83秒）、新GPU9ケース。CPU PoCLで実OpenCLカーネルによる1080pのBloom/円形DOF/併用を実行し、RGB平均絶対誤差0.45〜0.69/255、色と円形焦点を確認。これはGPU実機成功や高速化の証拠ではありません。GPU専用プローブがCPU OpenCLを拒否することを確認。Windows/GTX 1070 Ti/実LoL/Native録音/Windows FFmpeg実行と速度は未検証。追加FFmpegの新NVENCとドライバー互換性も実機確認が必要です。
+WGCWindowSourceの公開API/BGRA形式を維持し、変更する共有capture.pyと新しい内部capture_process.py/capture_worker.pyの正確なblobレビューを記録。Win64 HWND型を設定します。既存GPU Bloom/DOF/OpenCL/NVENC/CPU再試行・カメラ・録画/時刻・LoL専用音声・UI/HangFix・Native/START類・依存宣言は前回GPUFXとバイト一致。
 
-UI/HangFix/カメラ/録画/LoL専用録音/Native/元START.bat/共有API/依存宣言を保持し、担当・共有blob・統合一致ガード成功。250ソース/Python93・全36ブランチbundle、完全版248/差分11ファイル、SHA256、差分適用後の全ソース一致を確認。個人診断/設定/録画と200MBのFFmpegをGitへ入れません。前回HangFixを比較先にしたDraft PRで、mainへマージしません。
+検証: 全pytest278件成功（22.03秒）、新10ケース。実サブプロセス/共有メモリで正常BGRA/所有/待機タイムアウト/子異常終了/中断/再試行/回収、待機中の実Tkイベント継続を検査。ネイティブWGCのみ合成実装で、Windows/実LoL/実GPUでの修復成功は未検証。担当/共有blob/統合一致ガード、構文/空白、完全版254/差分8と差分適用後全256ソース一致・個人ファイル除外を確認。全38ブランチbundleと全旧版を保存。
 
-WindowsはこのブランチのCode→Download ZIP→LoL_AutoCine/START_GPU.bat。実行後の診断でgpu_effects_confirmed=trueとpipeline.gpu_blur_effectsのbloom/dof、NVENCはencoder=h264_nvencを別に確認し、同じ素材で速度を比較します。環境PublishはWindows取得に不要です。
+前回GPUFXを比較先にしたDraft PRでmainへマージしません。WindowsはこのブランチのCode→Download ZIP→別フォルダ展開→LoL_AutoCine/START_GPU.bat。LoLリプレイを表示/最小化解除してチェック1シーン→2シーンを試し、開始しなければ8秒程度でエラー/再試行へ戻るか確認。COLLECT_DIAGNOSTICS.batでcapture.log/capture_worker_*.log/last_errorを収集できます。Windows取得に環境Publishは不要です。

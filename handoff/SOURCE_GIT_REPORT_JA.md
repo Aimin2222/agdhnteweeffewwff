@@ -1,46 +1,43 @@
-# GPUFX版の保存・実変更
+# v5.10.3 GPUFX CaptureFix 保存報告
 
-ソース保存先: /workspace/LoL_AutoCine。ローカルGit、remoteなし。
-取得用保存先: /workspace/agdhnteweeffewwff。origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
-ソースHEAD: 16074dc72bce28cfc5daeb93ad34fdd073fa6beb。ブランチ: integration/v5.10.3-gpu-effects。
-取得用ブランチ: codex/lol-autocine-v5103-gpu-effects-handoff。mainへマージしない。
+ソース保存先: /workspace/LoL_AutoCine、ローカルGitでremoteなし。
+取得用保存先: /workspace/agdhnteweeffewwff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
+ソースHEAD: 86a1165658082daaff902649dd56eb7a4895ed09、ブランチ: integration/v5.10.3-capturefix。
+取得用ブランチ: codex/lol-autocine-v5103-capturefix-handoff。mainへマージしない。
 
-開始時の両Gitのgit status --shortは空。最終コミット/push後の状態はVERIFICATION_v5.10.3_GPUFX.jsonに記録する。無視ファイル（.venv/個人設定/診断/録画/生成dist）をローカルに保持し配布しない。
+更新開始前の両Gitのgit status --shortは空。最終コミット/push後も空を確認してVERIFICATIONへ記録する。個人設定・ログ・診断・録画・生成dist・.venvはローカルに保持し配布しない。
 
 ## ソースgit log -3 --oneline
 
 ```
-16074dc Record separate DOF-only and combined OpenCL reference measurements
-dacf009 Integrate GPU Bloom and DOF while preserving v5.10.3 HangFix UI
-eb8cb75 Add GPU-only OpenCL Bloom and circular DOF with verified Windows FFmpeg setup
+86a1165 Integrate bounded WGC capture without changing GPU effects or UI
+f6cb590 Record exact capture API review and reproducible CaptureFix packaging
+df4318a Isolate LoL WGC startup in a bounded child process with shared BGRA frames
 ```
 
 ## git remote -v
 
-ソース: 空。取得用:
+ソースは空。取得用:
 
 ```
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-## 前回HangFix版からの追加・変更
+## 前回GPUFX版からの実変更
 
 ```
-M	.gitignore
-A	START_GPU.bat
-M	core/effects.py
-A	core/gpu_binary.py
-A	core/gpu_bloom.py
-M	core/gpu_pipeline.py
-A	docs/CODEX_GPU_EFFECTS_v5.10.3_JA.md
-A	tests/test_gpu_opencl_bloom.py
+M	core/capture.py
+A	core/capture_process.py
+A	core/capture_worker.py
+A	docs/CODEX_CAPTURE_STARTUP_FIX_v5.10.3_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_CAPTURE_v5.10.3.json
+A	tests/test_gpu_capture_isolation.py
 M	tools/check_parallel_integration.py
-A	tools/package_v5103_gpu.py
-A	tools/setup_gpu_ffmpeg.py
+A	tools/package_v5103_capturefix.py
 ```
 
-## 元v5.8.5からの追加・変更
+## 元v5.8.5からの実変更
 
 ```
 M	.gitignore
@@ -64,6 +61,9 @@ M	VERSION.txt
 A	assets/champion_icons/README_JA.txt
 M	core/camera.py
 A	core/camera_clock.py
+M	core/capture.py
+A	core/capture_process.py
+A	core/capture_worker.py
 M	core/effects.py
 A	core/focus_fx.py
 A	core/gpu_binary.py
@@ -84,6 +84,7 @@ A	docs/CHANGELOG_v5.9.7_JA.md
 A	docs/CODEX_ALL_SCENES_HANG_FIX_v5.10.3_JA.md
 A	docs/CODEX_ARCHITECTURE_JA.md
 A	docs/CODEX_AUDIT_RESULTS_JA.md
+A	docs/CODEX_CAPTURE_STARTUP_FIX_v5.10.3_JA.md
 A	docs/CODEX_CHAMPION_PAIR_RESULTS_v5.9.9_JA.md
 A	docs/CODEX_GPU_ANALYSIS_JA.md
 A	docs/CODEX_GPU_EFFECTS_v5.10.3_JA.md
@@ -114,6 +115,7 @@ A	docs/CODEX_MERGE_PROMPT_JA.md
 A	docs/CODEX_MERGE_v5.9.0_JA.md
 A	docs/CODEX_MERGE_v5.9.1_JA.md
 A	docs/CODEX_PARALLEL_INTEGRATION_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_CAPTURE_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1.json
@@ -148,6 +150,7 @@ A	docs/v599_changes.patch
 M	legacy_app.py
 A	patches/v594_to_v595.patch
 A	tests/test_editor_ui_contract.py
+A	tests/test_gpu_capture_isolation.py
 A	tests/test_gpu_champion_pair_v599.py
 A	tests/test_gpu_circle_focus_v5103.py
 A	tests/test_gpu_dof_only_v5103.py
@@ -182,6 +185,7 @@ A	tools/check_parallel_integration.py
 A	tools/package_v5100.py
 A	tools/package_v5101.py
 A	tools/package_v5103.py
+A	tools/package_v5103_capturefix.py
 A	tools/package_v5103_gpu.py
 A	tools/package_v5103_hangfix.py
 A	tools/package_v599.py
@@ -198,4 +202,4 @@ A	ui/studio_localization.py
 A	ui_changes_v5.9.1.patch
 ```
 
-250ソースファイル/Python93、全36ブランチをbundle保存。UI/カメラ/録画/LoL専用録音/Native Helper/元START.bat/依存宣言はHangFix版とバイト一致。全旧ブランチ・ZIP・bundleを保持。
+256ソース/Python97・全38ブランチをbundle保存。GPUエフェクト/FFmpeg/NVENC/録画/カメラ/LoL専用音声/UI/HangFix/Native/START類/依存宣言は前回GPUFXとバイト一致。変更する共有キャプチャAPIの正確な3blobはdocs/CODEX_SHARED_API_REVIEW_CAPTURE_v5.10.3.jsonへ記録した。旧版/旧PR/旧ZIP/bundleを保持。
