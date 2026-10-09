@@ -23,6 +23,7 @@ sys.path.insert(0, str(ROOT))
 
 from core import paths                                             # noqa: E402
 from core.kill_icons import STYLES as KILL_ICON_STYLES, REVERSE_STYLES as KILL_ICON_REVERSE
+from core.kill_icons import POSITIONS as KILL_ICON_POSITIONS, REVERSE_POSITIONS as KILL_ICON_REVERSE_POSITIONS
 from core.camera import INTENSITY_JP, STYLES                       # noqa: E402
 from core.capture import CaptureError, SyntheticSource, WGCWindowSource   # noqa: E402
 from core.effects import (FOG_PRESETS, GRADE_JP, TRANSITIONS, Template, one_click_templates, gpu_encoder_available, gpu_pipeline_status,
@@ -382,6 +383,10 @@ class App:
         self.var_smart_highlight_style = tk.StringVar(value=SMART_STYLES['auto'])
         self.var_smart_highlight_enabled = tk.BooleanVar(value=False)
         self.var_kill_icon_style = tk.StringVar(value=KILL_ICON_STYLES['off'])
+        self.var_kill_icon_position = tk.StringVar(value=KILL_ICON_POSITIONS['right-top'])
+        self.var_kill_icon_scale = tk.DoubleVar(value=1.0)
+        self.var_kill_icon_duration = tk.DoubleVar(value=1.55)
+        self.var_kill_icon_opacity = tk.DoubleVar(value=1.0)
         self.var_smart_montage = tk.BooleanVar(value=True)
         self.var_smart_composition = tk.BooleanVar(value=False)
         self.var_scene_mode = tk.BooleanVar(value=False)    # opt-in per-scene rendering
@@ -1094,6 +1099,20 @@ class App:
         ttk.Label(output, text="キルアイコンの装飾（全シーン共通）", style="Card.TLabel").pack(anchor="w", pady=(5,2))
         ttk.Combobox(output, state="readonly", textvariable=self.var_kill_icon_style,
                      values=list(KILL_ICON_STYLES.values()), width=29).pack(fill="x", pady=(0,4))
+        ttk.Label(output, text="装飾位置", style="Card.TLabel").pack(anchor="w", pady=(2, 1))
+        ttk.Combobox(output, state="readonly", textvariable=self.var_kill_icon_position,
+                     values=list(KILL_ICON_POSITIONS.values()), width=28).pack(fill="x", pady=(0, 3))
+        badge_details = ttk.Frame(output, style="Card.TFrame")
+        badge_details.pack(fill="x", pady=(2, 5))
+        for caption, variable, lower, upper, inc in (
+                ("大きさ", self.var_kill_icon_scale, 0.5, 1.8, 0.1),
+                ("表示秒数", self.var_kill_icon_duration, 0.45, 4.0, 0.1),
+                ("濃さ", self.var_kill_icon_opacity, 0.25, 1.0, 0.05)):
+            part = ttk.Frame(badge_details, style="Card.TFrame")
+            part.pack(side="left", padx=(0, 8))
+            ttk.Label(part, text=caption, style="Card.TLabel").pack(side="top")
+            ttk.Spinbox(part, from_=lower, to=upper, increment=inc,
+                        textvariable=variable, width=7).pack(side="top")
         ttk.Checkbutton(output, text="スマートモンタージュで見せ場を後半に配置（自動編集時のみ）",
                         variable=self.var_smart_montage).pack(anchor="w", pady=(0,5))
         ttk.Label(output, text="モンタージュ専用の切替演出", style="Card.TLabel").pack(anchor="w", pady=(5,2))
@@ -2059,7 +2078,8 @@ class App:
         self.var_scene_mode.set(True)
         self.var_auto_director.set(True)
         self.var_smart_highlight_enabled.set(True)
-        self.log('スマート自動編集: ターゲット固定のカメラ演出とキル瞬間の強調を有効にします')
+        self.var_smart_composition.set(True)
+        self.log('スマート自動編集: スマート構図補正・キル瞬間演出・ターゲット固定を有効にします')
         self.on_one_click(smart=True)
 
     def on_clear_scene(self):
@@ -2283,6 +2303,10 @@ class App:
         self.var_tr.set(TRANSITIONS.get(t.transition, t.transition))
         self.var_montage_fx.set({"cut":"なし（従来の高速連結）", "flash":"光るカット（白い閃光）", "dark":"暗転カット（シネマ）"}.get(getattr(t,"montage_fx","cut"), "なし（従来の高速連結）"))
         self.var_kill_icon_style.set(KILL_ICON_STYLES.get(getattr(t, "kill_icon_style", "off"), KILL_ICON_STYLES["off"]))
+        self.var_kill_icon_position.set(KILL_ICON_POSITIONS.get(getattr(t, "kill_icon_position", "right-top"), KILL_ICON_POSITIONS["right-top"]))
+        self.var_kill_icon_scale.set(float(getattr(t, "kill_icon_scale", 1.0)))
+        self.var_kill_icon_duration.set(float(getattr(t, "kill_icon_duration", 1.55)))
+        self.var_kill_icon_opacity.set(float(getattr(t, "kill_icon_opacity", 1.0)))
         self.var_pre.set(t.pre)
         self.var_post.set(t.post)
         self.var_merge.set(t.merge_multikill)
@@ -2338,6 +2362,11 @@ class App:
         t.smart_highlight_enabled = bool(self.var_smart_highlight_enabled.get())
         t.smart_highlight_style = SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto')
         t.kill_icon_style = KILL_ICON_REVERSE.get(self.var_kill_icon_style.get(), 'off')
+        t.kill_icon_position = KILL_ICON_REVERSE_POSITIONS.get(self.var_kill_icon_position.get(), 'right-top')
+        from core.kill_icons import normalize_options
+        (_pos, t.kill_icon_scale, t.kill_icon_duration, t.kill_icon_opacity) = normalize_options(
+            t.kill_icon_position, self.var_kill_icon_scale.get(),
+            self.var_kill_icon_duration.get(), self.var_kill_icon_opacity.get())
         t.smart_montage = bool(self.var_smart_montage.get())
         t.smart_composition = bool(self.var_smart_composition.get())
         # LoLミラー/カメラは144Hzで内部サンプリングし、最終出力FPSだけUI選択値へ合わせる。
@@ -2390,6 +2419,15 @@ class App:
             self._apply_panel_widths()
             if d.get("kill_icon_style") in KILL_ICON_STYLES:
                 self.var_kill_icon_style.set(KILL_ICON_STYLES[d["kill_icon_style"]])
+            if d.get("kill_icon_position") in KILL_ICON_POSITIONS:
+                self.var_kill_icon_position.set(KILL_ICON_POSITIONS[d["kill_icon_position"]])
+            from core.kill_icons import normalize_options
+            (_p, badge_scale, badge_duration, badge_opacity) = normalize_options(
+                d.get("kill_icon_position"), d.get("kill_icon_scale"),
+                d.get("kill_icon_duration"), d.get("kill_icon_opacity"))
+            self.var_kill_icon_scale.set(badge_scale)
+            self.var_kill_icon_duration.set(badge_duration)
+            self.var_kill_icon_opacity.set(badge_opacity)
             if isinstance(d.get("smart_montage"), bool):
                 self.var_smart_montage.set(d["smart_montage"])
             if isinstance(d.get("smart_composition"), bool):
@@ -2422,6 +2460,10 @@ class App:
                                              "smart_highlight_style": SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto'),
                                              "hud_mode": self.var_hud_mode.get(),
                                              "kill_icon_style": KILL_ICON_REVERSE.get(self.var_kill_icon_style.get(), "off"),
+                                             "kill_icon_position": KILL_ICON_REVERSE_POSITIONS.get(self.var_kill_icon_position.get(), "right-top"),
+                                             "kill_icon_scale": float(self.var_kill_icon_scale.get()),
+                                             "kill_icon_duration": float(self.var_kill_icon_duration.get()),
+                                             "kill_icon_opacity": float(self.var_kill_icon_opacity.get()),
                                              "smart_montage": bool(self.var_smart_montage.get()),
                                              "smart_composition": bool(self.var_smart_composition.get()),
                                              "montage_fx": {"なし（従来の高速連結）":"cut", "光るカット（白い閃光）":"flash", "暗転カット（シネマ）":"dark"}.get(self.var_montage_fx.get(),"cut")}, ensure_ascii=False), encoding="utf-8")
