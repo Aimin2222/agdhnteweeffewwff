@@ -956,7 +956,7 @@ class App:
         slider(left_cam, "dist_scale", "追従距離", 0.3, 1.0)
         slider(left_cam, "cam_height", "高さ", 0, 900)
         slider(left_cam, "third_elev", "仰角", 10, 50)
-        ttk.Checkbutton(left_cam, text="常に対象を画面中央に表示", variable=tk.BooleanVar(value=True)).pack(anchor="w", pady=(4, 0))
+        ttk.Checkbutton(left_cam, text="スマート構図補正（距離・仰角を安全範囲へ調整）", variable=self.var_smart_composition).pack(anchor="w", pady=(4, 0))
         ttk.Label(right_cam, text="Orbit（横回転）", style="Card.TLabel", font=("Meiryo UI", 10, "bold")).pack(anchor="w", pady=(0, 3))
         slider(right_cam, "third_dist", "三人称 距離", 500, 1400)
         slider(right_cam, "third_yaw", "回転角", -180, 180)
