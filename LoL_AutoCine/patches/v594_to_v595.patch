@@ -1,0 +1,463 @@
+--- a/legacy_app.py
++++ b/legacy_app.py
+@@ -312,7 +312,7 @@
+ class App:
+     def __init__(self, root: tk.Tk):
+         self.root = root
+-        root.title(f"{APP} v5.9.3 - シンプル / 詳細編集")
++        root.title(f"{APP} v5.9.5 - かんたん / 詳細ワークスペース")
+         sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
+         root.geometry(f"{min(1560, sw - 40)}x{min(960, sh - 90)}+10+10")
+         root.option_add("*Font", FONT)
+@@ -406,9 +406,9 @@
+         style.configure("Section.TLabel", background=panel, foreground="#111827", font=("Meiryo UI", 11, "bold"))
+         style.configure("BigTitle.TLabel", background=bg, foreground="#0F172A", font=("Meiryo UI", 18, "bold"))
+         style.configure("SmallTitle.TLabel", background=bg, foreground=muted, font=("Meiryo UI", 9))
+-        style.configure("Mode.TRadiobutton", background="#EAF3FF", foreground="#174EA6", font=("Meiryo UI", 11, "bold"), padding=(12, 9))
++        style.configure("Mode.TRadiobutton", background="#EAF3FF", foreground="#174EA6", font=("Meiryo UI", 11, "bold"), padding=(10, 5))
+         style.map("Mode.TRadiobutton", background=[("active", "#D9EAFE")])
+-        style.configure("Nav.TButton", background=bg, foreground="#596780", padding=(14, 11), borderwidth=0, font=("Meiryo UI", 10, "bold"))
++        style.configure("Nav.TButton", background=bg, foreground="#596780", padding=(9, 6), borderwidth=0, font=("Meiryo UI", 10, "bold"))
+         style.map("Nav.TButton", background=[("active", "#EAF3FF")], foreground=[("active", accent)])
+         style.configure("TButton", background="#FFFFFF", foreground="#344054", padding=(10, 7), bordercolor=line, lightcolor=line, darkcolor=line)
+         style.map("TButton", background=[("active", "#F2F6FB"), ("pressed", "#E6EEF8")], foreground=[("disabled", "#98A2B3")])
+@@ -437,15 +437,14 @@
+         self.var_tpl = tk.StringVar(value=list(self.templates)[0])
+         self.var_int = tk.StringVar(value="standard")
+ 
+-        top = ttk.Frame(r, padding=(18, 7, 18, 6))
++        top = ttk.Frame(r, padding=(12, 3, 12, 3))
+         top.pack(fill="x")
+         brand_box = ttk.Frame(top)
+         brand_box.pack(side="left")
+-        ttk.Label(brand_box, text="◈  LoL AutoCine v5.9.3", style="BigTitle.TLabel").pack(anchor="w")
+-        ttk.Label(brand_box, text="", style="SmallTitle.TLabel").pack(anchor="w", pady=(0, 1))
++        ttk.Label(brand_box, text="◈  LoL AutoCine v5.9.5", style="BigTitle.TLabel").pack(anchor="w")
+ 
+         nav = ttk.Frame(top)
+-        nav.pack(side="left", padx=(48, 0))
++        nav.pack(side="left", padx=(15, 0))
+         ttk.Button(nav, text="⌂  ホーム", style="Nav.TButton", command=lambda: self._focus_home()).pack(side="left")
+         ttk.Button(nav, text="▣  テンプレート", style="Nav.TButton", command=lambda: self._focus_template()).pack(side="left")
+         ttk.Button(nav, text="▰  参考動画", style="Nav.TButton", command=lambda: self._focus_reference()).pack(side="left")
+@@ -453,7 +452,6 @@
+ 
+         right_top = ttk.Frame(top)
+         right_top.pack(side="right")
+-        ttk.Label(right_top, text="出力FPS", style="Muted.TLabel").pack(side="left", padx=(0, 5))
+         self.var_fps_ui = tk.StringVar(value="60 FPS")
+         self.var_preview_hz = tk.StringVar(value="144 Hz")
+         ttk.Label(right_top, text="プレビュー", style="Muted.TLabel").pack(side="left", padx=(0, 4))
+@@ -467,19 +465,23 @@
+ 
+         # View switch is UI-only. Project, checkmarks, templates and the render mode
+         # are never reset when the user changes between easy/detailed views.
+-        mode_bar = ttk.Frame(r, padding=(20, 5, 20, 7))
++        mode_bar = ttk.Frame(r, padding=(12, 2, 12, 3))
+         mode_bar.pack(fill="x")
+         ttk.Label(mode_bar, text="編集モード", style="Muted.TLabel").pack(side="left", padx=(0, 12))
+         for title, mode_id in (("★ かんたん編集", "easy"), ("⚙ 詳細編集", "advanced")):
+             ttk.Radiobutton(mode_bar, text=title, value=mode_id,
+                             variable=self.var_edit_mode, style="Mode.TRadiobutton",
+                             command=self._apply_edit_mode).pack(side="left", padx=(0, 8))
++        # Studio workspace shortcuts, intentionally scoped to explicit Ctrl+number.
++        # Never rebind single keys used by LoL or text/number entry fields.
++        for num, zone in enumerate(("scene", "camera", "color", "output"), start=1):
++            r.bind(f"<Control-Key-{num}>", lambda _e, z=zone: self._focus_editor_zone(z), add="+")
+         self.edit_mode_hint = ttk.Label(mode_bar, style="Muted.TLabel")
+         self.edit_mode_hint.pack(side="left", padx=12)
+         ttk.Separator(r).pack(fill="x")
+ 
+         # ---- main three-pane layout ----------------------------------------
+-        body = ttk.Frame(r, padding=(10, 7, 10, 5))
++        body = ttk.Frame(r, padding=(8, 4, 8, 3))
+         body.pack(fill="both", expand=True)
+ 
+         self.left_scroll = ScrollFrame(body, 310)
+@@ -538,6 +540,38 @@
+             return f
+ 
+         # ---- left: references / workflow / templates ----------------------
++        f = card(left, "1  リプレイ準備")
++        ttk.Button(f, text="① Replay APIを自動設定", command=self.on_fix_cfg).pack(fill="x", pady=2)
++        ttk.Button(f, text="② リプレイ（.rofl）を開く", command=self.on_open_replay).pack(fill="x", pady=2)
++        self.cb_recent = ttk.Combobox(f, state="readonly", values=[p.name for p in paths.list_replays()[:30]])
++        self.cb_recent.pack(fill="x", pady=2)
++        ttk.Button(f, text="最近のリプレイを再生", command=self.on_play_recent).pack(fill="x", pady=2)
++        ttk.Label(f, text="APIキー不要。game.cfgを自動設定します。", style="CardMuted.TLabel", wraplength=270).pack(fill="x", pady=(4, 0))
++
++        f = card(left, "2  対象プレイヤー")
++        ttk.Button(f, text="接続して10人を取得", command=self.on_connect).pack(fill="x", pady=(0, 5))
++        self.tree = ttk.Treeview(f, columns=("team", "champ", "name"), show="headings", height=8, selectmode="browse")
++        for c, t, w in (("team", "チーム", 55), ("champ", "チャンピオン", 95), ("name", "プレイヤー", 125)):
++            self.tree.heading(c, text=t); self.tree.column(c, width=w, anchor="w")
++        self.tree.tag_configure("ORDER", background="#EFF6FF", foreground="#1E3A8A")
++        self.tree.tag_configure("CHAOS", background="#FFF1F2", foreground="#9F1239")
++        self.tree.pack(fill="both", expand=True)
++        self.tree.bind("<Double-1>", lambda e: self.on_lock())
++        ttk.Button(f, text="この人を対象にする", command=self.on_lock).pack(fill="x", pady=(5, 3))
++        self.lbl_lock = ttk.Label(f, text="対象: 未選択", style="CardMuted.TLabel")
++        self.lbl_lock.pack(fill="x")
++
++        f = card(left, "3  キル・アシストを探す")
++        ttk.Label(f, text="検出対象", style="CardMuted.TLabel").pack(anchor="w", pady=(0, 3))
++        ttk.Combobox(f, state="readonly", textvariable=self.var_event_mode,
++                     values=["キル", "アシスト", "キル＋アシスト"]).pack(fill="x", pady=(0, 5))
++        ttk.Button(f, text="全編スキャン", command=self.on_scan).pack(fill="x")
++        self.pb_scan = ttk.Progressbar(f, maximum=100); self.pb_scan.pack(fill="x", pady=6)
++        self.lbl_scan = ttk.Label(f, text="まだスキャンしていません", style="CardMuted.TLabel", wraplength=270)
++        self.lbl_scan.pack(fill="x")
++
++
++        # 参考映像とテンプレートは準備・スキャンの後に配置する。
+         f = card(left, "▶  参考動画の追加")
+         mode = ttk.Frame(f, style="Card.TFrame")
+         mode.pack(fill="x", pady=(0, 7))
+@@ -576,36 +610,6 @@
+             ttk.Button(f, text="◆  " + name, command=cmd).pack(fill="x", pady=2)
+         ttk.Button(f, text="＋  新しいテンプレート", command=self.on_make_reference_template).pack(fill="x", pady=(5, 0))
+ 
+-        f = card(left, "1  リプレイ準備")
+-        ttk.Button(f, text="① Replay APIを自動設定", command=self.on_fix_cfg).pack(fill="x", pady=2)
+-        ttk.Button(f, text="② リプレイ（.rofl）を開く", command=self.on_open_replay).pack(fill="x", pady=2)
+-        self.cb_recent = ttk.Combobox(f, state="readonly", values=[p.name for p in paths.list_replays()[:30]])
+-        self.cb_recent.pack(fill="x", pady=2)
+-        ttk.Button(f, text="最近のリプレイを再生", command=self.on_play_recent).pack(fill="x", pady=2)
+-        ttk.Label(f, text="APIキー不要。game.cfgを自動設定します。", style="CardMuted.TLabel", wraplength=270).pack(fill="x", pady=(4, 0))
+-
+-        f = card(left, "2  対象プレイヤー")
+-        ttk.Button(f, text="接続して10人を取得", command=self.on_connect).pack(fill="x", pady=(0, 5))
+-        self.tree = ttk.Treeview(f, columns=("team", "champ", "name"), show="headings", height=8, selectmode="browse")
+-        for c, t, w in (("team", "チーム", 55), ("champ", "チャンピオン", 95), ("name", "プレイヤー", 125)):
+-            self.tree.heading(c, text=t); self.tree.column(c, width=w, anchor="w")
+-        self.tree.tag_configure("ORDER", background="#EFF6FF", foreground="#1E3A8A")
+-        self.tree.tag_configure("CHAOS", background="#FFF1F2", foreground="#9F1239")
+-        self.tree.pack(fill="both", expand=True)
+-        self.tree.bind("<Double-1>", lambda e: self.on_lock())
+-        ttk.Button(f, text="この人を対象にする", command=self.on_lock).pack(fill="x", pady=(5, 3))
+-        self.lbl_lock = ttk.Label(f, text="対象: 未選択", style="CardMuted.TLabel")
+-        self.lbl_lock.pack(fill="x")
+-
+-        f = card(left, "3  キル・アシストを探す")
+-        ttk.Label(f, text="検出対象", style="CardMuted.TLabel").pack(anchor="w", pady=(0, 3))
+-        ttk.Combobox(f, state="readonly", textvariable=self.var_event_mode,
+-                     values=["キル", "アシスト", "キル＋アシスト"]).pack(fill="x", pady=(0, 5))
+-        ttk.Button(f, text="全編スキャン", command=self.on_scan).pack(fill="x")
+-        self.pb_scan = ttk.Progressbar(f, maximum=100); self.pb_scan.pack(fill="x", pady=6)
+-        self.lbl_scan = ttk.Label(f, text="まだスキャンしていません", style="CardMuted.TLabel", wraplength=270)
+-        self.lbl_scan.pack(fill="x")
+-
+         # ---- center: preview / timeline / camera --------------------------
+         preview_card = ttk.Frame(preview_host, style="Card.TFrame", padding=(10, 10))
+         preview_card.pack(fill="both", expand=True, pady=(0, 8))
+@@ -633,13 +637,25 @@
+ 
+         player_bar = ttk.Frame(preview_card, style="Card.TFrame", padding=(4, 5, 4, 0))
+         player_bar.pack(fill="x")
+-        ttk.Label(player_bar, text="00:12.4 / 00:32.0", style="CardMuted.TLabel").pack(side="left")
+-        ttk.Label(player_bar, text="━━━━━━━━━━━━━━━━━━━━━━━━", style="CardMuted.TLabel").pack(side="left", padx=12)
+-        ttk.Label(player_bar, text="🔊 LoL音声のみ   144Hzプレビュー   ⛶   ⚙", style="CardMuted.TLabel").pack(side="right")
++        ttk.Label(player_bar, text="実際の再生位置はLoLリプレイ側で操作できます", style="CardMuted.TLabel").pack(side="left")
++        ttk.Label(player_bar, text="LoL音声のみ  |  カメラ操作は『動きをプレビュー』から", style="CardMuted.TLabel").pack(side="right")
+ 
+         split_hint = ttk.Frame(edit_host, style="Card.TFrame")
+         split_hint.pack(fill="x", padx=8, pady=(5, 0))
+         ttk.Label(split_hint, text="編集エリア　↕ 上下にドラッグして高さを変更　／　ミラーは上段に固定表示", style="CardMuted.TLabel").pack(anchor="center")
++
++        # v5.9.5: DaVinci / NLE-like focused edit workspaces. View only: no value resets.
++        self.var_editor_zone = tk.StringVar(value="scene")
++        self.editor_zone_bar = ttk.Frame(center_edit, style="Card.TFrame", padding=(10, 7))
++        self.editor_zone_bar.pack(fill="x", pady=(5, 7))
++        ttk.Label(self.editor_zone_bar, text="編集ワークスペース", style="Section.TLabel").pack(side="left", padx=(0, 12))
++        for title, zone in (("▣ シーン", "scene"), ("◉ カメラ", "camera"),
++                            ("◈ カラー・FX", "color"), ("▤ 出力", "output")):
++            ttk.Radiobutton(self.editor_zone_bar, text=title, variable=self.var_editor_zone,
++                            value=zone, style="Mode.TRadiobutton",
++                            command=self._apply_editor_zone).pack(side="left", padx=(0, 4))
++        self.editor_zone_hint = ttk.Label(center_edit, style="CardMuted.TLabel", wraplength=750)
++        self.editor_zone_hint.pack(fill="x", padx=13, pady=(0, 6))
+ 
+         easy = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
+         self._mode_easy_section = easy
+@@ -668,14 +684,16 @@
+         self._mode_detail_sections = []
+         timeline = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
+         self._mode_detail_sections.append(timeline)
++        self._editor_timeline = timeline
+         timeline.pack(fill="x", pady=(0, 8))
+         ttk.Label(timeline, text="◈  カメラ動作タイムライン", style="Section.TLabel").pack(anchor="w")
+         self.scene_timeline = SceneTimeline(timeline, self.var_pre, self.var_post)
+         self.scene_timeline.pack(fill="x", pady=(5, 4))
+-        ttk.Label(timeline, text="左・右のハンドルをドラッグ。下の「基本」タブのキル前/後（秒）と連動します。", style="CardMuted.TLabel").pack(anchor="w")
++        ttk.Label(timeline, text="左・右のハンドルをドラッグ。編集したキル前/後の秒数は実際の書き出しに反映されます。", style="CardMuted.TLabel").pack(anchor="w")
+         # Per-scene direction controls live in the center editor (GPU code unchanged).
+         scene_card = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
+         self._mode_detail_sections.append(scene_card)
++        self._editor_scene = scene_card
+         scene_card.pack(fill="x", pady=(0, 8))
+         ttk.Label(scene_card, text="◈ シーン別ディレクター / 編集プロジェクト", style="Section.TLabel").pack(anchor="w")
+         ttk.Checkbutton(scene_card, text="シーン別演出を使用（各クリップにカメラ設定を反映）",
+@@ -775,6 +793,8 @@
+                               ("やり直す",self.on_scene_redo)):
+             ttk.Button(actions,text=label,command=handler).pack(side="left",padx=(0,4))
+         project_bar=ttk.Frame(scene_card,style="Card.TFrame");project_bar.pack(fill="x",pady=(3,0))
++        ttk.Button(project_bar,text="設定をコピー",command=self.on_copy_scene_settings).pack(side="left", padx=(0, 4))
++        ttk.Button(project_bar,text="設定を貼り付け",command=self.on_paste_scene_settings).pack(side="left", padx=(0, 10))
+         ttk.Button(project_bar,text="編集プロジェクトを保存",command=self.on_scene_export).pack(side="left")
+         ttk.Button(project_bar,text="読み込み",command=self.on_scene_import).pack(side="left",padx=5)
+         ttk.Label(project_bar,text="自動保存 / Undo・Redo（最大100回） / ON時は1シーン1クリップ",style="CardMuted.TLabel").pack(side="right")
+@@ -800,6 +820,7 @@
+ 
+         cam = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
+         self._mode_detail_sections.append(cam)
++        self._editor_camera = cam
+         cam.pack(fill="x", pady=(0, 8))
+         ttk.Label(cam, text="◈  カメラ設定", style="Section.TLabel").pack(anchor="w", pady=(0, 7))
+         mode_row = ttk.Frame(cam, style="Card.TFrame"); mode_row.pack(fill="x", pady=(0, 7))
+@@ -885,9 +906,11 @@
+         # Keep existing advanced controls reachable below the main camera card.
+         advanced = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
+         self._mode_detail_sections.append(advanced)
++        self._editor_advanced = advanced
+         advanced.pack(fill="x", pady=(0, 8))
+-        ttk.Label(advanced, text="詳細編集", style="Section.TLabel").pack(anchor="w")
++        ttk.Label(advanced, text="カラー・エフェクト / 書き出し", style="Section.TLabel").pack(anchor="w")
+         nb = ttk.Notebook(advanced); nb.pack(fill="x", pady=(7, 0))
++        self._editor_advanced_tabs = nb
+         basic = ttk.Frame(nb, padding=8, style="Card.TFrame")
+         color = ttk.Frame(nb, padding=8, style="Card.TFrame")
+         output = ttk.Frame(nb, padding=8, style="Card.TFrame")
+@@ -999,12 +1022,37 @@
+         ttk.Button(output, text="出力フォルダを変更", command=self.on_pick_out).pack(fill="x", pady=3)
+         ttk.Button(output, text="出力フォルダを開く", command=self.on_open_out).pack(fill="x")
+ 
++        # Keep scene selection and render progress at the top of the inspector, even
++        # when the user switches to camera/color/output editing zones.
++        f = card(right, "◉  検出シーン")
++        ttk.Label(f, text="☑ = 作成対象 / ☐ = 除外。行を選んで「チェック切替」。", style="CardMuted.TLabel", wraplength=280).pack(anchor="w", pady=(0, 5))
++        self.lb_kills = tk.Listbox(f, height=7, bg="#FFFFFF", fg=fg, selectbackground=selected, selectforeground="#111827", relief="flat", highlightthickness=1, highlightbackground=line, activestyle="none", font=("Meiryo UI", 9))
++        kills_sb=ttk.Scrollbar(f, orient="vertical", command=self.lb_kills.yview); self.lb_kills.configure(yscrollcommand=kills_sb.set)
++        self.lb_kills.pack(fill="x", expand=False, pady=(0, 2)); kills_sb.pack(side="right", fill="y")
++        self.lb_kills.bind('<<ListboxSelect>>', self.on_scene_selection)
++        kb=ttk.Frame(f, style="Card.TFrame"); kb.pack(fill="x", pady=(6,0))
++        ttk.Button(kb, text="✓ チェック切替", command=self.on_toggle_checked).pack(side="left", fill="x", expand=True, padx=(0,3))
++        ttk.Button(kb, text="↳ 選択シーンへ移動", command=self.on_jump_selected).pack(side="left", fill="x", expand=True, padx=(3,0))
++        kb2=ttk.Frame(f, style="Card.TFrame"); kb2.pack(fill="x", pady=(5,0))
++        ttk.Button(kb2, text="全選択", command=self.on_check_all).pack(side="left", fill="x", expand=True, padx=(0,3))
++        ttk.Button(kb2, text="全解除", command=self.on_uncheck_all).pack(side="left", fill="x", expand=True, padx=(3,0))
++        ttk.Button(f, text="▶ 選択シーンを作成", command=self.on_make_selected).pack(fill="x", pady=(5,0), ipady=3)
++        ttk.Button(f, text="☑ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
++        ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
++
++        f = card(right, "☁  出力状況")
++        self.pb_job=ttk.Progressbar(f, maximum=100); self.pb_job.pack(fill="x")
++        self.lbl_job=ttk.Label(f, text="待機中", style="CardMuted.TLabel"); self.lbl_job.pack(fill="x", pady=3)
++        ttk.Button(f, text="中止", command=self.on_stop).pack(side="left")
++        ttk.Button(f, text="出力フォルダを開く", command=self.on_open_out).pack(side="right")
++
++
+         # right: cinematic settings / output / kill list --------------------
+         # 右パネルにも元版の数値コントロールを常時表示する。
+         # Notebook内だけに置くと、白UIでは「機能が消えた」ように見えるため、
+         # 同じ DoubleVar を共有して、どちらから動かしても即時反映されるようにする。
+         f = card(right, "◈  カラー・FX")
+-        ttk.Label(f, text="カラーグレード", style="Card.TLabel").pack(anchor="w")
++        ttk.Label(f, text="全体に適用するカラーグレード", style="Card.TLabel").pack(anchor="w")
+         ttk.Combobox(f, state="readonly", textvariable=self.var_grade,
+                      values=list(GRADE_JP.values())).pack(fill="x", pady=(3, 5))
+ 
+@@ -1083,40 +1131,23 @@
+         self.var_bars=tk.BooleanVar(value=False); ttk.Checkbutton(f, text="チャンピオンHPバーだけ残す", variable=self.var_bars).pack(anchor="w", pady=2)
+         self.var_dof_blur=tk.DoubleVar(value=0.0); self.var_dof_focus_distance=tk.DoubleVar(value=5510.0); self.var_dof_near_distance=tk.DoubleVar(value=10000.0); self.var_dof_far_distance=tk.DoubleVar(value=10000.0)
+         ttk.Checkbutton(f, text="音声クラッシュ防止", variable=tk.BooleanVar(value=True)).pack(anchor="w", pady=2)
+-        ttk.Label(f, text="出力FPS", style="Card.TLabel").pack(anchor="w", pady=(7,2))
+-        ttk.Combobox(f, state="readonly", values=["60 FPS", "144 FPS"], textvariable=self.var_fps_ui).pack(fill="x")
+-        ttk.Label(f, text="出力形式", style="Card.TLabel").pack(anchor="w", pady=(7,2))
+-        ttk.Combobox(f, state="readonly", values=["MP4（1080p）"], textvariable=self.var_format).pack(fill="x")
+-        ttk.Label(f, text="出力先（1080p MP4）", style="Card.TLabel").pack(anchor="w", pady=(8,2))
+-        out_row = ttk.Frame(f, style="Card.TFrame"); out_row.pack(fill="x")
++        # Quick-output duplicates stay available from the scene/camera/color zones,
++        # but are hidden when the full output workspace is open in the center.
++        quick_output = ttk.Frame(f, style="Card.TFrame")
++        self._right_quick_output = quick_output
++        quick_output.pack(fill="x")
++        ttk.Label(quick_output, text="出力FPS", style="Card.TLabel").pack(anchor="w", pady=(7,2))
++        ttk.Combobox(quick_output, state="readonly", values=["60 FPS", "144 FPS"], textvariable=self.var_fps_ui).pack(fill="x")
++        ttk.Label(quick_output, text="出力形式", style="Card.TLabel").pack(anchor="w", pady=(7,2))
++        ttk.Combobox(quick_output, state="readonly", values=["MP4（1080p）"], textvariable=self.var_format).pack(fill="x")
++        ttk.Label(quick_output, text="出力先（1080p MP4）", style="Card.TLabel").pack(anchor="w", pady=(8,2))
++        out_row = ttk.Frame(quick_output, style="Card.TFrame"); out_row.pack(fill="x")
+         self.var_out_right = tk.StringVar(value=str(self.out_root))
+         self.lbl_out_right = ttk.Label(out_row, textvariable=self.var_out_right,
+                                        style="CardMuted.TLabel", wraplength=230)
+         self.lbl_out_right.pack(side="left", fill="x", expand=True)
+         ttk.Button(out_row, text="選択", command=self.on_pick_out).pack(side="right", padx=(6,0))
+-        ttk.Button(f, text="▶  動画を生成", style="Accent.TButton", command=self.on_make_clips).pack(fill="x", pady=(8,0), ipady=5)
+-
+-        f = card(right, "◉  検出シーン")
+-        ttk.Label(f, text="☑ = 作成対象 / ☐ = 除外。行を選んで「チェック切替」。", style="CardMuted.TLabel", wraplength=280).pack(anchor="w", pady=(0, 5))
+-        self.lb_kills = tk.Listbox(f, height=7, bg="#FFFFFF", fg=fg, selectbackground=selected, selectforeground="#111827", relief="flat", highlightthickness=1, highlightbackground=line, activestyle="none", font=("Meiryo UI", 9))
+-        kills_sb=ttk.Scrollbar(f, orient="vertical", command=self.lb_kills.yview); self.lb_kills.configure(yscrollcommand=kills_sb.set)
+-        self.lb_kills.pack(fill="x", expand=False, pady=(0, 2)); kills_sb.pack(side="right", fill="y")
+-        self.lb_kills.bind('<<ListboxSelect>>', self.on_scene_selection)
+-        kb=ttk.Frame(f, style="Card.TFrame"); kb.pack(fill="x", pady=(6,0))
+-        ttk.Button(kb, text="✓ チェック切替", command=self.on_toggle_checked).pack(side="left", fill="x", expand=True, padx=(0,3))
+-        ttk.Button(kb, text="↳ 選択シーンへ移動", command=self.on_jump_selected).pack(side="left", fill="x", expand=True, padx=(3,0))
+-        kb2=ttk.Frame(f, style="Card.TFrame"); kb2.pack(fill="x", pady=(5,0))
+-        ttk.Button(kb2, text="全選択", command=self.on_check_all).pack(side="left", fill="x", expand=True, padx=(0,3))
+-        ttk.Button(kb2, text="全解除", command=self.on_uncheck_all).pack(side="left", fill="x", expand=True, padx=(3,0))
+-        ttk.Button(f, text="▶ 選択シーンを作成", command=self.on_make_selected).pack(fill="x", pady=(5,0), ipady=3)
+-        ttk.Button(f, text="☑ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
+-        ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
+-
+-        f = card(right, "☁  出力状況")
+-        self.pb_job=ttk.Progressbar(f, maximum=100); self.pb_job.pack(fill="x")
+-        self.lbl_job=ttk.Label(f, text="待機中", style="CardMuted.TLabel"); self.lbl_job.pack(fill="x", pady=3)
+-        ttk.Button(f, text="中止", command=self.on_stop).pack(side="left")
+-        ttk.Button(f, text="出力フォルダを開く", command=self.on_open_out).pack(side="right")
++        ttk.Button(quick_output, text="▶  動画を生成", style="Accent.TButton", command=self.on_make_clips).pack(fill="x", pady=(8,0), ipady=5)
+ 
+         # bottom status bar ---------------------------------------------------
+         bottom = ttk.Frame(r, padding=(16, 7))
+@@ -1124,7 +1155,7 @@
+         self.lbl_status=ttk.Label(bottom, text="", style="Muted.TLabel")
+         self.lbl_status.pack(side="left", fill="x", expand=True)
+         ttk.Label(bottom, text="●  準備完了", foreground=green, background=bg, font=("Meiryo UI", 9, "bold")).pack(side="left", padx=12)
+-        ttk.Label(bottom, text="参考動画　　テンプレート　　動画編集　　♥ LoLで最高の瞬間を", style="Muted.TLabel").pack(side="right")
++        ttk.Label(bottom, text="かんたん編集 / 詳細編集  •  対象固定 → スキャン → 編集 → 出力", style="Muted.TLabel").pack(side="right")
+ 
+         # legacy width variables/settings compatibility
+         self.var_mirror = tk.BooleanVar(value=False)
+@@ -1156,20 +1187,27 @@
+         easy = mode != "advanced"
+         if hasattr(self, "_mode_easy_section"):
+             self._mode_easy_section.pack_forget()
++            self.editor_zone_bar.pack_forget()
++            self.editor_zone_hint.pack_forget()
+             for panel in self._mode_detail_sections:
+                 panel.pack_forget()
+             if easy:
+                 self._mode_easy_section.pack(fill="x", pady=(0, 8))
+             else:
+-                for panel in self._mode_detail_sections:
+-                    panel.pack(fill="x", pady=(0, 8))
++                self.editor_zone_bar.pack(fill="x", pady=(0, 4))
++                self.editor_zone_hint.pack(fill="x", padx=13, pady=(0, 6))
++                self._apply_editor_zone()
+         if hasattr(self, "_mode_sidecards"):
+             for panel, _, _ in self._mode_sidecards:
+                 panel.pack_forget()
+             for panel, parent, title in self._mode_sidecards:
+                 # Keep replay/player/template and results accessible in easy mode;
+                 # hide specialist edit/FX blocks while keeping them instantiated.
+-                if easy and (title.startswith(("▶  参考", "◉  参考", "◈  カラー", "◈  カメラ詳細", "◈  LoLnam", "✧  自動"))):
++                if easy and title.startswith(("▶  参考", "◉  参考", "◈  カラー", "◈  カメラ詳細", "◈  LoLnam", "✧  自動")):
++                    continue
++                # Advanced: same global camera/color controls live in the center workspaces.
++                # Keep widgets instantiated and bound to the same variables, but don't duplicate them.
++                if not easy and title.startswith(("◈  カラー・FX", "◈  カメラ詳細")):
+                     continue
+                 panel.pack(in_=parent, fill="x", pady=(0, 8))
+         if hasattr(self, "edit_mode_hint"):
+@@ -1178,6 +1216,82 @@
+                 "シーン・タイムライン・キーフレーム・カラーまで調整できます。"))
+         if log and hasattr(self, "txt"):
+             self.log("編集画面を切替: " + ("かんたん編集" if easy else "詳細編集"))
++
++    def _apply_editor_zone(self) -> None:
++        """Show a single center workspace. GPU, audio, template and shot values are untouched."""
++        if self.var_edit_mode.get() != "advanced" or not hasattr(self, "_mode_detail_sections"):
++            return
++        for panel in self._mode_detail_sections:
++            panel.pack_forget()
++        zone = self.var_editor_zone.get()
++        visibility = {
++            "scene": (self._editor_timeline, self._editor_scene),
++            "camera": (self._editor_camera,),
++            "color": (self._editor_advanced,),
++            "output": (self._editor_advanced,),
++        }
++        if zone not in visibility:
++            zone = "scene"
++            self.var_editor_zone.set(zone)
++        for panel in visibility[zone]:
++            panel.pack(fill="x", pady=(0, 8))
++        if zone in ("color", "output") and hasattr(self, "_editor_advanced_tabs"):
++            self._editor_advanced_tabs.select(1 if zone == "color" else 2)
++        descriptions = {
++            "scene": "検出シーンごとの演出・キーフレーム・順番を編集。選択したキルは右側で切り替えます。",
++            "camera": "全体カメラの追従・Orbit・距離を設定。シーン別のキーフレームは［シーン］へ。",
++            "color": "カラー・FXの全体設定。シーンだけに適用する色は［シーン］で上書き。",
++            "output": "書き出し・音声・LUT・出力フォルダの設定。シーンの選択は右側から。",
++        }
++        self.editor_zone_hint.configure(text=descriptions[zone])
++        quick_output = getattr(self, "_right_quick_output", None)
++        if quick_output is not None:
++            quick_output.pack_forget()
++            if zone != "output":
++                quick_output.pack(fill="x")
++
++    def _focus_editor_zone(self, zone: str) -> None:
++        """Jump to a focused edit workspace without changing render settings."""
++        if zone not in ("scene", "camera", "color", "output"):
++            return
++        self.var_edit_mode.set("advanced")
++        self.var_editor_zone.set(zone)
++        self._apply_edit_mode(log=False)
++
++    def on_copy_scene_settings(self) -> None:
++        """Copy current UNSAVED shot values to a safe in-app clipboard."""
++        if self._current_scene() is None:
++            self.log('設定コピー: 右側でシーンを選択してください。')
++            return
++        try:
++            from dataclasses import asdict
++            self._scene_settings_clipboard = asdict(self._scene_shot_from_ui())
++            self.log('シーン設定をコピーしました。別シーンを選んで「設定を貼り付け」を押してください。')
++        except (ValueError, tk.TclError) as exc:
++            self.log(f'設定コピー失敗: {exc}')
++
++    def on_paste_scene_settings(self) -> None:
++        """Paste copied shot to selected scene with project Undo/Redo and autosave."""
++        if self.busy:
++            self.log('書き出し中はシーン設定を変更できません。')
++            return
++        kill = self._current_scene()
++        if kill is None:
++            self.log('設定貼り付け: 右側で対象シーンを選択してください。')
++            return
++        copied = getattr(self, '_scene_settings_clipboard', None)
++        if copied is None:
++            self.log('設定貼り付け: 先に別のシーンの設定をコピーしてください。')
++            return
++        try:
++            shot = Shot.validated(copied)
++            self.scene_project.put(scene_key(kill), shot)
++            self.var_scene_mode.set(True)
++            self._schedule_project_save()
++            self._refresh_scene_list()
++            self.log(f'シーン設定を貼り付け: {kill.time:.1f}秒 / Undoで戻せます。')
++        except (ValueError, TypeError, tk.TclError) as exc:
++            self.log(f'設定貼り付け失敗: {exc}')
+ 
+     def on_camera_safe_pose(self) -> None:
+         """Restore conservative 3rd-person framing without deleting shot edits."""
+--- a/tests/test_v593_mode_camera.py
++++ b/tests/test_v593_mode_camera.py
+@@ -58,7 +58,10 @@
+         app.var_edit_mode.set('advanced')
+         app._apply_edit_mode(log=False)
+         assert not app._mode_easy_section.winfo_manager()
+-        assert all(panel.winfo_manager()=='pack' for panel in app._mode_detail_sections)
++        assert app._editor_timeline.winfo_manager() == 'pack'
++        assert app._editor_scene.winfo_manager() == 'pack'
++        assert not app._editor_camera.winfo_manager()
++        assert not app._editor_advanced.winfo_manager()
+         assert app.var_scene_mode.get() is True
+         assert app.checked_kills=={1,3}
+         assert app.canvas.winfo_manager()=='pack'
+--- a/VERSION.txt
++++ b/VERSION.txt
+@@ -1 +1 @@
+-5.9.4
++5.9.5

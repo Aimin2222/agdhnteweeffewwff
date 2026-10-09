@@ -1,0 +1,12 @@
+LoL AutoCine v5.7.2
+
+IMPORTANT: Build the native LoL-only audio helper once before recording.
+
+1. Run BUILD_AUDIO_HELPER.bat
+2. Confirm tools\bin\lol_audio_helper.exe exists
+3. Run 00_AUDIO_TEST.bat
+4. Start AutoCine
+
+If BUILD_AUDIO_HELPER.bat reports that cl.exe is missing, install Visual Studio Build Tools with Desktop development with C++ and Windows SDK, then run it again.
+
+The application does not use desktop-wide audio fallback for LoL recording.

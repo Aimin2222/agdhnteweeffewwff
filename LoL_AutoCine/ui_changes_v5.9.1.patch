@@ -1,0 +1,596 @@
+--- a/legacy_app.py
++++ b/legacy_app.py
+@@ -687,6 +687,25 @@
+         ttk.Button(project_bar,text="編集プロジェクトを保存",command=self.on_scene_export).pack(side="left")
+         ttk.Button(project_bar,text="読み込み",command=self.on_scene_import).pack(side="left",padx=5)
+         ttk.Label(project_bar,text="自動保存 / Undo・Redo（最大100回） / ON時は1シーン1クリップ",style="CardMuted.TLabel").pack(side="right")
++        order_header=ttk.Frame(scene_card,style="Card.TFrame")
++        order_header.pack(fill="x",pady=(10,2))
++        ttk.Label(order_header,text="◈ モンタージュの再生順",style="Section.TLabel").pack(side="left")
++        ttk.Label(order_header,text="シーン別演出ONの場合のみ適用",style="CardMuted.TLabel").pack(side="right")
++        order_body=ttk.Frame(scene_card,style="Card.TFrame");order_body.pack(fill="x")
++        self.scene_order_list=tk.Listbox(order_body,height=5,exportselection=False,
++                                         bg="#FFFFFF",fg="#172033",selectbackground="#BFDBFE",
++                                         selectforeground="#172033",relief="flat",font=("Meiryo UI",9))
++        self.scene_order_list.pack(side="left",fill="x",expand=True)
++        self.scene_order_list.bind('<<ListboxSelect>>', self.on_order_selection)
++        self._drag_order_index = None
++        self.scene_order_list.bind('<ButtonPress-1>', self._on_order_drag_start, add='+')
++        self.scene_order_list.bind('<ButtonRelease-1>', self._on_order_drag_end, add='+')
++        order_buttons=ttk.Frame(order_body,style="Card.TFrame");order_buttons.pack(side="right",padx=(7,0))
++        ttk.Button(order_buttons,text="▲ 上へ",command=lambda:self.on_move_scene(-1)).pack(fill="x",pady=(0,4))
++        ttk.Button(order_buttons,text="▼ 下へ",command=lambda:self.on_move_scene(1)).pack(fill="x",pady=(0,4))
++        ttk.Button(order_buttons,text="時刻順に戻す",command=self.on_reset_scene_order).pack(fill="x")
++        ttk.Label(scene_card,text="ドラッグまたは▲▼で順序変更。プロジェクトJSONに保存され、Undo/Redoできます。",
++                  style="CardMuted.TLabel",wraplength=760).pack(anchor="w",pady=(4,0))
+ 
+         cam = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
+         cam.pack(fill="x", pady=(0, 8))
+@@ -1122,7 +1141,7 @@
+             return
+         self._run_bg(self._make_selected, self.kills[idx[0]], self.current_template(), *self._scene_render_config())
+ 
+-    def _make_selected(self, kill, tpl: Template, scene_mode=False, shots=None, auto=False) -> None:
++    def _make_selected(self, kill, tpl: Template, scene_mode=False, shots=None, auto=False, order=None) -> None:
+         p = self.locked
+         if p is None:
+             return
+@@ -1132,7 +1151,7 @@
+             if tpl.game_audio:
+                 factory = (lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else (lambda path: PreferredGameAudio(path))
+             res = self._render_with_optional_scene_mode(src, p, [kill], tpl, False, factory,
+-                                                        scene_mode, shots or {}, auto)
++                                                        scene_mode, shots or {}, auto, order)
+             self.log(f"選択キルの作成完了: {len(res.outputs)}本")
+         finally:
+             if own:
+@@ -1260,14 +1279,100 @@
+ 
+     def _fill_kills(self) -> None:
+         self.lb_kills.delete(0, "end")
++        ordered=self.scene_project.ordered_keys(scene_key(k) for k in self.kills)
++        ranks={k:i+1 for i,k in enumerate(ordered)}
+         for i, k in enumerate(self.kills):
+             m = {1: "", 2: " DOUBLE", 3: " TRIPLE", 4: " QUADRA"}.get(k.multikill, " PENTA" if k.multikill >= 5 else "")
+             role = "⚔ KILL" if getattr(k, "role", "kill") == "kill" else "＋ ASSIST"
+             mark = "☑" if i in self.checked_kills else "☐"
+             edited = " ✎" if scene_key(k) in self.scene_project.shots else ""
+-            self.lb_kills.insert("end", f"{mark}{edited}  {int(k.time // 60):02d}:{k.time % 60:04.1f}  [{role}] {k.killer} → {k.victim}{m}")
++            self.lb_kills.insert("end", f"{mark}{edited}  #{ranks[scene_key(k)]:02d}  {int(k.time // 60):02d}:{k.time % 60:04.1f}  [{role}] {k.killer} → {k.victim}{m}")
++
++        self._refresh_order_list()
+ 
+     # ---------------- scene direction (UI thread only) --------------------
++    def _refresh_order_list(self):
++        if not hasattr(self, 'scene_order_list'):
++            return
++        selected_key=None
++        selected=self.scene_order_list.curselection()
++        current=getattr(self,'_ordered_scene_keys',[])
++        if selected and selected[0]<len(current):
++            selected_key=current[selected[0]]
++        keys=self.scene_project.ordered_keys(scene_key(k) for k in self.kills)
++        self._ordered_scene_keys=keys
++        descriptions={scene_key(k):f"{k.time:.1f}s  {k.killer} → {k.victim}" for k in self.kills}
++        self.scene_order_list.delete(0,'end')
++        for index,key in enumerate(keys,1):
++            self.scene_order_list.insert('end',f"{index:02d}. {descriptions.get(key,key)}")
++        if selected_key in keys:
++            self.scene_order_list.selection_set(keys.index(selected_key))
++
++    def on_order_selection(self,_event=None):
++        pos=self.scene_order_list.curselection()
++        if not pos or pos[0] >= len(getattr(self,'_ordered_scene_keys',[])):
++            return
++        key=self._ordered_scene_keys[pos[0]]
++        for index,kill in enumerate(self.kills):
++            if scene_key(kill)==key:
++                self.lb_kills.selection_clear(0,'end')
++                self.lb_kills.selection_set(index)
++                self.lb_kills.see(index)
++                self.on_scene_selection()
++                return
++
++    def _on_order_drag_start(self,event):
++        self._drag_order_index = (self.scene_order_list.nearest(event.y), event.y)
++
++    def _on_order_drag_end(self,event):
++        drag=self._drag_order_index
++        self._drag_order_index=None
++        if self.busy or drag is None or abs(event.y-drag[1]) < 8:
++            return
++        initial=self._ordered_scene_keys
++        start=drag[0]
++        if not 0 <= start < len(initial):
++            return
++        key=initial[start]
++        target=self.scene_order_list.nearest(event.y)
++        if self.scene_project.move_to(key,(scene_key(k) for k in self.kills),target):
++            self.var_scene_mode.set(True)
++            self._schedule_project_save()
++            self._refresh_scene_list()
++            pos=self._ordered_scene_keys.index(key)
++            self.scene_order_list.selection_clear(0,'end')
++            self.scene_order_list.selection_set(pos)
++            self.scene_order_list.see(pos)
++            self.log(f'シーンをドラッグ移動: {start+1}番目 → {pos+1}番目')
++
++    def on_move_scene(self,step):
++        if self.busy:
++            self.log('作成中はシーンの順序を変更できません。')
++            return
++        kill=self._current_scene()
++        if kill is None:
++            messagebox.showinfo(APP,'先に右のシーン一覧、または再生順リストでシーンを選択してください。')
++            return
++        key=scene_key(kill)
++        if self.scene_project.move(key,(scene_key(k) for k in self.kills),step):
++            self.var_scene_mode.set(True)
++            self._schedule_project_save()
++            self._refresh_scene_list()
++            keys=self._ordered_scene_keys
++            if key in keys:
++                self.scene_order_list.selection_clear(0,'end')
++                self.scene_order_list.selection_set(keys.index(key))
++                self.scene_order_list.see(keys.index(key))
++            self.log(f'モンタージュ順序変更: {kill.time:.1f}秒 → {keys.index(key)+1}番目')
++
++    def on_reset_scene_order(self):
++        if self.busy:
++            return
++        if self.scene_project.reset_order(scene_key(k) for k in self.kills):
++            self._schedule_project_save()
++            self._refresh_scene_list()
++            self.log('モンタージュ順序を検出時刻順へ戻しました。')
++
+     def _current_scene(self):
+         selection = self.lb_kills.curselection()
+         if not selection or selection[0] >= len(self.kills):
+@@ -1396,20 +1501,20 @@
+                 self.scene_project = SceneProject.load(target)
+                 self.var_scene_mode.set(True)
+                 self._schedule_project_save()
+-                self.on_scene_selection()
++                self._refresh_scene_list()
+                 self.log(f'編集プロジェクトを読み込みました: {len(self.scene_project.shots)} シーン')
+             except Exception as exc: messagebox.showerror(APP,f'読み込み失敗: {exc}')
+ 
+     def _scene_render_config(self):
+         """Called in UI thread: worker receives only plain snapshots."""
+-        return bool(self.var_scene_mode.get()), self.scene_project.snapshot(), bool(self.var_auto_director.get())
++        return bool(self.var_scene_mode.get()), self.scene_project.snapshot(), bool(self.var_auto_director.get()), list(self.scene_project.sequence)
+ 
+     def _render_with_optional_scene_mode(self, src, player, kills, tpl, montage, factory,
+-                                         scene_mode: bool, shots: dict, auto: bool):
++                                         scene_mode: bool, shots: dict, auto: bool, order=None):
+         if scene_mode:
+             return render_scenes(self.api,src,player,kills,tpl,self.out_root,montage,shots,auto=auto,
+                                  progress=lambda *a:self.q.put(('job',*a)),stop=self.stop_ev,
+-                                 log=self.log,audio_factory=factory)
++                                 log=self.log,audio_factory=factory,order=order)
+         return run_auto_edit(self.api,src,player,kills,tpl,self.out_root,montage,
+                              progress=lambda *a:self.q.put(('job',*a)),stop=self.stop_ev,
+                              log=self.log,audio_factory=factory)
+@@ -1467,7 +1572,7 @@
+             _diag_write(CRASH_LOG, "CHECKED_CALLBACK_ERROR\n" + traceback.format_exc())
+             self.log("チェック済みシーン開始時にエラーが発生しました。diagnostics/crash.log を確認してください。")
+ 
+-    def _make_list(self, selected, tpl: Template, montage: bool, scene_mode=False, shots=None, auto=False) -> None:
++    def _make_list(self, selected, tpl: Template, montage: bool, scene_mode=False, shots=None, auto=False, order=None) -> None:
+         """Worker only: never read Tk variables in this function."""
+         _diag_write(RUN_LOG, "CHECKED_STAGE worker_enter")
+         p = self.locked
+@@ -1485,7 +1590,7 @@
+                 factory = (lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else (lambda path: PreferredGameAudio(path))
+             _diag_write(RUN_LOG, "CHECKED_STAGE render_begin")
+             res = self._render_with_optional_scene_mode(src, p, list(selected), tpl, montage, factory,
+-                                                        scene_mode, shots or {}, auto)
++                                                        scene_mode, shots or {}, auto, order)
+             _diag_write(RUN_LOG, f"CHECKED_STAGE render_complete outputs={len(res.outputs)} failed={len(res.failed)}")
+             self.log(f"チェック済みシーンの作成完了: {len(res.outputs)}本" +
+                      (f" / 失敗 {len(res.failed)}本" if res.failed else ""))
+@@ -1935,7 +2040,7 @@
+         self._run_bg(self._make, True, self.current_template(), bool(self.var_montage.get()), self.var_event_mode.get(), *self._scene_render_config())
+ 
+     def _make(self, scan_first: bool, tpl: Template, montage: bool, event_mode: str = "キル",
+-              scene_mode=False, shots=None, auto=False) -> None:
++              scene_mode=False, shots=None, auto=False, order=None) -> None:
+         # Tk変数はUIスレッドで読み取り済み (tpl/montage は引数で受け取る)
+         _diag_write(RUN_LOG, f"\n===== ALL_KILL_BEGIN {time.strftime('%Y-%m-%d %H:%M:%S')} player={getattr(self.locked, 'name', '?')} =====")
+         p = self.locked                      # ジョブ開始時に固定 (UI選択が変わっても影響しない)
+@@ -1956,7 +2061,7 @@
+                 factory = (lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else (lambda path: PreferredGameAudio(path))
+             try:
+                 res = self._render_with_optional_scene_mode(src, p, list(self.kills), tpl, montage, factory,
+-                                                            scene_mode, shots or {}, auto)
++                                                            scene_mode, shots or {}, auto, order)
+             except Exception as e:
+                 # 全キル処理全体の例外をUI/プロセスへ漏らさず、診断情報を残す。
+                 self.log(f"全キル作成を安全停止: {type(e).__name__}: {e}")
+--- a/ui/scene_project.py
++++ b/ui/scene_project.py
+@@ -9,7 +9,7 @@
+ import os
+ import tempfile
+ 
+-VERSION = 1
++VERSION = 2
+ PROFILES = ('auto', 'smooth', 'cinematic', 'dynamic')
+ 
+ 
+@@ -84,6 +84,7 @@
+ @dataclass
+ class SceneProject:
+     shots: dict[str, Shot] = field(default_factory=dict)
++    sequence: list[str] = field(default_factory=list)
+     _undo: list = field(default_factory=list, repr=False)
+     _redo: list = field(default_factory=list, repr=False)
+     MAX_HISTORY = 100
+@@ -91,8 +92,65 @@
+     def snapshot(self):
+         return {key: asdict(value) for key,value in self.shots.items()}
+ 
++    def ordered_keys(self, keys):
++        """Return existing keys in the user's montage order, followed by new scenes."""
++        seen = set()
++        incoming = []
++        for key in keys:
++            if isinstance(key, str) and key not in seen:
++                incoming.append(key)
++                seen.add(key)
++        present = set(incoming)
++        ordered = [key for key in self.sequence if key in present]
++        known = set(ordered)
++        return ordered + [key for key in incoming if key not in known]
++
++    def move(self, key: str, visible_keys, step: int) -> bool:
++        """Move one visible scene without changing the chronological scan results."""
++        keys = self.ordered_keys(visible_keys)
++        if key not in keys:
++            return False
++        index = keys.index(key)
++        target = index + int(step)
++        if not 0 <= target < len(keys):
++            return False
++        self._remember()
++        keys[index], keys[target] = keys[target], keys[index]
++        # Preserve any scenes from other scans at the end of the project's sequence.
++        visible = set(keys)
++        self.sequence = keys + [k for k in self.sequence if k not in visible]
++        return True
++
++    def move_to(self, key: str, visible_keys, position: int) -> bool:
++        """Move one visible scene directly to a zero-based montage slot."""
++        keys = self.ordered_keys(visible_keys)
++        if key not in keys or not keys:
++            return False
++        target = max(0, min(int(position), len(keys)-1))
++        if keys.index(key) == target:
++            return False
++        self._remember()
++        keys.remove(key)
++        keys.insert(target,key)
++        visible = set(keys)
++        self.sequence = keys + [k for k in self.sequence if k not in visible]
++        return True
++
++    def reset_order(self, visible_keys) -> bool:
++        keys = list(dict.fromkeys(k for k in visible_keys if isinstance(k, str)))
++        current = self.ordered_keys(keys)
++        if current == keys:
++            return False
++        self._remember()
++        selected = set(keys)
++        self.sequence = keys + [k for k in self.sequence if k not in selected]
++        return True
++
++    def _state(self):
++        return {'shots': self.snapshot(), 'sequence': list(self.sequence)}
++
+     def _remember(self):
+-        self._undo.append(self.snapshot())
++        self._undo.append(self._state())
+         self._undo = self._undo[-self.MAX_HISTORY:]
+         self._redo.clear()
+ 
+@@ -119,31 +177,36 @@
+             del self.shots[key]
+ 
+     def _restore(self, state):
+-        self.shots = {k: Shot.validated(v) for k,v in state.items()}
++        self.shots = {k: Shot.validated(v) for k,v in state['shots'].items()}
++        self.sequence = list(state['sequence'])
+ 
+     def undo(self) -> bool:
+         if not self._undo: return False
+-        self._redo.append(self.snapshot())
++        self._redo.append(self._state())
+         self._restore(self._undo.pop())
+         return True
+ 
+     def redo(self) -> bool:
+         if not self._redo: return False
+-        self._undo.append(self.snapshot())
++        self._undo.append(self._state())
+         self._restore(self._redo.pop())
+         return True
+ 
+     def to_dict(self):
+-        return {'schema_version': VERSION, 'application': 'LoL AutoCine', 'shots': self.snapshot()}
++        return {'schema_version': VERSION, 'application': 'LoL AutoCine', 'shots': self.snapshot(), 'sequence': list(self.sequence)}
+ 
+     @classmethod
+     def from_dict(cls, data):
+-        if not isinstance(data,dict) or data.get('schema_version') != VERSION:
++        if not isinstance(data,dict) or data.get('schema_version') not in (1, VERSION):
+             raise ValueError('未対応の編集プロジェクト形式です')
+         obj = data.get('shots',{})
+         if not isinstance(obj,dict) or len(obj)>5000:
+             raise ValueError('シーンデータが不正です')
+-        return cls({k: Shot.validated(v) for k,v in obj.items() if isinstance(k,str) and len(k)<=600})
++        seq = data.get('sequence', [])
++        if not isinstance(seq, list) or len(seq) > 5000 or any(not isinstance(k, str) or not 0 < len(k) <= 600 for k in seq):
++            raise ValueError('シーンの並び順データが不正です')
++        return cls({k: Shot.validated(v) for k,v in obj.items() if isinstance(k,str) and len(k)<=600},
++                   list(dict.fromkeys(seq)))
+ 
+     def save(self, path):
+         path=Path(path)
+--- a/ui/scene_batch.py
++++ b/ui/scene_batch.py
+@@ -19,8 +19,18 @@
+     montage: object = None
+ 
+ 
+-def build_scene_templates(kills, tpl, overrides: dict, *, auto: bool):
+-    for kill in kills:
++def order_scenes(kills, order):
++    """Stable ordering: explicitly ordered kills first, new/unlisted kills afterwards."""
++    if not order:
++        return list(kills)
++    lookup = {key: i for i, key in enumerate(order)}
++    incoming = list(kills)
++    return [kill for _, kill in sorted(enumerate(incoming),
++                                     key=lambda entry: (lookup.get(scene_key(entry[1]), len(lookup)), entry[0]))]
++
++
++def build_scene_templates(kills, tpl, overrides: dict, *, auto: bool, order=None):
++    for kill in order_scenes(kills, order):
+         key=scene_key(kill)
+         if key in overrides:
+             shot=Shot.validated(overrides[key])
+@@ -38,7 +48,7 @@
+ 
+ def render_scenes(api,source,player,kills,tpl,out_root,make_montage,
+                   overrides, *, auto=False,progress=None,stop=None,log=lambda s:None,audio_factory=None,
+-                  run_edit=None, concat=None, unique_path=None):
++                  run_edit=None, concat=None, unique_path=None, order=None):
+     """Inject dependencies for tests; never read tkinter variables here.
+ 
+     Per-scene override uses standalone clips (no cross-scene multikill merging).
+@@ -51,7 +61,7 @@
+     if unique_path is None:
+         from core.jobs import unique_path as unique_path
+     out=BatchResult()
+-    scenes=list(build_scene_templates(kills,tpl,overrides,auto=auto))
++    scenes=list(build_scene_templates(kills,tpl,overrides,auto=auto,order=order))
+     for i,(kill,scene_tpl) in enumerate(scenes,1):
+         if stop is not None and stop.is_set():
+             log('中止しました。');break
+--- a/tests/test_scene_studio.py
++++ b/tests/test_scene_studio.py
+@@ -23,7 +23,7 @@
+     f=tmp_path/'project.json';p.save(f)
+     loaded=SceneProject.load(f)
+     assert loaded.shots[k].arc == 7
+-    assert loaded.to_dict()['schema_version'] == 1
++    assert loaded.to_dict()['schema_version'] == 2
+     assert len(loaded.to_dict()['shots'])==1
+     assert SceneProject.from_dict(loaded.to_dict()).shots[k].profile=='smooth'
+ 
+--- a/tests/test_scene_studio_gui.py
++++ b/tests/test_scene_studio_gui.py
+@@ -48,6 +48,6 @@
+         assert args[3] is True and args[4][key]['arc']==44
+         app.on_smart_one_click()
+         assert captured[-1][0].__name__=='_make'
+-        assert captured[-1][1][-3] is True
++        assert captured[-1][1][-4] is True
+     finally:
+         root.destroy()
+--- a/VERSION.txt
++++ b/VERSION.txt
+@@ -1 +1 @@
+-5.9.0 SceneStudio UI Integration
++5.9.1 - Scene Sequence Editor
+--- /dev/null
++++ b/tests/test_scene_sequence.py
+@@ -0,0 +1,118 @@
++# -*- coding: utf-8 -*-
++"""Montage ordering should never change the default render pipeline or GPU/audio code."""
++from types import SimpleNamespace
++import tkinter as tk
++import pytest
++from core.scanner import Kill
++from core.players import Player
++from core.effects import Template
++from ui.scene_project import Shot, SceneProject, scene_key
++from ui.scene_batch import order_scenes, render_scenes
++from legacy_app import App
++
++
++def events():
++    return [Kill(11, 101.0, 'Aimin', 'Enemy1', []),
++            Kill(22, 202.0, 'Aimin', 'Enemy2', []),
++            Kill(33, 303.0, 'Aimin', 'Enemy3', [])]
++
++
++def test_sequence_edit_save_undo_and_version_migration(tmp_path):
++    ks = events()
++    keys = [scene_key(k) for k in ks]
++    p = SceneProject()
++    assert p.ordered_keys(keys) == keys
++    assert p.move(keys[1], keys, -1)
++    assert p.ordered_keys(keys) == [keys[1], keys[0], keys[2]]
++    p.put(keys[1], Shot(arc=40))
++    assert p.undo() and keys[1] not in p.shots
++    assert p.ordered_keys(keys)[0] == keys[1]
++    assert p.undo() and p.ordered_keys(keys) == keys
++    assert p.redo() and p.ordered_keys(keys)[0] == keys[1]
++    assert p.redo() and p.shots[keys[1]].arc == 40
++    target = tmp_path / 'project.json'
++    p.save(target)
++    restored = SceneProject.load(target)
++    assert restored.to_dict()['schema_version'] == 2
++    assert restored.ordered_keys(keys)[0] == keys[1]
++    assert restored.shots[keys[1]].arc == 40
++    # v5.9.0 (v1 schema) loads without an order, with all camera settings intact.
++    old = SceneProject.from_dict({'schema_version': 1, 'shots': {keys[0]: {'arc': 30}}})
++    assert old.shots[keys[0]].arc == 30
++    assert old.ordered_keys(keys) == keys
++    assert restored.reset_order(keys)
++    assert restored.ordered_keys(keys) == keys
++    assert restored.undo() and restored.ordered_keys(keys)[0] == keys[1]
++
++
++def test_new_and_filtered_scenes_keep_stable_order():
++    ks = events()
++    keys = [scene_key(k) for k in ks]
++    p = SceneProject()
++    p.move(keys[2], keys, -1)
++    p.move(keys[2], keys, -1)
++    assert [k.time for k in order_scenes(ks, p.sequence)] == [303, 101, 202]
++    assert [k.time for k in order_scenes(ks[1:], p.sequence)] == [303, 202]
++    assert [k.time for k in order_scenes(ks, None)] == [101, 202, 303]
++    newer = Kill(44, 404.0, 'Aimin', 'Enemy4', [])
++    assert [k.time for k in order_scenes(ks + [newer], p.sequence)] == [303, 101, 202, 404]
++    assert not p.move(keys[2], keys, -1)  # already at the top
++    assert p.move_to(keys[0], keys, 2)
++    assert p.ordered_keys(keys) == [keys[2], keys[1], keys[0]]
++    with pytest.raises(ValueError):
++        SceneProject.from_dict({'schema_version': 2, 'shots': {}, 'sequence': 'bad'})
++
++
++def test_render_uses_sequence_and_unmodified_audio_pipeline(tmp_path):
++    ks = events()
++    keys = [scene_key(k) for k in ks]
++    outputs = []
++    def fake_run(api, src, player, selected, template, out_root, montage, **kwargs):
++        assert kwargs['audio_factory'] is not None
++        assert template.game_audio
++        assert not montage
++        outputs.append(selected[0].event_id)
++        return SimpleNamespace(outputs=[tmp_path / f'{selected[0].event_id}.mp4'], failed=[])
++    report = render_scenes(None, None, SimpleNamespace(name='Aimin', champion='Lee Sin'), ks,
++                           Template(game_audio=True), tmp_path, True, {}, auto=True,
++                           order=[keys[2], keys[0], keys[1]], run_edit=fake_run,
++                           concat=lambda clips,path: None, unique_path=lambda path:path,
++                           audio_factory=lambda path:None)
++    assert outputs == [33, 11, 22]
++    assert report.montage is not None and len(report.outputs) == 3
++
++
++def test_ui_reorder_dispatch_and_undo(tmp_path):
++    root = tk.Tk()
++    try:
++        app = App(root)
++        app.scene_project_path = tmp_path/'scenes.json'
++        app.locked = Player(1, 'Aimin','Aimin#1','Aimin','Lee Sin','ORDER')
++        app.kills = events()
++        app.checked_kills = {0,1,2}
++        app._fill_kills()
++        app.lb_kills.selection_set(1)
++        app.on_scene_selection()
++        app.on_move_scene(-1)
++        assert app.scene_order_list.get(0).startswith('01. 202')
++        assert '#01' in app.lb_kills.get(1)
++        app._autosave_project()
++        assert SceneProject.load(app.scene_project_path).sequence[0] == scene_key(app.kills[1])
++        recorded = []
++        app._run_bg = lambda fn,*a: recorded.append((fn,a))
++        app._need_lock = lambda:True
++        app.on_make_checked()
++        assert recorded[-1][0].__name__ == '_make_list'
++        assert recorded[-1][1][-1][0] == scene_key(app.kills[1])
++        app.on_scene_undo()
++        assert app.scene_project.ordered_keys(scene_key(k) for k in app.kills)[0] == scene_key(app.kills[0])
++        app.on_scene_redo()
++        assert app.scene_project.ordered_keys(scene_key(k) for k in app.kills)[0] == scene_key(app.kills[1])
++        # drag reorder on the timeline list should update the persisted sequence
++        root.update_idletasks()
++        app.scene_order_list.event_generate('<ButtonPress-1>', x=24, y=12)
++        app.scene_order_list.event_generate('<ButtonRelease-1>', x=24, y=50)
++        app.on_reset_scene_order()
++        assert app.scene_project.ordered_keys(scene_key(k) for k in app.kills)[0] == scene_key(app.kills[0])
++    finally:
++        root.destroy()
+--- /dev/null
++++ b/README_v5.9.1_JA.md
+@@ -0,0 +1,40 @@
++# LoL AutoCine v5.9.1 — Montage Sequence Editor（ChatGPT/UI側）
++
++Codex Cloudから取得した `codex/lol-autocine-v590-handoff` ブランチの `LoL_AutoCine` を基準にUI機能を追加した版です。GPU/Audio/TargetLock実装は編集していません。
++
++## 新機能
++
++- 中央の **シーン別ディレクター → モンタージュの再生順** に順序リストを追加。
++- リストからシーンを選んで **▲上へ / ▼下へ**、またはリスト内を**縦ドラッグ**して並べ替え。
++- 右のキル一覧の `#01`, `#02` がモンタージュ順を表示。右リストは従来の時刻順のまま。
++- **シーン別演出ON**で作成した個別クリップ、モンタージュの連結順に反映。
++- シーン別演出OFF時の従来の書き出し順・音声・GPU処理は変更なし。
++- 順序の変更をプロジェクトJSONへ自動保存し、Undo / Redo、保存・読込に対応。
++- プロジェクトスキーマはv2。従来のv1 JSONを読み込める（順序は検出時刻順）。
++- 新たにスキャンされたシーンは順序リストの最後へ追加。チェック解除されたシーンは従来どおり除外。
++
++## 実機テスト（Windows）
++
++1. ZIPを**新しいフォルダ**に展開し `START.bat` を起動。スキャンして2〜3キルが表示されることを確認。
++2. 「シーン別演出を使用」をONにし、「モンタージュの再生順」で2番目のキルを選んで「▲上へ」。右の一覧の#番号が変わることを確認。
++3. リスト内でシーンを縦ドラッグして別位置へ移動。Undo → Redo → プロジェクト保存 → 再起動 → 読込で順序が保持されることを確認。
++4. 「モンタージュ」ONで2〜3シーンをチェックして「チェックしたシーンだけ作成」。MP4個別クリップと結合モンタージュの再生順を確認。
++5. 完成MP4の**カラー、LoLだけのゲーム音、同期、映像切れ**を確認。
++6. 「シーン別演出」をOFFに戻し従来どおり1クリップ作れることを確認（新しい並び替えがこの経路に影響しないこと）。
++7. トラブル時は `COLLECT_DIAGNOSTICS.bat` でログを収集して送付。
++
++### 自動テスト
++
++- `xvfb-run -a python -m pytest -q tests`：37件成功（Linux模擬環境）
++- Pythonコンパイル検査実施
++- `python tests/run_tests.py`：本環境で時間切れ。成功とは扱わない。
++- Windows/GTX 1070 Ti/LoL/Native Process Loopback実機は未テスト。
++
++## Codexへの統合
++
++`docs/CODEX_MERGE_v5.9.1_JA.md` と統合ZIP内の `ui_changes_v5.9.1.patch` を参照。GPUエンジン側の作業を**古いZIPで丸ごと上書きしないこと**。
++
++## 今後の機能
++
++- カメラの実キーフレーム編集：今回は**未実装**。安全なTargetLockとGPU担当変更の影響を避け、別フェーズで設計・テスト予定。
++- シーン個別のカラー/FX、実サムネイル、UI高速化など。
+--- /dev/null
++++ b/docs/CODEX_MERGE_v5.9.1_JA.md
+@@ -0,0 +1,24 @@
++# Codex統合 — v5.9.1 ChatGPT UI差分
++
++## 基準
++
++- GitHub `Aimin2222/agdhnteweeffewwff` ブランチ `codex/lol-autocine-v590-handoff` の `LoL_AutoCine` サブフォルダ。
++- 変更対象は `legacy_app.py`, `ui/scene_project.py`, `ui/scene_batch.py`, `tests/test_scene_studio.py`, `tests/test_scene_studio_gui.py`, `tests/test_scene_sequence.py` とUI向けdocs、`VERSION.txt`。
++- `core/**`, `tools/native_audio/**`, `core/effects.py`, `core/gpu_pipeline.py` は**変更していない**。
++
++## 推奨手順
++
++1. 最新GPUブランチからUI用ブランチを切る。
++2. `ui_changes_v5.9.1.patch` の適用前に `git apply --check ui_changes_v5.9.1.patch`。
++3. 問題なければ `git apply ui_changes_v5.9.1.patch`。競合がある場合はソース丸ごと上書きせず、差分内容を手動で統合。
++4. `python -m pytest -q tests`、必要に応じて `xvfb-run` の仮想表示でTkテストを実施。
++5. Windowsでクリップ音声、カラー、カメラTargetLock、シーン順序を実機テスト。
++
++### 呼び出し契約
++
++- シーンON時だけ `SceneProject.sequence` のスナップショットが `render_scenes(...,order=...)` へ渡る。
++- OFFの経路は従来の `core.jobs.run_auto_edit` を無変更で呼ぶ。
++- プロジェクトJSON schema 2。schema 1もロード可。
++- GUIのTk値はUIスレッドでスナップショットを取得しワーカーへ渡す。
++
++**注意**：Codex側が別途 `legacy_app.py` を変更している場合、Git側で差分統合すること。GPU側変更があるならビデオ生成の実機テストを必須とする。

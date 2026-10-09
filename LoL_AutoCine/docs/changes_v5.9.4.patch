@@ -1,0 +1,81 @@
+--- a/legacy_app.py
++++ b/legacy_app.py
+@@ -1678,10 +1678,31 @@
+             self._refresh_keyframe_list()
+ 
+     def on_keyframe_preview(self):
++        """Replay the CURRENT editor values, including unsaved keyframes, in LoL.
++
++        This button previously redrew only the graph; users rightly expected
++        a camera-motion preview. Capture all Tk values on the UI thread before
++        dispatching the Replay API work to the background worker.
++        """
+         self.shot_motion_graph.redraw()
+-        kill=self._current_scene()
+-        if kill is not None:
+-            self.log(f'キーフレーム曲線を更新: {len(self._edit_keyframes)}点 / 保存ボタンで確定')
++        kill = self._current_scene()
++        if kill is None:
++            self.log('動きのプレビュー: 検出シーンを選択してください。')
++            return
++        if not self._need_lock():
++            return
++        if self.busy:
++            self.log('動きのプレビュー: 別の処理を実行中です。')
++            return
++        try:
++            shot = self._scene_shot_from_ui()
++            tpl = apply_shot(self.current_template(), shot)
++        except (ValueError, TypeError, tk.TclError) as exc:
++            self.log(f'動きのプレビュー設定エラー: {exc}')
++            return
++        self.log(f'動きのプレビュー開始: {len(shot.keyframes)}キーフレーム / '
++                 f'シーン {kill.time:.1f}s / 未保存の編集値も反映')
++        self._run_bg(self._preview_play, tpl, kill)
+ 
+     def _schedule_project_save(self):
+         if self._project_autosave_token is not None:
+--- a/VERSION.txt
++++ b/VERSION.txt
+@@ -1 +1 @@
+-LoL AutoCine v5.9.3 Easy / Advanced Mode + Camera Smoothing
++5.9.4
+--- a/core/camera_clock.py
++++ b/core/camera_clock.py
+@@ -34,7 +34,11 @@
+         return False
+ 
+     def advance(self, elapsed: float, requested_speed: float = 1.0) -> float:
+-        dt = max(0.0, min(0.1, float(elapsed)))
++        # Local HTTPS camera writes can take 80–110 ms on actual machines.
++        # Capping every elapsed step at 100 ms/80 ms discards replay time and
++        # accumulates drift. Keep a safety cap for true system stalls, but
++        # account for ordinary slow API requests in full.
++        dt = max(0.0, min(0.25, float(elapsed)))
+         speed = max(0.0, float(requested_speed))
+         correction = max(-self.max_rate_correction,
+                          min(self.max_rate_correction, self.drift * 0.45))
+--- a/core/camera.py
++++ b/core/camera.py
+@@ -467,7 +467,7 @@
+                     self._last_sync = time.perf_counter()
+                 # Include HTTP latency rather than dropping it from the clock.
+                 now = time.perf_counter()
+-                real_dt = max(0.0, min(0.08, now - last_now))
++                real_dt = max(0.0, min(0.25, now - last_now))
+                 last_now = now
+                 t = clock.advance(real_dt, current_speed)
+                 plan, rig = self.plan, self.plan.rig
+--- a/core/jobs.py
++++ b/core/jobs.py
+@@ -226,6 +226,10 @@
+         _play_until(api, end, start, tpl, None, stop)
+     finally:
+         director.stop()
++        log(f"プレビューカメラ診断: API送信 {director.api_calls}回 / "
++            f"25ms超 {director.api_slow_calls}回 / "
++            f"最大API待ち {director.max_api_latency_ms:.1f}ms / "
++            f"最大時刻ずれ {director.max_clock_drift:.3f}s")
+         try:
+             api.set_playback(paused=True, speed=1.0)
+             api.set_render(fieldOfView=plan.base_fov, selectionOffset={"x": 0, "y": 0, "z": 0})
