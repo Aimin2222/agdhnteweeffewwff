@@ -34,3 +34,11 @@ git branch --all
 初回肖像取得は `ddragon.leagueoflegends.com` への接続が必要。キャッシュは `%LOCALAPPDATA%/LoL_AutoCine/champion_icons`。ネットなしでは `assets/champion_icons/<ChampionID>.png` へ公式PNGを置ける。情報/画像欠落時は装飾を省略する。
 
 詳細はLoL_AutoCine/docs/CODEX_INTEGRATION_RESULTS_v5.10.0_JA.md。Git状態/実差分はSOURCE_GIT_REPORT_JA.md、ハッシュ/枝一覧はMANIFEST.jsonとSHA256SUMS.txt。比較先は前回codex/lol-autocine-v599-champion-pair-handoff。mainへマージしない。
+
+## GitHub保存とクラウド復元確認
+
+Draft PR: https://github.com/Aimin2222/agdhnteweeffewwff/pull/12 （比較先は前回ChampionPairFix、mainは未変更）。ソース/取得用ともgit status --shortは空。全てコミット済み。
+
+GitHubの固定コミット56593a98c2bb6e2f1b92a46a01de879b41b87785からbundleを取得・SHA256検証し、別フォルダへ新規復元。226ソース/全29ローカルブランチ/HEADの完全一致、依存/構文/Tk/Xvfb/共有ガードと代表87テストを確認。既存対象へのセットアップ再実行も成功して追跡変更なし。新クラウドタスク自体を起動した試験とは区別する。
+
+セットアップスクリプトと開始手順を環境設定ドラフトへ保存し、読み戻しで一致を確認。既存リポジトリ設定・ネットワーク許可・プリセット・認証要件は保持。ドラフト保存は現在環境への実行・公開と別。将来のクラウド環境へ反映する場合だけ、環境設定で内容を確認・保存してPublishする。Windowsダウンロード/起動には不要。

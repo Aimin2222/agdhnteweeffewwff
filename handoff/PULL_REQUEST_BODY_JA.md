@@ -5,3 +5,7 @@ v5.10.0のホイール誤操作防止、左端シーンチェック、実ナビ/
 検証: pytest209件、依存/構文/実Git担当ガード（旧共有レビューは新jobsを阻止、新レビューで一致）、実Tk再起動14設定とUI→worker→モックAPI、実FFmpeg4装飾/4位置/2ペア/タイトル+BGM/AAC完全一致・AV末尾差0。スマートON/OFF各2クリップ＋モンタージュは1080p/60fps・音声あり。実NVENC拒否→CPU録画/時間補正/FX再試行を確認。Windows/実LoL/実GPU/NVENC成功/Native録音は未確認。公式肖像の実取得はクラウド403で未確認。Bloom/DOFのGPU高速化は未実装です。
 
 ソース226ファイル・全29ブランチbundle、完全版224/差分25ファイルのZIPとSHA256、Windows取得/Git状態/元v5.8.5からの実変更一覧を保存。差分適用後の全ソース一致と個人ファイル除外を確認。前回ChampionPairFixと全旧版を保持するDraft PRで、mainへマージしません。
+
+取得先: https://github.com/Aimin2222/agdhnteweeffewwff/tree/codex/lol-autocine-v5100-handoff （Code → Download ZIP → LoL_AutoCine/START.bat）。Windows取得にPublishは不要。
+
+GitHub保存bundleから別フォルダへ復元し、226ソース/29ローカルブランチ/HEAD一致、依存/構文/Tk/Xvfb/共有ガード、代表87テスト、既存対象へのinstaller再実行を確認。セットアップ/開始手順の環境ドラフト保存と読み戻し一致も確認し、他設定は保持。将来のクラウド反映にだけ設定確認・保存・Publishが必要です。
