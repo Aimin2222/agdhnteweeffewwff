@@ -5,18 +5,20 @@ import pytest
 from core.effects import Template
 from core.camera import CameraPlan
 from core.jobs import _recording_event_observer
-from core.kill_icons import with_badge
+from core.kill_icons import with_badge, with_badges
 
 
 def test_png_frame_rate_cannot_shorten_gameplay_or_audio():
     graph = with_badge('null[vout]', 1, [(1,1.4)], duration=3)
     assert 'shortest=0:eof_action=repeat' in graph
+    pair_graph = with_badges('null[vout]', 1, [('first.png', 1), ('second.png', 2)], duration=3)
+    assert pair_graph.count('shortest=0:eof_action=repeat') == 2
 
 
 def test_v598_template_positions_are_preserved():
     previous = Template(smart_highlight_enabled=True, highlight_pulse=.7, montage_fx='dark')
     new = {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration',
-           'kill_icon_opacity', 'smart_composition', 'smart_montage'}
+           'kill_icon_opacity', 'smart_composition', 'smart_montage', 'kill_icon_players'}
     values = [getattr(previous, f.name) for f in fields(Template) if f.name not in new]
     restored = Template(*values)
     assert restored.smart_highlight_enabled and restored.highlight_pulse == .7

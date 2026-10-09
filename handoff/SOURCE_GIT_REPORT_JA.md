@@ -1,4 +1,4 @@
-# AutoCine v5.9.9 ソースGit報告
+# AutoCine v5.9.9 ChampionPairFix ソースGit報告
 
 保存場所: /workspace/LoL_AutoCine
 取得用リポジトリ: /workspace/agdhnteweeffewwff
@@ -6,14 +6,14 @@
 
 ## git status --short
 
-空（未コミットの変更なし、取得用コピー更新前に確認）。
+空（未コミットの変更なし。コピー更新前のソース/取得用で確認）。
 
 ## git log -3 --oneline
 
 ```
-0d05c09 Record v5.9.9 integration and verified regressions
-d6e82cb Merge package application instructions
-463fc07 Clarify patch application for both source layouts
+cedf0c3 Record ChampionPairFix integration and verified regression results
+9b692ae Merge ChampionPairFix packaging profile
+ca36178 Package ChampionPairFix against the preserved v5.9.9 baseline
 ```
 
 ## git remote -v
@@ -24,35 +24,27 @@ origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-完全ソース213ファイル、全25ブランチを同梱bundleで保持。個人設定・プロジェクト・ログ・音声・録画・.venvは追跡しない。mainへマージしない。
+完全ソース218ファイル・全27ブランチをbundleで保持。個人設定・プロジェクト・録画・音声・画像キャッシュ・.venvは追跡しない。mainへマージしない。
 
-## v5.9.8から実際に追加・変更したファイル
+## 前回v5.9.9から実際に追加・変更したファイル
 
 ```
-A	README_v5.9.9_JA.md
-M	VERSION.txt
-M	core/camera.py
+A	README_v5.9.9_ChampionPairFix_JA.md
+A	assets/champion_icons/README_JA.txt
 M	core/effects.py
-M	core/jobs.py
-A	core/kill_icons.py
-A	docs/CODEX_INTEGRATION_RESULTS_v5.9.9_JA.md
-A	docs/CODEX_INTEGRATION_v599_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_v5.9.9.json
-A	docs/CODEX_SHARED_API_REVIEW_v5.9.9_JA.md
-A	docs/HANDOFF_MASTER_2026-10-09_JA.md
-A	docs/v599_changes.patch
+M	core/kill_icons.py
+A	docs/CODEX_CHAMPION_PAIR_RESULTS_v5.9.9_JA.md
 M	legacy_app.py
+A	tests/test_gpu_champion_pair_v599.py
 M	tests/test_gpu_highlight_v598.py
-A	tests/test_gpu_killbadges_v599.py
+M	tests/test_gpu_killbadges_v599.py
 M	tests/test_gpu_montage_v597.py
 M	tests/test_gpu_shared_camera_contract.py
 M	tests/test_parallel_integration.py
-A	tests/test_v599_automontage_killbadges.py
+A	tests/test_v5991_portrait_pairs.py
+M	tests/test_v599_automontage_killbadges.py
 M	tools/check_parallel_integration.py
-A	tools/package_v599.py
-M	ui/scene_batch.py
-M	ui/scene_project.py
-A	ui/smart_montage.py
+M	tools/package_v599.py
 ```
 
 ## 元のv5.8.5から実際に追加・変更したファイル
@@ -68,8 +60,10 @@ A	README_v5.9.5_JA.md
 A	README_v5.9.6_JA.md
 A	README_v5.9.7_JA.md
 A	README_v5.9.8_JA.md
+A	README_v5.9.9_ChampionPairFix_JA.md
 A	README_v5.9.9_JA.md
 M	VERSION.txt
+A	assets/champion_icons/README_JA.txt
 M	core/camera.py
 A	core/camera_clock.py
 M	core/effects.py
@@ -84,6 +78,7 @@ A	docs/CHANGELOG_v5.9.6_JA.md
 A	docs/CHANGELOG_v5.9.7_JA.md
 A	docs/CODEX_ARCHITECTURE_JA.md
 A	docs/CODEX_AUDIT_RESULTS_JA.md
+A	docs/CODEX_CHAMPION_PAIR_RESULTS_v5.9.9_JA.md
 A	docs/CODEX_GPU_ANALYSIS_JA.md
 A	docs/CODEX_GPU_REVIEW_v5.9.8_JA.md
 A	docs/CODEX_INTEGRATION_CONTRACT_JA.md
@@ -139,6 +134,7 @@ A	docs/v599_changes.patch
 M	legacy_app.py
 A	patches/v594_to_v595.patch
 A	tests/test_editor_ui_contract.py
+A	tests/test_gpu_champion_pair_v599.py
 A	tests/test_gpu_highlight_v598.py
 A	tests/test_gpu_killbadges_v599.py
 A	tests/test_gpu_montage_v597.py
@@ -156,6 +152,7 @@ A	tests/test_v595_workspace.py
 A	tests/test_v596_hud_batch.py
 A	tests/test_v597_studio.py
 A	tests/test_v598_highlight_director.py
+A	tests/test_v5991_portrait_pairs.py
 A	tests/test_v599_automontage_killbadges.py
 A	tools/check_parallel_integration.py
 A	tools/package_v599.py

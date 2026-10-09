@@ -35,7 +35,7 @@ def test_badge_is_real_transparent_png(tmp_path, style):
         assert img.mode == "RGBA" and img.size == (385, 116)
         # Blurred neon/gold glow can leave a barely visible edge pixel.
         assert img.getpixel((0, 0))[3] <= 3
-        assert img.getpixel((30, 40))[3] > 0
+        assert img.getpixel((50, 40))[3] > 0
 
 
 def test_badge_does_not_mutate_legacy_graph_when_absent():
@@ -191,3 +191,27 @@ def test_ffmpeg_can_render_kill_badge_into_real_mp4(tmp_path):
     decorated = frame(1.2)
     assert len(before) == len(decorated) == 640*360*3
     assert sum(a != b for a, b in zip(before, decorated)) > 400
+
+
+def test_ui_snapshots_full_roster_as_isolated_plain_data():
+    import tkinter as tk
+    from legacy_app import App
+    from core.players import parse_players
+    root = tk.Tk()
+    try:
+        app = App(root)
+        app.players = parse_players([
+            {'riotIdGameName': 'One', 'riotIdTagLine': 'JP1',
+             'rawChampionName': 'game_character_displayname_LeeSin'},
+            {'riotIdGameName': 'Two', 'riotIdTagLine': 'JP2',
+             'rawChampionName': 'game_character_displayname_Ahri'}])
+        template = app.current_template()
+        assert template.kill_icon_players == [p.to_dict() for p in app.players]
+        assert template.kill_icon_players[1]['selection_name'] == 'Ahri'
+        template.kill_icon_players[0]['name'] = 'Changed'
+        app.players.clear()
+        assert template.kill_icon_players[1]['name'] == 'Two'
+        assert app.current_template().kill_icon_players == []
+        assert 'v5.9.9' in root.title()
+    finally:
+        root.destroy()
