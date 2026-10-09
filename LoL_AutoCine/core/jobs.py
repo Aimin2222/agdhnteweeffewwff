@@ -22,7 +22,7 @@ from .capture import FrameSource, CaptureError
 from .effects import Template, apply_effects, concat_clips
 from .hud import hide_hud, restore_hud
 from .render_fx import apply_fx, restore_fx
-from .players import Player
+from .players import Player, parse_players
 from .recorder import ClipRecorder
 from .replay_api import ReplayAPI, ReplayApiError
 from .scanner import group_clips
@@ -253,6 +253,14 @@ def run_auto_edit(api: ReplayAPI, source: FrameSource, player: Player, kills: li
     raw_dir = out_dir / "raw"
     raw_dir.mkdir(parents=True, exist_ok=True)
     clips = group_clips(kills, tpl.pre, tpl.post, tpl.merge_multikill)
+    # Read the 10-player roster before capture, never during camera animation.
+    # This lets overlay code resolve real killer/victim champion portraits.
+    portrait_roster = []
+    if getattr(tpl, "kill_icon_style", "off") != "off":
+        try:
+            portrait_roster = parse_players(api.playerlist())
+        except (ReplayApiError, ValueError, TypeError) as exc:
+            log(f"キルアイコン: 参加チャンピオン一覧を読み込めず、装飾を省略する場合があります ({exc})")
     total = len(clips)
     if total == 0:
         log("対象プレイヤーのキルがありません。")
@@ -279,7 +287,7 @@ def run_auto_edit(api: ReplayAPI, source: FrameSource, player: Player, kills: li
                 if progress:
                     progress(i - 1, total, 100.0 * (i - 0.5) / total, f"クリップ {i}/{total} にエフェクト適用中…")
                 apply_effects(raw, final, tpl, take.duration, ks, game_wav=take.audio_path,
-                              audio_trim=take.audio_offset)
+                              audio_trim=take.audio_offset, player_roster=portrait_roster)
                 res.outputs.append(final)
                 log(f"保存: {final.name} ({take.duration:.1f}s, {len(ks)}キル"
                     + (", 音声あり" if take.audio_path else "") + ")")
