@@ -358,7 +358,7 @@ class DofViz(tk.Canvas):
 class App:
     def __init__(self, root: tk.Tk):
         self.root = root
-        root.title(f"{APP} v5.10.0 - UI/GPU/キルフレーム改善")
+        root.title(f"{APP} v5.10.1 - UI操作/初回録画修正")
         sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
         root.geometry(f"{min(1560, sw - 40)}x{min(960, sh - 90)}+10+10")
         root.option_add("*Font", FONT)
@@ -512,7 +512,7 @@ class App:
         top.pack(fill="x")
         brand_box = ttk.Frame(top)
         brand_box.pack(side="left")
-        ttk.Label(brand_box, text="◈  LoL AutoCine v5.10.0", style="CompactTitle.TLabel").pack(anchor="w")
+        ttk.Label(brand_box, text="◈  LoL AutoCine v5.10.1", style="CompactTitle.TLabel").pack(anchor="w")
 
         nav = ttk.Frame(top)
         nav.pack(side="left", padx=(15, 0))
@@ -1613,6 +1613,13 @@ class App:
                         widget.bind(sequence, intercept, add=False)
                 visit(widget)
         visit(self.root)
+        # Bind the Tcl widget *classes* as well: Notebook pages, floating popup
+        # editors, or future widgets created after this setup need the same
+        # behaviour.  Always consume the wheel before Tk's readonly-combobox
+        # class binding is allowed to change its selection.
+        for widget_class in ('TCombobox', 'TSpinbox', 'Spinbox'):
+            for sequence in ('<MouseWheel>', '<Button-4>', '<Button-5>'):
+                self.root.bind_class(widget_class, sequence, intercept)
 
     def _choose_kill_color(self, variable):
         _, chosen = colorchooser.askcolor(initialcolor=variable.get() or '#E3B975', parent=self.root)
@@ -1875,6 +1882,25 @@ class App:
 
         self._refresh_order_list()
 
+    def _rebuild_kills_keep_position(self):
+        """Redraw checkmarks without moving the list back to its first row.
+
+        Deleting and re-inserting every row resets Listbox.yview() and focus;
+        preserve both (including selection) across check/uncheck and editing.
+        """
+        if not hasattr(self, 'lb_kills'):
+            return
+        selected = self.lb_kills.curselection()
+        active = self.lb_kills.index('active') if self.lb_kills.size() else None
+        first_fraction = self.lb_kills.yview()[0]
+        self._fill_kills()
+        for index in selected:
+            if index < self.lb_kills.size():
+                self.lb_kills.selection_set(index)
+        if active is not None and active < self.lb_kills.size():
+            self.lb_kills.activate(active)
+        self.lb_kills.yview_moveto(first_fraction)
+
     # ---------------- scene direction (UI thread only) --------------------
     def _refresh_order_list(self):
         if not hasattr(self, 'scene_order_list'):
@@ -1965,11 +1991,7 @@ class App:
         return self.kills[selection[0]]
 
     def _refresh_scene_list(self):
-        selection=self.lb_kills.curselection()
-        index=selection[0] if selection else None
-        self._fill_kills()
-        if index is not None and index<len(self.kills):
-            self.lb_kills.selection_set(index)
+        self._rebuild_kills_keep_position()
         self.on_scene_selection()
 
     def on_scene_selection(self, _event=None):
@@ -2264,16 +2286,15 @@ class App:
             self.checked_kills.remove(i)
         else:
             self.checked_kills.add(i)
-        self._fill_kills()
-        self.lb_kills.selection_set(i)
+        self._rebuild_kills_keep_position()
 
     def on_check_all(self) -> None:
         self.checked_kills = set(range(len(self.kills)))
-        self._fill_kills()
+        self._rebuild_kills_keep_position()
 
     def on_uncheck_all(self) -> None:
         self.checked_kills.clear()
-        self._fill_kills()
+        self._rebuild_kills_keep_position()
 
     def on_make_checked(self) -> None:
         """UI thread captures all Tk state before a background render starts."""
@@ -2768,6 +2789,7 @@ class App:
     def _play(self, p: Path) -> None:
         try:
             how = watch_replay(self.lol_dir, p)
+            self.api._autocine_record_primed = False  # new replay requires new first-frame initialization
             self.log(f"リプレイを起動 ({how}): {p.name}  → 読み込み完了後『接続してプレイヤー取得』")
         except Exception as e:
             self.log(f"起動失敗: {e}")
@@ -2777,6 +2799,7 @@ class App:
         self._run_bg(self._connect)
 
     def _connect(self) -> None:
+        self.api._autocine_record_primed = False
         self.log("Replay API に接続中… (リプレイの読み込み完了まで待ちます)")
         if not self.api.wait_ready(timeout=90, stop=self.stop_ev):
             self.log("接続できません。game.cfg設定→LoL再起動→リプレイ再生を確認してください。")

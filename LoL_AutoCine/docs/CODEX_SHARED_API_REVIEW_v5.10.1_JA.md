@@ -1,0 +1,13 @@
+# v5.10.1 初回録画準備の共有APIレビュー
+
+基準はstable/v5.8.5。v5.10.0のcamera/camera_clock承認を維持し、jobsの正確なblobだけを更新する。
+
+受領jobsフルファイルはClipTake.effect_events、_play_untilのobserve、録画時刻の補間とFXへの転送、smart_highlight_enabled条件が欠落していたため採用しない。既存ソースへ次の差分だけを追加する。
+
+- WGCWindowSourceだけで最初の録画前に短い自動プレロールを行い、リプレイ時間の進行とWGCフレーム更新の両方を待つ。失敗や停止では完了フラグを立てず、再生をpauseへ戻す。成功したAPIセッションでは次クリップで繰り返さない。UIは新リプレイ起動/再接続時にフラグを解除する。
+- _setup_clipのシークが目標と0.80秒よりずれる場合だけ一度再試行し、再びずれていればカメラ接続前に中断する。関数署名/戻り値/TargetLock座標・既存プラン生成は保持する。
+- カメラ反映後のframe_countを基準に新しいWGCフレームを待つ。受領版のシーク前基準ではシーク中の古いフレームを許容し得るため、基準を反映後へ移す。停止にも応答し、映像準備失敗時は音声/録画を開始しない。SyntheticSourceは追加プレロール/フレーム待ちを行わない。
+
+run_auto_edit/record_one_clip/ClipRecorderの旧呼出形、NVENC開始前プローブ/CPU再試行、LoL専用音声/HUD復元/イベント補間/音声offsetを保持する。effects/recorder/gpu_pipeline/montage/診断/カメラ/Native Helperはv5.10.0とバイト一致。デスクトップ録画へ切り替えない。
+
+フレーム更新とAPI時間はゲーム内の内容を画像認識するものではない。Windows/実LoLのネクサス問題の解消は未確認。実機で手動プレビューなしの最初の1クリップを検査する。既存共有レビューでは新jobsを阻止し、新レビューで所有ファイルと一致を検証する。今後の別blobやUI側からの共有変更は引き続きレビューが必要。

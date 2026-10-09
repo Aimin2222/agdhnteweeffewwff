@@ -24,11 +24,12 @@ UI_FILES = {"legacy_app.py", "tests/test_editor_ui_contract.py",
             "tests/test_v593_mode_camera.py", "tests/test_v594_live_preview.py",
             "tests/test_v595_workspace.py", "tests/test_v596_hud_batch.py",
             "tests/test_v597_studio.py", "tests/test_v598_highlight_director.py",
-            "tests/test_v599_automontage_killbadges.py", "tests/test_v510_ui_gpu_killframe.py"}
+            "tests/test_v599_automontage_killbadges.py", "tests/test_v510_ui_gpu_killframe.py",
+            "tests/test_v5101_scroll_check_warmup.py"}
 SHARED_FILES = {"core/jobs.py", "core/camera.py", "core/camera_clock.py", "core/audio.py",
                 "core/scanner.py", "app.py", "requirements.txt",
                 "core/procloop.py", "core/audio_worker.py", "core/capture.py"}
-INFRA_FILES = {"tools/check_parallel_integration.py", "tests/test_parallel_integration.py", "tools/package_v599.py", "tools/package_v5100.py"}
+INFRA_FILES = {"tools/check_parallel_integration.py", "tests/test_parallel_integration.py", "tools/package_v599.py", "tools/package_v5100.py", "tools/package_v5101.py"}
 
 
 def owner(path: str) -> str:

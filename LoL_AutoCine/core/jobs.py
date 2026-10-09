@@ -18,7 +18,7 @@ from typing import Callable, Optional
 from .audio import AudioCapture, AudioError
 from .audio_log import log as audio_log
 from .camera import CameraPlan, CameraDirector, RigInfo, attach_to_player
-from .capture import FrameSource, CaptureError
+from .capture import FrameSource, CaptureError, WGCWindowSource
 from .effects import Template, apply_effects, concat_clips
 from .hud import hide_hud, restore_hud
 from .render_fx import apply_fx, restore_fx
@@ -94,10 +94,83 @@ def _play_until(api: ReplayAPI, end: float, start: float, tpl: Template, rec: Op
         time.sleep(0.05)
 
 
+def _prime_live_replay_once(api: ReplayAPI, source: FrameSource, start: float,
+                            stop=None, log: Callable = lambda m: None) -> None:
+    """Initialize the LoL 3D replay renderer before the first Windows recording.
+
+    When Replay API is responsive but playback has never actually run, a seek
+    can report the requested time while WGC still shows the initial Nexus.
+    A short *automatic* play of the pre-roll initializes the game scene.
+    `_setup_clip` then seeks back to the exact requested start time.
+    Never restart WGC or capture the desktop; reuse the existing session.
+    """
+    if not isinstance(source, WGCWindowSource) or getattr(api, '_autocine_record_primed', False):
+        return
+    if stop is not None and stop.is_set():
+        raise StallError('開始前に停止されました')
+    log('初回クリップ: リプレイ映像を自動準備中（手動再生は不要）…')
+    api.set_playback(paused=True, speed=1.0)
+    # Starting a little before the clip leaves room for the warming animation;
+    # never prime at 0 unless this really is a near-zero-time clip.
+    api.seek(max(0.0, float(start) - 1.5))
+    first_time = float(api.playback().get('time', 0.0))
+    base_frames = source.frame_count
+    advanced = False
+    fresh = False
+    try:
+        for attempt in range(2):
+            api.set_playback(paused=False, speed=1.0)
+            deadline = time.monotonic() + 1.25
+            while time.monotonic() < deadline:
+                if stop is not None and stop.is_set():
+                    raise StallError('開始前に停止されました')
+                time.sleep(0.09)
+                state = api.playback()
+                advanced |= float(state.get('time', first_time)) > first_time + 0.18
+                fresh |= source.frame_count > base_frames
+                if advanced and fresh:
+                    # Allow the renderer to draw a gameplay frame, not the old
+                    # static Nexus still cached by Windows Graphics Capture.
+                    time.sleep(0.35)
+                    break
+            if advanced and fresh:
+                break
+    finally:
+        api.set_playback(paused=True, speed=1.0)
+    if stop is not None and stop.is_set():
+        raise StallError('開始前に停止されました')
+    if not advanced or not fresh:
+        raise CaptureError('初回リプレイ画面の準備が完了しませんでした。LoLのリプレイ画面を表示し、再試行してください。')
+    # Flag only when verified; failures can retry on the next attempt.
+    api._autocine_record_primed = True
+    log('初回クリップ: 再生・ゲーム映像フレームを確認、正確な開始時刻へ戻します')
+
+
+def _await_capture_refresh(source: FrameSource, after_count: int, timeout: float = 1.5,
+                           stop=None) -> None:
+    """Do not record the pre-seek frame cached by WGC after moving the camera."""
+    if not isinstance(source, WGCWindowSource):
+        return
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if stop is not None and stop.is_set():
+            raise StallError('開始前に停止されました')
+        if source.frame_count > after_count and source.latest() is not None:
+            return
+        time.sleep(0.05)
+    if stop is not None and stop.is_set():
+        raise StallError('開始前に停止されました')
+    raise CaptureError('シーク後にLoL映像が更新されませんでした。古いネクサス映像の録画を防ぐため中止します。')
+
+
 def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kills: list,
                 log: Callable) -> tuple:
     api.set_playback(paused=True, speed=1.0)
-    api.seek(start)
+    actual = api.seek(start)
+    if actual is not None and abs(float(actual) - float(start)) > 0.80:
+        actual = api.seek(start)
+    if actual is not None and abs(float(actual) - float(start)) > 0.80:
+        raise ReplayApiError(f'リプレイのシーク位置が確定しません ({actual:.2f}s / 目標 {start:.2f}s)')
     rig = attach_to_player(api, player, tpl.style, dist_scale=tpl.dist_scale, height=tpl.cam_height,
                            third_elev=getattr(tpl, "third_elev", 28.0), third_dist=getattr(tpl, "third_dist", 950.0), log=log)
     time.sleep(0.35)
@@ -140,7 +213,10 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
                     log: Callable = lambda m: None,
                     audio_factory: Optional[Callable] = None) -> ClipTake:
     """1クリップ録画。HUD非表示は呼び出し側 (run_auto_edit) が行う。"""
+    _prime_live_replay_once(api, source, start, stop=stop, log=log)
     plan, rig = _setup_clip(api, player, tpl, start, kills, log)
+    # Count after camera setup: a frame from during the seek is not sufficient.
+    _await_capture_refresh(source, source.frame_count, stop=stop)
     take = ClipTake(rig=rig)
     saved_hud = {}
     if tpl.hide_hud:
