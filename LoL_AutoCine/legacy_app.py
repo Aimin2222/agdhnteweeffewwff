@@ -2367,6 +2367,7 @@ class App:
         (_pos, t.kill_icon_scale, t.kill_icon_duration, t.kill_icon_opacity) = normalize_options(
             t.kill_icon_position, self.var_kill_icon_scale.get(),
             self.var_kill_icon_duration.get(), self.var_kill_icon_opacity.get())
+        t.kill_icon_players = [p.to_dict() for p in self.players]
         t.smart_montage = bool(self.var_smart_montage.get())
         t.smart_composition = bool(self.var_smart_composition.get())
         # LoLミラー/カメラは144Hzで内部サンプリングし、最終出力FPSだけUI選択値へ合わせる。

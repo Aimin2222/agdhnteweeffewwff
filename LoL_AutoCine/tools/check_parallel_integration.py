@@ -14,7 +14,7 @@ import subprocess
 GPU_FILES = {"core/effects.py", "core/gpu_pipeline.py", "core/recorder.py",
              "core/montage_fx.py",
              "core/highlight_pulse.py",
-             "core/kill_icons.py",
+             "core/kill_icons.py", "tests/test_v5991_portrait_pairs.py",
              "core/performance_diagnostics.py", "tests/test_v585_filters.py",
              "tests/test_v585_diagnostics.py", "tests/test_v31_regressions.py"}
 UI_FILES = {"legacy_app.py", "tests/test_editor_ui_contract.py",
@@ -39,6 +39,8 @@ def owner(path: str) -> str:
     if path in SHARED_FILES:
         return "shared"
     if path in INFRA_FILES or path.startswith("docs/") or path in {"VERSION.txt", ".gitignore"}:
+        return "metadata"
+    if path == "assets/champion_icons/README_JA.txt":
         return "metadata"
     if path.startswith(("README", "CODEX_")) or path in {"ui_changes_v5.9.1.patch", "patches/v594_to_v595.patch"}:
         return "metadata"

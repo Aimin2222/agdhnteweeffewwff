@@ -43,6 +43,7 @@ def history(root, gpu_file, ui_file):
     "tests/test_v595_workspace.py", "tests/test_v596_hud_batch.py", "tests/test_v597_studio.py",
     "tests/test_v598_highlight_director.py",
     "tests/test_v599_automontage_killbadges.py",
+    "assets/champion_icons/README_JA.txt",
 ])
 def test_independent_changes_preserve_checkout(tmp_path, ui_file):
     history(tmp_path, "core/effects.py", ui_file)
@@ -57,6 +58,7 @@ def test_independent_changes_preserve_checkout(tmp_path, ui_file):
 
 @pytest.mark.parametrize("gpu_file,ui_file,key", [
     ("docs/gpu.md", "core/effects.py", "ui_changed_gpu_files"),
+    ("docs/gpu.md", "tests/test_v5991_portrait_pairs.py", "ui_changed_gpu_files"),
     ("legacy_app.py", "docs/ui.md", "gpu_changed_ui_files"),
     ("tests/test_scene_studio.py", "docs/ui.md", "gpu_changed_ui_files"),
     ("tests/test_scene_studio_gui.py", "docs/ui.md", "gpu_changed_ui_files"),

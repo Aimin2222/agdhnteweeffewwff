@@ -16,11 +16,14 @@ from zipfile import ZipFile, ZIP_DEFLATED
 APP = Path(__file__).resolve().parents[1]
 REPO = Path(subprocess.check_output(["git", "-C", str(APP), "rev-parse", "--show-toplevel"], text=True).strip())
 DIST = REPO / "dist"
-STABLE = "integration/v5.9.8" if REPO == APP else "origin/codex/lol-autocine-v598-handoff"
+PAIR_FIX = (APP / "README_v5.9.9_ChampionPairFix_JA.md").exists()
+STABLE = (("integration/v5.9.9" if PAIR_FIX else "integration/v5.9.8") if REPO == APP else
+          ("origin/codex/lol-autocine-v599-handoff" if PAIR_FIX else "origin/codex/lol-autocine-v598-handoff"))
 EXCLUDED_DIRS = {".git", ".venv", ".pytest_cache", "__pycache__", "node_modules", "output", "outputs", "projects", "thumbnails"}
 EXCLUDED_SUFFIXES = {".mp4", ".mkv", ".wav", ".avi", ".mov", ".webm", ".pyc", ".log", ".tmp"}
-FULL_ZIP = DIST / "LoL_AutoCine_v5.9.9_Windows_Full.zip"
-DIFF_ZIP = DIST / "LoL_AutoCine_v5.9.9_Codex_MergeChanges.zip"
+PACKAGE_NAME = "LoL_AutoCine_v5.9.9" + ("_ChampionPairFix" if PAIR_FIX else "")
+FULL_ZIP = DIST / (PACKAGE_NAME + "_Windows_Full.zip")
+DIFF_ZIP = DIST / (PACKAGE_NAME + "_Codex_MergeChanges.zip")
 
 
 def run_git(*args: str) -> str:
@@ -73,6 +76,9 @@ def build() -> tuple[Path, Path]:
 - 音声のProcess Loopback、NVENC、TargetLock、UI設定の回帰テストを実施
 - Windows/LoL/NVIDIA実機テストは配布前のLinux CIとは別に行う
 """
+    if PAIR_FIX:
+        instructions = instructions.replace("v5.9.9 Codex", "v5.9.9 ChampionPairFix Codex").replace(
+            "codex/lol-autocine-v598-handoff`（v5.9.8）", "codex/lol-autocine-v599-handoff`（前回のv5.9.9）")
     with ZipFile(DIFF_ZIP, "w", ZIP_DEFLATED, compresslevel=6) as z:
         write_manifest(z, sorted(changed))
         z.writestr("CHANGES_v5.9.9.patch", patch)
