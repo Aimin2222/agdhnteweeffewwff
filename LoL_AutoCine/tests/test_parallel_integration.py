@@ -45,6 +45,7 @@ def history(root, gpu_file, ui_file):
     "tests/test_v599_automontage_killbadges.py",
     "tests/test_v510_ui_gpu_killframe.py",
     "tests/test_v5101_scroll_check_warmup.py",
+    "tests/test_v5102_circle_focus_preset.py",
     "assets/champion_icons/README_JA.txt",
 ])
 def test_independent_changes_preserve_checkout(tmp_path, ui_file):
@@ -77,6 +78,9 @@ def test_independent_changes_preserve_checkout(tmp_path, ui_file):
     ("tests/test_v599_automontage_killbadges.py", "docs/ui.md", "gpu_changed_ui_files"),
     ("tests/test_v510_ui_gpu_killframe.py", "docs/ui.md", "gpu_changed_ui_files"),
     ("tests/test_v5101_scroll_check_warmup.py", "docs/ui.md", "gpu_changed_ui_files"),
+    ("tests/test_v5102_circle_focus_preset.py", "docs/ui.md", "gpu_changed_ui_files"),
+    ("docs/gpu.md", "core/focus_fx.py", "ui_changed_gpu_files"),
+    ("docs/gpu.md", "core/preview.py", "ui_changed_gpu_files"),
     ("docs/gpu.md", "core/kill_icons.py", "ui_changed_gpu_files"),
     ("core/effects.py", "core/jobs.py", "shared_files_requiring_review"),
 ])

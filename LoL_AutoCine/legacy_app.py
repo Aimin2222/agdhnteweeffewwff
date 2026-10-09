@@ -43,7 +43,7 @@ from ui.scene_batch import render_scenes                      # noqa: E402
 from ui.highlight_director import SMART_STYLES, SMART_STYLES_REVERSE, recommend_highlight  # noqa: E402
 from ui.motion_graph import ShotMotionGraph                  # noqa: E402
 from ui.hud_presets import (HUD_MODES, hud_mode_from_flags, hud_flags, hud_summary)  # noqa: E402
-from ui.studio_localization import (EFFECT_LABEL_JA, FOG_LABEL_JA, SHOT_PROFILE_JA,
+from ui.studio_localization import (EFFECT_LABEL_JA, EFFECT_HELP_JA, TEMPLATE_HELP_JA, FOG_LABEL_JA, SHOT_PROFILE_JA,
                                     SHOT_INTENSITY_JA, convert_label, reverse_label)  # noqa: E402
 
 APP = "LoL AutoCine"
@@ -355,10 +355,42 @@ class DofViz(tk.Canvas):
                          fill='#475569',font=('Meiryo UI',8))
         self.create_text(right,112,anchor='e',text=f'ぼかし強度 {blur:.1f}',fill='#475569',font=('Meiryo UI',8))
 
+class FocusCircleViz(tk.Canvas):
+    """Conceptual screen-space focus area, not champion/depth detection."""
+    def __init__(self, master, xvar, yvar, radiusvar, feathervar, **kw):
+        super().__init__(master, height=156, bg="#F8FAFC",
+                         highlightthickness=1, highlightbackground="#D0D5DD", **kw)
+        self.variables = xvar, yvar, radiusvar, feathervar
+        for v in self.variables:
+            v.trace_add('write', lambda *_: self.draw())
+        self.bind('<Configure>', lambda _e: self.draw())
+        self.draw()
+
+    def draw(self):
+        self.delete('all')
+        try:
+            from core.focus_fx import clamp
+            cx,cy,r,feather = (float(v.get()) for v in self.variables)
+            cx,cy = clamp(cx,.05,.95),clamp(cy,.05,.95)
+            r,feather = clamp(r,.08,.65),clamp(feather,.025,.35)
+        except (ValueError, tk.TclError):
+            return
+        w=max(350, self.winfo_width() or 350)
+        sh=134.0; sw=min(w-35,sh*16/9); sx=(w-sw)/2; sy=10
+        self.create_rectangle(sx,sy,sx+sw,sy+sh,fill="#CBD5E1",outline="#64748B")
+        self.create_text(sx+8,sy+8,anchor='nw',text="周囲：ぼかし",fill="#475569",font=("Meiryo UI",9))
+        x=sx+sw*cx; y=sy+sh*cy
+        for radius, color, dash in ((r+feather,"#93C5FD",(4,3)),(r,"#2563EB",None)):
+            rr=sh*radius
+            self.create_oval(x-rr,y-rr,x+rr,y+rr,outline=color,width=2,dash=dash)
+        self.create_line(x-8,y,x+8,y,fill="#1D4ED8",width=2)
+        self.create_line(x,y-8,x,y+8,fill="#1D4ED8",width=2)
+        self.create_text(x,y+13,text="対象付近",fill="#1D4ED8",font=("Meiryo UI",8,"bold"))
+
 class App:
     def __init__(self, root: tk.Tk):
         self.root = root
-        root.title(f"{APP} v5.10.1 - UI操作/初回録画修正")
+        root.title(f"{APP} v5.10.3 - 円形ぼかし / 色と説明")
         sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
         root.geometry(f"{min(1560, sw - 40)}x{min(960, sh - 90)}+10+10")
         root.option_add("*Font", FONT)
@@ -512,7 +544,7 @@ class App:
         top.pack(fill="x")
         brand_box = ttk.Frame(top)
         brand_box.pack(side="left")
-        ttk.Label(brand_box, text="◈  LoL AutoCine v5.10.1", style="CompactTitle.TLabel").pack(anchor="w")
+        ttk.Label(brand_box, text="◈  LoL AutoCine v5.10.3", style="CompactTitle.TLabel").pack(anchor="w")
 
         nav = ttk.Frame(top)
         nav.pack(side="left", padx=(15, 0))
@@ -674,6 +706,9 @@ class App:
         self.tpl_combo = ttk.Combobox(f, state="readonly", textvariable=self.var_tpl, values=list(self.templates))
         self.tpl_combo.pack(fill="x", pady=(0, 7))
         self.tpl_combo.bind("<<ComboboxSelected>>", lambda _e: self.apply_template(self.var_tpl.get()))
+        self.template_hint = ttk.Label(f, text="プリセットを選ぶとカメラ・色・切替がまとめて設定されます。",
+                                       style="CardMuted.TLabel", wraplength=400, justify="left")
+        self.template_hint.pack(fill="x", pady=(3, 5))
         for name, cmd in [
             ("標準シネマティック", lambda: self._select_template_by_text("標準")),
             ("LoLnam風シネマ", lambda: self._select_template_by_text("LoLnam")),
@@ -970,6 +1005,8 @@ class App:
                 "motion_dolly": (0, 15), "game_volume": (0, 1.5), "bgm_volume": (0, 1.0),
                 "dof_blur": (0, 12), "dof_focus_distance": (500, 12000),
                 "dof_near_distance": (100, 20000), "dof_far_distance": (100, 20000),
+                "dof_center_x": (.05,.95), "dof_center_y": (.05,.95),
+                "dof_radius": (.08,.65), "dof_feather": (.025,.35),
             }.get(key, (0, 1))
         self._slider_range = _slider_range
         def slider(parent, key, label, lo, hi, compact=False):
@@ -1058,6 +1095,8 @@ class App:
         ttk.Button(basic, text="★ この設定で全自動作成", style="Accent.TButton", command=self.on_one_click).pack(fill="x", pady=(4, 0))
 
         self.var_grade = tk.StringVar()
+        ttk.Label(color, text="色合いはテンプレートでまとめて選べます。『標準』は色の変化が少なく、撮影したLoLの色を優先します。",
+                  style="CardMuted.TLabel", wraplength=930).pack(anchor="w", pady=(0,6))
         ttk.Label(color, text="カラーグレード", style="Card.TLabel").pack(anchor="w")
         ttk.Combobox(color, state="readonly", textvariable=self.var_grade, values=list(GRADE_JP.values())).pack(fill="x", pady=3)
         for args in (("grade_strength","色の強さ",0,1.4),("temperature","色温度",-1,1),("contrast","コントラスト",0.6,1.6),("exposure","露出",-0.3,0.3),("vibrance","自然な彩度",-1,1.5),("vignette","ビネット",0,1),("grain","グレイン",0,1),("bloom","ブルーム",0,1),("bars","シネマ枠",0,1)):
@@ -1077,16 +1116,38 @@ class App:
         ttk.Label(color, text="点をクリックで追加 / ドラッグで移動。数値は x/y（0.000〜1.000）で入力できます。",
                   style="CardMuted.TLabel", wraplength=560).pack(anchor="w")
         ttk.Entry(color, textvariable=self.var_curve_points).pack(fill="x", pady=(4,0))
-        self.var_dof=tk.BooleanVar(value=False); ttk.Checkbutton(color, text="被写界深度 DOF", variable=self.var_dof).pack(anchor="w", pady=5)
-        slider(color,"dof_blur","DOFぼかし",0,12)
-        slider(color,"dof_focus_distance","フォーカス距離",500,12000)
-        slider(color,"dof_near_distance","近距離",100,20000)
-        slider(color,"dof_far_distance","遠距離",100,20000)
-        ttk.Label(color, text="ピントの合う範囲の図（距離の目安・実際のLoL映像ではありません）", style="CardMuted.TLabel").pack(anchor="w", pady=(5,2))
-        self.dof_viz = DofViz(color, self.sl["dof_blur"], self.sl["dof_focus_distance"], self.sl["dof_near_distance"], self.sl["dof_far_distance"])
-        self.dof_viz.pack(fill="x", pady=(0,4))
-        ttk.Label(color, text="緑＝比較的くっきり／灰色＝ぼかし。フォーカス距離を中心に、近・遠の範囲を確認できます。",
-                  style="CardMuted.TLabel", wraplength=1000).pack(anchor="w", pady=(0, 5))
+        self.var_dof=tk.BooleanVar(value=False)
+        ttk.Checkbutton(color, text="円形DOF：キャラ付近をくっきり、周囲をぼかす", variable=self.var_dof).pack(anchor="w", pady=(8,3))
+        ttk.Label(color, text="まずDOFぼかしを上げます。円の内側はそのまま、外側がぼけます（実際の深度推定ではありません）。",
+                  style="CardMuted.TLabel", wraplength=860).pack(anchor="w")
+        self.var_dof_shape=tk.StringVar(value="円形（おすすめ）")
+        ttk.Combobox(color, state="readonly", textvariable=self.var_dof_shape,
+                     values=["円形（おすすめ）", "従来の上下ぼかし"], width=30).pack(anchor="w", pady=(4,3))
+        slider(color,"dof_blur","周囲のぼかし強度",0,12)
+        self.var_dof_circle_hint = ttk.Label(color, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
+                                             style="CardMuted.TLabel", wraplength=880)
+        self.var_dof_circle_hint.pack(anchor="w", pady=(3,5))
+        slider(color,"dof_center_x","円の中心・左右",.05,.95)
+        slider(color,"dof_center_y","円の中心・上下",.05,.95)
+        slider(color,"dof_radius","くっきりする円の半径",.08,.65)
+        slider(color,"dof_feather","境界のなめらかさ",.025,.35)
+        ttk.Label(color, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
+                  style="CardMuted.TLabel", wraplength=950).pack(anchor="w", pady=(0,4))
+        self.dof_viz = FocusCircleViz(color, self.sl['dof_center_x'], self.sl['dof_center_y'],
+                                     self.sl['dof_radius'], self.sl['dof_feather'])
+        self.dof_viz.pack(fill="x", pady=(2,6))
+        legacy_dof = ttk.LabelFrame(color, text="従来の上下ぼかし用（互換設定）", padding=5)
+        self._legacy_dof_panel = legacy_dof
+        # These controls are intentionally collapsed in the new circle mode.
+        ttk.Label(legacy_dof, text="『従来の上下ぼかし』を選んだ場合だけ使います。円形モードでは変更不要。",
+                  style="CardMuted.TLabel", wraplength=850).pack(anchor="w")
+        slider(legacy_dof,"dof_focus_distance","フォーカス距離",500,12000)
+        slider(legacy_dof,"dof_near_distance","近距離",100,20000)
+        slider(legacy_dof,"dof_far_distance","遠距離",100,20000)
+        self.var_dof_shape.trace_add('write', lambda *_: self._update_dof_mode_ui())
+        self._update_dof_mode_ui()
+        ttk.Button(color, text="★ おすすめ：キャラをくっきり・背景を柔らかく",
+                   command=self._apply_focus_preset).pack(fill="x", pady=(0,7))
 
         # Premiere/AE系の演出。難しい編集を覚えなくても、チェックを入れるだけで使える。
         fx_box = ttk.LabelFrame(color, text="映像演出（チェックするだけでOK）", padding=8)
@@ -1100,6 +1161,9 @@ class App:
         self.cb_effect_preset.bind("<<ComboboxSelected>>", lambda _e: self._apply_effect_preset(self.var_effect_preset.get()))
         ttk.Label(fx_box, text="各エフェクトはON/OFFと強さを個別に変更できます。迷ったらプリセットだけでOK。",
                   style="CardMuted.TLabel", wraplength=560).pack(anchor="w", pady=(0, 6))
+        self.effect_help_text=tk.StringVar(value="効果名の『？』を押すと、使い方をここに表示します。")
+        ttk.Label(fx_box, textvariable=self.effect_help_text, style="CardMuted.TLabel",
+                  wraplength=920, justify="left").pack(fill="x", pady=(1,7))
         self.effect_vars = {}
         self.effect_strength_vars = {}
         for category, items in VIDEO_EFFECT_CATEGORIES.items():
@@ -1113,6 +1177,9 @@ class App:
                 var = tk.BooleanVar(value=False); sval = tk.DoubleVar(value=float(VIDEO_EFFECT_DEFAULTS.get(key, 0.25)))
                 self.effect_vars[key] = var; self.effect_strength_vars[key] = sval
                 ttk.Checkbutton(cell, text=EFFECT_LABEL_JA.get(key, label), variable=var).pack(side="left")
+                ttk.Button(cell, text="?", width=2,
+                           command=lambda k=key: self.effect_help_text.set(
+                               EFFECT_LABEL_JA.get(k,k)+"："+EFFECT_HELP_JA.get(k,"ONにすると映像に演出が加わります。"))).pack(side="left", padx=(2,3))
                 ttk.Scale(cell, from_=0.05, to=1.0, variable=sval, length=70).pack(side="left", fill="x", expand=True, padx=4)
                 ttk.Entry(cell, textvariable=sval, width=5, justify="right").pack(side="right")
         ttk.Button(fx_box, text="全エフェクトOFF", command=self._clear_video_effects).pack(fill="x", pady=(5, 0))
@@ -2401,6 +2468,28 @@ class App:
             _diag_write(CRASH_LOG, f"BG_THREAD_START_ERROR {name}: {e}")
             raise
 
+    def _update_dof_mode_ui(self):
+        """Do not present obsolete near/far controls while circular focus is active."""
+        panel = getattr(self, '_legacy_dof_panel', None)
+        if panel is None:
+            return
+        if self.var_dof_shape.get() == '従来の上下ぼかし':
+            if not panel.winfo_manager():
+                panel.pack(fill='x', pady=(2, 6))
+        elif panel.winfo_manager():
+            panel.pack_forget()
+
+    def _apply_focus_preset(self):
+        """One click circular focus without editing TargetLock or changing audio."""
+        self.var_dof.set(True)
+        self.var_dof_shape.set('円形（おすすめ）')
+        self.sl['dof_blur'].set(4.5)
+        self.sl['dof_center_x'].set(.5)
+        self.sl['dof_center_y'].set(.54)
+        self.sl['dof_radius'].set(.29)
+        self.sl['dof_feather'].set(.12)
+        self.effect_help_text.set('主役くっきり：画面中央付近をくっきり残し、周囲だけ柔らかくします。実際のキャラ追跡ではありません。')
+
     # ------------------------------------------------------------ video effects
     def _clear_video_effects(self) -> None:
         for v in getattr(self, "effect_vars", {}).values():
@@ -2435,6 +2524,9 @@ class App:
     # ------------------------------------------------------------ template <-> UI
     def apply_template(self, name: str) -> None:
         t = self.templates[name]
+        if hasattr(self, 'template_hint'):
+            self.template_hint.configure(text=TEMPLATE_HELP_JA.get(name,
+                "選ぶだけでカメラ・色・切替を設定。気に入ったら詳細編集で調整できます。"))
         self.var_int.set(t.intensity)
         self.var_style.set(STYLES.get(t.style, t.style))
         self.var_grade.set(GRADE_JP.get(t.grade, t.grade))
@@ -2470,6 +2562,7 @@ class App:
         self.var_curve.set(t.curve_enabled)
         self.var_curve_points.set(t.curve_points)
         self.var_dof.set(t.dof_enabled)
+        self.var_dof_shape.set("従来の上下ぼかし" if getattr(t, "dof_shape", "circle") == "band" else "円形（おすすめ）")
         for key in ("dof_blur", "dof_focus_distance", "dof_near_distance", "dof_far_distance"):
             if key in self.sl:
                 self.sl[key].set(float(getattr(t, key)))
@@ -2506,10 +2599,13 @@ class App:
         t.curve_enabled = bool(self.var_curve.get())
         t.curve_points = self.var_curve_points.get().strip()
         t.dof_enabled = bool(self.var_dof.get())
+        t.dof_shape = "band" if self.var_dof_shape.get() == "従来の上下ぼかし" else "circle"
         t.dof_blur = float(self.sl.get("dof_blur", tk.DoubleVar(value=t.dof_blur)).get())
         t.dof_focus_distance = float(self.sl.get("dof_focus_distance", tk.DoubleVar(value=t.dof_focus_distance)).get())
         t.dof_near_distance = float(self.sl.get("dof_near_distance", tk.DoubleVar(value=t.dof_near_distance)).get())
         t.dof_far_distance = float(self.sl.get("dof_far_distance", tk.DoubleVar(value=t.dof_far_distance)).get())
+        for key in ("dof_center_x", "dof_center_y", "dof_radius", "dof_feather"):
+            setattr(t, key, float(self.sl[key].get()))
         t.video_effects = self._get_video_effects()
         t.effect_preset = self.var_effect_preset.get() if hasattr(self, "var_effect_preset") else "なし"
         t.smart_highlight_enabled = bool(self.var_smart_highlight_enabled.get())

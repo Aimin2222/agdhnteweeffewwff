@@ -114,21 +114,33 @@ def grade_rgb(frame_rgb: np.ndarray, t: Template, title: str = "") -> np.ndarray
         fog = np.array([fr, fg, fb], dtype=np.float32)[None, None, :]
         op = max(0.0, min(0.45, float(t.fog_strength) * 0.35))
         a = np.clip(a * (1.0 - op) + fog * op, 0, 1)
-    # DOF: 実深度バッファはないため、画面上下位置を奥行きの代理値にして
-    # フォーカス帯だけ元画像を残し、近距離/遠距離側だけぼかす。
+    # v5.10.3: match FFmpeg circular DOF in the lightweight preview.
+    # This is screen-space centering around TargetLock's usual on-screen target.
+    # Do not claim per-frame champion pixel tracking or actual 3D depth.
+    from .focus_fx import focus_settings
+    cx, cy, radius, feather = focus_settings(t)
+    mask_circle = None
+    def circle_distance():
+        nonlocal mask_circle
+        if mask_circle is None:
+            yy, xx = np.ogrid[:h, :w]
+            mask_circle = np.hypot((xx / w - cx) * w / h, (yy / h - cy)).astype(np.float32)
+        return mask_circle
     if getattr(t, "dof_enabled", False) and getattr(t, "dof_blur", 0.0) > 0.01:
         base = a.copy()
         im = Image.fromarray((a * 255).astype(np.uint8))
-        blurred = np.asarray(im.filter(ImageFilter.GaussianBlur(float(t.dof_blur) * 0.75))).astype(np.float32) / 255.0
-        near = max(1.0, float(getattr(t, "dof_near_distance", 10000.0)))
-        focus = max(near, float(getattr(t, "dof_focus_distance", 5510.0)))
-        far = max(focus + 1.0, float(getattr(t, "dof_far_distance", 10000.0)))
-        fc = np.clip(focus / max(near + focus + far, 1.0), 0.05, 0.95)
-        span = max(0.025, min((focus-near)/max(focus+far,1.0), (far-focus)/max(focus+far,1.0)))
-        yy = np.linspace(0.0, 1.0, h, dtype=np.float32)[:, None]
-        m = np.clip((np.abs(yy - fc) - span) / max(span, 0.02), 0.0, 1.0)
-        m = m[..., None]
-        a = base * (1.0 - m) + blurred * m
+        blurred = np.asarray(im.filter(ImageFilter.GaussianBlur(float(t.dof_blur) * .75))).astype(np.float32) / 255.0
+        if getattr(t, "dof_shape", "circle") == "band":
+            near=max(1.0, float(getattr(t, "dof_near_distance", 10000.0)))
+            focus=max(near, float(getattr(t, "dof_focus_distance", 5510.0)))
+            far=max(focus+1.0, float(getattr(t, "dof_far_distance", 10000.0)))
+            fc=np.clip(focus/max(near+focus+far,1.0), .05,.95)
+            span=max(.025,min((focus-near)/max(focus+far,1.0), (far-focus)/max(focus+far,1.0)))
+            yy=np.linspace(0.,1.,h,dtype=np.float32)[:,None]
+            weight=np.clip((np.abs(yy-fc)-span)/max(span,.02),0,1)
+        else:
+            weight=np.clip((circle_distance()-radius)/feather,0,1)
+        a=base*(1.-weight[...,None])+blurred*weight[...,None]
     # cinema bars
     if t.bars > 0:
         bh = int(h * 0.12 * min(1.0, t.bars))
