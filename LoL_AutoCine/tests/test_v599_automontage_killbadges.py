@@ -212,6 +212,6 @@ def test_ui_snapshots_full_roster_as_isolated_plain_data():
         app.players.clear()
         assert template.kill_icon_players[1]['name'] == 'Two'
         assert app.current_template().kill_icon_players == []
-        assert 'v5.9.9' in root.title()
+        assert 'v5.10.0' in root.title()
     finally:
         root.destroy()

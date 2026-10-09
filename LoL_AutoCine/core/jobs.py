@@ -169,6 +169,7 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
             raise AudioError(f"LoLゲーム音の準備に失敗しました: {e}") from e
     director = CameraDirector(api, plan)
     rec = ClipRecorder(source, raw_path, fps=tpl.capture_fps)
+    rec.encoder_policy = getattr(tpl, 'encoder_policy', 'auto')
     try:
         rec.start()
         director.start()
@@ -341,7 +342,8 @@ def run_auto_edit(api: ReplayAPI, source: FrameSource, player: Player, kills: li
                 concat_clips(res.outputs, m)
             else:
                 from .montage_fx import render_montage
-                render_montage(res.outputs, m, tpl.montage_fx, logger=log)
+                render_montage(res.outputs, m, tpl.montage_fx, logger=log,
+                               encoder_policy=getattr(tpl, 'encoder_policy', 'auto'))
             res.montage = m
             log(f"モンタージュ保存: {m.name}")
         except Exception as ex:

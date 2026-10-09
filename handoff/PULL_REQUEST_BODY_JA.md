@@ -1,7 +1,11 @@
-文字付きのキル装飾をキラー/犠牲者のチャンピオン肖像ペアへ変更し、同じクリップのキルごとに相手を切り替えるChampionPairFixを統合しました。全プレイヤーをUIスレッドでプレーンdictへ写し、画像/情報欠落・同名曖昧時は装飾を省略。ローカルPNG/公式Data Dragonキャッシュを採用します。
+v5.10.0のホイール誤操作防止、左端シーンチェック、実ナビ/参考URL、キル枠の色/発光/枠幅/6中央マーク、エンコード選択/実績表示/保存を統合しました。auto/gpu/cpuを録画・時間補正・FX・切替モンタージュへ渡し、NVENC録画を開始前に検査、完成素材の失敗は映像/音声/FPSを保ってlibx264へ一度再試行します。途中録画失敗は中断し、失敗/タイムアウトを成功やGPU確認済みと記録しません。
 
-受領フルファイルを上書きせず、前回のeffect_eventsによるスロー時実時間補正、PNGで映像・音声末尾を短くしないshortest=0、旧位置引数とv5.9.9表示を保持。camera/jobs/音声/録画/GPU経路/Native Helperはバイト一致です。装飾はCPU処理でGPU高速化ではありません。
+受領フルファイルで古いGPU処理を上書きせず、effect_eventsの録画実時間補正、shortest=0、曖昧な名前の省略、正式Fiddlesticks ID、同じ画像の失敗取得の重複防止、同時キルの最新ペアを保持。共有jobsは方針受け渡しのみ、camera/音声/Native Helper/GPUフィルター本体は前回とバイト一致。旧位置引数を保持します。
 
-検証: pytest182件、依存・構文・実Gitガード。実Tk→worker→モックAPIで対象固定/HUD復元/UndoRedo/保存/一覧スナップショット。実FFmpegの4装飾/4位置・2ペア相手色切替、1080p/60fps、通常版とAAC完全一致・AV末尾差0、タイトル/BGM併用とGPU失敗模擬CPU再試行を確認。合成肖像を用いた試験で、公式画像の実取得はクラウドの403制限により未検証。模擬通信/オフラインキャッシュは成功。Windows/実LoL/実GPU/Native録音は未検証です。
+検証: pytest209件、依存/構文/実Git担当ガード（旧共有レビューは新jobsを阻止、新レビューで一致）、実Tk再起動14設定とUI→worker→モックAPI、実FFmpeg4装飾/4位置/2ペア/タイトル+BGM/AAC完全一致・AV末尾差0。スマートON/OFF各2クリップ＋モンタージュは1080p/60fps・音声あり。実NVENC拒否→CPU録画/時間補正/FX再試行を確認。Windows/実LoL/実GPU/NVENC成功/Native録音は未確認。公式肖像の実取得はクラウド403で未確認。Bloom/DOFのGPU高速化は未実装です。
 
-ソース218ファイル・全27ブランチbundle、完全版/差分ZIPとSHA256、Windows取得/Git状態/実変更一覧を保存。前回v5.9.9を残す新しいDraft PRで、mainへマージしません。
+ソース226ファイル・全29ブランチbundle、完全版224/差分25ファイルのZIPとSHA256、Windows取得/Git状態/元v5.8.5からの実変更一覧を保存。差分適用後の全ソース一致と個人ファイル除外を確認。前回ChampionPairFixと全旧版を保持するDraft PRで、mainへマージしません。
+
+取得先: https://github.com/Aimin2222/agdhnteweeffewwff/tree/codex/lol-autocine-v5100-handoff （Code → Download ZIP → LoL_AutoCine/START.bat）。Windows取得にPublishは不要。
+
+GitHub保存bundleから別フォルダへ復元し、226ソース/29ローカルブランチ/HEAD一致、依存/構文/Tk/Xvfb/共有ガード、代表87テスト、既存対象へのinstaller再実行を確認。セットアップ/開始手順の環境ドラフト保存と読み戻し一致も確認し、他設定は保持。将来のクラウド反映にだけ設定確認・保存・Publishが必要です。

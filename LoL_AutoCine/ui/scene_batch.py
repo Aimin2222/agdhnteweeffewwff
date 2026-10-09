@@ -108,7 +108,8 @@ def render_scenes(api,source,player,kills,tpl,out_root,make_montage,
                 concat(out.outputs,target)
             else:
                 from core.montage_fx import render_montage
-                render_montage(out.outputs,target, montage_style, concat=concat, logger=log)
+                render_montage(out.outputs,target, montage_style, concat=concat, logger=log,
+                               encoder_policy=getattr(tpl, 'encoder_policy', 'auto'))
             out.montage=target
             log(f'シーン別モンタージュ保存: {target.name}')
         except Exception as e:

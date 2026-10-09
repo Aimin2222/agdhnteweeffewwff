@@ -1,0 +1,13 @@
+# v5.10.0 共有APIレビュー
+
+基準は stable/v5.8.5。v5.9.9のcamera/camera_clock承認を維持し、jobsの承認だけを現在のファイルオブジェクトへ更新する。
+
+前回ChampionPairFixからのjobs差分は、既存ClipRecorder生成後のencoder_policy設定と、render_montageへのencoder_policyキーワード追加のみ。既定はauto。録音準備、LoL専用音声、HUD復元、TargetLock、ClipTake.effect_events、再生時刻の観測・補間、smart_impactの有効化条件は維持する。ClipRecorderコンストラクタの旧呼出形も維持する。
+
+GPU所有ファイルではTemplateの7フィールドと関数引数を末尾へ追加し、旧位置引数を維持。cpu設定は映像エンコードの選択であり、GPUエフェクトを無効化する設定ではない。NVENC選択時のFFmpeg失敗は同じ入力・フィルター・音声map・FPSでlibx264へ一度再試行する。録画は開始前のNVENCプローブでCPUを選べるが、途中の失敗は中断し、失われたフレームを録画し直したことにしない。時間補正が失敗した場合は元動画を保持してエラーを返す。
+
+受領フルファイルからのeffect_events削除、shortest=1への巻き戻し、曖昧な名前の推測は採用しない。Fiddlesticks公式ID補正、同一クリップ内の画像取得失敗の重複防止、同時キル時の最新ペア採用も保持する。カメラ・音声・Native Helper・GPUフィルター本体は前回とバイト一致。
+
+JSONは共有ファイルの正確なblobだけを承認する。旧v5.9.9レビューでは新jobs変更を阻止し、新レビューと統合後の所有ファイル照合で一致を確認する。将来の共有変更・他方ブランチからの変更・古いファイルへの巻き戻しは引き続き阻止する。
+
+検証結果はCODEX_INTEGRATION_RESULTS_v5.10.0_JA.mdを参照。Linux/合成動画/モックAPIによる試験であり、Windows・実LoL・実GPU/NVENC成功・Native録音は未検証。

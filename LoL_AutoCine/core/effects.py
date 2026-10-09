@@ -157,6 +157,13 @@ class Template:
     smart_composition: bool = False  # safer distance/elevation around the locked player
     smart_montage: bool = False  # only smart auto-edit reorders unpinned scenes
     kill_icon_players: list = field(default_factory=list)  # transient replay roster for real champion portraits
+    encoder_policy: str = 'auto'  # video encoding policy; independent of GPU effects
+    kill_frame_color: str = ''
+    kill_glow_color: str = ''
+    kill_glow_enabled: bool = True
+    kill_glow_strength: float = .65
+    kill_frame_width: int = 3
+    kill_mark_style: str = 'auto'
 
     def amp(self) -> float:
         return INTENSITY.get(self.intensity, 1.0)
@@ -544,8 +551,10 @@ def gpu_capabilities() -> dict:
 def gpu_pipeline_status() -> str:
     return gpu_backend_name(detect_gpu())
 
-def encoder_args(fps: int, crf: int = 17) -> list:
-    if gpu_encoder_available():
+def encoder_args(fps: int, crf: int = 17, policy: str = 'auto') -> list:
+    # NVENC on an FFmpeg encoder list does not prove the actual Windows driver
+    # will accept a render. performance_diagnostics retries libx264 on failure.
+    if policy != 'cpu' and gpu_encoder_available():
         # CQ 18 is roughly comparable to CRF 17 for typical game footage while being
         # much faster when NVENC is available.
         return ["-c:v", "h264_nvenc", "-preset", "p5", "-tune", "hq", "-rc", "vbr",
@@ -615,7 +624,10 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
     badge_style = kill_style_normalize(getattr(t, "kill_icon_style", "off"))
     import logging
     badge_entries = (make_event_badges(dst, badge_style, kills, events,
-                     getattr(t,"kill_icon_players",[]), log=logging.getLogger(__name__).warning)
+                     getattr(t,"kill_icon_players",[]), log=logging.getLogger(__name__).warning,
+                     frame_color=t.kill_frame_color, glow_color=t.kill_glow_color,
+                     glow_enabled=t.kill_glow_enabled, glow_strength=t.kill_glow_strength,
+                     border_width=t.kill_frame_width, mark_style=t.kill_mark_style)
                      if badge_style != "off" else [])
     badge_idx = 1 + int(png is not None)
     def add_pair_graph(g):
@@ -671,7 +683,7 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
     cmd += ["-filter_complex", graph + (";" + ag if ag else ""), "-map", "[vout]"]
     if ag:
         cmd += ["-map", "[aout]", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2"]
-    cmd += ["-t", f"{duration:.3f}"] + encoder_args(t.fps) + ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", str(dst)]
+    cmd += ["-t", f"{duration:.3f}"] + encoder_args(t.fps, policy=t.encoder_policy) + ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", str(dst)]
     from .performance_diagnostics import run_render
     pipeline_info = {
         "gpu_backend": gpu_backend_name(caps),
@@ -694,6 +706,9 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
         "kill_icon_scale": getattr(t, "kill_icon_scale", 1.0),
         "kill_icon_duration": getattr(t, "kill_icon_duration", 1.55),
         "kill_icon_opacity": getattr(t, "kill_icon_opacity", 1.0),
+        "encoder_policy": t.encoder_policy,
+        "kill_frame_color": t.kill_frame_color,
+        "kill_mark_style": t.kill_mark_style,
         "video_resolution": "1920x1080",
         "output_fps": t.fps,
         "duration_s": duration,
@@ -730,7 +745,7 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
             cpu_cmd += ["-filter_complex", graph_cpu + (";" + ag2 if ag2 else ""), "-map", "[vout]"]
             if ag2:
                 cpu_cmd += ["-map", "[aout]", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2"]
-            cpu_cmd += ["-t", f"{duration:.3f}"] + encoder_args(t.fps) + ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", str(dst)]
+            cpu_cmd += ["-t", f"{duration:.3f}"] + encoder_args(t.fps, policy=t.encoder_policy) + ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", str(dst)]
             r = run_render(cpu_cmd, output=dst, gpu_effects=[], effect_values=original_effects, fallback_reason="GPU render failed",
                            pipeline_info={**pipeline_info, "gpu_effects_selected": [],
                                           "cpu_video_effects": sorted(k for k,v in original_effects.items() if float(v or 0)>0.001),
@@ -777,7 +792,7 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
                     cpu_cmd += ["-filter_complex", graph_cpu + (";" + agc if agc else ""), "-map", "[vout]"]
                     if agc:
                         cpu_cmd += ["-map", "[aout]", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2"]
-                    cpu_cmd += ["-t", f"{duration:.3f}"] + encoder_args(t.fps) + ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", str(dst)]
+                    cpu_cmd += ["-t", f"{duration:.3f}"] + encoder_args(t.fps, policy=t.encoder_policy) + ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", str(dst)]
                     rr = run_render(cpu_cmd, output=dst, gpu_effects=[], effect_values=original_effects, fallback_reason="color preservation retry",
                                     pipeline_info={**pipeline_info, "gpu_effects_selected": [],
                                                    "filter_graph": graph_cpu})

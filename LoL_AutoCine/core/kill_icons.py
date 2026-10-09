@@ -32,6 +32,40 @@ COLORS = {
     "impact": (255, 122, 125),
 }
 
+MARK_STYLES = {
+    'auto': 'テンプレートに合わせる',
+    'cross': 'シャープX',
+    'slash': '二重斬撃',
+    'swords': '交差する剣',
+    'bolt': '稲妻',
+    'crystal': 'クリスタル',
+}
+REVERSE_MARK_STYLES = {value: key for key, value in MARK_STYLES.items()}
+
+
+def valid_hex(value: str, default: str = '') -> str:
+    """Strict RGB hex validation for user-configurable decoration colours."""
+    import re
+    value = str(value or '').strip()
+    return value.upper() if re.fullmatch(r'#[0-9a-fA-F]{6}', value) else default
+
+
+def normalize_design(frame_color='', glow_color='', glow_enabled=True,
+                     glow_strength=.65, border_width=3, mark_style='auto'):
+    def finite(value, default, minimum, maximum):
+        try:
+            number = float(value)
+            return max(minimum, min(maximum, number)) if math.isfinite(number) else default
+        except (ValueError, TypeError, OverflowError):
+            return default
+    return (valid_hex(frame_color), valid_hex(glow_color), bool(glow_enabled),
+            finite(glow_strength, .65, 0, 1), int(finite(border_width, 3, 1, 8)),
+            mark_style if mark_style in MARK_STYLES else 'auto')
+
+
+def _rgb(hex_color, fallback):
+    return tuple(bytes.fromhex(hex_color[1:])) if hex_color else fallback
+
 
 def normalize(style: str) -> str:
     return str(style) if style in STYLES else "off"
@@ -60,7 +94,9 @@ def _rounded_portrait(canvas, source, xy, radius=11):
     canvas.paste(square, (left,top), mask)
 
 
-def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, victim_icon=None) -> Path:
+def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, victim_icon=None,
+               frame_color='', glow_color='', glow_enabled=True, glow_strength=.65,
+               border_width=3, mark_style='auto') -> Path:
     """A champion x champion graphic. No KILL, x1, count or player names.
 
     Icons must be genuine (local/cache or Riot Data Dragon). If callers cannot
@@ -73,39 +109,57 @@ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, vict
         raise ValueError("Kill decoration is disabled")
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    color = COLORS[style]
+    frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style = normalize_design(
+        frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style)
+    color = _rgb(frame_color, COLORS[style])
+    light_color = _rgb(glow_color, color)
     w,h=385,116
     base=Image.new("RGBA", (w,h), (0,0,0,0))
     glow=Image.new("RGBA", (w,h), (0,0,0,0))
     g=ImageDraw.Draw(glow)
-    if style != "simple":
+    if glow_enabled and glow_strength > 0 and style != 'off':
         for x in (78, 307):
-            g.rounded_rectangle((x-38,16,x+38,100), radius=12, outline=(*color,190), width=9)
-        g.line((169,38,216,79),fill=(*color,185),width=7)
-        g.line((214,38,169,79),fill=(*color,185),width=7)
+            g.rounded_rectangle((x-38,16,x+38,100), radius=12,
+                                outline=(*light_color,int(190*glow_strength)),width=9)
+        g.line((169,38,216,79),fill=(*light_color,int(185*glow_strength)),width=7)
+        g.line((214,38,169,79),fill=(*light_color,int(185*glow_strength)),width=7)
         base=Image.alpha_composite(base,glow.filter(ImageFilter.GaussianBlur(11)))
     d=ImageDraw.Draw(base)
     # Small separated portrait medallions, not a full-width title card.
     for x in (38,267):
-        d.rounded_rectangle((x-4,14,x+80,102), radius=14,fill=(13,19,30,210),outline=(*color,255),width=3)
+        d.rounded_rectangle((x-4,14,x+80,102), radius=14,fill=(13,19,30,210),outline=(*color,255),width=border_width)
     if killer_icon is not None:
         _rounded_portrait(base,killer_icon,(44,24,68))
     if victim_icon is not None:
         _rounded_portrait(base,victim_icon,(273,24,68))
     d=ImageDraw.Draw(base)
     for x in (38,267):
-        d.rounded_rectangle((x-4,14,x+80,102),radius=14,outline=(*color,245),width=2)
+        d.rounded_rectangle((x-4,14,x+80,102),radius=14,outline=(*color,245),width=border_width)
     # Distinctive restrained clash motif, no "x" text or count.
-    if style == "cinema":
+    mark = mark_style if mark_style != 'auto' else {
+        'simple':'cross', 'cinema':'slash', 'neon':'cross', 'impact':'bolt'}[style]
+    if mark == 'slash':
         d.polygon([(171,29),(185,48),(215,83),(201,91),(188,69)],fill=(*color,240))
         d.polygon([(213,29),(199,48),(169,83),(183,91),(196,69)],fill=(255,244,212,232))
-    elif style == "neon":
+    elif mark == 'cross':
         d.line((171,33,213,83),fill=(*color,255),width=5)
         d.line((213,33,171,83),fill=(224,213,255,255),width=5)
         d.ellipse((185,52,199,66),fill=(250,250,255,230))
-    elif style == "impact":
+    elif mark == 'bolt':
         d.polygon([(166,27),(192,52),(219,23),(205,55),(221,88),(192,65),(168,91),(181,58)],fill=(*color,245))
         d.line((166,29,220,88),fill=(255,225,214,240),width=3)
+    elif mark == 'swords':
+        # Compact, symmetric hilts / blades; no copyrighted weapon asset.
+        d.line((172,30,211,83),fill=(*color,255),width=8)
+        d.line((212,30,173,83),fill=(245,246,255,255),width=8)
+        d.line((169,72,184,82),fill=(*color,255),width=5)
+        d.line((199,82,216,71),fill=(245,246,255,255),width=5)
+        d.polygon([(168,26),(178,33),(173,39)],fill=(255,255,255,250))
+        d.polygon([(216,26),(207,33),(212,39)],fill=(255,255,255,250))
+    elif mark == 'crystal':
+        d.polygon([(192,22),(216,58),(192,96),(168,58)],fill=(*color,255))
+        d.polygon([(192,22),(192,96),(181,59)],fill=(244,247,255,205))
+        d.line((168,58,216,58), fill=(255,255,255,225), width=3)
     else:
         d.line((173,35,210,82),fill=(*color,245),width=4)
         d.line((210,35,173,82),fill=(*color,245),width=4)
@@ -191,7 +245,7 @@ def champion_icon(player, *, cache_dir=None, download=True):
         return None
 
 
-def make_event_badges(output: Path, style: str, kills, events, roster, *, icon_lookup=None, log=None):
+def make_event_badges(output: Path, style: str, kills, events, roster, *, icon_lookup=None, log=None, **design):
     """Produce genuine portrait pairs separately for every kill in a clip."""
     entries=[]
     icon_lookup = champion_icon if icon_lookup is None else icon_lookup
@@ -216,7 +270,7 @@ def make_event_badges(output: Path, style: str, kills, events, roster, *, icon_l
             if log:log("キルアイコン: 公式肖像アイコン未取得。ネット接続またはassets/champion_iconsを確認")
             continue
         f=Path(output).with_name(Path(output).stem+f".kill_pair_{len(entries)+1:02d}.png")
-        make_badge(f,style,killer_icon=icon_a,victim_icon=icon_b)
+        make_badge(f,style,killer_icon=icon_a,victim_icon=icon_b,**design)
         entries.append((f,float(event[0])))
     return entries
 

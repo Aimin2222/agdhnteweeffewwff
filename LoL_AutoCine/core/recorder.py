@@ -8,6 +8,7 @@ from __future__ import annotations
 import subprocess
 import threading
 import time
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
@@ -15,6 +16,19 @@ import numpy as np
 
 from .capture import FrameSource, CaptureError
 from .effects import FFMPEG, gpu_encoder_available, encoder_args
+
+
+@lru_cache(maxsize=8)
+def _nvenc_capture_probe(ffmpeg, fps):
+    """Validate the encoder before capture; restarting a partial clip would lose frames."""
+    cmd=[ffmpeg,'-hide_banner','-loglevel','error','-f','lavfi','-i',
+         f'color=s=1920x1080:r={fps}:d=0.1','-frames:v','1','-an',
+         '-c:v','h264_nvenc','-preset','p5','-pix_fmt','yuv420p','-f','null','-']
+    try:
+        result=subprocess.run(cmd,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=8)
+        return result.returncode==0, (result.stderr or '')[-450:]
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return False,str(e)
 
 
 def _fit(frame: np.ndarray, w: int, h: int) -> np.ndarray:
@@ -26,8 +40,10 @@ def _fit(frame: np.ndarray, w: int, h: int) -> np.ndarray:
 
 
 class ClipRecorder:
-    def __init__(self, source: FrameSource, out_path: Path, fps: int = 60, crf: int = 14):
+    def __init__(self, source: FrameSource, out_path: Path, fps: int = 60, crf: int = 14,
+                 encoder_policy: str = 'auto'):
         self.src, self.out, self.fps, self.crf = source, Path(out_path), fps, crf
+        self.encoder_policy = encoder_policy
         self._proc: Optional[subprocess.Popen] = None
         self._th: Optional[threading.Thread] = None
         self._stop = threading.Event()
@@ -38,6 +54,8 @@ class ClipRecorder:
         self.started_perf = 0.0
         self.wall_duration = 0.0
         self._stderr_tail = ""
+        self.encoder_fallback_reason = None
+        self._command = []
 
     def start(self) -> None:
         fr = self.src.latest()
@@ -47,7 +65,14 @@ class ClipRecorder:
         w, h = w - (w % 2), h - (h % 2)
         self.w, self.h = w, h
         self.out.parent.mkdir(parents=True, exist_ok=True)
-        if gpu_encoder_available():
+        use_nvenc = self.encoder_policy != 'cpu' and gpu_encoder_available()
+        if use_nvenc:
+            use_nvenc, reason = _nvenc_capture_probe(FFMPEG, self.fps)
+            if not use_nvenc:
+                self.encoder_fallback_reason = 'NVENC録画プローブ失敗 → CPUで録画: ' + reason
+                import logging
+                logging.getLogger(__name__).warning(self.encoder_fallback_reason)
+        if use_nvenc:
             enc = ["-c:v", "h264_nvenc", "-preset", "p5", "-tune", "hq", "-rc", "vbr",
                    "-cq", "18", "-b:v", "0"]
         else:
@@ -58,6 +83,7 @@ class ClipRecorder:
                "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{w}x{h}", "-framerate", str(self.fps), "-i", "-",
                "-vf", "scale=1920:1080:flags=lanczos",
                *enc, "-pix_fmt", "yuv420p", "-r", str(self.fps), "-vsync", "cfr", str(self.out)]
+        self._command = cmd
         try:
             self._proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
         except OSError as e:
@@ -130,8 +156,11 @@ class ClipRecorder:
         # setpts=PTS/ratio: actual/target が 8 なら 8倍長くして正しい実時間へ戻す。
         cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error", "-i", str(self.out),
                "-vf", f"setpts=PTS/{ratio:.9f}", "-an",
-               *encoder_args(self.fps, self.crf), str(tmp)]
-        r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120)
+               *encoder_args(self.fps, self.crf, policy=self.encoder_policy), str(tmp)]
+        from .performance_diagnostics import run_render
+        r = run_render(cmd,output=tmp,gpu_effects=[],effect_values={},timeout=120,
+                       pipeline_info={'stage':'timing_normalization','encoder_policy':self.encoder_policy,
+                                      'output_fps':self.fps,'duration_s':target})
         if r.returncode == 0 and tmp.exists() and tmp.stat().st_size > 0:
             tmp.replace(self.out)
             self._timing_fixed = True
@@ -140,6 +169,7 @@ class ClipRecorder:
                 tmp.unlink()
             except OSError:
                 pass
+            raise CaptureError('録画時間の補正に失敗しました: ' + (r.stderr or '')[-500:])
 
     def stop(self) -> float:
         """録画停止。戻り値は録画秒数。"""
@@ -156,9 +186,19 @@ class ClipRecorder:
                 self._proc.wait(timeout=30)
             except subprocess.TimeoutExpired:
                 self._proc.kill()
+                self._proc.wait()
+                self.error = self.error or '録画FFmpegの終了がタイムアウトしました。'
             if self._proc.returncode not in (0, None) and not self.error:
                 err = self._proc.stderr.read().decode("utf-8", "replace")[-800:] if self._proc.stderr else ""
                 self.error = f"ffmpeg 異常終了: {err}"
+        from .performance_diagnostics import record_encoding_result
+        record_encoding_result(self._command,output=self.out,
+                               returncode=getattr(self._proc,'returncode',None),
+                               error=self.error or ('録画フレームなし' if self.frames<=0 else None),
+                               fallback_reason=self.encoder_fallback_reason,
+                               pipeline_info={'stage':'capture','encoder_policy':self.encoder_policy,
+                                              'cpu_video_effects':['scale'],'output_fps':self.fps,
+                                              'duration_s':self.wall_duration})
         if self.error:
             raise CaptureError(self.error)
         if self.frames <= 0:
