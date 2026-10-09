@@ -1,5 +1,7 @@
 # LoL AutoCine v5.9.9 ChampionPairFixをWindowsへ取得
 
+保存先: [Draft PR #11](https://github.com/Aimin2222/agdhnteweeffewwff/pull/11)。mainへマージしていません。
+
 GitHubの `codex/lol-autocine-v599-champion-pair-handoff` ブランチで **Code → Download ZIP**。旧版は別フォルダへ保管し、新しいフォルダへ展開して **LoL_AutoCine/START.bat** を起動してください。
 
 `handoff/LoL_AutoCine_v5.9.9_ChampionPairFix_Windows_Full.zip` は起動用完全版です。GitHubでこのファイルを開いて **Download raw file** でも取得できます。`ChampionPairFix_Codex_MergeChanges.zip` は前回v5.9.9基準の統合用差分で単体起動用ではありません。Windows取得にmainマージ・環境Publishは不要です。
@@ -33,3 +35,11 @@ git branch --all
 画像の初回取得は `ddragon.leagueoflegends.com` への接続が必要です。キャッシュは `%LOCALAPPDATA%/LoL_AutoCine/champion_icons`。ネットなしでは `assets/champion_icons/<ChampionID>.png` に公式PNGを置けます。未取得時は該当装飾を省略します。
 
 詳細はLoL_AutoCine/docs/CODEX_CHAMPION_PAIR_RESULTS_v5.9.9_JA.md。Git状態・実差分はSOURCE_GIT_REPORT_JA.md、ハッシュ/枝一覧はMANIFEST.jsonとSHA256SUMS.txt。比較先は前回codex/lol-autocine-v599-handoff。mainへマージしません。
+
+## クラウド復元の確認
+
+GitHub保存済みbundleから別フォルダへソース218ファイルと全27ローカルブランチを復元し、一致を確認しました。依存・構文・Tk/Xvfb・共有ガード、代表76テストが成功。既存フォルダへのinstaller再実行も成功し、未コミットの変更はありません。新しいクラウドタスクの起動そのものは別の確認になります。
+
+完全版/差分ZIPは保存済みソースに一致します。単体GitとGitHub取得用構成の双方でパッケージ作成を確認し、差分パッチ適用後の218ソース一致も確認しました。
+
+公式画像の接続許可は環境設定ドラフトへddragon.leagueoflegends.comを追加します。設定保存は現在の403解消や実取得成功を意味しません。Windowsの取得/使用に環境Publishは不要です。
