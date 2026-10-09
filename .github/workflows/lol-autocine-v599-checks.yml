@@ -1,9 +1,9 @@
-name: LoL AutoCine v5.9.9 regression checks
+name: LoL AutoCine v5.9.9.1 regression checks
 
 on:
   push:
     branches:
-      - autocine/v5.9.9-chatgpt
+      - autocine/v5.9.9.1-chatgpt
   workflow_dispatch:
 
 permissions:
@@ -31,8 +31,8 @@ jobs:
           pip install -r requirements.txt pytest
       - name: Compile all Python sources
         run: python -m compileall -q .
-      - name: Run v5.9.9 new tests under virtual display
-        run: xvfb-run -a python -m pytest -q tests/test_v599_automontage_killbadges.py
+      - name: Run v5.9.9.1 new tests under virtual display
+        run: xvfb-run -a python -m pytest -q tests/test_v599_automontage_killbadges.py tests/test_v5991_champion_portraits.py
       - name: Run full existing regression suite
         run: xvfb-run -a python -m pytest -q tests
       - name: Fetch stable v5.9.8 integration base
@@ -42,22 +42,22 @@ jobs:
       - name: Upload Windows full ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: LoL_AutoCine_v5.9.9_Windows_Full
-          path: dist/LoL_AutoCine_v5.9.9_Windows_Full.zip
+          name: LoL_AutoCine_v5.9.9.1_Windows_Full
+          path: dist/LoL_AutoCine_v5.9.9.1_Windows_Full.zip
           if-no-files-found: error
       - name: Upload Codex integration ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: LoL_AutoCine_v5.9.9_Codex_MergeChanges
-          path: dist/LoL_AutoCine_v5.9.9_Codex_MergeChanges.zip
+          name: LoL_AutoCine_v5.9.9.1_Codex_MergeChanges
+          path: dist/LoL_AutoCine_v5.9.9.1_Codex_MergeChanges.zip
           if-no-files-found: error
       - name: Publish ZIP downloads on dedicated generated branch
         working-directory: .
         run: |
           git config user.name "AutoCine build bot"
           git config user.email "autocine-build@users.noreply.github.com"
-          mkdir -p builds/v5.9.9
-          cp dist/*.zip dist/SHA256SUMS.txt builds/v5.9.9/
-          git add -f builds/v5.9.9
-          git commit -m "build: publish tested v5.9.9 full and Codex ZIPs"
-          git push --force origin HEAD:refs/heads/autocine/v5.9.9-bundles
+          mkdir -p builds/v5.9.9.1
+          cp dist/*.zip dist/SHA256SUMS.txt builds/v5.9.9.1/
+          git add -f builds/v5.9.9.1
+          git commit -m "build: publish tested v5.9.9.1 full and Codex ZIPs"
+          git push --force origin HEAD:refs/heads/autocine/v5.9.9.1-bundles
