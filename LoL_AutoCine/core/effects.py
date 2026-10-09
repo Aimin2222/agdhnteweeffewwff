@@ -150,6 +150,10 @@ class Template:
     smart_highlight_style: str = "auto"
     highlight_pulse: float = 0.0  # kill-timed accent, legacy graph unchanged when zero
     kill_icon_style: str = "off"  # off/simple/cinema/neon/impact
+    kill_icon_position: str = "right-top"
+    kill_icon_scale: float = 1.0
+    kill_icon_duration: float = 1.55
+    kill_icon_opacity: float = 1.0
     smart_composition: bool = False  # safer distance/elevation around the locked player
     smart_montage: bool = False  # only smart auto-edit reorders unpinned scenes
 
@@ -618,7 +622,10 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
     try:
         graph = build_graph(t, duration, png is not None, pre_filters=pre, effect_events=events)
         if badge_png is not None:
-            graph = with_badge(graph, badge_idx, events, duration=duration)
+            graph = with_badge(graph, badge_idx, events, duration=duration,
+                                    position=t.kill_icon_position, scale=t.kill_icon_scale,
+                                    seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
+                                    style=badge_style)
     finally:
         t.video_effects = original_effects
     cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error"]
@@ -667,6 +674,10 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
         "dof_blur_level": t.dof_blur if t.dof_enabled else 0,
         "filter_graph": graph,
         "kill_icon_style": badge_style,
+        "kill_icon_position": getattr(t, "kill_icon_position", "right-top"),
+        "kill_icon_scale": getattr(t, "kill_icon_scale", 1.0),
+        "kill_icon_duration": getattr(t, "kill_icon_duration", 1.55),
+        "kill_icon_opacity": getattr(t, "kill_icon_opacity", 1.0),
         "video_resolution": "1920x1080",
         "output_fps": t.fps,
         "duration_s": duration,
@@ -682,7 +693,10 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
         try:
             graph_cpu = build_graph(t, duration, png is not None, pre_filters=scale, effect_events=events)
             if badge_png is not None:
-                graph_cpu = with_badge(graph_cpu, badge_idx, events, duration=duration)
+                graph_cpu = with_badge(graph_cpu, badge_idx, events, duration=duration,
+                                    position=t.kill_icon_position, scale=t.kill_icon_scale,
+                                    seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
+                                    style=badge_style)
             cpu_cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error", "-i", str(src)]
             idx2 = 1
             if png is not None:
@@ -732,7 +746,10 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
                 try:
                     graph_cpu = build_graph(t, duration, png is not None, pre_filters=scale, effect_events=events)
                     if badge_png is not None:
-                        graph_cpu = with_badge(graph_cpu, badge_idx, events, duration=duration)
+                        graph_cpu = with_badge(graph_cpu, badge_idx, events, duration=duration,
+                                    position=t.kill_icon_position, scale=t.kill_icon_scale,
+                                    seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
+                                    style=badge_style)
                     cpu_cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error", "-i", str(src)]
                     idxc = 1
                     if png is not None:
