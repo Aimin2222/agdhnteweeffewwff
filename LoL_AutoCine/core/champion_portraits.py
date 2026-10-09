@@ -166,8 +166,14 @@ def portrait_for_event(event_name: str, roster: list[Player] | None,
     if not champion_id:
         return None
     stored = cache / f"{champion_id}.png"
-    if stored.is_file() and stored.stat().st_size > 400:
-        return stored
+    if stored.is_file() and stored.stat().st_size > 64:
+        try:
+            from PIL import Image
+            with Image.open(stored) as image:
+                image.verify()
+            return stored
+        except (OSError, ValueError):
+            stored.unlink(missing_ok=True)  # Corrupt cache can be downloaded again.
     version = _version(cache)
     if not version:
         return None
