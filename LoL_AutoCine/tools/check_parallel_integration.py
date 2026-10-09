@@ -33,7 +33,7 @@ SHARED_FILES = {"core/jobs.py", "core/camera.py", "core/camera_clock.py", "core/
                 "core/scanner.py", "app.py", "requirements.txt",
                 "core/procloop.py", "core/audio_worker.py", "core/capture.py",
                 "core/capture_process.py", "core/capture_worker.py"}
-INFRA_FILES = {"tools/check_parallel_integration.py", "tests/test_parallel_integration.py", "tools/package_v599.py", "tools/package_v5100.py", "tools/package_v5101.py", "tools/package_v5103.py", "tools/package_v5103_hangfix.py", "tools/package_v5103_gpu.py", "tools/package_v5103_capturefix.py"}
+INFRA_FILES = {'tools/package_v5103.py', 'tools/package_v5103_capturefix.py', 'tools/package_v599.py', 'tools/package_v5100.py', 'tools/package_v5103_gpu.py', 'tools/package_v5103_hangfix.py', 'tests/test_parallel_integration.py', 'tools/package_v5103_mirrorfix.py', 'tools/package_v5101.py', 'tools/check_parallel_integration.py'}
 
 
 def owner(path: str) -> str:

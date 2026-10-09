@@ -147,6 +147,18 @@ class CaptureSession:
                 code = self.process.poll()
                 if code is not None:
                     self.error = f'画面キャプチャの別プロセスが終了しました (code={code})'
+                    # Show the native exception, not only the child exit code.
+                    try:
+                        with self.error_path.open('rb') as log:
+                            log.seek(0, 2)
+                            log.seek(max(0, log.tell() - 4096))
+                            lines = log.read().decode('utf-8', 'replace').splitlines()
+                        for line in reversed(lines):
+                            if line.startswith('Exception:') or 'Error: ' in line and not line.startswith(' '):
+                                self.error += ': ' + line[:500]
+                                break
+                    except OSError:
+                        pass
                     self.source.running = False
                     with self.source._lock:
                         self.source._frame = None
