@@ -13,7 +13,7 @@ from core.effects import Template
 def test_v596_positional_template_fields_are_preserved():
     previous = Template(fog_enabled=True, scene_keyframes=[{'time': 0, 'yaw': 8}])
     names = [f.name for f in fields(Template)
-             if f.name not in {'montage_fx', 'smart_highlight_enabled', 'smart_highlight_style', 'highlight_pulse'}]
+             if f.name not in {'montage_fx', 'smart_highlight_enabled', 'smart_highlight_style', 'highlight_pulse'} | {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration', 'kill_icon_opacity', 'smart_composition', 'smart_montage'}]
     restored = Template(*(getattr(previous, name) for name in names))
     assert restored.fog_enabled
     assert restored.scene_keyframes == previous.scene_keyframes
