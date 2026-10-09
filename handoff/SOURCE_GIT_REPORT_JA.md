@@ -1,58 +1,42 @@
-# AutoCine v5.10.3 ソースGit報告
+# AutoCine v5.10.3 応答停止対策版 Git報告
 
-保存場所: /workspace/LoL_AutoCine
-取得用リポジトリ: /workspace/agdhnteweeffewwff
-ソースはローカルGitでremoteなし。取得用origin: https://github.com/Aimin2222/agdhnteweeffewwff.git
+ソース保存先: /workspace/LoL_AutoCine
+取得用保存先: /workspace/agdhnteweeffewwff
+ソースはローカルGit（remoteなし）。取得用originはhttps://github.com/Aimin2222/agdhnteweeffewwff.git。
 
 ## git status --short
 
-空（未コミットの変更なし。更新前にソース/取得用を確認）。ソースの.venv、設定、プロジェクト、診断、生成distは無視されたローカルファイルで、配布物には含めない。今回の確定配布物はhandoff以下のv5.10.3 ZIP。
+ソース・取得用とも更新開始前は空。最終コミット/push後も空を検証。無視ファイル（.venv/個人設定/プロジェクト/診断/生成dist）はローカルに保持し配布しない。
 
-## git log -3 --oneline
+## ソースgit log -3 --oneline
 
 ```
-9dc795d Merge branch 'feature/gpu-engine' into integration/v5.10.3
-fc62d60 Remove extra trailing blank line in focus renderer
-205c706 Document v5.10.3 integration and add reproducible v5.10.1-based packages
+c19c467 Record safe shutdown lifetime of display check workers
+9670d7d Merge branch 'feature/ui-dispatch-hangfix-v5103' into integration/v5.10.3-hangfix
+8f19493 Keep background display checks independent of Tk object lifetime
 ```
 
 ## git remote -v
 
-ソース: 空。取得用:
+ソースは空。取得用:
 ```
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-完全ソース240ファイル/Python86ファイル・全33ブランチをbundleで保持。mainへマージしない。
+ソース243ファイル/Python88・全35ブランチをbundle保存。core以下・Native Helper・START.batは前回とバイト一致。mainへマージしない。
 
-## 前回v5.10.1から実際に追加・変更したファイル
+## 元v5.10.3からの実変更一覧
 
 ```
-A	README_v5.10.3_JA.md
-M	VERSION.txt
-M	core/effects.py
-A	core/focus_fx.py
-M	core/preview.py
-A	docs/CODEX_INTEGRATION_RESULTS_v5.10.3_JA.md
+A	docs/CODEX_ALL_SCENES_HANG_FIX_v5.10.3_JA.md
 M	legacy_app.py
-M	tests/test_gpu_champion_pair_v599.py
-A	tests/test_gpu_circle_focus_v5103.py
-A	tests/test_gpu_dof_only_v5103.py
-M	tests/test_gpu_encoding_safety_v510.py
-M	tests/test_gpu_highlight_v598.py
-M	tests/test_gpu_killbadges_v599.py
-M	tests/test_gpu_montage_v597.py
-M	tests/test_gpu_shared_camera_contract.py
-M	tests/test_parallel_integration.py
-A	tests/test_v5102_circle_focus_preset.py
-M	tests/test_v599_automontage_killbadges.py
+A	tests/test_v5103_nonblocking_dispatch.py
 M	tools/check_parallel_integration.py
-A	tools/package_v5103.py
-M	ui/studio_localization.py
+A	tools/package_v5103_hangfix.py
 ```
 
-## 元のv5.8.5から実際に追加・変更したファイル
+## 元v5.8.5からの実変更一覧
 
 ```
 A	README_v5.10.0_JA.md
@@ -88,6 +72,7 @@ A	docs/CHANGELOG_v5.9.4_JA.md
 A	docs/CHANGELOG_v5.9.5_JA.md
 A	docs/CHANGELOG_v5.9.6_JA.md
 A	docs/CHANGELOG_v5.9.7_JA.md
+A	docs/CODEX_ALL_SCENES_HANG_FIX_v5.10.3_JA.md
 A	docs/CODEX_ARCHITECTURE_JA.md
 A	docs/CODEX_AUDIT_RESULTS_JA.md
 A	docs/CODEX_CHAMPION_PAIR_RESULTS_v5.9.9_JA.md
@@ -172,6 +157,7 @@ A	tests/test_scene_studio.py
 A	tests/test_scene_studio_gui.py
 A	tests/test_v5101_scroll_check_warmup.py
 A	tests/test_v5102_circle_focus_preset.py
+A	tests/test_v5103_nonblocking_dispatch.py
 A	tests/test_v510_ui_gpu_killframe.py
 A	tests/test_v593_mode_camera.py
 A	tests/test_v594_live_preview.py
@@ -185,6 +171,7 @@ A	tools/check_parallel_integration.py
 A	tools/package_v5100.py
 A	tools/package_v5101.py
 A	tools/package_v5103.py
+A	tools/package_v5103_hangfix.py
 A	tools/package_v599.py
 A	ui/__init__.py
 A	ui/highlight_director.py

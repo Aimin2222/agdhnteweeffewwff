@@ -417,6 +417,10 @@ class App:
         self.q: queue.Queue = queue.Queue()
         self.stop_ev = threading.Event()
         self.busy = False
+        self._closing = False
+        self._status_refresh_pending = False
+        self._gpu_refresh_pending = False
+        self._status_poll_token = None
         self._photo = None
         self._checked_watchdog_active = False
         self.out_root = Path(os.path.expanduser("~")) / "Videos" / "LoL_AutoCine"
@@ -1816,6 +1820,10 @@ class App:
 
     def on_close(self) -> None:
         """アプリ終了時に録画/ミラー用リソースを安全に止めてから終了する。"""
+        self._closing = True
+        if self._status_poll_token is not None:
+            self.root.after_cancel(self._status_poll_token)
+            self._status_poll_token = None
         try:
             self.stop_ev.set()
             if self.source is not None:
@@ -1868,6 +1876,14 @@ class App:
                         self.on_scene_selection()
                 elif kind == "status":
                     self._refresh_status()
+                elif kind == "status_ready":
+                    self._status_refresh_pending = False
+                    self.lbl_status.configure(text=a[0])
+                    self._schedule_status_poll()
+                elif kind == "gpu_status_ready":
+                    self._gpu_refresh_pending = False
+                    self.lbl_gpu.configure(text=a[0])
+                    self.lbl_gpu_latest.configure(text=a[1])
                 elif kind == "busy":
                     self.busy = a[0]
                     if not self.busy:
@@ -1913,17 +1929,43 @@ class App:
         self.root.after(80, self._pump)
 
     def _refresh_status(self) -> None:
-        up = self.api.is_up()
-        cfg_ok = False
-        if self.lol_dir:
-            cfg_ok = paths.replay_api_enabled(paths.game_cfg_path(self.lol_dir))
-        self.lbl_status.configure(
-            text=f"LoL: {self.lol_dir or '未検出'}   |   Replay API設定: {'OK' if cfg_ok else '未設定'}   |   "
-                 f"接続: {'OK' if up else '待機中 (リプレイ再生で自動接続)'}   |   映像入力: LoLウィンドウのみ")
-        self.root.after(5000, self._refresh_status_safe)
+        # The recorder uses the same API lock. Never wait for it on the Tk thread.
+        if self._closing or self._status_refresh_pending:
+            return
+        if self._status_poll_token is not None:
+            self.root.after_cancel(self._status_poll_token)
+            self._status_poll_token = None
+        self._status_refresh_pending = True
+        # Do not keep App/Tk variables alive on the probing thread after close.
+        api, lol_dir, result_queue = self.api, self.lol_dir, self.q
+
+        def collect():
+            try:
+                up = api.is_up()
+                cfg_ok = bool(lol_dir and paths.replay_api_enabled(paths.game_cfg_path(lol_dir)))
+                text = (f"LoL: {lol_dir or '未検出'}   |   Replay API設定: {'OK' if cfg_ok else '未設定'}   |   "
+                        f"接続: {'OK' if up else '待機中 (リプレイ再生で自動接続)'}   |   映像入力: LoLウィンドウのみ")
+            except Exception as e:
+                text = f"接続状態: 確認できません ({type(e).__name__})"
+            result_queue.put(("status_ready", text))
+
+        try:
+            threading.Thread(target=collect, daemon=True, name="AutoCine-connection-status").start()
+        except Exception as e:
+            self._status_refresh_pending = False
+            self.log(f"接続状態の確認を開始できません: {e}")
+            self._schedule_status_poll()
+
+    def _schedule_status_poll(self) -> None:
+        if self._closing:
+            return
+        if self._status_poll_token is not None:
+            self.root.after_cancel(self._status_poll_token)
+        self._status_poll_token = self.root.after(5000, self._refresh_status_safe)
 
     def _refresh_status_safe(self) -> None:
-        threading.Thread(target=lambda: self.q.put(("status",)), daemon=True).start()
+        self._status_poll_token = None
+        self._refresh_status()
 
     def _pick(self, var: tk.StringVar, ft: list) -> None:
         p = filedialog.askopenfilename(filetypes=ft)
@@ -2458,12 +2500,24 @@ class App:
                 (ROOT / "diagnostics" / "last_error.txt").write_text(traceback.format_exc(), encoding="utf-8")
                 _diag_write(RUN_LOG, f"BG_STAGE worker_error fn={name}: {type(e).__name__}: {e}")
             finally:
+                if self._checked_watchdog_active:
+                    try:
+                        faulthandler.cancel_dump_traceback_later()
+                    except Exception:
+                        pass
+                    self._checked_watchdog_active = False
                 _diag_write(RUN_LOG, f"BG_STAGE worker_finally fn={name}")
                 self.q.put(("busy", False))
         try:
             threading.Thread(target=w, daemon=True, name=f"AutoCine-{name}").start()
         except Exception as e:
             self.busy = False
+            if self._checked_watchdog_active:
+                try:
+                    faulthandler.cancel_dump_traceback_later()
+                except Exception:
+                    pass
+                self._checked_watchdog_active = False
             self.q.put(("busy", False))
             _diag_write(CRASH_LOG, f"BG_THREAD_START_ERROR {name}: {e}")
             raise
@@ -2638,17 +2692,32 @@ class App:
         return t
 
     def _refresh_gpu_status(self) -> None:
-        try:
-            ok = bool(gpu_encoder_available())
-            if hasattr(self, "lbl_gpu"):
-                self.lbl_gpu.configure(text=("FFmpeg NVENC登録あり" if ok else "FFmpeg NVENC未検出") +
-                                       " / " + gpu_pipeline_status() + " / プレビューCPU合成")
-            if hasattr(self, 'lbl_gpu_latest'):
+        # FFmpeg enumeration/OpenCL probes and history I/O may take seconds.
+        # Queue plain strings; only _pump touches Tk widgets.
+        if self._closing or self._gpu_refresh_pending:
+            return
+        self._gpu_refresh_pending = True
+        result_queue = self.q
+
+        def collect():
+            try:
+                ok = bool(gpu_encoder_available())
+                text = (("FFmpeg NVENC登録あり" if ok else "FFmpeg NVENC未検出") +
+                        " / " + gpu_pipeline_status() + " / プレビューCPU合成")
+            except Exception as e:
+                text = f"GPU状態: 判定できません ({type(e).__name__})"
+            try:
                 from core.performance_diagnostics import latest_render_summary
-                self.lbl_gpu_latest.configure(text=latest_render_summary())
+                latest = latest_render_summary()
+            except Exception as e:
+                latest = f"書き出し履歴: 読み込めません ({type(e).__name__})"
+            result_queue.put(("gpu_status_ready", text, latest))
+
+        try:
+            threading.Thread(target=collect, daemon=True, name="AutoCine-gpu-status").start()
         except Exception as e:
-            if hasattr(self, "lbl_gpu"):
-                self.lbl_gpu.configure(text=f"GPU状態: 判定できません ({type(e).__name__})")
+            self._gpu_refresh_pending = False
+            self.log(f"GPU状態の確認を開始できません: {e}")
 
     def _apply_panel_widths(self) -> None:
         try:
@@ -2960,12 +3029,35 @@ class App:
         return src, True
 
     def on_make_clips(self) -> None:
+        _diag_write(RUN_LOG, "ALL_STAGE click_enter")
+        if self.busy:
+            _diag_write(RUN_LOG, "ALL_STAGE already_busy")
+            messagebox.showinfo(APP, "別の処理を実行中です。")
+            return
         if not self._need_lock():
             return
         if not self.kills:
             messagebox.showinfo(APP, "先に全編スキャンを実行してください。")
             return
-        self._run_bg(self._make, False, self.current_template(), bool(self.var_montage.get()), "キル", *self._scene_render_config())
+        try:
+            _diag_write(RUN_LOG, f"ALL_STAGE template_begin count={len(self.kills)}")
+            template = self.current_template()
+            montage = bool(self.var_montage.get())
+            scene_config = self._scene_render_config()
+            _diag_write(RUN_LOG, "ALL_STAGE template_ready")
+            if _fatal_fp is not None:
+                try:
+                    faulthandler.dump_traceback_later(35, repeat=True, file=_fatal_fp)
+                    self._checked_watchdog_active = True
+                except Exception:
+                    pass
+            self.lbl_job.configure(text=f"全検出シーン {len(self.kills)} 件: 開始準備中…")
+            _diag_write(RUN_LOG, "ALL_STAGE enqueue_worker")
+            self._run_bg(self._make, False, template, montage, "キル", *scene_config)
+            _diag_write(RUN_LOG, "ALL_STAGE queued")
+        except Exception:
+            _diag_write(CRASH_LOG, "ALL_CALLBACK_ERROR\n" + traceback.format_exc())
+            self.log("一括作成の開始に失敗しました。設定の数値と diagnostics/crash.log を確認してください。")
 
     def _set_camera_motion(self, profile: str, arc: float, dolly: float) -> None:
         """UI-only: set the existing camera engine parameters, never overwrite target lock."""
@@ -3012,6 +3104,7 @@ class App:
               scene_mode=False, shots=None, auto=False, order=None) -> None:
         # Tk変数はUIスレッドで読み取り済み (tpl/montage は引数で受け取る)
         _diag_write(RUN_LOG, f"\n===== ALL_KILL_BEGIN {time.strftime('%Y-%m-%d %H:%M:%S')} player={getattr(self.locked, 'name', '?')} =====")
+        _diag_write(RUN_LOG, "ALL_STAGE worker_enter")
         p = self.locked                      # ジョブ開始時に固定 (UI選択が変わっても影響しない)
         if scan_first:
             self._scan(event_mode)
@@ -3019,7 +3112,9 @@ class App:
             self.log("対象プレイヤーのキルがありません。")
             return
         try:
+            _diag_write(RUN_LOG, "ALL_STAGE capture_start")
             src, own = self._ensure_source()
+            _diag_write(RUN_LOG, f"ALL_STAGE capture_ready own={own}")
         except CaptureError as e:
             self.log(f"映像入力エラー: {e}")
             return
@@ -3029,8 +3124,10 @@ class App:
             if tpl.game_audio:
                 factory = (lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else (lambda path: PreferredGameAudio(path))
             try:
+                _diag_write(RUN_LOG, "ALL_STAGE render_begin")
                 res = self._render_with_optional_scene_mode(src, p, list(self.kills), tpl, montage, factory,
                                                             scene_mode, shots or {}, auto, order)
+                _diag_write(RUN_LOG, f"ALL_STAGE render_complete outputs={len(res.outputs)} failed={len(res.failed)}")
             except Exception as e:
                 # 全キル処理全体の例外をUI/プロセスへ漏らさず、診断情報を残す。
                 self.log(f"全キル作成を安全停止: {type(e).__name__}: {e}")
