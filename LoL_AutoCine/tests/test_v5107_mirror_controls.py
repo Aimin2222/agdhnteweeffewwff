@@ -55,7 +55,7 @@ def test_full_resize_is_done_before_tk_upload_and_items_are_reused(app, monkeypa
     assert app._live_preview.result(key) is not None
     image, original = app._live_preview.result(key)[1]
     assert image.size == (cw, ch)
-    assert original.shape[:2] == (360, 640)
+    assert original.shape[:2] == (900, 1600)  # Full-resolution visible mirror requested in v5.10.8
     main = threading.get_ident()
     resize = Image.Image.resize
     def checked_resize(*args, **kw):
