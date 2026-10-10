@@ -81,6 +81,10 @@ def scan_kills(
             if key not in seen:
                 seen[key] = e
                 all_events.append(e)
+            elif len(e.get("Assisters", []) or []) > len(seen[key].get("Assisters", []) or []):
+                # Some replay events acquire their full assister list after
+                # the first poll. Refresh an existing event without duplicating it.
+                seen[key].update(e)
 
     mode = event_mode if event_mode in ("kill", "assist", "both") else "kill"
 
