@@ -1,37 +1,34 @@
-# v5.10.6 GPU FullをWindowsで取得する
+# v5.10.7 ミラー設定操作・GPUテスト起動修正版
 
-GitHubの `codex/lol-autocine-v5106-gpu-full-handoff` ブランチで **Code → Download ZIP**。旧版と別フォルダへ展開し、**LoL_AutoCine/START_GPU.bat** を実行してください。mainのマージやクラウド環境PublishはWindowsの取得/起動に不要です。
+GitHubの `codex/lol-autocine-v5107-mirror-test-handoff` ブランチで **Code → Download ZIP**。旧版と別フォルダへ展開し、**LoL_AutoCine/START_GPU.bat** を実行してください。mainのマージやクラウド環境PublishはWindowsの取得/起動に不要です。
 
-完全版ZIPを `handoff/LoL_AutoCine_v5.10.6_GPUFull_Windows_Full.zip` で開いて **Download raw file** でも取得できます。MergeChangesは前回v5.10.5基準のGitパッチです。古いGPUファイルを上書きしないでください。
+完全版ZIPを `handoff/LoL_AutoCine_v5.10.7_MirrorFix_Windows_Full.zip` で開いて **Download raw file** でも取得できます。MergeChangesは前回GPU Full v5.10.6基準のGitパッチです。古いGPUファイルを上書きしないでください。
 
-色/LUT/カーブ・全22演出・時間ブラー・DOF（円/帯）・Bloom・周辺減光・粒子・枠/フォグ・BPM/キルアクセント・タイトル/キル画像合成をOpenCL GPUへ対応。加工前60fps選択、主映像のOpenCL転送各1回、PNGのGPU再利用、対応素材のNVDEC、NVENCへのRGBA入力を追加しました。GPU/形式/色保持に問題があれば同じCPU経路へ再試行します。
+今回の受領診断では16回すべて、OpenCL GPUによる映像加工・NVDEC・NVENC・1080p/60fpsで成功しています。GPUテスト6ケースの実行結果は診断に含まれませんでした。ミラー表示はCPU合成です。
 
-受領ホットフィックスの録画後カメラ復帰とホバーを統合。滑らかなミラーUI、クリック説明、三人称TargetLock、LoL専用音声、カメラ144Hz/動画60fpsは維持。CPUは音声・UI・制御・ファイル・GPU入口の形式変換・ミラー簡易合成に残ります。全CPU負荷を0にするものではありません。
+ミラー用の縮小を高速化し、画面サイズへの拡大をワーカーへ移動。Canvas描画itemを再利用し、テンプレートは値変更時に再取得。スライダー/色/タブ/スクロール操作中はミラーだけ約6fpsへ抑え、操作後に通常頻度へ戻します。書き出し品質/FPS、三人称TargetLock、LoL専用音声、GPU Full処理は維持しています。
 
-全pytest348件成功、失敗/skipなし。CPU PoCL上のシェーダーで色の平均誤差0.52～1.10/255、時間履歴誤差最大1.5/255、60fpsフレーム数、装飾表示/消去時刻、全演出を確認。実FFmpegで144fps→加工60fps、音声offset/mux、GPUモンタージュと音声copyを確認。これはLinuxでの検証で、Windows/NVIDIA実機の速度・ドライバ相性は未検証です。
+TEST_GPU_RENDERは通常アプリと同じpy -3を優先し、存在しないWindows用.venvを必須にしません。Python選択/終了コード、エンジンimportより前の起動状態、例外/キャンセル/完了を診断へ保存してコンソールに表示し、最後はpauseします。受領UI差分からRED側Orbitの向き、キル＋アシスト、ガラス斬撃/中央なし、準備失敗時のミラー復帰を統合。既存のホバー/クリック説明とGPUエンジンを保持しました。
 
-**まとめて試す手順**: LoL_AutoCine/docs/WINDOWS_TEST_v5106_JA.md。
-1. ミラーONでスライダー/色/タブ/スクロール、ホバー/クリックを確認。
-2. 普段の設定で同じ1シーンを60fps出力し、色/焦点/TargetLock/LoL音声/同期を確認。
-3. アプリを閉じて **TEST_GPU_RENDER.bat** →そのraw MP4を選択。6本を自動加工し、02_GPUと03_CPUを比較（加工テスト自体は無音）。
-4. アプリで2～3シーン/全シーンとflash/darkモンタージュ、タイトル/キル画像を確認。
-5. **COLLECT_DIAGNOSTICS.bat** の診断ZIPと所要時間・見た目・問題操作を送る。
+全pytest370件成功、失敗/skipなし。実Tkで大きなミラー、設定変更、タブ/スクロール、ワーカー処理を確認。Linuxの合成1080p画像の準備時間中央値は60.18ms→29.81ms。これはTk画素転送やWindows実機の測定を含まず、実機のラグ解消を保証する数値ではありません。
 
-比較結果はoutput/gpu_render_tests/日時/RESULTS.jsonと診断ZIP。GPU成功とfallbackを区別します。問題時はSTART_GPU_HYBRID.bat（旧部分GPU）、START_CPU_EFFECTS_COMPARE.bat（CPUエフェクト）で比較できます。詳細はVERIFICATION_v5.10.6.json、SHA256SUMS.txt、SOURCE_GIT_REPORT_JA.md。
+**今回のテスト手順**: LoL_AutoCine/docs/WINDOWS_TEST_v5107_JA.md。
+1. ミラーONで設定エリアのスライダー/色/タブ/スクロールを操作。ライブFX ON/OFFを比較。
+2. アプリを閉じて **TEST_GPU_RENDER.bat** →同じraw MP4を選択。6ケースの進行と終了コードが表示され、最後の画面が残るか確認。
+3. 通常アプリで1080p/60fpsの1シーン/複数シーン、LoL音声/同期、三人称、RED/BLUE、キル＋アシストを確認。
+4. **COLLECT_DIAGNOSTICS.bat** の診断ZIPを送る。
 
-## ローカルGitで開発する場合
+起動失敗でもdiagnostics/gpu_test_launcher.logとgpu_test_startup_日時.json/.logに記録します。成功ならoutput/gpu_render_tests/日時/RESULTS.jsonとgpu_batch記録も生成。加工テスト自体は無音で、カメラやLoL音声は通常アプリで確認します。
 
-新しい保存先で実行します。
+## ローカルGitへ戻す場合
 
 ```sh
-git clone --single-branch --branch codex/lol-autocine-v5106-gpu-full-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v5106_Handoff
-git clone --branch integration/v5.10.6 LoL_AutoCine_v5106_Handoff/handoff/LoL_AutoCine_v5.10.6_GPUFull_all_branches.bundle LoL_AutoCine_v5106_Dev
-cd LoL_AutoCine_v5106_Dev
-git branch feature/gpu-full-v5106 origin/feature/gpu-full-v5106
-git branch feature/ui-hover-v5106 origin/feature/ui-hover-v5106
-git branch stable/v5.8.5 origin/stable/v5.8.5
+git clone --single-branch --branch codex/lol-autocine-v5107-mirror-test-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v5107_Handoff
+git clone --branch integration/v5.10.7 LoL_AutoCine_v5107_Handoff/handoff/LoL_AutoCine_v5.10.7_MirrorFix_all_branches.bundle LoL_AutoCine_v5107_Dev
+cd LoL_AutoCine_v5107_Dev
+git branch feature/gpu-test-launch-v5107 origin/feature/gpu-test-launch-v5107
+git branch feature/ui-mirror-v5107 origin/feature/ui-mirror-v5107
 git status --short
-git branch --all
 ```
 
-全54ブランチはorigin/*へ復元されます。originはローカルbundleです。担当ガードはdocs/CODEX_INTEGRATION_v5106_JA.md。旧配布物90件と旧51ブランチを保存しています。
+全57ブランチはorigin/*へ復元されます。originはローカルbundleです。担当ガードはdocs/CODEX_INTEGRATION_v5107_JA.md。旧配布物96件と旧54ブランチを保存しています。

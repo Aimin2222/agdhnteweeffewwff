@@ -1,15 +1,15 @@
-# v5.10.6 保存報告
+# v5.10.7 保存報告
 
-ソース: /workspace/LoL_AutoCine、branch integration/v5.10.6、HEAD 0170e3493d803374d65b7889c68f1b36be9ec04c、remoteなし。
-取得用: /workspace/agdhnteweeffewwff、branch codex/lol-autocine-v5106-gpu-full-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
+ソース: /workspace/LoL_AutoCine、branch integration/v5.10.7、HEAD 7cd5b1825cbf2eacef67a2fd5d4373ca6f1cb4fa、remoteなし。
+取得用: /workspace/agdhnteweeffewwff、branch codex/lol-autocine-v5107-mirror-test-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
 mainへマージしない。開始前の両statusは空。完了時はVERIFICATIONへ記録。
 
 ## git log -3 --oneline（ソース）
 
 ```
-0170e34 docs: publish GPU full integration contracts and Windows batch test instructions
-9af6a97 Integrate reviewed hover help into responsive v5.10.5 UI
-80144ac Integrate full GPU video pipeline without replacing UI
+7cd5b18 Complete adaptive mirror throttling for intercepted notebook scrolling
+0db28d1 Notify preview throttling before notebook and combobox wheel handlers stop propagation
+2d38a61 Preserve Windows batch CRLF bytes in v5.10.7 binary handoff patch
 ```
 
 ## git remote -v（取得用）
@@ -19,33 +19,28 @@ origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-## 前回v5.10.5からの実際の追加・変更
+## 前回GPU Full v5.10.6からの実際の追加・変更
 
 ```
-M	README.md
-A	START_CPU_EFFECTS_COMPARE.bat
-A	START_GPU_HYBRID.bat
-M	START_HERE.txt
-A	TEST_GPU_RENDER.bat
+M	TEST_GPU_RENDER.bat
 M	VERSION.txt
-M	core/effects.py
-A	core/gpu_full.py
-M	core/gpu_pipeline.py
+M	core/camera.py
 M	core/jobs.py
 M	core/kill_icons.py
-M	core/montage_fx.py
-M	core/performance_diagnostics.py
-A	docs/CODEX_INTEGRATION_v5106_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_v5.10.6.json
-A	docs/WINDOWS_TEST_v5106_JA.md
+M	core/scanner.py
+A	docs/CODEX_INTEGRATION_v5107_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.7.json
+A	docs/WINDOWS_TEST_v5107_JA.md
 M	legacy_app.py
-A	tests/test_gpu_full_pipeline.py
-M	tests/test_gpu_montage_v597.py
-A	tests/test_gpu_restore_mirror_v5106.py
-A	tests/test_v5106_hover_help.py
+A	patches/history/v5106_from_codex_v5105.patch
+M	tests/test_gpu_encoding_v510.py
+A	tests/test_gpu_shared_ui5106.py
+A	tests/test_gpu_test_launcher.py
+A	tests/test_v5107_mirror_controls.py
+M	tests/test_v5991_portrait_pairs.py
 M	tools/check_parallel_integration.py
-A	tools/gpu_render_test.py
-A	tools/package_v5106.py
+M	tools/gpu_render_test.py
+A	tools/package_v5107.py
 ```
 
 ## 元v5.8.5からの実際の追加・変更・移動
@@ -80,6 +75,7 @@ M	core/performance_diagnostics.py
 M	core/preview.py
 M	core/recorder.py
 M	core/replay_api.py
+M	core/scanner.py
 A	docs/APP_PACKAGING_PLAN_JA.md
 A	docs/CHANGELOG_v5.8.6_JA.md
 A	docs/CHANGELOG_v5.9.4_JA.md
@@ -112,6 +108,7 @@ A	docs/CODEX_INTEGRATION_RESULTS_v5.9.9_JA.md
 A	docs/CODEX_INTEGRATION_v5104_JA.md
 A	docs/CODEX_INTEGRATION_v5105_JA.md
 A	docs/CODEX_INTEGRATION_v5106_JA.md
+A	docs/CODEX_INTEGRATION_v5107_JA.md
 A	docs/CODEX_INTEGRATION_v592_JA.md
 A	docs/CODEX_INTEGRATION_v593_JA.md
 A	docs/CODEX_INTEGRATION_v595_JA.md
@@ -137,6 +134,7 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.10.1_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.4.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.5.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.6.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.7.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.9.2.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.9.2_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.9.3.json
@@ -156,6 +154,7 @@ A	docs/REQUIREMENTS_SCENESTUDIO_JA.md
 A	docs/TEST_PLAN_v5.9.0_JA.md
 A	docs/WINDOWS_TEST_v5105_JA.md
 A	docs/WINDOWS_TEST_v5106_JA.md
+A	docs/WINDOWS_TEST_v5107_JA.md
 A	docs/changes_v5.9.4.patch
 A	docs/history/README.md
 R100	README_AUDIO_DIAGNOSTICS_v5.6.2.md	docs/history/README_AUDIO_DIAGNOSTICS_v5.6.2.md
@@ -195,6 +194,7 @@ A	docs/v598_changes.patch
 A	docs/v599_changes.patch
 M	legacy_app.py
 A	patches/history/ui_changes_v5.9.1.patch
+A	patches/history/v5106_from_codex_v5105.patch
 A	patches/v594_to_v595.patch
 A	tests/test_editor_ui_contract.py
 A	tests/test_gpu_capture60_v5103.py
@@ -216,6 +216,8 @@ A	tests/test_gpu_shared_camera_contract.py
 A	tests/test_gpu_shared_camera_v593.py
 A	tests/test_gpu_shared_camera_v594.py
 A	tests/test_gpu_shared_replay_v5104.py
+A	tests/test_gpu_shared_ui5106.py
+A	tests/test_gpu_test_launcher.py
 A	tests/test_parallel_integration.py
 A	tests/test_scene_keyframes_v592.py
 A	tests/test_scene_sequence.py
@@ -228,6 +230,7 @@ A	tests/test_v5104_notebook_livefx_camera.py
 A	tests/test_v5105_killfeed_glow_side_help.py
 A	tests/test_v5105_preview_responsiveness.py
 A	tests/test_v5106_hover_help.py
+A	tests/test_v5107_mirror_controls.py
 A	tests/test_v510_ui_gpu_killframe.py
 A	tests/test_v593_mode_camera.py
 A	tests/test_v594_live_preview.py
@@ -251,6 +254,7 @@ A	tools/package_v5103_mirrorfix.py
 A	tools/package_v5104.py
 A	tools/package_v5105.py
 A	tools/package_v5106.py
+A	tools/package_v5107.py
 A	tools/package_v599.py
 A	tools/setup_gpu_ffmpeg.py
 A	ui/__init__.py
@@ -267,6 +271,6 @@ A	ui/smart_montage.py
 A	ui/studio_localization.py
 ```
 
-全299ソース/Python117、全54ブランチをbundleへ保存。旧51ブランチは先端を変えず保持。変更対象外のcore/ui/起動バッチ48ファイルを前版と一致確認。個人設定/プロジェクト/原診断ZIP/録画/生ログを配布しない。
+全307ソース/Python121、全57ブランチをbundleへ保存。旧54ブランチの先端と、GPUエンジン/録画/LoL専用音声など18ファイルを前版と一致確認。個人設定/プロジェクト/原診断ZIP/録画/生ログは配布しない。
 
-最終保存: Draft PR #23。ソースstatus空、取得用statusは検証記録のコミット後に空。main先端を保持。GitHub固定payloadから299ソース/54heads復元一致、代表48件成功、installer再実行で個人設定/プロジェクトを保持。クラウド再開用install_script/start_skillはrevision26へ保存・再読込一致、未Publish。Windows取得にPublish不要。
+完了確認: ソース/取得用の未保存変更なし。GitHubからの復元で全307ソース/57ローカルrefs一致、重点27件成功。installer再実行で設定/プロジェクトを保存しstatus空。全回帰370件成功。旧54refsと旧配布物のハッシュを再確認。Draft PR #24は前回v5.10.6比較、mainへマージせず先端を保持。環境草案revision27にinstall_script/start_skillのみ保存して読み戻し一致確認。Publishは未実施で、Windows取得にPublishは不要です。

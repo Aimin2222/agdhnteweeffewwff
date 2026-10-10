@@ -10,31 +10,40 @@ import json
 import os
 import sys
 import time
+import traceback
+from contextlib import redirect_stdout, redirect_stderr
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 
 
-def main():
-    from core.effects import Template,apply_effects,FFMPEG
-    from core.gpu_pipeline import detect
-    from core.montage_fx import get_duration
+def main(stage=lambda _name: None):
     parser=argparse.ArgumentParser(description='同じ録画でGPU/CPU映像加工をまとめて比較')
     parser.add_argument('source',nargs='?',help='録画済みraw MP4。省略するとファイル選択')
     parser.add_argument('--seconds',type=float,default=6)
     args=parser.parse_args()
     source=args.source
     if not source:
+        stage('selecting_source')
+        print('録画済みraw MP4を選択してください。キャンセルすると加工せず終了します。', flush=True)
         import tkinter as tk
         from tkinter import filedialog
         root=tk.Tk();root.withdraw()
         try:
             source=filedialog.askopenfilename(title='比較する同じraw MP4を選択',filetypes=[('MP4','*.mp4')])
         finally:root.destroy()
-    if not source: return 2
+    if not source:
+        stage('cancelled')
+        print('ファイル選択をキャンセルしました。', flush=True)
+        return 2
     source=Path(source).resolve()
     if not source.is_file(): parser.error('MP4が見つかりません')
     if not 0<args.seconds<=30: parser.error('--seconds は0より大きく30以下')
+    stage('loading_engine')
+    print('GPU比較テストを準備しています…', flush=True)
+    from core.effects import Template,apply_effects,FFMPEG
+    from core.gpu_pipeline import detect
+    from core.montage_fx import get_duration
     duration=min(args.seconds,get_duration(source,ffmpeg=FFMPEG))
     folder=ROOT/'output'/'gpu_render_tests'/dt.datetime.now().strftime('%Y%m%d_%H%M%S_%f')
     folder.mkdir(parents=True)
@@ -52,6 +61,7 @@ def main():
     result={'source':str(source),'duration_s':duration,'output_fps':60,'audio_tested':False,
             'camera_tested':False,'physical_gpu_verified_by_user':False,'cases':[]}
     events=[(duration/2,min(duration,duration/2+.42))]
+    stage('running_cases')
     try:
         for name,mode,options in cases:
             print(f'[{name}] {mode} / {duration:.2f}s / 60fps',flush=True)
@@ -83,4 +93,55 @@ def main():
     return int(any(c['status']!='success' for c in result['cases']))
 
 
-if __name__=='__main__': raise SystemExit(main())
+class _Tee:
+    def __init__(self, console, log):
+        self.console, self.log = console, log
+
+    def write(self, text):
+        self.log.write(text)
+        self.log.flush()
+        if self.console is not None:
+            self.console.write(text)
+        return len(text)
+
+    def flush(self):
+        self.log.flush()
+        if self.console is not None:
+            self.console.flush()
+
+
+def entrypoint(runner=None):
+    """Record startup before importing engine dependencies or opening Tk."""
+    folder = ROOT / 'diagnostics'
+    folder.mkdir(parents=True, exist_ok=True)
+    name = 'gpu_test_startup_' + dt.datetime.now().strftime('%Y%m%d_%H%M%S_%f')
+    record_path, log_path = folder / (name+'.json'), folder / (name+'.log')
+    record = {'python': sys.executable, 'python_version': sys.version,
+              'app_version': (ROOT/'VERSION.txt').read_text(encoding='utf-8').strip(),
+              'status': 'starting', 'exit_code': None}
+    def stage(status):
+        record['status'] = status
+        record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding='utf-8')
+    stage('starting')
+    with log_path.open('w', encoding='utf-8') as log:
+        with redirect_stdout(_Tee(sys.stdout, log)), redirect_stderr(_Tee(sys.stderr, log)):
+            print('GPUテストの起動ログ: '+str(log_path), flush=True)
+            try:
+                code = (runner or main)(stage) or 0
+            except SystemExit as exc:
+                code = exc.code if isinstance(exc.code, int) else 1
+                if exc.code is not None and not isinstance(exc.code, int):
+                    print(str(exc.code), file=sys.stderr, flush=True)
+            except Exception:
+                traceback.print_exc()
+                code = 1
+            except KeyboardInterrupt:
+                print('GPUテストを中断しました。', flush=True)
+                code = 130
+            record['exit_code'] = code
+            stage('completed' if code == 0 else ('cancelled' if record['status']=='cancelled' else 'failed'))
+            print(f'終了コード: {code} / 診断ログを保存しました。', flush=True)
+    return code
+
+
+if __name__=='__main__': raise SystemExit(entrypoint())

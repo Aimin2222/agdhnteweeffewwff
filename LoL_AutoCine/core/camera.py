@@ -394,7 +394,9 @@ class CameraPlan:
                 base_yaw = float(self.rig.rot.get(yaw_axis, 0.0))
             except Exception:
                 base_yaw = 0.0
-            yaw_delta = -(float(self.third_yaw) + self.keyframe_values(t)[0])
+            # Position AND look direction must rotate by the same side delta.
+            # Without side_yaw the red-side shot faces away from the target.
+            yaw_delta = -(float(self.third_yaw) + self.side_yaw + self.keyframe_values(t)[0])
             rot[yaw_axis] = base_yaw + yaw_delta
             return rot
         return self._lolnam_rotation_at(t)
