@@ -62,3 +62,122 @@ def draw_color_bars(canvas, colors, y0=1, bar_width=38, bar_height=20):
         x = i * (bar_width + 3) + 2
         canvas.create_rectangle(x, y0, x + bar_width, y0 + bar_height,
                                 fill=color, outline="#D5DDE7")
+
+
+def open_gallery(app):
+    """Option B: dedicated browseable two-column template window.
+
+    The existing inline quick-view swatch remains available as option A.
+    Both call App.apply_template, so they can be A/B tested safely.
+    """
+    import tkinter as tk
+    from tkinter import ttk
+    from PIL import ImageTk
+
+    active = getattr(app, "_template_gallery_window", None)
+    if active is not None:
+        try:
+            if active.winfo_exists():
+                active.lift()
+                active.focus_force()
+                return active
+        except tk.TclError:
+            pass
+
+    win = tk.Toplevel(app.root)
+    app._template_gallery_window = win
+    win.title("LoL AutoCine｜テンプレート図鑑・色味比較")
+    win.geometry("880x660")
+    win.minsize(660, 480)
+    win.configure(bg="#F4F7FB")
+    win._previews = []
+    head = ttk.Frame(win, padding=(14, 10))
+    head.pack(fill="x")
+    ttk.Label(head, text="テンプレート図鑑", font=("Meiryo UI", 15, "bold")).pack(anchor="w")
+    ttk.Label(head, text="色見本とカメラ・エフェクトを比較。サンプルはAutoCineのカラー補正から生成しています。",
+              wraplength=830).pack(anchor="w")
+    ttk.Label(head, text="適用すると通常のかんたん編集・詳細編集とミラーに同じテンプレート設定が反映されます。",
+              wraplength=830).pack(anchor="w")
+    search_var = tk.StringVar()
+    ttk.Entry(head, textvariable=search_var).pack(fill="x", pady=(6,0))
+    ttk.Label(head, text="↑ 名前・色・カメラ名で検索", font=("Meiryo UI", 9)).pack(anchor="w")
+
+    body = ttk.Frame(win)
+    body.pack(fill="both", expand=True)
+    scroll = tk.Canvas(body, bg="#F4F7FB", highlightthickness=0)
+    sb = ttk.Scrollbar(body, orient="vertical", command=scroll.yview)
+    inner = ttk.Frame(scroll)
+    inner.bind("<Configure>", lambda _e: scroll.configure(scrollregion=scroll.bbox("all")))
+    window_id = scroll.create_window((0,0), window=inner, anchor="nw")
+    scroll.bind("<Configure>", lambda e: scroll.itemconfigure(window_id, width=max(1,e.width)))
+    scroll.configure(yscrollcommand=sb.set)
+    scroll.pack(side="left",fill="both",expand=True)
+    sb.pack(side="right",fill="y")
+    cards = []
+    for i,(name, tpl) in enumerate(app.templates.items()):
+        info = template_info(tpl)
+        panel = ttk.Frame(inner, style="Card.TFrame",padding=8)
+        panel.grid(row=i//2,column=i%2,sticky="nsew",padx=8,pady=7)
+        ttk.Label(panel,text=name,style="Section.TLabel",wraplength=340).pack(anchor="w")
+        try:
+            photo = ImageTk.PhotoImage(render_template_preview(tpl, 320, 180),master=win)
+            win._previews.append(photo)
+            ttk.Label(panel, image=photo).pack(anchor="center",pady=4)
+        except Exception:
+            # A missing optional graphics package must not hide the controls.
+            ttk.Label(panel, text="色サンプルを取得できません",style="CardMuted.TLabel").pack()
+        bar=tk.Canvas(panel,width=130,height=23,background="#FFFFFF",highlightthickness=0)
+        bar.pack(anchor="w")
+        draw_color_bars(bar,info["colors"])
+        ttk.Label(panel,text=f'色：{info["tone"]}｜{info["description"]}',
+                  style="CardMuted.TLabel",wraplength=350).pack(anchor="w")
+        ttk.Label(panel,text=f'カメラ：{info["camera"]}｜{info["effects"]}',
+                  style="CardMuted.TLabel",wraplength=350).pack(anchor="w")
+        ttk.Label(panel,text=f'おすすめ：{info["use"]}',style="CardMuted.TLabel").pack(anchor="w")
+
+        def apply(name=name):
+            app.var_tpl.set(name)
+            app.apply_template(name)
+            app.var_live.set(True)
+            if hasattr(app,"_invalidate_preview_snapshot"):
+                app._invalidate_preview_snapshot()
+            app.log("テンプレート図鑑から適用: "+name)
+
+        ttk.Button(panel,text="このテンプレートを適用",command=apply).pack(fill="x",pady=(5,0))
+        cards.append((panel,(name+" "+info["tone"]+" "+info["camera"]+" "+info["description"]).casefold()))
+
+    inner.columnconfigure(0, weight=1)
+    inner.columnconfigure(1, weight=1)
+
+    def filter_cards(*_):
+        query=search_var.get().strip().casefold()
+        index=0
+        for frame,label in cards:
+            if not query or query in label:
+                frame.grid(row=index//2,column=index%2,sticky="nsew",padx=8,pady=7)
+                index+=1
+            else:
+                frame.grid_remove()
+        scroll.yview_moveto(0)
+
+    search_var.trace_add("write",filter_cards)
+
+    def wheel(event):
+        if getattr(event,"delta",0):
+            scroll.yview_scroll(-max(-8,min(8,int(event.delta/120))),"units")
+        elif getattr(event,"num",0)==4:
+            scroll.yview_scroll(-3,"units")
+        else:
+            scroll.yview_scroll(3,"units")
+        return "break"
+
+    # Bind in this window only; the main editor's combobox wheel protection stays intact.
+    def bind_children(widget):
+        widget.bind("<MouseWheel>",wheel,add="+")
+        widget.bind("<Button-4>",wheel,add="+")
+        widget.bind("<Button-5>",wheel,add="+")
+        for child in widget.winfo_children():
+            bind_children(child)
+
+    bind_children(win)
+    return win
