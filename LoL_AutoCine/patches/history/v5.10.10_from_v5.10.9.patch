@@ -1,0 +1,886 @@
+diff --git a/LoL_AutoCine/README_v5.10.10_JA.md b/LoL_AutoCine/README_v5.10.10_JA.md
+new file mode 100644
+index 0000000..ade75ec
+--- /dev/null
++++ b/LoL_AutoCine/README_v5.10.10_JA.md
+@@ -0,0 +1,41 @@
++# LoL AutoCine v5.10.10：実シーン比較・UI整理・発光調整
++
++## 変更内容
++
++- **テンプレート図鑑：実フレーム比較**
++  - スキャンで検出したキル／アシストシーンを選び、「①選択シーンへ移動」→ミラー映像に正しい場面が映っていることを確認→「②ミラーの今の実フレームを保存・比較」。
++  - 各テンプレートに同じ実フレームの **左：補正前、右：色＋2D FX適用後** を並べる。
++  - 以前から保存済みのシーンサムネイルは自動で再利用できる。「再表示」で再読み込み。
++  - 未取得時は架空画像を表示せず、撮影の案内を表示。比較元シーンはキルとアシストのどちらでも選べる。
++  - カードから適用すると従来どおり本体UIとミラーにテンプレート設定が伝わる。
++  - **カメラ位置・時間変化・FFmpeg固有演出は1枚の画像から完全再現できない**。比較はカラーと一部2D FXの静止画近似。実際の書き出しは別途確認が必要。
++- **UI整理**
++  - 旧来の「かんたん編集／詳細編集」分離を維持。
++  - キルフレームの発光・色・中央装飾など詳細な設定を折りたたみ式に変更。
++  - かんたん編集側の折りたたみ色見本（方式A）と、独立した実シーン図鑑（方式B）を両方残す。後で好きな方を選べる。
++  - アプリ起動直後・ウィンドウサイズ変更時の「LoLミラーを開始すると…」の案内を中央に再配置。
++- **発光の微調整**
++  - 詳細編集のキルフレーム設定に、発光量0.0〜2.0のスライダーと「弱／標準／強」ボタンを追加。
++  - v5.10.9で追加したプレミアム素材型6スタイルを**385×116の適正サイズ**にリサイズして書き出し時に合成。
++  - 素材型でも追加ブルーム・発光色・角の光の強さを描画へ反映。素材に描き込まれた元の光は残るため、発光0は「完全に光の無い別デザイン」ではない。
++- **維持した機能**：キルログ素材6種＋従来4種、キル／アシストスキャン、サイド別カメラ、TargetLock、LoL専用ゲーム音、円形DOF、GPU優先エンコード、既存エフェクト、1080p/60fpsの基本仕様。
++
++## 簡単な使い方
++
++1. ZIPを新しいフォルダへ解凍し `LoL_AutoCine/START.bat` から起動する。
++2. LoLリプレイを開き、対象チャンピオンを選び、ミラーをON、キル＋アシストなどをスキャン。
++3. 上部「テンプレート」から図鑑を開き、代表シーンを選択。
++4. **①シーンへ移動** → ミラーに希望の戦闘場面が映ったのを確認 → **②実フレームを保存・比較**。
++5. カードごとの左（元画像）と右（テンプレ色／FX適用後）を比較し、気に入ったものを適用。
++6. 必要なら「詳細編集→録画・出力→キルフレーム詳細」で発光を弱／標準／強に調整し、プレビューして書き出す。
++
++## 注意
++
++- ミラーを再生していないと実フレームは取得できない。画像を勝手に別シーンへ割り当てることを避けるため、シーンの確認・撮影はユーザー操作で行う。
++- GPUフル書き出しのコアや音声実装には手を加えていない。ミラーFXは従来どおりPython/PILによる近似であり、GPU書き出しとピクセル完全一致ではない。
++- 実機確認は `TESTLIST_v5.10.10_JA.md` を参照。
++
++## Codex用差分について
++
++- 差分のベースは **v5.10.9 Windowsフル版**。同梱のパッチを `git apply --check` で確認してからマージ。
++- 最新のCodex作業ブランチに同じファイルの変更がある場合、丸ごと上書きしない。特にGPUコードはCodex側の変更を優先する。
+diff --git a/LoL_AutoCine/TESTLIST_v5.10.10_JA.md b/LoL_AutoCine/TESTLIST_v5.10.10_JA.md
+new file mode 100644
+index 0000000..f16db7e
+--- /dev/null
++++ b/LoL_AutoCine/TESTLIST_v5.10.10_JA.md
+@@ -0,0 +1,42 @@
++# LoL AutoCine v5.10.10：まとめて実施するWindows確認リスト
++
++## 1. 起動・画面
++- [ ] 新しいフォルダで `START.bat` から起動できる。
++- [ ] 起動直後の「LoLミラーを開始するとここに実映像が表示されます」が中央に表示される。サイズ変更しても中央に残る。
++- [ ] かんたん編集で設定が過密でない。詳細編集の「キルフレーム詳細」が開閉できる。
++- [ ] タブ上のマウスホイールで基本／カラー・FX／録画・出力が勝手に切り替わらない。検出シーンのチェックでスクロール位置が戻らない。
++
++## 2. 実シーン比較（今回の最重要）
++- [ ] 対象プレイヤーを固定、LoLミラーON、キル／アシストの両方をスキャン。
++- [ ] 上部「テンプレート」の図鑑から、キルとアシストのシーンを選択できる。
++- [ ] 「①選択シーンへ移動」の後、ミラーで正しい場面を確認。
++- [ ] 「②ミラーの今の実フレームを保存・比較」で実際のゲームの1枚が登録される。
++- [ ] 同じ実フレームを使い、左が元画像／右が補正後で、色味の違いが分かる。
++- [ ] 保存済みのシーンに切り替えるとその画像に切り替わる。未保存シーンでは架空画像を表示しない。
++- [ ] 図鑑の検索・テンプレート適用が動作する。
++- [ ] かんたん側Aの色見本カードと図鑑Bの両方を試し、どちらが操作しやすいか比較。
++- [ ] 「デフォルト」「ゴールド」「アイスブルー」「ネオン」などを比較。ミラー再生中にも選んだ色が反映される。
++
++## 3. プレミアムキルフレーム・発光
++- [ ] プレミアムゴールド／黒曜石×ゴールド／ネオン・クリスタル／星と翼／炎熱ゴシック／サイバーパンクを選べる。
++- [ ] キルフレームのプレビューと書き出しで、被写体のチャンピオンと倒された相手の顔アイコンが正しい。
++- [ ] 素材フレームが巨大に表示されず、**1080p動画上の右上などに収まる**。
++- [ ] 発光の弱（0.4）／標準（1.0）／強（1.7）で実際の見た目が変わる。
++- [ ] 発光色（金／青／紫など）・角の光・縦積み間隔の調整が機能する。
++- [ ] 2〜3キル連続時に、装飾が縦に重なり過ぎず映る。
++- [ ] 既存のシンプル／シネマ／ネオン／インパクト／装飾なしも壊れていない。
++
++## 4. 既存機能の回帰
++- [ ] キル＋アシストが両方検出される。
++- [ ] ブルー／レッドで三人称カメラが自然に向き、TargetLockが対象を見失わない。
++- [ ] 手動プレビュー再生なしで最初のキルを録画し、ネクサスが冒頭に映らない。
++- [ ] プレビュー・書き出し後、ミラーが地形に埋まらず安全な視点へ戻る。
++- [ ] 円形DOF、カラー・FX、HUD設定が録画結果に反映される。
++- [ ] 1920×1080、60fps、LoLゲーム音が正常に書き出される。
++- [ ] Codex側のGPU設定・ログが従来どおり有効で、意図しないCPUフォールバックがない。
++
++## 異常があった場合に送ってほしいもの
++- 問題の `kill_001.mp4` または `montage.mp4`
++- `AutoCine_Diagnostics.zip`
++- 設定したテンプレート名、キルフレーム名、発光強度
++- 実シーン比較画面またはミラーのスクリーンショット
+diff --git a/LoL_AutoCine/VERSION.txt b/LoL_AutoCine/VERSION.txt
+index c942180..b3e5957 100644
+--- a/LoL_AutoCine/VERSION.txt
++++ b/LoL_AutoCine/VERSION.txt
+@@ -1 +1 @@
+-5.10.9
++5.10.10
+diff --git a/LoL_AutoCine/core/kill_icons.py b/LoL_AutoCine/core/kill_icons.py
+index 2cf98c4..d6836c9 100644
+--- a/LoL_AutoCine/core/kill_icons.py
++++ b/LoL_AutoCine/core/kill_icons.py
+@@ -116,25 +116,70 @@ def _fit_portrait_rgba(source, size, radius=20):
+     return square
+ 
+ 
+-def _compose_asset_badge(path: Path, style: str, killer_icon=None, victim_icon=None):
+-    from PIL import Image
++def _compose_asset_badge(path: Path, style: str, killer_icon=None, victim_icon=None,
++                         *, glow_enabled=True, glow_strength=.85, glow_color='',
++                         sparkle_strength=1.0):
++    """Composite actual players beneath a transparent premium frame.
++
++    Assets are high-resolution source illustrations, but the *video overlay*
++    must always be the same compact 385x116 canvas as legacy kill badges.
++    Bloom is adjustable for these PNG assets too (not just vector badges).
++    """
++    from PIL import Image, ImageDraw, ImageFilter
+     tpl_path = _asset_template_path(style)
+     if tpl_path is None:
+         raise FileNotFoundError(f"Asset template not found for style={style}")
+-    overlay = Image.open(tpl_path).convert("RGBA")
+-    base = Image.new("RGBA", overlay.size, (0,0,0,0))
+-    # Common cutout areas tuned for the generated 2172x724 premium frames.
++    with Image.open(tpl_path) as im:
++        overlay = im.convert("RGBA")
++    base = Image.new("RGBA", overlay.size, (0, 0, 0, 0))
++    # Relative to 2172x724 reference artwork. These portrait windows contain
++    # actual Riot champion icons, never baked-in faces from a reference image.
+     boxes = {
+         "left": (390, 180, 398, 398),
+         "right": (1382, 180, 398, 398),
+     }
+     if killer_icon is not None:
+-        portrait = _fit_portrait_rgba(killer_icon, (boxes["left"][2], boxes["left"][3]), radius=12)
+-        base.alpha_composite(portrait, (boxes["left"][0], boxes["left"][1]))
++        portrait = _fit_portrait_rgba(killer_icon, (398, 398), radius=12)
++        base.alpha_composite(portrait, boxes["left"][:2])
+     if victim_icon is not None:
+-        portrait = _fit_portrait_rgba(victim_icon, (boxes["right"][2], boxes["right"][3]), radius=12)
+-        base.alpha_composite(portrait, (boxes["right"][0], boxes["right"][1]))
+-    base = Image.alpha_composite(base, overlay)
++        portrait = _fit_portrait_rgba(victim_icon, (398, 398), radius=12)
++        base.alpha_composite(portrait, boxes["right"][:2])
++    base.alpha_composite(overlay)
++    base = base.resize((385, 116), Image.Resampling.LANCZOS)
++
++    # The supplied art already contains its original luminous details. Fade
++    # its semi-transparent outskirts at zero, and add a genuinely soft halo
++    # beyond the asset edges for higher intensities.
++    strength = max(0., min(2., float(glow_strength))) if glow_enabled else 0.
++    original = base.getchannel("A")
++    if strength < 1.0:
++        hard = original.point(lambda a: 255 if a >= 195 else 0)
++        alpha = Image.blend(hard, original, strength)
++        base.putalpha(alpha)
++    if strength > .01:
++        color = _rgb(valid_hex(glow_color), COLORS[style])
++        glow = Image.new("RGBA", base.size, (*color, 0))
++        bright = original.point(lambda a: 0 if a < 80 else a)
++        glow.putalpha(bright)
++        radius = 4.0 + 3.5 * strength
++        aura = glow.filter(ImageFilter.GaussianBlur(radius))
++        aura.putalpha(aura.getchannel("A").point(
++            lambda a: min(210, int(a * strength * .85))))
++        base = Image.alpha_composite(aura, base)
++
++    try:
++        sparkle = max(0., min(2., float(sparkle_strength))) if strength else 0.
++    except (ValueError, TypeError):
++        sparkle = 0.
++    if sparkle:
++        flare = Image.new("RGBA", base.size)
++        d = ImageDraw.Draw(flare)
++        color = _rgb(valid_hex(glow_color), COLORS[style])
++        for x, y in ((58,23), (307,23), (58,89), (307,89)):
++            alpha = min(250, int(92 * strength * sparkle))
++            d.line((x-15,y,x+15,y), fill=(*color,alpha),width=1)
++            d.line((x,y-8,x,y+8), fill=(255,251,232,alpha),width=1)
++        base = Image.alpha_composite(base, flare)
+     path.parent.mkdir(parents=True, exist_ok=True)
+     base.save(path, format="PNG")
+     return path
+@@ -178,7 +223,10 @@ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, vict
+         raise ValueError("Kill decoration is disabled")
+     path = Path(path)
+     if style in ASSET_STYLES:
+-        return _compose_asset_badge(path, style, killer_icon=killer_icon, victim_icon=victim_icon)
++        return _compose_asset_badge(path, style, killer_icon=killer_icon,
++                                    victim_icon=victim_icon, glow_enabled=glow_enabled,
++                                    glow_strength=glow_strength, glow_color=glow_color,
++                                    sparkle_strength=sparkle_strength)
+     path.parent.mkdir(parents=True, exist_ok=True)
+     frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style = normalize_design(
+         frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style)
+diff --git a/LoL_AutoCine/legacy_app.py b/LoL_AutoCine/legacy_app.py
+index 308ff45..1f4b343 100644
+--- a/LoL_AutoCine/legacy_app.py
++++ b/LoL_AutoCine/legacy_app.py
+@@ -644,7 +644,7 @@ class App:
+         top.pack(fill="x")
+         brand_box = ttk.Frame(top)
+         brand_box.pack(side="left")
+-        ttk.Label(brand_box, text="◈  LoL AutoCine v5.10.8", style="CompactTitle.TLabel").pack(anchor="w")
++        ttk.Label(brand_box, text="◈  LoL AutoCine v5.10.10", style="CompactTitle.TLabel").pack(anchor="w")
+ 
+         nav = ttk.Frame(top)
+         nav.pack(side="left", padx=(15, 0))
+@@ -833,8 +833,10 @@ class App:
+             draw_color_bars(bar,details["colors"])
+             ttk.Button(chip,text=preset[:13],width=17,
+                        command=lambda n=preset:self._choose_easy_preset(n)).pack(side="left",padx=4)
+-        ttk.Button(f, text="B：全テンプレート図鑑を開く",
++        ttk.Button(f, text="B：全テンプレート図鑑（実シーン比較）",
+                    command=self._open_template_gallery).pack(fill="x", pady=(3,0))
++        ttk.Label(f, text="スキャン→シーン選択→実画面保存で、補正前/後を比較します。",
++                  style="CardMuted.TLabel", wraplength=255).pack(anchor="w", pady=(2,0))
+ 
+         # ---- center: preview / timeline / camera --------------------------
+         preview_card = ttk.Frame(preview_host, style="Card.TFrame", padding=(6, 5))
+@@ -858,6 +860,8 @@ class App:
+ 
+         self.canvas = tk.Canvas(preview_card, bg="#111827", width=560, height=230, highlightthickness=0)
+         self.canvas.pack(fill="both", expand=True)
++        # Center placeholder whenever paned windows settle or the user resizes.
++        self.canvas.bind("<Configure>", self._recenter_preview_placeholder, add="+")
+         ttk.Label(preview_card, text="ぼかし・色はミラー再生中にも簡易表示（LoL本体の画面にはかかりません）。完成MP4は書き出し処理で適用。",
+                   style="CardMuted.TLabel").pack(anchor="w")
+         ttk.Label(preview_card, text="上段：準備・プレビュー・検出シーン　／　下段：全幅エディタ（境界ドラッグで高さ調整）",
+@@ -1343,15 +1347,19 @@ class App:
+             ttk.Label(part, text=caption, style="Card.TLabel").pack(side="top")
+             ttk.Spinbox(part, from_=lower, to=upper, increment=inc,
+                         textvariable=variable, width=7).pack(side="top")
+-        ttk.Label(output, text="キルフレームの色・発光・中央マーク", style="Card.TLabel").pack(anchor="w", pady=(6,3))
+-        frame_style_row = ttk.Frame(output, style="Card.TFrame")
++        ttk.Button(output, text="▶ キルフレーム詳細（色・光・中央マーク）を開閉",
++                   command=self._toggle_kill_badge_advanced).pack(fill="x", pady=(4,4))
++        self._kill_badge_advanced = ttk.Frame(output, style="Card.TFrame")
++        detail = self._kill_badge_advanced
++        ttk.Label(detail, text="キルフレームの色・発光・中央マーク", style="Card.TLabel").pack(anchor="w", pady=(6,3))
++        frame_style_row = ttk.Frame(detail, style="Card.TFrame")
+         frame_style_row.pack(fill="x", pady=2)
+         ttk.Button(frame_style_row, text="枠の色", command=lambda: self._choose_kill_color(self.var_kill_frame_color)).pack(side="left")
+         ttk.Entry(frame_style_row, textvariable=self.var_kill_frame_color, width=10).pack(side="left", padx=4)
+         ttk.Button(frame_style_row, text="発光色", command=lambda: self._choose_kill_color(self.var_kill_glow_color)).pack(side="left", padx=(8,0))
+         ttk.Entry(frame_style_row, textvariable=self.var_kill_glow_color, width=10).pack(side="left", padx=4)
+         ttk.Button(frame_style_row, text="色を標準に戻す", command=lambda: (self.var_kill_frame_color.set(''), self.var_kill_glow_color.set(''))).pack(side="left", padx=5)
+-        frame_fx_row = ttk.Frame(output, style="Card.TFrame")
++        frame_fx_row = ttk.Frame(detail, style="Card.TFrame")
+         frame_fx_row.pack(fill="x", pady=3)
+         ttk.Checkbutton(frame_fx_row, text="発光ON", variable=self.var_kill_glow_enabled).pack(side="left")
+         ttk.Label(frame_fx_row, text="発光の強さ", style="Card.TLabel").pack(side="left", padx=(10,3))
+@@ -1360,7 +1368,7 @@ class App:
+         ttk.Label(frame_fx_row, text="枠の太さ", style="Card.TLabel").pack(side="left", padx=(10,3))
+         ttk.Spinbox(frame_fx_row, from_=1, to=8, increment=1, width=5,
+                     textvariable=self.var_kill_frame_width).pack(side="left")
+-        glow_preset_row=ttk.Frame(output, style="Card.TFrame")
++        glow_preset_row=ttk.Frame(detail, style="Card.TFrame")
+         glow_preset_row.pack(fill="x", pady=(2,3))
+         ttk.Label(glow_preset_row, text="発光スタイル", style="Card.TLabel").pack(side="left", padx=(0,6))
+         glow_choice=ttk.Combobox(glow_preset_row, state="readonly",
+@@ -1368,9 +1376,22 @@ class App:
+                                  values=["オフ", "ゴールド", "ネオン", "カスタム"], width=17)
+         glow_choice.pack(side="left")
+         glow_choice.bind("<<ComboboxSelected>>", lambda _e: self._apply_kill_glow_preset())
+-        ttk.Label(glow_preset_row, text="0.0～2.0（強でくっきり発光）",
++        ttk.Label(glow_preset_row, text="弱→強をクリックで比較",
+                   style="CardMuted.TLabel").pack(side="left", padx=7)
+-        sparkle_row=ttk.Frame(output, style="Card.TFrame")
++        # Pixel-art assets already have fixed material highlights; this slider
++        # controls additional exported bloom rather than merely changing a label.
++        strength_row = ttk.Frame(detail, style="Card.TFrame")
++        strength_row.pack(fill="x", pady=(0,3))
++        ttk.Label(strength_row, text="発光量", style="Card.TLabel").pack(side="left")
++        ttk.Scale(strength_row, variable=self.var_kill_glow_strength,
++                  from_=0.0, to=2.0).pack(side="left", fill="x", expand=True, padx=(7,8))
++        for caption,level in (("弱",.4),("標準",1.0),("強",1.7)):
++            ttk.Button(strength_row, text=caption, width=4,
++                       command=lambda v=level:(self.var_kill_glow_enabled.set(True),
++                                                self.var_kill_glow_strength.set(v))).pack(side="left",padx=2)
++        ttk.Label(detail,text="素材フレームの元の光は素材の一部です。発光量は追加グローを調整します。",
++                  style="CardMuted.TLabel",wraplength=700).pack(anchor="w")
++        sparkle_row=ttk.Frame(detail, style="Card.TFrame")
+         sparkle_row.pack(fill="x", pady=(1,4))
+         ttk.Label(sparkle_row, text="角の光", style="Card.TLabel").pack(side="left")
+         ttk.Spinbox(sparkle_row, from_=0, to=2, increment=.2, width=5,
+@@ -1378,7 +1399,7 @@ class App:
+         ttk.Label(sparkle_row, text="縦並び間隔(px)", style="Card.TLabel").pack(side="left")
+         ttk.Spinbox(sparkle_row, from_=0, to=36, increment=2, width=5,
+                     textvariable=self.var_kill_stack_gap).pack(side="left", padx=4)
+-        palettes=ttk.Frame(output,style="Card.TFrame")
++        palettes=ttk.Frame(detail,style="Card.TFrame")
+         palettes.pack(fill="x",pady=(1,5))
+         ttk.Label(palettes,text="枠",style="Card.TLabel").pack(side="left",padx=(0,3))
+         for caption,value in (("金","#F6CB75"),("青","#6ABAFD"),("赤","#F97F7F"),("白","#F7F8FF")):
+@@ -1388,12 +1409,12 @@ class App:
+         for caption,value in (("金","#FFD978"),("白","#FFFAEF"),("青","#63CCFF"),("紫","#B489FF")):
+             ttk.Button(palettes,text=caption,width=3,
+                        command=lambda c=value:self.var_kill_glow_color.set(c)).pack(side="left",padx=2)
+-        ttk.Label(output, text="アイコン間の装飾", style="Card.TLabel").pack(anchor="w", pady=(3,1))
++        ttk.Label(detail, text="アイコン間の装飾", style="Card.TLabel").pack(anchor="w", pady=(3,1))
+         from core.kill_icons import MARK_STYLES
+-        ttk.Combobox(output, state="readonly", textvariable=self.var_kill_mark_style,
++        ttk.Combobox(detail, state="readonly", textvariable=self.var_kill_mark_style,
+                      values=list(MARK_STYLES.values()), width=27).pack(fill="x", pady=(0,4))
+-        ttk.Button(output, text="キルフレームを画像で確認（発光プレビュー）", command=self._preview_kill_frame).pack(fill="x", pady=(2,4))
+-        ttk.Label(output, text="発光は完成MP4に合成されます。ここでプレビューすると色と強さをすぐ比較できます。",
++        ttk.Button(detail, text="キルフレームを画像で確認（発光プレビュー）", command=self._preview_kill_frame).pack(fill="x", pady=(2,4))
++        ttk.Label(detail, text="発光は完成MP4に合成されます。ここでプレビューすると色と強さをすぐ比較できます。",
+                   style="CardMuted.TLabel", wraplength=700).pack(anchor="w", pady=(0,4))
+         ttk.Button(output, text="この画面の設定を保存", command=self._save_settings).pack(fill="x", pady=(0,6))
+         ttk.Checkbutton(output, text="スマートモンタージュで見せ場を後半に配置（自動編集時のみ）",
+@@ -1800,6 +1821,15 @@ class App:
+         self.left_scroll.scroll_to(self._nav_home_card)
+         self.log('ホーム: 左側のリプレイ準備・プレイヤー選択へ移動しました')
+ 
++    def _toggle_kill_badge_advanced(self):
++        frame = getattr(self, "_kill_badge_advanced", None)
++        if frame is None:
++            return
++        if frame.winfo_manager():
++            frame.pack_forget()
++        else:
++            frame.pack(fill="x", pady=(2,5))
++
+     def _open_template_gallery(self):
+         """Option B: full searchable gallery separate from the editor."""
+         from ui.template_gallery import open_gallery
+@@ -3507,6 +3537,19 @@ class App:
+         if hasattr(self, "var_mirror"):
+             self.var_mirror.set(False)
+ 
++    def _recenter_preview_placeholder(self, _event=None) -> None:
++        """Fix off-center startup placeholder after initial Tk geometry settles."""
++        if getattr(self, "_preview_image_item", None) is not None:
++            return
++        text_item=getattr(self, "_preview_text_item", None)
++        if text_item is None:
++            return
++        try:
++            self.canvas.coords(text_item, max(1,self.canvas.winfo_width())//2,
++                               max(1,self.canvas.winfo_height())//2)
++        except tk.TclError:
++            pass
++
+     def _current_frame_rgb(self, cw: int, ch: int):
+         """LoLミラー映像だけをプレビューに使用する。サンプル画像は表示しない。"""
+         if self.source is not None and self.source.running:
+diff --git a/LoL_AutoCine/tests/test_v51010_real_scene_material.py b/LoL_AutoCine/tests/test_v51010_real_scene_material.py
+new file mode 100644
+index 0000000..bedb723
+--- /dev/null
++++ b/LoL_AutoCine/tests/test_v51010_real_scene_material.py
+@@ -0,0 +1,69 @@
++# -*- coding: utf-8 -*-
++"""Regressions: actual-scene gallery, bounded badge sizing, material bloom."""
++from pathlib import Path
++from types import SimpleNamespace
++import numpy as np
++from PIL import Image, ImageChops
++import pytest
++
++from core.effects import Template
++from core.kill_icons import ASSET_STYLES, make_badge
++from ui.template_gallery import render_scene_comparison, scene_labels
++
++
++@pytest.mark.parametrize('style', sorted(ASSET_STYLES))
++def test_each_material_is_sized_for_1080p_kill_log(tmp_path, style):
++    path=make_badge(tmp_path/f'{style}.png',style)
++    with Image.open(path) as img:
++        assert img.mode=='RGBA'
++        assert img.size==(385,116)
++        assert img.getbbox() is not None
++
++
++def test_material_bloom_changes_with_strength_and_enabled(tmp_path):
++    p=[]
++    for level in (0, .7, 1.7):
++        path=make_badge(tmp_path/f'bloom_{level}.png','premium_gold',glow_strength=level,
++                        glow_color='#FFCA5D',sparkle_strength=1.4)
++        with Image.open(path) as im: p.append(im.copy())
++    assert ImageChops.difference(p[0],p[1]).getbbox() is not None
++    assert ImageChops.difference(p[1],p[2]).getbbox() is not None
++    off=make_badge(tmp_path/'off.png','premium_gold',glow_enabled=False,glow_strength=2)
++    with Image.open(off) as im:
++        assert ImageChops.difference(im,p[0]).getbbox() is None
++
++
++def test_real_scene_is_used_as_left_half_and_grade_changes_right():
++    # A stand-in for a captured LoL frame; never loaded from fake stock imagery.
++    yy,xx=np.mgrid[:90,:160]
++    real=np.zeros((90,160,3),dtype=np.uint8)
++    real[...,0]=(xx*3)%256
++    real[...,1]=(yy*2)%256
++    real[...,2]=87
++    inp=Image.fromarray(real,'RGB')
++    normal=Template(grade='default',grade_strength=0,bloom=0,vignette=0,grain=0)
++    warm=Template(grade='golden',grade_strength=1,bloom=0,vignette=0,grain=0)
++    a=render_scene_comparison(inp,normal,160,90)
++    b=render_scene_comparison(inp,warm,160,90)
++    assert a.size==b.size==(323,90)
++    assert np.array_equal(np.array(a)[:,:160],real)
++    assert np.array_equal(np.array(b)[:,:160],real)
++    assert not np.array_equal(np.array(a)[:,163:],np.array(b)[:,163:])
++
++
++def test_scene_choices_include_kill_and_assist_labels():
++    values=[]
++    for id,role in ((1,'kill'),(2,'assist')):
++        values.append(SimpleNamespace(event_id=id,time=31.+id,killer='Alpha',victim='Beta',role=role))
++    entries=scene_labels(values)
++    assert len(entries)==2
++    assert 'キル' in entries[0][0]
++    assert 'アシスト' in entries[1][0]
++    assert entries[0][1]!=entries[1][1]
++
++
++def test_editor_has_glow_slider_and_resize_centering():
++    source=(Path(__file__).resolve().parents[1]/'legacy_app.py').read_text('utf-8')
++    assert 'self.var_kill_glow_strength.set(v)' in source
++    assert 'self._recenter_preview_placeholder' in source
++    assert 'command=self._open_template_gallery' in source
+diff --git a/LoL_AutoCine/tests/test_v5108_premium_gallery.py b/LoL_AutoCine/tests/test_v5108_premium_gallery.py
+index f29e8bc..97cb038 100644
+--- a/LoL_AutoCine/tests/test_v5108_premium_gallery.py
++++ b/LoL_AutoCine/tests/test_v5108_premium_gallery.py
+@@ -71,5 +71,7 @@ def test_full_template_gallery_and_mirror_controls_exist():
+     assert "A：かんたん色見本カード" in source and "B：全テンプレート図鑑" in source
+     assert "self._refresh_template_tone(name)" in source
+     assert "self._live_preview.submit(key, (self.source, cw, ch" in source
+-    assert "render_template_preview(tpl, 320, 180)" in gallery
++    assert "render_scene_comparison(image,tpl,150,85)" in gallery
++    assert "save(path,'PNG')" in gallery
++    assert "sample_scene(" not in gallery.split("def open_gallery(",1)[1]
+     assert "self._apply_kill_glow_preset()" in source
+diff --git a/LoL_AutoCine/tests/test_v599_automontage_killbadges.py b/LoL_AutoCine/tests/test_v599_automontage_killbadges.py
+index 11f786b..d0f639b 100644
+--- a/LoL_AutoCine/tests/test_v599_automontage_killbadges.py
++++ b/LoL_AutoCine/tests/test_v599_automontage_killbadges.py
+@@ -21,7 +21,8 @@ def kill(n=1, t=10.0, multi=1, role="kill"):
+ 
+ 
+ def test_four_visual_styles_are_explicit_and_legacy_off():
+-    assert set(STYLES) == {"off", "simple", "cinema", "neon", "impact"}
++    assert {"off", "simple", "cinema", "neon", "impact"} <= set(STYLES)
++    assert {"premium_gold", "star_guardian", "cyberpunk"} <= set(STYLES)
+     assert Template().kill_icon_style == "off"
+     assert Template().kill_icon_position == "right-top"
+     assert len(POSITIONS) == 4
+diff --git a/LoL_AutoCine/ui/template_gallery.py b/LoL_AutoCine/ui/template_gallery.py
+index 6a897e5..08f2cfc 100644
+--- a/LoL_AutoCine/ui/template_gallery.py
++++ b/LoL_AutoCine/ui/template_gallery.py
+@@ -1,183 +1,298 @@
+ # -*- coding: utf-8 -*-
+-"""Shared template color previews for quick cards and the full gallery.
++"""Real LoL kill/assist scene previews, using AutoCine's live mirror snapshots.
+ 
+-Both formats use the same per-template source data; the thumbnails use
+-AutoCine's existing grade_rgb calculation, not hand-painted mock thumbnails.
++No fake gameplay thumbnails: until a real frame is saved for a selected scene,
++show instructions rather than an unrelated image. Preview does not send camera
++commands and never touches the export/GPU/TargetLock pipelines.
+ """
+ from __future__ import annotations
+ 
+ from typing import Any
+ 
++from PIL import Image
++import numpy as np
++
+ GRADE_APPEARANCE = {
+     "default": ("補正なし", "#748472", "#A4A993", "#D4C6A3", "元のLoLの色をそのまま使う"),
+     "standard": ("自然な色", "#718B74", "#87A7A6", "#DECC93", "自然な明るさと彩度"),
+-    "film": ("柔らかいフィルム", "#766C67", "#B19B87", "#D9C5A1", "少し落ち着いた映画色"),
++    "film": ("柔らかいフィルム", "#766C67", "#B19B87", "#D9C5A1", "落ち着いた映画色"),
+     "lolnam": ("映画風ティール＆金", "#355F70", "#9B9F8D", "#EAC189", "青緑の影と暖かいハイライト"),
+-    "tealorange": ("青緑 × オレンジ", "#2D6170", "#A47863", "#F6A659", "シネマティックな強い色の対比"),
+-    "golden": ("温かいゴールド", "#735632", "#C69A56", "#FFDC87", "キル瞬間の暖色を印象的に"),
+-    "iceblue": ("アイスブルー", "#263F6A", "#648CAF", "#BBDCF7", "涼しい青の映像"),
+-    "neon": ("ネオン", "#48256B", "#9E4BAA", "#65DDE1", "鮮やかな夜光・色の強調"),
+-    "purple": ("紫", "#35325C", "#8F5A9F", "#C5ABDA", "紫寄りの幻想的な色"),
+-    "noir": ("モノクロ", "#28292F", "#888A90", "#CFD0D0", "白黒に近い強い映画色"),
+-    "dark": ("暗め", "#232A34", "#596274", "#A59A8A", "暗い場所の臨場感"),
+-    "sunset": ("夕焼け", "#6E3432", "#C27854", "#FAC68B", "赤とオレンジの暖かい色"),
+-    "midnight": ("深夜青", "#1D284B", "#496588", "#A5BDCD", "寒色のミステリアスな色"),
+-    "drama": ("ドラマ", "#3E4057", "#9B847F", "#E0C4AC", "彩度控えめで人物が引き立つ"),
+-    "fade": ("フェード", "#687F86", "#A8AFA5", "#E0D6BE", "コントラストが柔らかい淡い色"),
+-    "highcontrast": ("高コントラスト", "#182D41", "#879999", "#F3CF7A", "陰影の差が強いパンチある色"),
++    "tealorange": ("青緑 × オレンジ", "#2D6170", "#A47863", "#F6A659", "映画風の強い色の対比"),
++    "golden": ("温かいゴールド", "#735632", "#C69A56", "#FFDC87", "暖かい金色"),
++    "iceblue": ("アイスブルー", "#263F6A", "#648CAF", "#BBDCF7", "冷たい青の色調"),
++    "neon": ("ネオン", "#48256B", "#9E4BAA", "#65DDE1", "鮮やかな色"),
++    "purple": ("紫", "#35325C", "#8F5A9F", "#C5ABDA", "幻想的な紫"),
++    "noir": ("モノクロ", "#28292F", "#888A90", "#CFD0D0", "モノクロ風"),
++    "dark": ("暗め", "#232A34", "#596274", "#A59A8A", "陰影の強調"),
++    "sunset": ("夕焼け", "#6E3432", "#C27854", "#FAC68B", "赤とオレンジ"),
++    "midnight": ("深夜青", "#1D284B", "#496588", "#A5BDCD", "濃い寒色"),
++    "drama": ("ドラマ", "#3E4057", "#9B847F", "#E0C4AC", "彩度控えめ"),
++    "fade": ("フェード", "#687F86", "#A8AFA5", "#E0D6BE", "淡い色"),
++    "highcontrast": ("高コントラスト", "#182D41", "#879999", "#F3CF7A", "陰影を強調"),
+ }
+ 
+ 
+ def appearance(grade: str):
+-    return GRADE_APPEARANCE.get(str(grade), GRADE_APPEARANCE["standard"])
++    return GRADE_APPEARANCE.get(str(grade), GRADE_APPEARANCE['standard'])
+ 
+ 
+ def template_info(template: Any) -> dict:
+-    tone, a, b, c, description = appearance(getattr(template, "grade", "standard"))
+-    style = getattr(template, "style", "follow")
+-    camera = {
+-        "third": "三人称・自然", "third_cinema": "三人称・シネマ",
+-        "lolnam_cinema": "Lolnam風Orbit", "cinema_top": "俯瞰シネマ",
+-        "cinema": "シネマ", "orbit": "Orbit", "follow": "追従"
+-    }.get(style, style)
+-    fx = getattr(template, "video_effects", {}) or {}
+-    enabled = [k for k, value in fx.items() if float(value or 0) > 0.01]
+-    return dict(tone=tone, colors=(a, b, c), description=description,
+-                camera=camera, effects=", ".join(enabled[:3]) or "追加FXなし",
+-                use="集団戦・複数キル向け" if "チーム" in template.name or "マルチ" in template.name
+-                    else "ワンクリック・キル編集向け")
++    tone, a, b, c, description = appearance(getattr(template, 'grade', 'standard'))
++    style = getattr(template, 'style', 'follow')
++    cameras = {'third':'三人称・自然', 'third_cinema':'三人称・シネマ',
++               'lolnam_cinema':'Lolnam風Orbit', 'cinema_top':'俯瞰シネマ',
++               'cinema':'シネマ', 'orbit':'Orbit', 'follow':'追従'}
++    fx = getattr(template, 'video_effects', {}) or {}
++    enabled = [k for k, v in fx.items() if float(v or 0) > .01]
++    return dict(tone=tone, colors=(a,b,c), description=description,
++                camera=cameras.get(style,style), effects=', '.join(enabled[:3]) or '追加FXなし',
++                use='集団戦向け' if 'チーム' in template.name or 'マルチ' in template.name
++                else 'キル／アシスト編集向け')
+ 
+ 
+ def render_template_preview(template, width=280, height=158):
+-    """Use real grade pipeline for the color comparison (not a canned image)."""
+-    from PIL import Image
++    """Compatibility method for legacy callers; gallery itself requires a real frame."""
+     from core.preview import sample_scene, grade_rgb
+-    rgb = sample_scene(width, height)
+-    return Image.fromarray(grade_rgb(rgb, template))
++    return Image.fromarray(grade_rgb(sample_scene(width,height), template))
+ 
+ 
+ def draw_color_bars(canvas, colors, y0=1, bar_width=38, bar_height=20):
+-    canvas.delete("all")
+-    for i, color in enumerate(colors):
+-        x = i * (bar_width + 3) + 2
+-        canvas.create_rectangle(x, y0, x + bar_width, y0 + bar_height,
+-                                fill=color, outline="#D5DDE7")
++    canvas.delete('all')
++    for i, col in enumerate(colors):
++        x = i * (bar_width+3)+2
++        canvas.create_rectangle(x,y0,x+bar_width,y0+bar_height,fill=col,outline='#D5DDE7')
+ 
+ 
+-def open_gallery(app):
+-    """Option B: dedicated browseable two-column template window.
++def render_scene_comparison(real_frame: Image.Image, template: Any,
++                            width: int=150, height: int=85) -> Image.Image:
++    """Same *real* source frame on both sides; grade/2D effects on right.
+ 
+-    The existing inline quick-view swatch remains available as option A.
+-    Both call App.apply_template, so they can be A/B tested safely.
++    Camera and temporal effects cannot be reconstructed from a single frame.
++    Only the explicitly supported single-frame grade/video FX are displayed.
+     """
++    from core.preview import grade_rgb, apply_video_effect_preview
++    if width < 8 or height < 8:
++        raise ValueError('Preview too small')
++    before = real_frame.convert('RGB').resize((width,height),Image.Resampling.LANCZOS)
++    rgb = np.asarray(before)
++    after = grade_rgb(rgb,template)
++    after = apply_video_effect_preview(after,template,phase=.5)
++    compared = Image.new('RGB',(width*2+3,height),(19,28,42))
++    compared.paste(before,(0,0))
++    compared.paste(Image.fromarray(after),(width+3,0))
++    return compared
++
++
++def scene_labels(kills):
++    from ui.scene_project import scene_key
++    names = []
++    for i, kill in enumerate(kills):
++        role = 'アシスト' if getattr(kill, 'role', 'kill') == 'assist' else 'キル'
++        names.append((f'{i+1:03d}｜{role}｜{float(kill.time):.1f}s｜'
++                      f'{str(kill.killer)} → {str(kill.victim)}', scene_key(kill), kill))
++    return names
++
++
++def open_gallery(app):
++    """Option B: searchable real-frame gallery, with capture per selected event."""
+     import tkinter as tk
+-    from tkinter import ttk
++    from tkinter import ttk, messagebox
+     from PIL import ImageTk
+ 
+-    active = getattr(app, "_template_gallery_window", None)
+-    if active is not None:
++    previous = getattr(app, '_template_gallery_window', None)
++    if previous is not None:
+         try:
+-            if active.winfo_exists():
+-                active.lift()
+-                active.focus_force()
+-                return active
++            if previous.winfo_exists():
++                if getattr(previous, '_scene_count', -1) == len(getattr(app,'kills',[])):
++                    previous.lift()
++                    previous.refresh_real_scene()
++                    return previous
++                previous.destroy()  # Scanning again may change selectable events.
+         except tk.TclError:
+             pass
+ 
+     win = tk.Toplevel(app.root)
++    win.title('LoL AutoCine｜実シーンでテンプレート比較')
++    win.geometry('930x700')
++    win.minsize(730, 490)
+     app._template_gallery_window = win
+-    win.title("LoL AutoCine｜テンプレート図鑑・色味比較")
+-    win.geometry("880x660")
+-    win.minsize(660, 480)
+-    win.configure(bg="#F4F7FB")
+     win._previews = []
+-    head = ttk.Frame(win, padding=(14, 10))
+-    head.pack(fill="x")
+-    ttk.Label(head, text="テンプレート図鑑", font=("Meiryo UI", 15, "bold")).pack(anchor="w")
+-    ttk.Label(head, text="色見本とカメラ・エフェクトを比較。サンプルはAutoCineのカラー補正から生成しています。",
+-              wraplength=830).pack(anchor="w")
+-    ttk.Label(head, text="適用すると通常のかんたん編集・詳細編集とミラーに同じテンプレート設定が反映されます。",
+-              wraplength=830).pack(anchor="w")
++    win._generation = 0
++    win._scene_count = len(getattr(app, 'kills', []))
++
++    head = ttk.Frame(win,padding=(12,10))
++    head.pack(fill='x')
++    ttk.Label(head,text='テンプレートを実際のキル／アシスト映像で比較',
++              font=('Meiryo UI',14,'bold')).pack(anchor='w')
++    ttk.Label(head,text='同じシーンの 左：元映像 ／ 右：色・2D FX適用後 を比較します。'
++              'カメラの位置や時間演出は静止画では再現されません。',
++              wraplength=860).pack(anchor='w',pady=(2,4))
++    scenes = scene_labels(getattr(app,'kills',[]))
++    scene_var = tk.StringVar(value=scenes[0][0] if scenes else '')
++    top = ttk.Frame(head);top.pack(fill='x',pady=(4,2))
++    ttk.Label(top,text='プレビュー元シーン').pack(side='left')
++    select = ttk.Combobox(top, textvariable=scene_var, state='readonly',
++                          values=[item[0] for item in scenes],width=67)
++    select.pack(side='left',padx=8,fill='x',expand=True)
++    status = tk.StringVar(value='キル／アシストをスキャンしてシーンを選んでください。'
++                          if not scenes else '保存済みの実シーン画像を読み込みます。')
++    ttk.Label(head,textvariable=status,wraplength=880).pack(anchor='w',pady=(3,3))
++    act = ttk.Frame(head);act.pack(fill='x',pady=(3,4))
+     search_var = tk.StringVar()
+-    ttk.Entry(head, textvariable=search_var).pack(fill="x", pady=(6,0))
+-    ttk.Label(head, text="↑ 名前・色・カメラ名で検索", font=("Meiryo UI", 9)).pack(anchor="w")
+-
+-    body = ttk.Frame(win)
+-    body.pack(fill="both", expand=True)
+-    scroll = tk.Canvas(body, bg="#F4F7FB", highlightthickness=0)
+-    sb = ttk.Scrollbar(body, orient="vertical", command=scroll.yview)
+-    inner = ttk.Frame(scroll)
+-    inner.bind("<Configure>", lambda _e: scroll.configure(scrollregion=scroll.bbox("all")))
+-    window_id = scroll.create_window((0,0), window=inner, anchor="nw")
+-    scroll.bind("<Configure>", lambda e: scroll.itemconfigure(window_id, width=max(1,e.width)))
+-    scroll.configure(yscrollcommand=sb.set)
+-    scroll.pack(side="left",fill="both",expand=True)
+-    sb.pack(side="right",fill="y")
++    ttk.Entry(head,textvariable=search_var).pack(fill='x',pady=(4,1))
++    ttk.Label(head,text='↑ テンプレートの名前・色・カメラで検索',font=('Meiryo UI',9)).pack(anchor='w')
++
++    body = ttk.Frame(win);body.pack(fill='both',expand=True)
++    canvas = tk.Canvas(body,bg='#F4F7FB',highlightthickness=0)
++    scrollbar = ttk.Scrollbar(body,orient='vertical',command=canvas.yview)
++    inner = ttk.Frame(canvas)
++    inner.bind('<Configure>',lambda _: canvas.configure(scrollregion=canvas.bbox('all')))
++    window_id = canvas.create_window((0,0),window=inner,anchor='nw')
++    canvas.bind('<Configure>',lambda e:canvas.itemconfigure(window_id,width=max(1,e.width)))
++    canvas.configure(yscrollcommand=scrollbar.set)
++    canvas.pack(side='left',fill='both',expand=True)
++    scrollbar.pack(side='right',fill='y')
++    inner.columnconfigure(0,weight=1)
++    inner.columnconfigure(1,weight=1)
++
+     cards = []
+-    for i,(name, tpl) in enumerate(app.templates.items()):
+-        info = template_info(tpl)
+-        panel = ttk.Frame(inner, style="Card.TFrame",padding=8)
+-        panel.grid(row=i//2,column=i%2,sticky="nsew",padx=8,pady=7)
+-        ttk.Label(panel,text=name,style="Section.TLabel",wraplength=340).pack(anchor="w")
+-        try:
+-            photo = ImageTk.PhotoImage(render_template_preview(tpl, 320, 180),master=win)
+-            win._previews.append(photo)
+-            ttk.Label(panel, image=photo).pack(anchor="center",pady=4)
+-        except Exception:
+-            # A missing optional graphics package must not hide the controls.
+-            ttk.Label(panel, text="色サンプルを取得できません",style="CardMuted.TLabel").pack()
+-        bar=tk.Canvas(panel,width=130,height=23,background="#FFFFFF",highlightthickness=0)
+-        bar.pack(anchor="w")
+-        draw_color_bars(bar,info["colors"])
++    for i,(name,tpl) in enumerate(app.templates.items()):
++        info=template_info(tpl)
++        panel=ttk.Frame(inner,padding=7)
++        panel.grid(row=i//2,column=i%2,sticky='nsew',padx=7,pady=6)
++        ttk.Label(panel,text=name,font=('Meiryo UI',10,'bold'),wraplength=360).pack(anchor='w')
++        preview=ttk.Label(panel,text='シーン画像を保存すると、ここに比較が出ます。',
++                          wraplength=330)
++        preview.pack(pady=(5,4))
++        bar=tk.Canvas(panel,width=130,height=23,highlightthickness=0,bg='#FFFFFF')
++        bar.pack(anchor='w')
++        draw_color_bars(bar,info['colors'])
+         ttk.Label(panel,text=f'色：{info["tone"]}｜{info["description"]}',
+-                  style="CardMuted.TLabel",wraplength=350).pack(anchor="w")
++                  wraplength=350).pack(anchor='w')
+         ttk.Label(panel,text=f'カメラ：{info["camera"]}｜{info["effects"]}',
+-                  style="CardMuted.TLabel",wraplength=350).pack(anchor="w")
+-        ttk.Label(panel,text=f'おすすめ：{info["use"]}',style="CardMuted.TLabel").pack(anchor="w")
+-
+-        def apply(name=name):
+-            app.var_tpl.set(name)
+-            app.apply_template(name)
++                  wraplength=350).pack(anchor='w')
++        def apply(n=name):
++            app.var_tpl.set(n)
++            app.apply_template(n)
+             app.var_live.set(True)
+-            if hasattr(app,"_invalidate_preview_snapshot"):
+-                app._invalidate_preview_snapshot()
+-            app.log("テンプレート図鑑から適用: "+name)
++            app._invalidate_preview_snapshot()
++            status.set(f'適用：{n}（ミラーにも反映）')
++        ttk.Button(panel,text='このテンプレートを適用',command=apply).pack(fill='x',pady=(6,0))
++        query=' '.join((name,info['tone'],info['camera'],info['description'])).casefold()
++        cards.append((panel,preview,tpl,query))
++
++    def chosen():
++        return next(((key,kill) for label,key,kill in scenes
++                     if label==scene_var.get()),(None,None))
++
++    def saved_image():
++        key,_ = chosen()
++        if key is None:
++            return None
++        path = app._scene_thumbnail_path(key)
++        try:
++            with Image.open(path) as im:
++                return im.convert('RGB').copy()
++        except (FileNotFoundError, OSError, ValueError):
++            return None
++
++    def refresh():
++        win._generation += 1
++        token=win._generation
++        image=saved_image()
++        win._previews=[]
++        if image is None:
++            for _,preview,_,_ in cards:
++                preview.configure(image='',text='実フレーム未保存：先にシーンへ移動して撮影')
++            status.set('実シーンの画像がありません。①移動 → ミラーで場面確認 → ②保存 の順で操作してください。')
++            return
++        status.set('保存した実シーンを使用中。各カード：左が元映像、右がテンプレ適用後。')
++        # Yield to Tk between previews to keep window and scroll responsive.
++        def render_next(index):
++            if not win.winfo_exists() or token != win._generation:
++                return
++            if index >= len(cards):
++                return
++            _,preview,tpl,_=cards[index]
++            try:
++                comparison=render_scene_comparison(image,tpl,150,85)
++                photo=ImageTk.PhotoImage(comparison,master=win)
++                win._previews.append(photo)
++                preview.configure(image=photo,text='')
++            except Exception as exc:
++                preview.configure(image='',text=f'この設定の表示に失敗：{str(exc)[:65]}')
++            win.after(4,lambda:render_next(index+1))
++        render_next(0)
+ 
+-        ttk.Button(panel,text="このテンプレートを適用",command=apply).pack(fill="x",pady=(5,0))
+-        cards.append((panel,(name+" "+info["tone"]+" "+info["camera"]+" "+info["description"]).casefold()))
++    def jump():
++        _,kill=chosen()
++        if kill is None:
++            return
++        if not app._need_lock():
++            return
++        if app.busy:
++            status.set('録画／処理中です。終了後にシーンへ移動できます。')
++            return
++        app._run_bg(app._jump_to_kill,kill)
++        status.set('選択シーンへ移動中。ミラーに正しいキル／アシストが映ったら②を押してください。')
+ 
+-    inner.columnconfigure(0, weight=1)
+-    inner.columnconfigure(1, weight=1)
++    def capture():
++        key,kill=chosen()
++        if key is None:
++            status.set('先にスキャンして、プレビュー元シーンを選んでください。')
++            return
++        if app.busy or app.source is None or not app.source.running:
++            status.set('録画中は撮影できません。LoLミラーをONにしてから試してください。')
++            return
++        rgb,where=app._current_frame_rgb(960,540)
++        if rgb is None or where != 'mirror':
++            status.set('ミラーに有効なゲーム画面がありません。')
++            return
++        path=app._scene_thumbnail_path(key)
++        try:
++            path.parent.mkdir(parents=True,exist_ok=True)
++            Image.fromarray(rgb).convert('RGB').save(path,'PNG')
++            if app._current_scene() is not None and chosen()[0] == __import__('ui.scene_project',fromlist=['scene_key']).scene_key(app._current_scene()):
++                app._show_scene_thumbnail(key)
++        except Exception as exc:
++            status.set(f'実シーン画像の保存失敗：{exc}')
++            return
++        refresh()
++        app.log(f'テンプレ比較用の実フレーム保存: {kill.time:.1f}s / {path.name}')
++
++    ttk.Button(act,text='① 選択シーンへ移動',command=jump).pack(side='left',padx=(0,8))
++    ttk.Button(act,text='② ミラーの今の実フレームを保存・比較',command=capture).pack(side='left',padx=(0,8))
++    ttk.Button(act,text='再表示',command=refresh).pack(side='left')
++    select.bind('<<ComboboxSelected>>',lambda _:refresh())
+ 
+     def filter_cards(*_):
+-        query=search_var.get().strip().casefold()
+-        index=0
+-        for frame,label in cards:
+-            if not query or query in label:
+-                frame.grid(row=index//2,column=index%2,sticky="nsew",padx=8,pady=7)
+-                index+=1
++        q=search_var.get().strip().casefold()
++        ix=0
++        for panel,_,_,name in cards:
++            if not q or q in name:
++                panel.grid(row=ix//2,column=ix%2,sticky='nsew',padx=7,pady=6)
++                ix+=1
+             else:
+-                frame.grid_remove()
+-        scroll.yview_moveto(0)
+-
+-    search_var.trace_add("write",filter_cards)
++                panel.grid_remove()
++        canvas.yview_moveto(0)
++    search_var.trace_add('write',filter_cards)
+ 
+     def wheel(event):
+-        if getattr(event,"delta",0):
+-            scroll.yview_scroll(-max(-8,min(8,int(event.delta/120))),"units")
+-        elif getattr(event,"num",0)==4:
+-            scroll.yview_scroll(-3,"units")
++        if event.delta:
++            units=-max(-8,min(8,round(event.delta/120)))
+         else:
+-            scroll.yview_scroll(3,"units")
+-        return "break"
+-
+-    # Bind in this window only; the main editor's combobox wheel protection stays intact.
+-    def bind_children(widget):
+-        widget.bind("<MouseWheel>",wheel,add="+")
+-        widget.bind("<Button-4>",wheel,add="+")
+-        widget.bind("<Button-5>",wheel,add="+")
+-        for child in widget.winfo_children():
+-            bind_children(child)
++            units=-3 if event.num==4 else 3
++        canvas.yview_scroll(units,'units')
++        return 'break'
+ 
+-    bind_children(win)
++    def bind_wheel(widget):
++        if isinstance(widget,(ttk.Combobox,ttk.Spinbox,ttk.Entry)):
++            return
++        for seq in ('<MouseWheel>','<Button-4>','<Button-5>'):
++            widget.bind(seq,wheel,add='+')
++        for child in widget.winfo_children():
++            bind_wheel(child)
++    bind_wheel(inner)
++    win.refresh_real_scene=refresh
++    refresh()
+     return win

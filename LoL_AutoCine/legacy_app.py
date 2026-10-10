@@ -528,7 +528,10 @@ class App:
         self.var_kill_frame_color = tk.StringVar(value='')
         self.var_kill_glow_color = tk.StringVar(value='')
         self.var_kill_glow_enabled = tk.BooleanVar(value=True)
-        self.var_kill_glow_strength = tk.DoubleVar(value=.65)
+        self.var_kill_glow_strength = tk.DoubleVar(value=.85)
+        self.var_kill_glow_preset = tk.StringVar(value="ゴールド")
+        self.var_kill_sparkle_intensity = tk.DoubleVar(value=1.0)
+        self.var_kill_stack_gap = tk.IntVar(value=4)
         self.var_kill_frame_width = tk.IntVar(value=3)
         self.var_kill_mark_style = tk.StringVar(value='テンプレートに合わせる')
         self.var_camera_side = tk.StringVar(value='自動（対象のチーム）')
@@ -641,12 +644,12 @@ class App:
         top.pack(fill="x")
         brand_box = ttk.Frame(top)
         brand_box.pack(side="left")
-        ttk.Label(brand_box, text="◈  LoL AutoCine v5.10.4", style="CompactTitle.TLabel").pack(anchor="w")
+        ttk.Label(brand_box, text="◈  LoL AutoCine v5.10.10", style="CompactTitle.TLabel").pack(anchor="w")
 
         nav = ttk.Frame(top)
         nav.pack(side="left", padx=(15, 0))
         ttk.Button(nav, text="⌂  ホーム", style="Nav.TButton", command=lambda: self._focus_home()).pack(side="left")
-        ttk.Button(nav, text="▣  テンプレート", style="Nav.TButton", command=lambda: self._focus_template()).pack(side="left")
+        ttk.Button(nav, text="▣  テンプレート", style="Nav.TButton", command=self._open_template_gallery).pack(side="left")
         ttk.Button(nav, text="▰  参考動画", style="Nav.TButton", command=lambda: self._focus_reference()).pack(side="left")
         ttk.Button(nav, text="⚙  設定", style="Nav.TButton", command=self._focus_settings).pack(side="left")
 
@@ -806,15 +809,34 @@ class App:
         self.template_hint = ttk.Label(f, text="プリセットを選ぶとカメラ・色・切替がまとめて設定されます。",
                                        style="CardMuted.TLabel", wraplength=400, justify="left")
         self.template_hint.pack(fill="x", pady=(3, 5))
-        for name, cmd in [
-            ("標準シネマティック", lambda: self._select_template_by_text("標準")),
-            ("LoLnam風シネマ", lambda: self._select_template_by_text("LoLnam")),
-            ("自動カメラモーション", lambda: self._select_template_by_text("自動")),
-            ("ダイナミックアクション", lambda: self._select_template_by_text("ダイナミック")),
-            ("マルチキル向け", lambda: self._select_template_by_text("マルチ")),
-        ]:
-            ttk.Button(f, text="◆  " + name, command=cmd).pack(fill="x", pady=2)
-        ttk.Button(f, text="＋  新しいテンプレート", command=self.on_make_reference_template).pack(fill="x", pady=(5, 0))
+        # Option A: compact live tone swatch. Option B: the complete gallery
+        # can be opened from the top navigation. No duplicated decorative buttons.
+        self._template_tone_text = tk.StringVar(value="色：テンプレート選択後に表示")
+        ttk.Label(f, textvariable=self._template_tone_text, style="CardMuted.TLabel",
+                  wraplength=255, justify="left").pack(anchor="w", pady=(1,3))
+        self._template_tone_canvas = tk.Canvas(f, width=141, height=23, bg="#FFFFFF",
+                                                highlightthickness=0)
+        self._template_tone_canvas.pack(anchor="w", pady=(1,5))
+        ttk.Button(f, text="A：かんたん色見本カードを開閉",
+                   command=self._toggle_inline_template_cards).pack(fill="x", pady=(3,2))
+        self._inline_color_cards=ttk.Frame(f, style="Card.TFrame")
+        from ui.template_gallery import template_info, draw_color_bars
+        for preset in ("クリア・アクション（視認性重視）", "アイスブルー・シネマ",
+                       "ゴールド・フィニッシュ", "ネオン・モンタージュ"):
+            if preset not in self.templates:
+                continue
+            details=template_info(self.templates[preset])
+            chip=ttk.Frame(self._inline_color_cards,style="Card.TFrame")
+            chip.pack(fill="x",pady=(2,2))
+            bar=tk.Canvas(chip,width=132,height=23,highlightthickness=0,bg="#FFFFFF")
+            bar.pack(side="left")
+            draw_color_bars(bar,details["colors"])
+            ttk.Button(chip,text=preset[:13],width=17,
+                       command=lambda n=preset:self._choose_easy_preset(n)).pack(side="left",padx=4)
+        ttk.Button(f, text="B：全テンプレート図鑑（実シーン比較）",
+                   command=self._open_template_gallery).pack(fill="x", pady=(3,0))
+        ttk.Label(f, text="スキャン→シーン選択→実画面保存で、補正前/後を比較します。",
+                  style="CardMuted.TLabel", wraplength=255).pack(anchor="w", pady=(2,0))
 
         # ---- center: preview / timeline / camera --------------------------
         preview_card = ttk.Frame(preview_host, style="Card.TFrame", padding=(6, 5))
@@ -826,18 +848,25 @@ class App:
         self.preview_badge.pack(side="right")
 
         self.var_live = tk.BooleanVar(value=True)
+        self.var_preview_quality = tk.StringVar(value="操作優先")
         self.var_split = tk.DoubleVar(value=0.0)
         self.var_mirror = tk.BooleanVar(value=False)
         tools = ttk.Frame(preview_card, style="Card.TFrame")
         tools.pack(fill="x", pady=(0, 7))
         ttk.Button(tools, text="ミラー ON / OFF", command=self.on_mirror_toggle).pack(side="left")
         ttk.Checkbutton(tools, text="FXをミラーに反映", variable=self.var_live).pack(side="left", padx=10)
+        quality = ttk.Combobox(tools, textvariable=self.var_preview_quality, state="readonly",
+                               values=("操作優先", "表示サイズで確認"), width=17)
+        quality.pack(side="left")
+        quality.bind("<<ComboboxSelected>>", lambda _: self._save_settings())
         ttk.Button(tools, text="▶ 再生", style="Accent.TButton", command=self.on_preview_play).pack(side="right", padx=4)
         ttk.Button(tools, text="■ 停止", command=self.on_preview_stop).pack(side="right", padx=4)
         ttk.Button(tools, text="1枚だけ更新", command=self.on_exact_still).pack(side="right", padx=4)
 
         self.canvas = tk.Canvas(preview_card, bg="#111827", width=560, height=230, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
+        # Center placeholder whenever paned windows settle or the user resizes.
+        self.canvas.bind("<Configure>", self._recenter_preview_placeholder, add="+")
         ttk.Label(preview_card, text="ぼかし・色はミラー再生中にも簡易表示（LoL本体の画面にはかかりません）。完成MP4は書き出し処理で適用。",
                   style="CardMuted.TLabel").pack(anchor="w")
         ttk.Label(preview_card, text="上段：準備・プレビュー・検出シーン　／　下段：全幅エディタ（境界ドラッグで高さ調整）",
@@ -1323,29 +1352,74 @@ class App:
             ttk.Label(part, text=caption, style="Card.TLabel").pack(side="top")
             ttk.Spinbox(part, from_=lower, to=upper, increment=inc,
                         textvariable=variable, width=7).pack(side="top")
-        ttk.Label(output, text="キルフレームの色・発光・中央マーク", style="Card.TLabel").pack(anchor="w", pady=(6,3))
-        frame_style_row = ttk.Frame(output, style="Card.TFrame")
+        ttk.Button(output, text="▶ キルフレーム詳細（色・光・中央マーク）を開閉",
+                   command=self._toggle_kill_badge_advanced).pack(fill="x", pady=(4,4))
+        self._kill_badge_advanced = ttk.Frame(output, style="Card.TFrame")
+        detail = self._kill_badge_advanced
+        ttk.Label(detail, text="キルフレームの色・発光・中央マーク", style="Card.TLabel").pack(anchor="w", pady=(6,3))
+        frame_style_row = ttk.Frame(detail, style="Card.TFrame")
         frame_style_row.pack(fill="x", pady=2)
         ttk.Button(frame_style_row, text="枠の色", command=lambda: self._choose_kill_color(self.var_kill_frame_color)).pack(side="left")
         ttk.Entry(frame_style_row, textvariable=self.var_kill_frame_color, width=10).pack(side="left", padx=4)
         ttk.Button(frame_style_row, text="発光色", command=lambda: self._choose_kill_color(self.var_kill_glow_color)).pack(side="left", padx=(8,0))
         ttk.Entry(frame_style_row, textvariable=self.var_kill_glow_color, width=10).pack(side="left", padx=4)
         ttk.Button(frame_style_row, text="色を標準に戻す", command=lambda: (self.var_kill_frame_color.set(''), self.var_kill_glow_color.set(''))).pack(side="left", padx=5)
-        frame_fx_row = ttk.Frame(output, style="Card.TFrame")
+        frame_fx_row = ttk.Frame(detail, style="Card.TFrame")
         frame_fx_row.pack(fill="x", pady=3)
         ttk.Checkbutton(frame_fx_row, text="発光ON", variable=self.var_kill_glow_enabled).pack(side="left")
         ttk.Label(frame_fx_row, text="発光の強さ", style="Card.TLabel").pack(side="left", padx=(10,3))
-        ttk.Spinbox(frame_fx_row, from_=0, to=1, increment=.1, width=5,
+        ttk.Spinbox(frame_fx_row, from_=0, to=2, increment=.1, width=5,
                     textvariable=self.var_kill_glow_strength).pack(side="left")
         ttk.Label(frame_fx_row, text="枠の太さ", style="Card.TLabel").pack(side="left", padx=(10,3))
         ttk.Spinbox(frame_fx_row, from_=1, to=8, increment=1, width=5,
                     textvariable=self.var_kill_frame_width).pack(side="left")
-        ttk.Label(output, text="アイコン間の装飾", style="Card.TLabel").pack(anchor="w", pady=(3,1))
+        glow_preset_row=ttk.Frame(detail, style="Card.TFrame")
+        glow_preset_row.pack(fill="x", pady=(2,3))
+        ttk.Label(glow_preset_row, text="発光スタイル", style="Card.TLabel").pack(side="left", padx=(0,6))
+        glow_choice=ttk.Combobox(glow_preset_row, state="readonly",
+                                 textvariable=self.var_kill_glow_preset,
+                                 values=["オフ", "ゴールド", "ネオン", "カスタム"], width=17)
+        glow_choice.pack(side="left")
+        glow_choice.bind("<<ComboboxSelected>>", lambda _e: self._apply_kill_glow_preset())
+        ttk.Label(glow_preset_row, text="弱→強をクリックで比較",
+                  style="CardMuted.TLabel").pack(side="left", padx=7)
+        # Pixel-art assets already have fixed material highlights; this slider
+        # controls additional exported bloom rather than merely changing a label.
+        strength_row = ttk.Frame(detail, style="Card.TFrame")
+        strength_row.pack(fill="x", pady=(0,3))
+        ttk.Label(strength_row, text="発光量", style="Card.TLabel").pack(side="left")
+        ttk.Scale(strength_row, variable=self.var_kill_glow_strength,
+                  from_=0.0, to=2.0).pack(side="left", fill="x", expand=True, padx=(7,8))
+        for caption,level in (("弱",.4),("標準",1.0),("強",1.7)):
+            ttk.Button(strength_row, text=caption, width=4,
+                       command=lambda v=level:(self.var_kill_glow_enabled.set(True),
+                                                self.var_kill_glow_strength.set(v))).pack(side="left",padx=2)
+        ttk.Label(detail,text="素材フレームの元の光は素材の一部です。発光量は追加グローを調整します。",
+                  style="CardMuted.TLabel",wraplength=700).pack(anchor="w")
+        sparkle_row=ttk.Frame(detail, style="Card.TFrame")
+        sparkle_row.pack(fill="x", pady=(1,4))
+        ttk.Label(sparkle_row, text="角の光", style="Card.TLabel").pack(side="left")
+        ttk.Spinbox(sparkle_row, from_=0, to=2, increment=.2, width=5,
+                    textvariable=self.var_kill_sparkle_intensity).pack(side="left", padx=(4,12))
+        ttk.Label(sparkle_row, text="縦並び間隔(px)", style="Card.TLabel").pack(side="left")
+        ttk.Spinbox(sparkle_row, from_=0, to=36, increment=2, width=5,
+                    textvariable=self.var_kill_stack_gap).pack(side="left", padx=4)
+        palettes=ttk.Frame(detail,style="Card.TFrame")
+        palettes.pack(fill="x",pady=(1,5))
+        ttk.Label(palettes,text="枠",style="Card.TLabel").pack(side="left",padx=(0,3))
+        for caption,value in (("金","#F6CB75"),("青","#6ABAFD"),("赤","#F97F7F"),("白","#F7F8FF")):
+            ttk.Button(palettes,text=caption,width=3,
+                       command=lambda c=value:self.var_kill_frame_color.set(c)).pack(side="left",padx=2)
+        ttk.Label(palettes,text="光",style="Card.TLabel").pack(side="left",padx=(10,3))
+        for caption,value in (("金","#FFD978"),("白","#FFFAEF"),("青","#63CCFF"),("紫","#B489FF")):
+            ttk.Button(palettes,text=caption,width=3,
+                       command=lambda c=value:self.var_kill_glow_color.set(c)).pack(side="left",padx=2)
+        ttk.Label(detail, text="アイコン間の装飾", style="Card.TLabel").pack(anchor="w", pady=(3,1))
         from core.kill_icons import MARK_STYLES
-        ttk.Combobox(output, state="readonly", textvariable=self.var_kill_mark_style,
+        ttk.Combobox(detail, state="readonly", textvariable=self.var_kill_mark_style,
                      values=list(MARK_STYLES.values()), width=27).pack(fill="x", pady=(0,4))
-        ttk.Button(output, text="キルフレームを画像で確認（発光プレビュー）", command=self._preview_kill_frame).pack(fill="x", pady=(2,4))
-        ttk.Label(output, text="発光は完成MP4に合成されます。ここでプレビューすると色と強さをすぐ比較できます。",
+        ttk.Button(detail, text="キルフレームを画像で確認（発光プレビュー）", command=self._preview_kill_frame).pack(fill="x", pady=(2,4))
+        ttk.Label(detail, text="発光は完成MP4に合成されます。ここでプレビューすると色と強さをすぐ比較できます。",
                   style="CardMuted.TLabel", wraplength=700).pack(anchor="w", pady=(0,4))
         ttk.Button(output, text="この画面の設定を保存", command=self._save_settings).pack(fill="x", pady=(0,6))
         ttk.Checkbutton(output, text="スマートモンタージュで見せ場を後半に配置（自動編集時のみ）",
@@ -1751,6 +1825,62 @@ class App:
     def _focus_home(self):
         self.left_scroll.scroll_to(self._nav_home_card)
         self.log('ホーム: 左側のリプレイ準備・プレイヤー選択へ移動しました')
+
+    def _toggle_kill_badge_advanced(self):
+        frame = getattr(self, "_kill_badge_advanced", None)
+        if frame is None:
+            return
+        if frame.winfo_manager():
+            frame.pack_forget()
+        else:
+            frame.pack(fill="x", pady=(2,5))
+
+    def _open_template_gallery(self):
+        """Option B: full searchable gallery separate from the editor."""
+        from ui.template_gallery import open_gallery
+        open_gallery(self)
+
+    def _refresh_template_tone(self, name):
+        """Option A: show selected template's actual tone without extra controls."""
+        if not hasattr(self, "_template_tone_canvas"):
+            return
+        from ui.template_gallery import template_info, draw_color_bars
+        tpl=self.templates.get(name)
+        if tpl is None:
+            return
+        info=template_info(tpl)
+        draw_color_bars(self._template_tone_canvas, info["colors"])
+        self._template_tone_text.set(
+            f'色：{info["tone"]} / {info["description"]}\nカメラ：{info["camera"]}')
+
+    def _toggle_inline_template_cards(self):
+        panel=getattr(self,"_inline_color_cards",None)
+        if panel is None:
+            return
+        if panel.winfo_manager():
+            panel.pack_forget()
+        else:
+            panel.pack(fill="x", pady=(3,5))
+
+    def _apply_kill_glow_preset(self):
+        """Set the real render variables; do not apply a UI-only colour label."""
+        choice=self.var_kill_glow_preset.get()
+        if choice=="オフ":
+            self.var_kill_glow_enabled.set(False)
+        elif choice=="ゴールド":
+            self.var_kill_glow_enabled.set(True)
+            self.var_kill_frame_color.set("#F4CB78")
+            self.var_kill_glow_color.set("#FFDB80")
+            self.var_kill_glow_strength.set(1.35)
+            self.var_kill_mark_style.set("ロイヤルゴールド紋章（参考画像風）")
+        elif choice=="ネオン":
+            self.var_kill_glow_enabled.set(True)
+            self.var_kill_frame_color.set("#69C6FF")
+            self.var_kill_glow_color.set("#B589FF")
+            self.var_kill_glow_strength.set(1.45)
+            self.var_kill_mark_style.set("LoL風・撃破エンブレム（オリジナル）")
+        if hasattr(self,"_invalidate_preview_snapshot"):
+            self._invalidate_preview_snapshot()
 
     def _focus_template(self):
         self.left_scroll.scroll_to(self._nav_template_card)
@@ -2730,6 +2860,12 @@ class App:
         self.var_kill_glow_color.set(getattr(t, 'kill_glow_color', ''))
         self.var_kill_glow_enabled.set(bool(getattr(t, 'kill_glow_enabled', True)))
         self.var_kill_glow_strength.set(float(getattr(t, 'kill_glow_strength', .65)))
+        self.var_kill_sparkle_intensity.set(float(getattr(t, 'kill_sparkle_intensity', 1.0)))
+        self.var_kill_stack_gap.set(int(getattr(t, 'kill_stack_gap', 4)))
+        self.var_kill_glow_preset.set("オフ" if not getattr(t, 'kill_glow_enabled', True)
+                                        else "ゴールド" if t.kill_icon_style == 'cinema'
+                                        else "ネオン" if t.kill_icon_style == 'neon'
+                                        else "カスタム")
         self.var_kill_frame_width.set(int(getattr(t, 'kill_frame_width', 3)))
         self.var_kill_mark_style.set(MARK_STYLES.get(getattr(t, 'kill_mark_style', 'auto'), MARK_STYLES['auto']))
         self.var_camera_side.set(CAMERA_SIDE_CHOICES.get(getattr(t, 'camera_side', 'auto'), CAMERA_SIDE_CHOICES['auto']))
@@ -2758,6 +2894,9 @@ class App:
                 self.effect_strength_vars[key].set(val if val > 0.001 else float(VIDEO_EFFECT_DEFAULTS.get(key, 0.25)))
         if hasattr(self, "var_effect_preset"):
             self.var_effect_preset.set(getattr(t, "effect_preset", "なし") or "なし")
+        self._refresh_template_tone(name)
+        if hasattr(self, "_invalidate_preview_snapshot"):
+            self._invalidate_preview_snapshot()
 
     def _preview_kill_frame(self) -> None:
         """Preview final ornamental PNG with genuine portraits, independent of encoder."""
@@ -2791,7 +2930,8 @@ class App:
                     png=make_badge(Path(directory)/'preview.png',style,killer_icon=icon_a,victim_icon=icon_b,
                                    frame_color=t.kill_frame_color,glow_color=t.kill_glow_color,
                                    glow_enabled=t.kill_glow_enabled,glow_strength=t.kill_glow_strength,
-                                   border_width=t.kill_frame_width,mark_style=t.kill_mark_style)
+                                   border_width=t.kill_frame_width,mark_style=t.kill_mark_style,
+                                   sparkle_strength=getattr(t, "kill_sparkle_intensity", 1.0))
                     with Image.open(png) as image_file:
                         image_copy=image_file.copy()
                 result_queue.put(("badge_preview_ready", image_copy, None))
@@ -2870,6 +3010,8 @@ class App:
             self.var_kill_frame_color.get(), self.var_kill_glow_color.get(),
             self.var_kill_glow_enabled.get(), self.var_kill_glow_strength.get(),
             self.var_kill_frame_width.get(), REVERSE_MARK_STYLES.get(self.var_kill_mark_style.get(), 'auto'))
+        t.kill_sparkle_intensity = max(0., min(2., float(self.var_kill_sparkle_intensity.get())))
+        t.kill_stack_gap = max(0, min(36, int(self.var_kill_stack_gap.get())))
         t.encoder_policy = {'GPU優先（NVENC）':'gpu', 'CPU優先（libx264）':'cpu'}.get(self.var_encoder_policy.get(),'auto')
         t.kill_icon_players = [p.to_dict() for p in self.players]
         t.smart_montage = bool(self.var_smart_montage.get())
@@ -2938,6 +3080,8 @@ class App:
                 self.lbl_out.configure(text=str(self.out_root))
                 if hasattr(self, "var_out_right"):
                     self.var_out_right.set(str(self.out_root))
+            if d.get("preview_quality") in ("操作優先", "表示サイズで確認"):
+                self.var_preview_quality.set(d["preview_quality"])
             if d.get("left_width"):
                 self.var_left_width.set(int(d["left_width"]))
             if d.get("right_width"):
@@ -2994,6 +3138,7 @@ class App:
     def _save_settings(self) -> None:
         try:
             SETTINGS.write_text(json.dumps({"out_root": str(self.out_root),
+                                             "preview_quality": self.var_preview_quality.get(),
                                              "left_width": int(self.var_left_width.get()),
                                              "right_width": int(self.var_right_width.get()),
                                              "edit_mode": self.var_edit_mode.get(),
@@ -3400,6 +3545,19 @@ class App:
         if hasattr(self, "var_mirror"):
             self.var_mirror.set(False)
 
+    def _recenter_preview_placeholder(self, _event=None) -> None:
+        """Fix off-center startup placeholder after initial Tk geometry settles."""
+        if getattr(self, "_preview_image_item", None) is not None:
+            return
+        text_item=getattr(self, "_preview_text_item", None)
+        if text_item is None:
+            return
+        try:
+            self.canvas.coords(text_item, max(1,self.canvas.winfo_width())//2,
+                               max(1,self.canvas.winfo_height())//2)
+        except tk.TclError:
+            pass
+
     def _current_frame_rgb(self, cw: int, ch: int):
         """LoLミラー映像だけをプレビューに使用する。サンプル画像は表示しない。"""
         if self.source is not None and self.source.running:
@@ -3453,12 +3611,17 @@ class App:
                 t, settings_key = self._preview_template_snapshot() if preview_fx else (None, '')
                 title = preview_title(t, self._selected_multikill()) if t is not None else ''
                 split = float(self.var_split.get()) if t is not None else 0.0
-                key = (id(self.source), cw, ch, settings_key, title, split)
+                if self.var_preview_quality.get() == "表示サイズで確認":
+                    process_w, process_h = cw, ch
+                else:
+                    process_w, process_h = (640, 360) if editing else (960, 540)
+                key = (id(self.source), cw, ch, process_w, process_h, settings_key, title, split)
                 result = self._live_preview.result(key)
                 # During drags/scrolls lower only the approximate mirror workload.
                 # Export templates, recording clocks and output resolution are untouched.
-                limit_w, limit_h = (640, 360) if editing else (960, 540)
-                self._live_preview.submit(key, (self.source, min(cw, limit_w), min(ch, limit_h),
+                # Native display quality is opt-in; default keeps controls responsive.
+                # GPU Full is still used by export; live display is CPU/PIL.
+                self._live_preview.submit(key, (self.source, process_w, process_h,
                                                t, title, split, cw, ch))
                 if result is not None and result is not self._preview_presented:
                     image, original = result[1]
@@ -3475,7 +3638,7 @@ class App:
                         cam = STYLES.get(t.style, t.style)
                         hud = "HUD安全モード" if t.hide_hud else "HUDそのまま"
                         self.canvas.itemconfigure(self._preview_text_item,
-                                                  text=f"ミラー上の簡易FX表示 / カメラ: {cam} / {hud}")
+                                                  text=f"ミラーFX表示（カラー/DOF適用） / カメラ: {cam} / {hud}")
                         now = time.monotonic()
                         if (hasattr(self, "curve_editor") and self.curve_editor.winfo_viewable()
                                 and now - self._histogram_updated >= .5):

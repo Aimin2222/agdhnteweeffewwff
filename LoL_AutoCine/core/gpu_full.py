@@ -342,7 +342,9 @@ class GPUFullStage:
             x='size.x-ow-32' if position.startswith('right') else '32.0f'
             if normalize(t.kill_icon_style)=='impact':
                 x+=f'+7*sin(35*(time-{number(entry["time"])}))*exp(-11*fabs(time-{number(entry["time"])}))'
-            row=int(round(120*scale))*entry['row']
+            # Same scaled badge height + unscaled editor gap as CPU compositing.
+            from .kill_icons import normalize_stack_gap
+            row=int(round(116*scale + normalize_stack_gap(getattr(t, 'kill_stack_gap', 4))))*entry['row']
             y=f'62.0f+{row}' if position.endswith('top') else f'size.y-oh-62-{row}'
             alpha=f'{number(opacity)}*(time>={number(entry["start"])} && time<={number(entry["end"])})'
             self._overlay(step,f'badge_{n}',label,x,y,alpha,scale)

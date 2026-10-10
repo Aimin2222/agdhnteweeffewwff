@@ -9,7 +9,7 @@ def test_v597_positional_arguments_stay_in_place():
     template = Template(fog_enabled=True, montage_fx='dark',
                         scene_keyframes=[{'time': 0, 'yaw': 4}])
     new = {'smart_highlight_enabled', 'smart_highlight_style', 'highlight_pulse'} | {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration', 'kill_icon_opacity', 'smart_composition', 'smart_montage', 'kill_icon_players'} | {'encoder_policy', 'kill_frame_color', 'kill_glow_color', 'kill_glow_enabled', 'kill_glow_strength', 'kill_frame_width', 'kill_mark_style'}
-    previous = [getattr(template, field.name) for field in fields(Template) if field.name not in new | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather','camera_side'}]
+    previous = [getattr(template, field.name) for field in fields(Template) if field.name not in new | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather','camera_side', 'kill_sparkle_intensity', 'kill_stack_gap'}]
     restored = Template(*previous)
     assert restored.fog_enabled and restored.montage_fx == 'dark'
     assert restored.scene_keyframes == [{'time': 0, 'yaw': 4}]
