@@ -1,18 +1,16 @@
-# v5.10.3 GPUFX MirrorFix 保存報告
+# v5.10.3 GPUFX ExportOpt 保存報告
 
-ソース保存先: /workspace/LoL_AutoCine、ローカルGitでremoteなし。
-取得用保存先: /workspace/agdhnteweeffewwff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
-ソースHEAD: 8a844a91f63ed20fcf932aef913c31580d0b79d5、ブランチ: integration/v5.10.3-mirrorfix。
-取得用ブランチ: codex/lol-autocine-v5103-mirrorfix-handoff。mainへマージしない。
+ソース: /workspace/LoL_AutoCine（ローカルGit、remoteなし）。取得用: /workspace/agdhnteweeffewwff（origin https://github.com/Aimin2222/agdhnteweeffewwff.git）。
+ソースHEAD: 257afdc4128e2196bcb96da9d22b763d69c254fe、ブランチ: integration/v5.10.3-exportopt。取得用ブランチ: codex/lol-autocine-v5103-exportopt-handoff。mainへマージしない。
 
-更新開始前の両Gitのgit status --shortは空。最終コミット/push後も空を確認してVERIFICATIONへ記録。個人設定・ログ・診断・録画・生成dist・.venvはローカルに保持し配布しない。
+開始前の両Gitのstatusは空。最終コミット/push後の状態はVERIFICATIONにも記録する。個人設定・録画・診断ZIP・ログ・.venvは配布しない。
 
-## ソースgit log -3 --oneline
+## git log -3 --oneline（ソース）
 
 ```
-8a844a9 Record MirrorFix integration contract and packaging
-8f4fa69 Document MirrorFix API review and preserve packaging and branch checks
-590227f Integrate asynchronous mirror lifecycle and export failure status
+257afdc Save export optimization contract and reproducible packaging
+f431de0 Document export optimization measurements and exact shared API review
+b719990 Integrate export optimization with existing mirror UI
 ```
 
 ## git remote -v
@@ -24,19 +22,20 @@ origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-## 前回CaptureFix版からの実変更
+## 前回MirrorFixからの実変更
 
 ```
 M	core/capture_process.py
-M	core/capture_worker.py
-A	docs/CODEX_MIRROR_TARGET_FIX_v5.10.3_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_MIRROR_v5.10.3.json
-M	legacy_app.py
-M	tests/test_gpu_capture_isolation.py
-M	tests/test_v5103_nonblocking_dispatch.py
+M	core/effects.py
+M	core/gpu_bloom.py
+M	core/jobs.py
+M	core/recorder.py
+A	docs/CODEX_EXPORT_OPTIMIZATION_v5.10.3_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_EXPORT_v5.10.3.json
+A	tests/test_gpu_export_optimization.py
+M	tests/test_gpu_replay_warmup_v5101.py
 M	tools/check_parallel_integration.py
-A	tools/package_v5103_mirrorfix.py
-A	ui/mirror_capture.py
+A	tools/package_v5103_exportopt.py
 ```
 
 ## 元v5.8.5からの実変更
@@ -88,6 +87,7 @@ A	docs/CODEX_ARCHITECTURE_JA.md
 A	docs/CODEX_AUDIT_RESULTS_JA.md
 A	docs/CODEX_CAPTURE_STARTUP_FIX_v5.10.3_JA.md
 A	docs/CODEX_CHAMPION_PAIR_RESULTS_v5.9.9_JA.md
+A	docs/CODEX_EXPORT_OPTIMIZATION_v5.10.3_JA.md
 A	docs/CODEX_GPU_ANALYSIS_JA.md
 A	docs/CODEX_GPU_EFFECTS_v5.10.3_JA.md
 A	docs/CODEX_GPU_REVIEW_v5.9.8_JA.md
@@ -119,6 +119,7 @@ A	docs/CODEX_MERGE_v5.9.1_JA.md
 A	docs/CODEX_MIRROR_TARGET_FIX_v5.10.3_JA.md
 A	docs/CODEX_PARALLEL_INTEGRATION_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_CAPTURE_v5.10.3.json
+A	docs/CODEX_SHARED_API_REVIEW_EXPORT_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_MIRROR_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0_JA.md
@@ -160,6 +161,7 @@ A	tests/test_gpu_circle_focus_v5103.py
 A	tests/test_gpu_dof_only_v5103.py
 A	tests/test_gpu_encoding_safety_v510.py
 A	tests/test_gpu_encoding_v510.py
+A	tests/test_gpu_export_optimization.py
 A	tests/test_gpu_highlight_v598.py
 A	tests/test_gpu_killbadges_v599.py
 A	tests/test_gpu_montage_v597.py
@@ -190,6 +192,7 @@ A	tools/package_v5100.py
 A	tools/package_v5101.py
 A	tools/package_v5103.py
 A	tools/package_v5103_capturefix.py
+A	tools/package_v5103_exportopt.py
 A	tools/package_v5103_gpu.py
 A	tools/package_v5103_hangfix.py
 A	tools/package_v5103_mirrorfix.py
@@ -208,4 +211,4 @@ A	ui/studio_localization.py
 A	ui_changes_v5.9.1.patch
 ```
 
-260ソース/Python99・全41ブランチをbundle保存。GPU/エンコード/録画/カメラ/LoL専用音声/Native/START/依存など26ファイルは前回CaptureFixとバイト一致。共有API変更なし、内部2モジュールは正確なblobをdocs/CODEX_SHARED_API_REVIEW_MIRROR_v5.10.3.jsonへ記録。UIレイアウト/変数を維持し開始/停止/失敗表示だけをUIブランチに分離した。旧版/旧PR/旧ZIP/bundleを保持。
+ソース264/Python101、全43ブランチをbundle保存。前回版の全配布物を残す。UIとlegacy_app.py、カメラ/時計/TargetLock、LoL専用音声/Native、START/FFmpeg導入などはバイト一致。core/effects.py・gpu_bloom.py・recorder.py・jobs.py・capture_process.pyは今回の意図した修正。共有内部変更は正確なblobをCODEX_SHARED_API_REVIEW_EXPORT_v5.10.3.jsonへ記録し、担当/統合一致を検査。詳細はCODEX_EXPORT_OPTIMIZATION_v5.10.3_JA.md。

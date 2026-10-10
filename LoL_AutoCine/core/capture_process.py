@@ -199,6 +199,8 @@ class CaptureSession:
         _log('WGC_STAGE first_frame_ready')
 
     def close(self, _from_reader=False):
+        if not self.cancelled.is_set():
+            _log(f'WGC_STAGE stop_requested caller={threading.current_thread().name}')
         self.cancelled.set()
         self.ready.set()
         if _from_reader:

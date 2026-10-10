@@ -135,17 +135,90 @@ def test_stop_during_frame_wait_prevents_recording(clock):
 
 def test_frame_from_during_setup_cannot_start_audio_or_recorder(monkeypatch, tmp_path):
     source = WGCWindowSource()
+    source.running = True
     source._push(np.zeros((8, 8, 4), dtype=np.uint8))
     def setup(*args):
         source._push(np.ones((8, 8, 4), dtype=np.uint8))
         return None, None
     monkeypatch.setattr(jobs, '_setup_clip', setup)
     monkeypatch.setattr(jobs, 'ClipRecorder', lambda *a, **kw: pytest.fail('stale capture started'))
-    with pytest.raises(CaptureError, match='更新されません'):
-        jobs.record_one_clip(SimpleNamespace(_autocine_record_primed=True), source, None,
+    api = FakeReplay(source)
+    api._autocine_record_primed = True
+    # Replay can move, but never produces another capture frame in recovery.
+    def playback_without_frames():
+        api.t += .12 if api.playing else 0
+        return {'time': api.t}
+    api.playback = playback_without_frames
+    with pytest.raises(CaptureError, match='準備が完了'):
+        jobs.record_one_clip(api, source, None,
                              jobs.Template(game_audio=True), 95, 96, [], tmp_path/'raw.mp4',
                              audio_factory=lambda *a: pytest.fail('audio started before readiness'))
     assert not (tmp_path/'raw.mp4').exists()
+    assert not api.playing and not api._autocine_record_primed
+
+
+@pytest.mark.parametrize('dead', [False, True])
+def test_later_paused_scene_recovers_once_and_returns_to_exact_start(monkeypatch, dead):
+    source = WGCWindowSource()
+    source.running = not dead
+    api = FakeReplay(source)
+    api._autocine_record_primed = True
+    setups, restarts, logs = [], [], []
+    def setup(api, player, tpl, start, kills, log):
+        api.set_playback(paused=True, speed=1.0)
+        api.seek(start)
+        # A paused renderer emits one valid frame during setup, then stays idle.
+        source._push(np.ones((8, 8, 4), dtype=np.uint8))
+        setups.append(start)
+        return 'plan', 'rig'
+    def restart():
+        restarts.append(True)
+        source.running = True
+    monkeypatch.setattr(jobs, '_setup_clip', setup)
+    monkeypatch.setattr(source, 'start', restart)
+    monkeypatch.setattr(source, 'stop', lambda: None)
+    assert jobs._prepare_clip_capture(api, source, None, jobs.Template(), 95, [], None, logs.append) == ('plan', 'rig')
+    assert setups == [95, 95] and api.t == 95 and not api.playing
+    assert restarts == ([True] if dead else [])
+    assert sum('1回だけ復旧' in line for line in logs) == 1
+    assert '指定の開始時刻' in logs[-1]
+
+
+def test_cancelled_scene_does_not_restart_capture(monkeypatch, clock):
+    source = WGCWindowSource();source.running = True
+    api = FakeReplay(source);api._autocine_record_primed = True
+    stop = threading.Event()
+    monkeypatch.setattr(jobs, '_setup_clip', lambda *a: (None, None))
+    monkeypatch.setattr(source, 'start', lambda: pytest.fail('cancelled source restarted'))
+    clock.on_sleep = lambda _: stop.set()
+    with pytest.raises(jobs.StallError):
+        jobs._prepare_clip_capture(api, source, None, jobs.Template(), 95, [], stop, lambda _: None)
+
+
+def test_game_pauses_before_ffmpeg_finalization(monkeypatch, tmp_path):
+    source = SyntheticSource();api = FakeReplay(source)
+    plan = SimpleNamespace(base_fov=90)
+    rig = SimpleNamespace(v=None, third=False)
+    monkeypatch.setattr(jobs, '_setup_clip', lambda *a: (plan, rig))
+    monkeypatch.setattr(jobs, 'apply_fx', lambda *a, **k: {})
+    monkeypatch.setattr(jobs, 'restore_fx', lambda *a: None)
+    monkeypatch.setattr(jobs, 'restore_hud', lambda *a: None)
+    monkeypatch.setattr(api, 'set_render', lambda **k: None, raising=False)
+    monkeypatch.setattr(jobs, '_play_until', lambda *a, **k: None)
+    director = SimpleNamespace(start=lambda: None,stop=lambda: None,errors=0,
+        api_calls=0,api_slow_calls=0,max_api_latency_ms=0,max_clock_drift=0)
+    monkeypatch.setattr(jobs, 'CameraDirector', lambda *a: director)
+    class Recorder:
+        started_perf = 0
+        def __init__(self, *a, **k): pass
+        def start(self): pass
+        def stop(self):
+            assert not api.playing, 'replay kept running during timing correction'
+            return 2
+    monkeypatch.setattr(jobs, 'ClipRecorder', Recorder)
+    take = jobs.record_one_clip(api,source,None,jobs.Template(game_audio=False,hide_hud=False),
+                               95,97,[],tmp_path/'raw.mp4')
+    assert take.duration == 2
 
 
 def test_synthetic_capture_needs_no_windows_warmup():

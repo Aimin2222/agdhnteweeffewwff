@@ -692,8 +692,12 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
     caps = caps or detect_gpu()
     gpu_prefix_graph, consumed_gpu = gpu_prefix(t.video_effects, caps)
     consumed_gpu = set(consumed_gpu) | (gpu_blur_stage.effects if gpu_blur_stage else set())
-    scale = f"scale={OUTPUT_W}:{OUTPUT_H}:flags=lanczos"
-    pre = ",".join([x for x in (gpu_prefix_graph, scale) if x])
+    # Select the final video clock BEFORE expensive filters. A 144fps capture
+    # exported at 60fps must not run CPU/OpenCL effects on discarded frames.
+    frame_rate = f"fps=fps={int(t.fps)}:round=near"
+    scale = f"{frame_rate},scale={OUTPUT_W}:{OUTPUT_H}:flags=lanczos"
+    pre = ",".join([x for x in (frame_rate, gpu_prefix_graph,
+                              f"scale={OUTPUT_W}:{OUTPUT_H}:flags=lanczos") if x])
     events = _effect_events(kills, t, duration) if effect_events is None else list(effect_events)
     # Build a distinct *actual champion* portrait pair for each event. If Riot
     # icons are unavailable, omit the badge rather than showing a fake champion.
@@ -796,6 +800,8 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
         "kill_mark_style": t.kill_mark_style,
         "video_resolution": "1920x1080",
         "output_fps": t.fps,
+        "effects_fps": t.fps,
+        "frame_rate_selection": "before_effects",
         "duration_s": duration,
     }
     r = run_render(cmd, output=dst, gpu_effects=consumed_gpu, effect_values=original_effects,
