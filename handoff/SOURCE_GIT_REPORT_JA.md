@@ -272,3 +272,5 @@ A	ui/studio_localization.py
 ```
 
 全307ソース/Python121、全57ブランチをbundleへ保存。旧54ブランチの先端と、GPUエンジン/録画/LoL専用音声など18ファイルを前版と一致確認。個人設定/プロジェクト/原診断ZIP/録画/生ログは配布しない。
+
+完了確認: ソース/取得用の未保存変更なし。GitHubからの復元で全307ソース/57ローカルrefs一致、重点27件成功。installer再実行で設定/プロジェクトを保存しstatus空。全回帰370件成功。旧54refsと旧配布物のハッシュを再確認。Draft PR #24は前回v5.10.6比較、mainへマージせず先端を保持。環境草案revision27にinstall_script/start_skillのみ保存して読み戻し一致確認。Publishは未実施で、Windows取得にPublishは不要です。

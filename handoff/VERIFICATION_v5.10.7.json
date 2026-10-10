@@ -338,8 +338,45 @@
   "old_handoff_files_retained": 96,
   "compileall_passed": true,
   "pip_check_passed": true,
-  "source_and_delivery_clean_after_commit": false,
-  "github_fresh_restore": null,
-  "environment_config_saved": false,
-  "notebook_intercepted_wheel_regression_tested": true
+  "source_and_delivery_clean_after_commit": true,
+  "github_fresh_restore": {
+    "payload_commit": "8d221189ebef18b58da7cd75f939a6a93abe6dd6",
+    "source_head": "7cd5b1825cbf2eacef67a2fd5d4373ca6f1cb4fa",
+    "all_source_bytes_match": true,
+    "source_files": 307,
+    "local_branch_count": 57,
+    "all_branch_refs_match": true,
+    "guard_status": "ok",
+    "status_before_private_markers": "clean",
+    "representative_tests": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "27",
+      "time": "4.132",
+      "timestamp": "2026-10-10T04:38:33.475884+00:00",
+      "hostname": "db64bb7c5e92"
+    },
+    "repeat_install_private_files_preserved": true,
+    "repeat_install_status": "clean"
+  },
+  "environment_config_saved": {
+    "revision": 27,
+    "fields": [
+      "install_script",
+      "start_skill"
+    ],
+    "exact_readback": true,
+    "other_settings_unchanged": true,
+    "published": false
+  },
+  "notebook_intercepted_wheel_regression_tested": true,
+  "main_unchanged": "c2a79ac3e7816c74b7d7fb15a5a32a32dd8fa16b",
+  "draft_pr": {
+    "number": 24,
+    "is_draft": true,
+    "base": "codex/lol-autocine-v5106-gpu-full-handoff",
+    "merged": false
+  }
 }
