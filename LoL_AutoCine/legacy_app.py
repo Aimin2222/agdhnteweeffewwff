@@ -3241,7 +3241,7 @@ class App:
             self.lbl_job.configure(text=f"全検出シーン {len(self.kills)} 件: 開始準備中…")
             _diag_write(RUN_LOG, "ALL_STAGE enqueue_worker")
             event_mode = self.var_event_mode.get()
-            need_rescan = getattr(self, "_last_scan_mode", None) != event_mode
+            need_rescan = getattr(self, "_last_scan_mode", event_mode) != event_mode
             self._run_bg(self._make, need_rescan, template, montage, event_mode, *scene_config)
             _diag_write(RUN_LOG, "ALL_STAGE queued")
         except Exception:
