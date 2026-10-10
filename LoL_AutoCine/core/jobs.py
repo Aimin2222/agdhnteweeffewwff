@@ -18,6 +18,7 @@ from typing import Callable, Optional
 from .audio import AudioCapture, AudioError
 from .audio_log import log as audio_log
 from .camera import CameraPlan, side_yaw_for, CameraDirector, RigInfo, attach_to_player
+from .mirror_restore import restore_mirror_camera
 from .capture import FrameSource, CaptureError, WGCWindowSource
 from .effects import Template, apply_effects, concat_clips
 from .hud import hide_hud, restore_hud
@@ -247,7 +248,11 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
                     log: Callable = lambda m: None,
                     audio_factory: Optional[Callable] = None) -> ClipTake:
     """1クリップ録画。HUD非表示は呼び出し側 (run_auto_edit) が行う。"""
-    plan, rig = _prepare_clip_capture(api, source, player, tpl, start, kills, stop, log)
+    try:
+        plan, rig = _prepare_clip_capture(api, source, player, tpl, start, kills, stop, log)
+    except Exception:
+        restore_mirror_camera(api, player, log=log)
+        raise
     take = ClipTake(rig=rig)
     saved_hud = {}
     if tpl.hide_hud:
@@ -273,6 +278,9 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
             audio_log(f"clip audio start failed: {type(e).__name__}: {e}", "ERROR")
             log(f"音声: 録音開始失敗 → {e}")
             # ゲーム音ONなのに無音MP4を成功扱いしない。初心者でも原因が分かるよう明示して停止。
+            restore_hud(api, saved_hud)
+            restore_fx(api, fx_saved)
+            restore_mirror_camera(api, player, plan.base_fov, log)
             raise AudioError(f"LoLゲーム音の準備に失敗しました: {e}") from e
     director = CameraDirector(api, plan)
     # CameraDirector has its own 144Hz motion clock. Do not encode and then
@@ -343,15 +351,14 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
             except Exception as e:  # noqa: BLE001
                 audio_log(f"WAV validation failed: {type(e).__name__}: {e}", "ERROR")
                 if tpl.game_audio:
+                    restore_hud(api, saved_hud)
+                    restore_fx(api, fx_saved)
+                    restore_mirror_camera(api, player, plan.base_fov, log)
                     raise AudioError(f"LoLゲーム音を確実に収録できません: {e}") from e
                 log(f"音声の停止処理でエラー: {e}")
-        try:
-            api.set_playback(paused=True, speed=1.0)
-            api.set_render(fieldOfView=plan.base_fov, selectionOffset={"x": 0, "y": 0, "z": 0})
-        except ReplayApiError:
-            pass
         restore_hud(api, saved_hud)
         restore_fx(api, fx_saved)
+        restore_mirror_camera(api, player, plan.base_fov, log)
     if recorder_error is not None:
         raise recorder_error
     return take
@@ -360,7 +367,11 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
 def preview_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, end: float, kills: list,
                  stop=None, log: Callable = lambda m: None) -> RigInfo:
     """録画せずに、テンプレートのカメラ演出(追従/ズーム/スロー/HUD非表示)をLoL上で再生して確認する。"""
-    plan, rig = _setup_clip(api, player, tpl, start, kills, log)
+    try:
+        plan, rig = _setup_clip(api, player, tpl, start, kills, log)
+    except Exception:
+        restore_mirror_camera(api, player, log=log)
+        raise
     director = CameraDirector(api, plan)
     cam_dist = getattr(tpl, "third_dist", 950.0) if getattr(rig, "third", False) else None
     if cam_dist is None and rig is not None and rig.v is not None:
@@ -377,13 +388,9 @@ def preview_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, en
             f"25ms超 {director.api_slow_calls}回 / "
             f"最大API待ち {director.max_api_latency_ms:.1f}ms / "
             f"最大時刻ずれ {director.max_clock_drift:.3f}s")
-        try:
-            api.set_playback(paused=True, speed=1.0)
-            api.set_render(fieldOfView=plan.base_fov, selectionOffset={"x": 0, "y": 0, "z": 0})
-        except ReplayApiError:
-            pass
         restore_hud(api, saved_hud)
         restore_fx(api, fx_saved)
+        restore_mirror_camera(api, player, plan.base_fov, log)
     return rig
 
 
