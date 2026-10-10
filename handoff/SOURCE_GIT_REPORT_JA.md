@@ -1,15 +1,15 @@
-# v5.10.7 保存報告
+# v5.10.10 保存報告
 
-ソース: /workspace/LoL_AutoCine、branch integration/v5.10.7、HEAD 7cd5b1825cbf2eacef67a2fd5d4373ca6f1cb4fa、remoteなし。
-取得用: /workspace/agdhnteweeffewwff、branch codex/lol-autocine-v5107-mirror-test-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
-mainへマージしない。開始前の両statusは空。完了時はVERIFICATIONへ記録。
+ソース保存先: /workspace/LoL_AutoCine、branch integration/v5.10.10、HEAD 3dc58a4558e6b7ccc72bddfae57edb995386d51c、remoteなし。
+取得用: /workspace/agdhnteweeffewwff、branch codex/lol-autocine-v51010-real-scene-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
+作業開始前の両git status --shortは空。完了時の状態はVERIFICATION_v5.10.10.jsonへ記録。mainにはマージしない。
 
 ## git log -3 --oneline（ソース）
 
 ```
-7cd5b18 Complete adaptive mirror throttling for intercepted notebook scrolling
-0db28d1 Notify preview throttling before notebook and combobox wheel handlers stop propagation
-2d38a61 Preserve Windows batch CRLF bytes in v5.10.7 binary handoff patch
+3dc58a4 Merge validated gallery regression fixture correction
+b704dbc Use package-qualified fixture import for gallery regression checks
+550f0a0 Document received changes and preserve branch ownership and reproducible v5.10.10 packages
 ```
 
 ## git remote -v（取得用）
@@ -19,28 +19,48 @@ origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-## 前回GPU Full v5.10.6からの実際の追加・変更
+## 前回v5.10.7からの実際の追加・変更
 
 ```
-M	TEST_GPU_RENDER.bat
+A	README_v5.10.10_JA.md
+A	README_v5.10.8_JA.md
+A	README_v5.10.9_JA.md
+A	TESTLIST_v5.10.10_JA.md
+A	TESTLIST_v5.10.9_JA.md
 M	VERSION.txt
-M	core/camera.py
-M	core/jobs.py
+A	assets/kill_badges/README_JA.txt
+A	assets/kill_badges/cyberpunk.png
+A	assets/kill_badges/inferno_gothic.png
+A	assets/kill_badges/neon_crystal.png
+A	assets/kill_badges/obsidian_gold.png
+A	assets/kill_badges/premium_gold.png
+A	assets/kill_badges/star_guardian.png
+M	core/effects.py
+M	core/gpu_full.py
 M	core/kill_icons.py
-M	core/scanner.py
-A	docs/CODEX_INTEGRATION_v5107_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_v5.10.7.json
-A	docs/WINDOWS_TEST_v5107_JA.md
+A	docs/CODEX_INTEGRATION_v51010_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.10.json
+A	docs/WINDOWS_TEST_v51010_JA.md
 M	legacy_app.py
-A	patches/history/v5106_from_codex_v5105.patch
-M	tests/test_gpu_encoding_v510.py
-A	tests/test_gpu_shared_ui5106.py
-A	tests/test_gpu_test_launcher.py
-A	tests/test_v5107_mirror_controls.py
-M	tests/test_v5991_portrait_pairs.py
+A	patches/history/RECEIVED_v51010_JA.txt
+A	patches/history/RECEIVED_v5108_JA.txt
+A	patches/history/RECEIVED_v5109_JA.txt
+A	patches/history/v5.10.10_from_v5.10.9.patch
+A	patches/history/v5.10.8_from_codex_v5.10.7.patch
+M	tests/test_gpu_champion_pair_v599.py
+M	tests/test_gpu_highlight_v598.py
+M	tests/test_gpu_killbadges_v599.py
+A	tests/test_gpu_material_v51010.py
+M	tests/test_gpu_montage_v597.py
+M	tests/test_gpu_shared_camera_contract.py
+A	tests/test_v51010_gallery_responsiveness.py
+A	tests/test_v51010_real_scene_material.py
+M	tests/test_v5105_killfeed_glow_side_help.py
+A	tests/test_v5108_premium_gallery.py
+M	tests/test_v599_automontage_killbadges.py
 M	tools/check_parallel_integration.py
-M	tools/gpu_render_test.py
-A	tools/package_v5107.py
+A	tools/package_v51010.py
+A	ui/template_gallery.py
 ```
 
 ## 元v5.8.5からの実際の追加・変更・移動
@@ -48,14 +68,26 @@ A	tools/package_v5107.py
 ```
 M	.gitignore
 M	README.md
+A	README_v5.10.10_JA.md
 A	README_v5.10.5_JA.md
+A	README_v5.10.8_JA.md
+A	README_v5.10.9_JA.md
 A	START_CPU_EFFECTS_COMPARE.bat
 A	START_GPU.bat
 A	START_GPU_HYBRID.bat
 M	START_HERE.txt
+A	TESTLIST_v5.10.10_JA.md
+A	TESTLIST_v5.10.9_JA.md
 A	TEST_GPU_RENDER.bat
 M	VERSION.txt
 A	assets/champion_icons/README_JA.txt
+A	assets/kill_badges/README_JA.txt
+A	assets/kill_badges/cyberpunk.png
+A	assets/kill_badges/inferno_gothic.png
+A	assets/kill_badges/neon_crystal.png
+A	assets/kill_badges/obsidian_gold.png
+A	assets/kill_badges/premium_gold.png
+A	assets/kill_badges/star_guardian.png
 M	core/camera.py
 A	core/camera_clock.py
 M	core/capture.py
@@ -105,6 +137,7 @@ A	docs/CODEX_INTEGRATION_RESULTS_v5.9.6_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.7_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.8_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.9_JA.md
+A	docs/CODEX_INTEGRATION_v51010_JA.md
 A	docs/CODEX_INTEGRATION_v5104_JA.md
 A	docs/CODEX_INTEGRATION_v5105_JA.md
 A	docs/CODEX_INTEGRATION_v5106_JA.md
@@ -130,6 +163,7 @@ A	docs/CODEX_SHARED_API_REVIEW_MIRROR_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.10.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.4.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.5.json
@@ -152,6 +186,7 @@ A	docs/DIAGNOSTIC_FINDINGS_v5.9.4_JA.md
 A	docs/HANDOFF_MASTER_2026-10-09_JA.md
 A	docs/REQUIREMENTS_SCENESTUDIO_JA.md
 A	docs/TEST_PLAN_v5.9.0_JA.md
+A	docs/WINDOWS_TEST_v51010_JA.md
 A	docs/WINDOWS_TEST_v5105_JA.md
 A	docs/WINDOWS_TEST_v5106_JA.md
 A	docs/WINDOWS_TEST_v5107_JA.md
@@ -193,7 +228,12 @@ A	docs/v598_CHANGED_FILES.txt
 A	docs/v598_changes.patch
 A	docs/v599_changes.patch
 M	legacy_app.py
+A	patches/history/RECEIVED_v51010_JA.txt
+A	patches/history/RECEIVED_v5108_JA.txt
+A	patches/history/RECEIVED_v5109_JA.txt
 A	patches/history/ui_changes_v5.9.1.patch
+A	patches/history/v5.10.10_from_v5.10.9.patch
+A	patches/history/v5.10.8_from_codex_v5.10.7.patch
 A	patches/history/v5106_from_codex_v5105.patch
 A	patches/v594_to_v595.patch
 A	tests/test_editor_ui_contract.py
@@ -208,6 +248,7 @@ A	tests/test_gpu_export_optimization.py
 A	tests/test_gpu_full_pipeline.py
 A	tests/test_gpu_highlight_v598.py
 A	tests/test_gpu_killbadges_v599.py
+A	tests/test_gpu_material_v51010.py
 A	tests/test_gpu_montage_v597.py
 A	tests/test_gpu_opencl_bloom.py
 A	tests/test_gpu_replay_warmup_v5101.py
@@ -223,6 +264,8 @@ A	tests/test_scene_keyframes_v592.py
 A	tests/test_scene_sequence.py
 A	tests/test_scene_studio.py
 A	tests/test_scene_studio_gui.py
+A	tests/test_v51010_gallery_responsiveness.py
+A	tests/test_v51010_real_scene_material.py
 A	tests/test_v5101_scroll_check_warmup.py
 A	tests/test_v5102_circle_focus_preset.py
 A	tests/test_v5103_nonblocking_dispatch.py
@@ -231,6 +274,7 @@ A	tests/test_v5105_killfeed_glow_side_help.py
 A	tests/test_v5105_preview_responsiveness.py
 A	tests/test_v5106_hover_help.py
 A	tests/test_v5107_mirror_controls.py
+A	tests/test_v5108_premium_gallery.py
 A	tests/test_v510_ui_gpu_killframe.py
 A	tests/test_v593_mode_camera.py
 A	tests/test_v594_live_preview.py
@@ -244,6 +288,7 @@ A	tools/check_parallel_integration.py
 A	tools/gpu_render_test.py
 A	tools/package_v5100.py
 A	tools/package_v5101.py
+A	tools/package_v51010.py
 A	tools/package_v5103.py
 A	tools/package_v5103_capture60.py
 A	tools/package_v5103_capturefix.py
@@ -269,8 +314,9 @@ A	ui/scene_project.py
 A	ui/scene_timeline.py
 A	ui/smart_montage.py
 A	ui/studio_localization.py
+A	ui/template_gallery.py
 ```
 
-全307ソース/Python121、全57ブランチをbundleへ保存。旧54ブランチの先端と、GPUエンジン/録画/LoL専用音声など18ファイルを前版と一致確認。個人設定/プロジェクト/原診断ZIP/録画/生ログは配布しない。
+全333ソース/Python127、全63ブランチをbundleへ保存。旧57ブランチ先端、GPUエンジン・カメラ・録画・LoL音声など23ファイル、受領PNG6種の一致を確認。GPU Fullの差分はキル行間、effectsはカラー/プリセット/末尾設定/バッジ設定接続のみ。個人設定/プロジェクト/原診断ZIP/録画/生ログは配布しない。旧版配布物102件をバイト単位で保持。
 
-完了確認: ソース/取得用の未保存変更なし。GitHubからの復元で全307ソース/57ローカルrefs一致、重点27件成功。installer再実行で設定/プロジェクトを保存しstatus空。全回帰370件成功。旧54refsと旧配布物のハッシュを再確認。Draft PR #24は前回v5.10.6比較、mainへマージせず先端を保持。環境草案revision27にinstall_script/start_skillのみ保存して読み戻し一致確認。Publishは未実施で、Windows取得にPublishは不要です。
+完了検証: ソース/取得用のgit status --shortは空。GitHub再取得333ソース/全63refs/ZIP・bundleハッシュ一致、復元先44テスト成功。再セットアップで設定/プロジェクト/診断のprivateテストファイルを保持。Draft PR #25、main未変更。環境設定はinstall_script/start_skillのみを保存し、Publishはしていない。

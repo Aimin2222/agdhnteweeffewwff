@@ -1,34 +1,30 @@
-# v5.10.7 ミラー設定操作・GPUテスト起動修正版
+# v5.10.10 実シーン図鑑・キルログ素材 / GPU Full統合版
 
-GitHubの `codex/lol-autocine-v5107-mirror-test-handoff` ブランチで **Code → Download ZIP**。旧版と別フォルダへ展開し、**LoL_AutoCine/START_GPU.bat** を実行してください。mainのマージやクラウド環境PublishはWindowsの取得/起動に不要です。
+GitHubの `codex/lol-autocine-v51010-real-scene-handoff` ブランチで **Code → Download ZIP**。旧版と別フォルダへ展開し、**LoL_AutoCine/START_GPU.bat** を実行。取得・起動にはmainマージやクラウドPublishは不要。
 
-完全版ZIPを `handoff/LoL_AutoCine_v5.10.7_MirrorFix_Windows_Full.zip` で開いて **Download raw file** でも取得できます。MergeChangesは前回GPU Full v5.10.6基準のGitパッチです。古いGPUファイルを上書きしないでください。
+完全版だけなら `handoff/LoL_AutoCine_v5.10.10_RealScene_GPUFull_Windows_Full.zip` を開いて **Download raw file**。MergeChangesは前回Codex v5.10.7基準のGit差分で、UI単独版v5.10.9へそのまま上書きしない。
 
-今回の受領診断では16回すべて、OpenCL GPUによる映像加工・NVDEC・NVENC・1080p/60fpsで成功しています。GPUテスト6ケースの実行結果は診断に含まれませんでした。ミラー表示はCPU合成です。
+v5.10.8→9→10を順にレビューして統合。実シーンの選択・移動・撮影による補正前/後の図鑑、キルログ素材6種、追加カラー、発光プリセット/強度/角の光/行間を追加。新しい行間と角の光を既存GPU書き出しへ接続。画像未保存なら案内を表示し、仮のゲーム画像で代用しない。静止画比較は色/2D FXの近似で、カメラの動きや時間演出は動画で確認する。
 
-ミラー用の縮小を高速化し、画面サイズへの拡大をワーカーへ移動。Canvas描画itemを再利用し、テンプレートは値変更時に再取得。スライダー/色/タブ/スクロール操作中はミラーだけ約6fpsへ抑え、操作後に通常頻度へ戻します。書き出し品質/FPS、三人称TargetLock、LoL専用音声、GPU Full処理は維持しています。
+図鑑の読込・色/FX処理は単一ワーカーへ移し、最新要求だけ保持。Tkは画像表示だけ行う。同件数の再スキャンで古い選択肢が残る問題も修正。ミラーは「操作優先」を初期値にし、従来の操作中負荷対策を保持。「表示サイズで確認」で高解像度のミラーも選択でき、選択を保存。ライブミラーはCPU/Pillowの近似表示、書き出しはGPU Fullと60fpsを維持する。
 
-TEST_GPU_RENDERは通常アプリと同じpy -3を優先し、存在しないWindows用.venvを必須にしません。Python選択/終了コード、エンジンimportより前の起動状態、例外/キャンセル/完了を診断へ保存してコンソールに表示し、最後はpauseします。受領UI差分からRED側Orbitの向き、キル＋アシスト、ガラス斬撃/中央なし、準備失敗時のミラー復帰を統合。既存のホバー/クリック説明とGPUエンジンを保持しました。
+GPU/録画/TargetLock/LoL専用音声の既存処理、TEST_GPU_RENDERの起動ログ・pause・6ケース、Windowsの起動バッチとNative Audio Helper構築を保持。全pytest407件成功（43秒、失敗/skipなし）。素材の実アイコン、発光、CPU/GPU行間、実Tkの応答・品質選択を確認。**今回の新Windows版は実機未確認**。
 
-全pytest370件成功、失敗/skipなし。実Tkで大きなミラー、設定変更、タブ/スクロール、ワーカー処理を確認。Linuxの合成1080p画像の準備時間中央値は60.18ms→29.81ms。これはTk画素転送やWindows実機の測定を含まず、実機のラグ解消を保証する数値ではありません。
+まとめテスト: **LoL_AutoCine/docs/WINDOWS_TEST_v51010_JA.md**。
+1. ミラーONで発光/色/スライダー/タブ/スクロール。「操作優先」と「表示サイズで確認」を比較。
+2. キル＋アシストをスキャンし図鑑→①移動→場面確認→②保存。検索/適用/同件数再スキャンを確認。
+3. 素材6種、発光OFF/弱/強・角の光・行間を同シーンで比較。1080p/60fpsの1/複数シーン、色、実アイコン、LoLのみの音声/同期、三人称/BLUE/REDを確認。
+4. アプリを閉じTEST_GPU_RENDERで同じrawを6ケース比較→COLLECT_DIAGNOSTICSのZIPを送る。
 
-**今回のテスト手順**: LoL_AutoCine/docs/WINDOWS_TEST_v5107_JA.md。
-1. ミラーONで設定エリアのスライダー/色/タブ/スクロールを操作。ライブFX ON/OFFを比較。
-2. アプリを閉じて **TEST_GPU_RENDER.bat** →同じraw MP4を選択。6ケースの進行と終了コードが表示され、最後の画面が残るか確認。
-3. 通常アプリで1080p/60fpsの1シーン/複数シーン、LoL音声/同期、三人称、RED/BLUE、キル＋アシストを確認。
-4. **COLLECT_DIAGNOSTICS.bat** の診断ZIPを送る。
-
-起動失敗でもdiagnostics/gpu_test_launcher.logとgpu_test_startup_日時.json/.logに記録します。成功ならoutput/gpu_render_tests/日時/RESULTS.jsonとgpu_batch記録も生成。加工テスト自体は無音で、カメラやLoL音声は通常アプリで確認します。
-
-## ローカルGitへ戻す場合
+## ローカルGitに戻す
 
 ```sh
-git clone --single-branch --branch codex/lol-autocine-v5107-mirror-test-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v5107_Handoff
-git clone --branch integration/v5.10.7 LoL_AutoCine_v5107_Handoff/handoff/LoL_AutoCine_v5.10.7_MirrorFix_all_branches.bundle LoL_AutoCine_v5107_Dev
-cd LoL_AutoCine_v5107_Dev
-git branch feature/gpu-test-launch-v5107 origin/feature/gpu-test-launch-v5107
-git branch feature/ui-mirror-v5107 origin/feature/ui-mirror-v5107
+git clone --single-branch --branch codex/lol-autocine-v51010-real-scene-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v51010_Handoff
+git clone --branch integration/v5.10.10 LoL_AutoCine_v51010_Handoff/handoff/LoL_AutoCine_v5.10.10_RealScene_GPUFull_all_branches.bundle LoL_AutoCine_v51010_Dev
+cd LoL_AutoCine_v51010_Dev
+git branch feature/gpu-material-v51010 origin/feature/gpu-material-v51010
+git branch feature/ui-real-scenes-v51010 origin/feature/ui-real-scenes-v51010
 git status --short
 ```
 
-全57ブランチはorigin/*へ復元されます。originはローカルbundleです。担当ガードはdocs/CODEX_INTEGRATION_v5107_JA.md。旧配布物96件と旧54ブランチを保存しています。
+全63ブランチはorigin/*に復元され、originはローカルbundle。担当ガード/共有レビューはdocs/CODEX_INTEGRATION_v51010_JA.md。個人設定・プロジェクト・録画は既存フォルダに保持したまま移行する。

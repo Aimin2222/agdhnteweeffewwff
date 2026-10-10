@@ -12,7 +12,7 @@ def test_previous_template_positions_and_roster_isolation():
     old = Template(smart_composition=True, kill_icon_style='neon')
     appended={'kill_icon_players','encoder_policy','kill_frame_color','kill_glow_color',
               'kill_glow_enabled','kill_glow_strength','kill_frame_width','kill_mark_style'}
-    values = [getattr(old, f.name) for f in fields(Template) if f.name not in appended | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather', 'camera_side'}]
+    values = [getattr(old, f.name) for f in fields(Template) if f.name not in appended | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather', 'camera_side', 'kill_sparkle_intensity', 'kill_stack_gap'}]
     copy = Template(*values)
     assert copy.smart_composition and copy.kill_icon_style == 'neon'
     copy.kill_icon_players.append({'name': 'Test'})

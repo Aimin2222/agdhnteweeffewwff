@@ -45,7 +45,7 @@ def test_template_camera_side_append_compatibility():
     assert data['camera_side']=='red'
     old=Template()
     assert old.camera_side=='auto'
-    assert [f.name for f in fields(Template)][-1]=='camera_side'
+    assert [f.name for f in fields(Template)][-3:] == ['camera_side', 'kill_sparkle_intensity', 'kill_stack_gap']
 
 
 def test_actual_glow_works_and_portraits_are_unchanged(tmp_path):

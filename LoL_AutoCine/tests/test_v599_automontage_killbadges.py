@@ -21,7 +21,8 @@ def kill(n=1, t=10.0, multi=1, role="kill"):
 
 
 def test_four_visual_styles_are_explicit_and_legacy_off():
-    assert set(STYLES) == {"off", "simple", "cinema", "neon", "impact"}
+    assert {"off", "simple", "cinema", "neon", "impact"} <= set(STYLES)
+    assert {"premium_gold", "star_guardian", "cyberpunk"} <= set(STYLES)
     assert Template().kill_icon_style == "off"
     assert Template().kill_icon_position == "right-top"
     assert len(POSITIONS) == 4

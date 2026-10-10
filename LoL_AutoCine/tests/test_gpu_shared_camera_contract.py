@@ -36,7 +36,7 @@ def test_legacy_camera_positional_arguments_are_preserved():
 def test_legacy_template_positional_arguments_and_new_default_isolation():
     legacy = Template(fog_enabled=True, dof_enabled=True, template_origin="custom")
     old_values = [getattr(legacy, field.name) for field in fields(Template)
-                  if field.name not in {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather','camera_side'} | {"scene_keyframes", "montage_fx", "smart_highlight_enabled",
+                  if field.name not in {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather','camera_side', 'kill_sparkle_intensity', 'kill_stack_gap'} | {"scene_keyframes", "montage_fx", "smart_highlight_enabled",
                                         "smart_highlight_style", "highlight_pulse"} | {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration', 'kill_icon_opacity', 'smart_composition', 'smart_montage', 'kill_icon_players'} | {'encoder_policy', 'kill_frame_color', 'kill_glow_color', 'kill_glow_enabled', 'kill_glow_strength', 'kill_frame_width', 'kill_mark_style'}]
     restored = Template(*old_values)
     assert restored.fog_enabled and restored.dof_enabled
