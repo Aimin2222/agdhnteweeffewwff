@@ -162,7 +162,7 @@ class GPUFullStage:
     def _build(self, t, duration, events, ffmpeg, title_index, badge_index, badges, lut_index, size):
         from PIL import Image
         from .effects import color_filters, FOG_RGB
-        from .kill_icons import badge_plan, normalize_options, normalize
+        from .kill_icons import badge_plan, normalize_options, normalize, ASSET_STYLES
         active = {k: max(0.,min(1.,float(v))) for k,v in t.video_effects.items() if float(v)>.001}
         unknown = set(active)-set(EFFECT_ORDER)
         if unknown:
@@ -347,7 +347,8 @@ class GPUFullStage:
             row=int(round(116*scale + normalize_stack_gap(getattr(t, 'kill_stack_gap', 4))))*entry['row']
             y=f'62.0f+{row}' if position.endswith('top') else f'size.y-oh-62-{row}'
             alpha=f'{number(opacity)}*(time>={number(entry["start"])} && time<={number(entry["end"])})'
-            self._overlay(step,f'badge_{n}',label,x,y,alpha,scale)
+            material_scale = scale * (0.5 if normalize(t.kill_icon_style) in ASSET_STYLES else 1.0)
+            self._overlay(step,f'badge_{n}',label,x,y,alpha,material_scale)
         if plan: self.effects.add('kill_icons')
         # program_opencl does not advertise its input frame rate. Re-establish
         # timestamps and rate with metadata filters to prevent default 25fps

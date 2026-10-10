@@ -1,30 +1,28 @@
-# v5.10.10 実シーン図鑑・キルログ素材 / GPU Full統合版
+# v5.10.13 一括スキャン・表示プレイヤー・カメラ・素材 / GPU Full統合版
 
-GitHubの `codex/lol-autocine-v51010-real-scene-handoff` ブランチで **Code → Download ZIP**。旧版と別フォルダへ展開し、**LoL_AutoCine/START_GPU.bat** を実行。取得・起動にはmainマージやクラウドPublishは不要。
+GitHubの `codex/lol-autocine-v51013-match-camera-handoff` ブランチで **Code → Download ZIP**。旧版と別フォルダへ展開し、**LoL_AutoCine/START_GPU.bat** を実行。Windows取得にはmainマージやクラウドPublishは不要。
 
-完全版だけなら `handoff/LoL_AutoCine_v5.10.10_RealScene_GPUFull_Windows_Full.zip` を開いて **Download raw file**。MergeChangesは前回Codex v5.10.7基準のGit差分で、UI単独版v5.10.9へそのまま上書きしない。
+完全版だけなら `handoff/LoL_AutoCine_v5.10.13_PlayerFilter_GPUFull_Windows_Full.zip` を開いて **Download raw file**。MergeChangesは前回Codex統合v5.10.10基準のGit差分。PNGはbinary patchに収録され、テキストだけ上書きしても素材は追加されません。UI単独版へGPUファイルを上書きしないでください。
 
-v5.10.8→9→10を順にレビューして統合。実シーンの選択・移動・撮影による補正前/後の図鑑、キルログ素材6種、追加カラー、発光プリセット/強度/角の光/行間を追加。新しい行間と角の光を既存GPU書き出しへ接続。画像未保存なら案内を表示し、仮のゲーム画像で代用しない。静止画比較は色/2D FXの近似で、カメラの動きや時間演出は動画で確認する。
+v5.10.11→12→13をレビューして統合。一括スキャンのキャッシュで表示プレイヤー/キル/アシストを切り替え、処理中の対象変更や中断・再接続後の古い結果を防ぐ。BLUE/REDのカメラ姿勢、図鑑の大きい比較画像と拡大表示、自動QA、素材37種類を追加。書き出し素材は770×232、CPU/GPUとも元の画面サイズへ縮小。受領PNGの絵は保持。
 
-図鑑の読込・色/FX処理は単一ワーカーへ移し、最新要求だけ保持。Tkは画像表示だけ行う。同件数の再スキャンで古い選択肢が残る問題も修正。ミラーは「操作優先」を初期値にし、従来の操作中負荷対策を保持。「表示サイズで確認」で高解像度のミラーも選択でき、選択を保存。ライブミラーはCPU/Pillowの近似表示、書き出しはGPU Fullと60fpsを維持する。
+RED自動192°は受領変更の暫定構図で、Windows実映像は未確認。手動ブルー/レッドの0°/180°も選べます。基準角をスマート構図の制限で潰さず、カメラの位置と視線を同じ方向へ。API俯角の補数表現を判定し、判定不能時は安全なトップへ戻ります。
 
-GPU/録画/TargetLock/LoL専用音声の既存処理、TEST_GPU_RENDERの起動ログ・pause・6ケース、Windowsの起動バッチとNative Audio Helper構築を保持。全pytest407件成功（43秒、失敗/skipなし）。素材の実アイコン、発光、CPU/GPU行間、実Tkの応答・品質選択を確認。**今回の新Windows版は実機未確認**。
+ミラー「操作優先」、設定変更時だけのsnapshot、図鑑/拡大の単一画像ワーカーを保持。ライブミラーはCPU/Pillow近似表示です。GPU Full/OpenCL、NVENC、60fpsタイムスタンプとフレーム数、LoL専用音声/同期、録画、GPU比較テストは従来の修正を保持。
 
-まとめテスト: **LoL_AutoCine/docs/WINDOWS_TEST_v51010_JA.md**。
-1. ミラーONで発光/色/スライダー/タブ/スクロール。「操作優先」と「表示サイズで確認」を比較。
-2. キル＋アシストをスキャンし図鑑→①移動→場面確認→②保存。検索/適用/同件数再スキャンを確認。
-3. 素材6種、発光OFF/弱/強・角の光・行間を同シーンで比較。1080p/60fpsの1/複数シーン、色、実アイコン、LoLのみの音声/同期、三人称/BLUE/REDを確認。
-4. アプリを閉じTEST_GPU_RENDERで同じrawを6ケース比較→COLLECT_DIAGNOSTICSのZIPを送る。
+全pytest499件成功（47秒、失敗/skipなし）、担当衝突ガードと完全ZIP/差分適用後の全ソース一致を確認。今回のWindows/NVIDIA/LoL実機の映像・音声・速度は未検証。
 
-## ローカルGitに戻す
+まとめテスト: **LoL_AutoCine/docs/WINDOWS_TEST_v51013_JA.md**。一括スキャン→表示対象/モード/チェック切替→BLUE/RED4カメラ→旧/追加素材と行間/発光→ミラーONの図鑑/拡大/色/スクロール→1080p60fpsの1/複数シーンとLoLだけの音声→自動QAとGPU比較6ケース→COLLECT_DIAGNOSTICS。
+
+## ローカルGitへ復元
 
 ```sh
-git clone --single-branch --branch codex/lol-autocine-v51010-real-scene-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v51010_Handoff
-git clone --branch integration/v5.10.10 LoL_AutoCine_v51010_Handoff/handoff/LoL_AutoCine_v5.10.10_RealScene_GPUFull_all_branches.bundle LoL_AutoCine_v51010_Dev
-cd LoL_AutoCine_v51010_Dev
-git branch feature/gpu-material-v51010 origin/feature/gpu-material-v51010
-git branch feature/ui-real-scenes-v51010 origin/feature/ui-real-scenes-v51010
+git clone --single-branch --branch codex/lol-autocine-v51013-match-camera-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v51013_Handoff
+git clone --branch integration/v5.10.13 LoL_AutoCine_v51013_Handoff/handoff/LoL_AutoCine_v5.10.13_PlayerFilter_GPUFull_all_branches.bundle LoL_AutoCine_v51013_Dev
+cd LoL_AutoCine_v51013_Dev
+git branch feature/gpu-shared-v51013 origin/feature/gpu-shared-v51013
+git branch feature/ui-player-filter-v51013 origin/feature/ui-player-filter-v51013
 git status --short
 ```
 
-全63ブランチはorigin/*に復元され、originはローカルbundle。担当ガード/共有レビューはdocs/CODEX_INTEGRATION_v51010_JA.md。個人設定・プロジェクト・録画は既存フォルダに保持したまま移行する。
+全72ブランチがorigin/*として復元されます。originはローカルbundle。担当ガード/共有レビューはdocs/CODEX_INTEGRATION_v51013_JA.md。既存フォルダの設定/プロジェクト/録画を保持して移行してください。

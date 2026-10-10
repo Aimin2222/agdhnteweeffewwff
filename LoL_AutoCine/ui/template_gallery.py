@@ -18,9 +18,9 @@ GRADE_APPEARANCE = {
     "film": ("柔らかいフィルム", "#766C67", "#B19B87", "#D9C5A1", "落ち着いた映画色"),
     "lolnam": ("映画風ティール＆金", "#355F70", "#9B9F8D", "#EAC189", "青緑の影と暖かいハイライト"),
     "tealorange": ("青緑 × オレンジ", "#2D6170", "#A47863", "#F6A659", "映画風の強い色の対比"),
-    "golden": ("温かいゴールド", "#735632", "#C69A56", "#FFDC87", "暖かい金色"),
-    "iceblue": ("アイスブルー", "#263F6A", "#648CAF", "#BBDCF7", "冷たい青の色調"),
-    "neon": ("ネオン", "#48256B", "#9E4BAA", "#65DDE1", "鮮やかな色"),
+    "golden": ("温かいゴールド", "#735632", "#C69A56", "#FFDC87", "暖かい金色・輝くハイライト"),
+    "iceblue": ("アイスブルー", "#263F6A", "#648CAF", "#BBDCF7", "冷たい青・青みが強い影"),
+    "neon": ("ネオン", "#48256B", "#9E4BAA", "#65DDE1", "紫・青の鮮やかなネオン"),
     "purple": ("紫", "#35325C", "#8F5A9F", "#C5ABDA", "幻想的な紫"),
     "noir": ("モノクロ", "#28292F", "#888A90", "#CFD0D0", "モノクロ風"),
     "dark": ("暗め", "#232A34", "#596274", "#A59A8A", "陰影の強調"),
@@ -97,7 +97,8 @@ def scene_labels(kills):
 def _render_real_scene_request(request):
     """Read and process real frames off Tk; requests contain paths/plain settings."""
     from core.effects import Template
-    path, settings = request
+    path, settings, *sizes = request
+    width, height = sizes[0] if sizes else (415, 234)
     try:
         with Image.open(path) as im:
             image = im.convert('RGB').copy()
@@ -107,10 +108,48 @@ def _render_real_scene_request(request):
     for values in settings:
         try:
             tpl = Template(**values)
-            comparisons.append((render_scene_comparison(image,tpl,150,85), None))
+            comparisons.append((render_scene_comparison(image,tpl,width,height), None))
         except Exception as exc:
             comparisons.append((None, str(exc)[:65]))
     return (True, comparisons)
+
+
+def _open_scene_zoom(parent, path, template):
+    import tkinter as tk
+    from tkinter import ttk
+    from PIL import ImageTk
+    from ui.live_preview import LatestPreview
+    win = tk.Toplevel(parent)
+    win.title(f'実映像の色比較｜{template.name}')
+    win.geometry('1310x490')
+    win.minsize(840, 350)
+    ttk.Label(win, text='左：補正前　右：テンプレート適用後（色/2D FXのみ）').pack(pady=8)
+    preview = ttk.Label(win, text='比較画像を準備中…')
+    preview.pack(expand=True)
+    worker = win._comparison_worker = LatestPreview(_render_real_scene_request)
+    win._photos = []
+    win.bind('<Destroy>', lambda event: worker.close() if event.widget is win else None, add='+')
+    worker.submit(1, (path, [template.to_dict()], (630, 354)))
+    def poll():
+        if not win.winfo_exists():
+            return
+        result = worker.result(1)
+        if result is None:
+            win.after(20, poll)
+            return
+        exists, comparisons = result[1]
+        if exists is None:
+            preview.configure(text='実フレームを保存してから拡大表示できます。')
+            return
+        comparison, error = comparisons[0]
+        if comparison is None:
+            preview.configure(text=f'表示に失敗：{error}')
+            return
+        photo = ImageTk.PhotoImage(comparison, master=win)
+        win._photos.append(photo)
+        preview.configure(image=photo, text='')
+    win.after(20, poll)
+    return win
 
 def open_gallery(app):
     """Option B: searchable real-frame gallery, with capture per selected event."""
@@ -135,8 +174,8 @@ def open_gallery(app):
 
     win = tk.Toplevel(app.root)
     win.title('LoL AutoCine｜実シーンでテンプレート比較')
-    win.geometry('930x700')
-    win.minsize(730, 490)
+    win.geometry('1140x800')
+    win.minsize(940, 570)
     app._template_gallery_window = win
     win._previews = []
     win._generation = 0
@@ -150,16 +189,16 @@ def open_gallery(app):
               font=('Meiryo UI',14,'bold')).pack(anchor='w')
     ttk.Label(head,text='同じシーンの 左：元映像 ／ 右：色・2D FX適用後 を比較します。'
               'カメラの位置や時間演出は静止画では再現されません。',
-              wraplength=860).pack(anchor='w',pady=(2,4))
+              wraplength=1080).pack(anchor='w',pady=(2,4))
     scene_var = tk.StringVar(value=scenes[0][0] if scenes else '')
     top = ttk.Frame(head);top.pack(fill='x',pady=(4,2))
     ttk.Label(top,text='プレビュー元シーン').pack(side='left')
     select = ttk.Combobox(top, textvariable=scene_var, state='readonly',
-                          values=[item[0] for item in scenes],width=67)
+                          values=[item[0] for item in scenes],width=90)
     select.pack(side='left',padx=8,fill='x',expand=True)
     status = tk.StringVar(value='キル／アシストをスキャンしてシーンを選んでください。'
                           if not scenes else '保存済みの実シーン画像を読み込みます。')
-    ttk.Label(head,textvariable=status,wraplength=880).pack(anchor='w',pady=(3,3))
+    ttk.Label(head,textvariable=status,wraplength=1080).pack(anchor='w',pady=(3,3))
     act = ttk.Frame(head);act.pack(fill='x',pady=(3,4))
     search_var = tk.StringVar()
     ttk.Entry(head,textvariable=search_var).pack(fill='x',pady=(4,1))
@@ -176,24 +215,26 @@ def open_gallery(app):
     canvas.pack(side='left',fill='both',expand=True)
     scrollbar.pack(side='right',fill='y')
     inner.columnconfigure(0,weight=1)
-    inner.columnconfigure(1,weight=1)
+    # One full-width comparison card per row.
 
     cards = []
     for i,(name,tpl) in enumerate(app.templates.items()):
         info=template_info(tpl)
         panel=ttk.Frame(inner,padding=7)
-        panel.grid(row=i//2,column=i%2,sticky='nsew',padx=7,pady=6)
-        ttk.Label(panel,text=name,font=('Meiryo UI',10,'bold'),wraplength=360).pack(anchor='w')
-        preview=ttk.Label(panel,text='シーン画像を保存すると、ここに比較が出ます。',
-                          wraplength=330)
-        preview.pack(pady=(5,4))
+        panel.grid(row=i,column=0,sticky='ew',padx=12,pady=10)
+        ttk.Label(panel,text=name,font=('Meiryo UI',10,'bold'),wraplength=850).pack(anchor='w')
+        preview=ttk.Label(panel,text='シーン画像を保存すると、ここに大きい比較が出ます。',
+                          wraplength=750,cursor='hand2')
+        preview.pack(pady=(6,4),anchor='center')
+        ttk.Label(panel,text='左：補正前（実映像）　　右：テンプレート適用後　｜　クリックで拡大',
+                  font=('Meiryo UI',10,'bold')).pack(anchor='center',pady=(0,5))
         bar=tk.Canvas(panel,width=130,height=23,highlightthickness=0,bg='#FFFFFF')
         bar.pack(anchor='w')
         draw_color_bars(bar,info['colors'])
         ttk.Label(panel,text=f'色：{info["tone"]}｜{info["description"]}',
-                  wraplength=350).pack(anchor='w')
+                  wraplength=850).pack(anchor='w')
         ttk.Label(panel,text=f'カメラ：{info["camera"]}｜{info["effects"]}',
-                  wraplength=350).pack(anchor='w')
+                  wraplength=850).pack(anchor='w')
         def apply(n=name):
             app.var_tpl.set(n)
             app.apply_template(n)
@@ -202,6 +243,13 @@ def open_gallery(app):
             status.set(f'適用：{n}（ミラーにも反映）')
         ttk.Button(panel,text='このテンプレートを適用',command=apply).pack(fill='x',pady=(6,0))
         query=' '.join((name,info['tone'],info['camera'],info['description'])).casefold()
+        def zoom(t=tpl):
+            key, _ = chosen()
+            if key is None:
+                status.set('実フレームを保存してから拡大表示できます。')
+                return
+            _open_scene_zoom(win, str(app._scene_thumbnail_path(key)), t)
+        preview.bind('<Button-1>', lambda _event, z=zoom: z())
         cards.append((panel,preview,tpl,query))
 
     def chosen():
@@ -297,7 +345,7 @@ def open_gallery(app):
         ix=0
         for panel,_,_,name in cards:
             if not q or q in name:
-                panel.grid(row=ix//2,column=ix%2,sticky='nsew',padx=7,pady=6)
+                panel.grid(row=ix,column=0,sticky='ew',padx=12,pady=10)
                 ix+=1
             else:
                 panel.grid_remove()

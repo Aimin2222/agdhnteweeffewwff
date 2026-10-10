@@ -22,7 +22,39 @@ STYLES = {
     "star_guardian": "星と翼の幻想",
     "inferno_gothic": "炎熱ゴシック",
     "cyberpunk": "サイバーパンク",
+    "royal_deluxe": "ロイヤル・デラックス（金）",
+    "gold_wing": "黄金の翼章",
+    "neon_show": "ネオン・ステージ",
+    "kda_style": "ポップアイドル（K/DA風）",
+    "project_style": "PROJECT風サイバー",
+    "star_magic": "星の守護者風・光翼",
+    "spirit_blossom": "精霊の花祭り風",
+    "high_noon": "ハイヌーン風・炎",
+    "obsidian_violet": "黒曜石・紫晶",
+    "emerald_relic": "エメラルド・レリック",
+    "crimson_mythic": "クリムゾン・ミシック",
+    "celestial_blue": "蒼天クリスタル",
+    "neon_duel": "ネオン決闘",
+    "purple_crystal": "紫の宝石フレーム",
+    "classic_obsidian": "黒曜石・黄金（別装飾）",
+    "user_frame_01": "追加素材 01",
+    "user_frame_02": "追加素材 02",
+    "user_frame_03": "追加素材 03",
+    "user_frame_04": "追加素材 04",
+    "user_frame_05": "追加素材 05",
+    "user_frame_06": "追加素材 06",
+    "user_frame_07": "追加素材 07",
+    "user_frame_08": "追加素材 08",
+    "user_frame_09": "追加素材 09",
+    "user_frame_10": "追加素材 10",
+    "user_frame_11": "追加素材 11",
+    "user_frame_12": "追加素材 12",
+    "user_frame_13": "追加素材 13",
+    "user_frame_14": "追加素材 14",
+    "user_frame_15": "追加素材 15",
+    "user_frame_16": "追加素材 16",
 }
+
 REVERSE_STYLES = {label: code for code, label in STYLES.items()}
 POSITIONS = {
     "right-top": "右上（おすすめ）",
@@ -42,6 +74,37 @@ COLORS = {
     "star_guardian": (255, 186, 243),
     "inferno_gothic": (255, 113, 84),
     "cyberpunk": (102, 243, 255),
+    "royal_deluxe": (249, 204, 113),
+    "gold_wing": (252, 194, 93),
+    "neon_show": (255, 112, 225),
+    "kda_style": (231, 88, 223),
+    "project_style": (239, 77, 55),
+    "star_magic": (250, 158, 225),
+    "spirit_blossom": (243, 186, 216),
+    "high_noon": (253, 151, 42),
+    "obsidian_violet": (158, 91, 234),
+    "emerald_relic": (84, 224, 164),
+    "crimson_mythic": (255, 105, 112),
+    "celestial_blue": (157, 203, 255),
+    "neon_duel": (203, 131, 255),
+    "purple_crystal": (205, 107, 251),
+    "classic_obsidian": (249, 201, 119),
+    "user_frame_01": (249, 194, 84),
+    "user_frame_02": (160, 139, 255),
+    "user_frame_03": (255, 112, 225),
+    "user_frame_04": (84, 224, 164),
+    "user_frame_05": (203, 131, 255),
+    "user_frame_06": (239, 77, 55),
+    "user_frame_07": (157, 203, 255),
+    "user_frame_08": (243, 186, 216),
+    "user_frame_09": (249, 194, 84),
+    "user_frame_10": (160, 139, 255),
+    "user_frame_11": (255, 112, 225),
+    "user_frame_12": (84, 224, 164),
+    "user_frame_13": (203, 131, 255),
+    "user_frame_14": (239, 77, 55),
+    "user_frame_15": (157, 203, 255),
+    "user_frame_16": (243, 186, 216),
 }
 
 ASSET_STYLES = {
@@ -51,6 +114,37 @@ ASSET_STYLES = {
     "star_guardian": "star_guardian.png",
     "inferno_gothic": "inferno_gothic.png",
     "cyberpunk": "cyberpunk.png",
+    "royal_deluxe": "royal_deluxe.png",
+    "gold_wing": "gold_wing.png",
+    "neon_show": "neon_show.png",
+    "kda_style": "kda_style.png",
+    "project_style": "project_style.png",
+    "star_magic": "star_magic.png",
+    "spirit_blossom": "spirit_blossom.png",
+    "high_noon": "high_noon.png",
+    "obsidian_violet": "obsidian_violet.png",
+    "emerald_relic": "emerald_relic.png",
+    "crimson_mythic": "crimson_mythic.png",
+    "celestial_blue": "celestial_blue.png",
+    "neon_duel": "neon_duel.png",
+    "purple_crystal": "purple_crystal.png",
+    "classic_obsidian": "classic_obsidian.png",
+    "user_frame_01": "user_frame_01.png",
+    "user_frame_02": "user_frame_02.png",
+    "user_frame_03": "user_frame_03.png",
+    "user_frame_04": "user_frame_04.png",
+    "user_frame_05": "user_frame_05.png",
+    "user_frame_06": "user_frame_06.png",
+    "user_frame_07": "user_frame_07.png",
+    "user_frame_08": "user_frame_08.png",
+    "user_frame_09": "user_frame_09.png",
+    "user_frame_10": "user_frame_10.png",
+    "user_frame_11": "user_frame_11.png",
+    "user_frame_12": "user_frame_12.png",
+    "user_frame_13": "user_frame_13.png",
+    "user_frame_14": "user_frame_14.png",
+    "user_frame_15": "user_frame_15.png",
+    "user_frame_16": "user_frame_16.png",
 }
 
 MARK_STYLES = {
@@ -126,7 +220,7 @@ def _fit_portrait_rgba(source, size, radius=20):
 
 def _compose_asset_badge(path: Path, style: str, killer_icon=None, victim_icon=None,
                          *, glow_enabled=True, glow_strength=.85, glow_color='',
-                         sparkle_strength=1.0):
+                         sparkle_strength=1.0, hires=False):
     """Composite actual players beneath a transparent premium frame.
 
     Assets are high-resolution source illustrations, but the *video overlay*
@@ -153,7 +247,10 @@ def _compose_asset_badge(path: Path, style: str, killer_icon=None, victim_icon=N
         portrait = _fit_portrait_rgba(victim_icon, (398, 398), radius=12)
         base.alpha_composite(portrait, boxes["right"][:2])
     base.alpha_composite(overlay)
-    base = base.resize((385, 116), Image.Resampling.LANCZOS)
+    # Keep twice the former working resolution until the video compositor;
+    # source art is unchanged (and already 2172px wide). No generative redraw.
+    factor = 2 if hires else 1
+    base = base.resize((385 * factor, 116 * factor), Image.Resampling.LANCZOS)
 
     # The supplied art already contains its original luminous details. Fade
     # its semi-transparent outskirts at zero, and add a genuinely soft halo
@@ -169,7 +266,7 @@ def _compose_asset_badge(path: Path, style: str, killer_icon=None, victim_icon=N
         glow = Image.new("RGBA", base.size, (*color, 0))
         bright = original.point(lambda a: 0 if a < 80 else a)
         glow.putalpha(bright)
-        radius = 4.0 + 3.5 * strength
+        radius = (4.0 + 3.5 * strength) * factor
         aura = glow.filter(ImageFilter.GaussianBlur(radius))
         aura.putalpha(aura.getchannel("A").point(
             lambda a: min(210, int(a * strength * .85))))
@@ -184,9 +281,10 @@ def _compose_asset_badge(path: Path, style: str, killer_icon=None, victim_icon=N
         d = ImageDraw.Draw(flare)
         color = _rgb(valid_hex(glow_color), COLORS[style])
         for x, y in ((58,23), (307,23), (58,89), (307,89)):
+            x, y = x * factor, y * factor
             alpha = min(250, int(92 * strength * sparkle))
-            d.line((x-15,y,x+15,y), fill=(*color,alpha),width=1)
-            d.line((x,y-8,x,y+8), fill=(255,251,232,alpha),width=1)
+            d.line((x-15*factor,y,x+15*factor,y), fill=(*color,alpha),width=factor)
+            d.line((x,y-8*factor,x,y+8*factor), fill=(255,251,232,alpha),width=factor)
         base = Image.alpha_composite(base, flare)
     path.parent.mkdir(parents=True, exist_ok=True)
     base.save(path, format="PNG")
@@ -218,7 +316,7 @@ def _rounded_portrait(canvas, source, xy, radius=11):
 
 def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, victim_icon=None,
                frame_color='', glow_color='', glow_enabled=True, glow_strength=.85,
-               border_width=3, mark_style='auto', sparkle_strength=1.0):
+               border_width=3, mark_style='auto', sparkle_strength=1.0, hires=False):
     """Build an ORIGINAL transparent premium kill-feed asset with genuine portraits.
 
     The reference artwork is a visual target only: do not stamp static
@@ -236,7 +334,7 @@ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, vict
         return _compose_asset_badge(path, style, killer_icon=killer_icon,
                                     victim_icon=victim_icon, glow_enabled=glow_enabled,
                                     glow_strength=glow_strength, glow_color=glow_color,
-                                    sparkle_strength=sparkle_strength)
+                                    sparkle_strength=sparkle_strength, hires=hires)
     path.parent.mkdir(parents=True, exist_ok=True)
     frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style = normalize_design(
         frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style)
@@ -473,7 +571,8 @@ def make_event_badges(output: Path, style: str, kills, events, roster, *, icon_l
             if log:log("キルアイコン: 公式肖像アイコン未取得。ネット接続またはassets/champion_iconsを確認")
             continue
         f=Path(output).with_name(Path(output).stem+f".kill_pair_{len(entries)+1:02d}.png")
-        make_badge(f,style,killer_icon=icon_a,victim_icon=icon_b,**design)
+        make_badge(f,style,killer_icon=icon_a,victim_icon=icon_b,
+                   hires=(style in ASSET_STYLES),**design)
         entries.append((f,float(event[0])))
     return entries
 
@@ -520,7 +619,10 @@ def with_badges(graph: str, badge_input: int, badges, *, duration: float,
         extra=(f"+7*sin(35*(t-{t:.3f}))*exp(-11*abs(t-{t:.3f}))" if normalize(style)=="impact" else "")
         inlabel=f"pair_src_{n}"
         outlabel="vout" if n==len(planned)-1 else f"pair_src_{n+1}"
-        parts.append(f"[{int(badge_input)+idx}:v]format=rgba,scale=w='trunc(iw*{scale:.3f}/2)*2':h='trunc(ih*{scale:.3f}/2)*2',colorchannelmixer=aa={opacity:.3f}[pair_img_{n}]")
+        # Premium PNG badges are rasterized at 2x to preserve glints/metallic
+        # edges; downsample only inside FFmpeg while keeping the same on-screen size.
+        display_scale = scale * (0.5 if normalize(style) in ASSET_STYLES else 1.0)
+        parts.append(f"[{int(badge_input)+idx}:v]format=rgba,scale=w='trunc(iw*{display_scale:.3f}/2)*2':h='trunc(ih*{display_scale:.3f}/2)*2',colorchannelmixer=aa={opacity:.3f}[pair_img_{n}]")
         parts.append(f"[{inlabel}][pair_img_{n}]overlay=x='{x+extra}':y='{y}':format=auto:shortest=0:eof_action=repeat:enable='between(t,{start:.3f},{end:.3f})'[{outlabel}]")
     parts[-1]=parts[-1].replace('[vout]','[pair_finished]')
     parts.append('[pair_finished]format=yuv420p[vout]')

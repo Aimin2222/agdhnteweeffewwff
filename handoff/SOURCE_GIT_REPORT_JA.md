@@ -1,93 +1,161 @@
-# v5.10.10 保存報告
+# v5.10.13 保存報告
 
-ソース保存先: /workspace/LoL_AutoCine、branch integration/v5.10.10、HEAD 3dc58a4558e6b7ccc72bddfae57edb995386d51c、remoteなし。
-取得用: /workspace/agdhnteweeffewwff、branch codex/lol-autocine-v51010-real-scene-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
-作業開始前の両git status --shortは空。完了時の状態はVERIFICATION_v5.10.10.jsonへ記録。mainにはマージしない。
+ソース: /workspace/LoL_AutoCine、branch integration/v5.10.13、HEAD 6d443c19fcd4bbb46a21519c61bff7c98af59b03、remoteなし。
+取得用: /workspace/agdhnteweeffewwff、branch codex/lol-autocine-v51013-match-camera-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
+開始時とソース保存完了時のgit status --shortは空。最終状態はVERIFICATION_v5.10.13.jsonへ記録。mainにはマージしない。
 
 ## git log -3 --oneline（ソース）
 
-```
-3dc58a4 Merge validated gallery regression fixture correction
-b704dbc Use package-qualified fixture import for gallery regression checks
-550f0a0 Document received changes and preserve branch ownership and reproducible v5.10.10 packages
+```text
+6d443c1 Resolve packaging baseline after standard single-branch bundle clone
+231a1e1 Document v5.10.13 shared API review, Windows tests and safe binary-patch packaging
+9b45e87 Merge UI session and zoom responsiveness regressions
 ```
 
 ## git remote -v（取得用）
 
-```
+```text
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-## 前回v5.10.7からの実際の追加・変更
+## v5.10.10からの追加・変更一覧
 
-```
-A	README_v5.10.10_JA.md
-A	README_v5.10.8_JA.md
-A	README_v5.10.9_JA.md
-A	TESTLIST_v5.10.10_JA.md
-A	TESTLIST_v5.10.9_JA.md
+```text
+A	README_v5.10.11_JA.md
+A	README_v5.10.12_JA.md
+A	README_v5.10.13_JA.md
+A	RUN_AUTOTEST.bat
+A	TESTLIST_v5.10.11_JA.md
+A	TESTLIST_v5.10.12_JA.md
+A	TESTLIST_v5.10.13_JA.md
 M	VERSION.txt
-A	assets/kill_badges/README_JA.txt
-A	assets/kill_badges/cyberpunk.png
-A	assets/kill_badges/inferno_gothic.png
-A	assets/kill_badges/neon_crystal.png
-A	assets/kill_badges/obsidian_gold.png
-A	assets/kill_badges/premium_gold.png
-A	assets/kill_badges/star_guardian.png
+A	assets/kill_badges/celestial_blue.png
+A	assets/kill_badges/classic_obsidian.png
+A	assets/kill_badges/crimson_mythic.png
+A	assets/kill_badges/emerald_relic.png
+A	assets/kill_badges/gold_wing.png
+A	assets/kill_badges/high_noon.png
+A	assets/kill_badges/kda_style.png
+A	assets/kill_badges/neon_duel.png
+A	assets/kill_badges/neon_show.png
+A	assets/kill_badges/obsidian_violet.png
+A	assets/kill_badges/project_style.png
+A	assets/kill_badges/purple_crystal.png
+A	assets/kill_badges/royal_deluxe.png
+A	assets/kill_badges/spirit_blossom.png
+A	assets/kill_badges/star_magic.png
+A	assets/kill_badges/user_frame_01.png
+A	assets/kill_badges/user_frame_02.png
+A	assets/kill_badges/user_frame_03.png
+A	assets/kill_badges/user_frame_04.png
+A	assets/kill_badges/user_frame_05.png
+A	assets/kill_badges/user_frame_06.png
+A	assets/kill_badges/user_frame_07.png
+A	assets/kill_badges/user_frame_08.png
+A	assets/kill_badges/user_frame_09.png
+A	assets/kill_badges/user_frame_10.png
+A	assets/kill_badges/user_frame_11.png
+A	assets/kill_badges/user_frame_12.png
+A	assets/kill_badges/user_frame_13.png
+A	assets/kill_badges/user_frame_14.png
+A	assets/kill_badges/user_frame_15.png
+A	assets/kill_badges/user_frame_16.png
+A	core/auto_qa.py
+M	core/camera.py
 M	core/effects.py
 M	core/gpu_full.py
+M	core/jobs.py
 M	core/kill_icons.py
-A	docs/CODEX_INTEGRATION_v51010_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_v5.10.10.json
-A	docs/WINDOWS_TEST_v51010_JA.md
+M	core/scanner.py
+A	docs/CODEX_INTEGRATION_v51012_JA.md
+A	docs/CODEX_INTEGRATION_v51013_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.12.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.13.json
+A	docs/WINDOWS_TEST_v51013_JA.md
 M	legacy_app.py
-A	patches/history/RECEIVED_v51010_JA.txt
-A	patches/history/RECEIVED_v5108_JA.txt
-A	patches/history/RECEIVED_v5109_JA.txt
-A	patches/history/v5.10.10_from_v5.10.9.patch
-A	patches/history/v5.10.8_from_codex_v5.10.7.patch
-M	tests/test_gpu_champion_pair_v599.py
-M	tests/test_gpu_highlight_v598.py
-M	tests/test_gpu_killbadges_v599.py
-A	tests/test_gpu_material_v51010.py
-M	tests/test_gpu_montage_v597.py
-M	tests/test_gpu_shared_camera_contract.py
-A	tests/test_v51010_gallery_responsiveness.py
-A	tests/test_v51010_real_scene_material.py
-M	tests/test_v5105_killfeed_glow_side_help.py
-A	tests/test_v5108_premium_gallery.py
-M	tests/test_v599_automontage_killbadges.py
+A	patches/history/RECEIVED_v51011_JA.md
+A	patches/history/RECEIVED_v51012_JA.txt
+A	patches/history/RECEIVED_v51013_JA.md
+A	patches/history/v5.10.12_from_v5.10.11.patch
+A	patches/history/v51011_from_v51010.patch
+A	patches/history/v51013_reviewed_code.patch
+A	tests/test_gpu_shared_v51013.py
+M	tests/test_v51010_gallery_responsiveness.py
+A	tests/test_v51011_gallery_camera_qa.py
+A	tests/test_v51012_allscan_quality_camera.py
+A	tests/test_v51013_player_filter.py
+M	tests/test_v5107_mirror_controls.py
+M	tests/test_v5108_premium_gallery.py
 M	tools/check_parallel_integration.py
-A	tools/package_v51010.py
-A	ui/template_gallery.py
+A	tools/package_v51013.py
+M	ui/template_gallery.py
 ```
 
-## 元v5.8.5からの実際の追加・変更・移動
+## 元v5.8.5からの追加・変更・移動一覧
 
-```
+```text
 M	.gitignore
 M	README.md
 A	README_v5.10.10_JA.md
+A	README_v5.10.11_JA.md
+A	README_v5.10.12_JA.md
+A	README_v5.10.13_JA.md
 A	README_v5.10.5_JA.md
 A	README_v5.10.8_JA.md
 A	README_v5.10.9_JA.md
+A	RUN_AUTOTEST.bat
 A	START_CPU_EFFECTS_COMPARE.bat
 A	START_GPU.bat
 A	START_GPU_HYBRID.bat
 M	START_HERE.txt
 A	TESTLIST_v5.10.10_JA.md
+A	TESTLIST_v5.10.11_JA.md
+A	TESTLIST_v5.10.12_JA.md
+A	TESTLIST_v5.10.13_JA.md
 A	TESTLIST_v5.10.9_JA.md
 A	TEST_GPU_RENDER.bat
 M	VERSION.txt
 A	assets/champion_icons/README_JA.txt
 A	assets/kill_badges/README_JA.txt
+A	assets/kill_badges/celestial_blue.png
+A	assets/kill_badges/classic_obsidian.png
+A	assets/kill_badges/crimson_mythic.png
 A	assets/kill_badges/cyberpunk.png
+A	assets/kill_badges/emerald_relic.png
+A	assets/kill_badges/gold_wing.png
+A	assets/kill_badges/high_noon.png
 A	assets/kill_badges/inferno_gothic.png
+A	assets/kill_badges/kda_style.png
 A	assets/kill_badges/neon_crystal.png
+A	assets/kill_badges/neon_duel.png
+A	assets/kill_badges/neon_show.png
 A	assets/kill_badges/obsidian_gold.png
+A	assets/kill_badges/obsidian_violet.png
 A	assets/kill_badges/premium_gold.png
+A	assets/kill_badges/project_style.png
+A	assets/kill_badges/purple_crystal.png
+A	assets/kill_badges/royal_deluxe.png
+A	assets/kill_badges/spirit_blossom.png
 A	assets/kill_badges/star_guardian.png
+A	assets/kill_badges/star_magic.png
+A	assets/kill_badges/user_frame_01.png
+A	assets/kill_badges/user_frame_02.png
+A	assets/kill_badges/user_frame_03.png
+A	assets/kill_badges/user_frame_04.png
+A	assets/kill_badges/user_frame_05.png
+A	assets/kill_badges/user_frame_06.png
+A	assets/kill_badges/user_frame_07.png
+A	assets/kill_badges/user_frame_08.png
+A	assets/kill_badges/user_frame_09.png
+A	assets/kill_badges/user_frame_10.png
+A	assets/kill_badges/user_frame_11.png
+A	assets/kill_badges/user_frame_12.png
+A	assets/kill_badges/user_frame_13.png
+A	assets/kill_badges/user_frame_14.png
+A	assets/kill_badges/user_frame_15.png
+A	assets/kill_badges/user_frame_16.png
+A	core/auto_qa.py
 M	core/camera.py
 A	core/camera_clock.py
 M	core/capture.py
@@ -138,6 +206,8 @@ A	docs/CODEX_INTEGRATION_RESULTS_v5.9.7_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.8_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.9_JA.md
 A	docs/CODEX_INTEGRATION_v51010_JA.md
+A	docs/CODEX_INTEGRATION_v51012_JA.md
+A	docs/CODEX_INTEGRATION_v51013_JA.md
 A	docs/CODEX_INTEGRATION_v5104_JA.md
 A	docs/CODEX_INTEGRATION_v5105_JA.md
 A	docs/CODEX_INTEGRATION_v5106_JA.md
@@ -164,6 +234,8 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.10.0.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.10.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.12.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.13.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.4.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.5.json
@@ -187,6 +259,7 @@ A	docs/HANDOFF_MASTER_2026-10-09_JA.md
 A	docs/REQUIREMENTS_SCENESTUDIO_JA.md
 A	docs/TEST_PLAN_v5.9.0_JA.md
 A	docs/WINDOWS_TEST_v51010_JA.md
+A	docs/WINDOWS_TEST_v51013_JA.md
 A	docs/WINDOWS_TEST_v5105_JA.md
 A	docs/WINDOWS_TEST_v5106_JA.md
 A	docs/WINDOWS_TEST_v5107_JA.md
@@ -229,11 +302,17 @@ A	docs/v598_changes.patch
 A	docs/v599_changes.patch
 M	legacy_app.py
 A	patches/history/RECEIVED_v51010_JA.txt
+A	patches/history/RECEIVED_v51011_JA.md
+A	patches/history/RECEIVED_v51012_JA.txt
+A	patches/history/RECEIVED_v51013_JA.md
 A	patches/history/RECEIVED_v5108_JA.txt
 A	patches/history/RECEIVED_v5109_JA.txt
 A	patches/history/ui_changes_v5.9.1.patch
 A	patches/history/v5.10.10_from_v5.10.9.patch
+A	patches/history/v5.10.12_from_v5.10.11.patch
 A	patches/history/v5.10.8_from_codex_v5.10.7.patch
+A	patches/history/v51011_from_v51010.patch
+A	patches/history/v51013_reviewed_code.patch
 A	patches/history/v5106_from_codex_v5105.patch
 A	patches/v594_to_v595.patch
 A	tests/test_editor_ui_contract.py
@@ -258,6 +337,7 @@ A	tests/test_gpu_shared_camera_v593.py
 A	tests/test_gpu_shared_camera_v594.py
 A	tests/test_gpu_shared_replay_v5104.py
 A	tests/test_gpu_shared_ui5106.py
+A	tests/test_gpu_shared_v51013.py
 A	tests/test_gpu_test_launcher.py
 A	tests/test_parallel_integration.py
 A	tests/test_scene_keyframes_v592.py
@@ -266,6 +346,9 @@ A	tests/test_scene_studio.py
 A	tests/test_scene_studio_gui.py
 A	tests/test_v51010_gallery_responsiveness.py
 A	tests/test_v51010_real_scene_material.py
+A	tests/test_v51011_gallery_camera_qa.py
+A	tests/test_v51012_allscan_quality_camera.py
+A	tests/test_v51013_player_filter.py
 A	tests/test_v5101_scroll_check_warmup.py
 A	tests/test_v5102_circle_focus_preset.py
 A	tests/test_v5103_nonblocking_dispatch.py
@@ -289,6 +372,7 @@ A	tools/gpu_render_test.py
 A	tools/package_v5100.py
 A	tools/package_v5101.py
 A	tools/package_v51010.py
+A	tools/package_v51013.py
 A	tools/package_v5103.py
 A	tools/package_v5103_capture60.py
 A	tools/package_v5103_capturefix.py
@@ -317,6 +401,4 @@ A	ui/studio_localization.py
 A	ui/template_gallery.py
 ```
 
-全333ソース/Python127、全63ブランチをbundleへ保存。旧57ブランチ先端、GPUエンジン・カメラ・録画・LoL音声など23ファイル、受領PNG6種の一致を確認。GPU Fullの差分はキル行間、effectsはカラー/プリセット/末尾設定/バッジ設定接続のみ。個人設定/プロジェクト/原診断ZIP/録画/生ログは配布しない。旧版配布物102件をバイト単位で保持。
-
-完了検証: ソース/取得用のgit status --shortは空。GitHub再取得333ソース/全63refs/ZIP・bundleハッシュ一致、復元先44テスト成功。再セットアップで設定/プロジェクト/診断のprivateテストファイルを保持。Draft PR #25、main未変更。環境設定はinstall_script/start_skillのみを保存し、Publishはしていない。
+全388ソース/Python133、全72ブランチをbundleへ保存。旧63ブランチ先端、GPU/録画/LoL音声等20ファイル、受領PNG37種類のバイト一致を確認。カメラ/jobs/scannerは共有レビュー済み。GPU Fullの追加差分は高解像度素材の縮小配置のみ、60fps時刻/フレーム数の修正を保持。診断ログ・キャッシュの混在した元v13パッチはGit外に保持し、必要なソース/素材だけを原本ブランチへ保存。旧配布物108件はバイト単位で保持。個人設定/プロジェクト/録画を削除しない。
