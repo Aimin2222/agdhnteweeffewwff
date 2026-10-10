@@ -1286,42 +1286,60 @@ class App:
         ttk.Combobox(color, state="readonly", textvariable=self.var_grade, values=list(GRADE_JP.values())).pack(fill="x", pady=3)
         for args in (("grade_strength","色の強さ",0,1.4),("temperature","色温度",-1,1),("contrast","コントラスト",0.6,1.6),("exposure","露出",-0.3,0.3),("vibrance","自然な彩度",-1,1.5),("vignette","ビネット",0,1),("grain","グレイン",0,1),("bloom","ブルーム",0,1),("bars","シネマ枠",0,1)):
             slider(color,*args)
-        self.var_fog=tk.BooleanVar(value=False); ttk.Checkbutton(color, text="Fogを有効化", variable=self.var_fog).pack(anchor="w", pady=(6,2))
-        self.var_fog_preset=tk.StringVar(value=FOG_LABEL_JA["teal"]); ttk.Combobox(color, state="readonly", textvariable=self.var_fog_preset, values=list(FOG_LABEL_JA.values())).pack(fill="x")
-        slider(color,"fog_strength","Fog強度",0,1)
-        self.fog_viz = FogViz(color, self.sl["fog_strength"])
+        self.var_fog=tk.BooleanVar(value=False)
+        ttk.Checkbutton(color,text="FOG補正",variable=self.var_fog).pack(anchor="w",pady=(6,2))
+        fog_controls=ttk.Frame(color,style="Card.TFrame")
+        def show_fog(*_):
+            if self.var_fog.get():fog_controls.pack(fill="x")
+            else:fog_controls.pack_forget()
+        self.var_fog.trace_add("write",show_fog)
+        self.var_fog_preset=tk.StringVar(value=FOG_LABEL_JA["teal"]); ttk.Combobox(fog_controls, state="readonly", textvariable=self.var_fog_preset, values=list(FOG_LABEL_JA.values())).pack(fill="x")
+        slider(fog_controls,"fog_strength","Fog強度",0,1)
+        self.fog_viz = FogViz(fog_controls, self.sl["fog_strength"])
         self.fog_viz.pack(fill="x", pady=(0,4))
-        self.var_curve=tk.BooleanVar(value=False); ttk.Checkbutton(color, text="カーブ補正を有効化（lolnam系）", variable=self.var_curve).pack(anchor="w", pady=(6,2))
+        self.var_curve=tk.BooleanVar(value=False)
+        ttk.Checkbutton(color,text="カーブ補正（LoLnam風）",variable=self.var_curve).pack(anchor="w",pady=(6,2))
+        curve_controls=ttk.Frame(color,style="Card.TFrame")
+        def show_curve(*_):
+            if self.var_curve.get():curve_controls.pack(fill="x")
+            else:curve_controls.pack_forget()
+        self.var_curve.trace_add("write",show_curve)
         self.var_curve_points=tk.StringVar(value="0/0 0.25/0.20 0.50/0.50 0.75/0.80 1/1")
-        curve_head = ttk.Frame(color, style="Card.TFrame"); curve_head.pack(fill="x", pady=(4,2))
+        curve_head = ttk.Frame(curve_controls, style="Card.TFrame"); curve_head.pack(fill="x", pady=(4,2))
         ttk.Label(curve_head, text="トーンカーブ（LoLnam風）", style="CardMuted.TLabel").pack(side="left")
         ttk.Button(curve_head, text="初期値に戻す", command=lambda: self.curve_editor.reset()).pack(side="right")
-        self.curve_editor = CurveEditor(color, self.var_curve_points, self.var_curve_points.get(), height=230)
+        self.curve_editor = CurveEditor(curve_controls, self.var_curve_points, self.var_curve_points.get(), height=230)
         self.curve_editor.pack(fill="x", pady=(0,4))
-        ttk.Label(color, text="点をクリックで追加 / ドラッグで移動。数値は x/y（0.000〜1.000）で入力できます。",
+        ttk.Label(curve_controls, text="点をクリックで追加 / ドラッグで移動。数値は x/y（0.000〜1.000）で入力できます。",
                   style="CardMuted.TLabel", wraplength=560).pack(anchor="w")
-        ttk.Entry(color, textvariable=self.var_curve_points).pack(fill="x", pady=(4,0))
+        ttk.Entry(curve_controls, textvariable=self.var_curve_points).pack(fill="x", pady=(4,0))
         self.var_dof=tk.BooleanVar(value=False)
-        ttk.Checkbutton(color, text="円形DOF：キャラ付近をくっきり、周囲をぼかす", variable=self.var_dof).pack(anchor="w", pady=(8,3))
-        ttk.Label(color, text="まずDOFぼかしを上げます。円の内側はそのまま、外側がぼけます（実際の深度推定ではありません）。",
+        ttk.Checkbutton(fx_page,text="DOF：キャラの周囲をぼかす（ONで詳細表示）",
+                        variable=self.var_dof).pack(anchor="w",pady=(8,3))
+        dof_controls=ttk.Frame(fx_page,style="Card.TFrame")
+        def show_dof(*_):
+            if self.var_dof.get():dof_controls.pack(fill="x")
+            else:dof_controls.pack_forget()
+        self.var_dof.trace_add("write",show_dof)
+        ttk.Label(dof_controls, text="まずDOFぼかしを上げます。円の内側はそのまま、外側がぼけます（実際の深度推定ではありません）。",
                   style="CardMuted.TLabel", wraplength=860).pack(anchor="w")
         self.var_dof_shape=tk.StringVar(value="円形（おすすめ）")
-        ttk.Combobox(color, state="readonly", textvariable=self.var_dof_shape,
+        ttk.Combobox(dof_controls, state="readonly", textvariable=self.var_dof_shape,
                      values=["円形（おすすめ）", "従来の上下ぼかし"], width=30).pack(anchor="w", pady=(4,3))
-        slider(color,"dof_blur","周囲のぼかし強度",0,12)
-        self.var_dof_circle_hint = ttk.Label(color, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
+        slider(dof_controls,"dof_blur","周囲のぼかし強度",0,12)
+        self.var_dof_circle_hint = ttk.Label(dof_controls, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
                                              style="CardMuted.TLabel", wraplength=880)
         self.var_dof_circle_hint.pack(anchor="w", pady=(3,5))
-        slider(color,"dof_center_x","円の中心・左右",.05,.95)
-        slider(color,"dof_center_y","円の中心・上下",.05,.95)
-        slider(color,"dof_radius","くっきりする円の半径",.08,.65)
-        slider(color,"dof_feather","境界のなめらかさ",.025,.35)
-        ttk.Label(color, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
+        slider(dof_controls,"dof_center_x","円の中心・左右",.05,.95)
+        slider(dof_controls,"dof_center_y","円の中心・上下",.05,.95)
+        slider(dof_controls,"dof_radius","くっきりする円の半径",.08,.65)
+        slider(dof_controls,"dof_feather","境界のなめらかさ",.025,.35)
+        ttk.Label(dof_controls, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
                   style="CardMuted.TLabel", wraplength=950).pack(anchor="w", pady=(0,4))
-        self.dof_viz = FocusCircleViz(color, self.sl['dof_center_x'], self.sl['dof_center_y'],
+        self.dof_viz = FocusCircleViz(dof_controls, self.sl['dof_center_x'], self.sl['dof_center_y'],
                                      self.sl['dof_radius'], self.sl['dof_feather'])
         self.dof_viz.pack(fill="x", pady=(2,6))
-        legacy_dof = ttk.LabelFrame(color, text="従来の上下ぼかし用（互換設定）", padding=5)
+        legacy_dof = ttk.LabelFrame(dof_controls, text="従来の上下ぼかし用（互換設定）", padding=5)
         self._legacy_dof_panel = legacy_dof
         # These controls are intentionally collapsed in the new circle mode.
         ttk.Label(legacy_dof, text="『従来の上下ぼかし』を選んだ場合だけ使います。円形モードでは変更不要。",
@@ -1331,7 +1349,7 @@ class App:
         slider(legacy_dof,"dof_far_distance","遠距離",100,20000)
         self.var_dof_shape.trace_add('write', lambda *_: self._update_dof_mode_ui())
         self._update_dof_mode_ui()
-        ttk.Button(color, text="★ おすすめ：キャラをくっきり・背景を柔らかく",
+        ttk.Button(fx_page, text="★ おすすめ：キャラをくっきり・背景を柔らかく",
                    command=self._apply_focus_preset).pack(fill="x", pady=(0,7))
 
         # Premiere/AE系の演出。難しい編集を覚えなくても、チェックを入れるだけで使える。
