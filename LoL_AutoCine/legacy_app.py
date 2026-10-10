@@ -103,6 +103,54 @@ def rev(d: dict) -> dict:
     return {v: k for k, v in d.items()}
 
 
+
+class HoverHelp:
+    """Small non-modal explanation after a one-second pointer hover."""
+    def __init__(self, widget, text: str, delay_ms: int = 1000):
+        self.widget = widget
+        self.text = text
+        self.delay_ms = delay_ms
+        self.timer = None
+        self.tip = None
+        widget.bind("<Enter>", self._enter, add="+")
+        widget.bind("<Leave>", self._leave, add="+")
+        widget.bind("<ButtonPress>", self._leave, add="+")
+
+    def _enter(self, _event=None):
+        self._leave()
+        self.timer = self.widget.after(self.delay_ms, self._show)
+
+    def _leave(self, _event=None):
+        if self.timer is not None:
+            try:
+                self.widget.after_cancel(self.timer)
+            except tk.TclError:
+                pass
+            self.timer = None
+        if self.tip is not None:
+            try:
+                self.tip.destroy()
+            except tk.TclError:
+                pass
+            self.tip = None
+
+    def _show(self):
+        self.timer = None
+        try:
+            if not self.widget.winfo_exists():
+                return
+            tip = tk.Toplevel(self.widget)
+            tip.wm_overrideredirect(True)
+            tip.configure(background="#FFFAEA")
+            label = tk.Label(tip, text=self.text, bg="#FFFAEA", fg="#1F2937",
+                             wraplength=350, justify="left", padx=12, pady=9,
+                             relief="solid", borderwidth=1)
+            label.pack()
+            tip.wm_geometry(f"+{self.widget.winfo_rootx()+16}+{self.widget.winfo_rooty()+self.widget.winfo_height()+5}")
+            self.tip = tip
+        except tk.TclError:
+            self.tip = None
+
 class ScrollFrame(ttk.Frame):
     """縦スクロールできるパネル。子ウィジェット/Scale/Scrollbar上でもホイールを奪わずパネルをスクロールする。"""
 
@@ -1201,7 +1249,7 @@ class App:
         self.cb_effect_preset.bind("<<ComboboxSelected>>", lambda _e: self._apply_effect_preset(self.var_effect_preset.get()))
         ttk.Label(fx_box, text="各エフェクトはON/OFFと強さを個別に変更できます。迷ったらプリセットだけでOK。",
                   style="CardMuted.TLabel", wraplength=560).pack(anchor="w", pady=(0, 6))
-        self.effect_help_text=tk.StringVar(value="効果名の『？』を押すと、使い方をここに表示します。")
+        self.effect_help_text=tk.StringVar(value="効果名の『？』にカーソルを約1秒置くと、説明が表示されます。")
         ttk.Label(fx_box, textvariable=self.effect_help_text, style="CardMuted.TLabel",
                   wraplength=920, justify="left").pack(fill="x", pady=(1,7))
         self.effect_vars = {}
@@ -1217,8 +1265,10 @@ class App:
                 var = tk.BooleanVar(value=False); sval = tk.DoubleVar(value=float(VIDEO_EFFECT_DEFAULTS.get(key, 0.25)))
                 self.effect_vars[key] = var; self.effect_strength_vars[key] = sval
                 ttk.Checkbutton(cell, text=EFFECT_LABEL_JA.get(key, label), variable=var).pack(side="left")
-                ttk.Button(cell, text="?", width=2,
-                           command=lambda k=key: self._show_effect_help(k)).pack(side="left", padx=(2,3))
+                help_button = ttk.Button(cell, text="?", width=2,
+                           command=lambda k=key: self._show_effect_help(k))
+                help_button.pack(side="left", padx=(2,3))
+                HoverHelp(help_button, f"{EFFECT_LABEL_JA.get(key, label)}\n{EFFECT_HELP_JA.get(key, '映像に演出を加えます。')}\n強さは右のスライダーで調整。")
                 ttk.Scale(cell, from_=0.05, to=1.0, variable=sval, length=70).pack(side="left", fill="x", expand=True, padx=4)
                 ttk.Entry(cell, textvariable=sval, width=5, justify="right").pack(side="right")
         ttk.Button(fx_box, text="全エフェクトOFF", command=self._clear_video_effects).pack(fill="x", pady=(5, 0))
@@ -3124,7 +3174,8 @@ class App:
     def on_scan(self) -> None:
         if not self._need_lock():
             return
-        self._run_bg(self._scan)
+        # Tk variables must be sampled before entering the background worker.
+        self._run_bg(self._scan, self.var_event_mode.get())
 
     def _need_lock(self) -> bool:
         if self.locked is None:
@@ -3142,8 +3193,12 @@ class App:
         res = scan_kills(self.api, p, progress=lambda *a: self.q.put(("scan", *a)), stop=self.stop_ev,
                          diag_dir=ROOT / "diagnostics", event_mode=mode)
         self.kills = res.kills
+        self._last_scan_mode = selected_mode
         self.checked_kills = set(range(len(self.kills)))
         self.q.put(("kills",))
+        kill_count = sum(getattr(k, "role", "kill") == "kill" for k in res.kills)
+        assist_count = sum(getattr(k, "role", "kill") == "assist" for k in res.kills)
+        self.log(f"スキャン内訳: キル {kill_count}件 / アシスト {assist_count}件")
         self.log(f"スキャン完了: イベント {res.total_events} 件 / 対象シーン {len(res.kills)} 件 / モード {selected_mode}"
                  + ("" if res.complete else " (途中で中断)"))
 
@@ -3185,7 +3240,9 @@ class App:
                     pass
             self.lbl_job.configure(text=f"全検出シーン {len(self.kills)} 件: 開始準備中…")
             _diag_write(RUN_LOG, "ALL_STAGE enqueue_worker")
-            self._run_bg(self._make, False, template, montage, "キル", *scene_config)
+            event_mode = self.var_event_mode.get()
+            need_rescan = getattr(self, "_last_scan_mode", None) != event_mode
+            self._run_bg(self._make, need_rescan, template, montage, event_mode, *scene_config)
             _diag_write(RUN_LOG, "ALL_STAGE queued")
         except Exception:
             _diag_write(CRASH_LOG, "ALL_CALLBACK_ERROR\n" + traceback.format_exc())
