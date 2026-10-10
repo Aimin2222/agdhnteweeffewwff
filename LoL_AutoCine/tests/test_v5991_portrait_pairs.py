@@ -59,7 +59,7 @@ def test_real_portraits_in_all_templates(tmp_path,style):
         # Actual portrait colors in left and right slots: no title, count or placeholder.
         assert im.getpixel((77,55))[:3]==(220,40,40)
         assert im.getpixel((306,55))[:3]==(30,80,235)
-        assert im.getpixel((192,58))[3]>0  # slash / clash art
+        assert (im.getpixel((192,58))[3] == 0) if style == 'simple' else (im.getpixel((192,58))[3] > 0)  # simple has no center mark
 
 
 def test_each_kill_uses_real_different_victim(tmp_path):
