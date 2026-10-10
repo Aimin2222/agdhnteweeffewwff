@@ -455,7 +455,10 @@ class CameraPlan:
             ks=tuple(self.kill_times) or (self.kill_time,)
             cue=max((window(t,k-1.8,k-.6,k+.4,k+1.5) for k in ks),default=0.)
             is_red=90.0 < (abs(self.side_yaw) % 360.0) < 270.0
-            nudge=(7.0 if self.style=="third" else 4.0) * (-1.0 if is_red else 1.0)
+            # A 180° BLUE/RED base heading already mirrors the entire orbit.
+            # Applying an extra opposite sign here breaks that geometry and
+            # introduces asymmetry exactly at the kill event.
+            nudge = 7.0 if self.style == "third" else 4.0
             motion += nudge * cue
         return self.side_yaw + motion
 
