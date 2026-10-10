@@ -271,7 +271,11 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
             # ゲーム音ONなのに無音MP4を成功扱いしない。初心者でも原因が分かるよう明示して停止。
             raise AudioError(f"LoLゲーム音の準備に失敗しました: {e}") from e
     director = CameraDirector(api, plan)
-    rec = ClipRecorder(source, raw_path, fps=tpl.capture_fps)
+    # CameraDirector has its own 144Hz motion clock. Do not encode and then
+    # normalize a 144fps intermediate when the requested video is only 60fps.
+    recording_fps = min(tpl.capture_fps, tpl.fps)
+    log(f"動画: 録画 {recording_fps}fps / 加工・出力 {tpl.fps}fps")
+    rec = ClipRecorder(source, raw_path, fps=recording_fps)
     rec.encoder_policy = getattr(tpl, 'encoder_policy', 'auto')
     try:
         rec.start()
