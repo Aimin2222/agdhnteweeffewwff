@@ -408,6 +408,46 @@ class CameraPlan:
         return rot
 
 
+def limit_camera_post(target: dict, previous: dict | None, elapsed: float,
+                      *, slow_api: bool) -> dict:
+    """Bound per-request camera jumps when Riot's Replay API is sluggish.
+
+    This is a *screen motion* safety guard, not a new camera coordinate system.
+    TargetLock / calibrated offsets / player attachment remain unchanged.
+    We only constrain FOV, offset and Euler angles after a measured slow POST;
+    first frame, heartbeat, and normal-latency POSTs remain unmodified.
+    """
+    if not slow_api or not previous:
+        return target
+    dt = max(0.016, min(0.35, float(elapsed)))
+    result = dict(target)
+    if 'fieldOfView' in target and 'fieldOfView' in previous:
+        before = float(previous['fieldOfView'])
+        result['fieldOfView'] = before + max(-22.0 * dt,
+                                          min(22.0 * dt, float(target['fieldOfView']) - before))
+    if 'selectionOffset' in target and 'selectionOffset' in previous:
+        new, old = target['selectionOffset'], previous['selectionOffset']
+        delta = {key: float(new[key]) - float(old[key]) for key in ('x', 'y', 'z')}
+        distance = math.sqrt(sum(value * value for value in delta.values()))
+        # A short bounded movement rather than teleporting toward the next
+        # evaluated Orbit pose after a 100-240ms blocking HTTPS request.
+        fraction = min(1.0, (420.0 * dt) / distance) if distance > 0 else 1.0
+        result['selectionOffset'] = {key: float(old[key]) + delta[key] * fraction
+                                     for key in ('x', 'y', 'z')}
+    if 'cameraRotation' in target and 'cameraRotation' in previous:
+        old, new = previous['cameraRotation'], target['cameraRotation']
+        values = {}
+        for key, angle in new.items():
+            if key not in old:
+                values[key] = angle
+            else:
+                prior = float(old[key])
+                angle_delta = (float(angle) - prior + 180.0) % 360.0 - 180.0
+                values[key] = prior + max(-42.0 * dt, min(42.0 * dt, angle_delta))
+        result['cameraRotation'] = values
+    return result
+
+
 class CameraDirector:
     """録画/プレビュー中のカメラを滑らかに制御するDirector。
 
@@ -444,6 +484,9 @@ class CameraDirector:
         self._sent_speed = None
         self._last_heartbeat = 0.0
         self._last_speed_send = 0.0
+        self._last_render_body = None  # last actual API pose, not unsent 144Hz value
+        self._last_render_at = 0.0
+        self._recent_render_ms = 0.0
 
     def start(self) -> None:
         try:
@@ -457,6 +500,9 @@ class CameraDirector:
         self._last_api_send = 0.0
         self._last_heartbeat = 0.0
         self._last_speed_send = 0.0
+        self._last_render_body = None
+        self._last_render_at = 0.0
+        self._recent_render_ms = 0.0
         self._adaptive_api_dt = self.api_dt
         self._th = threading.Thread(target=self._run, daemon=True)
         self._th.start()
@@ -479,12 +525,13 @@ class CameraDirector:
             try:
                 # HTTPS playback observations never modify camera time in steps.
                 # Only a real external seek resets the continuous clock.
-                if self._last_sync <= 0.0 or now - self._last_sync >= (0.50 if self.plan.smart_composition else 0.25):
+                if self._last_sync <= 0.0 or now - self._last_sync >= 0.50:
                     try:
                         pb = self.api.playback()
                         if clock.observe(pb.get("time", clock.time)):
                             # A seek is exceptional: avoid interpolating across a cut.
                             self._smooth_fov = self._smooth_offset = self._smooth_rot = None
+                            self._last_render_body = None
                         self.max_clock_drift = max(self.max_clock_drift, abs(clock.drift))
                     except ReplayApiError:
                         self.errors += 1
@@ -533,10 +580,21 @@ class CameraDirector:
                     self._last_heartbeat = now
                     self.heartbeats += 1
 
-                if body and (now - self._last_api_send >= (self._adaptive_api_dt if plan.smart_composition else self.api_dt)):
+                if body and (now - self._last_api_send >= self._adaptive_api_dt):
+                    # Replay API often takes >100ms per POST on real Windows
+                    # systems. Avoid jumping straight across those missing
+                    # poses; limit only when *observed* latency is high.
+                    interval = now - self._last_render_at if self._last_render_at else 0.0
+                    body = limit_camera_post(
+                        body, self._last_render_body, interval,
+                        slow_api=self._recent_render_ms >= 45.0)
                     api_t0 = time.perf_counter()
                     self.api.set_render(**body)
                     api_ms = (time.perf_counter() - api_t0) * 1000.0
+                    self._last_render_body = body
+                    self._last_render_at = api_t0
+                    self._recent_render_ms = (api_ms if self._recent_render_ms == 0.0
+                                              else 0.35 * api_ms + 0.65 * self._recent_render_ms)
                     self.api_calls += 1
                     self.max_api_latency_ms = max(self.max_api_latency_ms, api_ms)
                     # Keep slow HTTP calls from monopolizing the animation loop.
@@ -550,9 +608,14 @@ class CameraDirector:
                 # Protect Replay API from two alternating high-frequency
                 # write streams (render + playback). Sudden speed changes
                 # remain interpolated locally between bounded writes.
+                # Playback speed uses the same serialized HTTPS channel.
+                # Fewer tiny speed corrections leave more time for the actual
+                # camera updates when Replay API replies take >50-100ms.
+                # Large slow-motion transitions still take priority.
                 if (self._sent_speed is None or
-                        ((not plan.smart_composition or (now - self._last_speed_send) >= 0.085) and
-                         abs(current_speed - self._sent_speed) > (0.018 if plan.smart_composition else 0.01))):
+                        ((now - self._last_speed_send) >=
+                         (0.13 if abs(current_speed - self._sent_speed) >= 0.12 else 0.28) and
+                         abs(current_speed - self._sent_speed) > 0.035)):
                     self.api.set_playback(speed=round(current_speed, 3))
                     self._sent_speed = current_speed
                     self._last_speed_send = time.perf_counter()

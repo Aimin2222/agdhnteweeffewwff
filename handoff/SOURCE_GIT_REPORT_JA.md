@@ -1,15 +1,15 @@
-# v5.10.3 GPUFX Capture60 保存報告
+# v5.10.4 GPUFX Capture60 保存報告
 
 ソース: /workspace/LoL_AutoCine（ローカルGit、remoteなし）。取得用: /workspace/agdhnteweeffewwff（origin https://github.com/Aimin2222/agdhnteweeffewwff.git）。
-ソースHEAD: 2a7a538540cbce9c13aae49da4a156cfd7ff4671、ブランチ: integration/v5.10.3-capture60。取得用: codex/lol-autocine-v5103-capture60-handoff。mainへマージしない。
+ソースHEAD: ec2de7a0f139c7f884769073963ee080f132bed1、ブランチ: integration/v5.10.4。取得用: codex/lol-autocine-v5104-handoff。mainへマージしない。
 開始前の両Gitのstatusは空。最終コミット/push後の状態はVERIFICATIONにも記録。個人設定・録画・原診断ZIP・ログ・.venvは配布しない。
 
 ## git log -3 --oneline（ソース）
 
 ```
-2a7a538 Integrate 60fps capture with preserved scene and mirror UI
-954f55c Document 60fps intermediate policy and preserve parallel integration contract
-5aefb57 Record and normalize 60fps exports at 60fps without changing camera cadence
+ec2de7a Update version-title regression for v5.10.4
+ebb6298 Preserve legacy slow motion in v5.10.4 integration
+d058ca9 Check UI title against the bundled version after v5.10.4 update
 ```
 
 ## git remote -v
@@ -21,15 +21,21 @@ origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-## 前回ExportOptからの実変更
+## 前回Capture60からの実変更
 
 ```
-M	core/jobs.py
-A	docs/CODEX_CAPTURE60_v5.10.3_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_CAPTURE60_v5.10.3.json
-A	tests/test_gpu_capture60_v5103.py
+A	README_v5.10.4_JA.md
+M	VERSION.txt
+M	core/camera.py
+M	core/replay_api.py
+A	docs/CODEX_INTEGRATION_v5104_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.4.json
+M	legacy_app.py
+A	tests/test_gpu_shared_replay_v5104.py
+A	tests/test_v5104_notebook_livefx_camera.py
+M	tests/test_v599_automontage_killbadges.py
 M	tools/check_parallel_integration.py
-A	tools/package_v5103_capture60.py
+A	tools/package_v5104.py
 ```
 
 ## 元v5.8.5からの実変更
@@ -39,6 +45,7 @@ M	.gitignore
 A	README_v5.10.0_JA.md
 A	README_v5.10.1_JA.md
 A	README_v5.10.3_JA.md
+A	README_v5.10.4_JA.md
 A	README_v5.8.6_JA.md
 A	README_v5.9.0_JA.md
 A	README_v5.9.1_JA.md
@@ -71,6 +78,7 @@ A	core/montage_fx.py
 M	core/performance_diagnostics.py
 M	core/preview.py
 M	core/recorder.py
+M	core/replay_api.py
 A	docs/CHANGELOG_v5.8.6_JA.md
 A	docs/CHANGELOG_v5.9.4_JA.md
 A	docs/CHANGELOG_v5.9.5_JA.md
@@ -99,6 +107,7 @@ A	docs/CODEX_INTEGRATION_RESULTS_v5.9.6_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.7_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.8_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.9_JA.md
+A	docs/CODEX_INTEGRATION_v5104_JA.md
 A	docs/CODEX_INTEGRATION_v592_JA.md
 A	docs/CODEX_INTEGRATION_v593_JA.md
 A	docs/CODEX_INTEGRATION_v595_JA.md
@@ -121,6 +130,7 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.10.0.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.4.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.9.2.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.9.2_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.9.3.json
@@ -167,6 +177,7 @@ A	tests/test_gpu_replay_warmup_v5101.py
 A	tests/test_gpu_shared_camera_contract.py
 A	tests/test_gpu_shared_camera_v593.py
 A	tests/test_gpu_shared_camera_v594.py
+A	tests/test_gpu_shared_replay_v5104.py
 A	tests/test_parallel_integration.py
 A	tests/test_scene_keyframes_v592.py
 A	tests/test_scene_sequence.py
@@ -175,6 +186,7 @@ A	tests/test_scene_studio_gui.py
 A	tests/test_v5101_scroll_check_warmup.py
 A	tests/test_v5102_circle_focus_preset.py
 A	tests/test_v5103_nonblocking_dispatch.py
+A	tests/test_v5104_notebook_livefx_camera.py
 A	tests/test_v510_ui_gpu_killframe.py
 A	tests/test_v593_mode_camera.py
 A	tests/test_v594_live_preview.py
@@ -194,6 +206,7 @@ A	tools/package_v5103_exportopt.py
 A	tools/package_v5103_gpu.py
 A	tools/package_v5103_hangfix.py
 A	tools/package_v5103_mirrorfix.py
+A	tools/package_v5104.py
 A	tools/package_v599.py
 A	tools/setup_gpu_ffmpeg.py
 A	ui/__init__.py
@@ -209,4 +222,4 @@ A	ui/studio_localization.py
 A	ui_changes_v5.9.1.patch
 ```
 
-ソース268/Python103、全45ブランチをbundle保存。前回版の全配布物を残す。今回のアプリ変更はcore/jobs.pyの録画fps制限とログのみ。GPUエフェクト/recorder/カメラ/時計/LoL音声/Native/START/UIはバイト一致。共有jobsの正確なblobはCODEX_SHARED_API_REVIEW_CAPTURE60_v5.10.3.jsonへ記録。詳細はCODEX_CAPTURE60_v5.10.3_JA.md。
+ソース274/Python106、全48ブランチをbundle保存。旧配布物を残す。core/camera.pyとreplay_api.pyは共有変更としてレビューし、従来0.35倍スローを維持。GPU/録画/音声等37ファイルは前回Capture60とバイト一致。UIは3方向マージし競合2箇所を双方保持、ミラー/非同期/書き出し等15メソッドをAST一致検査。共有レビューの正確なblobと担当/統合一致を確認。詳細はCODEX_INTEGRATION_v5104_JA.md。

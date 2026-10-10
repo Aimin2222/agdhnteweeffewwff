@@ -1,30 +1,32 @@
-# v5.10.3 GPUFX Capture60をWindowsで試す
+# v5.10.4 GPUFX Capture60をWindowsで試す
 
-GitHubの `codex/lol-autocine-v5103-capture60-handoff` ブランチで **Code → Download ZIP**。前回版とは別フォルダへ展開し、**LoL_AutoCine/START_GPU.bat**を起動してください。mainマージ/クラウド環境Publishは不要です。
+GitHubの `codex/lol-autocine-v5104-handoff` ブランチで **Code → Download ZIP**。前回版とは別フォルダへ展開して **LoL_AutoCine/START_GPU.bat** を起動してください。mainマージ/クラウド環境Publishは不要です。
 
-GitHubの `handoff/LoL_AutoCine_v5.10.3_GPUFX_Capture60_Windows_Full.zip` の **Download raw file**でも取得できます。差分ZIPは前回ExportOpt基準で単体起動用ではありません。VERSION5.10.3を維持し、GPUFX_Capture60で区別します。
+GitHubの `handoff/LoL_AutoCine_v5.10.4_GPUFX_Capture60_Windows_Full.zip` の **Download raw file**でも取得できます。差分ZIPは前回v5.10.3 Capture60基準で、単体起動用ではありません。
 
-今回の診断では前回版の加工はすでに60fps/GPU Bloom・円形DOF + NVENC、4本完了、加工49～56秒でした。ただし原録画/時間補正が144fpsだったため、標準60 FPSなら録画60fps→必要な時間補正60fps→加工60fps→出力60fpsに揃えました。CameraDirector内部144Hz/Replay API送信最大60Hzを維持。UIやカメラ、GPU効果/CPU保護、LoL専用音声/時間軸は変更しません。144 FPSを明示選択した機能も維持します。
+v5.10.4 UI側のタブ誤切替防止、カメラ再生中のミラー簡易FX、カメラ通信Keep-Aliveと遅いAPI向け制限を統合しました。既存の非同期ミラー/書き出し保護、GPU Bloom・円形DOF・Focus Blur、60fps録画/時間補正/加工、LoL専用音声を保持。受領cameraの全モード0.40倍下限は従来スローを変えるため修正し、0.35倍を維持しています。
 
-全pytest303件成功（27.86秒、失敗/skipなし）。追加6件で30/60/120/144fpsと低い録画上限、カメラ時計とテンプレート不変を検査し、実FFmpegで60fpsの時間補正/連続PTS/終端丸め1フレーム以内を確認。新しいCapture60版のWindows実機速度と音声同期は未検証です。
+最新診断は統合前のCapture60版。4本すべて録画/時間補正/加工60fps、GPU Bloom + NVENC成功、加工46.9～51.6秒、モンタージュも成功。CPU色補正・粒子・合成/変換は残っています。PC全体CPU平均83～88%はアプリ単独の値ではありません。今回DOFは選択されていないため、この診断でDOF稼働とは言いません。
 
-同じリプレイ/同じ1シーン/60 FPS/同じ効果・音声で前回版と所要時間を比較し、4シーン連続を確認。完成MP4の色/焦点/カメラ/LoLだけ音声/同期/再生速度を確認。COLLECT_DIAGNOSTICS.batでcapture.output_fps=60、timing_normalization.output_fps=60（補正が必要な場合）、effects_fps=60、gpu_effects_confirmed、encoderを確認できます。runtimeには録画/加工・出力fpsを表示。
+全pytest311件成功（30.71秒、失敗/skipなし）。実Tk/実HTTP/実FFmpeg/子プロセスの回帰、接続再利用/切断/HTTP500/同時接続/POST重複送信防止、共有APIとGPUファイル保持を確認。新しいv5.10.4統合版のWindows実機UI/カメラ/音声同期は未検証です。
 
-完全版266/差分6、差分適用後全268ソース一致、個人ファイル除外。Git報告はSOURCE_GIT_REPORT_JA.md、検証はVERIFICATION_v5.10.3_Capture60.json、詳細はLoL_AutoCine/docs/CODEX_CAPTURE60_v5.10.3_JA.md。
+詳細編集のタブ上ホイールでタブが変わらずクリックで切り替わること、ミラーON + FX反映ONでカメラ再生中の円形DOF表示、書き出し中は簡易FX停止を確認。同じ1シーンと4シーン連続で色/焦点/対象追従/LoLだけ音声/同期/速度を確認してください。COLLECT_DIAGNOSTICSで60fps/GPU実行/カメラAPI待ちを照合。ミラーFXはCPU/PILの簡易表示で、LoL本体の画面にはかかりません。
+
+完全版272/差分12、差分適用後274ソース一致、個人ファイル除外。Git報告はSOURCE_GIT_REPORT_JA.md、検証はVERIFICATION_v5.10.4.json、詳細はLoL_AutoCine/docs/CODEX_INTEGRATION_v5104_JA.md。
 
 ## ローカルGit開発
 
 既存フォルダを上書きしない新しい保存先で実行します。
 
 ```sh
-git clone --single-branch --branch codex/lol-autocine-v5103-capture60-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_Capture60_Handoff
-git clone --branch integration/v5.10.3-capture60 LoL_AutoCine_Capture60_Handoff/handoff/LoL_AutoCine_v5.10.3_GPUFX_Capture60_all_branches.bundle LoL_AutoCine_Capture60_Dev
-cd LoL_AutoCine_Capture60_Dev
-git branch feature/gpu-capture60-v5103 origin/feature/gpu-capture60-v5103
-git branch feature/ui-mirror-targetfix-v5103 origin/feature/ui-mirror-targetfix-v5103
-git branch integration/v5.10.3-exportopt origin/integration/v5.10.3-exportopt
+git clone --single-branch --branch codex/lol-autocine-v5104-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v5104_Handoff
+git clone --branch integration/v5.10.4 LoL_AutoCine_v5104_Handoff/handoff/LoL_AutoCine_v5.10.4_GPUFX_Capture60_all_branches.bundle LoL_AutoCine_v5104_Dev
+cd LoL_AutoCine_v5104_Dev
+git branch feature/gpu-shared-v5104 origin/feature/gpu-shared-v5104
+git branch feature/ui-notebook-livefx-v5104 origin/feature/ui-notebook-livefx-v5104
+git branch integration/v5.10.3-capture60 origin/integration/v5.10.3-capture60
 git status --short
 git branch --all
 ```
 
-全45ブランチをorigin/*へ復元。このcloneのoriginはPC上のbundleです。担当/共有レビュー/統合ガードは上記開発文書のコマンドを使用。旧版/旧ブランチ/旧ZIP/bundleを保存しています。
+全48ブランチをorigin/*へ復元。このcloneのoriginはPC上のbundleです。担当/共有レビュー/統合ガードは上記開発文書のコマンドを使用。全旧版/旧ZIP/bundleを保存しています。
