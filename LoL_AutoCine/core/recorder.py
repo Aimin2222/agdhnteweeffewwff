@@ -108,7 +108,11 @@ class ClipRecorder:
                     if c != last_count:
                         self.fresh_frames += 1
                         last_count = c
-                    self._proc.stdin.write(_fit(fr, self.w, self.h).tobytes())
+                    # The source owns an immutable snapshot until replaced.
+                    # Write its buffer directly rather than allocating another
+                    # full BGRA copy for each duplicate capture frame.
+                    fitted = np.ascontiguousarray(_fit(fr, self.w, self.h))
+                    self._proc.stdin.write(memoryview(fitted).cast('B'))
                     self.frames += 1
                 nxt += dt
                 sl = nxt - time.perf_counter()
@@ -198,6 +202,9 @@ class ClipRecorder:
                                fallback_reason=self.encoder_fallback_reason,
                                pipeline_info={'stage':'capture','encoder_policy':self.encoder_policy,
                                               'cpu_video_effects':['scale'],'output_fps':self.fps,
+                                              'frames':self.frames,'fresh_frames':self.fresh_frames,
+                                              'captured_media_duration_s':self.elapsed,
+                                              'frame_buffer_copy':'only_if_noncontiguous',
                                               'duration_s':self.wall_duration})
         if self.error:
             raise CaptureError(self.error)

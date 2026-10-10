@@ -155,12 +155,42 @@ def _await_capture_refresh(source: FrameSource, after_count: int, timeout: float
     while time.monotonic() < deadline:
         if stop is not None and stop.is_set():
             raise StallError('開始前に停止されました')
-        if source.frame_count > after_count and source.latest() is not None:
+        frame = source.latest()  # Propagate a dead worker's actual error promptly.
+        if source.frame_count > after_count and frame is not None:
             return
         time.sleep(0.05)
     if stop is not None and stop.is_set():
         raise StallError('開始前に停止されました')
     raise CaptureError('シーク後にLoL映像が更新されませんでした。古いネクサス映像の録画を防ぐため中止します。')
+
+
+def _prepare_clip_capture(api, source, player, tpl, start, kills, stop, log):
+    """Recover one stalled seek without recording old frames or shifting a clip."""
+    _prime_live_replay_once(api, source, start, stop=stop, log=log)
+    plan, rig = _setup_clip(api, player, tpl, start, kills, log)
+    try:
+        _await_capture_refresh(source, source.frame_count, stop=stop)
+        return plan, rig
+    except CaptureError as exc:
+        if not isinstance(source, WGCWindowSource):
+            raise
+        if stop is not None and stop.is_set():
+            raise StallError('開始前に停止されました') from exc
+        log(f'映像入力を1回だけ復旧します（録画はまだ開始しません）: {exc}')
+    # Reuse a healthy mirror; restart only a terminated capture session.
+    if not source.running:
+        source.stop()
+        source.start()
+    api._autocine_record_primed = False
+    _prime_live_replay_once(api, source, start, stop=stop, log=log)
+    # Playing the pre-roll produced verified, moving frames. Seek back to the
+    # exact requested time and require another frame after this new setup began.
+    # A paused replay may deliver it DURING setup, then stop emitting frames.
+    baseline = source.frame_count
+    plan, rig = _setup_clip(api, player, tpl, start, kills, log)
+    _await_capture_refresh(source, baseline, stop=stop)
+    log('映像入力の復旧を確認、指定の開始時刻から録画します')
+    return plan, rig
 
 
 def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kills: list,
@@ -213,10 +243,7 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
                     log: Callable = lambda m: None,
                     audio_factory: Optional[Callable] = None) -> ClipTake:
     """1クリップ録画。HUD非表示は呼び出し側 (run_auto_edit) が行う。"""
-    _prime_live_replay_once(api, source, start, stop=stop, log=log)
-    plan, rig = _setup_clip(api, player, tpl, start, kills, log)
-    # Count after camera setup: a frame from during the seek is not sufficient.
-    _await_capture_refresh(source, source.frame_count, stop=stop)
+    plan, rig = _prepare_clip_capture(api, source, player, tpl, start, kills, stop, log)
     take = ClipTake(rig=rig)
     saved_hud = {}
     if tpl.hide_hud:
@@ -258,6 +285,12 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
         _play_until(api, end, start, tpl, rec, stop, observe=observe)
     finally:
         director.stop()
+        # Stop replay/game rendering before waiting for FFmpeg finalization and
+        # timing normalization. It otherwise keeps running during that work.
+        try:
+            api.set_playback(paused=True, speed=1.0)
+        except ReplayApiError as exc:
+            log(f'録画後の一時停止を再試行します: {exc}')
         recorder_error = None
         try:
             take.duration = rec.stop()
