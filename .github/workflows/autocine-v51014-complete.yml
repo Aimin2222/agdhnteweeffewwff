@@ -71,7 +71,16 @@ jobs:
               "まず git apply --check で競合を確認してください。\n"
               "現在Codex側GPU変更が進んでいる場合、GPU関連ファイルを上書きせず手動統合してください。\n",
               encoding="utf-8")
-          subprocess.run(["git","apply","--check",str(patch.resolve())],check=True)
+          # Validate the merge patch against the actual v5.10.13 base,
+          # not against HEAD where these changes are already present.
+          import tempfile
+          with tempfile.TemporaryDirectory(prefix="codex-base-") as td:
+              base_tree=Path(td)/"base"
+              subprocess.run(["git","worktree","add","--detach",str(base_tree),base],check=True)
+              try:
+                  subprocess.run(["git","-C",str(base_tree),"apply","--check",str(patch.resolve())],check=True)
+              finally:
+                  subprocess.run(["git","worktree","remove","--force",str(base_tree)],check=True)
           codex=out/"LoL_AutoCine_v5.10.14_Codex_MergeChanges.zip"
           with zipfile.ZipFile(codex,"w",zipfile.ZIP_DEFLATED) as z:
               z.write(patch,patch.name)
