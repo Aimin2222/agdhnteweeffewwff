@@ -64,7 +64,7 @@ def normalize_design(frame_color='', glow_color='', glow_enabled=True,
         except (ValueError, TypeError, OverflowError):
             return default
     return (valid_hex(frame_color), valid_hex(glow_color), bool(glow_enabled),
-            finite(glow_strength, .85, 0, 2), int(finite(border_width, 3, 1, 8)),
+            finite(glow_strength, .65, 0, 2), int(finite(border_width, 3, 1, 8)),
             mark_style if mark_style in MARK_STYLES else 'auto')
 
 
@@ -157,7 +157,7 @@ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, vict
     for x in (37, 266):
         # Bevelled, cut-corner metallic quadrilateral inspired by the
         # provided sample, not a copy of any third-party UI asset.
-        poly = [(x+8, 13), (x+74,13), (x+82,21), (x+82,94),
+        poly = [(x+8, 13), (x+74,13), (x+79,21), (x+79,94),
                 (x+73,103), (x+8,103), (x-5,90), (x-5,25)]
         d.polygon(poly,fill=(8,12,22,226))
         d.line(poly + [poly[0]],fill=(*color,255),width=max(1,border_width+1),joint='curve')
@@ -181,7 +181,10 @@ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, vict
                 d.line((cx-9,cy,cx+9,cy),fill=(255,241,176,strength),width=2)
                 d.line((cx,cy-9,cx,cy+9),fill=(255,241,176,strength),width=2)
                 d.polygon(((cx,cy-4),(cx+4,cy),(cx,cy+4),(cx-4,cy)),
-                          fill=(255,255,243,min(255,int(170*intensity*sparkle))))
+                          fill=(min(255,int(160+light_color[0]*.30)),
+                                min(255,int(160+light_color[1]*.30)),
+                                min(255,int(160+light_color[2]*.30)),
+                                min(255,int(170*intensity*sparkle))))
 
     cx,cy=192,58
     if mark == 'none':
