@@ -1,0 +1,13 @@
+LoL AutoCine v5.10.12 Codex統合用差分ZIP
+
+基準: v5.10.11 Windowsフル版（Codex側GPUフル版の更新が入る前と違う場合は要確認）
+内容: 試合一括スキャン＆選択後フィルタ、BLUE/RED別校正カメラ、キル枠の2倍内部合成、カラー差、テスト、README。
+
+推奨手順:
+1. 既存Git変更をコミットまたは退避してください。
+2. このZIPに入った v5.10.12_from_v5.10.11.patch に対し git apply --check を実行。
+3. GPU側の開発中変更がある場合はそのブランチにCherry-pickではなく必要なhunkをマージしてください。
+4. 問題なければ git apply を実行しテスト。
+
+注意: core/jobs.py、core/effects.py、core/gpu_full.pyに今回変更があります。
+Codex側GPU書き出しを上書きしないように必ず差分を読んで統合すること。

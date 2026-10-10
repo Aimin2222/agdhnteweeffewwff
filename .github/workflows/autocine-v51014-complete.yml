@@ -1,0 +1,103 @@
+name: AutoCine v5.10.14 UI Camera Full + Codex ZIPs
+on:
+  push:
+    branches:
+      - autocine/v5.10.14-ui-camera-full
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb ffmpeg
+          python -m pip install -r LoL_AutoCine/requirements.txt pytest
+      - name: Syntax check
+        run: python -m compileall -q LoL_AutoCine
+      - name: Targeted GUI, camera, montage and preservation regressions
+        working-directory: LoL_AutoCine
+        run: |
+          xvfb-run -a python -m pytest -q \
+            tests/test_v51014_studio_nle.py \
+            tests/test_v51013_player_filter.py \
+            tests/test_v51011_gallery_camera_qa.py \
+            tests/test_gpu_montage_v597.py \
+            tests/test_editor_ui_contract.py \
+            tests/test_v5105_killfeed_glow_side_help.py \
+            tests/test_v5106_hover_help.py
+      - name: Additional compatibility tests
+        working-directory: LoL_AutoCine
+        run: |
+          timeout 210s xvfb-run -a python -m pytest -q \
+            tests/test_scene_studio.py tests/test_v51012_allscan_quality_camera.py \
+            tests/test_v5108_premium_gallery.py tests/test_v5104_notebook_livefx_camera.py \
+            tests/test_v595_workspace.py tests/test_feature_preservation.py
+      - name: Generate full and Codex merge ZIPs
+        run: |
+          python - <<'PY'
+          import subprocess, zipfile, hashlib
+          from pathlib import Path
+          base="origin/codex/lol-autocine-v51013-match-camera-handoff"
+          subprocess.run(["git","fetch","origin","codex/lol-autocine-v51013-match-camera-handoff"],check=True)
+          out=Path("builds/v5.10.14")
+          out.mkdir(parents=True,exist_ok=True)
+          root=Path("LoL_AutoCine")
+          full=out/"LoL_AutoCine_v5.10.14_UI_Camera_Windows_Full.zip"
+          with zipfile.ZipFile(full,"w",zipfile.ZIP_DEFLATED,compresslevel=6) as z:
+              for p in sorted(root.rglob("*")):
+                  if not p.is_file() or p.suffix==".pyc" or any(x in p.parts for x in (".pytest_cache","__pycache__","diagnostics")):
+                      continue
+                  z.write(p,p.as_posix())
+          patch=out/"v5.10.14_from_codex_v51013.patch"
+          patch.write_bytes(subprocess.check_output(
+              ["git","diff","--binary",base+"...HEAD","--","LoL_AutoCine"]))
+          assert patch.stat().st_size>2000
+          guide=out/"CODEX_README_JA.txt"
+          guide.write_text(
+              "基準: codex/lol-autocine-v51013-match-camera-handoff\n"
+              "本ZIPのパッチのみを最新Codex作業ツリーへマージしてください。\n"
+              "まず git apply --check で競合を確認してください。\n"
+              "現在Codex側GPU変更が進んでいる場合、GPU関連ファイルを上書きせず手動統合してください。\n",
+              encoding="utf-8")
+          # Validate the merge patch against the actual v5.10.13 base,
+          # not against HEAD where these changes are already present.
+          import tempfile
+          with tempfile.TemporaryDirectory(prefix="codex-base-") as td:
+              base_tree=Path(td)/"base"
+              subprocess.run(["git","worktree","add","--detach",str(base_tree),base],check=True)
+              try:
+                  subprocess.run(["git","-C",str(base_tree),"apply","--check",str(patch.resolve())],check=True)
+              finally:
+                  subprocess.run(["git","worktree","remove","--force",str(base_tree)],check=True)
+          codex=out/"LoL_AutoCine_v5.10.14_Codex_MergeChanges.zip"
+          with zipfile.ZipFile(codex,"w",zipfile.ZIP_DEFLATED) as z:
+              z.write(patch,patch.name)
+              z.write(guide,guide.name)
+              z.write(root/"docs"/"AutoCine_v5.10.14_実装仕様書.md","実装仕様書_v5.10.14.md")
+              z.write(root/"TESTLIST_v5.10.14_JA.md","TESTLIST_v5.10.14_JA.md")
+          for p in (full,codex):
+              with zipfile.ZipFile(p) as z: assert z.testzip() is None
+              print("VERIFIED",p,p.stat().st_size,hashlib.sha256(p.read_bytes()).hexdigest())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LoL-AutoCine-v5.10.14-Windows-Full
+          path: builds/v5.10.14/*Windows_Full.zip
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LoL-AutoCine-v5.10.14-Codex-MergeChanges
+          path: builds/v5.10.14/*Codex_MergeChanges.zip
+          retention-days: 30

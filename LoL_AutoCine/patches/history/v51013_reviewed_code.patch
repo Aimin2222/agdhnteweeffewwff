@@ -1,0 +1,203 @@
+diff --git a/LoL_AutoCine/core/camera.py b/LoL_AutoCine/core/camera.py
+index 5eda628..343ca89 100644
+--- a/LoL_AutoCine/core/camera.py
++++ b/LoL_AutoCine/core/camera.py
+@@ -101,7 +101,7 @@ def side_yaw_for(team: str, preference: str = 'auto') -> float:
+ # Manual blue/red overrides retain the legacy explicit 0°/180° choices.
+ SIDE_THIRD_PROFILES = {
+     'ORDER': dict(yaw=-12.0, elevation=37.0, distance=1060.0),
+-    'CHAOS': dict(yaw=12.0, elevation=42.0, distance=1170.0),
++    'CHAOS': dict(yaw=192.0, elevation=42.0, distance=1170.0),
+ }
+ 
+ 
+diff --git a/LoL_AutoCine/core/kill_icons.py b/LoL_AutoCine/core/kill_icons.py
+index 0df8db7..dc3086d 100644
+--- a/LoL_AutoCine/core/kill_icons.py
++++ b/LoL_AutoCine/core/kill_icons.py
+@@ -37,6 +37,22 @@ STYLES = {
+     "neon_duel": "ネオン決闘",
+     "purple_crystal": "紫の宝石フレーム",
+     "classic_obsidian": "黒曜石・黄金（別装飾）",
++    "user_frame_01": "追加素材 01",
++    "user_frame_02": "追加素材 02",
++    "user_frame_03": "追加素材 03",
++    "user_frame_04": "追加素材 04",
++    "user_frame_05": "追加素材 05",
++    "user_frame_06": "追加素材 06",
++    "user_frame_07": "追加素材 07",
++    "user_frame_08": "追加素材 08",
++    "user_frame_09": "追加素材 09",
++    "user_frame_10": "追加素材 10",
++    "user_frame_11": "追加素材 11",
++    "user_frame_12": "追加素材 12",
++    "user_frame_13": "追加素材 13",
++    "user_frame_14": "追加素材 14",
++    "user_frame_15": "追加素材 15",
++    "user_frame_16": "追加素材 16",
+ }
+ 
+ REVERSE_STYLES = {label: code for code, label in STYLES.items()}
+@@ -73,6 +89,22 @@ COLORS = {
+     "neon_duel": (203, 131, 255),
+     "purple_crystal": (205, 107, 251),
+     "classic_obsidian": (249, 201, 119),
++    "user_frame_01": (249, 194, 84),
++    "user_frame_02": (160, 139, 255),
++    "user_frame_03": (255, 112, 225),
++    "user_frame_04": (84, 224, 164),
++    "user_frame_05": (203, 131, 255),
++    "user_frame_06": (239, 77, 55),
++    "user_frame_07": (157, 203, 255),
++    "user_frame_08": (243, 186, 216),
++    "user_frame_09": (249, 194, 84),
++    "user_frame_10": (160, 139, 255),
++    "user_frame_11": (255, 112, 225),
++    "user_frame_12": (84, 224, 164),
++    "user_frame_13": (203, 131, 255),
++    "user_frame_14": (239, 77, 55),
++    "user_frame_15": (157, 203, 255),
++    "user_frame_16": (243, 186, 216),
+ }
+ 
+ ASSET_STYLES = {
+@@ -97,6 +129,22 @@ ASSET_STYLES = {
+     "neon_duel": "neon_duel.png",
+     "purple_crystal": "purple_crystal.png",
+     "classic_obsidian": "classic_obsidian.png",
++    "user_frame_01": "user_frame_01.png",
++    "user_frame_02": "user_frame_02.png",
++    "user_frame_03": "user_frame_03.png",
++    "user_frame_04": "user_frame_04.png",
++    "user_frame_05": "user_frame_05.png",
++    "user_frame_06": "user_frame_06.png",
++    "user_frame_07": "user_frame_07.png",
++    "user_frame_08": "user_frame_08.png",
++    "user_frame_09": "user_frame_09.png",
++    "user_frame_10": "user_frame_10.png",
++    "user_frame_11": "user_frame_11.png",
++    "user_frame_12": "user_frame_12.png",
++    "user_frame_13": "user_frame_13.png",
++    "user_frame_14": "user_frame_14.png",
++    "user_frame_15": "user_frame_15.png",
++    "user_frame_16": "user_frame_16.png",
+ }
+ 
+ MARK_STYLES = {
+diff --git a/LoL_AutoCine/legacy_app.py b/LoL_AutoCine/legacy_app.py
+index f78305e..62d5e52 100644
+--- a/LoL_AutoCine/legacy_app.py
++++ b/LoL_AutoCine/legacy_app.py
+@@ -536,6 +536,7 @@ class App:
+         self.var_kill_frame_width = tk.IntVar(value=3)
+         self.var_kill_mark_style = tk.StringVar(value='テンプレートに合わせる')
+         self.var_camera_side = tk.StringVar(value='自動（対象のチーム）')
++        self.var_scene_player_filter = tk.StringVar(value='')
+         self.var_encoder_policy = tk.StringVar(value='自動（NVENC優先・失敗時CPU）')
+         self.var_smart_montage = tk.BooleanVar(value=True)
+         self.var_smart_composition = tk.BooleanVar(value=False)
+@@ -1468,6 +1469,12 @@ class App:
+         # when the user switches to camera/color/output editing zones.
+         f = card(right, "◉  検出シーン")
+         ttk.Label(f, text="[✓] 作成する ／ [  ] 作成しない。シーンを選んで切り替え。", style="CardMuted.TLabel", wraplength=280).pack(anchor="w", pady=(0, 5))
++        scene_filter = ttk.Frame(f, style="Card.TFrame")
++        scene_filter.pack(fill="x", pady=(0, 5))
++        ttk.Label(scene_filter, text="表示プレイヤー", style="Card.TLabel", width=12).pack(side="left")
++        self.cb_scene_player_filter = ttk.Combobox(scene_filter, state="readonly", textvariable=self.var_scene_player_filter, values=[])
++        self.cb_scene_player_filter.pack(side="left", fill="x", expand=True, padx=(4,0))
++        self.cb_scene_player_filter.bind("<<ComboboxSelected>>", self._on_scene_player_filter_changed)
+         self.lb_kills = tk.Listbox(f, height=7, bg="#FFFFFF", fg=fg, selectbackground=selected, selectforeground="#111827", relief="flat", highlightthickness=1, highlightbackground=line, activestyle="none", font=("Meiryo UI", 9))
+         kills_sb=ttk.Scrollbar(f, orient="vertical", command=self.lb_kills.yview); self.lb_kills.configure(yscrollcommand=kills_sb.set)
+         self.lb_kills.pack(fill="x", expand=False, pady=(0, 2)); kills_sb.pack(side="right", fill="y")
+@@ -2151,6 +2158,7 @@ class App:
+                     self.lbl_job.configure(text=f"{msg}  ({done}/{total}  {pct:.0f}%)")
+                 elif kind == "players":
+                     self._fill_players()
++                    self._refresh_scene_player_filter_choices()
+                 elif kind == "kills":
+                     self._fill_kills()
+                     if self.kills:
+@@ -2285,6 +2293,58 @@ class App:
+             self.tree.insert("", "end", iid=str(p.slot), values=("BLUE" if p.team == "ORDER" else "RED", p.champion, p.name),
+                              tags=(p.team,))
+ 
++
++    def _refresh_scene_player_filter_choices(self) -> None:
++        if not hasattr(self, 'cb_scene_player_filter'):
++            return
++        values = [p.label() for p in self.players]
++        self.cb_scene_player_filter.configure(values=values)
++        current = self.var_scene_player_filter.get().strip()
++        if self.locked is not None:
++            locked_label = self.locked.label()
++            if current not in values:
++                self.var_scene_player_filter.set(locked_label)
++        elif values and current not in values:
++            self.var_scene_player_filter.set(values[0])
++
++    def _find_player_by_label(self, label: str):
++        needle = str(label or '').strip()
++        for player in self.players:
++            if player.label() == needle:
++                return player
++        return None
++
++    def _set_locked_player(self, player, *, refill_from_cache: bool = True, log_prefix: str | None = None) -> None:
++        if player is None:
++            return
++        self.locked = player
++        self.lbl_lock.configure(text=f"対象: {self.locked.label()}", foreground="#15803d")
++        if hasattr(self, 'cb_scene_player_filter'):
++            self._refresh_scene_player_filter_choices()
++            self.var_scene_player_filter.set(self.locked.label())
++        try:
++            self.tree.selection_set(str(player.slot))
++            self.tree.focus(str(player.slot))
++            self.tree.see(str(player.slot))
++        except Exception:
++            pass
++        if log_prefix:
++            self.log(f"{log_prefix}: {self.locked.label()} (slot {self.locked.slot})")
++            self.log("カメラ基準: " + ("RED：自動で180°反転寄りの斜め後ろ" if self.locked.team == 'CHAOS' else "BLUE：斜め後ろの安全構図") + "（自動設定時）")
++        if refill_from_cache and self._match_scan_cache and self._match_scan_cache.complete:
++            self._filter_scanned_for_locked()
++            self.log("一括スキャン済みのため再読み込みせず対象を切替しました")
++        elif refill_from_cache:
++            self.kills = []
++            self.checked_kills = set()
++            self._fill_kills()
++
++    def _on_scene_player_filter_changed(self, _event=None) -> None:
++        player = self._find_player_by_label(self.var_scene_player_filter.get())
++        if player is None:
++            return
++        self._set_locked_player(player, refill_from_cache=True, log_prefix="検出シーンの表示対象を変更")
++
+     def _fill_kills(self) -> None:
+         self.lb_kills.delete(0, "end")
+         ordered=self.scene_project.ordered_keys(scene_key(k) for k in self.kills)
+@@ -3382,21 +3442,13 @@ class App:
+         if not sel:
+             messagebox.showinfo(APP, "プレイヤーを選んでください。")
+             return
+-        self.locked = next(p for p in self.players if str(p.slot) == sel[0])
+-        self.lbl_lock.configure(text=f"対象: {self.locked.label()}", foreground="#15803d")
+-        self.log(f"対象を固定: {self.locked.label()} (slot {self.locked.slot})")
+-        self.log("カメラ基準: " + ("RED：実測方向から+12°・高めの安全構図" if self.locked.team == 'CHAOS' else "BLUE：実測方向から-12°・斜め後ろ") + "（自動設定時）")
+-        if self._match_scan_cache and self._match_scan_cache.complete:
+-            self._filter_scanned_for_locked()
+-            self.log("一括スキャン済みのため再読み込みせず対象を切替しました")
+-        else:
+-            self.kills = []
+-            self.checked_kills = set()
+-            self._fill_kills()
++        player = next(p for p in self.players if str(p.slot) == sel[0])
++        self._set_locked_player(player, refill_from_cache=True, log_prefix="対象を固定")
+ 
+     def _filter_scanned_for_locked(self) -> None:
+         if self._match_scan_cache is None or self.locked is None:
+             return
++        self._refresh_scene_player_filter_choices()
+         from core.scanner import filter_scanned_events
+         mode={"キル": "kill", "アシスト": "assist", "キル＋アシスト": "both"}.get(self.var_event_mode.get(), "kill")
+         self.kills = filter_scanned_events(self._match_scan_cache.events, self.locked, mode)

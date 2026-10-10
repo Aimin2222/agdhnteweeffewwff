@@ -1,0 +1,1329 @@
+diff --git a/LoL_AutoCine/README_v5.9.9_JA.md b/LoL_AutoCine/README_v5.9.9_JA.md
+new file mode 100644
+index 0000000..fea3862
+--- /dev/null
++++ b/LoL_AutoCine/README_v5.9.9_JA.md
+@@ -0,0 +1,44 @@
++# LoL AutoCine v5.9.9 — キル装飾＋安定カメラ＋スマートモンタージュ
++
++## 原則
++
++v5.9.8をベースに追加実装。**既存のTargetLock、Windows Process Loopback LoL専用音声、NVENC優先/CPUフォールバック、HUD、かんたん編集/詳細編集、Undo/Redo/シーンJSON、横型1080pを維持**。縦型Shorts機能は追加しない。
++
++## v5.9.9の変更
++
++1. **キルアイコン装飾：4種類**：かんたん編集で「シンプル／シネマ・ゴールド／ネオン・ブルー／インパクト・レッド」を選ぶ。初期値「なし」なら旧版と同じ。HUDそのものではなくMP4に透過PNGバッジを重ね、キルイベントの時刻で表示。ゲーム側の素材をコピーしない独自アイコン。
++2. **詳細編集**：表示位置（右上/右下/左上/左下）、倍率（0.5〜1.8）、表示秒数（0.45〜4秒）、不透明度（0.25〜1.0）を編集。設定保存、再起動後の復元、シーン別スタイル上書き（「全体を引き継ぐ」も可能）。Undo/Redo対応のシーンJSONと両立。
++3. **スマート構図補正**：スマート自動編集時に有効化。三人称追走の最低距離・仰角を安全寄りに設定し、ゲーム地形で遮られにくい高さ/距離を優先。これは**地形を直接検出した結果ではない**ため、必ずしも完全に遮蔽を回避できるわけではない。
++4. **Replay API安定化**：HTTP送信間隔を実際のAPI待機時間に応じて調整。playback時間の再照会を抑え、スローモーション用playbackコマンドも間隔を制限。TargetLock補間は維持。
++5. **キル前後の連動演出**：v5.9.8の5点キーフレーム＋キル瞬間アクセントを維持し、同じReplay時刻の速度・FOV・ズーム変化と組み合わせる。スローモーションはReplay APIの再生速度を変える方式であり、FFmpegで勝手に映像の長さを再度変える方式ではない。
++6. **スマートモンタージュ**：通常は候補を全部利用。候補が12シーンを超えたときはマルチキル・時間的な重複を考慮して最大12シーンに絞り、導入からクライマックスへ並べる。手動順序がある場合は尊重。選ばれた各シーンの出力、最後のモンタージュに既存の切替（自動設定時の暗転）を利用。
++
++## かんたん編集（最短）
++
++1. `START.bat` → LoLリプレイへ接続 → プレイヤー固定。
++2. 「キルアイコン装飾」で好きなテンプレートを選択（不要なら「なし」）。
++3. 自動カメラ演出タイプを選び「✨ スマート自動編集」を押す。
++4. 出力したMP4の右側キル装飾、カメラ構図、キル瞬間の寄り/発光/スロー、LoL音声を確認。
++
++## 詳細編集
++
++「詳細編集」の出力エリアに「キルアイコン装飾（全シーン共通）」設定がある。位置・倍率・秒数・濃さを個別調整。「シーンごとの色・エフェクト」でシーン別の装飾スタイルを変更できる。プロジェクトJSONを保存し再読込。自動モンタージュの順序は手動保存済みの順序を優先する。
++
++## Windows実機で依頼したいテスト
++
++1. **旧版回帰**：「なし」設定の通常自動作成で1本。色があり1080pでLoL音声が残ること。
++2. **キルアイコン4種**：各1本。右上に出ること、キルの瞬間から約1.55秒後に消えること。ネオン/シネマの光、インパクトの小さい動き、音声に異常がないこと。
++3. **詳細編集の調整**：位置を右下、倍率1.2、表示2.5秒、不透明度0.6にし保存→再起動→再読込。同じ設定で動画が出ること。
++4. **構図補正**：以前障害物に隠れたシーンをv5.9.8と同じ設定で比較。キャラクターが見える割合、画角の自然さを確認。
++5. **カメラ**：連続したキル2本以上でReplay APIのガクつきが改善したか。診断の`最大API待ち(ms)`を控える。
++6. **モンタージュ**：3〜5キルで順序とつなぎ目、戦闘のテンポ、音ズレがないこと。12件超の場合だけ自動で見せ場を絞ること。手動並べ替え後は順序が保持されること。
++7. **詳細編集**：キーフレーム・シーン別色FX・Undo/Redo・JSON保存/復元が壊れていないこと。
++8. **エンコード**：NVENCで出力できるか、CPU高負荷やクラッシュが増えていないか、Windowsヘルパーの音声録音が動くか。
++9. `COLLECT_DIAGNOSTICS.bat` を実行して診断ZIPを送る。可能なら問題が分かる10秒程度のMP4も添える。
++
++## 制限・未確認
++
++- Linuxの自動テストではWindows/LoL API/GTX 1070 Ti本体の挙動を再現できない。GPUのエフェクト本体はCPU処理のままのものが多く、すべてGPUにしたわけではない。
++- Replay APIで地形の深度／視線遮蔽データを取得しているわけではない。高さ・距離の安全マージンによる**遮蔽低減**であり、キャラクターを100%見失わない保証はない。
++- ユーザーがアップした参考動画の音楽・画像・キルアートをコピーしたものではない。類似技法の独自実装。
++- Windows実機テスト結果はユーザーの出力MP4・診断ログで確認すること。
+diff --git a/LoL_AutoCine/VERSION.txt b/LoL_AutoCine/VERSION.txt
+index 9115dfd..457a67e 100644
+--- a/LoL_AutoCine/VERSION.txt
++++ b/LoL_AutoCine/VERSION.txt
+@@ -1 +1 @@
+-5.9.8
++5.9.9
+diff --git a/LoL_AutoCine/core/camera.py b/LoL_AutoCine/core/camera.py
+index 6c54fdd..b5a7428 100644
+--- a/LoL_AutoCine/core/camera.py
++++ b/LoL_AutoCine/core/camera.py
+@@ -165,6 +165,8 @@ class CameraPlan:
+     height: float = 0.0                # FPS系の安全高さ補正
+     sel_name: str = ""
+     scene_keyframes: tuple = ()       # append to preserve legacy positional fields
++    smart_composition: bool = False   # optional visibility-safe framing
++    smart_impact: float = 0.0         # optional kill-time speed envelope
+ 
+     @staticmethod
+     def _keyframe_channel(frames, left_idx: int, key: str, local_t: float) -> float:
+@@ -222,7 +224,12 @@ class CameraPlan:
+         w = self._cue(t, (-1.6, -0.5, 0.3, 1.8))
+         slow = 1.0 - 0.5 * min(1.0, self.intensity)
+         slow = max(0.35, slow - 0.1 * max(0.0, self.intensity - 1.0))
+-        return 1.0 + (slow - 1.0) * w
++        speed = 1.0 + (slow - 1.0) * w
++        if self.smart_impact > 0.001:
++            # Audio/video durations are still determined by the Replay API;
++            # change playback speed only inside the pre-existing cinematic cue.
++            speed *= 1.0 - 0.16 * min(1.0, self.smart_impact) * w
++        return max(0.40, speed)
+ 
+     def fov_at(self, t: float) -> float:
+         base = self._base_fov_at(t)
+@@ -272,6 +279,11 @@ class CameraPlan:
+             # カメラがキャラの周囲を公転する動き。Yは高さとして固定する。
+             extra_yaw, zoom, _ = self.keyframe_values(t)
+             dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
++            if self.smart_composition:
++                # Conservative framing: back away instead of allowing extreme
++                # close-ups and raise the viewpoint to reduce terrain occlusion.
++                dist = max(dist, self.third_dist * 0.88)
++                e = max(e, math.radians(31.0))
+             sin_e = max(math.sin(e), MIN_CAM_HEIGHT / max(dist, 1.0))
+             sin_e = min(0.98, sin_e)
+             e = math.asin(sin_e)
+@@ -314,6 +326,11 @@ class CameraPlan:
+         extra_yaw, zoom, _ = self.keyframe_values(t)
+         dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
+         elev = max(12.0, min(58.0, elev))
++        if self.smart_composition:
++            dist = max(dist, self.third_dist * 0.88)
++            elev = max(elev, 31.0)
++            # Avoid whipping the camera around terrain during a kill.
++            orbit_delta = max(-22.0, min(22.0, orbit_delta))
+         sin_e = max(math.sin(math.radians(elev)), MIN_CAM_HEIGHT / max(dist, 1.0))
+         sin_e = min(0.98, sin_e)
+         eang = math.asin(sin_e)
+@@ -405,6 +422,7 @@ class CameraDirector:
+         self.api_hz = max(30.0, min(60.0, float(api_hz)))
+         self.dt = 1.0 / self.hz
+         self.api_dt = 1.0 / self.api_hz
++        self._adaptive_api_dt = self.api_dt
+         self._smooth_fov = None
+         self._smooth_offset = None
+         self._smooth_rot = None
+@@ -424,6 +442,7 @@ class CameraDirector:
+         self._last_speed = None
+         self._sent_speed = None
+         self._last_heartbeat = 0.0
++        self._last_speed_send = 0.0
+ 
+     def start(self) -> None:
+         try:
+@@ -436,6 +455,8 @@ class CameraDirector:
+         self._last_sync = self._wall_t0
+         self._last_api_send = 0.0
+         self._last_heartbeat = 0.0
++        self._last_speed_send = 0.0
++        self._adaptive_api_dt = self.api_dt
+         self._th = threading.Thread(target=self._run, daemon=True)
+         self._th.start()
+ 
+@@ -457,7 +478,7 @@ class CameraDirector:
+             try:
+                 # HTTPS playback observations never modify camera time in steps.
+                 # Only a real external seek resets the continuous clock.
+-                if self._last_sync <= 0.0 or now - self._last_sync >= 0.25:
++                if self._last_sync <= 0.0 or now - self._last_sync >= 0.50:
+                     try:
+                         pb = self.api.playback()
+                         if clock.observe(pb.get("time", clock.time)):
+@@ -486,7 +507,8 @@ class CameraDirector:
+                     body["fieldOfView"] = round(self._smooth_fov, 3)
+                 if rig is not None and rig.mode == "fps":
+                     target_offset = tuple(float(v) for v in plan.offset_at(t))
+-                    alpha = 1.0 - math.exp(-real_dt / 0.095) if self._smooth_offset is not None else 1.0
++                    smoothing = 0.125 if plan.smart_composition else 0.095
++                    alpha = 1.0 - math.exp(-real_dt / smoothing) if self._smooth_offset is not None else 1.0
+                     self._smooth_offset = target_offset if self._smooth_offset is None else tuple(a + (b - a) * alpha for a, b in zip(self._smooth_offset, target_offset))
+                     x, y, z = self._smooth_offset
+                     body["selectionOffset"] = {"x": x, "y": y, "z": z}
+@@ -510,20 +532,29 @@ class CameraDirector:
+                     self._last_heartbeat = now
+                     self.heartbeats += 1
+ 
+-                if body and (now - self._last_api_send >= self.api_dt):
++                if body and (now - self._last_api_send >= self._adaptive_api_dt):
+                     api_t0 = time.perf_counter()
+                     self.api.set_render(**body)
+                     api_ms = (time.perf_counter() - api_t0) * 1000.0
+                     self.api_calls += 1
+                     self.max_api_latency_ms = max(self.max_api_latency_ms, api_ms)
++                    # Keep slow HTTP calls from monopolizing the animation loop.
++                    # Recover gradually if the Replay API becomes responsive.
++                    desired = max(self.api_dt, min(0.140, api_ms * 0.00130))
++                    self._adaptive_api_dt += (desired - self._adaptive_api_dt) * 0.22
+                     if api_ms >= 25.0:
+                         self.api_slow_calls += 1
+                     self._last_api_send = time.perf_counter()
+ 
+-                # Speed is also smoothed; only send meaningful changes.
+-                if self._sent_speed is None or abs(current_speed - self._sent_speed) > 0.01:
++                # Protect Replay API from two alternating high-frequency
++                # write streams (render + playback). Sudden speed changes
++                # remain interpolated locally between bounded writes.
++                if (self._sent_speed is None or
++                        ((now - self._last_speed_send) >= 0.085 and
++                         abs(current_speed - self._sent_speed) > 0.018)):
+                     self.api.set_playback(speed=round(current_speed, 3))
+                     self._sent_speed = current_speed
++                    self._last_speed_send = time.perf_counter()
+             except ReplayApiError:
+                 self.errors += 1
+             next_tick += self.dt
+diff --git a/LoL_AutoCine/core/effects.py b/LoL_AutoCine/core/effects.py
+index bc2a53b..d269e58 100644
+--- a/LoL_AutoCine/core/effects.py
++++ b/LoL_AutoCine/core/effects.py
+@@ -21,6 +21,7 @@ except ImportError:
+     # Fall back to a system ffmpeg so the rest of the UI can still start.
+     FFMPEG = shutil.which("ffmpeg") or shutil.which("ffmpeg.exe")
+ 
++from .kill_icons import make_badge, with_badge, normalize as kill_style_normalize
+ from .camera import INTENSITY
+ from .gpu_pipeline import detect as detect_gpu, gpu_prefix, backend_name as gpu_backend_name
+ 
+@@ -148,6 +149,13 @@ class Template:
+     smart_highlight_enabled: bool = False  # explicit automatic planning only
+     smart_highlight_style: str = "auto"
+     highlight_pulse: float = 0.0  # kill-timed accent, legacy graph unchanged when zero
++    kill_icon_style: str = "off"  # off/simple/cinema/neon/impact
++    kill_icon_position: str = "right-top"
++    kill_icon_scale: float = 1.0
++    kill_icon_duration: float = 1.55
++    kill_icon_opacity: float = 1.0
++    smart_composition: bool = False  # safer distance/elevation around the locked player
++    smart_montage: bool = False  # only smart auto-edit reorders unpinned scenes
+ 
+     def amp(self) -> float:
+         return INTENSITY.get(self.intensity, 1.0)
+@@ -600,6 +608,11 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
+     scale = f"scale={OUTPUT_W}:{OUTPUT_H}:flags=lanczos"
+     pre = ",".join([x for x in (gpu_prefix_graph, scale) if x])
+     events = _effect_events(kills, t, duration)
++    badge_png = None
++    badge_style = kill_style_normalize(getattr(t, "kill_icon_style", "off"))
++    if badge_style != "off":
++        badge_png = make_badge(dst.with_suffix(".killbadge.png"), badge_style, len(kills))
++    badge_idx = 1 + int(png is not None)
+     original_effects = t.video_effects
+     if consumed_gpu:
+         remaining = dict(original_effects)
+@@ -608,6 +621,11 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
+         t.video_effects = remaining
+     try:
+         graph = build_graph(t, duration, png is not None, pre_filters=pre, effect_events=events)
++        if badge_png is not None:
++            graph = with_badge(graph, badge_idx, events, duration=duration,
++                                    position=t.kill_icon_position, scale=t.kill_icon_scale,
++                                    seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
++                                    style=badge_style)
+     finally:
+         t.video_effects = original_effects
+     cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error"]
+@@ -619,6 +637,9 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
+     if png is not None:
+         cmd += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(png)]
+         idx += 1
++    if badge_png is not None:
++        cmd += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(badge_png)]
++        idx += 1
+ 
+     # ゲーム音だけの標準経路は後段mux。BGMを使う場合のみ従来の同時ミックスを使う。
+     game_idx = bgm_idx = None
+@@ -652,6 +673,11 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
+         "bloom_level": t.bloom,
+         "dof_blur_level": t.dof_blur if t.dof_enabled else 0,
+         "filter_graph": graph,
++        "kill_icon_style": badge_style,
++        "kill_icon_position": getattr(t, "kill_icon_position", "right-top"),
++        "kill_icon_scale": getattr(t, "kill_icon_scale", 1.0),
++        "kill_icon_duration": getattr(t, "kill_icon_duration", 1.55),
++        "kill_icon_opacity": getattr(t, "kill_icon_opacity", 1.0),
+         "video_resolution": "1920x1080",
+         "output_fps": t.fps,
+         "duration_s": duration,
+@@ -666,11 +692,19 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
+         t.video_effects = fallback
+         try:
+             graph_cpu = build_graph(t, duration, png is not None, pre_filters=scale, effect_events=events)
++            if badge_png is not None:
++                graph_cpu = with_badge(graph_cpu, badge_idx, events, duration=duration,
++                                    position=t.kill_icon_position, scale=t.kill_icon_scale,
++                                    seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
++                                    style=badge_style)
+             cpu_cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error", "-i", str(src)]
+             idx2 = 1
+             if png is not None:
+                 cpu_cmd += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(png)]
+                 idx2 += 1
++            if badge_png is not None:
++                cpu_cmd += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(badge_png)]
++                idx2 += 1
+             if mix_audio_in_graph:
+                 if t.game_audio and has_wav:
+                     cpu_cmd += ["-i", str(game_wav)]
+@@ -692,11 +726,6 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
+                                           "filter_graph": graph_cpu})
+         finally:
+             t.video_effects = original_effects
+-    if png is not None:
+-        try:
+-            os.remove(png)
+-        except OSError:
+-            pass
+     if r.returncode != 0:
+         raise RuntimeError("ffmpeg エフェクト適用に失敗: " + r.stderr[-1200:])
+     if not dst.exists() or dst.stat().st_size < 1024:
+@@ -716,11 +745,19 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
+                 t.video_effects = remaining
+                 try:
+                     graph_cpu = build_graph(t, duration, png is not None, pre_filters=scale, effect_events=events)
++                    if badge_png is not None:
++                        graph_cpu = with_badge(graph_cpu, badge_idx, events, duration=duration,
++                                    position=t.kill_icon_position, scale=t.kill_icon_scale,
++                                    seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
++                                    style=badge_style)
+                     cpu_cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error", "-i", str(src)]
+                     idxc = 1
+                     if png is not None:
+                         cpu_cmd += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(png)]
+                         idxc += 1
++                    if badge_png is not None:
++                        cpu_cmd += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(badge_png)]
++                        idxc += 1
+                     if mix_audio_in_graph:
+                         gi = None
+                         if t.game_audio and has_wav:
+@@ -743,6 +780,13 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
+                 finally:
+                     t.video_effects = original_effects
+ 
++    for temporary in (png, badge_png):
++        if temporary is not None:
++            try:
++                Path(temporary).unlink(missing_ok=True)
++            except OSError:
++                pass
++
+     if t.game_audio and not mix_audio_in_graph:
+         if not has_wav:
+             raise RuntimeError("LoLゲーム音WAVが見つからないため、音声付きMP4を作成できません")
+diff --git a/LoL_AutoCine/core/jobs.py b/LoL_AutoCine/core/jobs.py
+index d8e9265..fd45463 100644
+--- a/LoL_AutoCine/core/jobs.py
++++ b/LoL_AutoCine/core/jobs.py
+@@ -104,7 +104,9 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
+                        third_yaw=getattr(tpl, "third_yaw", 0.0),
+                       motion_arc=getattr(tpl, "motion_arc", 0.0), motion_dolly=getattr(tpl, "motion_dolly", 0.0),
+                       motion_profile=getattr(tpl, "motion_profile", "cinematic"),
+-                      scene_keyframes=tuple(getattr(tpl, 'scene_keyframes', ()) or ()), rig=rig,
++                      scene_keyframes=tuple(getattr(tpl, 'scene_keyframes', ()) or ()),
++                       smart_composition=bool(getattr(tpl, 'smart_composition', False)),
++                       smart_impact=float(getattr(tpl, 'highlight_pulse', 0.0)), rig=rig,
+                       sel_name=player.selection_name or player.champion)
+     if rig.mode == "top" and tpl.style in ("cinema", "follow"):
+         plan.style = "cinema_top" if tpl.style == "cinema" else "top"   # 実際に使えるモードに合わせる
+diff --git a/LoL_AutoCine/core/kill_icons.py b/LoL_AutoCine/core/kill_icons.py
+new file mode 100644
+index 0000000..54d86f8
+--- /dev/null
++++ b/LoL_AutoCine/core/kill_icons.py
+@@ -0,0 +1,139 @@
++# -*- coding: utf-8 -*-
++"""Original optional right-side kill-feed overlays for 16:9 LoL highlights.
++
++Do not touch the game's HUD. A transparent PNG is composed into the exported
++clip at the exact scene event times, so this works with HUD-hidden recordings.
++All editor-supplied options are normalized here, before they reach FFmpeg.
++"""
++from __future__ import annotations
++
++import math
++from pathlib import Path
++
++STYLES = {
++    "off": "なし（従来どおり）",
++    "simple": "シンプル",
++    "cinema": "シネマ・ゴールド",
++    "neon": "ネオン・ブルー",
++    "impact": "インパクト・レッド",
++}
++REVERSE_STYLES = {label: code for code, label in STYLES.items()}
++POSITIONS = {
++    "right-top": "右上（おすすめ）",
++    "right-bottom": "右下",
++    "left-top": "左上",
++    "left-bottom": "左下",
++}
++REVERSE_POSITIONS = {label: code for code, label in POSITIONS.items()}
++COLORS = {
++    "simple": (196, 208, 223),
++    "cinema": (247, 197, 102),
++    "neon": (160, 139, 255),
++    "impact": (255, 122, 125),
++}
++
++
++def normalize(style: str) -> str:
++    return str(style) if style in STYLES else "off"
++
++
++def normalize_options(position="right-top", scale=1.0, seconds=1.55, opacity=1.0):
++    """Pure validation: keep FFmpeg expressions bounded and injection-safe."""
++    def finite(value, fallback, lower, upper):
++        try:
++            val = float(value)
++        except (TypeError, ValueError, OverflowError):
++            val = fallback
++        return max(lower, min(upper, val)) if math.isfinite(val) else fallback
++    pos = position if position in POSITIONS else "right-top"
++    return pos, finite(scale, 1.0, .5, 1.8), finite(seconds, 1.55, .45, 4.0), finite(opacity, 1.0, .25, 1.0)
++
++
++def make_badge(path: Path, style: str, count: int = 1) -> Path:
++    """Draw a self-contained transparent badge using original geometric art."""
++    from PIL import Image, ImageDraw, ImageFont, ImageFilter
++    style = normalize(style)
++    if style == "off":
++        raise ValueError("Kill decoration is disabled")
++    path = Path(path)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    color = COLORS[style]
++    width, height = 385, 116
++    base = Image.new("RGBA", (width, height), (0, 0, 0, 0))
++    glow = Image.new("RGBA", (width, height), (0, 0, 0, 0))
++    gd = ImageDraw.Draw(glow)
++    if style != "simple":
++        gd.rounded_rectangle((16, 15, 368, 102), radius=18, outline=(*color, 160), width=8)
++        base = Image.alpha_composite(base, glow.filter(ImageFilter.GaussianBlur(12)))
++    d = ImageDraw.Draw(base)
++    d.rounded_rectangle((17, 17, 367, 100), radius=16,
++                        fill=(13, 19, 30, 190 if style == "simple" else 215),
++                        outline=(*color, 225), width=3)
++    d.rounded_rectangle((26, 26, 93, 91), radius=14, fill=(*color, 45),
++                        outline=(*color, 255), width=2)
++    d.line((44, 44, 77, 78), fill=(*color, 255), width=6)
++    d.line((77, 44, 44, 78), fill=(*color, 255), width=6)
++    d.ellipse((41, 41, 49, 49), fill=(255, 255, 255, 235))
++    d.ellipse((72, 72, 80, 80), fill=(255, 255, 255, 235))
++    try:
++        font = ImageFont.truetype("arialbd.ttf", 32)
++        subfont = ImageFont.truetype("arial.ttf", 18)
++    except OSError:
++        font = ImageFont.load_default()
++        subfont = ImageFont.load_default()
++    n = max(1, min(99, int(count)))
++    d.text((109, 33), f"KILL  x{n}", font=font, fill=(255, 255, 255, 255))
++    d.text((111, 74), {"simple": "HIGHLIGHT", "cinema": "CINEMATIC",
++                       "neon": "NEON FINISH", "impact": "IMPACT"}[style],
++           font=subfont, fill=(*color, 245))
++    if style == "impact":
++        d.rectangle((344, 26, 351, 90), fill=(*color, 230))
++    elif style == "neon":
++        d.line((109, 96, 322, 96), fill=(*color, 220), width=3)
++    base.save(path, format="PNG")
++    return path
++
++
++def with_badge(graph: str, badge_input: int, events, *, duration: float,
++               position: str = "right-top", scale: float = 1.0,
++               seconds: float = 1.55, opacity: float = 1.0,
++               style: str = "simple") -> str:
++    """Append a bounded, kill-synchronized overlay after the existing [vout].
++
++    The output is still named [vout]. No audio graph or gameplay frames change.
++    """
++    if not graph.endswith("[vout]"):
++        raise ValueError("Existing video graph has no [vout]")
++    position, scale, seconds, opacity = normalize_options(position, scale, seconds, opacity)
++    valid_duration = max(0.0, float(duration))
++    times = []
++    for event in list(events or [])[:24]:
++        try:
++            t = float(event[0])
++        except (ValueError, TypeError, IndexError):
++            continue
++        if math.isfinite(t) and 0 <= t <= valid_duration:
++            times.append(t)
++    if not times:
++        return graph
++    spans = []
++    for center in times:
++        lo = max(0.0, center - 0.10)
++        hi = min(valid_duration, center + seconds)
++        if hi > lo:
++            spans.append(f"between(t,{lo:.3f},{hi:.3f})")
++    if not spans:
++        return graph
++    y = "62" if position.endswith("top") else "H-h-62"
++    x = "W-w-32" if position.startswith("right") else "32"
++    if normalize(style) == "impact":
++        # Small, damped kick rather than a disorienting screen shake.
++        kick = "+".join(f"7*sin(35*(t-{center:.3f}))*exp(-11*abs(t-{center:.3f}))" for center in times[:6])
++        x += "+" + kick
++    return (graph[:-6] + "[pre_kill_badge];"
++            + f"[{int(badge_input)}:v]format=rgba,"
++            + f"scale=w='trunc(iw*{scale:.3f}/2)*2':h='trunc(ih*{scale:.3f}/2)*2',"
++            + f"colorchannelmixer=aa={opacity:.3f}[kill_badge];"
++            + "[pre_kill_badge][kill_badge]"
++            + f"overlay=x='{x}':y='{y}':format=auto:shortest=1:"
++            + f"enable='{'+'.join(spans)}',format=yuv420p[vout]")
+diff --git a/LoL_AutoCine/docs/HANDOFF_MASTER_2026-10-09_JA.md b/LoL_AutoCine/docs/HANDOFF_MASTER_2026-10-09_JA.md
+new file mode 100644
+index 0000000..8c40e51
+--- /dev/null
++++ b/LoL_AutoCine/docs/HANDOFF_MASTER_2026-10-09_JA.md
+@@ -0,0 +1,188 @@
++# LoL AutoCine — 新チャット完全引き継ぎガイド（2026-10-09）
++
++> **最初に読むこと**：本書は、これまでのChatGPTとの長期間の開発会話から仕様・問題・判断・参考動画・今後の作業をできるだけ詳細に移したもの。過去チャットや添付動画のバイナリ、全フレーム分析、モデル内部の「学習」を100%複製するものではない。**実装の真実は現行ソース、仕様の真実は本書とユーザーの最新指示、動作確認の真実は実機ログ**とする。曖昧な事項は推測で完成扱いにしない。
++
++## 0. 新しいチャットの最初の作業
++
++1. 本書全体、および `LoL_AutoCine/AGENTS.md`・直近 `README_v5.9.8_JA.md` と該当設計書を読む。
++2. GitHubの2つのブランチを調べ、**v5.9.8を安定ベース**、v5.9.9を**未完成・未検証の開発途中差分**として比較する。v5.9.9をそのまま完成版として配布してはいけない。
++3. 最新のユーザー指定は「v5.9.9を開発し、Windows用フル版ZIP＋Codex統合用差分ZIPの2つを渡す。テスト手順も渡す」。
++4. ユーザーが元動画／最新版ZIPを新チャットに添付したら、その中身を優先して確認する。**ZIPを直接開かずに旧コードや想像で上書きしない**。
++5. 既存機能に回帰テストをかけ、Windows/LoL/NVIDIA固有の未実施テストは未検証と明記する。
++
++## 1. GitHub上の現時点の状態（2026-10-09にGitHubコネクタで確認済み）
++
++- リポジトリ：`Aimin2222/agdhnteweeffewwff`
++- アプリのルート：`LoL_AutoCine/`（リポジトリの他の静的サイト用ファイルに手を出さないこと）。
++- **直近の安定コードのGitHub側コピー**：ブランチ `codex/lol-autocine-v598-handoff`、`LoL_AutoCine/VERSION.txt` = `5.9.8`。
++- **未完成v5.9.9開発途中**：ブランチ `autocine/v5.9.9-chatgpt`。現時点の `VERSION.txt` はまだ `5.9.8`。安定ブランチから**9コミット進行中**で、以下の7ファイルに変更：
++  - `core/camera.py`（変更）
++  - `core/effects.py`（変更）
++  - `core/jobs.py`（変更）
++  - `core/kill_icons.py`（新規）
++  - `legacy_app.py`（変更）
++  - `ui/scene_batch.py`（変更）
++  - `ui/scene_project.py`（変更）
++- 途中実装はキルアイコン装飾・シーンごとのスタイル保存・カメラ調整・一部自動モンタージュの基礎など。ただし**v5.9.9全機能の完成・テスト成功・Windowsでの起動は未確認**。
++- GitHubのブランチ閲覧例：
++  - 安定： https://github.com/Aimin2222/agdhnteweeffewwff/tree/codex/lol-autocine-v598-handoff/LoL_AutoCine
++  - 開発途中： https://github.com/Aimin2222/agdhnteweeffewwff/tree/autocine/v5.9.9-chatgpt/LoL_AutoCine
++- `main` の静的サイト関連は無断でマージ／上書きしない。
++- 以前からユーザーへは最新版の**フル版ZIP**を配布してきた。GitHub上のソースとユーザーの持つ最新ZIPで差があれば、差分比較してからベースを選ぶ。
++
++## 2. プロジェクトの理念・絶対条件
++
++**LoLのリプレイを選ぶ → 対象プレイヤーを固定 → キル／アシストを検出 → 1クリックでカメラ演出・色・FX・LoL音声付きの高品質な横型モンタージュを出力**できるWindowsアプリ。初心者にも直感的な「かんたん編集」と、DaVinci Resolve／Lolnamを参考にした「詳細編集」を**両立**。ユーザーは継続して日本語での説明とUI日本語化を希望。
++
++- **横型1920×1080・16:9中心**。標準出力は1080p/60fps。144Hzは内部カメラ・ミラー・必要に応じたFPS指定の話であり、**縦型Shorts出力は不要／追加しない**。
++- 既存の正常機能を勝手に削除・全面刷新しない。変更する場合は後方互換・テスト必須。
++- 配布：**Windows実機用フル版ZIP + Codex統合用の変更差分ZIP**を毎回2つ。別々の開発ブランチの更新ファイルを無造作に上書きしない。
++- ユーザーはテストを実行してログ・MP4・スクショを送り、こちらがログ解析→修正→ZIPの反復を希望。
++- GPU/NVENCを優先し、失敗すれば安全にCPU経路へフォールバック。GPU使用率だけで「GPUエフェクト実行」と判定しない。
++- **ゲーム音のみ**：デスクトップ全体の録音に戻さない。LoLプロセス専用のWindows Process Loopback方式が実機で成功している。
++- 人間が操作するのは基本1クリック。詳細編集では自由に編集／保存できる。
++- 既存`TargetLock`（プレイヤーの固定）、三人称カメラの座標系と視点を破壊しない。
++- 色付きのプレビューなのにMP4が白黒になる過去不具合を再発させない。
++- チェックの見た目は「■に×」ではなく分かりやすい ✓。英語機能名は可能な限り日本語へ、設定名も正確に。
++- ユーザーが望むHUD：**体力バーは表示、キャラクター／プレイヤー名は非表示**。体力バーと名前の可否はLoL自身の設定に依存する部分があり、完全自動化を確認せず断言しない。
++
++## 3. 動作実績と既存機能（v5.9.8時点）
++
++ユーザーから以下の実機報告あり：
++- 以前のバージョンでLoLプロセス音声が実際に録れて、完成クリップに音が入った。
++- v5.8.4以降「チェックしたシーンだけ作成」クラッシュが改善した旨の報告。
++- v5.8.5〜v5.9.8でカラー1080pクリップ生成・HUD・シーン編集・モンタージュ等を反復テスト済み。
++- v5.9.6の指定したテスト全件をユーザーが「問題なく完了」と報告。
++- v5.9.8のユーザー提出7クリップは1080p/60fpsで生成されたが**カメラの構図・地形による遮り・ガクつきは未解消**。
++- 「GPUエンコードNVENC」は実機で動作。**GPUエフェクト本体はまだCPUで処理される経路が多い**。GPU処理済みと偽らない。
++
++主な既存機能：
++- Replay API / .rofl / game.cfg 連携、リプレイ一覧、プレイヤー10人取得／対象固定
++- キル・アシスト・両方のイベント検出、検出シーンのチェック選択、単独／複数書き出し
++- HUD表示モード、HPバー優先表示、名前非表示ガイド、HUD非表示
++- カメラ：三人称・三人称シネマ・FPS風・俯瞰・Lolnam風、Orbit・Dolly・角度・高さ・FOV、TargetLock
++- シーン別カメラキーフレーム（キル時刻を0とした相対時間）、グラフ、プレビュー、Undo/Redo、JSON保存、旧プロジェクト互換性
++- シーン別カメラ・色・Bloom・Focus Blur・DOF、設定コピー／貼り付け、一括適用、並べ替え、シーンサムネイル
++- かんたん編集／詳細編集の上部切り替え
++- 詳細編集：左側にリプレイ準備・プレイヤー固定・スキャン・参考動画／テンプレート、上段中央に固定LoLミラー、右上段にシーン選択／出力、**下段全幅にシーン／カメラ／カラー・FX／出力のワークスペース**。上段の余白を詰める。下段は広くスクロール・編集可能
++- 参考動画URL／ファイルからテンプレートの方向性、HERO／CLEAN／HYPE等
++- ミラー、色・温度・曲線・Fog・Bloom・DOF・LUT、BGM、各種VideoFX、モンタージュの通常連結／白い閃光／シネマ暗転
++- スマート自動編集：「おまかせ」「追走シネマ」「キル瞬間を強調」「集団戦（広め）」、キル中心の自動5キーフレーム、キル瞬間の明るさ・彩度アクセント
++- 1080p MP4、NVENC優先、ゲーム音の録音とAACマックス、進捗とキャンセル、診断ZIP
++
++## 4. 重大な過去バグと守るべき修正
++
++### 音声
++- 過去のProcess Loopbackでネイティブエラー／`0x80004001 GetMixFormat`／`captureClient`未宣言等。
++- Windowsネイティブ音声ヘルパー `tools/native_audio/lol_audio_helper.cpp` を利用。Windows Process Loopback APIを使い**LoLの対象PIDと子プロセスの音だけ**を収録。ビルド関連：`ENSURE_CPP_BUILD_TOOLS.bat`, `BUILD_AUDIO_HELPER.bat`, `START.bat`。
++- `GetMixFormat`を使わずPCM形式を指定し、capture client取得などを修正した結果、実機で `LoL音声OK: 13.98s / offset 0.055s` 等の録音成功が確認された。
++- 全デスクトップ音を録るフォールバックはプライバシー・要件面で不適切。音声が失敗した場合は記録し、音のない成功を「音声あり」と偽らない。
++- LoL録音WAV→AAC音声のMP4結合を継続。音声ストリームがあることとA/V同期の良さは別なので、実機で音ズレ確認。
++
++### FFmpeg／GPU
++- 過去の`hwdownload,format=yuv420p`が `Invalid output format yuv420p for hwframe download` で2クリップ失敗 → v5.7.8で問題のCUDA downloadパスを外し、安定CPUフィルター＋NVENCエンコードへ変更。
++- プレビューはカラーなのに出力が白黒になった不具合を修正。カラー処理・BT.709等の互換を再確認する。
++- `Focus Blur`／DOFが重い問題→低解像度でBlurして戻す処理等。
++- CPU高負荷：以前は約9秒クリップを約68〜85秒で処理、平均CPU約70〜80%。一部OpenCLフィルターはFFmpegに存在せずCPU実行。GPUエフェクトの完了を過大申告しない。
++- `core/effects.py`、`core/gpu_pipeline.py`、`core/jobs.py` の結線・既存効果を壊さない。
++
++### UI／カメラ
++- Tkinter `RuntimeError: main thread is not in main loop`：ワーカースレッドから`tk.Variable.get()`等を呼ばない。UIメインスレッドで値を取得してデータにしてからワーカーへ渡す。
++- 過去`CurveEditor`のCanvas width/height多重指定クラッシュ。kwargsに`setdefault`を使う。
++- 過去UIルート変数`r`を行番号`r,c=divmod(...)`で上書きし`int has no attribute tk` → 行列変数名を分離。
++- 「チェックしたシーンだけ作成」クリック直後の応答なし・終了コード `-805306369`：v5.8.4で正しい処理のログ追跡・二重起動防止・UI描画負荷低減が入りユーザー実機で成功。
++- 過去「動きをプレビュー」がグラフを更新するだけだった→v5.9.4でLoLカメラ実際の移動へ接続。
++- Camera Replay API最大約60〜122ms待ち／以前最大0.73秒時刻ずれ。v5.9.4で内部時計の取りこぼしを抑え、診断でずれ約0.04〜0.10秒になったが、**見た目のガクつきは残る**。
++- 青／赤サイドで「キャラクターの後ろ」が変わる。三人称斜め後ろは**空から見下ろす高さ**で、地面すれすれの横アングルではない。0／90／180／270度Orbitでターゲットを見失わない。対象中心の視線・座標系を維持。以前、気に入った三人称斜め後ろのカメラをユーザーが明確に採用した。
++
++## 5. 次のv5.9.9 — 必須実装（ユーザーが再三指定）
++
++**完成扱いにするには全項目が実コードとテストで裏付けられること。**
++
++1. **キルアイコン装飾テンプレート4種**：シンプル／シネマ・ゴールド／ネオン・ブルー／インパクト・レッド。かんたん編集でワンクリック選択。詳細編集で位置・大きさ・色・表示時間・場面ごとのON/OFF・保存。右側キルフィードを装飾。キル瞬間のイベントと同期。元のLoL HUDは変えず、装飾を映像へ後合成する方式が好ましい。ゲーム公式の画像を無許諾でコピーせず、オリジナル装飾で開始。現開発ブランチ`core/kill_icons.py`にはPillowで透明PNGバッジ作成しFFmpeg`overlay`を行う基礎コードがあるが、**実機テスト・全オプションの実装は未確認**。
++2. **スマート構図補正**：選択キャラクターを見失わない。手前の木／壁／地形で遮られる場合にカメラ距離・高さ・角度で軽減。単純なReplay API座標だけでは厳密な遮蔽検出はできないので、映像解析／視点候補の採点など具体的に検証。勝手に俯瞰へ不自然に飛ばさない。
++3. **Replay APIカメラのガクつき改善**：高頻度のHTTP呼び出しによる遅延・時計補間・ターゲット追従更新を見直し、カメラモーションが滑らかになるか実機検証。ミラー144Hz希望だが、Replay APIポーリング自体を144Hzで叩きすぎない。一定間隔でサンプル取得し、可能なら補間／バッファ／速度制限。TargetLockの原理は維持。
++4. **キル前後の連動演出**：キル前→寄り→キル瞬間の短い発光／Blur→短いスロー→自然に戻す。ズーム・発光・スローモーションのタイミングを同じイベント時計で同期させる。短いスローが音声同期／クリップ長／次のシーンを破壊しない。
++5. **スマートモンタージュ自動構成**：複数キルから見せ場を選定、順序と構成に意味を持たせ、場面転換・テンポを自動設定。時刻順連結しかできない仕組みから段階的に発展。ユーザーが詳細編集で並べた順序は無断変更しない。
++6. **詳細編集との統合**：上記の自動結果を手動で編集・保存・Undo/Redo・再読込。簡単編集／詳細編集の切替でも状態維持。初期OFFの新エフェクトは既存挙動に影響させない。
++
++**特に注意**：この6項目は以前から「実装する予定」と案内されているが、ZIPを作る実行環境が`ClientError`で失敗し**v5.9.9配布済みではない**。2026-10-09時点、GitHubには**部分実装のみ**。未検証の動作を「完成」「テスト全部通過」と書かない。
++
++## 6. UIと今後の開発ロードマップ
++
++- 上部は空白を減らす。モード切替は上部の「かんたん編集／詳細編集」。
++- かんたん編集はリプレイ準備・対象固定・キルスキャン・テンプレート・ワンクリック書き出しの短い導線。
++- 詳細編集はDaVinci ResolveやLolnamの**思想を参考**に、ゾーン／インスペクタ／プレビュー／タイムラインを整理する。商標・独自UIをそのままコピーするのではなく、分かりやすい独自UI。
++- 左に「リプレイ準備／プレイヤー／スキャン」を参考動画・テンプレートより上へ。中央上にLoLミラー固定。右上に検出シーン・書き出し。**下段は全幅のタイムライン／編集エリア**。パネルはスクロール可能でプレビューが消えない。
++- 中央と右で同じ設定を重複表示しない。カメラ・色・DOF・エフェクトの編集ゾーンを明確に。
++- カーブ補正／Fogは編集グラフ、DOFはフォーカス範囲が直感的に理解できる可視化、カメラ軌道サンプリングは意味・単位が分かる説明を。
++- 数値パラメータはスライダー横の数値表示と**直接入力**。シーンサムネイル、キーフレームのドラッグ編集、複数選択、Undo/Redo、シーンコピー。
++- 参考動画URL／動画添付から色味や編集テンプレートを作れる機能は中長期テーマ。動画の完全模倣は保証できず、解析の根拠を明記。
++- スマート編集の次候補：敵味方の位置を活かす広めの構図、キル速度に応じた盛り上がり、ベースの映像色を保ったまま一瞬だけ強調、キルフィード連動エフェクト、段階的GPUエフェクト化、安定したプレビュー／書き出し一致。
++- CPU/GPU/VRAM/FFmpegフィルタープランを自動で診断。ユーザーに毎回タスクマネージャーの数値を手打ちさせない。
++- 最終的に.exe/Windows配布しやすいプロジェクトへ。日本語の要件定義・設計書・変更履歴も更新。
++- **縦型Shorts出力は明示的に禁止・不要**。参考がYouTube Shortsでも出力は横型1080p。
++
++## 7. 参考動画・Lolnam分析（別途再添付が必要な場合あり）
++
++これはこれまでのチャットでユーザーが明示的にアップロードした参考資料の**名前と用途の索引**であり、新チャットが添付バイナリを自動閲覧できる保証ではない。
++
++- Lolnamの元資料：`LolnamEditor_仕様書_設計書(1).zip`、`LolnamEditor(2).zip`、`afaff(2).zip`。Lolnamにあるカメラ高さ、フォーカス距離、Orbit、キーフレーム、シーケンス保存、Undo/Redo等を参考。既存アプリ機能を消さない。
++- 先に分析した動画：`videoplayback.mp4`、`videoplayback (1).mp4`〜`videoplayback (6).mp4`（計7ファイル、うち2本重複、1本長尺約12分）。分析資料 `LoL_AutoCine_ReferenceVideo_Analysis_JA.md`。特徴：戦闘前に状況を見せる→交戦で追従→キル瞬間のみ寄り・短い発光・Blur等を強める→余韻・自然な復帰。背景を柔らかく、スキル色を活かす。
++- 後から追加した参考動画群：
++  `akG45H-SVImhl3Yt.mp4`,
++  `_24aR5saTNFeixOK.mp4`,
++  `MXMkKgqs6kfh1zko.mp4`,
++  `XhT1-KNLx6IJxFyB.mp4`,
++  `peLTBHKiygJB4Hde.mp4`,
++  `kTaKFwxYG-9xGXTB.mp4`,
++  `5cEhRAP-ekv5Lnny.mp4`,
++  `4GlDYzuY69GlyAw0.mp4`,
++  `C3Iit6b4LvoSAlED.mp4`,
++  `XhT1-KNLx6IJxFyB (1).mp4`,
++  `wkGChrE9eb4hdfXh.mp4`,
++  `LAyhgsKwyftg23dD.mp4`,
++  `qLWZzlEfXlggOjgh.mp4`,
++  `43noR8Nr6OYwlHVt.mp4`,
++  `nDddfS4VLbXydI1G.mp4`,
++  `6QUDMs0PGbbwR-1I.mp4`,
++  `YTDown.com_YouTube_Media_uG9PbP0fAOY_벽느껴지는-고인물들의-챔프-활용법_001_1080p.mp4`。
++- **`C3Iit6b4LvoSAlED.mp4` の画面右側キルアイコン装飾**がv5.9.9の直接の着想。元動画から位置／アニメのタイミングを判断するには、必要なら新チャットに再アップロードして実際に見る。未確認の映像内容を断定しない。
++- 関連YouTubeチャンネル： https://www.youtube.com/@lolnam 、 https://www.youtube.com/@takiXayah_jk/shorts 。
++- 関連X： https://x.com/TakiXayah_jk/status/2106628539412021593 （以前は内容を直接確認できなかったため、内容を見たという前提にしない）。
++- ユーザーの実機テスト例：`kill_001.mp4`〜`kill_001_006.mp4`、`montage_027.mp4`〜`montage_030.mp4`、`AutoCine_Diagnostics(1).zip`〜`AutoCine_Diagnostics(4).zip`。新チャットに実ファイルが見えない場合は必要なものを再送依頼。
++- 動画の音楽／演出を無断でコピーするのではなく、**技法を研究しオリジナルのテンプレートを作る**。
++
++## 8. 開発・テスト・配布のルール
++
++1. 最新ZIP／GitHubブランチとドキュメントの整合を確認。Python`py_compile`、pytest等で回帰テスト。Windows実機専用のReplay API/NVENC/Process Loopbackは**未テストならそう明記**。
++2. 高速化を主張する場合はFFmpegログと実測処理時間を比較。GPU使用率だけで実際のエフェクト実行を証明しない。
++3. 1クリップ通常→4種類のキルアイコン→1シーンのカメラとタイミング→2シーンとモンタージュ→詳細編集保存／Undo／再読込→音声・カラー・同期の順に確認。
++4. 必須の自動テスト例：
++   - キル時刻とキルアイコンの表示時間の一致
++   - 複数キルが近接した際のアイコンの重なり・表示維持
++   - `off`スタイルの既存映像と音声への無影響
++   - シーン設定で`inherit`と個別スタイルが正しく優先される
++   - キーフレームの単調時刻・有限値・端点の滑らかさ
++   - Warp/Slow時の音声長・映像長・イベント同期
++   - 右／左サイドのカメラ後方方向と0/90/180/270度のTargetLock
++   - GPU可／不可、FFmpeg失敗時に正常フォールバック
++   - ワーカースレッドからTk UI変数を読まない
++   - 操作前プレビューと実際の出力で補正・色・カメラが一致
++5. 実機テスト指示は番号付きで短く説明し、`COLLECT_DIAGNOSTICS.bat`または`diagnostics/latest_diagnostics.zip`の提出を依頼。落ちたらログを送ってもらう。
++6. 完成したら**①WindowsフルZIP ②Codex差分ZIP**。差分はGitパッチ＋適用説明・変更一覧を入れる。既存GPU／音声の変更を古いファイルで上書きしない。
++7. 出力は日本語、ファイル名は文字化け防止にASCII中心、仕様書はUTF-8 Markdown。
++8. システムや実行環境が使えない場合は、その旨を正直に伝える。**ファイルが実際に作成できていないのにsandboxリンクを作らない**。
++
++## 9. 現在の開発環境で起きたこと
++
++以前のチャットでは2026-10-09にPythonの`print(1 + 1)`すら`caas.internal.errors.ClientError`で実行できず、ZIP/動画サイズのせいかは確認できなかった。**AutoCine自体が壊れた証拠ではない**。GitHubコネクタは動作している。新チャットでは実行環境の健全性をまず`print(1+1)`などでテストし、問題なければZIPを読み込んで続行する。
++
++## 10. ユーザーに確認すべき点と確認不要な点
++
++- **確認不要**：日本語UI、横型1080p中心、縦型Shorts不要、音声はLoLのみ、ワンクリック＋詳細編集を両立、2つのZIP、旧機能維持。すでに確定している。
++- **必要になった場合だけ確認**：参考動画そのものの解析に必要なMP4の再添付、Windows実機のエラーログ／出力クリップ、4つのキルアイコンテンプレートの最終デザイン調整。資料があるのに最初から仕様を聞き直さない。
++
++## 11. 開発者向けの完了定義（Definition of Done）
++
++v5.9.9の完成宣言に必要なのは、**(a)** 希望6機能がプログラムで実動作、**(b)** `TargetLock`とLoL専用音声・NVENC・HUD・UI・既存保存形式の回帰確認、**(c)** 自動テストと短い合成映像／音声テスト、**(d)** Windowsで追加確認が必要な項目の正直な列挙、**(e)** 実在するフル版と差分版の2つのZIPへのリンク、の全て。どれかが未完了なら完了とは書かない。
+diff --git a/LoL_AutoCine/legacy_app.py b/LoL_AutoCine/legacy_app.py
+index b2fdd08..7d950a3 100644
+--- a/LoL_AutoCine/legacy_app.py
++++ b/LoL_AutoCine/legacy_app.py
+@@ -22,6 +22,8 @@ ROOT = Path(__file__).resolve().parent
+ sys.path.insert(0, str(ROOT))
+ 
+ from core import paths                                             # noqa: E402
++from core.kill_icons import STYLES as KILL_ICON_STYLES, REVERSE_STYLES as KILL_ICON_REVERSE
++from core.kill_icons import POSITIONS as KILL_ICON_POSITIONS, REVERSE_POSITIONS as KILL_ICON_REVERSE_POSITIONS
+ from core.camera import INTENSITY_JP, STYLES                       # noqa: E402
+ from core.capture import CaptureError, SyntheticSource, WGCWindowSource   # noqa: E402
+ from core.effects import (FOG_PRESETS, GRADE_JP, TRANSITIONS, Template, one_click_templates, gpu_encoder_available, gpu_pipeline_status,
+@@ -380,6 +382,13 @@ class App:
+         self.var_auto_director = tk.BooleanVar(value=False)  # preserve old one-click default
+         self.var_smart_highlight_style = tk.StringVar(value=SMART_STYLES['auto'])
+         self.var_smart_highlight_enabled = tk.BooleanVar(value=False)
++        self.var_kill_icon_style = tk.StringVar(value=KILL_ICON_STYLES['off'])
++        self.var_kill_icon_position = tk.StringVar(value=KILL_ICON_POSITIONS['right-top'])
++        self.var_kill_icon_scale = tk.DoubleVar(value=1.0)
++        self.var_kill_icon_duration = tk.DoubleVar(value=1.55)
++        self.var_kill_icon_opacity = tk.DoubleVar(value=1.0)
++        self.var_smart_montage = tk.BooleanVar(value=True)
++        self.var_smart_composition = tk.BooleanVar(value=False)
+         self.var_scene_mode = tk.BooleanVar(value=False)    # opt-in per-scene rendering
+         self.var_edit_mode = tk.StringVar(value="easy")  # view only: never silently change rendering state
+         # A single HUD preset drives the legacy render flags. LoL player-name visibility is an in-game setting.
+@@ -709,6 +718,13 @@ class App:
+                      values=list(SMART_STYLES.values()), width=31).pack(side="left", fill="x", expand=True)
+         ttk.Label(easy, text="戦闘を見せる→キル直前に寄る→瞬間を短く強調→自然に戻る。通常の自動作成には影響しません。",
+                   style="CardMuted.TLabel", wraplength=850).pack(anchor="w")
++        badge_easy = ttk.Frame(easy, style="Card.TFrame")
++        badge_easy.pack(fill="x", pady=(8, 2))
++        ttk.Label(badge_easy, text="キルアイコン装飾", style="Card.TLabel", width=16).pack(side="left")
++        ttk.Combobox(badge_easy, state="readonly", textvariable=self.var_kill_icon_style,
++                     values=list(KILL_ICON_STYLES.values()), width=26).pack(side="left", fill="x", expand=True)
++        ttk.Checkbutton(easy, text="スマートモンタージュ（見せ場を後半に配置・自然な切り替え）",
++                        variable=self.var_smart_montage).pack(anchor="w", pady=(5, 2))
+         quick_presets = ttk.Frame(easy, style="Card.TFrame")
+         quick_presets.pack(fill="x", pady=(10, 3))
+         ttk.Label(quick_presets, text="仕上がり", style="Card.TLabel").pack(side="left", padx=(0, 6))
+@@ -829,6 +845,12 @@ class App:
+         fx_head = ttk.Frame(scene_card,style="Card.TFrame"); fx_head.pack(fill="x",pady=(8,3))
+         ttk.Label(fx_head,text="◈ シーンごとの色・エフェクト",style="Section.TLabel").pack(side="left")
+         self.var_scene_fx_enabled = tk.BooleanVar(value=False)
++        scene_badge = ttk.Frame(scene_card, style="Card.TFrame")
++        scene_badge.pack(fill="x", pady=(3, 5))
++        self.var_scene_kill_icon = tk.StringVar(value="全体設定を引き継ぐ")
++        ttk.Label(scene_badge, text="このシーンのキルアイコン", style="Card.TLabel").pack(side="left", padx=(0, 8))
++        ttk.Combobox(scene_badge, state="readonly", textvariable=self.var_scene_kill_icon,
++                     values=["全体設定を引き継ぐ", *KILL_ICON_STYLES.values()], width=25).pack(side="left")
+         ttk.Checkbutton(scene_card,text="このシーンだけ色・エフェクトを上書き（OFFは全体設定を引き継ぐ）",
+                         variable=self.var_scene_fx_enabled).pack(anchor="w")
+         self.scene_fx_vars={}
+@@ -939,7 +961,7 @@ class App:
+         slider(left_cam, "dist_scale", "追従距離", 0.3, 1.0)
+         slider(left_cam, "cam_height", "高さ", 0, 900)
+         slider(left_cam, "third_elev", "仰角", 10, 50)
+-        ttk.Checkbutton(left_cam, text="常に対象を画面中央に表示", variable=tk.BooleanVar(value=True)).pack(anchor="w", pady=(4, 0))
++        ttk.Checkbutton(left_cam, text="スマート構図補正（距離・仰角を安全範囲へ調整）", variable=self.var_smart_composition).pack(anchor="w", pady=(4, 0))
+         ttk.Label(right_cam, text="Orbit（横回転）", style="Card.TLabel", font=("Meiryo UI", 10, "bold")).pack(anchor="w", pady=(0, 3))
+         slider(right_cam, "third_dist", "三人称 距離", 500, 1400)
+         slider(right_cam, "third_yaw", "回転角", -180, 180)
+@@ -1074,6 +1096,25 @@ class App:
+         self.root.after(200, self._refresh_gpu_status)
+         ttk.Label(output, text="プレビュー/カメラ制御は最大144Hz。最終MP4は1080p・60fpsを標準。", style="CardMuted.TLabel", wraplength=520).pack(anchor="w", pady=(0,4))
+         self.var_montage=tk.BooleanVar(value=True); ttk.Checkbutton(output, text="完成クリップを1本のモンタージュにする", variable=self.var_montage).pack(anchor="w", pady=4)
++        ttk.Label(output, text="キルアイコンの装飾（全シーン共通）", style="Card.TLabel").pack(anchor="w", pady=(5,2))
++        ttk.Combobox(output, state="readonly", textvariable=self.var_kill_icon_style,
++                     values=list(KILL_ICON_STYLES.values()), width=29).pack(fill="x", pady=(0,4))
++        ttk.Label(output, text="装飾位置", style="Card.TLabel").pack(anchor="w", pady=(2, 1))
++        ttk.Combobox(output, state="readonly", textvariable=self.var_kill_icon_position,
++                     values=list(KILL_ICON_POSITIONS.values()), width=28).pack(fill="x", pady=(0, 3))
++        badge_details = ttk.Frame(output, style="Card.TFrame")
++        badge_details.pack(fill="x", pady=(2, 5))
++        for caption, variable, lower, upper, inc in (
++                ("大きさ", self.var_kill_icon_scale, 0.5, 1.8, 0.1),
++                ("表示秒数", self.var_kill_icon_duration, 0.45, 4.0, 0.1),
++                ("濃さ", self.var_kill_icon_opacity, 0.25, 1.0, 0.05)):
++            part = ttk.Frame(badge_details, style="Card.TFrame")
++            part.pack(side="left", padx=(0, 8))
++            ttk.Label(part, text=caption, style="Card.TLabel").pack(side="top")
++            ttk.Spinbox(part, from_=lower, to=upper, increment=inc,
++                        textvariable=variable, width=7).pack(side="top")
++        ttk.Checkbutton(output, text="スマートモンタージュで見せ場を後半に配置（自動編集時のみ）",
++                        variable=self.var_smart_montage).pack(anchor="w", pady=(0,5))
+         ttk.Label(output, text="モンタージュ専用の切替演出", style="Card.TLabel").pack(anchor="w", pady=(5,2))
+         ttk.Combobox(output, state="readonly", textvariable=self.var_montage_fx,
+                      values=["なし（従来の高速連結）", "光るカット（白い閃光）", "暗転カット（シネマ）"],
+@@ -1824,6 +1865,7 @@ class App:
+             self._edit_keyframes = [dict(frame) for frame in shot.keyframes]
+             self._refresh_keyframe_list()
+             self.var_scene_fx_enabled.set(shot.fx_override)
++            self.var_scene_kill_icon.set("全体設定を引き継ぐ" if shot.kill_icon_style == "inherit" else KILL_ICON_STYLES.get(shot.kill_icon_style, KILL_ICON_STYLES["off"]))
+             for field, var in self.scene_fx_vars.items():
+                 var.set(getattr(shot, field))
+             self.shot_motion_graph.redraw()
+@@ -1883,6 +1925,8 @@ class App:
+             raw[key] = variable.get()
+         raw['keyframes'] = [dict(f) for f in getattr(self, '_edit_keyframes', [])]
+         raw['fx_override'] = self.var_scene_fx_enabled.get()
++        raw['kill_icon_style'] = ('inherit' if self.var_scene_kill_icon.get() == '全体設定を引き継ぐ'
++                                  else KILL_ICON_REVERSE.get(self.var_scene_kill_icon.get(), 'inherit'))
+         for key, variable in self.scene_fx_vars.items():
+             raw[key] = variable.get()
+         return Shot.validated(raw)
+@@ -2034,7 +2078,8 @@ class App:
+         self.var_scene_mode.set(True)
+         self.var_auto_director.set(True)
+         self.var_smart_highlight_enabled.set(True)
+-        self.log('スマート自動編集: ターゲット固定のカメラ演出とキル瞬間の強調を有効にします')
++        self.var_smart_composition.set(True)
++        self.log('スマート自動編集: スマート構図補正・キル瞬間演出・ターゲット固定を有効にします')
+         self.on_one_click(smart=True)
+ 
+     def on_clear_scene(self):
+@@ -2257,6 +2302,11 @@ class App:
+             v.set(getattr(t, k))
+         self.var_tr.set(TRANSITIONS.get(t.transition, t.transition))
+         self.var_montage_fx.set({"cut":"なし（従来の高速連結）", "flash":"光るカット（白い閃光）", "dark":"暗転カット（シネマ）"}.get(getattr(t,"montage_fx","cut"), "なし（従来の高速連結）"))
++        self.var_kill_icon_style.set(KILL_ICON_STYLES.get(getattr(t, "kill_icon_style", "off"), KILL_ICON_STYLES["off"]))
++        self.var_kill_icon_position.set(KILL_ICON_POSITIONS.get(getattr(t, "kill_icon_position", "right-top"), KILL_ICON_POSITIONS["right-top"]))
++        self.var_kill_icon_scale.set(float(getattr(t, "kill_icon_scale", 1.0)))
++        self.var_kill_icon_duration.set(float(getattr(t, "kill_icon_duration", 1.55)))
++        self.var_kill_icon_opacity.set(float(getattr(t, "kill_icon_opacity", 1.0)))
+         self.var_pre.set(t.pre)
+         self.var_post.set(t.post)
+         self.var_merge.set(t.merge_multikill)
+@@ -2311,6 +2361,14 @@ class App:
+         t.effect_preset = self.var_effect_preset.get() if hasattr(self, "var_effect_preset") else "なし"
+         t.smart_highlight_enabled = bool(self.var_smart_highlight_enabled.get())
+         t.smart_highlight_style = SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto')
++        t.kill_icon_style = KILL_ICON_REVERSE.get(self.var_kill_icon_style.get(), 'off')
++        t.kill_icon_position = KILL_ICON_REVERSE_POSITIONS.get(self.var_kill_icon_position.get(), 'right-top')
++        from core.kill_icons import normalize_options
++        (_pos, t.kill_icon_scale, t.kill_icon_duration, t.kill_icon_opacity) = normalize_options(
++            t.kill_icon_position, self.var_kill_icon_scale.get(),
++            self.var_kill_icon_duration.get(), self.var_kill_icon_opacity.get())
++        t.smart_montage = bool(self.var_smart_montage.get())
++        t.smart_composition = bool(self.var_smart_composition.get())
+         # LoLミラー/カメラは144Hzで内部サンプリングし、最終出力FPSだけUI選択値へ合わせる。
+         # これで60fps書き出しでも、カメラ演出の元データを144Hzで保持できる。
+         t.capture_fps = 144
+@@ -2359,6 +2417,21 @@ class App:
+             if d.get("right_width"):
+                 self.var_right_width.set(int(d["right_width"]))
+             self._apply_panel_widths()
++            if d.get("kill_icon_style") in KILL_ICON_STYLES:
++                self.var_kill_icon_style.set(KILL_ICON_STYLES[d["kill_icon_style"]])
++            if d.get("kill_icon_position") in KILL_ICON_POSITIONS:
++                self.var_kill_icon_position.set(KILL_ICON_POSITIONS[d["kill_icon_position"]])
++            from core.kill_icons import normalize_options
++            (_p, badge_scale, badge_duration, badge_opacity) = normalize_options(
++                d.get("kill_icon_position"), d.get("kill_icon_scale"),
++                d.get("kill_icon_duration"), d.get("kill_icon_opacity"))
++            self.var_kill_icon_scale.set(badge_scale)
++            self.var_kill_icon_duration.set(badge_duration)
++            self.var_kill_icon_opacity.set(badge_opacity)
++            if isinstance(d.get("smart_montage"), bool):
++                self.var_smart_montage.set(d["smart_montage"])
++            if isinstance(d.get("smart_composition"), bool):
++                self.var_smart_composition.set(d["smart_composition"])
+             if d.get("hud_mode") in HUD_MODES:
+                 self._set_hud_mode(d["hud_mode"])
+             style_id = d.get('smart_highlight_style', 'auto')
+@@ -2386,6 +2459,13 @@ class App:
+                                              "edit_mode": self.var_edit_mode.get(),
+                                              "smart_highlight_style": SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto'),
+                                              "hud_mode": self.var_hud_mode.get(),
++                                             "kill_icon_style": KILL_ICON_REVERSE.get(self.var_kill_icon_style.get(), "off"),
++                                             "kill_icon_position": KILL_ICON_REVERSE_POSITIONS.get(self.var_kill_icon_position.get(), "right-top"),
++                                             "kill_icon_scale": float(self.var_kill_icon_scale.get()),
++                                             "kill_icon_duration": float(self.var_kill_icon_duration.get()),
++                                             "kill_icon_opacity": float(self.var_kill_icon_opacity.get()),
++                                             "smart_montage": bool(self.var_smart_montage.get()),
++                                             "smart_composition": bool(self.var_smart_composition.get()),
+                                              "montage_fx": {"なし（従来の高速連結）":"cut", "光るカット（白い閃光）":"flash", "暗転カット（シネマ）":"dark"}.get(self.var_montage_fx.get(),"cut")}, ensure_ascii=False), encoding="utf-8")
+         except Exception:
+             pass
+@@ -2636,6 +2716,9 @@ class App:
+             scene_cfg = (False, scene_cfg[1], False, scene_cfg[3])
+         template = self.current_template()
+         template.smart_highlight_enabled = bool(smart)
++        if smart:
++            template.smart_composition = True
++            template.smart_montage = bool(self.var_smart_montage.get())
+         self._run_bg(self._make, True, template, bool(self.var_montage.get()), self.var_event_mode.get(), *scene_cfg)
+ 
+     def _make(self, scan_first: bool, tpl: Template, montage: bool, event_mode: str = "キル",
+diff --git a/LoL_AutoCine/tests/test_gpu_highlight_v598.py b/LoL_AutoCine/tests/test_gpu_highlight_v598.py
+index fef5256..b098e64 100644
+--- a/LoL_AutoCine/tests/test_gpu_highlight_v598.py
++++ b/LoL_AutoCine/tests/test_gpu_highlight_v598.py
+@@ -8,7 +8,7 @@ from core.highlight_pulse import pulse_filters
+ def test_v597_positional_arguments_stay_in_place():
+     template = Template(fog_enabled=True, montage_fx='dark',
+                         scene_keyframes=[{'time': 0, 'yaw': 4}])
+-    new = {'smart_highlight_enabled', 'smart_highlight_style', 'highlight_pulse'}
++    new = {'smart_highlight_enabled', 'smart_highlight_style', 'highlight_pulse'} | {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration', 'kill_icon_opacity', 'smart_composition', 'smart_montage'}
+     previous = [getattr(template, field.name) for field in fields(Template) if field.name not in new]
+     restored = Template(*previous)
+     assert restored.fog_enabled and restored.montage_fx == 'dark'
+diff --git a/LoL_AutoCine/tests/test_gpu_montage_v597.py b/LoL_AutoCine/tests/test_gpu_montage_v597.py
+index b868735..b1f3910 100644
+--- a/LoL_AutoCine/tests/test_gpu_montage_v597.py
++++ b/LoL_AutoCine/tests/test_gpu_montage_v597.py
+@@ -13,7 +13,7 @@ from core.effects import Template
+ def test_v596_positional_template_fields_are_preserved():
+     previous = Template(fog_enabled=True, scene_keyframes=[{'time': 0, 'yaw': 8}])
+     names = [f.name for f in fields(Template)
+-             if f.name not in {'montage_fx', 'smart_highlight_enabled', 'smart_highlight_style', 'highlight_pulse'}]
++             if f.name not in {'montage_fx', 'smart_highlight_enabled', 'smart_highlight_style', 'highlight_pulse'} | {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration', 'kill_icon_opacity', 'smart_composition', 'smart_montage'}]
+     restored = Template(*(getattr(previous, name) for name in names))
+     assert restored.fog_enabled
+     assert restored.scene_keyframes == previous.scene_keyframes
+diff --git a/LoL_AutoCine/tests/test_gpu_shared_camera_contract.py b/LoL_AutoCine/tests/test_gpu_shared_camera_contract.py
+index 81dbeda..0f709b0 100644
+--- a/LoL_AutoCine/tests/test_gpu_shared_camera_contract.py
++++ b/LoL_AutoCine/tests/test_gpu_shared_camera_contract.py
+@@ -37,7 +37,7 @@ def test_legacy_template_positional_arguments_and_new_default_isolation():
+     legacy = Template(fog_enabled=True, dof_enabled=True, template_origin="custom")
+     old_values = [getattr(legacy, field.name) for field in fields(Template)
+                   if field.name not in {"scene_keyframes", "montage_fx", "smart_highlight_enabled",
+-                                        "smart_highlight_style", "highlight_pulse"}]
++                                        "smart_highlight_style", "highlight_pulse"} | {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration', 'kill_icon_opacity', 'smart_composition', 'smart_montage'}]
+     restored = Template(*old_values)
+     assert restored.fog_enabled and restored.dof_enabled
+     assert restored.template_origin == "custom" and restored.scene_keyframes == []
+diff --git a/LoL_AutoCine/tests/test_v599_automontage_killbadges.py b/LoL_AutoCine/tests/test_v599_automontage_killbadges.py
+new file mode 100644
+index 0000000..2380c9c
+--- /dev/null
++++ b/LoL_AutoCine/tests/test_v599_automontage_killbadges.py
+@@ -0,0 +1,193 @@
++# -*- coding: utf-8 -*-
++"""v5.9.9 overlay, preset, camera, montage and opt-in regression tests."""
++from __future__ import annotations
++
++from types import SimpleNamespace
++from pathlib import Path
++
++import pytest
++
++from core.effects import Template, _effect_events, build_graph
++from core.camera import CameraPlan, RigInfo
++from core.kill_icons import STYLES, POSITIONS, make_badge, normalize_options, with_badge
++from ui.smart_montage import choose_scenes, score
++from ui.scene_project import SceneProject, Shot, apply_shot, scene_key
++from ui.scene_batch import build_scene_templates, order_scenes
++
++
++def kill(n=1, t=10.0, multi=1, role="kill"):
++    return SimpleNamespace(event_id=n, time=t, killer="Test", victim=f"Enemy{n}",
++                           multikill=multi, role=role)
++
++
++def test_four_visual_styles_are_explicit_and_legacy_off():
++    assert set(STYLES) == {"off", "simple", "cinema", "neon", "impact"}
++    assert Template().kill_icon_style == "off"
++    assert Template().kill_icon_position == "right-top"
++    assert len(POSITIONS) == 4
++
++
++@pytest.mark.parametrize("style", ["simple", "cinema", "neon", "impact"])
++def test_badge_is_real_transparent_png(tmp_path, style):
++    from PIL import Image
++    dest = make_badge(tmp_path / f"{style}.png", style, 2)
++    with Image.open(dest) as img:
++        assert img.mode == "RGBA" and img.size == (385, 116)
++        # Blurred neon/gold glow can leave a barely visible edge pixel.
++        assert img.getpixel((0, 0))[3] <= 3
++        assert img.getpixel((30, 40))[3] > 0
++
++
++def test_badge_does_not_mutate_legacy_graph_when_absent():
++    src = "testsrc,format=yuv420p[vout]"
++    assert with_badge(src, 1, [], duration=6) == src
++    assert with_badge(src, 1, [(22, 23)], duration=6) == src
++    with pytest.raises(ValueError):
++        with_badge("null[xyz]", 1, [(2, 3)], duration=6)
++
++
++@pytest.mark.parametrize("position", list(POSITIONS))
++def test_badge_position_duration_size_and_format(position):
++    graph = with_badge("null[vout]", 2, [(4.0, 4.4)], duration=7.0,
++                       position=position, scale=1.4, seconds=2.0,
++                       opacity=0.7, style="impact")
++    assert graph.endswith("[vout]")
++    assert "overlay=" in graph and "format=yuv420p[vout]" in graph
++    assert "2:v" in graph and "iw*1.400" in graph
++    assert "aa=0.700" in graph and "between(t,3.900,6.000)" in graph
++    assert "W-w-32" in graph if position.startswith("right") else "x='32" in graph
++    assert "H-h-62" in graph if position.endswith("bottom") else "y='62'" in graph
++
++
++def test_badge_validation_bounds_nonfinite_values():
++    assert normalize_options("no", -10, float("nan"), float("inf")) == ("right-top", .5, 1.55, 1.0)
++    assert normalize_options("right-bottom", 2, 20, -1) == ("right-bottom", 1.8, 4.0, .25)
++
++
++def test_events_drive_badges_not_wall_clock():
++    tpl = Template(pre=4.0)
++    events = _effect_events([kill(1, 35)], tpl, 7.0)
++    assert events[0][0] == 4.0
++    output = with_badge(build_graph(tpl, 7.0, False, effect_events=events),
++                        1, events, duration=7.0)
++    assert "between(t,3.900,5.550)" in output
++
++
++def test_individual_scene_preset_inherits_or_overrides():
++    base = Template(kill_icon_style="cinema", kill_icon_scale=1.25)
++    inherited = apply_shot(base, Shot())
++    assert inherited.kill_icon_style == "cinema"
++    assert inherited.kill_icon_scale == 1.25
++    forced_off = apply_shot(base, Shot(kill_icon_style="off"))
++    assert forced_off.kill_icon_style == "off"
++    neon = apply_shot(base, Shot(kill_icon_style="neon"))
++    assert neon.kill_icon_style == "neon"
++    assert base.kill_icon_style == "cinema"
++
++
++def test_project_json_roundtrips_style_and_legacy():
++    k = kill()
++    key = scene_key(k)
++    p = SceneProject()
++    p.put(key, Shot(kill_icon_style="impact"))
++    copy = SceneProject.from_dict(p.to_dict())
++    assert copy.shots[key].kill_icon_style == "impact"
++    assert SceneProject.from_dict({"schema_version": 3, "application": "LoL AutoCine",
++                                    "shots": {key: {"arc": 10}}}).shots[key].kill_icon_style == "inherit"
++
++
++def test_smart_montage_preserves_short_set_and_paces_climax():
++    a = [kill(n=i, t=i * 6, multi=(3 if i==2 else 1)) for i in range(1, 8)]
++    result = choose_scenes([(k, None) for k in a])
++    assert len(result) == len(a)
++    assert result[-1][0].multikill == 3
++
++
++def test_smart_montage_selects_highlights_and_diversifies_timing():
++    a = [kill(n=i, t=i*5, multi=(5 if i==15 else 3 if i%4==0 else 1),
++              role="assist" if i%5==0 else "kill") for i in range(20)]
++    result = choose_scenes([(k, None) for k in a])
++    assert len(result) == 12
++    assert a[15] in [p[0] for p in result]
++    assert result[-1][0].multikill == 5
++
++
++def test_manual_sequence_remains_authoritative():
++    a, b = kill(n=1), kill(n=2)
++    assert order_scenes([a, b], [scene_key(b), scene_key(a)]) == [b, a]
++
++
++def test_smart_composition_maintains_high_safe_angle():
++    rig = RigInfo(mode="fps", h=(0.0, -1.0))
++    p = CameraPlan(style="lolnam_cinema", kill_time=10, smart_composition=True,
++                   third_elev=18, third_dist=950, rig=rig)
++    for t in (7.0, 9.5, 10.0, 10.5, 13.0):
++        offset, elev = p.third_pose_at(t)
++        assert elev >= 30.99
++        assert offset[1] >= 400
++
++
++def test_slow_motion_and_pulse_align_to_same_kill_timestamp():
++    p = CameraPlan(style="lolnam_cinema", kill_time=10, smart_impact=.8)
++    assert p.speed_at(10) < p.speed_at(5)
++    event = (4.0, 4.4)
++    from core.highlight_pulse import pulse_filters
++    assert "t-4.000" in " ".join(pulse_filters([event], .8))
++
++
++def test_easy_controls_create_valid_template():
++    import tkinter as tk
++    from legacy_app import App
++    root = tk.Tk()
++    try:
++        app = App(root)
++        app.var_kill_icon_style.set(STYLES["neon"])
++        app.var_kill_icon_position.set(POSITIONS["left-bottom"])
++        app.var_kill_icon_scale.set(1.2)
++        app.var_kill_icon_duration.set(2.5)
++        app.var_kill_icon_opacity.set(.6)
++        template = app.current_template()
++        assert (template.kill_icon_style, template.kill_icon_position) == ("neon", "left-bottom")
++        assert (template.kill_icon_scale, template.kill_icon_duration, template.kill_icon_opacity) == (1.2, 2.5, .6)
++        selected = []
++        app.on_one_click = lambda smart=False: selected.append(smart)
++        app.on_smart_one_click()
++        assert selected == [True]
++        assert app.current_template().smart_composition
++    finally:
++        root.destroy()
++
++
++def test_ffmpeg_can_render_kill_badge_into_real_mp4(tmp_path):
++    import shutil
++    import subprocess
++    ffmpeg = shutil.which("ffmpeg")
++    if ffmpeg is None:
++        pytest.skip("System ffmpeg is not available")
++    badge = make_badge(tmp_path / "badge.png", "neon", 1)
++    graph = with_badge("[0:v]format=yuv420p[vout]", 1, [(1.0, 1.4)],
++                       duration=2.0, position="right-top", scale=.7)
++    dst = tmp_path / "badge_smoke.mp4"
++    cmd = [ffmpeg, "-y", "-hide_banner", "-loglevel", "error",
++           "-f", "lavfi", "-i", "color=c=blue:s=640x360:r=24:d=2",
++           "-loop", "1", "-t", "2", "-i", str(badge),
++           "-filter_complex", graph, "-map", "[vout]",
++           "-c:v", "libx264", "-preset", "ultrafast",
++           "-t", "2", "-pix_fmt", "yuv420p", str(dst)]
++    p = subprocess.run(cmd, capture_output=True, text=True, timeout=45)
++    assert p.returncode == 0, p.stderr[-1600:]
++    assert dst.stat().st_size > 1000
++    # Ensure the icon actually changed output pixels during the kill window,
++    # rather than just producing a video file without compositing.
++    def frame(ts):
++        result = subprocess.run(
++            [ffmpeg, "-hide_banner", "-loglevel", "error", "-ss", str(ts),
++             "-i", str(dst), "-frames:v", "1", "-f", "rawvideo",
++             "-pix_fmt", "rgb24", "-"],
++            stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=20)
++        assert result.returncode == 0, result.stderr[-300:]
++        return result.stdout
++    before = frame(.4)
++    decorated = frame(1.2)
++    assert len(before) == len(decorated) == 640*360*3
++    assert sum(a != b for a, b in zip(before, decorated)) > 400
+diff --git a/LoL_AutoCine/tools/package_v599.py b/LoL_AutoCine/tools/package_v599.py
+new file mode 100644
+index 0000000..7a62f1f
+--- /dev/null
++++ b/LoL_AutoCine/tools/package_v599.py
+@@ -0,0 +1,89 @@
++# -*- coding: utf-8 -*-
++"""Reproducible v5.9.9 full & Codex-diff ZIPs. Run from a Git checkout.
++
++Usage: python LoL_AutoCine/tools/package_v599.py
++Prerequisite: git fetch origin codex/lol-autocine-v598-handoff
++Does not modify the Git index, edit a user file, or upload anything.
++"""
++from __future__ import annotations
++
++import hashlib
++import subprocess
++from pathlib import Path
++from zipfile import ZipFile, ZIP_DEFLATED
++
++APP = Path(__file__).resolve().parents[1]
++REPO = APP.parent
++DIST = REPO / "dist"
++STABLE = "origin/codex/lol-autocine-v598-handoff"
++EXCLUDED_DIRS = {".git", ".venv", ".pytest_cache", "__pycache__", "node_modules", "output", "outputs"}
++EXCLUDED_SUFFIXES = {".mp4", ".mkv", ".wav", ".avi", ".mov", ".webm", ".pyc", ".log", ".tmp"}
++FULL_ZIP = DIST / "LoL_AutoCine_v5.9.9_Windows_Full.zip"
++DIFF_ZIP = DIST / "LoL_AutoCine_v5.9.9_Codex_MergeChanges.zip"
++
++
++def run_git(*args: str) -> str:
++    proc = subprocess.run(["git", "-C", str(REPO), *args], capture_output=True,
++                          text=True, encoding="utf-8", errors="replace", check=True)
++    return proc.stdout
++
++
++def in_package(path: Path) -> bool:
++    rel = path.relative_to(APP)
++    return (path.is_file() and
++            not any(name in EXCLUDED_DIRS for name in rel.parts) and
++            path.suffix.lower() not in EXCLUDED_SUFFIXES and
++            not (len(rel.parts) > 1 and rel.parts[0] == "diagnostics"))
++
++
++def write_manifest(z: ZipFile, files: list[Path]) -> None:
++    for f in files:
++        z.write(f, arcname=f.relative_to(REPO).as_posix())
++
++
++def build() -> tuple[Path, Path]:
++    version = (APP / "VERSION.txt").read_text(encoding="utf-8").strip()
++    if not version.startswith("5.9.9"):
++        raise RuntimeError(f"VERSION.txt is not 5.9.9: {version}")
++    DIST.mkdir(exist_ok=True)
++    allfiles = sorted(f for f in APP.rglob("*") if in_package(f))
++    assert len(allfiles) >= 90, f"Suspiciously incomplete source: {len(allfiles)} files"
++    with ZipFile(FULL_ZIP, "w", ZIP_DEFLATED, compresslevel=6) as z:
++        write_manifest(z, allfiles)
++
++    diff_names = run_git("diff", "--name-only", f"{STABLE}...HEAD", "--", "LoL_AutoCine").splitlines()
++    changed = [REPO / name for name in diff_names if (REPO / name).is_file()]
++    if not changed or not any(p.name == "kill_icons.py" for p in changed):
++        raise RuntimeError("Expected v5.9.9 source changes are missing in the diff")
++    patch = run_git("diff", "--binary", f"{STABLE}...HEAD", "--", "LoL_AutoCine")
++    instructions = """# v5.9.9 Codex統合用差分
++
++- 基準: `codex/lol-autocine-v598-handoff`（v5.9.8）
++- 変更ファイル: このZIPに含まれる `LoL_AutoCine/` 以下
++- Git推奨: 既存変更をコミットしてから `git apply --check CHANGES_v5.9.9.patch` → `git apply CHANGES_v5.9.9.patch`
++- Gitを使わない場合: 一覧を比較してから各ファイルをマージ（自動上書きは推奨しない）
++- Codexが別途編集した `core/effects.py`、`core/gpu_pipeline.py`、`core/jobs.py`、`core/camera.py` 等はコンフリクト確認必須
++- 音声のProcess Loopback、NVENC、TargetLock、UI設定の回帰テストを実施
++- Windows/LoL/NVIDIA実機テストは配布前のLinux CIとは別に行う
++"""
++    with ZipFile(DIFF_ZIP, "w", ZIP_DEFLATED, compresslevel=6) as z:
++        write_manifest(z, sorted(changed))
++        z.writestr("CHANGES_v5.9.9.patch", patch)
++        z.writestr("MERGE_INSTRUCTIONS_JA.md", instructions)
++    for f in (FULL_ZIP, DIFF_ZIP):
++        with ZipFile(f) as z:
++            bad = z.testzip()
++            if bad:
++                raise RuntimeError(f"ZIP integrity test failed: {bad}")
++            assert z.namelist(), f"{f.name} is empty"
++    sums = "\n".join(f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.name}"
++                     for p in (FULL_ZIP, DIFF_ZIP)) + "\n"
++    (DIST / "SHA256SUMS.txt").write_text(sums, encoding="utf-8")
++    print(f"Full: {len(allfiles)} files, {FULL_ZIP.stat().st_size} bytes")
++    print(f"Diff: {len(changed)} files, {DIFF_ZIP.stat().st_size} bytes")
++    print(sums, end="")
++    return FULL_ZIP, DIFF_ZIP
++
++
++if __name__ == "__main__":
++    build()
+diff --git a/LoL_AutoCine/ui/scene_batch.py b/LoL_AutoCine/ui/scene_batch.py
+index 600956b..e0b6287 100644
+--- a/LoL_AutoCine/ui/scene_batch.py
++++ b/LoL_AutoCine/ui/scene_batch.py
+@@ -68,6 +68,12 @@ def render_scenes(api,source,player,kills,tpl,out_root,make_montage,
+         from core.jobs import unique_path as unique_path
+     out=BatchResult()
+     scenes=list(build_scene_templates(kills,tpl,overrides,auto=auto,order=order))
++    if auto and getattr(tpl, 'smart_highlight_enabled', False) and getattr(tpl, 'smart_montage', False) and not order:
++        from .smart_montage import choose_scenes
++        before = len(scenes)
++        scenes = choose_scenes(scenes, limit=12)
++        log(f'スマートモンタージュ: {before}候補から{len(scenes)}見せ場を構成。'
++            '徐々に盛り上げてクライマックスへ。手動で保存した順番は変更しません。')
+     for i,(kill,scene_tpl) in enumerate(scenes,1):
+         if stop is not None and stop.is_set():
+             log('中止しました。');break
+@@ -94,11 +100,14 @@ def render_scenes(api,source,player,kills,tpl,out_root,make_montage,
+             from core.jobs import safe_name
+             out_dir=Path(out_root)/f'{safe_name(player.name)}_{safe_name(player.champion)}'
+             target=unique_path(out_dir/'montage.mp4')
+-            if getattr(tpl, 'montage_fx', 'cut') == 'cut':
++            montage_style = getattr(tpl, 'montage_fx', 'cut')
++            if auto and getattr(tpl, 'smart_montage', False) and montage_style == 'cut':
++                montage_style = 'dark'  # restrained automatic seam; audio is copied
++            if montage_style == 'cut':
+                 concat(out.outputs,target)
+             else:
+                 from core.montage_fx import render_montage
+-                render_montage(out.outputs,target, tpl.montage_fx, concat=concat, logger=log)
++                render_montage(out.outputs,target, montage_style, concat=concat, logger=log)
+             out.montage=target
+             log(f'シーン別モンタージュ保存: {target.name}')
+         except Exception as e:
+diff --git a/LoL_AutoCine/ui/scene_project.py b/LoL_AutoCine/ui/scene_project.py
+index bce4e2f..2ae36c7 100644
+--- a/LoL_AutoCine/ui/scene_project.py
++++ b/LoL_AutoCine/ui/scene_project.py
+@@ -65,6 +65,7 @@ class Shot:
+     focus_blur: float = 0.0
+     dof_blur: float = 0.0
+     highlight_pulse: float = 0.0  # 0=off, kill-timed warm/white accent
++    kill_icon_style: str = 'inherit'  # per-scene decoration, inherits global by default
+ 
+     @classmethod
+     def validated(cls, data):
+@@ -84,7 +85,8 @@ class Shot:
+             bloom=bound(data.get('bloom'), 0.0, 1.0, 0.25),
+             focus_blur=bound(data.get('focus_blur'), 0.0, 1.0, 0.0),
+             dof_blur=bound(data.get('dof_blur'), 0.0, 20.0, 0.0),
+-            highlight_pulse=bound(data.get('highlight_pulse'), 0.0, 1.0, 0.0)
++            highlight_pulse=bound(data.get('highlight_pulse'), 0.0, 1.0, 0.0),
++            kill_icon_style=data.get('kill_icon_style') if data.get('kill_icon_style') in ('inherit', 'off', 'simple', 'cinema', 'neon', 'impact') else 'inherit'
+         )
+ 
+ 
+@@ -114,6 +116,8 @@ def apply_shot(base, shot: Shot):
+     # Reuse the existing camera and effect pipelines; no renderer duplication.
+     t.scene_keyframes = copy.deepcopy(s.keyframes)
+     t.highlight_pulse = s.highlight_pulse
++    if s.kill_icon_style != 'inherit':
++        t.kill_icon_style = s.kill_icon_style
+     if s.fx_override:
+         t.temperature = s.temperature
+         t.bloom = s.bloom
+diff --git a/LoL_AutoCine/ui/smart_montage.py b/LoL_AutoCine/ui/smart_montage.py
+new file mode 100644
+index 0000000..9ee700b
+--- /dev/null
++++ b/LoL_AutoCine/ui/smart_montage.py
+@@ -0,0 +1,59 @@
++# -*- coding: utf-8 -*-
++"""Deterministic smart montage plan. No Tk, Replay API, filesystem or FFmpeg."""
++from __future__ import annotations
++
++
++def _count(kill):
++    try:
++        return max(1, min(5, int(getattr(kill, "multikill", 1))))
++    except (ValueError, TypeError, OverflowError):
++        return 1
++
++
++def _time(kill):
++    try:
++        t = float(getattr(kill, "time", 0.0))
++        return t if 0 <= t < 1e9 else 0.0
++    except (TypeError, ValueError, OverflowError):
++        return 0.0
++
++
++def score(kill):
++    """Multi-kills are climaxes; an assist remains eligible as build-up."""
++    value = 4 * _count(kill)
++    if getattr(kill, "role", "kill") == "kill":
++        value += 3
++    return value
++
++
++def choose_scenes(scenes, *, limit=12):
++    """Return selected (kill, scene template) pairs in rising dramatic order.
++
++    Preserve all clips if the scan has <= limit scenes. For very long matches,
++    prefer stronger events and avoid repetitive almost-identical neighboring
++    kills. Explicit manual scene order is handled by caller (never touched).
++    """
++    scenes = list(scenes)
++    limit = max(2, min(60, int(limit)))
++    if len(scenes) <= limit:
++        selected = scenes
++    else:
++        indexed = list(enumerate(scenes))
++        by_quality = sorted(indexed,
++                            key=lambda pair: (-score(pair[1][0]), _time(pair[1][0]), pair[0]))
++        picked = []
++        for item in by_quality:
++            t = _time(item[1][0])
++            if all(abs(t - _time(k[1][0])) > 1.8 for k in picked):
++                picked.append(item)
++            if len(picked) == limit:
++                break
++        if len(picked) < limit:
++            used = {n for n, _ in picked}
++            picked.extend(item for item in by_quality
++                          if item[0] not in used and len(picked) < limit)
++        selected = [item[1] for item in picked[:limit]]
++    # Preserve chronological ordering for equal-strength highlights, ending
++    # with the strongest event rather than chopping randomly in mid-fight.
++    return sorted(selected,
++                  key=lambda item: (score(item[0]), _time(item[0])))
