@@ -246,6 +246,18 @@ def one_click_templates() -> dict:
         "ヴィンテージ・フィルム": T(name="ヴィンテージ・フィルム", style="follow", intensity="natural", grade="film",
                             grade_strength=1.0, temperature=0.25, contrast=1.05, vignette=0.6, grain=0.55, bloom=0.2,
                             bars=0.07, transition="fade", exposure=0.03),
+        # v5.10.8: an ungraded reference baseline and a one-click kill-glow look.
+        "デフォルト（無加工カラー）": T(name="デフォルト（無加工カラー）",
+                           style="third_cinema", intensity="natural",
+                           grade="default", grade_strength=0,
+                           vignette=0, grain=0, bloom=0, bars=0, transition="cut"),
+        "ロイヤルゴールド・キルログ": T(name="ロイヤルゴールド・キルログ",
+                           style="third_cinema", intensity="standard",
+                           grade="golden", grade_strength=.65,
+                           vignette=.16, grain=.05, bloom=.25, bars=.02, transition="flash",
+                           kill_icon_style="cinema", kill_glow_enabled=True,
+                           kill_glow_strength=1.4, kill_frame_color="#F6CB75",
+                           kill_glow_color="#FFDB80", kill_mark_style="royal"),
         # v5.10.2: tasteful preset additions, no new camera coordinates or FPS assumptions.
         "クリア・アクション（視認性重視）": T(name="クリア・アクション（視認性重視）",
                           style="third_cinema", intensity="natural", grade="standard",
