@@ -103,6 +103,57 @@ def rev(d: dict) -> dict:
     return {v: k for k, v in d.items()}
 
 
+def bind_effect_hover_tip(widget, explanation: str, delay_ms: int = 1000) -> None:
+    """Show the existing Japanese FX help near the '?' after a one-second hover."""
+    state = {"job": None, "popup": None}
+
+    def cancel(_event=None):
+        if state["job"] is not None:
+            try:
+                widget.after_cancel(state["job"])
+            except tk.TclError:
+                pass
+            state["job"] = None
+        if state["popup"] is not None:
+            try:
+                state["popup"].destroy()
+            except tk.TclError:
+                pass
+            state["popup"] = None
+
+    def show():
+        state["job"] = None
+        try:
+            if not widget.winfo_exists():
+                return
+            tip = tk.Toplevel(widget)
+            tip.overrideredirect(True)
+            tip.attributes("-topmost", True)
+            x = widget.winfo_pointerx() + 12
+            y = widget.winfo_pointery() + 16
+            tip.geometry(f"+{x}+{y}")
+            label = tk.Label(tip, text=explanation, justify="left",
+                             bg="#182437", fg="#F8FAFC", padx=12, pady=9,
+                             relief="solid", bd=1, wraplength=380,
+                             font=("Meiryo UI", 9))
+            label.pack()
+            state["popup"] = tip
+        except tk.TclError:
+            cancel()
+
+    def schedule(_event=None):
+        cancel()
+        try:
+            state["job"] = widget.after(delay_ms, show)
+        except tk.TclError:
+            pass
+
+    widget.bind("<Enter>", schedule, add="+")
+    widget.bind("<Leave>", cancel, add="+")
+    widget.bind("<Destroy>", cancel, add="+")
+
+
+
 class ScrollFrame(ttk.Frame):
     """縦スクロールできるパネル。子ウィジェット/Scale/Scrollbar上でもホイールを奪わずパネルをスクロールする。"""
 
@@ -1201,7 +1252,7 @@ class App:
         self.cb_effect_preset.bind("<<ComboboxSelected>>", lambda _e: self._apply_effect_preset(self.var_effect_preset.get()))
         ttk.Label(fx_box, text="各エフェクトはON/OFFと強さを個別に変更できます。迷ったらプリセットだけでOK。",
                   style="CardMuted.TLabel", wraplength=560).pack(anchor="w", pady=(0, 6))
-        self.effect_help_text=tk.StringVar(value="効果名の『？』を押すと、使い方をここに表示します。")
+        self.effect_help_text=tk.StringVar(value="効果名の『？』へカーソルを1秒置くと説明が表示されます。クリックでも確認できます。")
         ttk.Label(fx_box, textvariable=self.effect_help_text, style="CardMuted.TLabel",
                   wraplength=920, justify="left").pack(fill="x", pady=(1,7))
         self.effect_vars = {}
@@ -1217,8 +1268,12 @@ class App:
                 var = tk.BooleanVar(value=False); sval = tk.DoubleVar(value=float(VIDEO_EFFECT_DEFAULTS.get(key, 0.25)))
                 self.effect_vars[key] = var; self.effect_strength_vars[key] = sval
                 ttk.Checkbutton(cell, text=EFFECT_LABEL_JA.get(key, label), variable=var).pack(side="left")
-                ttk.Button(cell, text="?", width=2,
-                           command=lambda k=key: self._show_effect_help(k)).pack(side="left", padx=(2,3))
+                help_message = EFFECT_LABEL_JA.get(key, key) + "：" + EFFECT_HELP_JA.get(
+                    key, "ONにすると映像に演出が加わります。")
+                help_button = ttk.Button(cell, text="?", width=2,
+                                         command=lambda k=key: self._show_effect_help(k))
+                help_button.pack(side="left", padx=(2,3))
+                bind_effect_hover_tip(help_button, help_message, delay_ms=1000)
                 ttk.Scale(cell, from_=0.05, to=1.0, variable=sval, length=70).pack(side="left", fill="x", expand=True, padx=4)
                 ttk.Entry(cell, textvariable=sval, width=5, justify="right").pack(side="right")
         ttk.Button(fx_box, text="全エフェクトOFF", command=self._clear_video_effects).pack(fill="x", pady=(5, 0))

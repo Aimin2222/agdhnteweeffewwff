@@ -438,11 +438,8 @@ def _build_video_effect_filters(t: Template, duration: float, events: list[tuple
     return f
 
 
-def build_graph(t: Template, duration: float, has_title: bool, still: bool = False,
-                pre_filters: str = "", effect_events: Optional[list[tuple[float,float]]] = None,
-                gpu_blur_stage=None) -> str:
-    """録画クリップ(60fps)に適用する filter_complex。入力0=動画 / 入力1=タイトルPNG(任意)。出力ラベル [vout]。
-    still=True はプレビュー用の1枚絵 (フェード/BPM明滅なし)。pre_filters は先頭に挟む前処理 (拡大縮小/カメラ疑似)。"""
+def color_filters(t: Template) -> list[str]:
+    """Shared grade definition for software rendering and one-time GPU LUT bake."""
     f: list = []
     g = grade_values(t.grade, t.grade_strength, t.contrast)
     tmp = max(-1.0, min(1.0, t.temperature))      # 色温度は colorbalance に加算
@@ -461,6 +458,14 @@ def build_graph(t: Template, duration: float, has_title: bool, still: bool = Fal
     cf = _curve_filter(t)
     if cf:
         f.append(cf)
+    return f
+
+
+def build_graph(t: Template, duration: float, has_title: bool, still: bool = False,
+                pre_filters: str = "", effect_events: Optional[list[tuple[float,float]]] = None,
+                gpu_blur_stage=None) -> str:
+    """Legacy CPU/hybrid graph. Retained unchanged as the recovery renderer."""
+    f = color_filters(t)
     f.extend(_build_video_effect_filters(t, duration, effect_events or [], still))
     # Optional CPU accent uses existing kill timestamps, independently of NVENC.
     pulse = max(0.0, min(1.0, float(getattr(t, "highlight_pulse", 0.0))))
@@ -603,6 +608,8 @@ def gpu_capabilities() -> dict:
         "unsharp_opencl": c.unsharp_opencl, "opencl_runtime_ok": c.opencl_runtime_ok,
         "program_opencl": c.program_opencl, "rgba_gpu_runtime_ok": c.rgba_gpu_runtime_ok,
         "rgba_probe_reason": c.rgba_probe_reason,
+        'full_gpu_runtime_ok': c.full_gpu_runtime_ok,
+        'full_probe_reason': c.full_probe_reason,
     }
 
 def gpu_pipeline_status() -> str:
@@ -655,6 +662,11 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
     """Keep the original API and release GPU shader files on every exit/retry."""
     caps = detect_gpu()
     stage = None
+    resources = []
+    from .gpu_full import mode
+    if mode() == 'cpu':
+        caps = replace(caps, opencl_runtime_ok=False, rgba_gpu_runtime_ok=False,
+                       full_gpu_runtime_ok=False, full_probe_reason='explicit_cpu_comparison')
     try:
         stage = GPUBlurStage(t, caps)
     except (OSError, ValueError) as e:
@@ -662,15 +674,17 @@ def apply_effects(src: Path, dst: Path, t: Template, duration: float, kills: lis
         logging.getLogger(__name__).warning('GPU blur setup failed; using CPU: %s', e)
     try:
         _apply_effects(src,dst,t,duration,kills,size,game_wav,audio_trim,game_audio,
-                       audio_offset,effect_events,caps,stage)
+                       audio_offset,effect_events,caps,stage,resources)
     finally:
+        for cleanup in reversed(resources):
+            cleanup()
         if stage is not None:
             stage.close()
 
 
 def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
                    audio_trim=0.0, game_audio=None, audio_offset=None,
-                   effect_events=None, caps=None, gpu_blur_stage=None):
+                   effect_events=None, caps=None, gpu_blur_stage=None, resources=None):
     """録画クリップへ映像エフェクトを適用し、必要ならLoL音声を後段muxする。
 
     GPU優先: 実機OpenCLプローブに成功した効果のみGPUへ回し、それ以外はCPUで処理。
@@ -686,6 +700,8 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
     OUTPUT_W, OUTPUT_H = 1920, 1080
     if title:
         png = make_title_png(title, OUTPUT_W, OUTPUT_H, dst.with_suffix(".title.png"), find_jp_font())
+        if resources is not None:
+            resources.append(lambda: png.unlink(missing_ok=True))
 
     # GPU Effects Engine: GPU-native effects run in a dedicated GPU stage.
     # Unsupported effects remain on the CPU. The frame is downloaded at most
@@ -717,15 +733,19 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
                            position=t.kill_icon_position, scale=t.kill_icon_scale,
                            seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
                            style=badge_style)
-    def add_pair_inputs(command):
+    def add_pair_inputs(command, loop=True):
         for badge_path, _ in badge_entries:
-            command += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(badge_path)]
+            if loop:
+                command += ["-loop", "1", "-framerate", str(t.fps), "-t", f"{duration:.2f}"]
+            command += ["-i", str(badge_path)]
     def clean_pair_files():
         for path, _ in badge_entries:
             try:
                 Path(path).unlink(missing_ok=True)
             except OSError:
                 pass
+    if resources is not None:
+        resources.append(clean_pair_files)
     original_effects = t.video_effects
     if consumed_gpu:
         remaining = dict(original_effects)
@@ -738,17 +758,44 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
         graph = add_pair_graph(graph)
     finally:
         t.video_effects = original_effects
+    full_stage = None
+    full_reason = getattr(caps, 'full_probe_reason', '')
+    decode_ok, decode_reason = False, 'not_selected'
+    from .gpu_full import GPUFullStage, mode, decode_probe
+    if mode() == 'full' and getattr(caps, 'full_gpu_runtime_ok', False):
+        try:
+            full_stage = GPUFullStage(t,duration,events,ffmpeg=FFMPEG,
+                                     title_index=1 if png is not None else None,
+                                     badge_index=badge_idx,badges=badge_entries,
+                                     lut_index=badge_idx+len(badge_entries))
+            if resources is not None: resources.append(full_stage.close)
+            graph = full_stage.graph
+            consumed_gpu = full_stage.effects
+            if caps.cuda:
+                decode_ok,decode_reason = decode_probe(FFMPEG,str(src),Path(src).stat().st_mtime_ns)
+        except (OSError,ValueError,RuntimeError,subprocess.TimeoutExpired) as exc:
+            full_reason = str(exc)[-1200:]
+            logging.getLogger(__name__).warning('Full GPU setup failed; using legacy path: %s',full_reason)
     cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error"]
     if consumed_gpu:
         # hwupload without a filter device is not usable on Windows.
         cmd += ["-init_hw_device", OPENCL_DEVICE, "-filter_hw_device", "ocl"]
+    if decode_ok:
+        cmd += ['-hwaccel','cuda']
     cmd += ["-i", str(src)]
     idx = 1
     if png is not None:
-        cmd += ["-loop", "1", "-t", f"{duration:.2f}", "-i", str(png)]
+        if full_stage is None:
+            cmd += ["-loop", "1", "-framerate", str(t.fps), "-t", f"{duration:.2f}"]
+        cmd += ["-i", str(png)]
         idx += 1
-    add_pair_inputs(cmd)
+    add_pair_inputs(cmd, loop=full_stage is None)
     idx += len(badge_entries)
+    if full_stage is not None:
+        # A static image is uploaded once. OpenCL framesync repeats that GPU
+        # frame at EOF; do not decode/upload a new PNG for every video frame.
+        cmd += ['-i',str(full_stage.lut)]
+        idx += 1
 
     # ゲーム音だけの標準経路は後段mux。BGMを使う場合のみ従来の同時ミックスを使う。
     game_idx = bgm_idx = None
@@ -765,9 +812,25 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
     cmd += ["-filter_complex", graph + (";" + ag if ag else ""), "-map", "[vout]"]
     if ag:
         cmd += ["-map", "[aout]", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2"]
-    cmd += ["-t", f"{duration:.3f}"] + encoder_args(t.fps, policy=t.encoder_policy) + ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", str(dst)]
+    encoding = encoder_args(t.fps, policy=t.encoder_policy)
+    if full_stage is not None and 'h264_nvenc' in encoding:
+        encoding[encoding.index('-pix_fmt')+1] = 'rgba'
+    cmd += ["-t", f"{duration:.3f}"] + encoding + ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", str(dst)]
     from .performance_diagnostics import run_render
     pipeline_info = {
+        'full_gpu_pipeline': full_stage is not None,
+        'full_gpu_unavailable_reason': full_reason if full_stage is None else None,
+        'gpu_effects_mode': mode(),
+        'video_decoder': 'NVDEC' if decode_ok else 'CPU',
+        'gpu_decode_unavailable_reason': None if decode_ok else decode_reason,
+        'main_frame_uploads': 1 if full_stage is not None else None,
+        'main_frame_downloads': 1 if full_stage is not None else None,
+        'pixel_processing': 'OpenCL GPU' if full_stage is not None else 'CPU/OpenCL hybrid',
+        'encoder_color_conversion': 'NVENC hardware RGB input' if full_stage is not None and 'rgba' in encoding else 'software YUV420P',
+        'cpu_once_per_template': ['color_LUT_calibration','PNG_resources'] if full_stage is not None else [],
+        'cpu_control_and_audio': True,
+        'cpu_frame_boundary_conversion': 'decoded YUV to upload RGBA',
+        'cpu_per_frame_stages': ['YUV_to_RGBA_upload_boundary'] if full_stage is not None else ['legacy_software_filters'],
         "gpu_backend": gpu_backend_name(caps),
         "gpu_effects_unavailable_reason": (
             None if consumed_gpu else
@@ -805,8 +868,12 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
         "frame_rate_selection": "before_effects",
         "duration_s": duration,
     }
-    r = run_render(cmd, output=dst, gpu_effects=consumed_gpu, effect_values=original_effects,
-                   pipeline_info=pipeline_info)
+    try:
+        r = run_render(cmd, output=dst, gpu_effects=consumed_gpu, effect_values=original_effects,
+                       pipeline_info=pipeline_info)
+    except subprocess.TimeoutExpired as exc:
+        if not consumed_gpu: raise
+        r = subprocess.CompletedProcess(cmd,1,stderr='GPU render timed out: '+str(exc))
     # GPU effect runtimeが不安定な環境では、同じ設定をCPUエフェクト経路で自動再試行。
     if r.returncode != 0 and consumed_gpu:
         fallback = dict(t.video_effects)
@@ -840,6 +907,9 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
             cpu_cmd += ["-t", f"{duration:.3f}"] + encoder_args(t.fps, policy=t.encoder_policy) + ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", str(dst)]
             r = run_render(cpu_cmd, output=dst, gpu_effects=[], effect_values=original_effects, fallback_reason="GPU render failed",
                            pipeline_info={**pipeline_info, "gpu_effects_selected": [],
+                                          'full_gpu_pipeline':False,'pixel_processing':'CPU',
+                                          'video_decoder':'CPU','main_frame_uploads':0,'main_frame_downloads':0,
+                                          'encoder_color_conversion':'software YUV420P',
                                           "gpu_backend": "CPU Effects fallback",
                                           "gpu_effects_unavailable_reason": "gpu_render_failed",
                                           "gpu_opencl_device": None,
@@ -893,6 +963,9 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
                     cpu_cmd += ["-t", f"{duration:.3f}"] + encoder_args(t.fps, policy=t.encoder_policy) + ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", str(dst)]
                     rr = run_render(cpu_cmd, output=dst, gpu_effects=[], effect_values=original_effects, fallback_reason="color preservation retry",
                                     pipeline_info={**pipeline_info, "gpu_effects_selected": [],
+                                                   'full_gpu_pipeline':False,'pixel_processing':'CPU',
+                                                   'video_decoder':'CPU','main_frame_uploads':0,'main_frame_downloads':0,
+                                                   'encoder_color_conversion':'software YUV420P',
                                                    "gpu_backend": "CPU Effects fallback",
                                                    "gpu_effects_unavailable_reason": "color_preservation_retry",
                                                    "gpu_opencl_device": None,
