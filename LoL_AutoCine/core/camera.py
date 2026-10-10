@@ -460,6 +460,10 @@ class CameraPlan:
             # introduces asymmetry exactly at the kill event.
             nudge = 7.0 if self.style == "third" else 4.0
             motion += nudge * cue
+        if self.smart_composition:
+            # Clamp the FINAL motion including kill cue. This prevents the
+            # supplemental nudge bypassing the safe ±55° bound.
+            motion = max(-55.0, min(55.0, motion))
         return self.side_yaw + motion
 
     def _lolnam_orbit(self, t):
