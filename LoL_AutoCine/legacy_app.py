@@ -1784,6 +1784,53 @@ class App:
         self.left_scroll.scroll_to(self._nav_home_card)
         self.log('ホーム: 左側のリプレイ準備・プレイヤー選択へ移動しました')
 
+    def _open_template_gallery(self):
+        """Option B: full searchable gallery separate from the editor."""
+        from ui.template_gallery import open_gallery
+        open_gallery(self)
+
+    def _refresh_template_tone(self, name):
+        """Option A: show selected template's actual tone without extra controls."""
+        if not hasattr(self, "_template_tone_canvas"):
+            return
+        from ui.template_gallery import template_info, draw_color_bars
+        tpl=self.templates.get(name)
+        if tpl is None:
+            return
+        info=template_info(tpl)
+        draw_color_bars(self._template_tone_canvas, info["colors"])
+        self._template_tone_text.set(
+            f'色：{info["tone"]} / {info["description"]}\nカメラ：{info["camera"]}')
+
+    def _toggle_inline_template_cards(self):
+        panel=getattr(self,"_inline_color_cards",None)
+        if panel is None:
+            return
+        if panel.winfo_manager():
+            panel.pack_forget()
+        else:
+            panel.pack(fill="x", pady=(3,5))
+
+    def _apply_kill_glow_preset(self):
+        """Set the real render variables; do not apply a UI-only colour label."""
+        choice=self.var_kill_glow_preset.get()
+        if choice=="オフ":
+            self.var_kill_glow_enabled.set(False)
+        elif choice=="ゴールド":
+            self.var_kill_glow_enabled.set(True)
+            self.var_kill_frame_color.set("#F4CB78")
+            self.var_kill_glow_color.set("#FFDB80")
+            self.var_kill_glow_strength.set(1.35)
+            self.var_kill_mark_style.set("ロイヤルゴールド紋章（参考画像風）")
+        elif choice=="ネオン":
+            self.var_kill_glow_enabled.set(True)
+            self.var_kill_frame_color.set("#69C6FF")
+            self.var_kill_glow_color.set("#B589FF")
+            self.var_kill_glow_strength.set(1.45)
+            self.var_kill_mark_style.set("LoL風・撃破エンブレム（オリジナル）")
+        if hasattr(self,"_invalidate_preview_snapshot"):
+            self._invalidate_preview_snapshot()
+
     def _focus_template(self):
         self.left_scroll.scroll_to(self._nav_template_card)
         self.tpl_combo.focus_set()
@@ -3501,8 +3548,9 @@ class App:
                 result = self._live_preview.result(key)
                 # During drags/scrolls lower only the approximate mirror workload.
                 # Export templates, recording clocks and output resolution are untouched.
-                limit_w, limit_h = (640, 360) if editing else (960, 540)
-                self._live_preview.submit(key, (self.source, min(cw, limit_w), min(ch, limit_h),
+                # Full visible mirror resolution (no lower-quality editing tier).
+                # GPU Full is still used by export; live display is CPU/PIL.
+                self._live_preview.submit(key, (self.source, cw, ch,
                                                t, title, split, cw, ch))
                 if result is not None and result is not self._preview_presented:
                     image, original = result[1]
@@ -3519,7 +3567,7 @@ class App:
                         cam = STYLES.get(t.style, t.style)
                         hud = "HUD安全モード" if t.hide_hud else "HUDそのまま"
                         self.canvas.itemconfigure(self._preview_text_item,
-                                                  text=f"ミラー上の簡易FX表示 / カメラ: {cam} / {hud}")
+                                                  text=f"ミラーFX表示（カラー/DOF適用） / カメラ: {cam} / {hud}")
                         now = time.monotonic()
                         if (hasattr(self, "curve_editor") and self.curve_editor.winfo_viewable()
                                 and now - self._histogram_updated >= .5):
