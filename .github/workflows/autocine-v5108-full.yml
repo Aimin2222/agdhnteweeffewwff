@@ -1,0 +1,78 @@
+name: LoL AutoCine v5.10.8 Full + Codex ZIP
+on:
+  push:
+    branches:
+      - autocine/v5.10.8-kill-glow-template-ui
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install FFmpeg, headless display and dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb ffmpeg
+          python -m pip install -r LoL_AutoCine/requirements.txt pytest
+      - name: Python syntax compilation
+        run: python -m compileall -q LoL_AutoCine
+      - name: Unit and integration tests
+        working-directory: LoL_AutoCine
+        run: xvfb-run -a python -m pytest -q tests --ignore=tests/gui_smoke.py
+      - name: Build full ZIP and Codex merge ZIP, with clean patch validation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess, zipfile, tempfile, hashlib
+          app=Path("LoL_AutoCine")
+          target=Path("builds/v5.10.8")
+          target.mkdir(parents=True,exist_ok=True)
+          base="origin/codex/lol-autocine-v5107-mirror-test-handoff"
+          subprocess.run(["git","fetch","origin","codex/lol-autocine-v5107-mirror-test-handoff"],check=True)
+          full=target/"LoL_AutoCine_v5.10.8_PremiumGlow_TemplateGallery_Windows_Full.zip"
+          with zipfile.ZipFile(full,"w",zipfile.ZIP_DEFLATED) as z:
+              for f in sorted(app.rglob("*")):
+                  if not f.is_file() or f.suffix==".pyc":
+                      continue
+                  if any(p in (".pytest_cache","__pycache__","diagnostics") for p in f.parts):
+                      continue
+                  z.write(f,f.as_posix())
+          patch=target/"v5.10.8_from_codex_v5.10.7.patch"
+          patch.write_bytes(subprocess.check_output(["git","diff","--binary",base+"...HEAD","--","LoL_AutoCine"]))
+          assert patch.stat().st_size>1000, "Expected a non-empty code patch"
+          with tempfile.TemporaryDirectory(prefix="autocine_v5108_patch_") as tmp:
+              subprocess.run(["git","worktree","add","--detach",tmp,base],check=True,
+                             stdout=subprocess.DEVNULL)
+              try:
+                  subprocess.run(["git","apply","--check",str(patch.resolve())],cwd=tmp,check=True)
+              finally:
+                  subprocess.run(["git","worktree","remove","--force",tmp],check=True)
+          readme=target/"CODEX_APPLY_README_JA.txt"
+          readme.write_text("v5.10.8 プレミアムキルログ＋テンプレート図鑑差分\\n"+
+              "基準ブランチ：codex/lol-autocine-v5107-mirror-test-handoff\\n"+
+              "既存のGPU Full・音声・TargetLockは維持。新しいCodex GPU変更がある場合は競合を手動マージしてください。\\n"+
+              "同梱パッチを git apply --check で先に検証してください。\\n",encoding="utf-8")
+          diff=target/"LoL_AutoCine_v5.10.8_Codex_MergeChanges.zip"
+          with zipfile.ZipFile(diff,"w",zipfile.ZIP_DEFLATED) as z:
+              z.write(patch,patch.name)
+              z.write(readme,readme.name)
+              z.write(app/"README_v5.10.8_JA.md","README_v5.10.8_JA.md")
+          for p in (full,diff):
+              with zipfile.ZipFile(p) as z: assert z.testzip() is None
+              print(f"VERIFIED {p.name}: {p.stat().st_size} bytes, SHA256={hashlib.sha256(p.read_bytes()).hexdigest()}")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AutoCine-v5.10.8-Windows-Full-and-Codex-ZIPs
+          path: builds/v5.10.8/*.zip
+          retention-days: 30
