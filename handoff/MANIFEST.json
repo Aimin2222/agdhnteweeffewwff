@@ -1,12 +1,15 @@
 {
-  "source_head": "3dc58a4558e6b7ccc72bddfae57edb995386d51c",
-  "source_branch": "integration/v5.10.10",
-  "source_files": 333,
-  "python_files": 127,
-  "bundle_file": "LoL_AutoCine_v5.10.10_RealScene_GPUFull_all_branches.bundle",
-  "bundle_sha256": "91c96ac3b184a7683e7900bf388834bd340b625440a08da86cdee79181906ec2",
+  "source_head": "6d443c19fcd4bbb46a21519c61bff7c98af59b03",
+  "source_branch": "integration/v5.10.13",
+  "source_files": 388,
+  "python_files": 133,
+  "bundle_file": "LoL_AutoCine_v5.10.13_PlayerFilter_GPUFull_all_branches.bundle",
+  "bundle_sha256": "57c902af78e5531a61557e3409ac279c32a353d7714e3c4d710fe6cf5f086047",
   "branches": [
     "archive/received-ui-v51010 0d368de4b202e8b73ca8fa1a85b92f3102dabe98",
+    "archive/received-ui-v51011 e16d12958ee9d8b31d3f2e9011a0896554e5aabe",
+    "archive/received-ui-v51012 5983c9173c92b6f08c7079b6ba830498809ca883",
+    "archive/received-ui-v51013 e2a189930ba9a978b0e69f3623fd47117de5cdd7",
     "archive/received-ui-v5108 be2a9c6cbd51de576e75dd18da3fa40aa0b86cd4",
     "archive/received-ui-v5109 8c5cb07ed85a3b5463feb1b8ddfe13ba4e5b8314",
     "baseline/v5.8.5 96b928a7385537317e73bad5235a28984fe94716",
@@ -18,6 +21,8 @@
     "feature/gpu-export-optimization-v5103 f431de0dc493e0baf76466b87ab595320d3851f7",
     "feature/gpu-full-v5106 fbdf92a408804fa9128f82d2b922d64bfa742f54",
     "feature/gpu-material-v51010 40864bc743ef3e83faa92deaf36d3af15b972937",
+    "feature/gpu-shared-v51012 9d3630c840274cf3947a419c34c5fb51a001db6d",
+    "feature/gpu-shared-v51013 60aaf2ea838165ccc62dff99bc39b8f1736103d9",
     "feature/gpu-shared-v5104 4462635e6887e3cf38bf687b120eebe4be415d45",
     "feature/gpu-shared-v5105 efcbbd17bd143055a437ced4341727c35c828728",
     "feature/gpu-test-launch-v5107 eefbfd65cd94b42319ebf98df3dcdbc40220aa7f",
@@ -31,10 +36,12 @@
     "feature/ui-keyframes-v592 7394aa0c8612429934d1e63bb453be8116eb372b",
     "feature/ui-killbadges-v599 463fc074886c4c2e38b701e088de67e2cac010de",
     "feature/ui-killframe-v5100 055676a6cdbd75ebc421ac67a18e06f9cc78424f",
+    "feature/ui-match-gallery-v51012 4ab670593c72148fcadaf6d3df7028df212a03c0",
     "feature/ui-mirror-targetfix-v5103 5a397b5df1a5445ab63932aba4ec87f27b9f26ae",
     "feature/ui-mirror-v5107 0db28d1fda308499f3c1d1cd291263a04fa17404",
     "feature/ui-modes-v593 616f8cedb2fd64ffe49ce7fd36748f197983a7f4",
     "feature/ui-notebook-livefx-v5104 d058ca98cccf89ec980064bf6d73893d808cfa5d",
+    "feature/ui-player-filter-v51013 a8bda730ec48966a476894d12e35158a993c5c37",
     "feature/ui-preview-v594 08cba49de5a72a463db174e685e9a29c6f7217ce",
     "feature/ui-real-scenes-v51010 b704dbc6741b45a325b2a419c48b225872c30783",
     "feature/ui-responsive-v5105 754117d578ca3c5765e96d17a3efaf376c60eda2",
@@ -46,6 +53,8 @@
     "integration/v5.10.0 8a6759bae0681ff7063c025d2917e1d735adf724",
     "integration/v5.10.1 169fedca69010785350c9285748c7df730786705",
     "integration/v5.10.10 3dc58a4558e6b7ccc72bddfae57edb995386d51c",
+    "integration/v5.10.12 3bea357b2241e95f035c500fa06787c79987eb5f",
+    "integration/v5.10.13 6d443c19fcd4bbb46a21519c61bff7c98af59b03",
     "integration/v5.10.3 9dc795ded438d0ce4510e9d99fd699ec9155230f",
     "integration/v5.10.3-capture60 2a7a538540cbce9c13aae49da4a156cfd7ff4671",
     "integration/v5.10.3-capturefix 86a1165658082daaff902649dd56eb7a4895ed09",
@@ -71,7 +80,7 @@
     "stable/v5.8.5 96b928a7385537317e73bad5235a28984fe94716"
   ],
   "artifacts": {
-    "LoL_AutoCine_v5.10.10_RealScene_GPUFull_Windows_Full.zip": "b83b4db898d525805147be611275fb91a67e28445b6ec2638c69b19f1ce6a5af",
-    "LoL_AutoCine_v5.10.10_RealScene_GPUFull_Codex_MergeChanges.zip": "6bf9cc9300838899fde48b2a7b10f90f5892b7ba026d6b945198005bf40b953b"
+    "LoL_AutoCine_v5.10.13_PlayerFilter_GPUFull_Windows_Full.zip": "7a0e7b8594d2b21d39af588bce21b20cd983647b83c1dbde080dd90837eb5c2a",
+    "LoL_AutoCine_v5.10.13_PlayerFilter_GPUFull_Codex_MergeChanges.zip": "4e997a85fa364aa06de51b792887310ae17f6c73d9e082ea9a716a96653cca49"
   }
 }

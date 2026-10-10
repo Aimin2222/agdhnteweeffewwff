@@ -71,7 +71,7 @@ def test_full_template_gallery_and_mirror_controls_exist():
     assert "A：かんたん色見本カード" in source and "B：全テンプレート図鑑" in source
     assert "self._refresh_template_tone(name)" in source
     assert "self._live_preview.submit(key, (self.source, process_w, process_h" in source
-    assert "render_scene_comparison(image,tpl,150,85)" in gallery
+    assert "render_scene_comparison(image,tpl,width,height)" in gallery
     assert "save(path,'PNG')" in gallery
     assert "sample_scene(" not in gallery.split("def open_gallery(",1)[1]
     assert "self._apply_kill_glow_preset()" in source

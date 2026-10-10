@@ -73,7 +73,7 @@ def test_gallery_comparison_worker_leaves_tk_responsive(gallery_app, monkeypatch
         assert not win._previews
         release.set()
         pump(gallery_app.root, lambda: len(win._previews) == 2)
-        assert all(photo.width() == 303 for photo in win._previews)
+        assert all(photo.width() == 833 for photo in win._previews)
     finally:
         release.set()
         win.destroy()

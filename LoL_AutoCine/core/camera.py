@@ -95,6 +95,25 @@ def side_yaw_for(team: str, preference: str = 'auto') -> float:
     return 180.0 if is_red else 0.0
 
 
+# v5.10.13 requests a provisional +192° rear heading for RED, based on
+# external footage. This is a side profile, not an extra flip in the rig.
+# Position and look rotation share it; Windows framing needs confirmation.
+# Manual blue/red overrides retain the explicit 0°/180° choices.
+SIDE_THIRD_PROFILES = {
+    'ORDER': dict(yaw=-12.0, elevation=37.0, distance=1060.0),
+    'CHAOS': dict(yaw=192.0, elevation=42.0, distance=1170.0),
+}
+
+
+def live_side_profile(team: str, choice: str = 'auto') -> dict:
+    """Calibrated per-side safe rear view, with manual heading overrides."""
+    team = 'CHAOS' if str(team).upper() in ('CHAOS', 'RED') else 'ORDER'
+    profile = dict(SIDE_THIRD_PROFILES[team])
+    if choice in ('blue', 'red'):
+        profile['yaw'] = side_yaw_for(team, choice)
+    return profile
+
+
 MIN_CLEARANCE = 350.0     # FPS風: 地面(キャラ位置)よりカメラが最低これだけ上
 MIN_CAM_HEIGHT = 300.0    # 三人称: 常にこの高さ以上
 HEARTBEAT = 1.0           # 追従設定の再送間隔(秒)
@@ -137,17 +156,32 @@ def _len(a) -> float:
     return math.sqrt(a[0] ** 2 + a[1] ** 2 + a[2] ** 2)
 
 
-def _pitch_axis(rot: dict, phi_top: float) -> Optional[str]:
-    """回転 dict のうち、標準カメラの俯角(=vの仰角)と大きさが一致する成分名。無ければ None。"""
-    best, best_d = None, 8.0
-    for k in ("x", "y", "z"):
+def _pitch_calibration(rot: dict, phi_top: float) -> tuple[str | None, bool]:
+    """Find a plausible Replay API pitch axis without making up coordinates.
+
+    Replay cameras can describe elevation from the horizontal or angle from
+    the vertical. Check *both* conventions and remember which one was used;
+    otherwise a real 3rd-person rig gets silently misclassified as FPS.
+    Reject large deviations instead of guessing a random axis.
+    """
+    best_axis, best_complement, best_distance = None, False, 15.0
+    for axis in ("x", "y", "z"):
         try:
-            d = abs(abs(float(rot[k])) - phi_top)
-        except Exception:
+            measured = abs(float(rot[axis]))
+        except (KeyError, TypeError, ValueError):
             continue
-        if d < best_d:
-            best, best_d = k, d
-    return best
+        if not math.isfinite(measured) or measured > 90:
+            continue
+        for complementary, expected in ((False, phi_top), (True, 90.0 - phi_top)):
+            deviation = abs(measured - expected)
+            if deviation < best_distance:
+                best_axis, best_complement, best_distance = axis, complementary, deviation
+    return best_axis, best_complement
+
+
+def _pitch_axis(rot: dict, phi_top: float) -> Optional[str]:
+    """Backward-compatible axis-only helper for old test/plug-in code."""
+    return _pitch_calibration(rot, phi_top)[0]
 
 
 @dataclass
@@ -161,7 +195,8 @@ class RigInfo:
     third: bool = False               # 三人称リグが有効
     pitch_axis: str = ""
     pitch_sign: float = -1.0
-    h: tuple = (0.0, -1.0)            # 水平方向の単位ベクトル (x, z): キャラ→カメラ
+    h: tuple = (0.0, -1.0)         # 水平方向の単位ベクトル (x, z): キャラ→カメラ
+    pitch_complement: bool = False # APIピッチ角を垂直方向から測るときだけTrue
 
 
 @dataclass
@@ -299,14 +334,15 @@ class CameraPlan:
             extra_yaw, zoom, _ = self.keyframe_values(t)
             dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
             if self.smart_composition:
-                # Conservative framing: back away instead of allowing extreme
-                # close-ups and raise the viewpoint to reduce terrain occlusion.
-                dist = max(dist, self.third_dist * 0.88)
-                e = max(e, math.radians(31.0))
+                # Conservatively raise/back out of terrain; image-space player
+                # recognition cannot be guaranteed by Replay API coordinates.
+                dist = max(dist, self.third_dist * 0.98)
+                e = max(e, math.radians(38.0))
             sin_e = max(math.sin(e), MIN_CAM_HEIGHT / max(dist, 1.0))
             sin_e = min(0.98, sin_e)
             e = math.asin(sin_e)
-            orbit = math.radians(float(self.third_yaw) + self.side_yaw + extra_yaw)
+            user_yaw = self._third_heading(t)
+            orbit = math.radians(user_yaw)
             c, s = math.cos(orbit), math.sin(orbit)
             rhx = hx * c - hz * s
             rhz = hx * s + hz * c
@@ -327,7 +363,7 @@ class CameraPlan:
             # キル前に開始→インパクトで最大→終了で基準へ戻る。
             u = max(0.0, min(1.0, (t - (min(ks)-2.0)) / 4.0))
             arc_wave = math.sin(math.pi * _ease5(u))
-            orbit_delta = arc * arc_wave
+            orbit_delta = self._lolnam_orbit(t)
             close_amount = (0.30 * a + dolly / 100.0) * impact
             wide_amount = (0.045 * max(0, multi-1)) * cue
             dist_factor = max(0.52, 1.0 - close_amount + min(0.16, wide_amount))
@@ -354,7 +390,7 @@ class CameraPlan:
         sin_e = min(0.98, sin_e)
         eang = math.asin(sin_e)
         hx, hz = self.rig.h if self.rig else (0.0, -1.0)
-        yaw = math.radians(float(self.third_yaw) + self.side_yaw + orbit_delta + extra_yaw)
+        yaw = math.radians(self._third_heading(t, orbit_delta))
         rhx = hx * math.cos(yaw) - hz * math.sin(yaw)
         rhz = hx * math.sin(yaw) + hz * math.cos(yaw)
         return ((rhx * dist * math.cos(eang), dist * sin_e, rhz * dist * math.cos(eang)), math.degrees(eang))
@@ -384,7 +420,8 @@ class CameraPlan:
                 return None
             rot = dict(self.rig.rot)
             elev = self.third_pose_at(t)[1]
-            rot[self.rig.pitch_axis] = self.rig.pitch_sign * elev
+            rot[self.rig.pitch_axis] = self.rig.pitch_sign * (
+                90.0 - elev if self.rig.pitch_complement else elev)
 
             # TRUE ORBITの視線。カメラ位置を回しただけでは横を向くため、
             # 同じ軌道角だけ水平Yawも回して、常にキャラクター中心へ向ける。
@@ -396,16 +433,35 @@ class CameraPlan:
                 base_yaw = 0.0
             # Position AND look direction must rotate by the same side delta.
             # Without side_yaw the red-side shot faces away from the target.
-            yaw_delta = -(float(self.third_yaw) + self.side_yaw + self.keyframe_values(t)[0])
+            yaw_delta = -self._third_heading(t)
             rot[yaw_axis] = base_yaw + yaw_delta
             return rot
         return self._lolnam_rotation_at(t)
+
+    def _third_heading(self, t, orbit_delta=0.0):
+        # Clamp extra shot motion, never the explicit BLUE/RED base heading.
+        motion = float(self.third_yaw) + self.keyframe_values(t)[0] + orbit_delta
+        if self.smart_composition:
+            motion = max(-55.0, min(55.0, motion))
+        return self.side_yaw + motion
+
+    def _lolnam_orbit(self, t):
+        if self.style != 'lolnam_cinema':
+            return 0.0
+        ks = tuple(self.kill_times) or (self.kill_time,)
+        auto_arc, _, _ = _motion_params(self.motion_profile, self.intensity, max(1, len(ks)))
+        arc = float(self.motion_arc or auto_arc)
+        u = max(0.0, min(1.0, (t - (min(ks) - 2.0)) / 4.0))
+        orbit = arc * math.sin(math.pi * _ease5(u))
+        return max(-22.0, min(22.0, orbit)) if self.smart_composition else orbit
 
     def _lolnam_rotation_at(self, t: float) -> Optional[dict]:
         if self.rig is None or not self.rig.third or not self.rig.rot or not self.rig.pitch_axis:
             return None
         rot = dict(self.rig.rot)
-        rot[self.rig.pitch_axis] = self.rig.pitch_sign * self.third_pose_at(t)[1]
+        elevation = self.third_pose_at(t)[1]
+        rot[self.rig.pitch_axis] = self.rig.pitch_sign * (
+            90.0 - elevation if self.rig.pitch_complement else elevation)
 
         # Orbitは「カメラを回す」のではなく「キャラを中心にカメラが回る」。
         # そのためカメラ位置を回した分だけ水平Yawも同じだけ回し、
@@ -416,14 +472,7 @@ class CameraPlan:
             base_yaw = float(rot.get(yaw_axis, 0.0))
         except Exception:
             base_yaw = 0.0
-        yaw_delta = float(self.third_yaw) + self.side_yaw + self.keyframe_values(t)[0]
-        if self.style == "lolnam_cinema":
-            ks = tuple(self.kill_times) or (self.kill_time,)
-            multi = max(1, len(ks))
-            auto_arc, _, _ = _motion_params(self.motion_profile, self.intensity, multi)
-            arc = float(self.motion_arc or auto_arc)
-            u = max(0.0, min(1.0, (t - (min(ks)-2.0)) / 4.0))
-            yaw_delta += arc * math.sin(math.pi * _ease5(u))
+        yaw_delta = self._third_heading(t, self._lolnam_orbit(t))
         rot[yaw_axis] = base_yaw - yaw_delta
         return rot
 
@@ -667,7 +716,7 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
     現在値で軸を取れない場合は、同じ対象の直近の成功キャリブレーションを使う。
     """
     sel = p.selection_name or p.champion
-    cache_key = (sel, style)
+    cache_key = (sel, 'third_common') if style in THIRD_STYLES else (sel, style)
     cached = _TPS_CALIBRATION.get(cache_key)
 
     api.set_render(selectionName=sel, cameraMode="top", cameraAttached=True,
@@ -696,13 +745,29 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
 
     axis = None
     sign = -1.0
+    pitch_complement = False
     if isinstance(rot, dict) and current_phi is not None:
-        axis = _pitch_axis(rot, current_phi)
+        axis, pitch_complement = _pitch_calibration(rot, current_phi)
         if axis:
             try:
                 sign = 1.0 if float(rot[axis]) >= 0 else -1.0
             except Exception:
                 axis = None
+
+    # Seek can return an old/unsettled render transform. One read-only retry
+    # often returns the rotation after camera mode has actually updated.
+    if style in THIRD_STYLES and not axis and current_phi is not None:
+        try:
+            candidate = api.render().get('cameraRotation')
+            if isinstance(candidate, dict):
+                retry_axis, retry_complement = _pitch_calibration(candidate, current_phi)
+                if retry_axis:
+                    axis, pitch_complement = retry_axis, retry_complement
+                    rot = candidate
+                    sign = 1.0 if float(candidate[axis]) >= 0 else -1.0
+                    log('カメラ: 追加のReplay API確認で三人称回転軸を取得')
+        except ReplayApiError:
+            pass
 
     # ここが重要: 現在の cameraRotation だけで軸を決められなくても、
     # 過去に成功した三人称リグがあれば、それを録画時にも再利用する。
@@ -712,11 +777,14 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
         if not axis and cached_axis:
             axis = cached_axis
             sign = cached_sign
+            pitch_complement = bool(cached.get('pitch_complement', False))
             log(f"カメラ: 保存済み三人称リグを再利用 (軸 {axis}, 符号 {sign:+.0f})")
         elif axis:
             # 現在値が取れた場合でも、符号は成功済みキャリブレーションを優先。
             # seek直後に符号だけ反転するケースを避ける。
-            sign = cached_sign if cached_axis == axis else sign
+            if cached_axis == axis:
+                sign = cached_sign
+                pitch_complement = bool(cached.get('pitch_complement', False))
 
     # 座標が一時的に欠けた場合も、成功済みキャリブレーションの水平方向を使う。
     h = current_h
@@ -746,6 +814,11 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
 
     # 三人称は「現在軸」または「保存軸」のどちらかがあれば維持する。
     third = style in THIRD_STYLES and bool(axis)
+    if style in THIRD_STYLES and not third:
+        log(f"カメラ診断: 三人称キャリブレーション未成立 / "
+            f"仰角={current_phi!s} / 回転API={rot!s}。地形への埋まりを防ぐため安全俯瞰へ切り替えます")
+        return _fallback_top(api, sel, base_fov,
+                             '三人称角度を取得できず、安全な俯瞰追従へ切替（実際のカメラは三人称ではありません）')
     note_extra = ""
     rot_use = dict(rot) if isinstance(rot, dict) else None
 
@@ -763,7 +836,7 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
             # 軸だけ分かって回転全体が取れないケースは、他軸を壊さないため
             # 最小限の回転を作る。Replay側が補正できるよう三人称を維持する。
             rot_use = {"x": 0.0, "y": 0.0, "z": 0.0}
-        rot_use[axis] = sign * third_elev
+        rot_use[axis] = sign * (90.0 - third_elev if pitch_complement else third_elev)
     else:
         if style in THIRD_STYLES:
             note_extra = " (保存済み三人称リグもなく、方向を特定できないためFPS風)"
@@ -807,7 +880,7 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
                 err = _len(_sub(Q2, expected))
                 if err <= max_err * 1.25 and clearance >= min_clearance:
                     note = f"三人称カメラ OK (地面からの高さ {clearance:.0f}) (保存済みリグ再利用)"
-                    return _cache_success(cache_key, P, v, rot_use, h, axis, sign, log, note)
+                    return _cache_success(cache_key, P, v, rot_use, h, axis, sign, log, note, pitch_complement)
 
         info = _fallback_top(api, sel, base_fov,
                              f"カメラが想定位置になりません(誤差{err:.0f}, 高さ{clearance:.0f})。俯瞰に切替")
@@ -817,12 +890,13 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
     kind = "三人称" if third else "FPS風"
     note = f"{kind}カメラ OK (地面からの高さ {clearance:.0f}){note_extra}"
     if third:
-        return _cache_success(cache_key, P, v, rot_use, h, axis, sign, log, note)
+        return _cache_success(cache_key, P, v, rot_use, h, axis, sign, log, note, pitch_complement)
     return RigInfo(mode="fps", P=P, v=v, rot=rot_use, third=False,
                    pitch_axis="", pitch_sign=sign, h=h, note=note)
 
 
-def _cache_success(cache_key, P, v, rot, h, axis, sign, log, note) -> RigInfo:
+def _cache_success(cache_key, P, v, rot, h, axis, sign, log, note,
+                   pitch_complement=False) -> RigInfo:
     """成功した三人称リグを次の seek/録画でも再利用できる形で保存する。"""
     _TPS_CALIBRATION[cache_key] = {
         "P": tuple(P) if P is not None else None,
@@ -831,8 +905,9 @@ def _cache_success(cache_key, P, v, rot, h, axis, sign, log, note) -> RigInfo:
         "rot": dict(rot or {}),
         "axis": axis or "",
         "sign": float(sign),
+        "pitch_complement": bool(pitch_complement),
     }
     log("カメラ: " + note)
     return RigInfo(mode="fps", P=P, v=v, rot=dict(rot or {}), third=True,
-                   pitch_axis=axis or "", pitch_sign=float(sign), h=tuple(h), note=note)
-
+                   pitch_axis=axis or "", pitch_sign=float(sign), h=tuple(h),
+                   pitch_complement=bool(pitch_complement), note=note)

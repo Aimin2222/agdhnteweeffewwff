@@ -88,6 +88,7 @@ def test_raw_decode_ignores_zero_alpha_and_keeps_bgr_colors():
 
 def test_scan_passes_the_ui_selected_event_mode(app, monkeypatch):
     app.locked = object()
+    app.players = [app.locked]
     app.var_event_mode.set('キル＋アシスト')
     requests = []
     monkeypatch.setattr(app, '_run_bg', lambda *args: requests.append(args))

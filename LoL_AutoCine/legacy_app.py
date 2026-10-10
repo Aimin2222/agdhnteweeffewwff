@@ -481,6 +481,9 @@ class App:
         self.players: list = []
         self.locked: Player | None = None
         self.kills: list = []
+        self._match_scan_cache = None  # One whole-replay scan; player switches are instant
+        self._replay_generation = 0
+        self._auto_qa_pending = False
         self.checked_kills: set[int] = set()
         self.var_event_mode = tk.StringVar(value="キル")
         self.source = None
@@ -535,6 +538,7 @@ class App:
         self.var_kill_frame_width = tk.IntVar(value=3)
         self.var_kill_mark_style = tk.StringVar(value='テンプレートに合わせる')
         self.var_camera_side = tk.StringVar(value='自動（対象のチーム）')
+        self.var_scene_player_filter = tk.StringVar(value='')
         self.var_encoder_policy = tk.StringVar(value='自動（NVENC優先・失敗時CPU）')
         self.var_smart_montage = tk.BooleanVar(value=True)
         self.var_smart_composition = tk.BooleanVar(value=False)
@@ -644,12 +648,13 @@ class App:
         top.pack(fill="x")
         brand_box = ttk.Frame(top)
         brand_box.pack(side="left")
-        ttk.Label(brand_box, text="◈  LoL AutoCine v5.10.10", style="CompactTitle.TLabel").pack(anchor="w")
+        ttk.Label(brand_box, text=f"◈  LoL AutoCine v{APP_VERSION}", style="CompactTitle.TLabel").pack(anchor="w")
 
         nav = ttk.Frame(top)
         nav.pack(side="left", padx=(15, 0))
         ttk.Button(nav, text="⌂  ホーム", style="Nav.TButton", command=lambda: self._focus_home()).pack(side="left")
         ttk.Button(nav, text="▣  テンプレート", style="Nav.TButton", command=self._open_template_gallery).pack(side="left")
+        ttk.Button(nav, text="✓  自動診断", style="Nav.TButton", command=self.on_automatic_qa).pack(side="left")
         ttk.Button(nav, text="▰  参考動画", style="Nav.TButton", command=lambda: self._focus_reference()).pack(side="left")
         ttk.Button(nav, text="⚙  設定", style="Nav.TButton", command=self._focus_settings).pack(side="left")
 
@@ -711,6 +716,7 @@ class App:
         right = self.right_scroll.inner
 
         center_edit_scroll = ScrollFrame(edit_host, 0)
+        self.center_edit_scroll = center_edit_scroll
         center_edit_scroll.pack(fill="both", expand=True)
         center_edit = center_edit_scroll.inner
         self.center_preview_host = preview_host
@@ -769,7 +775,15 @@ class App:
         ttk.Label(f, text="検出対象", style="CardMuted.TLabel").pack(anchor="w", pady=(0, 3))
         ttk.Combobox(f, state="readonly", textvariable=self.var_event_mode,
                      values=["キル", "アシスト", "キル＋アシスト"]).pack(fill="x", pady=(0, 5))
-        ttk.Button(f, text="全編スキャン", command=self.on_scan).pack(fill="x")
+        ttk.Button(f, text="① 試合全体を一括スキャン（1回だけ）", command=self.on_scan).pack(fill="x")
+        ttk.Label(f, text="② スキャン後は上の選手を選んで「この人を対象にする」。再スキャン不要。",
+                  style="CardMuted.TLabel", wraplength=290).pack(fill="x", pady=(4,3))
+        self.var_team_filter = tk.StringVar(value="全チーム")
+        team_filter = ttk.Combobox(f, state="readonly", textvariable=self.var_team_filter,
+                                   values=["全チーム", "BLUE", "RED"])
+        team_filter.pack(fill="x", pady=(0,4))
+        team_filter.bind("<<ComboboxSelected>>", lambda _e: self._fill_players())
+        self.var_event_mode.trace_add("write", lambda *_: self._filter_scanned_for_locked() if not self.busy else None)
         self.pb_scan = ttk.Progressbar(f, maximum=100); self.pb_scan.pack(fill="x", pady=6)
         self.lbl_scan = ttk.Label(f, text="まだスキャンしていません", style="CardMuted.TLabel", wraplength=270)
         self.lbl_scan.pack(fill="x")
@@ -844,7 +858,8 @@ class App:
         ph = ttk.Frame(preview_card, style="Card.TFrame")
         ph.pack(fill="x", pady=(0, 7))
         ttk.Label(ph, text="カメラプレビュー", style="Section.TLabel").pack(side="left")
-        self.preview_badge = ttk.Label(ph, text="三人称カメラ（対象: 追従）", style="CardMuted.TLabel")
+        self.var_camera_status = tk.StringVar(value="カメラ：未再生（設定未適用）")
+        self.preview_badge = ttk.Label(ph, textvariable=self.var_camera_status, style="CardMuted.TLabel")
         self.preview_badge.pack(side="right")
 
         self.var_live = tk.BooleanVar(value=True)
@@ -853,7 +868,8 @@ class App:
         self.var_mirror = tk.BooleanVar(value=False)
         tools = ttk.Frame(preview_card, style="Card.TFrame")
         tools.pack(fill="x", pady=(0, 7))
-        ttk.Button(tools, text="ミラー ON / OFF", command=self.on_mirror_toggle).pack(side="left")
+        ttk.Button(tools, text="ミラー開始", command=self.on_mirror_start).pack(side="left")
+        ttk.Button(tools, text="停止", command=lambda: self.on_mirror_stop(reason="停止ボタン")) .pack(side="left", padx=(4,0))
         ttk.Checkbutton(tools, text="FXをミラーに反映", variable=self.var_live).pack(side="left", padx=10)
         quality = ttk.Combobox(tools, textvariable=self.var_preview_quality, state="readonly",
                                values=("操作優先", "表示サイズで確認"), width=17)
@@ -1352,8 +1368,9 @@ class App:
             ttk.Label(part, text=caption, style="Card.TLabel").pack(side="top")
             ttk.Spinbox(part, from_=lower, to=upper, increment=inc,
                         textvariable=variable, width=7).pack(side="top")
-        ttk.Button(output, text="▶ キルフレーム詳細（色・光・中央マーク）を開閉",
-                   command=self._toggle_kill_badge_advanced).pack(fill="x", pady=(4,4))
+        self._kill_badge_toggle_button = ttk.Button(output, text="▶ キルフレーム詳細を開く（発光・中央マーク）",
+                   command=self._toggle_kill_badge_advanced)
+        self._kill_badge_toggle_button.pack(fill="x", pady=(4,4))
         self._kill_badge_advanced = ttk.Frame(output, style="Card.TFrame")
         detail = self._kill_badge_advanced
         ttk.Label(detail, text="キルフレームの色・発光・中央マーク", style="Card.TLabel").pack(anchor="w", pady=(6,3))
@@ -1459,6 +1476,12 @@ class App:
         # when the user switches to camera/color/output editing zones.
         f = card(right, "◉  検出シーン")
         ttk.Label(f, text="[✓] 作成する ／ [  ] 作成しない。シーンを選んで切り替え。", style="CardMuted.TLabel", wraplength=280).pack(anchor="w", pady=(0, 5))
+        scene_filter = ttk.Frame(f, style="Card.TFrame")
+        scene_filter.pack(fill="x", pady=(0, 5))
+        ttk.Label(scene_filter, text="表示プレイヤー", style="Card.TLabel", width=12).pack(side="left")
+        self.cb_scene_player_filter = ttk.Combobox(scene_filter, state="readonly", textvariable=self.var_scene_player_filter, values=[])
+        self.cb_scene_player_filter.pack(side="left", fill="x", expand=True, padx=(4,0))
+        self.cb_scene_player_filter.bind("<<ComboboxSelected>>", self._on_scene_player_filter_changed)
         self.lb_kills = tk.Listbox(f, height=7, bg="#FFFFFF", fg=fg, selectbackground=selected, selectforeground="#111827", relief="flat", highlightthickness=1, highlightbackground=line, activestyle="none", font=("Meiryo UI", 9))
         kills_sb=ttk.Scrollbar(f, orient="vertical", command=self.lb_kills.yview); self.lb_kills.configure(yscrollcommand=kills_sb.set)
         self.lb_kills.pack(fill="x", expand=False, pady=(0, 2)); kills_sb.pack(side="right", fill="y")
@@ -1830,10 +1853,31 @@ class App:
         frame = getattr(self, "_kill_badge_advanced", None)
         if frame is None:
             return
-        if frame.winfo_manager():
-            frame.pack_forget()
+        opening = not bool(frame.winfo_manager())
+        if opening:
+            frame.pack(in_=frame.master, after=self._kill_badge_toggle_button,
+                       fill="x", pady=(2,5))
         else:
-            frame.pack(fill="x", pady=(2,5))
+            frame.pack_forget()
+        self._kill_badge_toggle_button.configure(
+            text="▼ キルフレーム詳細を閉じる" if opening else "▶ キルフレーム詳細を開く（発光・中央マーク）")
+        if opening:
+            self.root.after_idle(self._scroll_to_kill_detail)
+
+    def _scroll_to_kill_detail(self):
+        """Keep an expanding notebook's new settings visible in the scrollable editor."""
+        frame = getattr(self, "_kill_badge_advanced", None)
+        scroll = getattr(self, "center_edit_scroll", None)
+        if frame is None or scroll is None or not frame.winfo_viewable():
+            return
+        try:
+            self.root.update_idletasks()
+            y = frame.winfo_rooty() - scroll.inner.winfo_rooty()
+            total = max(1, scroll.inner.winfo_height())
+            viewport = max(1, scroll.canvas.winfo_height())
+            scroll.canvas.yview_moveto(max(0., min(1., (y - viewport*.18) / max(1,total - viewport))))
+        except tk.TclError:
+            pass
 
     def _open_template_gallery(self):
         """Option B: full searchable gallery separate from the editor."""
@@ -1992,6 +2036,28 @@ class App:
             self.log(f"準備に失敗: {e}")
             messagebox.showerror(APP, str(e))
 
+    def on_automatic_qa(self) -> None:
+        """Run safe, non-destructive checks in a worker. Game/replay visual tests still need LoL."""
+        if self.busy or self._auto_qa_pending:
+            self.log("処理中または診断中は自動診断を開始できません。")
+            return
+        from core.auto_qa import run_checks
+        self.log("自動診断を開始しました（設定変更・録画・カメラ移動はしません）。")
+        out = ROOT / "diagnostics" / "selftest_latest.json"
+        api, result_queue = self.api, self.q
+        self._auto_qa_pending = True
+        def worker():
+            try:
+                result = run_checks(ROOT, report_file=out, api=api)
+                result_queue.put(("auto_qa_done", result, str(out)))
+            except Exception as exc:
+                result_queue.put(("auto_qa_error", str(exc)))
+        try:
+            threading.Thread(target=worker, daemon=True, name="AutoCine-SelfTest").start()
+        except Exception:
+            self._auto_qa_pending = False
+            raise
+
     def on_show_diagnostics(self) -> None:
         d = ROOT / "diagnostics"
         d.mkdir(exist_ok=True)
@@ -2011,7 +2077,7 @@ class App:
             self.log("処理中はミラーを切り替えできません。中止後に操作してください。")
             return
         if self._mirror.pending or self.source is not None:
-            self.on_mirror_stop()
+            self.on_mirror_stop(reason="ON/OFF切替ボタン")
         else:
             self.on_mirror_start()
 
@@ -2108,6 +2174,7 @@ class App:
                     self.lbl_job.configure(text=f"{msg}  ({done}/{total}  {pct:.0f}%)")
                 elif kind == "players":
                     self._fill_players()
+                    self._refresh_scene_player_filter_choices()
                 elif kind == "kills":
                     self._fill_kills()
                     if self.kills:
@@ -2135,6 +2202,22 @@ class App:
                         self.source = self._mirror.source
                         self.var_mirror.set(self.source is not None)
                         self.log(f"ミラー開始失敗: {error}" if error else "ミラー開始 (LoLウィンドウのみ)。")
+                elif kind == "camera_status":
+                    self.var_camera_status.set(a[0])
+                elif kind == "auto_qa_error":
+                    self._auto_qa_pending = False
+                    self.log(f"自動診断を保存できませんでした: {a[0]}")
+                elif kind == "replay_reset":
+                    self._fill_players()
+                    self._refresh_scene_player_filter_choices()
+                    self._fill_kills()
+                    self.lbl_lock.configure(text="対象: 未固定")
+                    self.var_camera_status.set("カメラ：再接続後は対象を選んでください")
+                elif kind == "auto_qa_done":
+                    self._auto_qa_pending = False
+                    qa, path = a
+                    self.log(f"自動診断: 成功 {qa['passed']}件 / 注意 {qa['warnings']}件 / 失敗 {qa['failed']}件 → {path}")
+                    messagebox.showinfo("AutoCine 自動診断", f"成功 {qa['passed']}件 / 注意 {qa['warnings']}件 / 失敗 {qa['failed']}件\n\nログ: {path}\n\nLoLの実映像やカメラ構図の良し悪しは実機確認が必要です。", parent=self.root)
                 elif kind == "mirror_stop_error":
                     self.log(f"ミラー停止エラー: {a[0]}")
                 elif kind == "job_error":
@@ -2229,9 +2312,65 @@ class App:
 
     def _fill_players(self) -> None:
         self.tree.delete(*self.tree.get_children())
+        wanted = self.var_team_filter.get() if hasattr(self, "var_team_filter") else "全チーム"
         for p in self.players:
+            if wanted != "全チーム" and (("BLUE" if p.team == "ORDER" else "RED") != wanted):
+                continue
             self.tree.insert("", "end", iid=str(p.slot), values=("BLUE" if p.team == "ORDER" else "RED", p.champion, p.name),
                              tags=(p.team,))
+
+
+    def _refresh_scene_player_filter_choices(self) -> None:
+        if not hasattr(self, 'cb_scene_player_filter'):
+            return
+        values = [p.label() for p in self.players]
+        self.cb_scene_player_filter.configure(values=values)
+        # Keep the displayed choice identical to the actual camera/export target.
+        label = self.locked.label() if self.locked is not None else ''
+        self.var_scene_player_filter.set(label if label in values else '')
+
+    def _find_player_by_label(self, label: str):
+        needle = str(label or '').strip()
+        for player in self.players:
+            if player.label() == needle:
+                return player
+        return None
+
+    def _set_locked_player(self, player, *, refill_from_cache: bool = True, log_prefix: str | None = None) -> None:
+        if self.busy:
+            self._refresh_scene_player_filter_choices()
+            self.log("処理中は対象を変更できません。終了後に選択してください。")
+            return
+        if player is None or player not in self.players:
+            self._refresh_scene_player_filter_choices()
+            return
+        self.locked = player
+        self.lbl_lock.configure(text=f"対象: {self.locked.label()}", foreground="#15803d")
+        if hasattr(self, 'cb_scene_player_filter'):
+            self._refresh_scene_player_filter_choices()
+            self.var_scene_player_filter.set(self.locked.label())
+        try:
+            self.tree.selection_set(str(player.slot))
+            self.tree.focus(str(player.slot))
+            self.tree.see(str(player.slot))
+        except Exception:
+            pass
+        if log_prefix:
+            self.log(f"{log_prefix}: {self.locked.label()} (slot {self.locked.slot})")
+            self.log("カメラ基準: " + ("RED：自動で180°反転寄りの斜め後ろ" if self.locked.team == 'CHAOS' else "BLUE：斜め後ろの安全構図") + "（自動設定時）")
+        if refill_from_cache and self._match_scan_cache and self._match_scan_cache.complete:
+            self._filter_scanned_for_locked()
+            self.log("一括スキャン済みのため再読み込みせず対象を切替しました")
+        elif refill_from_cache:
+            self.kills = []
+            self.checked_kills = set()
+            self._fill_kills()
+
+    def _on_scene_player_filter_changed(self, _event=None) -> None:
+        player = self._find_player_by_label(self.var_scene_player_filter.get())
+        if player is None:
+            return
+        self._set_locked_player(player, refill_from_cache=True, log_prefix="検出シーンの表示対象を変更")
 
     def _fill_kills(self) -> None:
         self.lb_kills.delete(0, "end")
@@ -2511,6 +2650,9 @@ class App:
             return
         self.log(f'動きのプレビュー開始: {len(shot.keyframes)}キーフレーム / '
                  f'シーン {kill.time:.1f}s / 未保存の編集値も反映')
+        if hasattr(self, 'var_camera_status'):
+            self.var_camera_status.set(f"再生中：{STYLES.get(tpl.style, tpl.style)} / 対象: "
+                                       f"{self.locked.champion if self.locked else '未固定'} / 実機カメラを判定中")
         self._run_bg(self._preview_play, tpl, kill)
 
     def _schedule_project_save(self):
@@ -3295,9 +3437,13 @@ class App:
             self._play(paths.replays_dir() / n)
 
     def _play(self, p: Path) -> None:
+        if self.busy:
+            self.log("処理中は別のリプレイを起動できません。中止後に操作してください。")
+            return
         try:
             how = watch_replay(self.lol_dir, p)
             self.api._autocine_record_primed = False  # new replay requires new first-frame initialization
+            self._reset_match_state()
             self.log(f"リプレイを起動 ({how}): {p.name}  → 読み込み完了後『接続してプレイヤー取得』")
         except Exception as e:
             self.log(f"起動失敗: {e}")
@@ -3306,8 +3452,20 @@ class App:
     def on_connect(self) -> None:
         self._run_bg(self._connect)
 
+    def _reset_match_state(self):
+        # Plain data only: callers may run in a worker. Tk updates use the queue.
+        self._replay_generation += 1
+        self._match_scan_cache = None
+        self.players = []
+        self.locked = None
+        self.kills = []
+        self.checked_kills = set()
+        self._last_scan_mode = None
+        self.q.put(("replay_reset",))
+
     def _connect(self) -> None:
         self.api._autocine_record_primed = False
+        self._reset_match_state()
         self.log("Replay API に接続中… (リプレイの読み込み完了まで待ちます)")
         if not self.api.wait_ready(timeout=90, stop=self.stop_ev):
             self.log("接続できません。game.cfg設定→LoL再起動→リプレイ再生を確認してください。")
@@ -3324,20 +3482,38 @@ class App:
             self.log("※10人未満です (カスタム/ボット戦の可能性)。")
 
     def on_lock(self) -> None:
+        if self.busy:
+            self.log("処理中は対象を変更できません。終了後に選択してください。")
+            return
         sel = self.tree.selection()
         if not sel:
             messagebox.showinfo(APP, "プレイヤーを選んでください。")
             return
-        self.locked = next(p for p in self.players if str(p.slot) == sel[0])
-        self.lbl_lock.configure(text=f"対象: {self.locked.label()}", foreground="#15803d")
-        self.log(f"対象を固定: {self.locked.label()} (slot {self.locked.slot})")
-        self.log("カメラ基準: " + ("RED：反対側からの斜め後ろ" if self.locked.team == 'CHAOS' else "BLUE：従来の斜め後ろ") + "（自動設定時）")
-        self.kills = []
-        self.checked_kills = set()
+        player = next(p for p in self.players if str(p.slot) == sel[0])
+        self._set_locked_player(player, refill_from_cache=True, log_prefix="対象を固定")
+
+    def _filter_scanned_for_locked(self) -> None:
+        if self._match_scan_cache is None or not self._match_scan_cache.complete or self.locked is None:
+            return
+        self._refresh_scene_player_filter_choices()
+        from core.scanner import filter_scanned_events
+        mode={"キル": "kill", "アシスト": "assist", "キル＋アシスト": "both"}.get(self.var_event_mode.get(), "kill")
+        self.kills = filter_scanned_events(self._match_scan_cache.events, self.locked, mode)
+        self.checked_kills = set(range(len(self.kills)))
+        self._last_scan_mode = self.var_event_mode.get()
         self._fill_kills()
+        self.log(f"試合全体のキャッシュから {self.locked.label()}：{len(self.kills)} 件（{mode}）")
 
     def on_scan(self) -> None:
-        if not self._need_lock():
+        if self.busy:
+            self.log("別の処理が完了してからスキャンしてください。")
+            return
+        if not self.players:
+            messagebox.showinfo(APP, "先に接続して10人のプレイヤーを取得してください。")
+            return
+        if self._match_scan_cache and self._match_scan_cache.complete:
+            self._filter_scanned_for_locked()
+            self.log("スキャン済みの試合イベントを再利用しました")
             return
         self._run_bg(self._scan, self.var_event_mode.get())
 
@@ -3348,22 +3524,38 @@ class App:
         return True
 
     def _scan(self, event_mode: str | None = None) -> None:
+        session = self._replay_generation
         p = self.locked
-        self.log(f"全編スキャン開始: {p.label()}")
+        if self._match_scan_cache and self._match_scan_cache.complete:
+            self.kills = __import__('core.scanner', fromlist=['filter_scanned_events']).filter_scanned_events(
+                self._match_scan_cache.events, p,
+                {"キル": "kill", "アシスト": "assist", "キル＋アシスト": "both"}.get(event_mode, "kill"))
+            self.checked_kills = set(range(len(self.kills)))
+            self._last_scan_mode = event_mode
+            self.q.put(("kills",))
+            self.log(f"全編イベントキャッシュ再利用: 対象={getattr(p, 'name', '全員')} / {len(self.kills)}件")
+            return
+        self.log("試合全体のキル・アシストを初回一括スキャン中…")
         # Tk変数はバックグラウンドスレッドから読まない。UI側でsnapshotした値を渡す。
         # この関数はバックグラウンドスレッドからも呼ばれるため、Tk変数を読まない。
         selected_mode = event_mode if event_mode is not None else "キル"
         mode = {"キル": "kill", "アシスト": "assist", "キル＋アシスト": "both"}.get(selected_mode, "kill")
-        res = scan_kills(self.api, p, progress=lambda *a: self.q.put(("scan", *a)), stop=self.stop_ev,
-                         diag_dir=ROOT / "diagnostics", event_mode=mode)
-        self.kills = res.kills
+        res = scan_kills(self.api, None, progress=lambda *a: self.q.put(("scan", *a)), stop=self.stop_ev,
+                         diag_dir=ROOT / "diagnostics", event_mode="both")
+        # Cache only fully completed scans, never partial, and clear on replay reconnect.
+        if session != self._replay_generation:
+            self.log("再接続前のスキャン結果を破棄しました。")
+            return
+        self._match_scan_cache = res if res.complete and not self.stop_ev.is_set() else None
+        from core.scanner import filter_scanned_events
+        self.kills = filter_scanned_events(res.events, p, mode) if p is not None else res.kills
         self._last_scan_mode = selected_mode
         self.checked_kills = set(range(len(self.kills)))
         self.q.put(("kills",))
-        kill_count = sum(getattr(k, 'role', 'kill') == 'kill' for k in res.kills)
-        assist_count = sum(getattr(k, 'role', 'kill') == 'assist' for k in res.kills)
+        kill_count = sum(getattr(k, 'role', 'kill') == 'kill' for k in self.kills)
+        assist_count = sum(getattr(k, 'role', 'kill') == 'assist' for k in self.kills)
         self.log(f"スキャン内訳: キル {kill_count}件 / アシスト {assist_count}件")
-        self.log(f"スキャン完了: イベント {res.total_events} 件 / 対象シーン {len(res.kills)} 件 / モード {selected_mode}"
+        self.log(f"スキャン完了: イベント {res.total_events} 件 / 対象シーン {len(self.kills)} 件 / モード {selected_mode}"
                  + ("" if res.complete else " (途中で中断)"))
 
     def _ensure_source(self):
@@ -3437,8 +3629,10 @@ class App:
         self._set_camera_motion(profile, arc, dolly)
 
     def on_one_click(self, smart: bool = False) -> None:
-        if not self._need_lock():
+        if self.busy or not self._need_lock():
             return
+        if self._match_scan_cache and self._match_scan_cache.complete:
+            self._filter_scanned_for_locked()
         if self.var_auto_director.get():
             self._apply_auto_director()
         scene_cfg = self._scene_render_config()
@@ -3451,7 +3645,8 @@ class App:
         if smart:
             template.smart_composition = True
             template.smart_montage = bool(self.var_smart_montage.get())
-        self._run_bg(self._make, True, template, bool(self.var_montage.get()), self.var_event_mode.get(), *scene_cfg)
+        has_cached = bool(self._match_scan_cache and self._match_scan_cache.complete)
+        self._run_bg(self._make, not has_cached, template, bool(self.var_montage.get()), self.var_event_mode.get(), *scene_cfg)
 
     def _make(self, scan_first: bool, tpl: Template, montage: bool, event_mode: str = "キル",
               scene_mode=False, shots=None, auto=False, order=None) -> None:
@@ -3535,13 +3730,14 @@ class App:
             self.var_mirror.set(False)
             self.log(f"ミラー開始失敗: {e}")
 
-    def on_mirror_stop(self) -> None:
+    def on_mirror_stop(self, reason: str = "操作または再接続") -> None:
+        self.log(f"ミラーを停止します（理由: {reason}）")
         self._mirror.stop()
         self.source = None
         self.canvas.delete("all")
         self._preview_image_item = self._preview_text_item = None
         self._preview_presented = None
-        self.log("ミラーOFF。")
+        self.log(f"ミラーOFF（{reason}）。")
         if hasattr(self, "var_mirror"):
             self.var_mirror.set(False)
 
@@ -3568,6 +3764,12 @@ class App:
                 return np.asarray(img), "mirror"
         return None, "empty"
 
+    def _camera_selection_changed(self, *_args):
+        """Label the SELECTED preset, never misstate it as the active Replay API mode."""
+        if hasattr(self, 'var_camera_status') and hasattr(self, 'var_style'):
+            choice=self.var_style.get()
+            self.var_camera_status.set(f'設定：{choice}（▶再生で実際の動作を確認）')
+
     def _selected_multikill(self) -> int:
         sel = self.lb_kills.curselection()
         if sel and sel[0] < len(self.kills):
@@ -3589,6 +3791,8 @@ class App:
             variables.extend(mapping.values())
         for variable in {str(v): v for v in variables}.values():
             variable.trace_add('write', self._invalidate_preview_snapshot)
+        self.var_style.trace_add('write', self._camera_selection_changed)
+        self._camera_selection_changed()
         for event in ('<ButtonPress>', '<B1-Motion>', '<MouseWheel>', '<Button-4>',
                       '<Button-5>', '<KeyPress>', '<<NotebookTabChanged>>'):
             self.root.bind(event, self._preview_input, add='+')
@@ -3696,6 +3900,9 @@ class App:
                 shot = recommend(kill, tpl.pre, tpl.post)
             if shot is not None:
                 tpl = apply_shot(tpl, shot)
+        if hasattr(self, 'var_camera_status'):
+            self.var_camera_status.set(f"再生中：{STYLES.get(tpl.style, tpl.style)} / 対象: "
+                                       f"{self.locked.champion if self.locked else '未固定'} / 実機カメラを判定中")
         self._run_bg(self._preview_play, tpl, kill)
 
     def _preview_play(self, tpl, kill) -> None:
@@ -3706,6 +3913,9 @@ class App:
         start, end = max(0.0, kill.time - tpl.pre), kill.time + tpl.post
         self.log(f"カメラ演出プレビュー: {int(kill.time // 60):02d}:{kill.time % 60:04.1f} 付近 (録画はしません。ミラーを開始すると見やすい)")
         rig = preview_clip(self.api, self.locked, tpl, start, end, [kill], stop=self.stop_ev, log=self.log)
+        active = ("三人称" if rig.third else "俯瞰" if rig.mode == "top" else "FPS風")
+        self.q.put(("camera_status", f"再生時：{active} / 設定：{STYLES.get(tpl.style, tpl.style)} / "
+                                      f"サイド：{getattr(self.locked, 'team', '?')}"))
         self.log("カメラ: " + (rig.note or rig.mode) + f" / 横回転 {getattr(tpl, 'third_yaw', 0.0):+.0f}°")
 
 

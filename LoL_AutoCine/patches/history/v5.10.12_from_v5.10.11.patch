@@ -1,0 +1,676 @@
+diff --git a/LoL_AutoCine/README_v5.10.12_JA.md b/LoL_AutoCine/README_v5.10.12_JA.md
+new file mode 100644
+index 0000000..eda9831
+--- /dev/null
++++ b/LoL_AutoCine/README_v5.10.12_JA.md
+@@ -0,0 +1,19 @@
++# LoL AutoCine v5.10.12 — Match Scan / Calibrated Side Camera / Premium Quality / Color
++
++ベース: v5.10.11 Windows Full。
++
++## 変更点
++
++1. **試合全体スキャン1回**: Replay APIから全体の ChampionKill イベントを収集し、終了後はメモリ内キャッシュからプレイヤー・BLUE/RED・キル/アシスト条件で即座に再抽出。対象を切り替える度に試合全体を再生する必要はなくなった。最初の1回は従来同様、試合尺に応じた再生時間がかかる。途中キャンセル/試合の再接続時はキャッシュ破棄。
++2. **サイド別の安全寄りカメラプロファイル**: Replay APIの三人称リグが実測済みの絶対座標方向を返す場合、REDでさらに180°を二重適用しない。BLUE -12°/RED +12°の穏やかなオフセットと、サイド別の仰角/距離下限を適用。手動BLUE/RED指定の水平回転は既存仕様を維持。対象追従/TargetLockロジックの基礎座標は不変更。
++3. **安全構図**: 既存のカメラ位置読み戻し検証と俯瞰フォールバックを維持。スマート構図選択時の距離/高さを保守的に引き上げ、過大Orbit回転を制限。**被写体をAIで画面認識したり、地形遮蔽を画像で判定したりする機能ではありません。**
++4. **キルフレーム高画質化**: 既存の透過PNGアセットは1ピクセルも変更せず、素材型21種類の合成途中解像度を従来の2倍（770×232）へ。映像合成時に表示サイズを戻す。GPU FullとCPU FFmpegの両経路で対応。元画像自体を生成AIで再描画していないため、失われた顔肖像の細部そのものを復元する処理ではありません。
++5. **テンプレートカラー差**: ゴールド/アイスブルー/Lolnam/紫/ネオン/フィルムの強弱を調整。既存の実シーン図鑑の大型左右比較を利用可能。
++
++## 自動テストの範囲
++`tests/test_v51012_allscan_quality_camera.py` に新機能の7件を追加。関連既存テストを合わせて42件成功。全体の長時間GUI/通信回帰テストは完走していないため、全件合格とはしません。
++
++## GPU統合注意
++Codex差分パッチは **v5.10.11を基点** に作成。GPU書き出しをCodex側でさらに更新している場合は差分を確認し、特に `core/gpu_full.py` と `core/effects.py` を無条件に上書きせず統合してください。
++
++Windows実機の確認項目: `TESTLIST_v5.10.12_JA.md`
+diff --git a/LoL_AutoCine/TESTLIST_v5.10.12_JA.md b/LoL_AutoCine/TESTLIST_v5.10.12_JA.md
+new file mode 100644
+index 0000000..27bb807
+--- /dev/null
++++ b/LoL_AutoCine/TESTLIST_v5.10.12_JA.md
+@@ -0,0 +1,40 @@
++# LoL AutoCine v5.10.12 — Windows実機まとめテスト
++
++## 最優先: 1回スキャン / 選手切替
++- [ ] リプレイ接続し10人を取得。プレイヤーを選ばず「① 試合全体を一括スキャン」を実行する
++- [ ] スキャンが完了するまで待ち、診断ログで全試合の ChampionKill イベントが収集されているか確認
++- [ ] BLUEドレイヴンを選び「この人を対象にする」。新しいスキャン待ちが発生せずシーンが切り替わる
++- [ ] REDブリッツクランクに切り替え、同様に即時に切り替わる
++- [ ] 「キル／アシスト／キル＋アシスト」を切り替え、件数と行の表示が変わる
++- [ ] 「全チーム / BLUE / RED」切替で対象の選手一覧が絞り込まれる
++- [ ] 一括作成 / 選択シーン作成が、その時固定しているプレイヤーのイベントのみを使用する
++- [ ] **別のリプレイへ接続し直したら、前の試合のキャッシュが使用されない**
++
++## カメラ8本比較（添付の順に同じ場面で再テスト）
++- [ ] RED: 通常三人称 / 三人称シネマ / FPS風 / Lolnam風
++- [ ] BLUE: 通常三人称 / 三人称シネマ / FPS風 / Lolnam風
++- [ ] レッド側で建物・草・地形ばかり映す問題が改善している
++- [ ] キャラが中心付近で見えるか、キル瞬間に見切れないかを確認
++- [ ] API校正失敗時に安全俯瞰へ切り替わる表示と理由が分かる
++- [ ] 極端なOrbit角 +90°でも被写体が消える場合はMP4と診断ログを送付
++- [ ] Replay API待ちによるガクつきが残るか確認（完全なカメラ画像追跡は未実装）
++
++## 高解像度キルフレーム
++- [ ] 全21種類の素材型キルログが選べ、既存デザインが変わらず表示される
++- [ ] 素材の細線・装飾・フレアがv5.10.11より滑らかに見える
++- [ ] 高解像度化でアイコンの表示サイズが2倍に肥大化していない
++- [ ] 正しい2人のチャンピオン顔が表示され、連続キルでも縦に並ぶ
++- [ ] GPUフル書き出しでもCPU側FFmpegでもキルフレームが正しく合成される
++
++## 色とテンプレート
++- [ ] テンプレート図鑑の実シーン「元画像 / 適用後」の比較が見やすい
++- [ ] デフォルト / Lolnam / シネマゴールド / アイスブルー / 紫 / ネオンの差が以前より分かりやすい
++- [ ] ミラーと完成MP4で色味の方向が一致する（完全なピクセル一致ではない）
++
++## 従来機能・互換性
++- [ ] Windows 1080p / 60fps、GPUエンコード、LoLゲーム音、HUD、TargetLockが動作する
++- [ ] 「キルフレーム詳細」、ミラーON/OFF、自動診断、説明ホバーの操作が正常
++- [ ] 以前のテンプレートとシーン編集JSONを読み込める
++
++## 不具合発生時
++`AutoCine_Diagnostics.zip`、該当の `kill_*.mp4`、RED/BLUEと選択プレイヤー、選んだカメラとテンプレートを送ってください。
+diff --git a/LoL_AutoCine/VERSION.txt b/LoL_AutoCine/VERSION.txt
+index e64b8d2..66d758a 100644
+--- a/LoL_AutoCine/VERSION.txt
++++ b/LoL_AutoCine/VERSION.txt
+@@ -1 +1 @@
+-5.10.11
++5.10.12
+diff --git a/LoL_AutoCine/core/camera.py b/LoL_AutoCine/core/camera.py
+index 7d24c2c..5eda628 100644
+--- a/LoL_AutoCine/core/camera.py
++++ b/LoL_AutoCine/core/camera.py
+@@ -95,6 +95,25 @@ def side_yaw_for(team: str, preference: str = 'auto') -> float:
+     return 180.0 if is_red else 0.0
+ 
+ 
++# Calibrated rear-view profiles from live Replay API are *already* in world
++# coordinates for the selected champion. Applying another 180° RED flip to
++# that measured vector caused the reported RED wall/ground camera shots.
++# Manual blue/red overrides retain the legacy explicit 0°/180° choices.
++SIDE_THIRD_PROFILES = {
++    'ORDER': dict(yaw=-12.0, elevation=37.0, distance=1060.0),
++    'CHAOS': dict(yaw=12.0, elevation=42.0, distance=1170.0),
++}
++
++
++def live_side_profile(team: str, choice: str = 'auto') -> dict:
++    """Calibrated per-side safe rear view, with manual heading overrides."""
++    team = 'CHAOS' if str(team).upper() in ('CHAOS', 'RED') else 'ORDER'
++    profile = dict(SIDE_THIRD_PROFILES[team])
++    if choice in ('blue', 'red'):
++        profile['yaw'] = side_yaw_for(team, choice)
++    return profile
++
++
+ MIN_CLEARANCE = 350.0     # FPS風: 地面(キャラ位置)よりカメラが最低これだけ上
+ MIN_CAM_HEIGHT = 300.0    # 三人称: 常にこの高さ以上
+ HEARTBEAT = 1.0           # 追従設定の再送間隔(秒)
+@@ -315,14 +334,17 @@ class CameraPlan:
+             extra_yaw, zoom, _ = self.keyframe_values(t)
+             dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
+             if self.smart_composition:
+-                # Conservative framing: back away instead of allowing extreme
+-                # close-ups and raise the viewpoint to reduce terrain occlusion.
+-                dist = max(dist, self.third_dist * 0.88)
+-                e = max(e, math.radians(31.0))
++                # Conservatively raise/back out of terrain; image-space player
++                # recognition cannot be guaranteed by Replay API coordinates.
++                dist = max(dist, self.third_dist * 0.98)
++                e = max(e, math.radians(38.0))
+             sin_e = max(math.sin(e), MIN_CAM_HEIGHT / max(dist, 1.0))
+             sin_e = min(0.98, sin_e)
+             e = math.asin(sin_e)
+-            orbit = math.radians(float(self.third_yaw) + self.side_yaw + extra_yaw)
++            user_yaw = float(self.third_yaw) + self.side_yaw + extra_yaw
++            if self.smart_composition:
++                user_yaw = max(-55.0, min(55.0, user_yaw))
++            orbit = math.radians(user_yaw)
+             c, s = math.cos(orbit), math.sin(orbit)
+             rhx = hx * c - hz * s
+             rhz = hx * s + hz * c
+@@ -414,6 +436,8 @@ class CameraPlan:
+             # Position AND look direction must rotate by the same side delta.
+             # Without side_yaw the red-side shot faces away from the target.
+             yaw_delta = -(float(self.third_yaw) + self.side_yaw + self.keyframe_values(t)[0])
++            if self.smart_composition:
++                yaw_delta = max(-55.0, min(55.0, yaw_delta))
+             rot[yaw_axis] = base_yaw + yaw_delta
+             return rot
+         return self._lolnam_rotation_at(t)
+diff --git a/LoL_AutoCine/core/effects.py b/LoL_AutoCine/core/effects.py
+index 95dd202..a5e6aab 100644
+--- a/LoL_AutoCine/core/effects.py
++++ b/LoL_AutoCine/core/effects.py
+@@ -28,25 +28,25 @@ NEUTRAL = dict(contrast=1.0, brightness=0.0, saturation=1.0, gamma=1.0,
+ 
+ GRADES: dict = {
+     "default":    dict(),  # No creative colour transformation
+-    "lolnam":     dict(contrast=1.11, saturation=1.14, rs=-0.045, bs=0.07,
++    "lolnam":     dict(contrast=1.20, saturation=1.20, rs=-0.09, bs=0.12,
+                        rm=0.055, bm=-0.065, rh=0.085, bh=-0.04),
+     "drama":      dict(contrast=1.22, brightness=-0.018, saturation=0.78,
+                        rs=0.04, bs=-0.03, rh=0.07, gh=0.02),
+     "fade":       dict(contrast=0.84, brightness=0.025, saturation=0.84, gamma=1.07),
+     "highcontrast": dict(contrast=1.32, saturation=1.16, brightness=-0.012),
+     "standard":   dict(),
+-    "film":       dict(contrast=1.08, saturation=0.92, rs=0.04, bs=-0.03, rh=0.03, gh=0.01, bh=-0.04),
++    "film":       dict(contrast=1.10, saturation=0.82, rs=0.07, bs=-0.05, rh=0.03, gh=0.01, bh=-0.04),
+     "noir":       dict(contrast=1.25, saturation=0.12, brightness=-0.03),
+     "dark":       dict(contrast=1.15, brightness=-0.07, saturation=0.9, gamma=0.92),
+     "sunset":     dict(contrast=1.06, saturation=1.2, rm=0.10, gm=0.02, bm=-0.10, rh=0.10, bh=-0.08),
+     "midnight":   dict(contrast=1.1, saturation=0.95, brightness=-0.05, rs=-0.06, bs=0.12, bm=0.08, bh=0.05),
+     "tealorange": dict(contrast=1.12, saturation=1.15, rs=-0.08, gs=0.03, bs=0.10, rm=0.04, bm=-0.04,
+                        rh=0.12, gh=0.04, bh=-0.10),
+-    "neon":       dict(contrast=1.2, saturation=1.6, rs=0.05, bs=0.10, gm=-0.03, rh=0.08, bh=0.06),
+-    "purple":     dict(contrast=1.08, saturation=1.1, rm=0.07, bm=0.10, gm=-0.05, rs=0.05, bs=0.08),
+-    "iceblue":    dict(contrast=1.13, saturation=1.07, rs=-0.04, bs=0.06, rm=-0.04, gm=0.01,
++    "neon":       dict(contrast=1.22, saturation=1.76, rs=0.07, bs=0.14, gm=-0.03, rh=0.08, bh=0.06),
++    "purple":     dict(contrast=1.14, saturation=1.2, rm=0.13, bm=0.16, gm=-0.085, rs=0.05, bs=0.08),
++    "iceblue":    dict(contrast=1.19, saturation=1.09, rs=-0.095, bs=0.14, rm=-0.06, gm=0.01,
+                        bm=0.10, rh=0.02, gh=0.03, bh=0.08),
+-    "golden":     dict(contrast=1.10, saturation=1.06, rs=0.02, bs=-0.025, rm=0.06, gm=0.025,
++    "golden":     dict(contrast=1.17, saturation=1.14, rs=0.045, bs=-0.055, rm=0.11, gm=0.045,
+                        bm=-0.045, rh=0.09, gh=0.04, bh=-0.07),
+ }
+ GRADE_JP = {
+diff --git a/LoL_AutoCine/core/gpu_full.py b/LoL_AutoCine/core/gpu_full.py
+index 7c88171..24a00ee 100644
+--- a/LoL_AutoCine/core/gpu_full.py
++++ b/LoL_AutoCine/core/gpu_full.py
+@@ -162,7 +162,7 @@ class GPUFullStage:
+     def _build(self, t, duration, events, ffmpeg, title_index, badge_index, badges, lut_index, size):
+         from PIL import Image
+         from .effects import color_filters, FOG_RGB
+-        from .kill_icons import badge_plan, normalize_options, normalize
++        from .kill_icons import badge_plan, normalize_options, normalize, ASSET_STYLES
+         active = {k: max(0.,min(1.,float(v))) for k,v in t.video_effects.items() if float(v)>.001}
+         unknown = set(active)-set(EFFECT_ORDER)
+         if unknown:
+@@ -345,7 +345,8 @@ class GPUFullStage:
+             row=int(round(120*scale))*entry['row']
+             y=f'62.0f+{row}' if position.endswith('top') else f'size.y-oh-62-{row}'
+             alpha=f'{number(opacity)}*(time>={number(entry["start"])} && time<={number(entry["end"])})'
+-            self._overlay(step,f'badge_{n}',label,x,y,alpha,scale)
++            material_scale = scale * (0.5 if normalize(t.kill_icon_style) in ASSET_STYLES else 1.0)
++            self._overlay(step,f'badge_{n}',label,x,y,alpha,material_scale)
+         if plan: self.effects.add('kill_icons')
+         # program_opencl does not advertise its input frame rate. Re-establish
+         # timestamps and rate with metadata filters to prevent default 25fps
+diff --git a/LoL_AutoCine/core/jobs.py b/LoL_AutoCine/core/jobs.py
+index f278a6d..ec72d12 100644
+--- a/LoL_AutoCine/core/jobs.py
++++ b/LoL_AutoCine/core/jobs.py
+@@ -17,7 +17,7 @@ from typing import Callable, Optional
+ 
+ from .audio import AudioCapture, AudioError
+ from .audio_log import log as audio_log
+-from .camera import CameraPlan, side_yaw_for, CameraDirector, RigInfo, attach_to_player
++from .camera import CameraPlan, side_yaw_for, live_side_profile, CameraDirector, RigInfo, attach_to_player
+ from .capture import FrameSource, CaptureError, WGCWindowSource
+ from .effects import Template, apply_effects, concat_clips
+ from .hud import hide_hud, restore_hud
+@@ -201,12 +201,17 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
+         actual = api.seek(start)
+     if actual is not None and abs(float(actual) - float(start)) > 0.80:
+         raise ReplayApiError(f'リプレイのシーク位置が確定しません ({actual:.2f}s / 目標 {start:.2f}s)')
++    side_choice = getattr(tpl, 'camera_side', 'auto')
++    profile = live_side_profile(getattr(player, 'team', 'ORDER'), side_choice)
++    live_third = tpl.style in ('third', 'third_cinema', 'lolnam_cinema')
++    elev = max(float(getattr(tpl, 'third_elev', 28.0)), profile['elevation']) if live_third else float(getattr(tpl, 'third_elev', 28.0))
++    dist = max(float(getattr(tpl, 'third_dist', 950.0)), profile['distance']) if live_third else float(getattr(tpl, 'third_dist', 950.0))
+     rig = attach_to_player(api, player, tpl.style, dist_scale=tpl.dist_scale, height=tpl.cam_height,
+-                           third_elev=getattr(tpl, "third_elev", 28.0), third_dist=getattr(tpl, "third_dist", 950.0), log=log)
++                           third_elev=elev, third_dist=dist, log=log)
+     time.sleep(0.35)
+     plan = CameraPlan(style=tpl.style, intensity=tpl.amp(), kill_time=kills[0].time,
+                       kill_times=tuple(k.time for k in kills), dist_scale=tpl.dist_scale, height=tpl.cam_height,
+-                      third_elev=getattr(tpl, "third_elev", 28.0), third_dist=getattr(tpl, "third_dist", 950.0),
++                      third_elev=elev, third_dist=dist,
+                        third_yaw=getattr(tpl, "third_yaw", 0.0),
+                       motion_arc=getattr(tpl, "motion_arc", 0.0), motion_dolly=getattr(tpl, "motion_dolly", 0.0),
+                       motion_profile=getattr(tpl, "motion_profile", "cinematic"),
+@@ -214,13 +219,14 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
+                        smart_composition=bool(getattr(tpl, 'smart_composition', False)),
+                        smart_impact=(float(getattr(tpl, 'highlight_pulse', 0.0))
+                                      if getattr(tpl, 'smart_highlight_enabled', False) else 0.0), rig=rig,
+-                       side_yaw=side_yaw_for(getattr(player, "team", "ORDER"), getattr(tpl, "camera_side", "auto")),
++                       side_yaw=(profile['yaw'] if live_third else 0.0),
+                       sel_name=player.selection_name or player.champion)
+     if rig.mode == "top" and tpl.style in ("cinema", "follow"):
+         plan.style = "cinema_top" if tpl.style == "cinema" else "top"   # 実際に使えるモードに合わせる
+     if plan.style in ("third", "third_cinema", "lolnam_cinema"):
+         log(f"カメラサイド基準: 所属={getattr(player, 'team', 'ORDER')} / "
+-            f"設定={getattr(tpl, 'camera_side', 'auto')} / 水平補正={plan.side_yaw:.0f}°")
++            f"設定={side_choice} / 校正済み水平補正={plan.side_yaw:.0f}° "
++            f"/ 高さ角={elev:.0f}° / 距離={dist:.0f} (世界座標を二重反転しない)")
+     return plan, rig
+ 
+ 
+diff --git a/LoL_AutoCine/core/kill_icons.py b/LoL_AutoCine/core/kill_icons.py
+index cc10264..0df8db7 100644
+--- a/LoL_AutoCine/core/kill_icons.py
++++ b/LoL_AutoCine/core/kill_icons.py
+@@ -164,7 +164,7 @@ def _fit_portrait_rgba(source, size, radius=20):
+ 
+ def _compose_asset_badge(path: Path, style: str, killer_icon=None, victim_icon=None,
+                          *, glow_enabled=True, glow_strength=.85, glow_color='',
+-                         sparkle_strength=1.0):
++                         sparkle_strength=1.0, hires=False):
+     """Composite actual players beneath a transparent premium frame.
+ 
+     Assets are high-resolution source illustrations, but the *video overlay*
+@@ -191,7 +191,10 @@ def _compose_asset_badge(path: Path, style: str, killer_icon=None, victim_icon=N
+         portrait = _fit_portrait_rgba(victim_icon, (398, 398), radius=12)
+         base.alpha_composite(portrait, boxes["right"][:2])
+     base.alpha_composite(overlay)
+-    base = base.resize((385, 116), Image.Resampling.LANCZOS)
++    # Keep twice the former working resolution until the video compositor;
++    # source art is unchanged (and already 2172px wide). No generative redraw.
++    factor = 2 if hires else 1
++    base = base.resize((385 * factor, 116 * factor), Image.Resampling.LANCZOS)
+ 
+     # The supplied art already contains its original luminous details. Fade
+     # its semi-transparent outskirts at zero, and add a genuinely soft halo
+@@ -207,7 +210,7 @@ def _compose_asset_badge(path: Path, style: str, killer_icon=None, victim_icon=N
+         glow = Image.new("RGBA", base.size, (*color, 0))
+         bright = original.point(lambda a: 0 if a < 80 else a)
+         glow.putalpha(bright)
+-        radius = 4.0 + 3.5 * strength
++        radius = (4.0 + 3.5 * strength) * factor
+         aura = glow.filter(ImageFilter.GaussianBlur(radius))
+         aura.putalpha(aura.getchannel("A").point(
+             lambda a: min(210, int(a * strength * .85))))
+@@ -222,9 +225,10 @@ def _compose_asset_badge(path: Path, style: str, killer_icon=None, victim_icon=N
+         d = ImageDraw.Draw(flare)
+         color = _rgb(valid_hex(glow_color), COLORS[style])
+         for x, y in ((58,23), (307,23), (58,89), (307,89)):
++            x, y = x * factor, y * factor
+             alpha = min(250, int(92 * strength * sparkle))
+-            d.line((x-15,y,x+15,y), fill=(*color,alpha),width=1)
+-            d.line((x,y-8,x,y+8), fill=(255,251,232,alpha),width=1)
++            d.line((x-15*factor,y,x+15*factor,y), fill=(*color,alpha),width=factor)
++            d.line((x,y-8*factor,x,y+8*factor), fill=(255,251,232,alpha),width=factor)
+         base = Image.alpha_composite(base, flare)
+     path.parent.mkdir(parents=True, exist_ok=True)
+     base.save(path, format="PNG")
+@@ -256,7 +260,7 @@ def _rounded_portrait(canvas, source, xy, radius=11):
+ 
+ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, victim_icon=None,
+                frame_color='', glow_color='', glow_enabled=True, glow_strength=.85,
+-               border_width=3, mark_style='auto', sparkle_strength=1.0):
++               border_width=3, mark_style='auto', sparkle_strength=1.0, hires=False):
+     """Build an ORIGINAL transparent premium kill-feed asset with genuine portraits.
+ 
+     The reference artwork is a visual target only: do not stamp static
+@@ -272,7 +276,7 @@ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, vict
+         return _compose_asset_badge(path, style, killer_icon=killer_icon,
+                                     victim_icon=victim_icon, glow_enabled=glow_enabled,
+                                     glow_strength=glow_strength, glow_color=glow_color,
+-                                    sparkle_strength=sparkle_strength)
++                                    sparkle_strength=sparkle_strength, hires=hires)
+     path.parent.mkdir(parents=True, exist_ok=True)
+     frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style = normalize_design(
+         frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style)
+@@ -509,7 +513,8 @@ def make_event_badges(output: Path, style: str, kills, events, roster, *, icon_l
+             if log:log("キルアイコン: 公式肖像アイコン未取得。ネット接続またはassets/champion_iconsを確認")
+             continue
+         f=Path(output).with_name(Path(output).stem+f".kill_pair_{len(entries)+1:02d}.png")
+-        make_badge(f,style,killer_icon=icon_a,victim_icon=icon_b,**design)
++        make_badge(f,style,killer_icon=icon_a,victim_icon=icon_b,
++                   hires=(style in ASSET_STYLES),**design)
+         entries.append((f,float(event[0])))
+     return entries
+ 
+@@ -556,7 +561,10 @@ def with_badges(graph: str, badge_input: int, badges, *, duration: float,
+         extra=(f"+7*sin(35*(t-{t:.3f}))*exp(-11*abs(t-{t:.3f}))" if normalize(style)=="impact" else "")
+         inlabel=f"pair_src_{n}"
+         outlabel="vout" if n==len(planned)-1 else f"pair_src_{n+1}"
+-        parts.append(f"[{int(badge_input)+idx}:v]format=rgba,scale=w='trunc(iw*{scale:.3f}/2)*2':h='trunc(ih*{scale:.3f}/2)*2',colorchannelmixer=aa={opacity:.3f}[pair_img_{n}]")
++        # Premium PNG badges are rasterized at 2x to preserve glints/metallic
++        # edges; downsample only inside FFmpeg while keeping the same on-screen size.
++        display_scale = scale * (0.5 if normalize(style) in ASSET_STYLES else 1.0)
++        parts.append(f"[{int(badge_input)+idx}:v]format=rgba,scale=w='trunc(iw*{display_scale:.3f}/2)*2':h='trunc(ih*{display_scale:.3f}/2)*2',colorchannelmixer=aa={opacity:.3f}[pair_img_{n}]")
+         parts.append(f"[{inlabel}][pair_img_{n}]overlay=x='{x+extra}':y='{y}':format=auto:shortest=0:eof_action=repeat:enable='between(t,{start:.3f},{end:.3f})'[{outlabel}]")
+     parts[-1]=parts[-1].replace('[vout]','[pair_finished]')
+     parts.append('[pair_finished]format=yuv420p[vout]')
+diff --git a/LoL_AutoCine/core/scanner.py b/LoL_AutoCine/core/scanner.py
+index 088930b..3d81898 100644
+--- a/LoL_AutoCine/core/scanner.py
++++ b/LoL_AutoCine/core/scanner.py
+@@ -7,7 +7,7 @@ Replay中の /liveclientdata/eventdata は「現在の再生時刻までのイ
+ from __future__ import annotations
+ import json
+ import time
+-from dataclasses import dataclass, asdict
++from dataclasses import dataclass, asdict, field
+ from pathlib import Path
+ from typing import Callable, Optional
+ 
+@@ -35,6 +35,7 @@ class ScanResult:
+     kills: list
+     length: float
+     complete: bool
++    events: list = field(default_factory=list)  # every normalized match event, for later filtering
+ 
+ 
+ def _norm_event(e: dict) -> Optional[dict]:
+@@ -51,7 +52,7 @@ def _norm_event(e: dict) -> Optional[dict]:
+ 
+ def scan_kills(
+     api: ReplayAPI,
+-    player: Player,
++    player: Optional[Player],
+     progress: Optional[Callable] = None,
+     stop=None,
+     scan_speed: float = 8.0,
+@@ -89,6 +90,8 @@ def scan_kills(
+     mode = event_mode if event_mode in ("kill", "assist", "both") else "kill"
+ 
+     def _is_target(ne: dict) -> tuple[bool, str]:
++        if player is None:  # whole match; role is assigned when filtering afterward
++            return True, "kill"
+         if is_player_name(ne["killer"], player):
+             return True, "kill"
+         if any(is_player_name(a, player) for a in ne.get("assisters", [])):
+@@ -153,13 +156,54 @@ def scan_kills(
+         diag_dir.mkdir(parents=True, exist_ok=True)
+         (diag_dir / "last_scan_events.json").write_text(
+             json.dumps(
+-                {"player": player.to_dict(), "length": length, "complete": complete,
++                {"player": player.to_dict() if player is not None else None, "length": length, "complete": complete,
+                  "total_events": len(all_events), "target_kills": len(kills), "event_mode": mode,
+                  "kills": [k.to_dict() for k in kills], "events": all_events},
+                 ensure_ascii=False, indent=2),
+             encoding="utf-8")
+-    return ScanResult(len(all_events), kills, length, complete)
++    return ScanResult(len(all_events), kills, length, complete,
++                      [ne for e in all_events if (ne := _norm_event(e)) is not None])
++
++
+ 
++def filter_scanned_events(events: list, player: Optional[Player], mode: str = "both") -> list[Kill]:
++    """Fast, pure in-memory event filtering. No seeks or Replay API calls.
++
++    An event appears as a kill for its killer and assist for each named assister.
++    player=None is a whole-match overview (one record per kill, no double count).
++    """
++    mode = mode if mode in ("kill", "assist", "both") else "both"
++    out = []
++    for raw in events:
++        ne = _norm_event(raw) if "EventName" in raw else raw
++        if ne is None:
++            continue
++        if player is None:
++            role = "kill"
++        elif is_player_name(ne.get("killer", ""), player):
++            role = "kill"
++        elif any(is_player_name(name, player) for name in ne.get("assisters", [])):
++            role = "assist"
++        else:
++            continue
++        if mode != "both" and role != mode:
++            continue
++        out.append(Kill(int(ne.get("event_id", -1)), float(ne.get("time", 0.0)),
++                        str(ne.get("killer", "")), str(ne.get("victim", "")),
++                        list(ne.get("assisters", []) or []), role=role))
++    out.sort(key=lambda k:k.time)
++    out = _dedupe_kills(out)
++    # Multikill means the selected player is the killer, not adjacent other-player assists.
++    streak = 0
++    previous = None
++    for k in out:
++        if k.role == "kill":
++            streak = streak + 1 if previous is not None and k.time - previous <= 10.0 else 1
++            previous = k.time
++            k.multikill = streak
++        else:
++            k.multikill = 1
++    return out
+ 
+ 
+ def _dedupe_kills(kills: list, same_victim_window: float = 1.5) -> list:
+diff --git a/LoL_AutoCine/legacy_app.py b/LoL_AutoCine/legacy_app.py
+index cc1463a..f78305e 100644
+--- a/LoL_AutoCine/legacy_app.py
++++ b/LoL_AutoCine/legacy_app.py
+@@ -481,6 +481,7 @@ class App:
+         self.players: list = []
+         self.locked: Player | None = None
+         self.kills: list = []
++        self._match_scan_cache = None  # One whole-replay scan; player switches are instant
+         self.checked_kills: set[int] = set()
+         self.var_event_mode = tk.StringVar(value="キル")
+         self.source = None
+@@ -771,7 +772,15 @@ class App:
+         ttk.Label(f, text="検出対象", style="CardMuted.TLabel").pack(anchor="w", pady=(0, 3))
+         ttk.Combobox(f, state="readonly", textvariable=self.var_event_mode,
+                      values=["キル", "アシスト", "キル＋アシスト"]).pack(fill="x", pady=(0, 5))
+-        ttk.Button(f, text="全編スキャン", command=self.on_scan).pack(fill="x")
++        ttk.Button(f, text="① 試合全体を一括スキャン（1回だけ）", command=self.on_scan).pack(fill="x")
++        ttk.Label(f, text="② スキャン後は上の選手を選んで「この人を対象にする」。再スキャン不要。",
++                  style="CardMuted.TLabel", wraplength=290).pack(fill="x", pady=(4,3))
++        self.var_team_filter = tk.StringVar(value="全チーム")
++        team_filter = ttk.Combobox(f, state="readonly", textvariable=self.var_team_filter,
++                                   values=["全チーム", "BLUE", "RED"])
++        team_filter.pack(fill="x", pady=(0,4))
++        team_filter.bind("<<ComboboxSelected>>", lambda _e: self._fill_players())
++        self.var_event_mode.trace_add("write", lambda *_: self._filter_scanned_for_locked() if not self.busy else None)
+         self.pb_scan = ttk.Progressbar(f, maximum=100); self.pb_scan.pack(fill="x", pady=6)
+         self.lbl_scan = ttk.Label(f, text="まだスキャンしていません", style="CardMuted.TLabel", wraplength=270)
+         self.lbl_scan.pack(fill="x")
+@@ -2269,7 +2278,10 @@ class App:
+ 
+     def _fill_players(self) -> None:
+         self.tree.delete(*self.tree.get_children())
++        wanted = self.var_team_filter.get() if hasattr(self, "var_team_filter") else "全チーム"
+         for p in self.players:
++            if wanted != "全チーム" and (("BLUE" if p.team == "ORDER" else "RED") != wanted):
++                continue
+             self.tree.insert("", "end", iid=str(p.slot), values=("BLUE" if p.team == "ORDER" else "RED", p.champion, p.name),
+                              tags=(p.team,))
+ 
+@@ -3338,6 +3350,7 @@ class App:
+         try:
+             how = watch_replay(self.lol_dir, p)
+             self.api._autocine_record_primed = False  # new replay requires new first-frame initialization
++            self._match_scan_cache = None
+             self.log(f"リプレイを起動 ({how}): {p.name}  → 読み込み完了後『接続してプレイヤー取得』")
+         except Exception as e:
+             self.log(f"起動失敗: {e}")
+@@ -3348,6 +3361,7 @@ class App:
+ 
+     def _connect(self) -> None:
+         self.api._autocine_record_primed = False
++        self._match_scan_cache = None
+         self.log("Replay API に接続中… (リプレイの読み込み完了まで待ちます)")
+         if not self.api.wait_ready(timeout=90, stop=self.stop_ev):
+             self.log("接続できません。game.cfg設定→LoL再起動→リプレイ再生を確認してください。")
+@@ -3371,13 +3385,33 @@ class App:
+         self.locked = next(p for p in self.players if str(p.slot) == sel[0])
+         self.lbl_lock.configure(text=f"対象: {self.locked.label()}", foreground="#15803d")
+         self.log(f"対象を固定: {self.locked.label()} (slot {self.locked.slot})")
+-        self.log("カメラ基準: " + ("RED：反対側からの斜め後ろ" if self.locked.team == 'CHAOS' else "BLUE：従来の斜め後ろ") + "（自動設定時）")
+-        self.kills = []
+-        self.checked_kills = set()
++        self.log("カメラ基準: " + ("RED：実測方向から+12°・高めの安全構図" if self.locked.team == 'CHAOS' else "BLUE：実測方向から-12°・斜め後ろ") + "（自動設定時）")
++        if self._match_scan_cache and self._match_scan_cache.complete:
++            self._filter_scanned_for_locked()
++            self.log("一括スキャン済みのため再読み込みせず対象を切替しました")
++        else:
++            self.kills = []
++            self.checked_kills = set()
++            self._fill_kills()
++
++    def _filter_scanned_for_locked(self) -> None:
++        if self._match_scan_cache is None or self.locked is None:
++            return
++        from core.scanner import filter_scanned_events
++        mode={"キル": "kill", "アシスト": "assist", "キル＋アシスト": "both"}.get(self.var_event_mode.get(), "kill")
++        self.kills = filter_scanned_events(self._match_scan_cache.events, self.locked, mode)
++        self.checked_kills = set(range(len(self.kills)))
++        self._last_scan_mode = self.var_event_mode.get()
+         self._fill_kills()
++        self.log(f"試合全体のキャッシュから {self.locked.label()}：{len(self.kills)} 件（{mode}）")
+ 
+     def on_scan(self) -> None:
+-        if not self._need_lock():
++        if not self.players:
++            messagebox.showinfo(APP, "先に接続して10人のプレイヤーを取得してください。")
++            return
++        if self._match_scan_cache and self._match_scan_cache.complete:
++            self._filter_scanned_for_locked()
++            self.log("スキャン済みの試合イベントを再利用しました")
+             return
+         self._run_bg(self._scan, self.var_event_mode.get())
+ 
+@@ -3389,14 +3423,26 @@ class App:
+ 
+     def _scan(self, event_mode: str | None = None) -> None:
+         p = self.locked
+-        self.log(f"全編スキャン開始: {p.label()}")
++        if self._match_scan_cache and self._match_scan_cache.complete:
++            self.kills = __import__('core.scanner', fromlist=['filter_scanned_events']).filter_scanned_events(
++                self._match_scan_cache.events, p,
++                {"キル": "kill", "アシスト": "assist", "キル＋アシスト": "both"}.get(event_mode, "kill"))
++            self.checked_kills = set(range(len(self.kills)))
++            self._last_scan_mode = event_mode
++            self.q.put(("kills",))
++            self.log(f"全編イベントキャッシュ再利用: 対象={getattr(p, 'name', '全員')} / {len(self.kills)}件")
++            return
++        self.log("試合全体のキル・アシストを初回一括スキャン中…")
+         # Tk変数はバックグラウンドスレッドから読まない。UI側でsnapshotした値を渡す。
+         # この関数はバックグラウンドスレッドからも呼ばれるため、Tk変数を読まない。
+         selected_mode = event_mode if event_mode is not None else "キル"
+         mode = {"キル": "kill", "アシスト": "assist", "キル＋アシスト": "both"}.get(selected_mode, "kill")
+-        res = scan_kills(self.api, p, progress=lambda *a: self.q.put(("scan", *a)), stop=self.stop_ev,
+-                         diag_dir=ROOT / "diagnostics", event_mode=mode)
+-        self.kills = res.kills
++        res = scan_kills(self.api, None, progress=lambda *a: self.q.put(("scan", *a)), stop=self.stop_ev,
++                         diag_dir=ROOT / "diagnostics", event_mode="both")
++        # Cache only fully completed scans, never partial, and clear on replay reconnect.
++        self._match_scan_cache = res if res.complete else None
++        from core.scanner import filter_scanned_events
++        self.kills = filter_scanned_events(res.events, p, mode) if p is not None else res.kills
+         self._last_scan_mode = selected_mode
+         self.checked_kills = set(range(len(self.kills)))
+         self.q.put(("kills",))
+@@ -3491,7 +3537,8 @@ class App:
+         if smart:
+             template.smart_composition = True
+             template.smart_montage = bool(self.var_smart_montage.get())
+-        self._run_bg(self._make, True, template, bool(self.var_montage.get()), self.var_event_mode.get(), *scene_cfg)
++        has_cached = bool(self._match_scan_cache and self._match_scan_cache.complete)
++        self._run_bg(self._make, not has_cached, template, bool(self.var_montage.get()), self.var_event_mode.get(), *scene_cfg)
+ 
+     def _make(self, scan_first: bool, tpl: Template, montage: bool, event_mode: str = "キル",
+               scene_mode=False, shots=None, auto=False, order=None) -> None:
+diff --git a/LoL_AutoCine/tests/test_v51012_allscan_quality_camera.py b/LoL_AutoCine/tests/test_v51012_allscan_quality_camera.py
+new file mode 100644
+index 0000000..66b370d
+--- /dev/null
++++ b/LoL_AutoCine/tests/test_v51012_allscan_quality_camera.py
+@@ -0,0 +1,86 @@
++# -*- coding: utf-8 -*-
++"""v5.10.12 regression tests for whole-match scan, style colors and camera guards."""
++from pathlib import Path
++from types import SimpleNamespace
++from PIL import Image
++import pytest
++
++from core.players import Player
++from core.scanner import filter_scanned_events, scan_kills
++from core.camera import live_side_profile, side_yaw_for, CameraPlan, RigInfo
++from core.kill_icons import make_badge, ASSET_STYLES
++from core.effects import Template, grade_values, GRADES
++
++
++def player(name, team, slot):
++    return Player(slot, name, name+'#JP1', name, 'Lee Sin', team)
++
++EVENTS = [
++    dict(event_id=1,time=12.,killer='Blue',victim='Red',assisters=['BlueAssist']),
++    dict(event_id=2,time=24.,killer='Red',victim='Blue',assisters=['RedAssist']),
++    dict(event_id=3,time=35.,killer='Blue',victim='Red',assisters=['BlueAssist']),
++]
++
++
++def test_filter_cache_does_not_modify_scan_and_handles_assists():
++    blue, red, blue_assist = player('Blue','ORDER',0), player('Red','CHAOS',5),player('BlueAssist','ORDER',1)
++    original = repr(EVENTS)
++    assert [k.role for k in filter_scanned_events(EVENTS,blue,'both')] == ['kill','kill']
++    assert [k.role for k in filter_scanned_events(EVENTS,red,'both')] == ['kill']
++    assert len(filter_scanned_events(EVENTS,blue_assist,'assist')) == 2
++    assert len(filter_scanned_events(EVENTS,None,'both')) == 3
++    assert len(filter_scanned_events(EVENTS,None,'assist')) == 0
++    assert repr(EVENTS)==original
++
++
++def test_all_scan_filter_no_extra_api_requests(monkeypatch):
++    # Pure cache re-filtering never talks to a replay API.
++    class FailAPI:
++        def __getattr__(self,key): raise AssertionError('No new Replay API query allowed')
++    api=FailAPI()
++    assert len(filter_scanned_events(EVENTS,player('BlueAssist','ORDER',1),'both')) == 2
++
++
++def test_side_profile_uses_calibrated_world_heading_not_double_180():
++    blue=live_side_profile('ORDER')
++    red=live_side_profile('CHAOS')
++    assert blue['yaw'] < 0 < red['yaw']
++    assert abs(blue['yaw'])<45 and abs(red['yaw'])<45
++    assert blue['elevation'] >= 35 and red['elevation'] >= 35
++    assert red['distance'] > blue['distance']
++    assert live_side_profile('CHAOS','red')['yaw'] == 180
++    assert side_yaw_for('CHAOS') == 180  # legacy pure calculation still supported
++
++
++def test_conservative_camera_prevents_extreme_close_ups():
++    rig=RigInfo(mode='fps',third=True,rot={'x':25.,'y':0.,'z':0.},pitch_axis='x',pitch_sign=1,h=(0.,-1.))
++    a=CameraPlan(style='third',rig=rig,third_dist=1100,third_elev=26,third_yaw=80,smart_composition=True)
++    off,e=a.third_pose_at(0)
++    assert off[1]>650
++    assert e>=38
++    assert abs(a.rotation_at(0)['z'])<=55
++
++
++def test_asset_hi_res_reuses_exact_original_artwork(tmp_path):
++    asset=next(iter(ASSET_STYLES))
++    a=make_badge(tmp_path/'normal.png',asset)
++    b=make_badge(tmp_path/'high.png',asset,hires=True)
++    with Image.open(a) as im1, Image.open(b) as im2:
++        assert im1.size==(385,116)
++        assert im2.size==(770,232)
++
++
++def test_grades_more_distinct_from_default():
++    neutral=grade_values('default',1,1)
++    for label in ('golden','iceblue','lolnam','neon','purple'):
++        grade=grade_values(label,1,1)
++        assert max(abs(grade[k]-neutral[k]) for k in neutral)>0.10
++
++
++def test_ui_supports_scan_once_then_player_and_team_filter():
++    code=(Path(__file__).resolve().parents[1]/'legacy_app.py').read_text('utf-8')
++    assert '試合全体を一括スキャン' in code
++    assert 'self._match_scan_cache' in code
++    assert 'self._filter_scanned_for_locked()' in code
++    assert 'self.var_team_filter' in code
++    assert 'self._match_scan_cache = None' in code
+diff --git a/LoL_AutoCine/ui/template_gallery.py b/LoL_AutoCine/ui/template_gallery.py
+index 3b36590..f6c1e10 100644
+--- a/LoL_AutoCine/ui/template_gallery.py
++++ b/LoL_AutoCine/ui/template_gallery.py
+@@ -18,9 +18,9 @@ GRADE_APPEARANCE = {
+     "film": ("柔らかいフィルム", "#766C67", "#B19B87", "#D9C5A1", "落ち着いた映画色"),
+     "lolnam": ("映画風ティール＆金", "#355F70", "#9B9F8D", "#EAC189", "青緑の影と暖かいハイライト"),
+     "tealorange": ("青緑 × オレンジ", "#2D6170", "#A47863", "#F6A659", "映画風の強い色の対比"),
+-    "golden": ("温かいゴールド", "#735632", "#C69A56", "#FFDC87", "暖かい金色"),
+-    "iceblue": ("アイスブルー", "#263F6A", "#648CAF", "#BBDCF7", "冷たい青の色調"),
+-    "neon": ("ネオン", "#48256B", "#9E4BAA", "#65DDE1", "鮮やかな色"),
++    "golden": ("温かいゴールド", "#735632", "#C69A56", "#FFDC87", "暖かい金色・輝くハイライト"),
++    "iceblue": ("アイスブルー", "#263F6A", "#648CAF", "#BBDCF7", "冷たい青・青みが強い影"),
++    "neon": ("ネオン", "#48256B", "#9E4BAA", "#65DDE1", "紫・青の鮮やかなネオン"),
+     "purple": ("紫", "#35325C", "#8F5A9F", "#C5ABDA", "幻想的な紫"),
+     "noir": ("モノクロ", "#28292F", "#888A90", "#CFD0D0", "モノクロ風"),
+     "dark": ("暗め", "#232A34", "#596274", "#A59A8A", "陰影の強調"),

@@ -7,7 +7,7 @@ Replay中の /liveclientdata/eventdata は「現在の再生時刻までのイ�
 from __future__ import annotations
 import json
 import time
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from pathlib import Path
 from typing import Callable, Optional
 
@@ -35,6 +35,7 @@ class ScanResult:
     kills: list
     length: float
     complete: bool
+    events: list = field(default_factory=list)  # every normalized match event, for later filtering
 
 
 def _norm_event(e: dict) -> Optional[dict]:
@@ -51,7 +52,7 @@ def _norm_event(e: dict) -> Optional[dict]:
 
 def scan_kills(
     api: ReplayAPI,
-    player: Player,
+    player: Optional[Player],
     progress: Optional[Callable] = None,
     stop=None,
     scan_speed: float = 8.0,
@@ -89,6 +90,8 @@ def scan_kills(
     mode = event_mode if event_mode in ("kill", "assist", "both") else "kill"
 
     def _is_target(ne: dict) -> tuple[bool, str]:
+        if player is None:  # whole match; role is assigned when filtering afterward
+            return True, "kill"
         if is_player_name(ne["killer"], player):
             return True, "kill"
         if any(is_player_name(a, player) for a in ne.get("assisters", [])):
@@ -153,13 +156,45 @@ def scan_kills(
         diag_dir.mkdir(parents=True, exist_ok=True)
         (diag_dir / "last_scan_events.json").write_text(
             json.dumps(
-                {"player": player.to_dict(), "length": length, "complete": complete,
+                {"player": player.to_dict() if player is not None else None, "length": length, "complete": complete,
                  "total_events": len(all_events), "target_kills": len(kills), "event_mode": mode,
                  "kills": [k.to_dict() for k in kills], "events": all_events},
                 ensure_ascii=False, indent=2),
             encoding="utf-8")
-    return ScanResult(len(all_events), kills, length, complete)
+    return ScanResult(len(all_events), kills, length, complete,
+                      [ne for e in all_events if (ne := _norm_event(e)) is not None])
 
+
+
+def filter_scanned_events(events: list, player: Optional[Player], mode: str = "both") -> list[Kill]:
+    """Fast, pure in-memory event filtering. No seeks or Replay API calls.
+
+    An event appears as a kill for its killer and assist for each named assister.
+    player=None is a whole-match overview (one record per kill, no double count).
+    """
+    mode = mode if mode in ("kill", "assist", "both") else "both"
+    out = []
+    for raw in events:
+        ne = _norm_event(raw) if "EventName" in raw else raw
+        if ne is None:
+            continue
+        if player is None:
+            role = "kill"
+        elif is_player_name(ne.get("killer", ""), player):
+            role = "kill"
+        elif any(is_player_name(name, player) for name in ne.get("assisters", [])):
+            role = "assist"
+        else:
+            continue
+        if mode != "both" and role != mode:
+            continue
+        out.append(Kill(int(ne.get("event_id", -1)), float(ne.get("time", 0.0)),
+                        str(ne.get("killer", "")), str(ne.get("victim", "")),
+                        list(ne.get("assisters", []) or []), role=role))
+    out.sort(key=lambda k:k.time)
+    out = _dedupe_kills(out)
+    _mark_multikills(out)
+    return out
 
 
 def _dedupe_kills(kills: list, same_victim_window: float = 1.5) -> list:
@@ -188,15 +223,16 @@ def _dedupe_kills(kills: list, same_victim_window: float = 1.5) -> list:
 
 def _mark_multikills(kills: list, window: float = 10.0) -> None:
     """10秒以内の連続キルに multikill 数を付与 (ダブル/トリプル…)。"""
-    run = 0
-    prev = None
+    runs = {}
     for k in kills:
-        if prev is not None and k.time - prev.time <= window:
-            run += 1
-        else:
-            run = 1
+        if k.role != 'kill':
+            k.multikill = 1
+            continue
+        name = k.killer.strip().casefold()
+        previous, run = runs.get(name, (None, 0))
+        run = run + 1 if previous is not None and k.time - previous <= window else 1
         k.multikill = run
-        prev = k
+        runs[name] = (k.time, run)
 
 
 def group_clips(kills: list, pre: float, post: float, merge: bool = True) -> list:

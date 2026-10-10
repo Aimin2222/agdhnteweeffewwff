@@ -17,7 +17,7 @@ from typing import Callable, Optional
 
 from .audio import AudioCapture, AudioError
 from .audio_log import log as audio_log
-from .camera import CameraPlan, side_yaw_for, CameraDirector, RigInfo, attach_to_player
+from .camera import CameraPlan, side_yaw_for, live_side_profile, CameraDirector, RigInfo, attach_to_player
 from .capture import FrameSource, CaptureError, WGCWindowSource
 from .effects import Template, apply_effects, concat_clips
 from .hud import hide_hud, restore_hud
@@ -201,12 +201,17 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
         actual = api.seek(start)
     if actual is not None and abs(float(actual) - float(start)) > 0.80:
         raise ReplayApiError(f'リプレイのシーク位置が確定しません ({actual:.2f}s / 目標 {start:.2f}s)')
+    side_choice = getattr(tpl, 'camera_side', 'auto')
+    profile = live_side_profile(getattr(player, 'team', 'ORDER'), side_choice)
+    live_third = tpl.style in ('third', 'third_cinema', 'lolnam_cinema')
+    elev = max(float(getattr(tpl, 'third_elev', 28.0)), profile['elevation']) if live_third else float(getattr(tpl, 'third_elev', 28.0))
+    dist = max(float(getattr(tpl, 'third_dist', 950.0)), profile['distance']) if live_third else float(getattr(tpl, 'third_dist', 950.0))
     rig = attach_to_player(api, player, tpl.style, dist_scale=tpl.dist_scale, height=tpl.cam_height,
-                           third_elev=getattr(tpl, "third_elev", 28.0), third_dist=getattr(tpl, "third_dist", 950.0), log=log)
+                           third_elev=elev, third_dist=dist, log=log)
     time.sleep(0.35)
     plan = CameraPlan(style=tpl.style, intensity=tpl.amp(), kill_time=kills[0].time,
                       kill_times=tuple(k.time for k in kills), dist_scale=tpl.dist_scale, height=tpl.cam_height,
-                      third_elev=getattr(tpl, "third_elev", 28.0), third_dist=getattr(tpl, "third_dist", 950.0),
+                      third_elev=elev, third_dist=dist,
                        third_yaw=getattr(tpl, "third_yaw", 0.0),
                       motion_arc=getattr(tpl, "motion_arc", 0.0), motion_dolly=getattr(tpl, "motion_dolly", 0.0),
                       motion_profile=getattr(tpl, "motion_profile", "cinematic"),
@@ -214,13 +219,14 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                        smart_composition=bool(getattr(tpl, 'smart_composition', False)),
                        smart_impact=(float(getattr(tpl, 'highlight_pulse', 0.0))
                                      if getattr(tpl, 'smart_highlight_enabled', False) else 0.0), rig=rig,
-                       side_yaw=side_yaw_for(getattr(player, "team", "ORDER"), getattr(tpl, "camera_side", "auto")),
+                       side_yaw=(profile['yaw'] if live_third else 0.0),
                       sel_name=player.selection_name or player.champion)
     if rig.mode == "top" and tpl.style in ("cinema", "follow"):
         plan.style = "cinema_top" if tpl.style == "cinema" else "top"   # 実際に使えるモードに合わせる
     if plan.style in ("third", "third_cinema", "lolnam_cinema"):
         log(f"カメラサイド基準: 所属={getattr(player, 'team', 'ORDER')} / "
-            f"設定={getattr(tpl, 'camera_side', 'auto')} / 水平補正={plan.side_yaw:.0f}°")
+            f"設定={side_choice} / 校正済み水平補正={plan.side_yaw:.0f}° "
+            f"/ 高さ角={elev:.0f}° / 距離={dist:.0f} (世界座標を二重反転しない)")
     return plan, rig
 
 
@@ -289,7 +295,7 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
         saved_hud = hide_hud(api, tpl.keep_champion_bars)
     fx_saved = {}
     try:
-        cam_dist = getattr(tpl, "third_dist", 950.0) if getattr(rig, "third", False) else None
+        cam_dist = plan.third_dist if getattr(rig, "third", False) else None
         if cam_dist is None and rig is not None and rig.v is not None:
             cam_dist = sum(float(x) * float(x) for x in rig.v) ** 0.5
         fx_saved = apply_fx(api, tpl, cam_dist=cam_dist)
@@ -407,7 +413,7 @@ def preview_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, en
             log(f"準備失敗後のミラー復帰をスキップ: {restore_error}")
         raise
     director = CameraDirector(api, plan)
-    cam_dist = getattr(tpl, "third_dist", 950.0) if getattr(rig, "third", False) else None
+    cam_dist = plan.third_dist if getattr(rig, "third", False) else None
     if cam_dist is None and rig is not None and rig.v is not None:
         cam_dist = sum(float(x) * float(x) for x in rig.v) ** 0.5
     fx_saved = apply_fx(api, tpl, cam_dist=cam_dist)

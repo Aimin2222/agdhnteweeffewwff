@@ -1,0 +1,584 @@
+--- a/LoL_AutoCine/core/camera.py
++++ b/LoL_AutoCine/core/camera.py
+@@ -137,17 +137,32 @@
+     return math.sqrt(a[0] ** 2 + a[1] ** 2 + a[2] ** 2)
+ 
+ 
++def _pitch_calibration(rot: dict, phi_top: float) -> tuple[str | None, bool]:
++    """Find a plausible Replay API pitch axis without making up coordinates.
++
++    Replay cameras can describe elevation from the horizontal or angle from
++    the vertical. Check *both* conventions and remember which one was used;
++    otherwise a real 3rd-person rig gets silently misclassified as FPS.
++    Reject large deviations instead of guessing a random axis.
++    """
++    best_axis, best_complement, best_distance = None, False, 15.0
++    for axis in ("x", "y", "z"):
++        try:
++            measured = abs(float(rot[axis]))
++        except (KeyError, TypeError, ValueError):
++            continue
++        if not math.isfinite(measured) or measured > 90:
++            continue
++        for complementary, expected in ((False, phi_top), (True, 90.0 - phi_top)):
++            deviation = abs(measured - expected)
++            if deviation < best_distance:
++                best_axis, best_complement, best_distance = axis, complementary, deviation
++    return best_axis, best_complement
++
++
+ def _pitch_axis(rot: dict, phi_top: float) -> Optional[str]:
+-    """回転 dict のうち、標準カメラの俯角(=vの仰角)と大きさが一致する成分名。無ければ None。"""
+-    best, best_d = None, 8.0
+-    for k in ("x", "y", "z"):
+-        try:
+-            d = abs(abs(float(rot[k])) - phi_top)
+-        except Exception:
+-            continue
+-        if d < best_d:
+-            best, best_d = k, d
+-    return best
++    """Backward-compatible axis-only helper for old test/plug-in code."""
++    return _pitch_calibration(rot, phi_top)[0]
+ 
+ 
+ @dataclass
+@@ -161,7 +176,8 @@
+     third: bool = False               # 三人称リグが有効
+     pitch_axis: str = ""
+     pitch_sign: float = -1.0
+-    h: tuple = (0.0, -1.0)            # 水平方向の単位ベクトル (x, z): キャラ→カメラ
++    h: tuple = (0.0, -1.0)         # 水平方向の単位ベクトル (x, z): キャラ→カメラ
++    pitch_complement: bool = False # APIピッチ角を垂直方向から測るときだけTrue
+ 
+ 
+ @dataclass
+@@ -384,7 +400,8 @@
+                 return None
+             rot = dict(self.rig.rot)
+             elev = self.third_pose_at(t)[1]
+-            rot[self.rig.pitch_axis] = self.rig.pitch_sign * elev
++            rot[self.rig.pitch_axis] = self.rig.pitch_sign * (
++                90.0 - elev if self.rig.pitch_complement else elev)
+ 
+             # TRUE ORBITの視線。カメラ位置を回しただけでは横を向くため、
+             # 同じ軌道角だけ水平Yawも回して、常にキャラクター中心へ向ける。
+@@ -405,7 +422,9 @@
+         if self.rig is None or not self.rig.third or not self.rig.rot or not self.rig.pitch_axis:
+             return None
+         rot = dict(self.rig.rot)
+-        rot[self.rig.pitch_axis] = self.rig.pitch_sign * self.third_pose_at(t)[1]
++        elevation = self.third_pose_at(t)[1]
++        rot[self.rig.pitch_axis] = self.rig.pitch_sign * (
++            90.0 - elevation if self.rig.pitch_complement else elevation)
+ 
+         # Orbitは「カメラを回す」のではなく「キャラを中心にカメラが回る」。
+         # そのためカメラ位置を回した分だけ水平Yawも同じだけ回し、
+@@ -667,7 +686,7 @@
+     現在値で軸を取れない場合は、同じ対象の直近の成功キャリブレーションを使う。
+     """
+     sel = p.selection_name or p.champion
+-    cache_key = (sel, style)
++    cache_key = (sel, 'third_common') if style in THIRD_STYLES else (sel, style)
+     cached = _TPS_CALIBRATION.get(cache_key)
+ 
+     api.set_render(selectionName=sel, cameraMode="top", cameraAttached=True,
+@@ -696,13 +715,29 @@
+ 
+     axis = None
+     sign = -1.0
++    pitch_complement = False
+     if isinstance(rot, dict) and current_phi is not None:
+-        axis = _pitch_axis(rot, current_phi)
++        axis, pitch_complement = _pitch_calibration(rot, current_phi)
+         if axis:
+             try:
+                 sign = 1.0 if float(rot[axis]) >= 0 else -1.0
+             except Exception:
+                 axis = None
++
++    # Seek can return an old/unsettled render transform. One read-only retry
++    # often returns the rotation after camera mode has actually updated.
++    if style in THIRD_STYLES and not axis and current_phi is not None:
++        try:
++            candidate = api.render().get('cameraRotation')
++            if isinstance(candidate, dict):
++                retry_axis, retry_complement = _pitch_calibration(candidate, current_phi)
++                if retry_axis:
++                    axis, pitch_complement = retry_axis, retry_complement
++                    rot = candidate
++                    sign = 1.0 if float(candidate[axis]) >= 0 else -1.0
++                    log('カメラ: 追加のReplay API確認で三人称回転軸を取得')
++        except ReplayApiError:
++            pass
+ 
+     # ここが重要: 現在の cameraRotation だけで軸を決められなくても、
+     # 過去に成功した三人称リグがあれば、それを録画時にも再利用する。
+@@ -712,11 +747,14 @@
+         if not axis and cached_axis:
+             axis = cached_axis
+             sign = cached_sign
++            pitch_complement = bool(cached.get('pitch_complement', False))
+             log(f"カメラ: 保存済み三人称リグを再利用 (軸 {axis}, 符号 {sign:+.0f})")
+         elif axis:
+             # 現在値が取れた場合でも、符号は成功済みキャリブレーションを優先。
+             # seek直後に符号だけ反転するケースを避ける。
+-            sign = cached_sign if cached_axis == axis else sign
++            if cached_axis == axis:
++                sign = cached_sign
++                pitch_complement = bool(cached.get('pitch_complement', False))
+ 
+     # 座標が一時的に欠けた場合も、成功済みキャリブレーションの水平方向を使う。
+     h = current_h
+@@ -746,6 +784,11 @@
+ 
+     # 三人称は「現在軸」または「保存軸」のどちらかがあれば維持する。
+     third = style in THIRD_STYLES and bool(axis)
++    if style in THIRD_STYLES and not third:
++        log(f"カメラ診断: 三人称キャリブレーション未成立 / "
++            f"仰角={current_phi!s} / 回転API={rot!s}。地形への埋まりを防ぐため安全俯瞰へ切り替えます")
++        return _fallback_top(api, sel, base_fov,
++                             '三人称角度を取得できず、安全な俯瞰追従へ切替（実際のカメラは三人称ではありません）')
+     note_extra = ""
+     rot_use = dict(rot) if isinstance(rot, dict) else None
+ 
+@@ -763,7 +806,7 @@
+             # 軸だけ分かって回転全体が取れないケースは、他軸を壊さないため
+             # 最小限の回転を作る。Replay側が補正できるよう三人称を維持する。
+             rot_use = {"x": 0.0, "y": 0.0, "z": 0.0}
+-        rot_use[axis] = sign * third_elev
++        rot_use[axis] = sign * (90.0 - third_elev if pitch_complement else third_elev)
+     else:
+         if style in THIRD_STYLES:
+             note_extra = " (保存済み三人称リグもなく、方向を特定できないためFPS風)"
+@@ -807,7 +850,7 @@
+                 err = _len(_sub(Q2, expected))
+                 if err <= max_err * 1.25 and clearance >= min_clearance:
+                     note = f"三人称カメラ OK (地面からの高さ {clearance:.0f}) (保存済みリグ再利用)"
+-                    return _cache_success(cache_key, P, v, rot_use, h, axis, sign, log, note)
++                    return _cache_success(cache_key, P, v, rot_use, h, axis, sign, log, note, pitch_complement)
+ 
+         info = _fallback_top(api, sel, base_fov,
+                              f"カメラが想定位置になりません(誤差{err:.0f}, 高さ{clearance:.0f})。俯瞰に切替")
+@@ -817,12 +860,13 @@
+     kind = "三人称" if third else "FPS風"
+     note = f"{kind}カメラ OK (地面からの高さ {clearance:.0f}){note_extra}"
+     if third:
+-        return _cache_success(cache_key, P, v, rot_use, h, axis, sign, log, note)
++        return _cache_success(cache_key, P, v, rot_use, h, axis, sign, log, note, pitch_complement)
+     return RigInfo(mode="fps", P=P, v=v, rot=rot_use, third=False,
+                    pitch_axis="", pitch_sign=sign, h=h, note=note)
+ 
+ 
+-def _cache_success(cache_key, P, v, rot, h, axis, sign, log, note) -> RigInfo:
++def _cache_success(cache_key, P, v, rot, h, axis, sign, log, note,
++                   pitch_complement=False) -> RigInfo:
+     """成功した三人称リグを次の seek/録画でも再利用できる形で保存する。"""
+     _TPS_CALIBRATION[cache_key] = {
+         "P": tuple(P) if P is not None else None,
+@@ -831,8 +875,10 @@
+         "rot": dict(rot or {}),
+         "axis": axis or "",
+         "sign": float(sign),
++        "pitch_complement": bool(pitch_complement),
+     }
+     log("カメラ: " + note)
+     return RigInfo(mode="fps", P=P, v=v, rot=dict(rot or {}), third=True,
+-                   pitch_axis=axis or "", pitch_sign=float(sign), h=tuple(h), note=note)
+-
++                   pitch_axis=axis or "", pitch_sign=float(sign), h=tuple(h),
++                   pitch_complement=bool(pitch_complement), note=note)
++
+--- a/LoL_AutoCine/core/kill_icons.py
++++ b/LoL_AutoCine/core/kill_icons.py
+@@ -22,7 +22,23 @@
+     "star_guardian": "星と翼の幻想",
+     "inferno_gothic": "炎熱ゴシック",
+     "cyberpunk": "サイバーパンク",
++    "royal_deluxe": "ロイヤル・デラックス（金）",
++    "gold_wing": "黄金の翼章",
++    "neon_show": "ネオン・ステージ",
++    "kda_style": "ポップアイドル（K/DA風）",
++    "project_style": "PROJECT風サイバー",
++    "star_magic": "星の守護者風・光翼",
++    "spirit_blossom": "精霊の花祭り風",
++    "high_noon": "ハイヌーン風・炎",
++    "obsidian_violet": "黒曜石・紫晶",
++    "emerald_relic": "エメラルド・レリック",
++    "crimson_mythic": "クリムゾン・ミシック",
++    "celestial_blue": "蒼天クリスタル",
++    "neon_duel": "ネオン決闘",
++    "purple_crystal": "紫の宝石フレーム",
++    "classic_obsidian": "黒曜石・黄金（別装飾）",
+ }
++
+ REVERSE_STYLES = {label: code for code, label in STYLES.items()}
+ POSITIONS = {
+     "right-top": "右上（おすすめ）",
+@@ -42,6 +58,21 @@
+     "star_guardian": (255, 186, 243),
+     "inferno_gothic": (255, 113, 84),
+     "cyberpunk": (102, 243, 255),
++    "royal_deluxe": (249, 204, 113),
++    "gold_wing": (252, 194, 93),
++    "neon_show": (255, 112, 225),
++    "kda_style": (231, 88, 223),
++    "project_style": (239, 77, 55),
++    "star_magic": (250, 158, 225),
++    "spirit_blossom": (243, 186, 216),
++    "high_noon": (253, 151, 42),
++    "obsidian_violet": (158, 91, 234),
++    "emerald_relic": (84, 224, 164),
++    "crimson_mythic": (255, 105, 112),
++    "celestial_blue": (157, 203, 255),
++    "neon_duel": (203, 131, 255),
++    "purple_crystal": (205, 107, 251),
++    "classic_obsidian": (249, 201, 119),
+ }
+ 
+ ASSET_STYLES = {
+@@ -51,6 +82,21 @@
+     "star_guardian": "star_guardian.png",
+     "inferno_gothic": "inferno_gothic.png",
+     "cyberpunk": "cyberpunk.png",
++    "royal_deluxe": "royal_deluxe.png",
++    "gold_wing": "gold_wing.png",
++    "neon_show": "neon_show.png",
++    "kda_style": "kda_style.png",
++    "project_style": "project_style.png",
++    "star_magic": "star_magic.png",
++    "spirit_blossom": "spirit_blossom.png",
++    "high_noon": "high_noon.png",
++    "obsidian_violet": "obsidian_violet.png",
++    "emerald_relic": "emerald_relic.png",
++    "crimson_mythic": "crimson_mythic.png",
++    "celestial_blue": "celestial_blue.png",
++    "neon_duel": "neon_duel.png",
++    "purple_crystal": "purple_crystal.png",
++    "classic_obsidian": "classic_obsidian.png",
+ }
+ 
+ MARK_STYLES = {
+--- a/LoL_AutoCine/legacy_app.py
++++ b/LoL_AutoCine/legacy_app.py
+@@ -650,6 +650,7 @@
+         nav.pack(side="left", padx=(15, 0))
+         ttk.Button(nav, text="⌂  ホーム", style="Nav.TButton", command=lambda: self._focus_home()).pack(side="left")
+         ttk.Button(nav, text="▣  テンプレート", style="Nav.TButton", command=self._open_template_gallery).pack(side="left")
++        ttk.Button(nav, text="✓  自動診断", style="Nav.TButton", command=self.on_automatic_qa).pack(side="left")
+         ttk.Button(nav, text="▰  参考動画", style="Nav.TButton", command=lambda: self._focus_reference()).pack(side="left")
+         ttk.Button(nav, text="⚙  設定", style="Nav.TButton", command=self._focus_settings).pack(side="left")
+ 
+@@ -711,6 +712,7 @@
+         right = self.right_scroll.inner
+ 
+         center_edit_scroll = ScrollFrame(edit_host, 0)
++        self.center_edit_scroll = center_edit_scroll
+         center_edit_scroll.pack(fill="both", expand=True)
+         center_edit = center_edit_scroll.inner
+         self.center_preview_host = preview_host
+@@ -844,7 +846,8 @@
+         ph = ttk.Frame(preview_card, style="Card.TFrame")
+         ph.pack(fill="x", pady=(0, 7))
+         ttk.Label(ph, text="カメラプレビュー", style="Section.TLabel").pack(side="left")
+-        self.preview_badge = ttk.Label(ph, text="三人称カメラ（対象: 追従）", style="CardMuted.TLabel")
++        self.var_camera_status = tk.StringVar(value="カメラ：未再生（設定未適用）")
++        self.preview_badge = ttk.Label(ph, textvariable=self.var_camera_status, style="CardMuted.TLabel")
+         self.preview_badge.pack(side="right")
+ 
+         self.var_live = tk.BooleanVar(value=True)
+@@ -852,7 +855,8 @@
+         self.var_mirror = tk.BooleanVar(value=False)
+         tools = ttk.Frame(preview_card, style="Card.TFrame")
+         tools.pack(fill="x", pady=(0, 7))
+-        ttk.Button(tools, text="ミラー ON / OFF", command=self.on_mirror_toggle).pack(side="left")
++        ttk.Button(tools, text="ミラー開始", command=self.on_mirror_start).pack(side="left")
++        ttk.Button(tools, text="停止", command=lambda: self.on_mirror_stop(reason="停止ボタン")) .pack(side="left", padx=(4,0))
+         ttk.Checkbutton(tools, text="FXをミラーに反映", variable=self.var_live).pack(side="left", padx=10)
+         ttk.Button(tools, text="▶ 再生", style="Accent.TButton", command=self.on_preview_play).pack(side="right", padx=4)
+         ttk.Button(tools, text="■ 停止", command=self.on_preview_stop).pack(side="right", padx=4)
+@@ -1347,8 +1351,9 @@
+             ttk.Label(part, text=caption, style="Card.TLabel").pack(side="top")
+             ttk.Spinbox(part, from_=lower, to=upper, increment=inc,
+                         textvariable=variable, width=7).pack(side="top")
+-        ttk.Button(output, text="▶ キルフレーム詳細（色・光・中央マーク）を開閉",
+-                   command=self._toggle_kill_badge_advanced).pack(fill="x", pady=(4,4))
++        self._kill_badge_toggle_button = ttk.Button(output, text="▶ キルフレーム詳細を開く（発光・中央マーク）",
++                   command=self._toggle_kill_badge_advanced)
++        self._kill_badge_toggle_button.pack(fill="x", pady=(4,4))
+         self._kill_badge_advanced = ttk.Frame(output, style="Card.TFrame")
+         detail = self._kill_badge_advanced
+         ttk.Label(detail, text="キルフレームの色・発光・中央マーク", style="Card.TLabel").pack(anchor="w", pady=(6,3))
+@@ -1825,10 +1830,31 @@
+         frame = getattr(self, "_kill_badge_advanced", None)
+         if frame is None:
+             return
+-        if frame.winfo_manager():
++        opening = not bool(frame.winfo_manager())
++        if opening:
++            frame.pack(in_=frame.master, after=self._kill_badge_toggle_button,
++                       fill="x", pady=(2,5))
++        else:
+             frame.pack_forget()
+-        else:
+-            frame.pack(fill="x", pady=(2,5))
++        self._kill_badge_toggle_button.configure(
++            text="▼ キルフレーム詳細を閉じる" if opening else "▶ キルフレーム詳細を開く（発光・中央マーク）")
++        if opening:
++            self.root.after_idle(self._scroll_to_kill_detail)
++
++    def _scroll_to_kill_detail(self):
++        """Keep an expanding notebook's new settings visible in the scrollable editor."""
++        frame = getattr(self, "_kill_badge_advanced", None)
++        scroll = getattr(self, "center_edit_scroll", None)
++        if frame is None or scroll is None or not frame.winfo_viewable():
++            return
++        try:
++            self.root.update_idletasks()
++            y = frame.winfo_rooty() - scroll.inner.winfo_rooty()
++            total = max(1, scroll.inner.winfo_height())
++            viewport = max(1, scroll.canvas.winfo_height())
++            scroll.canvas.yview_moveto(max(0., min(1., (y - viewport*.18) / max(1,total - viewport))))
++        except tk.TclError:
++            pass
+ 
+     def _open_template_gallery(self):
+         """Option B: full searchable gallery separate from the editor."""
+@@ -1987,6 +2013,19 @@
+             self.log(f"準備に失敗: {e}")
+             messagebox.showerror(APP, str(e))
+ 
++    def on_automatic_qa(self) -> None:
++        """Run safe, non-destructive checks in a worker. Game/replay visual tests still need LoL."""
++        if self.busy:
++            self.log("処理中は自動診断を開始できません。")
++            return
++        from core.auto_qa import run_checks
++        self.log("自動診断を開始しました（設定変更・録画・カメラ移動はしません）。")
++        out = ROOT / "diagnostics" / "selftest_latest.json"
++        def worker():
++            result = run_checks(ROOT, report_file=out, api=self.api)
++            self.q.put(("auto_qa_done", result, str(out)))
++        threading.Thread(target=worker, daemon=True, name="AutoCine-SelfTest").start()
++
+     def on_show_diagnostics(self) -> None:
+         d = ROOT / "diagnostics"
+         d.mkdir(exist_ok=True)
+@@ -2006,7 +2045,7 @@
+             self.log("処理中はミラーを切り替えできません。中止後に操作してください。")
+             return
+         if self._mirror.pending or self.source is not None:
+-            self.on_mirror_stop()
++            self.on_mirror_stop(reason="ON/OFF切替ボタン")
+         else:
+             self.on_mirror_start()
+ 
+@@ -2130,6 +2169,12 @@
+                         self.source = self._mirror.source
+                         self.var_mirror.set(self.source is not None)
+                         self.log(f"ミラー開始失敗: {error}" if error else "ミラー開始 (LoLウィンドウのみ)。")
++                elif kind == "camera_status":
++                    self.var_camera_status.set(a[0])
++                elif kind == "auto_qa_done":
++                    qa, path = a
++                    self.log(f"自動診断: 成功 {qa['passed']}件 / 注意 {qa['warnings']}件 / 失敗 {qa['failed']}件 → {path}")
++                    messagebox.showinfo("AutoCine 自動診断", f"成功 {qa['passed']}件 / 注意 {qa['warnings']}件 / 失敗 {qa['failed']}件\n\nログ: {path}\n\nLoLの実映像やカメラ構図の良し悪しは実機確認が必要です。", parent=self.root)
+                 elif kind == "mirror_stop_error":
+                     self.log(f"ミラー停止エラー: {a[0]}")
+                 elif kind == "job_error":
+@@ -2506,6 +2551,9 @@
+             return
+         self.log(f'動きのプレビュー開始: {len(shot.keyframes)}キーフレーム / '
+                  f'シーン {kill.time:.1f}s / 未保存の編集値も反映')
++        if hasattr(self, 'var_camera_status'):
++            self.var_camera_status.set(f"再生中：{STYLES.get(tpl.style, tpl.style)} / 対象: "
++                                       f"{self.locked.champion if self.locked else '未固定'} / 実機カメラを判定中")
+         self._run_bg(self._preview_play, tpl, kill)
+ 
+     def _schedule_project_save(self):
+@@ -3527,13 +3575,14 @@
+             self.var_mirror.set(False)
+             self.log(f"ミラー開始失敗: {e}")
+ 
+-    def on_mirror_stop(self) -> None:
++    def on_mirror_stop(self, reason: str = "操作または再接続") -> None:
++        self.log(f"ミラーを停止します（理由: {reason}）")
+         self._mirror.stop()
+         self.source = None
+         self.canvas.delete("all")
+         self._preview_image_item = self._preview_text_item = None
+         self._preview_presented = None
+-        self.log("ミラーOFF。")
++        self.log(f"ミラーOFF（{reason}）。")
+         if hasattr(self, "var_mirror"):
+             self.var_mirror.set(False)
+ 
+@@ -3560,6 +3609,12 @@
+                 return np.asarray(img), "mirror"
+         return None, "empty"
+ 
++    def _camera_selection_changed(self, *_args):
++        """Label the SELECTED preset, never misstate it as the active Replay API mode."""
++        if hasattr(self, 'var_camera_status') and hasattr(self, 'var_style'):
++            choice=self.var_style.get()
++            self.var_camera_status.set(f'設定：{choice}（▶再生で実際の動作を確認）')
++
+     def _selected_multikill(self) -> int:
+         sel = self.lb_kills.curselection()
+         if sel and sel[0] < len(self.kills):
+@@ -3581,6 +3636,8 @@
+             variables.extend(mapping.values())
+         for variable in {str(v): v for v in variables}.values():
+             variable.trace_add('write', self._invalidate_preview_snapshot)
++        self.var_style.trace_add('write', self._camera_selection_changed)
++        self._camera_selection_changed()
+         for event in ('<ButtonPress>', '<B1-Motion>', '<MouseWheel>', '<Button-4>',
+                       '<Button-5>', '<KeyPress>', '<<NotebookTabChanged>>'):
+             self.root.bind(event, self._preview_input, add='+')
+@@ -3684,6 +3741,9 @@
+                 shot = recommend(kill, tpl.pre, tpl.post)
+             if shot is not None:
+                 tpl = apply_shot(tpl, shot)
++        if hasattr(self, 'var_camera_status'):
++            self.var_camera_status.set(f"再生中：{STYLES.get(tpl.style, tpl.style)} / 対象: "
++                                       f"{self.locked.champion if self.locked else '未固定'} / 実機カメラを判定中")
+         self._run_bg(self._preview_play, tpl, kill)
+ 
+     def _preview_play(self, tpl, kill) -> None:
+@@ -3694,6 +3754,9 @@
+         start, end = max(0.0, kill.time - tpl.pre), kill.time + tpl.post
+         self.log(f"カメラ演出プレビュー: {int(kill.time // 60):02d}:{kill.time % 60:04.1f} 付近 (録画はしません。ミラーを開始すると見やすい)")
+         rig = preview_clip(self.api, self.locked, tpl, start, end, [kill], stop=self.stop_ev, log=self.log)
++        active = ("三人称" if rig.third else "俯瞰" if rig.mode == "top" else "FPS風")
++        self.q.put(("camera_status", f"実際：{active} / 設定：{STYLES.get(tpl.style, tpl.style)} / "
++                                      f"サイド：{getattr(self.locked, 'team', '?')}"))
+         self.log("カメラ: " + (rig.note or rig.mode) + f" / 横回転 {getattr(tpl, 'third_yaw', 0.0):+.0f}°")
+ 
+ 
+--- a/LoL_AutoCine/ui/template_gallery.py
++++ b/LoL_AutoCine/ui/template_gallery.py
+@@ -113,8 +113,8 @@
+ 
+     win = tk.Toplevel(app.root)
+     win.title('LoL AutoCine｜実シーンでテンプレート比較')
+-    win.geometry('930x700')
+-    win.minsize(730, 490)
++    win.geometry('1140x800')
++    win.minsize(940, 570)
+     app._template_gallery_window = win
+     win._previews = []
+     win._generation = 0
+@@ -126,17 +126,17 @@
+               font=('Meiryo UI',14,'bold')).pack(anchor='w')
+     ttk.Label(head,text='同じシーンの 左：元映像 ／ 右：色・2D FX適用後 を比較します。'
+               'カメラの位置や時間演出は静止画では再現されません。',
+-              wraplength=860).pack(anchor='w',pady=(2,4))
++              wraplength=1080).pack(anchor='w',pady=(2,4))
+     scenes = scene_labels(getattr(app,'kills',[]))
+     scene_var = tk.StringVar(value=scenes[0][0] if scenes else '')
+     top = ttk.Frame(head);top.pack(fill='x',pady=(4,2))
+     ttk.Label(top,text='プレビュー元シーン').pack(side='left')
+     select = ttk.Combobox(top, textvariable=scene_var, state='readonly',
+-                          values=[item[0] for item in scenes],width=67)
++                          values=[item[0] for item in scenes],width=90)
+     select.pack(side='left',padx=8,fill='x',expand=True)
+     status = tk.StringVar(value='キル／アシストをスキャンしてシーンを選んでください。'
+                           if not scenes else '保存済みの実シーン画像を読み込みます。')
+-    ttk.Label(head,textvariable=status,wraplength=880).pack(anchor='w',pady=(3,3))
++    ttk.Label(head,textvariable=status,wraplength=1080).pack(anchor='w',pady=(3,3))
+     act = ttk.Frame(head);act.pack(fill='x',pady=(3,4))
+     search_var = tk.StringVar()
+     ttk.Entry(head,textvariable=search_var).pack(fill='x',pady=(4,1))
+@@ -153,24 +153,26 @@
+     canvas.pack(side='left',fill='both',expand=True)
+     scrollbar.pack(side='right',fill='y')
+     inner.columnconfigure(0,weight=1)
+-    inner.columnconfigure(1,weight=1)
++    # A single full-width card makes both actual LoL screenshots readable.
+ 
+     cards = []
+     for i,(name,tpl) in enumerate(app.templates.items()):
+         info=template_info(tpl)
+         panel=ttk.Frame(inner,padding=7)
+-        panel.grid(row=i//2,column=i%2,sticky='nsew',padx=7,pady=6)
+-        ttk.Label(panel,text=name,font=('Meiryo UI',10,'bold'),wraplength=360).pack(anchor='w')
+-        preview=ttk.Label(panel,text='シーン画像を保存すると、ここに比較が出ます。',
+-                          wraplength=330)
+-        preview.pack(pady=(5,4))
++        panel.grid(row=i,column=0,sticky='ew',padx=12,pady=10)
++        ttk.Label(panel,text=name,font=('Meiryo UI',10,'bold'),wraplength=850).pack(anchor='w')
++        preview=ttk.Label(panel,text='シーン画像を保存すると、ここに大きい比較が出ます。',
++                          wraplength=750,cursor='hand2')
++        preview.pack(pady=(6,4),anchor='center')
++        ttk.Label(panel,text='左：補正前（実映像）　　　　　　右：選択テンプレート適用後　｜　画像をクリックで拡大',
++                  font=('Meiryo UI',10,'bold')).pack(anchor='center',pady=(0,5))
+         bar=tk.Canvas(panel,width=130,height=23,highlightthickness=0,bg='#FFFFFF')
+         bar.pack(anchor='w')
+         draw_color_bars(bar,info['colors'])
+         ttk.Label(panel,text=f'色：{info["tone"]}｜{info["description"]}',
+-                  wraplength=350).pack(anchor='w')
++                  wraplength=850).pack(anchor='w')
+         ttk.Label(panel,text=f'カメラ：{info["camera"]}｜{info["effects"]}',
+-                  wraplength=350).pack(anchor='w')
++                  wraplength=850).pack(anchor='w')
+         def apply(n=name):
+             app.var_tpl.set(n)
+             app.apply_template(n)
+@@ -179,6 +181,23 @@
+             status.set(f'適用：{n}（ミラーにも反映）')
+         ttk.Button(panel,text='このテンプレートを適用',command=apply).pack(fill='x',pady=(6,0))
+         query=' '.join((name,info['tone'],info['camera'],info['description'])).casefold()
++        def zoom(t=tpl):
++            actual = saved_image()
++            if actual is None:
++                status.set('実フレームを保存してから拡大表示できます。')
++                return
++            enlarged = tk.Toplevel(win)
++            enlarged.title(f'実映像の色比較｜{t.name}')
++            enlarged.geometry('1310x490')
++            enlarged.minsize(840,350)
++            enlarged._photos=[]
++            img=render_scene_comparison(actual,t,630,354)
++            ph=ImageTk.PhotoImage(img,master=enlarged)
++            enlarged._photos.append(ph)
++            ttk.Label(enlarged,text='左：補正前　　右：テンプレート適用後（色/2D FXのみ）',
++                      font=('Meiryo UI',12,'bold')).pack(pady=8)
++            ttk.Label(enlarged,image=ph).pack(expand=True)
++        preview.bind('<Button-1>',lambda _e,z=zoom:z())
+         cards.append((panel,preview,tpl,query))
+ 
+     def chosen():
+@@ -215,7 +234,7 @@
+                 return
+             _,preview,tpl,_=cards[index]
+             try:
+-                comparison=render_scene_comparison(image,tpl,150,85)
++                comparison=render_scene_comparison(image,tpl,415,234)
+                 photo=ImageTk.PhotoImage(comparison,master=win)
+                 win._previews.append(photo)
+                 preview.configure(image=photo,text='')
+@@ -270,7 +289,7 @@
+         ix=0
+         for panel,_,_,name in cards:
+             if not q or q in name:
+-                panel.grid(row=ix//2,column=ix%2,sticky='nsew',padx=7,pady=6)
++                panel.grid(row=ix,column=0,sticky='ew',padx=12,pady=10)
+                 ix+=1
+             else:
+                 panel.grid_remove()
+--- a/LoL_AutoCine/tests/test_v5108_premium_gallery.py
++++ b/LoL_AutoCine/tests/test_v5108_premium_gallery.py
+@@ -71,7 +71,7 @@
+     assert "A：かんたん色見本カード" in source and "B：全テンプレート図鑑" in source
+     assert "self._refresh_template_tone(name)" in source
+     assert "self._live_preview.submit(key, (self.source, cw, ch" in source
+-    assert "render_scene_comparison(image,tpl,150,85)" in gallery
++    assert "render_scene_comparison(image,tpl,415,234)" in gallery
+     assert "save(path,'PNG')" in gallery
+     assert "sample_scene(" not in gallery.split("def open_gallery(",1)[1]
+     assert "self._apply_kill_glow_preset()" in source
+--- a/LoL_AutoCine/VERSION.txt
++++ b/LoL_AutoCine/VERSION.txt
+@@ -1 +1 @@
+-5.10.10
++5.10.11
