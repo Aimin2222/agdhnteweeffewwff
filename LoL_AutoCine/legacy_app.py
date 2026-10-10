@@ -919,8 +919,12 @@ class App:
         ttk.Label(eh, text="★ かんたん作成", style="Section.TLabel").pack(side="left")
         ttk.Label(eh, text="難しい設定は後から変更できます", style="CardMuted.TLabel").pack(side="right")
         ttk.Label(easy, text="① リプレイを開く → ② 対象プレイヤーを選ぶ → ③ ボタン1つでキル/アシストを検出して動画を作成", style="CardMuted.TLabel", wraplength=900).pack(anchor="w", pady=(4, 7))
-        ttk.Button(easy, text="★ これで自動作成（おすすめ）", style="Accent.TButton", command=self.on_one_click).pack(fill="x", ipady=4)
-        ttk.Button(easy, text="✨ スマート自動編集：カメラ＋キル瞬間の演出を自動作成", command=self.on_smart_one_click).pack(fill="x", pady=(4,0))
+        ttk.Button(easy, text="★ 自動作成（標準）", style="Accent.TButton", command=self.on_one_click).pack(fill="x", ipady=4)
+        ttk.Label(easy, text="現在の設定でキル／アシストを自動抽出して書き出します。初めてならこちら。",
+                  style="CardMuted.TLabel", wraplength=880).pack(anchor="w",pady=(1,5))
+        ttk.Button(easy, text="✨ スマート自動編集（演出重視）", command=self.on_smart_one_click).pack(fill="x", pady=(4,0))
+        ttk.Label(easy, text="キル前後のズーム・カメラの回り込み・短い発光を自動で加えて出力します。",
+                  style="CardMuted.TLabel", wraplength=880).pack(anchor="w",pady=(1,5))
         smart_row = ttk.Frame(easy, style="Card.TFrame")
         smart_row.pack(fill="x", pady=(6,2))
         ttk.Label(smart_row, text="自動カメラ演出", style="Card.TLabel", width=16).pack(side="left")
@@ -933,21 +937,26 @@ class App:
         ttk.Label(badge_easy, text="キルアイコン装飾", style="Card.TLabel", width=16).pack(side="left")
         ttk.Combobox(badge_easy, state="readonly", textvariable=self.var_kill_icon_style,
                      values=list(KILL_ICON_STYLES.values()), width=26).pack(side="left", fill="x", expand=True)
-        ttk.Checkbutton(easy, text="スマートモンタージュ（見せ場を後半に配置・自然な切り替え）",
+        ttk.Button(badge_easy,text="▣ 見た目で選ぶ",command=self._open_kill_frame_gallery).pack(side="left",padx=4)
+        ttk.Checkbutton(easy, text="スマートモンタージュ（見せ場を後半に配置）",
                         variable=self.var_smart_montage).pack(anchor="w", pady=(5, 2))
+        ttk.Label(easy,text="ONなら複数キルの順番を見せ場中心に自動構成。OFFは時刻順を優先。",
+                  style="CardMuted.TLabel",wraplength=880).pack(anchor="w")
         quick_presets = ttk.Frame(easy, style="Card.TFrame")
         quick_presets.pack(fill="x", pady=(10, 3))
         ttk.Label(quick_presets, text="仕上がり", style="Card.TLabel").pack(side="left", padx=(0, 6))
-        for title, key in (("自然", "三人称 自然め"),
-                           ("シネマ", "Lolnam風スムーズ"),
-                           ("ダイナミック", "Lolnam風ダイナミック")):
-            ttk.Button(quick_presets, text=title,
-                       command=lambda k=key: self._choose_easy_preset(k)).pack(side="left", padx=3, fill="x", expand=True)
+        for title, key in (("自然（LoL色）", "三人称 自然め"),
+                           ("シネマ（映画色）", "Lolnam風スムーズ"),
+                           ("鮮やか（高彩度）", "Lolnam風ダイナミック")):
+            button=ttk.Button(quick_presets, text=title,
+                       command=lambda k=key: self._choose_easy_preset(k))
+            button.pack(side="left", padx=3, fill="x", expand=True)
+            self._bind_preset_hover(button,key)
         self.lbl_easy_preset = ttk.Label(easy, textvariable=self.var_tpl, style="CardMuted.TLabel")
         self.lbl_easy_preset.pack(anchor="w", pady=(0, 3))
         ttk.Checkbutton(easy, text="自動ディレクター：キル数に合わせてカメラ演出を自動調整（任意）",
                         variable=self.var_auto_director).pack(anchor="w", pady=(6, 1))
-        ttk.Label(easy, text="ONなら自動作成前に既存のOrbit/ドリー設定を調整します。OFFでは以前の挙動のまま。",
+        ttk.Label(easy, text="ON：キル数・シーンに合わせOrbitとドリーを調整。OFF：選んだカメラ設定を優先。",
                   style="CardMuted.TLabel").pack(anchor="w")
         hud_easy = ttk.Frame(easy, style="Card.TFrame")
         hud_easy.pack(fill="x", pady=(12, 2))
@@ -1354,8 +1363,10 @@ class App:
         ttk.Label(output, text="プレビュー/カメラ制御は最大144Hz。最終MP4は1080p・60fpsを標準。", style="CardMuted.TLabel", wraplength=520).pack(anchor="w", pady=(0,4))
         self.var_montage=tk.BooleanVar(value=True); ttk.Checkbutton(output, text="完成クリップを1本のモンタージュにする", variable=self.var_montage).pack(anchor="w", pady=4)
         ttk.Label(output, text="キルアイコンの装飾（全シーン共通）", style="Card.TLabel").pack(anchor="w", pady=(5,2))
-        ttk.Combobox(output, state="readonly", textvariable=self.var_kill_icon_style,
-                     values=list(KILL_ICON_STYLES.values()), width=29).pack(fill="x", pady=(0,4))
+        combo_badge=ttk.Frame(output,style="Card.TFrame");combo_badge.pack(fill="x",pady=(0,4))
+        ttk.Combobox(combo_badge, state="readonly", textvariable=self.var_kill_icon_style,
+                     values=list(KILL_ICON_STYLES.values()), width=29).pack(side="left",fill="x",expand=True)
+        ttk.Button(combo_badge,text="図鑑",command=self._open_kill_frame_gallery).pack(side="left",padx=4)
         ttk.Label(output, text="装飾位置", style="Card.TLabel").pack(anchor="w", pady=(2, 1))
         ttk.Combobox(output, state="readonly", textvariable=self.var_kill_icon_position,
                      values=list(KILL_ICON_POSITIONS.values()), width=28).pack(fill="x", pady=(0, 3))
