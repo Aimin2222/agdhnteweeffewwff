@@ -1,15 +1,15 @@
 # v5.10.7 保存報告
 
-ソース: /workspace/LoL_AutoCine、branch integration/v5.10.7、HEAD 2d38a61b6a0c239859e7ad9124d4122e4e076117、remoteなし。
+ソース: /workspace/LoL_AutoCine、branch integration/v5.10.7、HEAD 7cd5b1825cbf2eacef67a2fd5d4373ca6f1cb4fa、remoteなし。
 取得用: /workspace/agdhnteweeffewwff、branch codex/lol-autocine-v5107-mirror-test-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
 mainへマージしない。開始前の両statusは空。完了時はVERIFICATIONへ記録。
 
 ## git log -3 --oneline（ソース）
 
 ```
+7cd5b18 Complete adaptive mirror throttling for intercepted notebook scrolling
+0db28d1 Notify preview throttling before notebook and combobox wheel handlers stop propagation
 2d38a61 Preserve Windows batch CRLF bytes in v5.10.7 binary handoff patch
-443a6b2 Update exact shared jobs review after cleanup regression fix
-753ce22 Integrate setup cleanup regression fix
 ```
 
 ## git remote -v（取得用）

@@ -4,9 +4,9 @@
     "errors": "0",
     "failures": "0",
     "skipped": "0",
-    "tests": "369",
-    "time": "38.078",
-    "timestamp": "2026-10-10T04:30:38.578971+00:00",
+    "tests": "370",
+    "time": "38.645",
+    "timestamp": "2026-10-10T04:35:29.581767+00:00",
     "hostname": "db64bb7c5e92"
   },
   "new_windows_version_tested": false,
@@ -24,8 +24,8 @@
     "refs": {
       "base": "96b928a7385537317e73bad5235a28984fe94716",
       "gpu": "eefbfd65cd94b42319ebf98df3dcdbc40220aa7f",
-      "ui": "6c1847bb3f1e32378d4858a0a183600fc047b70b",
-      "integration": "443a6b25a877afd20a59ca80f16b6ab26a2a8a5f"
+      "ui": "0db28d1fda308499f3c1d1cd291263a04fa17404",
+      "integration": "7cd5b1825cbf2eacef67a2fd5d4373ca6f1cb4fa"
     },
     "ui_changed": [
       "README_v5.10.0_JA.md",
@@ -303,8 +303,8 @@
     "patch_base": "v5.10.6 GPUFull",
     "all_source_bytes_match_after_patch": true,
     "sha256": {
-      "LoL_AutoCine_v5.10.7_MirrorFix_Windows_Full.zip": "c82aeca5b351295f0c6ec5f37ef972a524c617b05c611274f652de4964051aa0",
-      "LoL_AutoCine_v5.10.7_MirrorFix_Codex_MergeChanges.zip": "f0d72f2b88e3a47a450a7ae890b3418a2d08bbaeeda9f1eca9e83763dd676b42"
+      "LoL_AutoCine_v5.10.7_MirrorFix_Windows_Full.zip": "aed0f8d87bcd6cac3bbd76ba4fcb586a90773d69431bbba0048cd1889cbffb27",
+      "LoL_AutoCine_v5.10.7_MirrorFix_Codex_MergeChanges.zip": "fa3cb976e8f0b736f144a44c486d004c4082c83b38aa31a5a61e26c9603e9c0c"
     }
   },
   "preservation": {
@@ -340,5 +340,6 @@
   "pip_check_passed": true,
   "source_and_delivery_clean_after_commit": false,
   "github_fresh_restore": null,
-  "environment_config_saved": false
+  "environment_config_saved": false,
+  "notebook_intercepted_wheel_regression_tested": true
 }

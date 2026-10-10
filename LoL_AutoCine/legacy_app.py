@@ -1778,6 +1778,8 @@ class App:
     def _register_scrolling_controls(self):
         """Mousewheel scrolls containing panel; never changes a closed combobox."""
         def intercept(event):
+            # These handlers return 'break' before the root input binding runs.
+            self._preview_input(event)
             for panel in (self.left_scroll, self.right_scroll, self.center_edit_scroll):
                 if panel._pointer_inside(event):
                     panel.scroll_wheel(event)

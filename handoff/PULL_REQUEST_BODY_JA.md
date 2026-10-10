@@ -6,6 +6,6 @@ TEST_GPU_RENDERはアプリと同じpy -3を優先し、ローカルvenv/python�
 
 受領v5.10.6 UI差分からRED側Orbitのside_yaw、キル＋アシスト検出モード/遅れたアシスト情報、ガラス斬撃と中央なし、準備失敗後ミラー復帰を内容で統合。既存のホバー/クリックと再試行付きミラー復帰を維持し、古いGPUファイルを上書きしていません。
 
-検証: 全回帰369件成功（38.08秒、失敗/skipなし）、実Tkの大きなミラーと設定操作、起動例外ログ、Git担当ガード、全ソースのZIP/Gitパッチ再現。合成1080pの画像準備中央値60.18ms→29.81ms（Linux CPU、Tk転送やWindows実機速度を含まない）。実FFmpegで比較ツール6ケースのCPUフォールバックも成功し、起動・結果ログを確認。新Windows版の実機確認は未実施。
+検証: 全回帰370件成功（38.65秒、失敗/skipなし）、実Tkの大きなミラーと設定操作、起動例外ログ、Git担当ガード、全ソースのZIP/Gitパッチ再現。合成1080pの画像準備中央値60.18ms→29.81ms（Linux CPU、Tk転送やWindows実機速度を含まない）。実FFmpegで比較ツール6ケースのCPUフォールバックも成功し、起動・結果ログを確認。新Windows版の実機確認は未実施。
 
 旧54ブランチ/旧配布物は保持。前回GPU Full v5.10.6を比較先とするDraft PRで、mainへマージしません。Windows取得は本ブランチのCode→Download ZIP、別フォルダへ展開してSTART_GPU.bat。今回のまとめテストはLoL_AutoCine/docs/WINDOWS_TEST_v5107_JA.mdに記載。

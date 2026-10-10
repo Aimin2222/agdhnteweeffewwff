@@ -106,3 +106,17 @@ def test_editor_events_slow_only_mirror_and_resume(app, monkeypatch):
     app._preview_tick()
     assert scheduled[-1] == 50
     assert app.current_template().fps == 60
+
+
+def test_notebook_wheel_marks_input_before_native_binding_is_blocked(app):
+    app.var_edit_mode.set('advanced')
+    app._apply_edit_mode(log=False)
+    app.var_editor_zone.set('color')
+    app._apply_editor_zone()
+    app.root.update()
+    notebook = app._editor_advanced_tabs
+    before = notebook.select()
+    app._preview_input_at = 0
+    notebook.event_generate('<MouseWheel>', delta=-120)
+    assert app._preview_input_at > 0
+    assert notebook.select() == before
