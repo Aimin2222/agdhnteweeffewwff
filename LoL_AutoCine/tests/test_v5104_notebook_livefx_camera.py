@@ -42,30 +42,23 @@ def test_advanced_notebook_wheel_does_not_switch_tab(gui):
 def test_live_fx_draw_during_camera_preview_only(gui, monkeypatch):
     import legacy_app
     app, root=gui
-    n={'fx': 0}
-    dummy=np.zeros((70, 140, 3),dtype=np.uint8)
-    monkeypatch.setattr(app, '_current_frame_rgb', lambda *args: (dummy, 'mirror'))
-    monkeypatch.setattr(legacy_app, 'apply_camera_preview', lambda a, t: a)
-    def fx(a, t, phase=.5):
-        n['fx']+=1
-        return a
-    monkeypatch.setattr(legacy_app, 'apply_video_effect_preview', fx)
-    monkeypatch.setattr(legacy_app, 'compose_compare', lambda a, *unused: a)
-    monkeypatch.setattr(legacy_app, 'preview_title', lambda *unused: '')
+    requests=[]
+    app.source=SimpleNamespace(running=True)
+    monkeypatch.setattr(app._live_preview, 'submit', lambda key, request: requests.append(request))
     app.var_live.set(True)
     app.busy=True
     app._preview_fx_during_camera=True
     app._preview_tick()
-    assert n['fx']==1
+    assert requests[-1][3] is not None
     app._preview_fx_during_camera=False
     app._preview_tick()
-    assert n['fx']==1, 'No expensive FX should be applied during export'
+    assert requests[-1][3] is None, 'No expensive FX should be requested during export'
     app.busy=False
     app._preview_tick()
-    assert n['fx']==2
+    assert requests[-1][3] is not None
     app.var_live.set(False)
     app._preview_tick()
-    assert n['fx']==2
+    assert requests[-1][3] is None
 
 
 def test_render_rate_limiter_only_when_api_slow():

@@ -17,7 +17,7 @@ from typing import Callable, Optional
 
 from .audio import AudioCapture, AudioError
 from .audio_log import log as audio_log
-from .camera import CameraPlan, CameraDirector, RigInfo, attach_to_player
+from .camera import CameraPlan, side_yaw_for, CameraDirector, RigInfo, attach_to_player
 from .capture import FrameSource, CaptureError, WGCWindowSource
 from .effects import Template, apply_effects, concat_clips
 from .hud import hide_hud, restore_hud
@@ -214,9 +214,13 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                        smart_composition=bool(getattr(tpl, 'smart_composition', False)),
                        smart_impact=(float(getattr(tpl, 'highlight_pulse', 0.0))
                                      if getattr(tpl, 'smart_highlight_enabled', False) else 0.0), rig=rig,
+                       side_yaw=side_yaw_for(getattr(player, "team", "ORDER"), getattr(tpl, "camera_side", "auto")),
                       sel_name=player.selection_name or player.champion)
     if rig.mode == "top" and tpl.style in ("cinema", "follow"):
         plan.style = "cinema_top" if tpl.style == "cinema" else "top"   # 実際に使えるモードに合わせる
+    if plan.style in ("third", "third_cinema", "lolnam_cinema"):
+        log(f"カメラサイド基準: 所属={getattr(player, 'team', 'ORDER')} / "
+            f"設定={getattr(tpl, 'camera_side', 'auto')} / 水平補正={plan.side_yaw:.0f}°")
     return plan, rig
 
 

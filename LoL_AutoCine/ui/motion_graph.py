@@ -9,6 +9,7 @@ import tkinter as tk
 import math
 from core.camera import CameraPlan, RigInfo
 from .scene_project import Shot
+from .redraw import request_redraw
 
 
 def sample_motion(shot: Shot, samples=81, base_distance=950):
@@ -40,9 +41,12 @@ class ShotMotionGraph(tk.Canvas):
         self.get_shot=get_shot
         self._data=[]
         self._chart=(32,0,0,0)
-        self.bind('<Configure>',lambda _:self.redraw())
+        self.bind('<Configure>',lambda _:self.request_redraw())
         self.bind('<Motion>',self._show_cursor)
         self.bind('<Leave>',lambda _:self.delete('cursor'))
+
+    def request_redraw(self):
+        request_redraw(self, "redraw")
 
     def redraw(self):
         self.delete('all')

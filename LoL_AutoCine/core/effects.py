@@ -172,6 +172,7 @@ class Template:
     dof_center_y: float = .54
     dof_radius: float = .29   # normalized by screen height, not screen width
     dof_feather: float = .12  # soft circular edge
+    camera_side: str = "auto"  # v5.10.5: auto / blue / red (append: old positional templates safe)
 
     def __post_init__(self) -> None:
         # v5.10.3: preserve older project JSON but retire the accidentally-added

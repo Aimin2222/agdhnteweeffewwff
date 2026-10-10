@@ -78,6 +78,23 @@ def _motion_params(profile: str, intensity: float, multi: int) -> tuple[float, f
     if multi >= 3:
         gain *= 1.08
     return base[0] * gain, base[1] * gain, base[2] * gain
+CAMERA_SIDE_CHOICES = {'auto': '自動（対象のチーム）', 'blue': 'ブルー側基準', 'red': 'レッド側基準'}
+
+
+def side_yaw_for(team: str, preference: str = 'auto') -> float:
+    """Return side-aware orbit offset without changing calibrated TargetLock axes.
+
+    LoL's standard rear direction is mirrored for the opposing team; camera
+    position and look rotation must receive the SAME 180 degree yaw delta.
+    Manual overrides are useful for unusual replay shots / older recordings.
+    """
+    setting = str(preference).lower()
+    if setting not in CAMERA_SIDE_CHOICES:
+        setting = 'auto'
+    is_red = setting == 'red' or (setting == 'auto' and str(team).upper() in ('CHAOS', 'RED'))
+    return 180.0 if is_red else 0.0
+
+
 MIN_CLEARANCE = 350.0     # FPS風: 地面(キャラ位置)よりカメラが最低これだけ上
 MIN_CAM_HEIGHT = 300.0    # 三人称: 常にこの高さ以上
 HEARTBEAT = 1.0           # 追従設定の再送間隔(秒)
@@ -167,6 +184,7 @@ class CameraPlan:
     scene_keyframes: tuple = ()       # append to preserve legacy positional fields
     smart_composition: bool = False   # optional visibility-safe framing
     smart_impact: float = 0.0         # optional kill-time speed envelope
+    side_yaw: float = 0.0            # v5.10.5: side-aware orbit bias; calibrated rig unchanged
 
     @staticmethod
     def _keyframe_channel(frames, left_idx: int, key: str, local_t: float) -> float:
@@ -288,7 +306,7 @@ class CameraPlan:
             sin_e = max(math.sin(e), MIN_CAM_HEIGHT / max(dist, 1.0))
             sin_e = min(0.98, sin_e)
             e = math.asin(sin_e)
-            orbit = math.radians(float(self.third_yaw) + extra_yaw)
+            orbit = math.radians(float(self.third_yaw) + self.side_yaw + extra_yaw)
             c, s = math.cos(orbit), math.sin(orbit)
             rhx = hx * c - hz * s
             rhz = hx * s + hz * c
@@ -336,7 +354,7 @@ class CameraPlan:
         sin_e = min(0.98, sin_e)
         eang = math.asin(sin_e)
         hx, hz = self.rig.h if self.rig else (0.0, -1.0)
-        yaw = math.radians(float(self.third_yaw) + orbit_delta + extra_yaw)
+        yaw = math.radians(float(self.third_yaw) + self.side_yaw + orbit_delta + extra_yaw)
         rhx = hx * math.cos(yaw) - hz * math.sin(yaw)
         rhz = hx * math.sin(yaw) + hz * math.cos(yaw)
         return ((rhx * dist * math.cos(eang), dist * sin_e, rhz * dist * math.cos(eang)), math.degrees(eang))
@@ -396,7 +414,7 @@ class CameraPlan:
             base_yaw = float(rot.get(yaw_axis, 0.0))
         except Exception:
             base_yaw = 0.0
-        yaw_delta = float(self.third_yaw) + self.keyframe_values(t)[0]
+        yaw_delta = float(self.third_yaw) + self.side_yaw + self.keyframe_values(t)[0]
         if self.style == "lolnam_cinema":
             ks = tuple(self.kill_times) or (self.kill_time,)
             multi = max(1, len(ks))

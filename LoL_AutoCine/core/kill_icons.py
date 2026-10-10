@@ -39,6 +39,7 @@ MARK_STYLES = {
     'swords': '交差する剣',
     'bolt': '稲妻',
     'crystal': 'クリスタル',
+    'crest': '金のエンブレム',
 }
 REVERSE_MARK_STYLES = {value: key for key, value in MARK_STYLES.items()}
 
@@ -117,13 +118,19 @@ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, vict
     base=Image.new("RGBA", (w,h), (0,0,0,0))
     glow=Image.new("RGBA", (w,h), (0,0,0,0))
     g=ImageDraw.Draw(glow)
-    if glow_enabled and glow_strength > 0 and style != 'off':
+    if glow_enabled and glow_strength > 0:
+        # Real blurred halo, not merely a colored outline. Keep enough room on
+        # the transparent badge edges so screen composite has visible bloom.
+        power = float(glow_strength)
         for x in (78, 307):
-            g.rounded_rectangle((x-38,16,x+38,100), radius=12,
-                                outline=(*light_color,int(190*glow_strength)),width=9)
-        g.line((169,38,216,79),fill=(*light_color,int(185*glow_strength)),width=7)
-        g.line((214,38,169,79),fill=(*light_color,int(185*glow_strength)),width=7)
-        base=Image.alpha_composite(base,glow.filter(ImageFilter.GaussianBlur(11)))
+            g.rounded_rectangle((x-42, 12, x+42, 104), radius=13,
+                                outline=(*light_color, int(235*power)), width=15)
+            g.rounded_rectangle((x-37, 17, x+37, 99), radius=12,
+                                outline=(*light_color, int(240*power)), width=7)
+        for points in (((166,30),(216,87)), ((218,30),(168,87))):
+            g.line(points, fill=(*light_color, int(225*power)), width=12)
+        base=Image.alpha_composite(base,glow.filter(ImageFilter.GaussianBlur(13)))
+        base=Image.alpha_composite(base,glow.filter(ImageFilter.GaussianBlur(5)))
     d=ImageDraw.Draw(base)
     # Small separated portrait medallions, not a full-width title card.
     for x in (38,267):
@@ -134,11 +141,36 @@ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, vict
         _rounded_portrait(base,victim_icon,(273,24,68))
     d=ImageDraw.Draw(base)
     for x in (38,267):
-        d.rounded_rectangle((x-4,14,x+80,102),radius=14,outline=(*color,245),width=border_width)
+        d.rounded_rectangle((x-4,14,x+80,102),radius=12,outline=(*color,255),width=border_width)
+        # Thin highlight and decorative corners inspired by ornamental frames.
+        d.line((x,19,x+27,19),fill=(255,245,206,230) if style=='cinema' else (*light_color,225),width=2)
+        d.line((x+48,97,x+75,97),fill=(*light_color,205),width=2)
+        for cx,cy in ((x,17),(x+76,17),(x,99),(x+76,99)):
+            d.polygon([(cx,cy-4),(cx+4,cy),(cx,cy+4),(cx-4,cy)],fill=(*light_color,245))
+    if glow_enabled and glow_strength > 0:
+        # Crisp core makes the outer glow perceptible even against bright LoL maps.
+        shine=(min(255,int(v*.5+127)) for v in light_color)
+        highlight=tuple(shine)+(int(90+165*glow_strength),)
+        for x in (78,307):
+            d.rounded_rectangle((x-41,13,x+41,103),radius=13,outline=highlight,width=2)
+        for cx,cy in ((150,58),(235,58)):
+            d.line((cx-7,cy,cx+7,cy),fill=highlight,width=2)
+            d.line((cx,cy-7,cx,cy+7),fill=highlight,width=2)
     # Distinctive restrained clash motif, no "x" text or count.
     mark = mark_style if mark_style != 'auto' else {
-        'simple':'cross', 'cinema':'slash', 'neon':'cross', 'impact':'bolt'}[style]
-    if mark == 'slash':
+        'simple':'cross', 'cinema':'crest', 'neon':'cross', 'impact':'bolt'}[style]
+    if mark == 'crest':
+        # Original eight-point ceremonial clash glyph, not a game asset.
+        cx,cy=192,58
+        d.ellipse((cx-14,cy-14,cx+14,cy+14),outline=(*color,240),width=3)
+        for dx,dy in ((0,-34),(24,-18),(32,0),(24,18),(0,34),(-24,18),(-32,0),(-24,-18)):
+            tip=(cx+dx,cy+dy)
+            short=(cx+int(dx*.47),cy+int(dy*.47))
+            d.line((*short,*tip),fill=(*color,255),width=4)
+            d.ellipse((tip[0]-2,tip[1]-2,tip[0]+2,tip[1]+2),fill=(255,246,204,245))
+        d.polygon([(cx,cy-16),(cx+10,cy),(cx,cy+16),(cx-10,cy)],fill=(*color,255))
+        d.polygon([(cx,cy-11),(cx+6,cy),(cx,cy+11),(cx-6,cy)],fill=(255,244,207,235))
+    elif mark == 'slash':
         d.polygon([(171,29),(185,48),(215,83),(201,91),(188,69)],fill=(*color,240))
         d.polygon([(213,29),(199,48),(169,83),(183,91),(196,69)],fill=(255,244,212,232))
     elif mark == 'cross':
@@ -277,33 +309,50 @@ def make_event_badges(output: Path, style: str, kills, events, roster, *, icon_l
 
 def with_badges(graph: str, badge_input: int, badges, *, duration: float,
                 position="right-top",scale=1.0,seconds=1.55,opacity=1.0,style="simple"):
-    """Overlay each unique kill pair at its own event time. Later kills replace earlier ones."""
+    """Show separate portrait pairs as a compact stacked kill feed (max 3 rows).
+
+    Each event retains its own portrait pair. Concurrent events stack rather
+    than replacing the previous event; oldest row is retired if four overlap.
+    """
     if not graph.endswith("[vout]"):
         raise ValueError("Existing video graph has no [vout]")
     if not badges:
         return graph
-    position,scale,seconds,opacity=normalize_options(position,scale,seconds,opacity)
-    valid=sorted([(i,float(t)) for i,(_,t) in enumerate(badges) if math.isfinite(float(t)) and 0<=float(t)<=duration],key=lambda p:p[1])
-    if not valid: return graph
+    position, scale, seconds, opacity = normalize_options(position, scale, seconds, opacity)
+    valid = sorted([(i,float(t)) for i,(_,t) in enumerate(badges)
+                    if math.isfinite(float(t)) and 0 <= float(t) <= duration], key=lambda it:it[1])
     planned=[]
-    for n,(img_index,t) in enumerate(valid):
-        first=max(0.0,t-0.10)
-        after=max(0.0,valid[n+1][1]-0.10) if n+1<len(valid) else float(duration)
-        last=min(float(duration),t+seconds,after)
-        if last>first:
-            planned.append((img_index,t,first,last))
+    for idx,t in valid:
+        start=max(0.,t-.10)
+        end=min(float(duration),t+seconds)
+        if end <= start:
+            continue
+        active=[entry for entry in planned if entry['end'] > start]
+        available=set(range(3)) - {entry['row'] for entry in active}
+        if not available:
+            oldest=min(active,key=lambda entry:entry['start'])
+            oldest['end']=max(oldest['start'],start-.01)
+            available.add(oldest['row'])
+        planned.append(dict(index=idx, time=t, start=start, end=end, row=min(available)))
+    planned=[entry for entry in planned if entry['end']>entry['start']]
     if not planned:
         return graph
-    pieces=[graph[:-6]+"[pair_src_0]"]
+    parts=[graph[:-6]+"[pair_src_0]"]
     x="W-w-32" if position.startswith("right") else "32"
-    y="62" if position.endswith("top") else "H-h-62"
-    for n,(img_index,t,first,last) in enumerate(planned):
+    for n,entry in enumerate(planned):
+        idx,t=entry['index'],entry['time']
+        start,end=entry['start'],entry['end']
+        row=entry['row']
+        step=int(round(120*scale))
+        y=(f"62+{step*row}" if position.endswith('top') else f"H-h-62-{step*row}")
         extra=(f"+7*sin(35*(t-{t:.3f}))*exp(-11*abs(t-{t:.3f}))" if normalize(style)=="impact" else "")
         inlabel=f"pair_src_{n}"
         outlabel="vout" if n==len(planned)-1 else f"pair_src_{n+1}"
-        pieces.append(f"[{int(badge_input)+img_index}:v]format=rgba,scale=w='trunc(iw*{scale:.3f}/2)*2':h='trunc(ih*{scale:.3f}/2)*2',colorchannelmixer=aa={opacity:.3f}[pair_img_{n}]")
-        pieces.append(f"[{inlabel}][pair_img_{n}]overlay=x='{x+extra}':y='{y}':format=auto:shortest=0:eof_action=repeat:enable='between(t,{first:.3f},{last:.3f})'[{outlabel}]")
-    return ";".join(pieces[:-1]+[pieces[-1].replace("[vout]","[pair_finished]") , "[pair_finished]format=yuv420p[vout]"])
+        parts.append(f"[{int(badge_input)+idx}:v]format=rgba,scale=w='trunc(iw*{scale:.3f}/2)*2':h='trunc(ih*{scale:.3f}/2)*2',colorchannelmixer=aa={opacity:.3f}[pair_img_{n}]")
+        parts.append(f"[{inlabel}][pair_img_{n}]overlay=x='{x+extra}':y='{y}':format=auto:shortest=0:eof_action=repeat:enable='between(t,{start:.3f},{end:.3f})'[{outlabel}]")
+    parts[-1]=parts[-1].replace('[vout]','[pair_finished]')
+    parts.append('[pair_finished]format=yuv420p[vout]')
+    return ';'.join(parts)
 
 
 def with_badge(graph: str, badge_input: int, events, *, duration: float,

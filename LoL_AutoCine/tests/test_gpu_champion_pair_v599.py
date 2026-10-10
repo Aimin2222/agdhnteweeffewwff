@@ -12,7 +12,7 @@ def test_previous_template_positions_and_roster_isolation():
     old = Template(smart_composition=True, kill_icon_style='neon')
     appended={'kill_icon_players','encoder_policy','kill_frame_color','kill_glow_color',
               'kill_glow_enabled','kill_glow_strength','kill_frame_width','kill_mark_style'}
-    values = [getattr(old, f.name) for f in fields(Template) if f.name not in appended | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather'}]
+    values = [getattr(old, f.name) for f in fields(Template) if f.name not in appended | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather', 'camera_side'}]
     copy = Template(*values)
     assert copy.smart_composition and copy.kill_icon_style == 'neon'
     copy.kill_icon_players.append({'name': 'Test'})
@@ -49,10 +49,13 @@ def test_wrong_event_count_omits_pairs_without_icon_requests(tmp_path):
                              icon_lookup=unexpected) == []
 
 
-def test_latest_simultaneous_kill_replaces_previous_pair():
+def test_simultaneous_kills_keep_both_actual_pairs_on_separate_rows():
     graph = with_badges('null[vout]', 1, [('a.png', 1), ('b.png', 1)], duration=3)
-    assert '[2:v]' in graph and '[1:v]' not in graph
-    assert graph.count('overlay=') == 1
+    assert '[2:v]' in graph and '[1:v]' in graph
+    assert "y='62+0'" in graph and "y='62+120'" in graph
+    assert graph.count("between(t,0.900,2.550)") == 2
+    assert 'shortest=0:eof_action=repeat' in graph
+    assert graph.count('overlay=') == 2
 
 
 def test_download_uses_verified_cache_offline(monkeypatch, tmp_path):

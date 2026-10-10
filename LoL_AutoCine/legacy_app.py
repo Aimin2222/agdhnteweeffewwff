@@ -25,7 +25,7 @@ from core import paths                                             # noqa: E402
 from core.kill_icons import STYLES as KILL_ICON_STYLES, REVERSE_STYLES as KILL_ICON_REVERSE
 from core.kill_icons import POSITIONS as KILL_ICON_POSITIONS, REVERSE_POSITIONS as KILL_ICON_REVERSE_POSITIONS
 from core.kill_icons import REVERSE_MARK_STYLES as KILL_MARK_REVERSE
-from core.camera import INTENSITY_JP, STYLES                       # noqa: E402
+from core.camera import INTENSITY_JP, STYLES, CAMERA_SIDE_CHOICES        # noqa: E402
 from core.capture import CaptureError, SyntheticSource, WGCWindowSource   # noqa: E402
 from core.effects import (FOG_PRESETS, GRADE_JP, TRANSITIONS, Template, one_click_templates, gpu_encoder_available, gpu_pipeline_status,
                             VIDEO_EFFECT_CATEGORIES, VIDEO_EFFECT_DEFAULTS, VIDEO_EFFECT_LABELS)   # noqa: E402
@@ -38,6 +38,8 @@ from core.players import Player, parse_players                     # noqa: E402
 from core.replay_api import ReplayAPI                              # noqa: E402
 from core.scanner import scan_kills                                # noqa: E402
 from ui.scene_timeline import SceneTimeline                     # noqa: E402
+from ui.live_preview import LatestPreview
+from ui.redraw import request_redraw
 from ui.mirror_capture import MirrorCapture                     # noqa: E402
 from ui.scene_project import SceneProject, Shot, scene_key, recommend, apply_shot  # noqa: E402
 from ui.scene_batch import render_scenes                      # noqa: E402
@@ -48,6 +50,7 @@ from ui.studio_localization import (EFFECT_LABEL_JA, EFFECT_HELP_JA, TEMPLATE_HE
                                     SHOT_INTENSITY_JA, convert_label, reverse_label)  # noqa: E402
 
 APP = "LoL AutoCine"
+APP_VERSION = (ROOT / "VERSION.txt").read_text(encoding="utf-8").strip()
 FONT = ("Meiryo UI", 10)
 SETTINGS = ROOT / "settings.json"
 API_BASE = os.environ.get("AUTOCINE_API_BASE", "https://127.0.0.1:2999")
@@ -188,7 +191,7 @@ class CurveEditor(tk.Canvas):
         self.drag = None
         self.hist = None
         self.var.trace_add("write", lambda *_: self._sync_from_var())
-        self.bind("<Configure>", lambda _e: self.draw())
+        self.bind("<Configure>", lambda _e: request_redraw(self))
         self.bind("<Button-1>", self._down)
         self.bind("<B1-Motion>", self._move)
         self.bind("<ButtonRelease-1>", self._up)
@@ -206,7 +209,7 @@ class CurveEditor(tk.Canvas):
 
     def _sync_from_var(self):
         self.points=self._parse(self.var.get())
-        self.draw()
+        request_redraw(self)
 
     def set_histogram(self, rgb):
         """現在のミラー映像の輝度ヒストグラムを背景に表示。"""
@@ -302,7 +305,7 @@ class CurveEditor(tk.Canvas):
 class FogViz(tk.Canvas):
     def __init__(self, master, strength_var, **kw):
         super().__init__(master, width=260, height=90, bg="#F8FAFC", highlightthickness=1, highlightbackground="#D0D5DD", **kw)
-        self.var=strength_var; self.var.trace_add("write", lambda *_: self.draw()); self.draw()
+        self.var=strength_var; self.var.trace_add("write", lambda *_: request_redraw(self)); self.draw()
     def draw(self):
         self.delete("all")
         try:v=max(0,min(1,float(self.var.get())))
@@ -324,8 +327,8 @@ class DofViz(tk.Canvas):
         super().__init__(master,**opts)
         self.vars=(blur_var,focus_var,near_var,far_var)
         for v in self.vars:
-            v.trace_add('write',lambda *_:self.draw())
-        self.bind('<Configure>', lambda _e:self.draw())
+            v.trace_add('write',lambda *_:request_redraw(self))
+        self.bind('<Configure>', lambda _e:request_redraw(self))
         self.draw()
 
     def draw(self):
@@ -363,8 +366,8 @@ class FocusCircleViz(tk.Canvas):
                          highlightthickness=1, highlightbackground="#D0D5DD", **kw)
         self.variables = xvar, yvar, radiusvar, feathervar
         for v in self.variables:
-            v.trace_add('write', lambda *_: self.draw())
-        self.bind('<Configure>', lambda _e: self.draw())
+            v.trace_add('write', lambda *_: request_redraw(self))
+        self.bind('<Configure>', lambda _e: request_redraw(self))
         self.draw()
 
     def draw(self):
@@ -388,10 +391,26 @@ class FocusCircleViz(tk.Canvas):
         self.create_line(x,y-8,x,y+8,fill="#1D4ED8",width=2)
         self.create_text(x,y+13,text="対象付近",fill="#1D4ED8",font=("Meiryo UI",8,"bold"))
 
+
+def _render_live_preview(request):
+    source, width, height, template, title, split = request
+    frame = source.latest()
+    if frame is None:
+        return None
+    image = Image.fromarray(frame[..., [2, 1, 0]])
+    image.thumbnail((width, height), Image.Resampling.LANCZOS)
+    original = np.asarray(image)
+    rgb = original
+    if template is not None:
+        rgb = apply_camera_preview(rgb, template)
+        rgb = apply_video_effect_preview(rgb, template, phase=0.5)
+        rgb = compose_compare(rgb, template, title, split)
+    return rgb, original
+
 class App:
     def __init__(self, root: tk.Tk):
         self.root = root
-        root.title(f"{APP} v5.10.4 - タブ操作 / ミラーFX / カメラ安定化")
+        root.title(f"{APP} v{APP_VERSION} - Scene Studio")
         sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
         root.geometry(f"{min(1560, sw - 40)}x{min(960, sh - 90)}+10+10")
         root.option_add("*Font", FONT)
@@ -452,6 +471,7 @@ class App:
         self.var_kill_glow_strength = tk.DoubleVar(value=.65)
         self.var_kill_frame_width = tk.IntVar(value=3)
         self.var_kill_mark_style = tk.StringVar(value='テンプレートに合わせる')
+        self.var_camera_side = tk.StringVar(value='自動（対象のチーム）')
         self.var_encoder_policy = tk.StringVar(value='自動（NVENC優先・失敗時CPU）')
         self.var_smart_montage = tk.BooleanVar(value=True)
         self.var_smart_composition = tk.BooleanVar(value=False)
@@ -465,6 +485,10 @@ class App:
         self.scene_project_path = ROOT / 'projects' / 'scene_project.json'
         self._project_autosave_token = None
         self._scene_loading = False
+        self._live_preview = LatestPreview(_render_live_preview)
+        self._preview_presented = None
+        self._histogram_updated = 0.0
+        self._badge_preview_pending = False
         self._build()
         self._register_scrolling_controls()
         self._load_settings()
@@ -475,7 +499,7 @@ class App:
             self.log(f"シーンプロジェクトの復元をスキップ: {e}")
         self.root.after(80, self._pump)
         # UIプレビューはTkinter/PIL/NumpyのCPU合成。書き出し側はGPU Hybridを使用。
-        # 144Hzで毎回フルフレーム加工するとUI操作まで重くなるため、プレビュー処理は最大60Hzに制限。
+        # 簡易合成は別スレッドで最大15Hz。録画・最終出力のFPSとは独立。
         self.root.after(16, self._preview_tick)
         self.log("起動しました。①から順に、または上部の『★ これで自動作成』を押してください。")
         self._refresh_status()
@@ -943,7 +967,7 @@ class App:
         ttk.Label(scene_card, text="キル瞬間の強調は短時間だけ明るさ・彩度を上げます（0で無効）。カメラ曲線と同じキル時刻に同期します。",
                   style="CardMuted.TLabel", wraplength=870).pack(anchor="w", pady=(2,4))
         for _variable in (self.var_shot_profile,self.var_shot_intensity,*self.scene_vars.values()):
-            _variable.trace_add('write',lambda *_: self.shot_motion_graph.redraw())
+            _variable.trace_add('write',lambda *_: self.shot_motion_graph.request_redraw())
         actions=ttk.Frame(scene_card,style="Card.TFrame");actions.pack(fill="x",pady=(7,2))
         ttk.Button(scene_card,text="全シーンの演出を自動推薦（従来型）", command=self.on_recommend_all).pack(fill="x",pady=3)
         ttk.Button(scene_card,text="★ 全シーンに参考動画風のカメラ＋キル強調を設定", command=self.on_highlight_plan_all).pack(fill="x",pady=3)
@@ -1039,6 +1063,11 @@ class App:
         slider(left_cam, "cam_height", "高さ", 0, 900)
         slider(left_cam, "third_elev", "仰角", 10, 50)
         ttk.Checkbutton(left_cam, text="スマート構図補正（距離・仰角を安全範囲へ調整）", variable=self.var_smart_composition).pack(anchor="w", pady=(4, 0))
+        ttk.Label(left_cam, text="サイド別・斜め後ろカメラ", style="Card.TLabel").pack(anchor="w", pady=(6, 2))
+        ttk.Combobox(left_cam, state="readonly", textvariable=self.var_camera_side,
+                     values=list(CAMERA_SIDE_CHOICES.values()), width=25).pack(fill="x", pady=(0, 3))
+        ttk.Label(left_cam, text="自動は固定した選手のブルー/レッド所属で反転。\n手動設定も可能。既存TargetLockは維持します。",
+                  style="CardMuted.TLabel", justify="left").pack(anchor="w")
         ttk.Label(right_cam, text="Orbit（横回転）", style="Card.TLabel", font=("Meiryo UI", 10, "bold")).pack(anchor="w", pady=(0, 3))
         slider(right_cam, "third_dist", "三人称 距離", 500, 1400)
         slider(right_cam, "third_yaw", "回転角", -180, 180)
@@ -1189,8 +1218,7 @@ class App:
                 self.effect_vars[key] = var; self.effect_strength_vars[key] = sval
                 ttk.Checkbutton(cell, text=EFFECT_LABEL_JA.get(key, label), variable=var).pack(side="left")
                 ttk.Button(cell, text="?", width=2,
-                           command=lambda k=key: self.effect_help_text.set(
-                               EFFECT_LABEL_JA.get(k,k)+"："+EFFECT_HELP_JA.get(k,"ONにすると映像に演出が加わります。"))).pack(side="left", padx=(2,3))
+                           command=lambda k=key: self._show_effect_help(k)).pack(side="left", padx=(2,3))
                 ttk.Scale(cell, from_=0.05, to=1.0, variable=sval, length=70).pack(side="left", fill="x", expand=True, padx=4)
                 ttk.Entry(cell, textvariable=sval, width=5, justify="right").pack(side="right")
         ttk.Button(fx_box, text="全エフェクトOFF", command=self._clear_video_effects).pack(fill="x", pady=(5, 0))
@@ -1248,6 +1276,9 @@ class App:
         from core.kill_icons import MARK_STYLES
         ttk.Combobox(output, state="readonly", textvariable=self.var_kill_mark_style,
                      values=list(MARK_STYLES.values()), width=27).pack(fill="x", pady=(0,4))
+        ttk.Button(output, text="キルフレームを画像で確認（発光プレビュー）", command=self._preview_kill_frame).pack(fill="x", pady=(2,4))
+        ttk.Label(output, text="発光は完成MP4に合成されます。ここでプレビューすると色と強さをすぐ比較できます。",
+                  style="CardMuted.TLabel", wraplength=700).pack(anchor="w", pady=(0,4))
         ttk.Button(output, text="この画面の設定を保存", command=self._save_settings).pack(fill="x", pady=(0,6))
         ttk.Checkbutton(output, text="スマートモンタージュで見せ場を後半に配置（自動編集時のみ）",
                         variable=self.var_smart_montage).pack(anchor="w", pady=(0,5))
@@ -1832,6 +1863,7 @@ class App:
     def on_close(self) -> None:
         """アプリ終了時に録画/ミラー用リソースを安全に止めてから終了する。"""
         self._closing = True
+        self._live_preview.close()
         if self._status_poll_token is not None:
             self.root.after_cancel(self._status_poll_token)
             self._status_poll_token = None
@@ -1891,6 +1923,12 @@ class App:
                     self._gpu_refresh_pending = False
                     self.lbl_gpu.configure(text=a[0])
                     self.lbl_gpu_latest.configure(text=a[1])
+                elif kind == "badge_preview_ready":
+                    self._badge_preview_pending = False
+                    if a[1]:
+                        messagebox.showwarning("キルフレーム", a[1], parent=self.root)
+                    elif not self._closing:
+                        self._show_badge_preview(a[0])
                 elif kind == "mirror_ready":
                     token, source, error = a
                     if self._mirror.accept(token, source, error):
@@ -2624,6 +2662,7 @@ class App:
         self.var_kill_glow_strength.set(float(getattr(t, 'kill_glow_strength', .65)))
         self.var_kill_frame_width.set(int(getattr(t, 'kill_frame_width', 3)))
         self.var_kill_mark_style.set(MARK_STYLES.get(getattr(t, 'kill_mark_style', 'auto'), MARK_STYLES['auto']))
+        self.var_camera_side.set(CAMERA_SIDE_CHOICES.get(getattr(t, 'camera_side', 'auto'), CAMERA_SIDE_CHOICES['auto']))
         self.var_encoder_policy.set({'auto':'自動（NVENC優先・失敗時CPU）',
                                      'gpu':'GPU優先（NVENC）',
                                      'cpu':'CPU優先（libx264）'}.get(getattr(t,'encoder_policy','auto'), '自動（NVENC優先・失敗時CPU）'))
@@ -2650,6 +2689,70 @@ class App:
         if hasattr(self, "var_effect_preset"):
             self.var_effect_preset.set(getattr(t, "effect_preset", "なし") or "なし")
 
+    def _preview_kill_frame(self) -> None:
+        """Preview final ornamental PNG with genuine portraits, independent of encoder."""
+        if not self.locked:
+            messagebox.showinfo("キルフレーム", "先にリプレイの対象プレイヤーを固定してください。", parent=self.root)
+            return
+        enemy=next((p for p in self.players if p.team != self.locked.team), None)
+        if enemy is None:
+            messagebox.showinfo("キルフレーム", "対戦相手の情報を取得できていません。", parent=self.root)
+            return
+        if self._badge_preview_pending or self.busy:
+            return
+        from core.kill_icons import champion_icon, make_badge, normalize
+        import tempfile
+        t=self.current_template()
+        style=normalize(t.kill_icon_style)
+        if style=='off':
+            messagebox.showinfo("キルフレーム", "キル装飾を『なし』以外に変更してください。", parent=self.root)
+            return
+        killer, victim = self.locked.to_dict(), enemy.to_dict()
+        result_queue = self.q
+        self._badge_preview_pending = True
+        self.log("キルフレーム画像を準備しています…")
+
+        def create():
+            try:
+                icon_a, icon_b = champion_icon(killer), champion_icon(victim)
+                if not icon_a or not icon_b:
+                    raise RuntimeError("公式画像を取得できません。ネット接続または画像キャッシュを確認してください。")
+                with tempfile.TemporaryDirectory(prefix='autocine_badge_') as directory:
+                    png=make_badge(Path(directory)/'preview.png',style,killer_icon=icon_a,victim_icon=icon_b,
+                                   frame_color=t.kill_frame_color,glow_color=t.kill_glow_color,
+                                   glow_enabled=t.kill_glow_enabled,glow_strength=t.kill_glow_strength,
+                                   border_width=t.kill_frame_width,mark_style=t.kill_mark_style)
+                    with Image.open(png) as image_file:
+                        image_copy=image_file.copy()
+                result_queue.put(("badge_preview_ready", image_copy, None))
+            except Exception as e:
+                result_queue.put(("badge_preview_ready", None, str(e)))
+        try:
+            threading.Thread(target=create, daemon=True, name="AutoCine-badge-preview").start()
+        except Exception:
+            self._badge_preview_pending = False
+            raise
+
+    def _show_badge_preview(self, image_copy) -> None:
+        dlg=tk.Toplevel(self.root)
+        dlg.title("キルフレームの確認（実際のチャンピオン画像）")
+        dlg.configure(bg='#18202A')
+        photo=ImageTk.PhotoImage(image_copy,master=dlg)
+        frame=tk.Label(dlg,image=photo,bg='#18202A')
+        frame.image=photo
+        frame.pack(padx=22,pady=(15,8))
+        tk.Label(dlg,text="キル側 × 倒された側／プレビュー例。実際の相手はイベントに合わせて変わります。",
+                 fg='#DBE4F2',bg='#18202A').pack(padx=12,pady=(0,15))
+
+    def _show_effect_help(self, effect_id: str) -> None:
+        """Present help where the user can actually see it, not above a scrolled list."""
+        label = EFFECT_LABEL_JA.get(effect_id, effect_id)
+        description = EFFECT_HELP_JA.get(effect_id, "ONにすると映像に演出が加わります。")
+        message = description + "\n\n強さのバーで効果量を調整できます。FXは主に書き出し時に反映されます。"
+        if hasattr(self, "effect_help_text"):
+            self.effect_help_text.set(f"{label}：{description}")
+        messagebox.showinfo(f"映像演出：{label}", message, parent=getattr(self, 'root', None))
+
     def current_template(self) -> Template:
         t = Template(name=self.var_tpl.get())
         t.intensity = self.var_int.get()
@@ -2675,10 +2778,10 @@ class App:
         t.curve_points = self.var_curve_points.get().strip()
         t.dof_enabled = bool(self.var_dof.get())
         t.dof_shape = "band" if self.var_dof_shape.get() == "従来の上下ぼかし" else "circle"
-        t.dof_blur = float(self.sl.get("dof_blur", tk.DoubleVar(value=t.dof_blur)).get())
-        t.dof_focus_distance = float(self.sl.get("dof_focus_distance", tk.DoubleVar(value=t.dof_focus_distance)).get())
-        t.dof_near_distance = float(self.sl.get("dof_near_distance", tk.DoubleVar(value=t.dof_near_distance)).get())
-        t.dof_far_distance = float(self.sl.get("dof_far_distance", tk.DoubleVar(value=t.dof_far_distance)).get())
+        t.dof_blur = float(self.sl["dof_blur"].get()) if "dof_blur" in self.sl else t.dof_blur
+        t.dof_focus_distance = float(self.sl["dof_focus_distance"].get()) if "dof_focus_distance" in self.sl else t.dof_focus_distance
+        t.dof_near_distance = float(self.sl["dof_near_distance"].get()) if "dof_near_distance" in self.sl else t.dof_near_distance
+        t.dof_far_distance = float(self.sl["dof_far_distance"].get()) if "dof_far_distance" in self.sl else t.dof_far_distance
         for key in ("dof_center_x", "dof_center_y", "dof_radius", "dof_feather"):
             setattr(t, key, float(self.sl[key].get()))
         t.video_effects = self._get_video_effects()
@@ -2701,6 +2804,8 @@ class App:
         t.kill_icon_players = [p.to_dict() for p in self.players]
         t.smart_montage = bool(self.var_smart_montage.get())
         t.smart_composition = bool(self.var_smart_composition.get())
+        t.camera_side = next((key for key, label in CAMERA_SIDE_CHOICES.items()
+                              if label == self.var_camera_side.get()), "auto")
         # LoLミラー/カメラは144Hzで内部サンプリングし、最終出力FPSだけUI選択値へ合わせる。
         # これで60fps書き出しでも、カメラ演出の元データを144Hzで保持できる。
         t.capture_fps = 144
@@ -2789,6 +2894,7 @@ class App:
             self.var_kill_glow_strength.set(strength)
             self.var_kill_frame_width.set(width)
             self.var_kill_mark_style.set(MARK_STYLES[mark])
+            self.var_camera_side.set(CAMERA_SIDE_CHOICES.get(d.get('camera_side', 'auto'), CAMERA_SIDE_CHOICES['auto']))
             self.var_encoder_policy.set({'auto':'自動（NVENC優先・失敗時CPU）',
                                          'gpu':'GPU優先（NVENC）',
                                          'cpu':'CPU優先（libx264）'}.get(d.get('encoder_policy'),'自動（NVENC優先・失敗時CPU）'))
@@ -2834,6 +2940,7 @@ class App:
                                              "kill_glow_strength": float(self.var_kill_glow_strength.get()),
                                              "kill_frame_width": int(self.var_kill_frame_width.get()),
                                              "kill_mark_style": KILL_MARK_REVERSE.get(self.var_kill_mark_style.get(),'auto'),
+                                             "camera_side": next((code for code, label in CAMERA_SIDE_CHOICES.items() if label == self.var_camera_side.get()), 'auto'),
                                              "encoder_policy": {'GPU優先（NVENC）':'gpu','CPU優先（libx264）':'cpu'}.get(self.var_encoder_policy.get(),'auto'),
                                              "smart_montage": bool(self.var_smart_montage.get()),
                                              "smart_composition": bool(self.var_smart_composition.get()),
@@ -3009,6 +3116,7 @@ class App:
         self.locked = next(p for p in self.players if str(p.slot) == sel[0])
         self.lbl_lock.configure(text=f"対象: {self.locked.label()}", foreground="#15803d")
         self.log(f"対象を固定: {self.locked.label()} (slot {self.locked.slot})")
+        self.log("カメラ基準: " + ("RED：反対側からの斜め後ろ" if self.locked.team == 'CHAOS' else "BLUE：従来の斜め後ろ") + "（自動設定時）")
         self.kills = []
         self.checked_kills = set()
         self._fill_kills()
@@ -3231,38 +3339,48 @@ class App:
         return 1
 
     def _preview_tick(self) -> None:
+        if self._closing:
+            return
+        preview_fx = bool(self.var_live.get()) and (not self.busy or self._preview_fx_during_camera)
         try:
             cw, ch = max(160, self.canvas.winfo_width()), max(90, self.canvas.winfo_height())
-            live = bool(self.var_live.get())
-            mirror_on = self.source is not None and self.source.running
-            preview_fx = live and (not self.busy or self._preview_fx_during_camera)
-            self.canvas.delete("all")
-            rgb, kind = self._current_frame_rgb(cw, ch)
-            if rgb is not None:
-                if preview_fx:
-                    t = self.current_template()
-                    if hasattr(self, "curve_editor"):
-                        self.curve_editor.set_histogram(rgb)
-                    # ミラー表示はReplay APIへHUD/camera設定を送らず、画面上だけテンプレートを近似適用する。
-                    rgb = apply_camera_preview(rgb, t)
-                    rgb = apply_video_effect_preview(rgb, t, phase=0.5)
-                    rgb = compose_compare(rgb, t, preview_title(t, self._selected_multikill()), float(self.var_split.get()))
-                self._photo = ImageTk.PhotoImage(Image.fromarray(rgb))
-                self.canvas.create_image(cw // 2, ch // 2, image=self._photo)
-                if preview_fx:
-                    cam = STYLES.get(t.style, t.style)
-                    hud = "HUD安全モード" if t.hide_hud else "HUDそのまま"
-                    self.canvas.create_text(8, 8, anchor="nw", fill="#a7f3d0",
-                                            text=f"ミラー上の簡易FX表示 / カメラ: {cam} / {hud}")
+            if self.source is not None and self.source.running:
+                # Snapshot Tk values here. The worker gets only data and the capture source.
+                t = self.current_template() if preview_fx else None
+                title = preview_title(t, self._selected_multikill()) if t is not None else ''
+                split = float(self.var_split.get()) if t is not None else 0.0
+                key = (id(self.source), cw, ch, json.dumps(t.to_dict(), sort_keys=True) if t else '', title, split)
+                result = self._live_preview.result(key)
+                self._live_preview.submit(key, (self.source, min(cw, 960), min(ch, 540), t, title, split))
+                if result is not None and result is not self._preview_presented:
+                    rgb, original = result[1]
+                    image = Image.fromarray(rgb)
+                    ratio = min(cw / image.width, ch / image.height)
+                    if ratio != 1:
+                        image = image.resize((max(1, round(image.width * ratio)), max(1, round(image.height * ratio))))
+                    self._photo = ImageTk.PhotoImage(image)
+                    self.canvas.delete("all")
+                    self.canvas.create_image(cw // 2, ch // 2, image=self._photo)
+                    self._preview_presented = result
+                    if preview_fx:
+                        cam = STYLES.get(t.style, t.style)
+                        hud = "HUD安全モード" if t.hide_hud else "HUDそのまま"
+                        self.canvas.create_text(8, 8, anchor="nw", fill="#a7f3d0",
+                                                text=f"ミラー上の簡易FX表示 / カメラ: {cam} / {hud}")
+                        now = time.monotonic()
+                        if (hasattr(self, "curve_editor") and self.curve_editor.winfo_viewable()
+                                and now - self._histogram_updated >= .5):
+                            self.curve_editor.set_histogram(original[::4, ::4])
+                            self._histogram_updated = now
             else:
+                self._preview_presented = None
+                self.canvas.delete("all")
                 self.canvas.create_text(cw // 2, ch // 2, anchor="center",
                                         fill="#94A3B8", font=("Meiryo UI", 12, "bold"),
                                         text="LoLミラーを開始するとここに実映像が表示されます")
-        except Exception:
-            pass
-        # Rendering/export: ~10Hz unfiltered. Camera-only preview: ~15Hz
-        # filtered; avoids blocking Tk when circular DOF is CPU-composited.
-        self.root.after(67 if self._preview_fx_during_camera else (100 if self.busy else 16), self._preview_tick)
+        except (ValueError, tk.TclError):
+            pass  # A numeric entry may be temporarily empty while the user edits it.
+        self.root.after(100 if self.busy and not preview_fx else (67 if preview_fx else 33), self._preview_tick)
 
     def on_exact_still(self) -> None:
         try:
