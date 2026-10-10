@@ -31,7 +31,7 @@ def test_all_marks_and_custom_frame(tmp_path,mark):
         assert img.getpixel((77,55))[:3] == (255,32,32)
         assert img.getpixel((306,55))[:3] == (20,160,240)
         assert img.getpixel((35,53))[3]>0
-        assert img.getpixel((192,58))[3]>0
+        assert (img.getpixel((192,58))[3] == 0) if mark == 'none' else (img.getpixel((192,58))[3] > 0)
 
 
 def test_glow_toggle_does_not_change_portrait(tmp_path):
