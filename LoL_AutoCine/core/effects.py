@@ -27,6 +27,13 @@ NEUTRAL = dict(contrast=1.0, brightness=0.0, saturation=1.0, gamma=1.0,
                rs=0, gs=0, bs=0, rm=0, gm=0, bm=0, rh=0, gh=0, bh=0)
 
 GRADES: dict = {
+    "default":    dict(),  # No creative colour transformation
+    "lolnam":     dict(contrast=1.11, saturation=1.14, rs=-0.045, bs=0.07,
+                       rm=0.055, bm=-0.065, rh=0.085, bh=-0.04),
+    "drama":      dict(contrast=1.22, brightness=-0.018, saturation=0.78,
+                       rs=0.04, bs=-0.03, rh=0.07, gh=0.02),
+    "fade":       dict(contrast=0.84, brightness=0.025, saturation=0.84, gamma=1.07),
+    "highcontrast": dict(contrast=1.32, saturation=1.16, brightness=-0.012),
     "standard":   dict(),
     "film":       dict(contrast=1.08, saturation=0.92, rs=0.04, bs=-0.03, rh=0.03, gh=0.01, bh=-0.04),
     "noir":       dict(contrast=1.25, saturation=0.12, brightness=-0.03),
@@ -43,6 +50,8 @@ GRADES: dict = {
                        bm=-0.045, rh=0.09, gh=0.04, bh=-0.07),
 }
 GRADE_JP = {
+    "default": "デフォルト（色補正なし）", "lolnam": "Lolnam風シネマ",
+    "drama": "ドラマ", "fade": "フェード", "highcontrast": "高コントラスト",
     "standard": "標準", "film": "フィルム", "noir": "ノワール", "dark": "ダーク", "sunset": "夕日",
     "midnight": "深夜青", "tealorange": "ティール&オレンジ", "neon": "ネオン", "purple": "紫霧", "iceblue": "アイスブルー", "golden": "シネマゴールド",
 }
