@@ -101,6 +101,9 @@ def render_montage(clips, dst, style="cut", *, concat=None, ffmpeg=None,
                 if "-r" in args:
                     n = args.index("-r")
                     del args[n:n+2]
+                from .gpu_full import render_gpu_montage
+                if render_gpu_montage(ffmpeg,raw,dst,style,boundaries,args,logger):
+                    return style
             cmd = [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-i", str(raw),
                    "-vf", filt, "-map", "0:v:0", "-map", "0:a?", *args,
                    "-c:a", "copy", "-movflags", "+faststart", str(dst)]

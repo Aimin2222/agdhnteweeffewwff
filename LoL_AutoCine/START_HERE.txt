@@ -1,4 +1,4 @@
-LoL AutoCine v5.10.5 — 現在の起動手順
+LoL AutoCine v5.10.6 — 現在の起動手順
 
 完全版を旧版と別のフォルダへ展開し、START_GPU.bat を実行してください。
 初回のGPU FFmpeg準備にはダウンロードが必要です。
@@ -11,5 +11,7 @@ LoLリプレイを開く → 接続して10人取得 → 対象プレイヤー�
 画像変換と簡易FXを別スレッド化しました。録画・最終出力の60 FPSは維持しています。
 過去版の説明書は docs\history に保存しています。
 
-詳細: README.md / docs\WINDOWS_TEST_v5105_JA.md
+映像加工をまとめてGPU化。対応確認と失敗時CPU復旧を維持します。
+同じraw録画の比較: TEST_GPU_RENDER.bat で6本を自動生成。
+詳細: README.md / docs\WINDOWS_TEST_v5106_JA.md
 不具合時: COLLECT_DIAGNOSTICS.bat で診断ZIPを作成。

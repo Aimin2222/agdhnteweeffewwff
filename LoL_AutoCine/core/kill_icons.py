@@ -307,18 +307,8 @@ def make_event_badges(output: Path, style: str, kills, events, roster, *, icon_l
     return entries
 
 
-def with_badges(graph: str, badge_input: int, badges, *, duration: float,
-                position="right-top",scale=1.0,seconds=1.55,opacity=1.0,style="simple"):
-    """Show separate portrait pairs as a compact stacked kill feed (max 3 rows).
-
-    Each event retains its own portrait pair. Concurrent events stack rather
-    than replacing the previous event; oldest row is retired if four overlap.
-    """
-    if not graph.endswith("[vout]"):
-        raise ValueError("Existing video graph has no [vout]")
-    if not badges:
-        return graph
-    position, scale, seconds, opacity = normalize_options(position, scale, seconds, opacity)
+def badge_plan(badges, duration, seconds):
+    """Identical bounded stacking for CPU and GPU portrait compositors."""
     valid = sorted([(i,float(t)) for i,(_,t) in enumerate(badges)
                     if math.isfinite(float(t)) and 0 <= float(t) <= duration], key=lambda it:it[1])
     planned=[]
@@ -334,7 +324,18 @@ def with_badges(graph: str, badge_input: int, badges, *, duration: float,
             oldest['end']=max(oldest['start'],start-.01)
             available.add(oldest['row'])
         planned.append(dict(index=idx, time=t, start=start, end=end, row=min(available)))
-    planned=[entry for entry in planned if entry['end']>entry['start']]
+    return [entry for entry in planned if entry['end']>entry['start']]
+
+
+def with_badges(graph: str, badge_input: int, badges, *, duration: float,
+                position="right-top",scale=1.0,seconds=1.55,opacity=1.0,style="simple"):
+    """Show separate portrait pairs as a compact stacked kill feed (max 3 rows)."""
+    if not graph.endswith("[vout]"):
+        raise ValueError("Existing video graph has no [vout]")
+    if not badges:
+        return graph
+    position, scale, seconds, opacity = normalize_options(position, scale, seconds, opacity)
+    planned=badge_plan(badges,duration,seconds)
     if not planned:
         return graph
     parts=[graph[:-6]+"[pair_src_0]"]

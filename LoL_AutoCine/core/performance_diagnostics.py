@@ -26,6 +26,10 @@ def cpu_encoder_retry_command(command):
             cursor+=2
         else:
             tail.append(args[cursor]);cursor+=1
+    # RGBA input lets NVENC perform its color conversion on hardware. libx264
+    # must explicitly return to the compatible 4:2:0 software output format.
+    for n in range(len(tail)-1):
+        if tail[n]=='-pix_fmt': tail[n+1]='yuv420p'
     return args[:idx]+['libx264','-preset','medium','-crf','17']+tail
 
 
@@ -95,12 +99,30 @@ def run_render(cmd, *, output, gpu_effects, effect_values, fallback_reason=None,
         import psutil
     except ImportError:
         psutil = None
+    process = psutil.Process() if psutil else None
+    ffmpeg_processes = {}
     def sample():
         while not stop.is_set():
             row = {'elapsed_s': round(time.monotonic() - start, 2)}
             if psutil:
                 row['cpu_pct'] = psutil.cpu_percent(interval=None)
                 row['ram_used_mb'] = round(psutil.virtual_memory().used / 1048576)
+                try:
+                    row['python_cpu_pct'] = process.cpu_percent(interval=None)
+                    total = 0.0
+                    alive = set()
+                    for child in process.children(recursive=True):
+                        if 'ffmpeg' not in child.name().lower(): continue
+                        alive.add(child.pid)
+                        cached = ffmpeg_processes.setdefault(child.pid,child)
+                        total += cached.cpu_percent(interval=None)
+                    for pid in set(ffmpeg_processes)-alive: del ffmpeg_processes[pid]
+                    # psutil process percentages sum logical cores and may
+                    # exceed 100%; normalized value is share of this PC.
+                    row['ffmpeg_cpu_pct'] = round(total,2)
+                    row['ffmpeg_cpu_pc_pct'] = round(total/max(1,psutil.cpu_count() or 1),2)
+                except (psutil.Error,OSError):
+                    pass
             try:
                 row.update(_sample_gpu())
                 rows.append(row)
@@ -136,7 +158,8 @@ def run_render(cmd, *, output, gpu_effects, effect_values, fallback_reason=None,
         stop.set()
         if worker is not None:
             worker.join(timeout=0.3)
-        fields = ['elapsed_s', 'cpu_pct', 'ram_used_mb', 'gpu_pct', 'encoder_pct', 'vram_used_mb', 'vram_total_mb', 'gpu_temp_c']
+        fields = ['elapsed_s', 'cpu_pct', 'ram_used_mb', 'gpu_pct', 'encoder_pct', 'vram_used_mb', 'vram_total_mb', 'gpu_temp_c',
+                  'python_cpu_pct','ffmpeg_cpu_pct','ffmpeg_cpu_pc_pct']
         try:
             csv_path = folder / ('render_' + stamp + '.csv')
             with csv_path.open('w', encoding='utf-8-sig', newline='') as f:
@@ -147,6 +170,9 @@ def run_render(cmd, *, output, gpu_effects, effect_values, fallback_reason=None,
             log_path = base / 'ffmpeg' / ('render_' + stamp + '.log')
             log_path.parent.mkdir(parents=True, exist_ok=True)
             log_path.write_text('Command: ' + subprocess.list2cmdline([str(x) for x in cmd]) + '\n\n' + ('CPU retry command: '+subprocess.list2cmdline([str(x) for x in actual_command])+'\n' if encoder_retry_reason else '') + stderr + '\n' + (error or '') + '\n' + (encoder_retry_reason or ''), encoding='utf-8')
+            pipeline_info = dict(pipeline_info or {})
+            if encoder_retry_reason and _encoder_name(actual_command)=='libx264':
+                pipeline_info['encoder_color_conversion']='software YUV420P (NVENC retry)'
             data = {'started_at': stamp, 'output': str(output), 'elapsed_s': round(time.monotonic()-start, 3), 'returncode': result.returncode if result else None, 'error': error, 'command': actual_command, 'gpu_effects_requested': list(gpu_effects), 'effect_values': effect_values, 'fallback_reason': fallback_reason or encoder_retry_reason, 'encoder_retry_reason': encoder_retry_reason, 'encoder': _encoder_name(actual_command), 'gpu_effects_attempted': bool(gpu_effects), 'gpu_effects_confirmed': bool(gpu_effects) and error is None and result is not None and result.returncode == 0, 'pipeline': pipeline_info or {}, 'effective_processing_fps': round(float((pipeline_info or {}).get('output_fps', 0) or 0) * float((pipeline_info or {}).get('duration_s', 0) or 0) / max(time.monotonic()-start,0.001), 2) if (pipeline_info or {}).get('duration_s') else None, 'samples': len(rows), 'metrics': {key: {'avg': round(sum(r[key] for r in rows if key in r) / len([r for r in rows if key in r]), 2), 'max': max(r[key] for r in rows if key in r)} for key in fields[1:] if any(key in r for r in rows)}}
             json_path = folder / ('render_' + stamp + '.json')
             json_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8')

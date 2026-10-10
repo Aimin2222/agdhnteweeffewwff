@@ -21,6 +21,9 @@ def test_v596_positional_template_fields_are_preserved():
 
 
 def setup_montage(tmp_path, monkeypatch):
+    # These tests exercise the legacy CPU eq path and encoder recovery.
+    from core import gpu_full
+    monkeypatch.setattr(gpu_full,'render_gpu_montage',lambda *a,**k:False)
     clips = [tmp_path / 'one.mp4', tmp_path / 'two.mp4']
     raw_bytes = b'original audio-bearing montage' * 100
     dst = tmp_path / 'montage.mp4'

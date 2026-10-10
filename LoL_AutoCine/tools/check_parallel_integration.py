@@ -12,6 +12,7 @@ import subprocess
 
 
 GPU_FILES = {"core/effects.py", "core/gpu_pipeline.py", "core/recorder.py",
+             'tools/gpu_render_test.py','START_CPU_EFFECTS_COMPARE.bat','START_GPU_HYBRID.bat','TEST_GPU_RENDER.bat',
              "tools/setup_gpu_ffmpeg.py", "START_GPU.bat",
              "core/focus_fx.py", "core/preview.py",
              "core/montage_fx.py",
@@ -19,7 +20,7 @@ GPU_FILES = {"core/effects.py", "core/gpu_pipeline.py", "core/recorder.py",
              "core/kill_icons.py", "tests/test_v5991_portrait_pairs.py",
              "core/performance_diagnostics.py", "tests/test_v585_filters.py",
              "tests/test_v585_diagnostics.py", "tests/test_v31_regressions.py"}
-UI_FILES = {"tests/test_v5105_preview_responsiveness.py", "tests/test_v5105_killfeed_glow_side_help.py", "tests/test_v5104_notebook_livefx_camera.py", "legacy_app.py", "tests/test_editor_ui_contract.py",
+UI_FILES = {"tests/test_v5106_hover_help.py", "tests/test_v5105_preview_responsiveness.py", "tests/test_v5105_killfeed_glow_side_help.py", "tests/test_v5104_notebook_livefx_camera.py", "legacy_app.py", "tests/test_editor_ui_contract.py",
             "tests/test_checked_dispatch.py", "tests/gui_smoke.py",
             "tests/test_scene_studio.py", "tests/test_scene_studio_gui.py",
             "tests/test_scene_sequence.py", "tests/test_scene_keyframes_v592.py",
@@ -47,6 +48,7 @@ INFRA_FILES = {
     'tools/package_v5103_mirrorfix.py',
     'tools/package_v5104.py',
     'tools/package_v5105.py',
+    'tools/package_v5106.py',
     'tools/package_v599.py',
 }
 

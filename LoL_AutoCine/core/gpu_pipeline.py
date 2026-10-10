@@ -29,6 +29,8 @@ class GPUCapabilities:
     program_opencl: bool = False
     rgba_gpu_runtime_ok: bool = False
     rgba_probe_reason: str = ''
+    full_gpu_runtime_ok: bool = False
+    full_probe_reason: str = ''
 
 
 def _run(args: list[str], timeout: float = 10.0) -> tuple[int, str]:
@@ -102,6 +104,8 @@ def detect() -> GPUCapabilities:
     opencl = "opencl" in f
     runtime_ok = _opencl_probe() if gblur_opencl else False
     rgba_ok, rgba_reason = _rgba_probe()
+    from .gpu_full import full_runtime_probe, mode
+    full_ok, full_reason = full_runtime_probe(FFMPEG) if rgba_ok and mode() == 'full' else (False, rgba_reason or 'full_gpu_not_selected')
     return GPUCapabilities(
         nvenc=nvenc,
         cuda=nvenc or scale_cuda or "hwupload_cuda" in f,
@@ -115,11 +119,15 @@ def detect() -> GPUCapabilities:
         program_opencl='program_opencl' in f,
         rgba_gpu_runtime_ok=rgba_ok,
         rgba_probe_reason=rgba_reason,
+        full_gpu_runtime_ok=full_ok,
+        full_probe_reason=full_reason,
     )
 
 
 def backend_name(c: GPUCapabilities | None = None) -> str:
     c = c or detect()
+    if c.full_gpu_runtime_ok:
+        return 'OpenCL full video effects (verified) + ' + ('NVIDIA NVENC' if c.nvenc else 'CPU Encode fallback')
     if c.nvenc and (c.opencl_runtime_ok or c.rgba_gpu_runtime_ok):
         return "OpenCL GPU Effects (verified) + NVIDIA NVENC"
     if c.nvenc:
