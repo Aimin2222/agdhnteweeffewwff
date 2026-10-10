@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from queue import Queue, Empty
+from threading import Thread
 import tkinter as tk
 from tkinter import ttk
 
@@ -42,6 +44,8 @@ class KillFrameGallery:
         self._photos=[]
         self._rendered={}
         self._queue=list(STYLES)
+        self._ready=Queue()
+        self._stopping=False
         self._preview_after=None
         self._chosen='premium_gold' if 'premium_gold' in STYLES else 'cinema'
         self._workdir=TemporaryDirectory(prefix="autocine_kill_gallery_")
@@ -58,6 +62,10 @@ class KillFrameGallery:
         ttk.Label(heading,text="試合の撮影は不要。選択後はかんたん編集・詳細編集の両方に反映。",
                   wraplength=460).pack(side="left",padx=(18,4))
         self.search=tk.StringVar()
+        self.group=tk.StringVar(value="すべて")
+        self.groups=("すべて","追加素材","ゴールド・炎","ネオン・サイバー","スキンテーマ風","その他")
+        ttk.Combobox(heading,textvariable=self.group,values=self.groups,state="readonly",width=17).pack(side="right",padx=(7,4))
+        self.group.trace_add("write",self.filter_cards)
         ttk.Entry(heading,textvariable=self.search,width=22).pack(side="right")
         ttk.Label(heading,text="検索：",style="CardMuted.TLabel").pack(side="right")
         main=ttk.PanedWindow(self.win,orient="horizontal")
@@ -97,6 +105,7 @@ class KillFrameGallery:
         self.title.pack(anchor="w",pady=(4,8))
         self.preview=ttk.Label(right,text="読み込み中…")
         self.preview.pack(fill="x",pady=(6,8))
+        ttk.Button(right,text="▣ さらに拡大して確認",command=self.zoom_preview).pack(fill="x",pady=(0,8))
         ttk.Label(right,text="青／赤は見本の肖像です。実際の書き出しでは試合のチャンピオンアイコンになります。",
                   wraplength=410).pack(anchor="w")
         self.strength=tk.DoubleVar(value=float(app.var_kill_glow_strength.get()))
@@ -110,35 +119,50 @@ class KillFrameGallery:
         self.status=ttk.Label(right,text="37種類以上を順に読み込んでいます。",wraplength=430)
         self.status.pack(anchor="w",pady=7)
         self.select(self._chosen)
-        self.win.after(10,self._fill_batch)
+        Thread(target=self._render_all,daemon=True,name="AutoCine-KillFrames").start()
+        self.win.after(30,self._fill_batch)
 
     def _render(self,style,glow_strength=1.,glow_enabled=True):
         tmp=Path(self._workdir.name)/f"badge_{style}_{int(glow_strength*100)}_{int(glow_enabled)}.png"
+        if style == "off":
+            im=Image.new("RGBA",(385,116),(0,0,0,0))
+            d=ImageDraw.Draw(im)
+            d.rounded_rectangle((54,35,331,86),radius=8,fill=(20,30,46,192))
+            d.text((128,51),"NO FRAME",fill=(226,233,240,255))
+            return im
         if not tmp.is_file():
             make_badge(tmp,style,killer_icon=self._icons[0],victim_icon=self._icons[1],
                        glow_strength=glow_strength,glow_enabled=glow_enabled)
         with Image.open(tmp) as im: return im.convert("RGBA").copy()
 
-    def _fill_batch(self):
-        if not self.win.winfo_exists(): return
-        for _ in range(min(2,len(self._queue))):
-            style=self._queue.pop(0)
+    def _render_all(self):
+        """Keep PIL/large PNG decoding off the Tk event thread."""
+        for style in STYLES:
+            if self._stopping:
+                return
             try:
-                im=self._render(style,1.)
-                im.thumbnail((280,92),Image.Resampling.LANCZOS)
-                photo=ImageTk.PhotoImage(im,master=self.win)
-                self._photos.append(photo)
-                for key,_,_,label in self.cards:
-                    if key==style:
-                        label.configure(image=photo,text="")
-                        break
+                picture=self._render(style,1.)
+                picture.thumbnail((280,92),Image.Resampling.LANCZOS)
+                self._ready.put((style,picture,None))
             except Exception as error:
-                for key,_,_,label in self.cards:
-                    if key==style:
-                        label.configure(text=f"プレビュー不可: {error}")
-                        break
+                self._ready.put((style,None,str(error)))
+
+    def _fill_batch(self):
+        if not self.win.winfo_exists() or self._stopping:return
+        for _ in range(3):
+            try:style,im,error=self._ready.get_nowait()
+            except Empty:break
+            if style in self._queue:self._queue.remove(style)
+            for key,_,_,label in self.cards:
+                if key==style:
+                    if error:label.configure(text="プレビュー不可: "+error)
+                    else:
+                        photo=ImageTk.PhotoImage(im,master=self.win)
+                        self._photos.append(photo)
+                        label.configure(image=photo,text="")
+                    break
         self.status.configure(text=f"読み込み：{len(STYLES)-len(self._queue)} / {len(STYLES)}")
-        if self._queue:self.win.after(40,self._fill_batch)
+        if self._queue:self.win.after(45,self._fill_batch)
 
     def _queue_preview(self):
         if self._preview_after:
@@ -169,11 +193,34 @@ class KillFrameGallery:
             self.app._save_settings()
             self.app.log("キルフレーム図鑑から適用: "+STYLES[style])
 
+    def zoom_preview(self):
+        popup=tk.Toplevel(self.win)
+        popup.title("キルフレームを大きく確認")
+        popup.geometry("860x330")
+        ttk.Label(popup,text=STYLES[self._chosen],font=("Meiryo UI",13,"bold")).pack(pady=8)
+        try:
+            img=self._render(self._chosen,float(self.strength.get()),bool(self.glow_enabled.get()))
+            image=img.resize((770,232),Image.Resampling.LANCZOS)
+            photo=ImageTk.PhotoImage(image,master=popup)
+            label=ttk.Label(popup,image=photo)
+            label.image=photo
+            label.pack(pady=6)
+        except Exception as exc:
+            ttk.Label(popup,text=str(exc)).pack(pady=20)
+
+    def _category(self, style):
+        if style.startswith("user_frame_"):return "追加素材"
+        if any(x in style for x in ("gold","royal","inferno","noon","wing")):return "ゴールド・炎"
+        if any(x in style for x in ("neon","cyber","project","crystal")):return "ネオン・サイバー"
+        if any(x in style for x in ("kda","star","spirit","celestial")):return "スキンテーマ風"
+        return "その他"
+
     def filter_cards(self,*_):
         token=self.search.get().strip().casefold()
+        group=self.group.get()
         idx=0
         for style,title,panel,_ in self.cards:
-            if not token or token in title.casefold() or token in style.casefold():
+            if (not token or token in title.casefold() or token in style.casefold()) and (group=="すべて" or group==self._category(style)):
                 panel.grid(row=idx//2,column=idx%2,sticky="nsew",padx=4,pady=4)
                 idx+=1
             else:panel.grid_remove()
@@ -186,6 +233,7 @@ class KillFrameGallery:
         return "break"
 
     def close(self):
+        self._stopping=True
         if self._preview_after:
             try:self.win.after_cancel(self._preview_after)
             except tk.TclError:pass
