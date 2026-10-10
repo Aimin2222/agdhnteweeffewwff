@@ -39,6 +39,7 @@ INFRA_FILES = {
     'tools/package_v5100.py',
     'tools/package_v5101.py',
     'tools/package_v5103.py',
+    'tools/package_v5103_capture60.py',
     'tools/package_v5103_capturefix.py',
     'tools/package_v5103_exportopt.py',
     'tools/package_v5103_gpu.py',

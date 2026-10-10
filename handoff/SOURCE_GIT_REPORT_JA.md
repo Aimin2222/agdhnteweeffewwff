@@ -1,16 +1,15 @@
-# v5.10.3 GPUFX ExportOpt 保存報告
+# v5.10.3 GPUFX Capture60 保存報告
 
 ソース: /workspace/LoL_AutoCine（ローカルGit、remoteなし）。取得用: /workspace/agdhnteweeffewwff（origin https://github.com/Aimin2222/agdhnteweeffewwff.git）。
-ソースHEAD: 257afdc4128e2196bcb96da9d22b763d69c254fe、ブランチ: integration/v5.10.3-exportopt。取得用ブランチ: codex/lol-autocine-v5103-exportopt-handoff。mainへマージしない。
-
-開始前の両Gitのstatusは空。最終コミット/push後の状態はVERIFICATIONにも記録する。個人設定・録画・診断ZIP・ログ・.venvは配布しない。
+ソースHEAD: 2a7a538540cbce9c13aae49da4a156cfd7ff4671、ブランチ: integration/v5.10.3-capture60。取得用: codex/lol-autocine-v5103-capture60-handoff。mainへマージしない。
+開始前の両Gitのstatusは空。最終コミット/push後の状態はVERIFICATIONにも記録。個人設定・録画・原診断ZIP・ログ・.venvは配布しない。
 
 ## git log -3 --oneline（ソース）
 
 ```
-257afdc Save export optimization contract and reproducible packaging
-f431de0 Document export optimization measurements and exact shared API review
-b719990 Integrate export optimization with existing mirror UI
+2a7a538 Integrate 60fps capture with preserved scene and mirror UI
+954f55c Document 60fps intermediate policy and preserve parallel integration contract
+5aefb57 Record and normalize 60fps exports at 60fps without changing camera cadence
 ```
 
 ## git remote -v
@@ -22,20 +21,15 @@ origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-## 前回MirrorFixからの実変更
+## 前回ExportOptからの実変更
 
 ```
-M	core/capture_process.py
-M	core/effects.py
-M	core/gpu_bloom.py
 M	core/jobs.py
-M	core/recorder.py
-A	docs/CODEX_EXPORT_OPTIMIZATION_v5.10.3_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_EXPORT_v5.10.3.json
-A	tests/test_gpu_export_optimization.py
-M	tests/test_gpu_replay_warmup_v5101.py
+A	docs/CODEX_CAPTURE60_v5.10.3_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_CAPTURE60_v5.10.3.json
+A	tests/test_gpu_capture60_v5103.py
 M	tools/check_parallel_integration.py
-A	tools/package_v5103_exportopt.py
+A	tools/package_v5103_capture60.py
 ```
 
 ## 元v5.8.5からの実変更
@@ -85,6 +79,7 @@ A	docs/CHANGELOG_v5.9.7_JA.md
 A	docs/CODEX_ALL_SCENES_HANG_FIX_v5.10.3_JA.md
 A	docs/CODEX_ARCHITECTURE_JA.md
 A	docs/CODEX_AUDIT_RESULTS_JA.md
+A	docs/CODEX_CAPTURE60_v5.10.3_JA.md
 A	docs/CODEX_CAPTURE_STARTUP_FIX_v5.10.3_JA.md
 A	docs/CODEX_CHAMPION_PAIR_RESULTS_v5.9.9_JA.md
 A	docs/CODEX_EXPORT_OPTIMIZATION_v5.10.3_JA.md
@@ -118,6 +113,7 @@ A	docs/CODEX_MERGE_v5.9.0_JA.md
 A	docs/CODEX_MERGE_v5.9.1_JA.md
 A	docs/CODEX_MIRROR_TARGET_FIX_v5.10.3_JA.md
 A	docs/CODEX_PARALLEL_INTEGRATION_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_CAPTURE60_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_CAPTURE_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_EXPORT_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_MIRROR_v5.10.3.json
@@ -155,6 +151,7 @@ A	docs/v599_changes.patch
 M	legacy_app.py
 A	patches/v594_to_v595.patch
 A	tests/test_editor_ui_contract.py
+A	tests/test_gpu_capture60_v5103.py
 A	tests/test_gpu_capture_isolation.py
 A	tests/test_gpu_champion_pair_v599.py
 A	tests/test_gpu_circle_focus_v5103.py
@@ -191,6 +188,7 @@ A	tools/check_parallel_integration.py
 A	tools/package_v5100.py
 A	tools/package_v5101.py
 A	tools/package_v5103.py
+A	tools/package_v5103_capture60.py
 A	tools/package_v5103_capturefix.py
 A	tools/package_v5103_exportopt.py
 A	tools/package_v5103_gpu.py
@@ -211,4 +209,4 @@ A	ui/studio_localization.py
 A	ui_changes_v5.9.1.patch
 ```
 
-ソース264/Python101、全43ブランチをbundle保存。前回版の全配布物を残す。UIとlegacy_app.py、カメラ/時計/TargetLock、LoL専用音声/Native、START/FFmpeg導入などはバイト一致。core/effects.py・gpu_bloom.py・recorder.py・jobs.py・capture_process.pyは今回の意図した修正。共有内部変更は正確なblobをCODEX_SHARED_API_REVIEW_EXPORT_v5.10.3.jsonへ記録し、担当/統合一致を検査。詳細はCODEX_EXPORT_OPTIMIZATION_v5.10.3_JA.md。
+ソース268/Python103、全45ブランチをbundle保存。前回版の全配布物を残す。今回のアプリ変更はcore/jobs.pyの録画fps制限とログのみ。GPUエフェクト/recorder/カメラ/時計/LoL音声/Native/START/UIはバイト一致。共有jobsの正確なblobはCODEX_SHARED_API_REVIEW_CAPTURE60_v5.10.3.jsonへ記録。詳細はCODEX_CAPTURE60_v5.10.3_JA.md。
