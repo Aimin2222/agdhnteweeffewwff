@@ -371,7 +371,52 @@
     "all_bytes_identical": true
   },
   "compileall_passed": true,
-  "source_and_delivery_clean_after_commit": false,
-  "github_fresh_restore": null,
-  "environment_config_saved": false
+  "source_and_delivery_clean_after_commit": true,
+  "github_fresh_restore": {
+    "source_head": "2a7a538540cbce9c13aae49da4a156cfd7ff4671",
+    "source_files": 268,
+    "local_branch_count": 45,
+    "all_source_bytes_match": true,
+    "all_branch_tips_match": true,
+    "guard_passed": true,
+    "tracked_files_unchanged": true,
+    "repeated_install_preserves_head_and_private_files": true,
+    "representative_pytest": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "41",
+      "time": "4.503",
+      "timestamp": "2026-10-10T00:42:21.527715+00:00",
+      "hostname": "db64bb7c5e92"
+    }
+  },
+  "environment_config_saved": {
+    "status": "saved",
+    "revision": 23,
+    "install_script_exact_match": true,
+    "start_skill_exact_match": true,
+    "other_fields_preserved": [
+      "repositories",
+      "network_policy",
+      "secrets",
+      "runtime_requirements",
+      "pending_runtime_requirements"
+    ],
+    "requires_publish": true
+  },
+  "delivery_preservation": {
+    "previous_artifacts_count": 72,
+    "all_old_artifacts_identical": true,
+    "all_source_bytes_match": true,
+    "main_unchanged": true
+  },
+  "github_delivery": {
+    "pull_request": 20,
+    "draft": true,
+    "base": "codex/lol-autocine-v5103-exportopt-handoff",
+    "main_unchanged": true,
+    "immutable_restore_commit": "357c0f0e48739c976305e81d8562c41fa63d0793"
+  }
 }
