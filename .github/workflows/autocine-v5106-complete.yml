@@ -1,0 +1,70 @@
+name: AutoCine v5.10.6 Complete - Tests & ZIPs
+on:
+  push:
+    branches:
+      - autocine/v5.10.6-complete
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-and-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install headless display and FFmpeg
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb ffmpeg
+          python -m pip install -r LoL_AutoCine/requirements.txt pytest
+      - name: Compile
+        run: python -m compileall -q LoL_AutoCine
+      - name: All unit and integration tests
+        working-directory: LoL_AutoCine
+        run: xvfb-run -a python -m pytest -q tests --ignore=tests/gui_smoke.py
+      - name: Build verified full and Codex merge ZIPs
+        run: |
+          python - <<'PY'
+          import pathlib, subprocess, zipfile, tempfile
+          app=pathlib.Path('LoL_AutoCine')
+          out=pathlib.Path('builds/v5.10.6')
+          out.mkdir(parents=True, exist_ok=True)
+          base='origin/codex/lol-autocine-v5105-responsive-ui-handoff'
+          subprocess.run(['git','fetch','origin','codex/lol-autocine-v5105-responsive-ui-handoff'], check=True)
+          full=out/'LoL_AutoCine_v5.10.6_Windows_Full.zip'
+          with zipfile.ZipFile(full,'w',zipfile.ZIP_DEFLATED) as z:
+              for path in sorted(app.rglob('*')):
+                  if path.is_file() and not any(p in ('.pytest_cache','__pycache__','diagnostics') for p in path.parts) and path.suffix != '.pyc':
+                      z.write(path,path.as_posix())
+          patch_bytes=subprocess.check_output(['git','diff','--binary',base+'...HEAD','--','LoL_AutoCine'])
+          assert patch_bytes.strip(), 'expected Codex patch'
+          patch=out/'v5106_from_codex_v5105.patch'
+          patch.write_bytes(patch_bytes)
+          with tempfile.TemporaryDirectory() as tmp:
+              subprocess.run(['git','worktree','add','--detach',tmp,base],check=True,stdout=subprocess.DEVNULL)
+              try:
+                  subprocess.run(['git','apply','--check',str(patch.resolve())],cwd=tmp,check=True)
+              finally:
+                  subprocess.run(['git','worktree','remove','--force',tmp],check=True)
+          guide=out/'CODEX_README_JA.txt'
+          guide.write_text('v5.10.6 完全版差分です。ベースは codex/lol-autocine-v5105-responsive-ui-handoff。\n進行中のGPU実装を上書きしないよう、core/jobs.pyなど競合ファイルは差分を確認してマージしてください。\n',encoding='utf-8')
+          diffzip=out/'LoL_AutoCine_v5.10.6_Codex_MergeChanges.zip'
+          with zipfile.ZipFile(diffzip,'w',zipfile.ZIP_DEFLATED) as z:
+              z.write(patch,patch.name);z.write(guide,guide.name)
+          for path in (full,diffzip):
+              with zipfile.ZipFile(path) as z:
+                  assert z.testzip() is None
+              print(path,path.stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LoL-AutoCine-v5.10.6-Full-and-Codex
+          path: builds/v5.10.6/*.zip
+          retention-days: 30
