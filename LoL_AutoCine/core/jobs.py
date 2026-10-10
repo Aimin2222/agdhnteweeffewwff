@@ -238,6 +238,33 @@ def _recording_event_observer(kills, replay_start, wall_start, events):
     return observe
 
 
+
+def restore_mirror_camera(api: ReplayAPI, player: Player, fov: float,
+                          log: Callable = lambda m: None) -> None:
+    """Restore a *safe visible* replay view after a cinematic job.
+
+    A zero selectionOffset with cameraMode='fps' keeps the camera attached to
+    the champion and can place the camera inside the character/terrain. Reset
+    the camera mode and its attachment together. This changes only the live
+    Replay API view; the already-rendered MP4 is untouched.
+    """
+    try:
+        api.set_playback(paused=True, speed=1.0)
+    except ReplayApiError as exc:
+        log(f"ミラー復帰: 再生停止を確認できません: {exc}")
+    sel = player.selection_name or player.champion
+    try:
+        api.set_render(selectionName=sel, cameraMode="top", cameraAttached=True,
+                       selectionOffset={"x": 0, "y": 0, "z": 0}, fieldOfView=fov)
+        log("ミラー復帰: 対象チャンピオンの安全な俯瞰追従カメラに戻しました")
+    except ReplayApiError as exc:
+        log(f"ミラー復帰: カメラ切替失敗: {exc}")
+        try:
+            api.set_render(cameraMode="top", cameraAttached=True)
+        except ReplayApiError as retry:
+            log(f"ミラー復帰: 再試行失敗（リプレイの接続を確認）: {retry}")
+
+
 def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Template,
                     start: float, end: float, kills: list, raw_path: Path, stop=None,
                     log: Callable = lambda m: None,
@@ -268,7 +295,10 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
         except AudioError as e:
             audio_log(f"clip audio start failed: {type(e).__name__}: {e}", "ERROR")
             log(f"音声: 録音開始失敗 → {e}")
-            # ゲーム音ONなのに無音MP4を成功扱いしない。初心者でも原因が分かるよう明示して停止。
+            # Start can fail after camera setup. Never leave the LoL mirror inside the rig.
+            restore_hud(api, saved_hud)
+            restore_fx(api, fx_saved)
+            restore_mirror_camera(api, player, plan.base_fov, log)
             raise AudioError(f"LoLゲーム音の準備に失敗しました: {e}") from e
     director = CameraDirector(api, plan)
     # CameraDirector has its own 144Hz motion clock. Do not encode and then
@@ -302,6 +332,11 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
             # 復元処理を完了してからクリップ単位の失敗として返す。
             take.duration = rec.elapsed
             recorder_error = e
+        # Recorder is stopped: release the temporary 3rd-person camera now,
+        # even if LoL audio validation below raises an exception.
+        restore_hud(api, saved_hud)
+        restore_fx(api, fx_saved)
+        restore_mirror_camera(api, player, plan.base_fov, log)
         take.cam_errors = director.errors
         log(f"カメラ動作診断: API送信 {director.api_calls}回 / 25ms超 {director.api_slow_calls}回 / "
             f"最大API待ち {director.max_api_latency_ms:.1f}ms / 最大時刻ずれ {director.max_clock_drift:.3f}s")
@@ -341,13 +376,7 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
                 if tpl.game_audio:
                     raise AudioError(f"LoLゲーム音を確実に収録できません: {e}") from e
                 log(f"音声の停止処理でエラー: {e}")
-        try:
-            api.set_playback(paused=True, speed=1.0)
-            api.set_render(fieldOfView=plan.base_fov, selectionOffset={"x": 0, "y": 0, "z": 0})
-        except ReplayApiError:
-            pass
-        restore_hud(api, saved_hud)
-        restore_fx(api, fx_saved)
+        # The temporary camera was already released immediately after rec.stop().
     if recorder_error is not None:
         raise recorder_error
     return take
@@ -373,13 +402,9 @@ def preview_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, en
             f"25ms超 {director.api_slow_calls}回 / "
             f"最大API待ち {director.max_api_latency_ms:.1f}ms / "
             f"最大時刻ずれ {director.max_clock_drift:.3f}s")
-        try:
-            api.set_playback(paused=True, speed=1.0)
-            api.set_render(fieldOfView=plan.base_fov, selectionOffset={"x": 0, "y": 0, "z": 0})
-        except ReplayApiError:
-            pass
         restore_hud(api, saved_hud)
         restore_fx(api, fx_saved)
+        restore_mirror_camera(api, player, plan.base_fov, log)
     return rig
 
 
