@@ -11,7 +11,20 @@ import math
 import re
 import subprocess
 
-MONTAGE_FX = {"cut", "flash", "dark"}
+MONTAGE_LABELS = {
+    "cut": "なし（高速連結）",
+    "flash": "白いフラッシュ",
+    "dark": "シネマ暗転",
+    "white": "ホワイトアウト",
+    "soft": "ソフトディゾルブ風",
+    "gold": "ゴールドライト",
+    "cool": "クールブルー",
+    "pulse": "インパクトパルス",
+    "cinema": "フィルムフラッシュ",
+    "shadow": "ディープシャドウ",
+}
+MONTAGE_REVERSE = {label: key for key,label in MONTAGE_LABELS.items()}
+MONTAGE_FX = set(MONTAGE_LABELS)
 
 
 def get_duration(path: Path, *, ffprobe: str = "ffprobe", ffmpeg: str = "ffmpeg") -> float:
@@ -58,15 +71,24 @@ def montage_filter(style: str, cuts: list[float]) -> str:
         raise ValueError("未知のモンタージュ演出: " + style)
     if style == "cut" or not cuts:
         return "null"
-    if style == "flash":
-        # 2 frame wide flicker at 60fps; avoid full-white screen or seizure-like strobing
-        terms = [f"0.22*max(0,1-abs(t-{x:.4f})/0.09)" for x in cuts]
-    else:
-        terms = [f"-0.24*max(0,1-abs(t-{x:.4f})/0.18)" for x in cuts]
-    # Note: FFmpeg filter argument escaping is handled by passing the entire
-    # filter as one subprocess argument (not through a shell).
-    return "eq=brightness='" + "+".join(terms) + "':eval=frame"
-
+    profiles = {
+        "flash": (.22, .09), "dark": (-.24, .18),
+        "white": (.34, .24), "soft": (.11, .30),
+        "gold": (.19, .22), "cool": (.10, .20),
+        "pulse": (.28, .11), "cinema": (.16, .16),
+        "shadow": (-.34, .23),
+    }
+    amount, width = profiles[style]
+    terms=[f"{amount:.3f}*max(0,1-abs(t-{x:.4f})/{width:.3f})" for x in cuts]
+    # Safe continuous pulses preserve 1080p/60fps and original game audio.
+    graph="eq=brightness='"+"+".join(terms)+"':eval=frame"
+    if style in ("gold","cinema"):
+        graph+=",colorbalance=rs=0.02:gs=0.008:bs=-0.018"
+    elif style=="cool":
+        graph+=",colorbalance=rs=-0.022:bs=0.035"
+    elif style=="pulse":
+        graph+=",eq=saturation=1.11"
+    return graph
 
 def render_montage(clips, dst, style="cut", *, concat=None, ffmpeg=None,
                    ffprobe="ffprobe", encoder=None, logger=None, encoder_policy='auto') -> str:
@@ -102,7 +124,7 @@ def render_montage(clips, dst, style="cut", *, concat=None, ffmpeg=None,
                     n = args.index("-r")
                     del args[n:n+2]
                 from .gpu_full import render_gpu_montage
-                if render_gpu_montage(ffmpeg,raw,dst,style,boundaries,args,logger):
+                if style in ("flash", "dark") and render_gpu_montage(ffmpeg,raw,dst,style,boundaries,args,logger):
                     return style
             cmd = [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-i", str(raw),
                    "-vf", filt, "-map", "0:v:0", "-map", "0:a?", *args,
