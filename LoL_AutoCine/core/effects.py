@@ -182,6 +182,8 @@ class Template:
     dof_radius: float = .29   # normalized by screen height, not screen width
     dof_feather: float = .12  # soft circular edge
     camera_side: str = "auto"  # v5.10.5: auto / blue / red (append: old positional templates safe)
+    kill_sparkle_intensity: float = 1.0  # v5.10.8: corner rays/star flares
+    kill_stack_gap: int = 4  # v5.10.8: additional pixels between simultaneous kills
 
     def __post_init__(self) -> None:
         # v5.10.3: preserve older project JSON but retire the accidentally-added
@@ -733,7 +735,8 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
                      getattr(t,"kill_icon_players",[]), log=logging.getLogger(__name__).warning,
                      frame_color=t.kill_frame_color, glow_color=t.kill_glow_color,
                      glow_enabled=t.kill_glow_enabled, glow_strength=t.kill_glow_strength,
-                     border_width=t.kill_frame_width, mark_style=t.kill_mark_style)
+                     border_width=t.kill_frame_width, mark_style=t.kill_mark_style,
+                     sparkle_strength=getattr(t, "kill_sparkle_intensity", 1.0))
                      if badge_style != "off" else [])
     badge_idx = 1 + int(png is not None)
     def add_pair_graph(g):
@@ -741,7 +744,7 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
         return with_badges(g, badge_idx, badge_entries, duration=duration,
                            position=t.kill_icon_position, scale=t.kill_icon_scale,
                            seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
-                           style=badge_style)
+                           style=badge_style, stack_gap=getattr(t, "kill_stack_gap", 4))
     def add_pair_inputs(command, loop=True):
         for badge_path, _ in badge_entries:
             if loop:
