@@ -155,6 +155,25 @@ def bind_effect_hover_tip(widget, explanation: str, delay_ms: int = 500) -> None
 
 
 
+def fold_section(parent, caption: str, initially_open: bool = False):
+    """Tk pack-based disclosure. Widgets and values survive collapsing."""
+    outer=ttk.Frame(parent,style="Card.TFrame")
+    outer.pack(fill="x",pady=(6,4))
+    body=ttk.Frame(outer,style="Card.TFrame")
+    def toggle():
+        if body.winfo_manager():
+            body.pack_forget()
+            button.configure(text="▶ "+caption)
+        else:
+            body.pack(fill="x",padx=8,pady=(4,6))
+            button.configure(text="▼ "+caption)
+    button=ttk.Button(outer,text=("▼ " if initially_open else "▶ ")+caption,command=toggle)
+    button.pack(fill="x")
+    if initially_open:
+        body.pack(fill="x",padx=8,pady=(4,6))
+    return body
+
+
 class ScrollFrame(ttk.Frame):
     """縦スクロールできるパネル。子ウィジェット/Scale/Scrollbar上でもホイールを奪わずパネルをスクロールする。"""
 
@@ -988,7 +1007,7 @@ class App:
         self._mode_detail_sections.append(scene_card)
         self._editor_scene = scene_card
         scene_card.pack(fill="x", pady=(0, 8))
-        ttk.Label(scene_card, text="◈ シーン別ディレクター / 編集プロジェクト", style="Section.TLabel").pack(anchor="w")
+        ttk.Label(scene_card, text="◈ シーン編集 — 基本設定 → 必要なら詳細を開く", style="Section.TLabel").pack(anchor="w")
         ttk.Checkbutton(scene_card, text="シーン別演出を使用（各クリップにカメラ設定を反映）",
                         variable=self.var_scene_mode).pack(anchor="w", pady=(5, 2))
         ttk.Label(scene_card, text="右の検出シーンを選ぶ → 値を調整 →『このシーンに保存』。三人称はLolnam風カメラへ切替、FPS/俯瞰はそのまま。",
@@ -1015,31 +1034,33 @@ class App:
         ttk.Label(sr, text="演出強度", style="Card.TLabel").pack(side="left")
         ttk.Combobox(sr, textvariable=self.var_shot_intensity, state="readonly", width=12,
                      values=list(SHOT_INTENSITY_JA.values())).pack(side="left", padx=(4,10))
+        scene_pose_group=fold_section(scene_card,"カメラの動き・グラフ（細かく調整）")
         self.scene_vars = {}
         for title,key,lo,hi,initial in (("Orbit°", "arc",0,75,10),("Dolly%","dolly",0,15,3),
                                          ("Yaw°","yaw",-180,180,0),("キル前s","pre",1,15,4),
                                          ("キル後s","post",1,15,3)):
             self.scene_vars[key] = tk.DoubleVar(value=initial)
-            segment=ttk.Frame(scene_card, style="Card.TFrame");segment.pack(fill="x",pady=1)
+            segment=ttk.Frame(scene_pose_group, style="Card.TFrame");segment.pack(fill="x",pady=1)
             ttk.Label(segment, text=title, width=12, style="Card.TLabel").pack(side="left")
             ttk.Scale(segment, variable=self.scene_vars[key], from_=lo, to=hi).pack(side="left", fill="x", expand=True, padx=(0,6))
             ttk.Spinbox(segment, from_=lo,to=hi,increment=0.5,textvariable=self.scene_vars[key],width=7).pack(side="right")
-        self.shot_motion_graph=ShotMotionGraph(scene_card, self._scene_shot_from_ui)
+        self.shot_motion_graph=ShotMotionGraph(scene_pose_group, self._scene_shot_from_ui)
         self.shot_motion_graph.pack(fill="x",pady=(5,2))
-        ttk.Label(scene_card, text="横軸はキルまでの時間。青=画角 / 緑=カメラ距離 / 紫=回り込み角。線は見やすいよう各項目を別々に拡大しています。",
+        ttk.Label(scene_pose_group, text="横軸はキルまでの時間。青=画角 / 緑=カメラ距離 / 紫=回り込み角。線は見やすいよう各項目を別々に拡大しています。",
                   style="CardMuted.TLabel", wraplength=1100).pack(anchor="w", pady=(0,4))
 
         # v5.9.2: Optional camera keyframe lane, relative to the kill event.
-        kf_head = ttk.Frame(scene_card, style="Card.TFrame"); kf_head.pack(fill="x", pady=(8,3))
+        keyframe_group=fold_section(scene_card,"キーフレーム（詳細・手動カメラ補正）")
+        kf_head = ttk.Frame(keyframe_group, style="Card.TFrame"); kf_head.pack(fill="x", pady=(8,3))
         ttk.Label(kf_head, text="◈ カメラキーフレーム（キル瞬間 = 0秒）", style="Section.TLabel").pack(side="left")
-        ttk.Label(scene_card, text="回転・寄り・FOVの補正値。空なら従来の自動カメラ。変更後は『このシーンに保存』で確定。",
+        ttk.Label(keyframe_group, text="回転・寄り・FOVの補正値。空なら従来の自動カメラ。変更後は『このシーンに保存』で確定。",
                   style="CardMuted.TLabel", wraplength=760).pack(anchor="w")
         self._edit_keyframes = []
-        self.kf_list = tk.Listbox(scene_card, height=4, exportselection=False,
+        self.kf_list = tk.Listbox(keyframe_group, height=4, exportselection=False,
                                   bg="#FFFFFF", fg="#172033", selectbackground="#BFDBFE", relief="flat")
         self.kf_list.pack(fill="x", pady=(3,3))
         self.kf_list.bind('<<ListboxSelect>>', self.on_keyframe_selection)
-        kf_inputs = ttk.Frame(scene_card, style="Card.TFrame"); kf_inputs.pack(fill="x")
+        kf_inputs = ttk.Frame(keyframe_group, style="Card.TFrame"); kf_inputs.pack(fill="x")
         self.kf_vars = {}
         for title, field_name, lo, hi, value in (("時刻s", "time", -15, 15, 0),
             ("回転°", "yaw", -70, 70, 0), ("寄り%", "zoom", -30, 30, 0),
@@ -1048,11 +1069,11 @@ class App:
             self.kf_vars[field_name] = tk.DoubleVar(value=value)
             ttk.Spinbox(kf_inputs, from_=lo, to=hi, increment=0.5,
                         textvariable=self.kf_vars[field_name], width=6).pack(side="left", padx=(0,5))
-        kf_actions=ttk.Frame(scene_card,style="Card.TFrame"); kf_actions.pack(fill="x",pady=(4,4))
+        kf_actions=ttk.Frame(keyframe_group,style="Card.TFrame"); kf_actions.pack(fill="x",pady=(4,4))
         ttk.Button(kf_actions,text="＋ 追加 / 選択を更新",command=self.on_keyframe_upsert).pack(side="left")
         ttk.Button(kf_actions,text="－ 選択を削除",command=self.on_keyframe_remove).pack(side="left",padx=5)
         ttk.Button(kf_actions,text="動きをプレビュー",command=self.on_keyframe_preview).pack(side="left")
-        preset_actions = ttk.Frame(scene_card, style="Card.TFrame")
+        preset_actions = ttk.Frame(keyframe_group, style="Card.TFrame")
         preset_actions.pack(fill="x", pady=(4, 3))
         ttk.Label(preset_actions, text="キーフレームの型", style="Card.TLabel").pack(side="left", padx=(0, 6))
         for caption, pattern in (("自然な回り込み", "soft_orbit"),
@@ -1061,16 +1082,17 @@ class App:
             ttk.Button(preset_actions, text=caption,
                        command=lambda p=pattern: self.on_keyframe_preset(p)).pack(side="left", padx=3)
 
-        fx_head = ttk.Frame(scene_card,style="Card.TFrame"); fx_head.pack(fill="x",pady=(8,3))
+        scene_fx_group=fold_section(scene_card,"このシーンだけの色・FX・キルフレーム")
+        fx_head = ttk.Frame(scene_fx_group,style="Card.TFrame"); fx_head.pack(fill="x",pady=(8,3))
         ttk.Label(fx_head,text="◈ シーンごとの色・エフェクト",style="Section.TLabel").pack(side="left")
         self.var_scene_fx_enabled = tk.BooleanVar(value=False)
-        scene_badge = ttk.Frame(scene_card, style="Card.TFrame")
+        scene_badge = ttk.Frame(scene_fx_group, style="Card.TFrame")
         scene_badge.pack(fill="x", pady=(3, 5))
         self.var_scene_kill_icon = tk.StringVar(value="全体設定を引き継ぐ")
         ttk.Label(scene_badge, text="このシーンのキルアイコン", style="Card.TLabel").pack(side="left", padx=(0, 8))
         ttk.Combobox(scene_badge, state="readonly", textvariable=self.var_scene_kill_icon,
                      values=["全体設定を引き継ぐ", *KILL_ICON_STYLES.values()], width=25).pack(side="left")
-        ttk.Checkbutton(scene_card,text="このシーンだけ色・エフェクトを上書き（OFFは全体設定を引き継ぐ）",
+        ttk.Checkbutton(scene_fx_group,text="このシーンだけ色・エフェクトを上書き（OFFは全体設定を引き継ぐ）",
                         variable=self.var_scene_fx_enabled).pack(anchor="w")
         self.scene_fx_vars={}
         for label,key,lo,hi,default in (("色温度", "temperature",-1,1,0),
@@ -1078,13 +1100,13 @@ class App:
                                        ("Focus Blur", "focus_blur",0,1,0),
                                        ("DOFぼかし", "dof_blur",0,20,0),
                                        ("キル瞬間の強調", "highlight_pulse",0,1,0)):
-            fx_row=ttk.Frame(scene_card,style="Card.TFrame");fx_row.pack(fill="x",pady=1)
+            fx_row=ttk.Frame(scene_fx_group,style="Card.TFrame");fx_row.pack(fill="x",pady=1)
             ttk.Label(fx_row,text=label,width=14,style="Card.TLabel").pack(side="left")
             v=tk.DoubleVar(value=default);self.scene_fx_vars[key]=v
             ttk.Scale(fx_row,variable=v,from_=lo,to=hi).pack(side="left",fill="x",expand=True,padx=5)
             ttk.Spinbox(fx_row,from_=lo,to=hi,increment=0.05,textvariable=v,width=7).pack(side="left")
 
-        ttk.Label(scene_card, text="キル瞬間の強調は短時間だけ明るさ・彩度を上げます（0で無効）。カメラ曲線と同じキル時刻に同期します。",
+        ttk.Label(scene_fx_group, text="キル瞬間の強調は短時間だけ明るさ・彩度を上げます（0で無効）。カメラ曲線と同じキル時刻に同期します。",
                   style="CardMuted.TLabel", wraplength=870).pack(anchor="w", pady=(2,4))
         for _variable in (self.var_shot_profile,self.var_shot_intensity,*self.scene_vars.values()):
             _variable.trace_add('write',lambda *_: self.shot_motion_graph.request_redraw())
@@ -1148,6 +1170,7 @@ class App:
         ttk.Button(target_row, text="◉  キル対象（自動）", command=lambda: self.log("追従対象: キル対象（自動）")).pack(side="left", fill="x", expand=True)
         ttk.Button(target_row, text="▶  対象を手動指定", command=self.on_lock).pack(side="left", fill="x", expand=True, padx=(6, 0))
 
+        camera_more=fold_section(cam,"距離・高さ・Orbit・モーション詳細")
         # all existing camera sliders remain available in the center
         self.sl, self.sl_labels = {}, {}
         def _slider_range(key):
@@ -1174,7 +1197,7 @@ class App:
             ent.pack(side="right")
             self.sl[key] = v; self.sl_labels[key] = ent
 
-        cam_grid = ttk.Frame(cam, style="Card.TFrame")
+        cam_grid = ttk.Frame(camera_more, style="Card.TFrame")
         cam_grid.pack(fill="x")
         left_cam = ttk.Frame(cam_grid, style="Card.TFrame"); left_cam.pack(side="left", fill="both", expand=True, padx=(0, 10))
         right_cam = ttk.Frame(cam_grid, style="Card.TFrame"); right_cam.pack(side="left", fill="both", expand=True)
@@ -1198,7 +1221,7 @@ class App:
         ttk.Button(yawbar, text="0°", command=lambda: self.sl["third_yaw"].set(0)).pack(side="left", expand=True, fill="x", padx=2)
         ttk.Button(yawbar, text="+90° ↷", command=lambda: self.sl["third_yaw"].set(min(180, self.sl["third_yaw"].get()+90))).pack(side="left", expand=True, fill="x", padx=(2, 0))
 
-        motion = ttk.Frame(cam, style="Card.TFrame", padding=(0, 8, 0, 0)); motion.pack(fill="x")
+        motion = ttk.Frame(camera_more, style="Card.TFrame", padding=(0, 8, 0, 0)); motion.pack(fill="x")
         ttk.Label(motion, text="自動カメラモーション", style="Card.TLabel", font=("Meiryo UI", 10, "bold")).pack(anchor="w")
         self.var_motion_profile = tk.StringVar(value="Cinematic（Lolnam風）")
         self.cb_motion_profile = ttk.Combobox(motion, state="readonly", textvariable=self.var_motion_profile,
@@ -1221,15 +1244,17 @@ class App:
         self._mode_detail_sections.append(advanced)
         self._editor_advanced = advanced
         advanced.pack(fill="x", pady=(0, 8))
-        ttk.Label(advanced, text="カラー・エフェクト / 書き出し", style="Section.TLabel").pack(anchor="w")
+        ttk.Label(advanced, text="仕上げ（基本／カラー／FX／出力）", style="Section.TLabel").pack(anchor="w")
         nb = ttk.Notebook(advanced); nb.pack(fill="x", pady=(7, 0))
         self._editor_advanced_tabs = nb
         basic = ttk.Frame(nb, padding=8, style="Card.TFrame")
         color = ttk.Frame(nb, padding=8, style="Card.TFrame")
+        fx_page = ttk.Frame(nb, padding=8, style="Card.TFrame")
         output = ttk.Frame(nb, padding=8, style="Card.TFrame")
         nb.add(basic, text="基本")
-        nb.add(color, text="カラー・FX")
-        nb.add(output, text="録画・出力")
+        nb.add(color, text="カラー")
+        nb.add(fx_page, text="FX・DOF")
+        nb.add(output, text="出力")
 
         ttk.Label(basic, text="テンプレート", style="Card.TLabel").pack(anchor="w")
         self.cb_tpl_quick = ttk.Combobox(basic, state="readonly", textvariable=self.var_tpl, values=list(self.templates))
@@ -1310,7 +1335,7 @@ class App:
                    command=self._apply_focus_preset).pack(fill="x", pady=(0,7))
 
         # Premiere/AE系の演出。難しい編集を覚えなくても、チェックを入れるだけで使える。
-        fx_box = ttk.LabelFrame(color, text="映像演出（チェックするだけでOK）", padding=8)
+        fx_box = ttk.LabelFrame(fx_page, text="映像演出（チェックするだけでOK）", padding=8)
         fx_box.pack(fill="x", pady=(8, 0))
         fx_top = ttk.Frame(fx_box, style="Card.TFrame"); fx_top.pack(fill="x", pady=(0, 5))
         ttk.Label(fx_top, text="演出プリセット", style="Card.TLabel").pack(side="left")
@@ -1682,7 +1707,7 @@ class App:
                     continue
                 # Advanced: same global camera/color controls live in the center workspaces.
                 # Keep widgets instantiated and bound to the same variables, but don't duplicate them.
-                if not easy and title.startswith(("◈  カラー・FX", "◈  カメラ詳細")):
+                if not easy and title.startswith(("◈  カラー・FX", "◈  カメラ詳細", "◈  LoLnam", "✧  自動カメラモーション")):
                     continue
                 panel.pack(in_=parent, fill="x", pady=(0, 8))
         if hasattr(self, "edit_mode_hint"):
@@ -1703,6 +1728,7 @@ class App:
             "scene": (self._editor_timeline, self._editor_scene),
             "camera": (self._editor_camera,),
             "color": (self._editor_advanced,),
+            "fx": (self._editor_advanced,),
             "output": (self._editor_advanced,),
         }
         if zone not in visibility:
@@ -1710,13 +1736,14 @@ class App:
             self.var_editor_zone.set(zone)
         for panel in visibility[zone]:
             panel.pack(fill="x", pady=(0, 8))
-        if zone in ("color", "output") and hasattr(self, "_editor_advanced_tabs"):
-            self._editor_advanced_tabs.select(1 if zone == "color" else 2)
+        if zone in ("color", "fx", "output") and hasattr(self, "_editor_advanced_tabs"):
+            self._editor_advanced_tabs.select({"color": 1, "fx": 2, "output": 3}[zone])
         descriptions = {
             "scene": "検出シーンごとの演出・キーフレーム・順番を編集。選択したキルは右側で切り替えます。",
             "camera": "全体カメラの追従・Orbit・距離を設定。シーン別のキーフレームは［シーン］へ。",
-            "color": "カラー・FXの全体設定。シーンだけに適用する色は［シーン］で上書き。",
-            "output": "書き出し・音声・LUT・出力フォルダの設定。シーンの選択は右側から。",
+            "color": "カラーグレード・トーンカーブ・FOG補正。色の調整をまとめました。",
+            "fx": "ぼかし・DOF・映像演出。ONにした項目だけ詳細を開けます。",
+            "output": "書き出し・音声・LUT・出力フォルダ。シーンの選択は右側から。",
         }
         self.editor_zone_hint.configure(text=descriptions[zone])
         quick_output = getattr(self, "_right_quick_output", None)
@@ -1727,7 +1754,7 @@ class App:
 
     def _focus_editor_zone(self, zone: str) -> None:
         """Jump to a focused edit workspace without changing render settings."""
-        if zone not in ("scene", "camera", "color", "output"):
+        if zone not in ("scene", "camera", "color", "fx", "output"):
             return
         self.var_edit_mode.set("advanced")
         self.var_editor_zone.set(zone)
