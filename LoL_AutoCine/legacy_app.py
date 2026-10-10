@@ -1966,6 +1966,62 @@ class App:
         if hasattr(self,"_invalidate_preview_snapshot"):
             self._invalidate_preview_snapshot()
 
+    def _open_kill_frame_gallery(self):
+        from ui.kill_frame_gallery import open_gallery
+        return open_gallery(self)
+
+    def _bind_preset_hover(self, widget, preset_name):
+        """500ms real-frame hover preview; no applying until the user clicks."""
+        state={"after":None,"window":None,"photo":None}
+        def hide(_event=None):
+            if state["after"] is not None:
+                try:widget.after_cancel(state["after"])
+                except tk.TclError:pass
+            state["after"]=None
+            if state["window"] is not None:
+                try:state["window"].destroy()
+                except tk.TclError:pass
+            state["window"]=None
+            state["photo"]=None
+        def show():
+            state["after"]=None
+            if not widget.winfo_exists() or preset_name not in self.templates:return
+            t=self.templates[preset_name]
+            popup=tk.Toplevel(widget)
+            popup.overrideredirect(True)
+            popup.attributes("-topmost",True)
+            popup.geometry(f"+{widget.winfo_rootx()}+{widget.winfo_rooty()+widget.winfo_height()+5}")
+            popup.configure(bg="#111C30")
+            state["window"]=popup
+            try:
+                from ui.template_gallery import template_info
+                info=template_info(t)
+                frame,origin=self._current_frame_rgb(240,135)
+                if frame is not None:
+                    from core.preview import grade_rgb
+                    before=Image.fromarray(frame.astype(np.uint8)).resize((240,135))
+                    after=Image.fromarray(grade_rgb(np.asarray(before),t))
+                    row=Image.new("RGB",(480,135))
+                    row.paste(before,(0,0));row.paste(after,(240,0))
+                    photo=ImageTk.PhotoImage(row,master=popup)
+                    state["photo"]=photo
+                    tk.Label(popup,image=photo,bg="#111C30").pack(padx=9,pady=(9,3))
+                tk.Label(popup,text="左：元の試合　／　右：このテンプレートの色",
+                         bg="#111C30",fg="white").pack()
+                tk.Label(popup,text=f'{preset_name}\n色：{info["tone"]}　カメラ：{info["camera"]}',
+                         bg="#111C30",fg="#E2E8F0",justify="left").pack(padx=9,pady=9)
+            except Exception as exc:
+                tk.Label(popup,text=f"色見本を取得できません：{exc}",
+                         bg="#111C30",fg="white").pack(padx=8,pady=8)
+            popup.bind("<Enter>",lambda _e:None)
+            popup.bind("<Leave>",hide,add="+")
+        def schedule(_event=None):
+            hide()
+            state["after"]=widget.after(500,show)
+        widget.bind("<Enter>",schedule,add="+")
+        widget.bind("<Leave>",hide,add="+")
+        widget.bind("<ButtonPress>",hide,add="+")
+
     def _focus_template(self):
         self.left_scroll.scroll_to(self._nav_template_card)
         self.tpl_combo.focus_set()
