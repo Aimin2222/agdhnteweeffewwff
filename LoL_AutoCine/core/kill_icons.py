@@ -370,7 +370,7 @@ def badge_plan(badges, duration, seconds):
 
 
 def with_badges(graph: str, badge_input: int, badges, *, duration: float,
-                position="right-top",scale=1.0,seconds=1.55,opacity=1.0,style="simple"):
+                position="right-top",scale=1.0,seconds=1.55,opacity=1.0,style="simple",stack_gap=4):
     """Show separate portrait pairs as a compact stacked kill feed (max 3 rows)."""
     if not graph.endswith("[vout]"):
         raise ValueError("Existing video graph has no [vout]")
@@ -386,7 +386,7 @@ def with_badges(graph: str, badge_input: int, badges, *, duration: float,
         idx,t=entry['index'],entry['time']
         start,end=entry['start'],entry['end']
         row=entry['row']
-        step=int(round(120*scale))
+        step=int(round(116*scale + max(0, min(36, int(stack_gap)))))
         y=(f"62+{step*row}" if position.endswith('top') else f"H-h-62-{step*row}")
         extra=(f"+7*sin(35*(t-{t:.3f}))*exp(-11*abs(t-{t:.3f}))" if normalize(style)=="impact" else "")
         inlabel=f"pair_src_{n}"
