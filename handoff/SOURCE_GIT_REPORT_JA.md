@@ -268,3 +268,5 @@ A	ui/studio_localization.py
 ```
 
 全299ソース/Python117、全54ブランチをbundleへ保存。旧51ブランチは先端を変えず保持。変更対象外のcore/ui/起動バッチ48ファイルを前版と一致確認。個人設定/プロジェクト/原診断ZIP/録画/生ログを配布しない。
+
+最終保存: Draft PR #23。ソースstatus空、取得用statusは検証記録のコミット後に空。main先端を保持。GitHub固定payloadから299ソース/54heads復元一致、代表48件成功、installer再実行で個人設定/プロジェクトを保持。クラウド再開用install_script/start_skillはrevision26へ保存・再読込一致、未Publish。Windows取得にPublish不要。
