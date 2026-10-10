@@ -1,0 +1,56 @@
+name: AutoCine v5.10.6 Camera Hotfix Checks
+on:
+  push:
+    branches:
+      - autocine/v5.10.6-mirror-camera-work
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Dependencies
+        run: python -m pip install -r LoL_AutoCine/requirements.txt pytest
+      - name: Camera reset tests
+        working-directory: LoL_AutoCine
+        run: python -m pytest -q tests/test_restore_mirror_v5106.py
+      - name: Syntax compilation
+        run: python -m compileall -q LoL_AutoCine
+      - name: Package verified source hotfix
+        run: |
+          python - <<'PY'
+          import pathlib, zipfile, subprocess
+          root=pathlib.Path("LoL_AutoCine")
+          out=pathlib.Path("builds/v5106-camera-hotfix")
+          out.mkdir(parents=True, exist_ok=True)
+          full=out/"LoL_AutoCine_v5104base_Camera_Hover_Hotfix_Source.zip"
+          with zipfile.ZipFile(full, "w", zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(root.rglob("*")):
+                  if p.is_file() and not any(x in ("__pycache__", ".pytest_cache") for x in p.parts) and p.suffix != ".pyc":
+                      z.write(p,p.as_posix())
+          diff=subprocess.run(["git","diff","origin/codex/lol-autocine-v5104-handoff...HEAD","--","LoL_AutoCine"],capture_output=True,text=True,check=True)
+          patch=out/"v5106_camera_hover_against_v5104.patch"
+          patch.write_text(diff.stdout,encoding="utf-8")
+          readme=out/"README_注意事項.txt"
+          readme.write_text("このソースZIPはGitHubのv5.10.4ブランチをベースにしたカメラ復帰・ホバー説明の作業版です。v5.10.5のキルログなど最新機能と未統合のため正式なv5.10.6ではありません。Codex GPU変更がある場合はそのまま上書きせず差分を確認してください。\n",encoding="utf-8")
+          with zipfile.ZipFile(out/"LoL_AutoCine_v5106_Codex_Hotfix_Patch.zip","w",zipfile.ZIP_DEFLATED) as z:
+              z.write(patch,patch.name)
+              z.write(readme,readme.name)
+          for p in out.glob("*.zip"):
+              with zipfile.ZipFile(p) as z: assert z.testzip() is None
+          print([str(x) for x in out.glob("*.zip")])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AutoCine-v5106-camera-hover-HOTFIX-ONLY
+          path: builds/v5106-camera-hotfix/*.zip
+          retention-days: 30
