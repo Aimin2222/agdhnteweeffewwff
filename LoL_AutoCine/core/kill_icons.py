@@ -40,6 +40,8 @@ MARK_STYLES = {
     'bolt': '稲妻',
     'crystal': 'クリスタル',
     'crest': '金のエンブレム',
+    'shard': '細いガラス斬撃（新）',
+    'none': '表示なし（アイコンのみ）',
 }
 REVERSE_MARK_STYLES = {value: key for key, value in MARK_STYLES.items()}
 
@@ -112,6 +114,9 @@ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, vict
     path.parent.mkdir(parents=True, exist_ok=True)
     frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style = normalize_design(
         frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style)
+    # Chosen before creating the glow: no phantom X for the 'none' mark.
+    mark = mark_style if mark_style != 'auto' else {
+        'simple':'none', 'cinema':'shard', 'neon':'shard', 'impact':'shard'}[style]
     color = _rgb(frame_color, COLORS[style])
     light_color = _rgb(glow_color, color)
     w,h=385,116
@@ -127,8 +132,9 @@ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, vict
                                 outline=(*light_color, int(235*power)), width=15)
             g.rounded_rectangle((x-37, 17, x+37, 99), radius=12,
                                 outline=(*light_color, int(240*power)), width=7)
-        for points in (((166,30),(216,87)), ((218,30),(168,87))):
-            g.line(points, fill=(*light_color, int(225*power)), width=12)
+        if mark != 'none':
+            # Restrained light behind the new hand-drawn center glyph.
+            g.line((177,79,210,32), fill=(*light_color, int(140*power)), width=8)
         base=Image.alpha_composite(base,glow.filter(ImageFilter.GaussianBlur(13)))
         base=Image.alpha_composite(base,glow.filter(ImageFilter.GaussianBlur(5)))
     d=ImageDraw.Draw(base)
@@ -157,9 +163,19 @@ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, vict
             d.line((cx-7,cy,cx+7,cy),fill=highlight,width=2)
             d.line((cx,cy-7,cx,cy+7),fill=highlight,width=2)
     # Distinctive restrained clash motif, no "x" text or count.
-    mark = mark_style if mark_style != 'auto' else {
-        'simple':'cross', 'cinema':'crest', 'neon':'cross', 'impact':'bolt'}[style]
-    if mark == 'crest':
+    if mark == 'none':
+        pass
+    elif mark == 'shard':
+        # Original minimal glass-like diagonal with delicate parallel etchings.
+        # No third-party art asset, no license dependency or extra text.
+        d.polygon([(184,26),(195,28),(207,49),(194,61),(190,85),
+                   (181,91),(185,62),(198,48)], fill=(*color,210))
+        d.line((180,84,204,30), fill=(255,248,230,240), width=2)
+        d.line((189,79,215,38), fill=(*light_color,195), width=2)
+        d.line((170,65,182,62), fill=(*color,145), width=2)
+        d.line((210,47,221,44), fill=(*light_color,145), width=2)
+        d.ellipse((209,25,212,28), fill=(255,251,234,220))
+    elif mark == 'crest':
         # Original eight-point ceremonial clash glyph, not a game asset.
         cx,cy=192,58
         d.ellipse((cx-14,cy-14,cx+14,cy+14),outline=(*color,240),width=3)
