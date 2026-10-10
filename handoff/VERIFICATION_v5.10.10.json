@@ -283,8 +283,100 @@
   "old_handoff_files_retained": 102,
   "compileall_passed": true,
   "pip_check_passed": true,
-  "source_and_delivery_clean_after_commit": false,
-  "github_fresh_restore": null,
-  "environment_config_saved": false,
-  "main_unchanged": "c2a79ac3e7816c74b7d7fb15a5a32a32dd8fa16b"
+  "source_and_delivery_clean_after_commit": true,
+  "github_fresh_restore": {
+    "payload_commit": "3d969e23ba629ed68e46aed43889e7197da6738d",
+    "source_head": "3dc58a4558e6b7ccc72bddfae57edb995386d51c",
+    "all_source_bytes_match": true,
+    "github_download_source_bytes_match": true,
+    "source_files": 333,
+    "local_branch_count": 63,
+    "all_branch_refs_match": true,
+    "bundle_and_zip_hashes_match": true,
+    "guard_status": "ok",
+    "status_before_private_markers": "clean",
+    "representative_tests": {
+      "tests": "44",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "time": "5.841"
+    },
+    "repeat_install_private_files_preserved": true,
+    "repeat_install_status": "clean"
+  },
+  "environment_config_saved": {
+    "revision": 28,
+    "fields": [
+      "install_script",
+      "start_skill"
+    ],
+    "exact_readback": true,
+    "other_settings_unchanged": true,
+    "published": false
+  },
+  "main_unchanged": "c2a79ac3e7816c74b7d7fb15a5a32a32dd8fa16b",
+  "draft_pr": {
+    "number": 25,
+    "is_draft": true,
+    "base": "codex/lol-autocine-v5107-mirror-test-handoff",
+    "merged": false
+  },
+  "prior_windows_batch_aggregate": {
+    "from_previous_windows_diagnostics": true,
+    "current_v51010_windows_tested": false,
+    "duration_s": 6,
+    "output_fps_setting": 60,
+    "all_six_cases_success": true,
+    "cases": [
+      {
+        "name": "01_clean_gpu",
+        "requested_mode": "full",
+        "status": "success",
+        "wall_time_s": 8.826,
+        "gpu_effects_confirmed": true,
+        "actual_encoder": "h264_nvenc"
+      },
+      {
+        "name": "02_standard_gpu",
+        "requested_mode": "full",
+        "status": "success",
+        "wall_time_s": 10.989,
+        "gpu_effects_confirmed": true,
+        "actual_encoder": "h264_nvenc"
+      },
+      {
+        "name": "03_standard_cpu",
+        "requested_mode": "cpu",
+        "status": "success",
+        "wall_time_s": 46.344,
+        "gpu_effects_confirmed": false,
+        "actual_encoder": "h264_nvenc"
+      },
+      {
+        "name": "04_curve_title_band_gpu",
+        "requested_mode": "full",
+        "status": "success",
+        "wall_time_s": 8.474,
+        "gpu_effects_confirmed": true,
+        "actual_encoder": "h264_nvenc"
+      },
+      {
+        "name": "05_temporal_transform_gpu",
+        "requested_mode": "full",
+        "status": "success",
+        "wall_time_s": 7.268,
+        "gpu_effects_confirmed": true,
+        "actual_encoder": "h264_nvenc"
+      },
+      {
+        "name": "06_fog_grain_glint_gpu",
+        "requested_mode": "full",
+        "status": "success",
+        "wall_time_s": 7.237,
+        "gpu_effects_confirmed": true,
+        "actual_encoder": "h264_nvenc"
+      }
+    ]
+  }
 }

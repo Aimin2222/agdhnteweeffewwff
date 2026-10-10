@@ -318,3 +318,5 @@ A	ui/template_gallery.py
 ```
 
 全333ソース/Python127、全63ブランチをbundleへ保存。旧57ブランチ先端、GPUエンジン・カメラ・録画・LoL音声など23ファイル、受領PNG6種の一致を確認。GPU Fullの差分はキル行間、effectsはカラー/プリセット/末尾設定/バッジ設定接続のみ。個人設定/プロジェクト/原診断ZIP/録画/生ログは配布しない。旧版配布物102件をバイト単位で保持。
+
+完了検証: ソース/取得用のgit status --shortは空。GitHub再取得333ソース/全63refs/ZIP・bundleハッシュ一致、復元先44テスト成功。再セットアップで設定/プロジェクト/診断のprivateテストファイルを保持。Draft PR #25、main未変更。環境設定はinstall_script/start_skillのみを保存し、Publishはしていない。
