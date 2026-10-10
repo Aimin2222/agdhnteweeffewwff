@@ -42,6 +42,8 @@ MARK_STYLES = {
     'crest': '金のエンブレム',
     'shard': '細いガラス斬撃（新）',
     'none': '表示なし（アイコンのみ）',
+    'royal': 'ロイヤルゴールド紋章（参考画像風）',
+    'lolkill': 'LoL風・撃破エンブレム（オリジナル）',
 }
 REVERSE_MARK_STYLES = {value: key for key, value in MARK_STYLES.items()}
 
@@ -62,7 +64,7 @@ def normalize_design(frame_color='', glow_color='', glow_enabled=True,
         except (ValueError, TypeError, OverflowError):
             return default
     return (valid_hex(frame_color), valid_hex(glow_color), bool(glow_enabled),
-            finite(glow_strength, .65, 0, 1), int(finite(border_width, 3, 1, 8)),
+            finite(glow_strength, .85, 0, 2), int(finite(border_width, 3, 1, 8)),
             mark_style if mark_style in MARK_STYLES else 'auto')
 
 
@@ -98,13 +100,13 @@ def _rounded_portrait(canvas, source, xy, radius=11):
 
 
 def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, victim_icon=None,
-               frame_color='', glow_color='', glow_enabled=True, glow_strength=.65,
-               border_width=3, mark_style='auto') -> Path:
-    """A champion x champion graphic. No KILL, x1, count or player names.
+               frame_color='', glow_color='', glow_enabled=True, glow_strength=.85,
+               border_width=3, mark_style='auto', sparkle_strength=1.0):
+    """Build an ORIGINAL transparent premium kill-feed asset with genuine portraits.
 
-    Icons must be genuine (local/cache or Riot Data Dragon). If callers cannot
-    resolve either portrait, they must not present this as a verified kill pair.
-    The count argument remains only for compatibility with older callers.
+    The reference artwork is a visual target only: do not stamp static
+    champions/background into a dynamic clip. This runtime image remains RGBA
+    so frame, bloom and centre crest overlay actual gameplay.
     """
     from PIL import Image, ImageDraw, ImageFilter
     style = normalize(style)
@@ -114,104 +116,128 @@ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, vict
     path.parent.mkdir(parents=True, exist_ok=True)
     frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style = normalize_design(
         frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style)
-    # Chosen before creating the glow: no phantom X for the 'none' mark.
     mark = mark_style if mark_style != 'auto' else {
-        'simple':'none', 'cinema':'shard', 'neon':'shard', 'impact':'shard'}[style]
+        'simple':'none', 'cinema':'royal', 'neon':'lolkill', 'impact':'lolkill'
+    }[style]
+    gold = (249, 194, 84)
     color = _rgb(frame_color, COLORS[style])
     light_color = _rgb(glow_color, color)
-    w,h=385,116
-    base=Image.new("RGBA", (w,h), (0,0,0,0))
-    glow=Image.new("RGBA", (w,h), (0,0,0,0))
-    g=ImageDraw.Draw(glow)
-    if glow_enabled and glow_strength > 0:
-        # Real blurred halo, not merely a colored outline. Keep enough room on
-        # the transparent badge edges so screen composite has visible bloom.
-        power = float(glow_strength)
-        for x in (78, 307):
-            g.rounded_rectangle((x-42, 12, x+42, 104), radius=13,
-                                outline=(*light_color, int(235*power)), width=15)
-            g.rounded_rectangle((x-37, 17, x+37, 99), radius=12,
-                                outline=(*light_color, int(240*power)), width=7)
+    w, h = 385, 116
+    base = Image.new('RGBA', (w, h))
+    intensity = min(2.0, max(0.0, float(glow_strength))) if glow_enabled else 0.0
+    try:
+        sparkle = max(0.0, min(2.0, float(sparkle_strength)))
+    except (TypeError, ValueError):
+        sparkle = 1.0
+
+    # Multi-scale glows really emit light beyond the painted line: separate
+    # halo, middle bloom and a bright core, all on transparent layers.
+    if intensity:
+        emit = Image.new('RGBA', (w, h))
+        halo_draw = ImageDraw.Draw(emit)
+        for x in (37, 266):
+            halo_draw.rounded_rectangle((x-5, 13, x+82, 103), radius=8,
+                                         outline=(*light_color, 255), width=8)
         if mark != 'none':
-            # Restrained light behind the new hand-drawn center glyph.
-            g.line((177,79,210,32), fill=(*light_color, int(140*power)), width=8)
-        base=Image.alpha_composite(base,glow.filter(ImageFilter.GaussianBlur(13)))
-        base=Image.alpha_composite(base,glow.filter(ImageFilter.GaussianBlur(5)))
-    d=ImageDraw.Draw(base)
-    # Small separated portrait medallions, not a full-width title card.
-    for x in (38,267):
-        d.rounded_rectangle((x-4,14,x+80,102), radius=14,fill=(13,19,30,210),outline=(*color,255),width=border_width)
+            halo_draw.ellipse((166, 25, 219, 92), outline=(*light_color, 240), width=7)
+        for blur, alpha in ((19, .65), (9, .8), (3, .55)):
+            layer = emit.filter(ImageFilter.GaussianBlur(blur))
+            layer.putalpha(layer.getchannel('A').point(
+                lambda a, factor=alpha: min(255, int(a * factor * intensity))))
+            base = Image.alpha_composite(base, layer)
+        # Long soft horizontal streaks and tiny sparks, without burying faces.
+        shine = Image.new('RGBA', (w, h))
+        sd = ImageDraw.Draw(shine)
+        ray_alpha = min(220, int(70 * intensity * sparkle))
+        for x0, x1, cy in ((2, 74, 20), (312, 383, 20), (2, 65, 97), (319, 383, 97)):
+            sd.line((x0,cy,x1,cy), fill=(*light_color,ray_alpha),width=2)
+        base = Image.alpha_composite(base, shine.filter(ImageFilter.GaussianBlur(3)))
+
+    d = ImageDraw.Draw(base)
+    for x in (37, 266):
+        # Bevelled, cut-corner metallic quadrilateral inspired by the
+        # provided sample, not a copy of any third-party UI asset.
+        poly = [(x+8, 13), (x+74,13), (x+82,21), (x+82,94),
+                (x+73,103), (x+8,103), (x-5,90), (x-5,25)]
+        d.polygon(poly,fill=(8,12,22,226))
+        d.line(poly + [poly[0]],fill=(*color,255),width=max(1,border_width+1),joint='curve')
+        d.line([(x+8,17),(x+70,17),(x+77,24)],fill=(255,248,212,255),width=2)
+        d.line([(x+77,92),(x+70,99),(x+9,99)],fill=(*color,255),width=2)
+        d.line([(x,28),(x,88),(x+10,98)],fill=(*color,222),width=2)
+
     if killer_icon is not None:
-        _rounded_portrait(base,killer_icon,(44,24,68))
+        _rounded_portrait(base, killer_icon, (44,24,68), radius=3)
     if victim_icon is not None:
-        _rounded_portrait(base,victim_icon,(273,24,68))
-    d=ImageDraw.Draw(base)
-    for x in (38,267):
-        d.rounded_rectangle((x-4,14,x+80,102),radius=12,outline=(*color,255),width=border_width)
-        # Thin highlight and decorative corners inspired by ornamental frames.
-        d.line((x,19,x+27,19),fill=(255,245,206,230) if style=='cinema' else (*light_color,225),width=2)
-        d.line((x+48,97,x+75,97),fill=(*light_color,205),width=2)
-        for cx,cy in ((x,17),(x+76,17),(x,99),(x+76,99)):
-            d.polygon([(cx,cy-4),(cx+4,cy),(cx,cy+4),(cx-4,cy)],fill=(*light_color,245))
-    if glow_enabled and glow_strength > 0:
-        # Crisp core makes the outer glow perceptible even against bright LoL maps.
-        shine=(min(255,int(v*.5+127)) for v in light_color)
-        highlight=tuple(shine)+(int(90+165*glow_strength),)
-        for x in (78,307):
-            d.rounded_rectangle((x-41,13,x+41,103),radius=13,outline=highlight,width=2)
-        for cx,cy in ((150,58),(235,58)):
-            d.line((cx-7,cy,cx+7,cy),fill=highlight,width=2)
-            d.line((cx,cy-7,cx,cy+7),fill=highlight,width=2)
-    # Distinctive restrained clash motif, no "x" text or count.
+        _rounded_portrait(base, victim_icon, (273,24,68), radius=3)
+    d = ImageDraw.Draw(base)
+    for x in (37,266):
+        d.rectangle((x+6, 21, x+77, 95),outline=(255,219,122,240) if style=='cinema' else (*color,238),width=2)
+        d.line((x-1,21,x+14,21), fill=(255,255,229,255),width=2)
+        d.line((x+65,98,x+81,98), fill=(*color,255),width=2)
+        # Corner flares create the "actually glowing" gold-white glint.
+        if intensity and sparkle:
+            for cx,cy in ((x-2,19),(x+80,98)):
+                strength = min(255,int(105 * intensity * sparkle))
+                d.line((cx-9,cy,cx+9,cy),fill=(255,241,176,strength),width=2)
+                d.line((cx,cy-9,cx,cy+9),fill=(255,241,176,strength),width=2)
+                d.polygon(((cx,cy-4),(cx+4,cy),(cx,cy+4),(cx-4,cy)),
+                          fill=(255,255,243,min(255,int(170*intensity*sparkle))))
+
+    cx,cy=192,58
     if mark == 'none':
         pass
-    elif mark == 'shard':
-        # Original minimal glass-like diagonal with delicate parallel etchings.
-        # No third-party art asset, no license dependency or extra text.
-        d.polygon([(184,26),(195,28),(207,49),(194,61),(190,85),
-                   (181,91),(185,62),(198,48)], fill=(*color,210))
-        d.line((180,84,204,30), fill=(255,248,230,240), width=2)
-        d.line((189,79,215,38), fill=(*light_color,195), width=2)
-        d.line((170,65,182,62), fill=(*color,145), width=2)
-        d.line((210,47,221,44), fill=(*light_color,145), width=2)
-        d.ellipse((209,25,212,28), fill=(255,251,234,220))
+    elif mark in ('royal','lolkill'):
+        # New symmetrical high-end emblem, generated from vector geometry.
+        # Six polished feathers converging into a diamond-tipped spear.
+        metal = (255,211,111,255) if style=='cinema' else (*color,255)
+        core = (255,250,222,255)
+        d.ellipse((cx-16,cy-22,cx+16,cy+22),outline=(*light_color,210),width=2)
+        for sign in (-1,1):
+            for offset in (-1,0,1):
+                y=cy+offset*14
+                d.polygon([(cx+sign*5,y),(cx+sign*24,y-9),
+                           (cx+sign*17,y+1),(cx+sign*7,y+7)],fill=metal)
+                d.line((cx+sign*7,y+2,cx+sign*19,y-5),fill=core,width=1)
+        if mark=='royal':
+            d.polygon([(cx,cy-33),(cx+7,cy-4),(cx,cy+27),(cx-7,cy-4)],
+                      fill=metal)
+            d.polygon([(cx,cy-21),(cx+3,cy-4),(cx,cy+15),(cx-3,cy-4)],
+                      fill=core)
+        else:
+            d.polygon([(cx,cy-28),(cx+9,cy-4),(cx,cy+24),(cx-9,cy-4)],
+                      fill=metal)
+            d.line((cx-17,cy+27,cx+17,cy-27),fill=core,width=2)
+        d.polygon([(cx-7,cy),(cx,cy-9),(cx+7,cy),(cx,cy+9)],fill=core)
     elif mark == 'crest':
-        # Original eight-point ceremonial clash glyph, not a game asset.
-        cx,cy=192,58
         d.ellipse((cx-14,cy-14,cx+14,cy+14),outline=(*color,240),width=3)
-        for dx,dy in ((0,-34),(24,-18),(32,0),(24,18),(0,34),(-24,18),(-32,0),(-24,-18)):
-            tip=(cx+dx,cy+dy)
-            short=(cx+int(dx*.47),cy+int(dy*.47))
-            d.line((*short,*tip),fill=(*color,255),width=4)
-            d.ellipse((tip[0]-2,tip[1]-2,tip[0]+2,tip[1]+2),fill=(255,246,204,245))
+        for dx,dy in ((0,-32),(24,-18),(30,0),(24,18),(0,32),(-24,18),(-30,0),(-24,-18)):
+            d.line((cx+dx*.42,cy+dy*.42,cx+dx,cy+dy),fill=(*color,255),width=4)
         d.polygon([(cx,cy-16),(cx+10,cy),(cx,cy+16),(cx-10,cy)],fill=(*color,255))
-        d.polygon([(cx,cy-11),(cx+6,cy),(cx,cy+11),(cx-6,cy)],fill=(255,244,207,235))
+    elif mark == 'shard':
+        d.polygon([(184,26),(195,28),(207,49),(194,61),(190,85),(181,91),(185,62),(198,48)],
+                  fill=(*color,255))
+        d.line((180,84,204,30),fill=(255,248,230,250),width=2)
     elif mark == 'slash':
-        d.polygon([(171,29),(185,48),(215,83),(201,91),(188,69)],fill=(*color,240))
-        d.polygon([(213,29),(199,48),(169,83),(183,91),(196,69)],fill=(255,244,212,232))
+        d.polygon([(171,29),(185,48),(215,83),(201,91),(188,69)],fill=(*color,255))
+        d.polygon([(213,29),(199,48),(169,83),(183,91),(196,69)],fill=(255,244,212,255))
     elif mark == 'cross':
         d.line((171,33,213,83),fill=(*color,255),width=5)
         d.line((213,33,171,83),fill=(224,213,255,255),width=5)
-        d.ellipse((185,52,199,66),fill=(250,250,255,230))
     elif mark == 'bolt':
-        d.polygon([(166,27),(192,52),(219,23),(205,55),(221,88),(192,65),(168,91),(181,58)],fill=(*color,245))
-        d.line((166,29,220,88),fill=(255,225,214,240),width=3)
+        d.polygon([(166,27),(192,52),(219,23),(205,55),(221,88),(192,65),(168,91),(181,58)],
+                  fill=(*color,255))
     elif mark == 'swords':
-        # Compact, symmetric hilts / blades; no copyrighted weapon asset.
         d.line((172,30,211,83),fill=(*color,255),width=8)
         d.line((212,30,173,83),fill=(245,246,255,255),width=8)
-        d.line((169,72,184,82),fill=(*color,255),width=5)
-        d.line((199,82,216,71),fill=(245,246,255,255),width=5)
-        d.polygon([(168,26),(178,33),(173,39)],fill=(255,255,255,250))
-        d.polygon([(216,26),(207,33),(212,39)],fill=(255,255,255,250))
     elif mark == 'crystal':
         d.polygon([(192,22),(216,58),(192,96),(168,58)],fill=(*color,255))
-        d.polygon([(192,22),(192,96),(181,59)],fill=(244,247,255,205))
-        d.line((168,58,216,58), fill=(255,255,255,225), width=3)
     else:
-        d.line((173,35,210,82),fill=(*color,245),width=4)
-        d.line((210,35,173,82),fill=(*color,245),width=4)
-    base.save(path,format="PNG")
+        d.line((173,35,210,82),fill=(*color,255),width=4)
+        d.line((210,35,173,82),fill=(*color,255),width=4)
+    if mark != 'none':
+        # Guarantees a crisp luminous pixel at the heart of every ornament.
+        d.ellipse((cx-2,cy-2,cx+2,cy+2),fill=(255,250,222,250))
+    base.save(path,format='PNG')
     return path
 
 
