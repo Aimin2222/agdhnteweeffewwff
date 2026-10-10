@@ -1,7 +1,9 @@
-ユーザーは最初から60fps加工でよいと希望。最新Windows診断ではExportOptの4本すべてがすでに加工前60fps選択/GPU Bloom・円形DOF/NVENCで成功し、49～56秒で4本完了しています。ただし原録画と時間補正は144fpsのままで、完成動画に使わないフレームもスケール/エンコードしていました。
+v5.10.4のUI側差分を、CodexのGPU/60fps修正を保って統合します。更新済みlegacy_app.pyには過去の非同期ミラー/書き出し修正がなく、丸ごと置換で回帰するため3方向マージを実施。タブのホイール誤切替防止とカメラ再生中のミラー簡易FXを追加し、録画/書き出し中は簡易FXを停止します。
 
-ClipRecorderへのfpsをmin(capture_fps, fps)へ制限し、標準60fps出力を原録画→必要な時間補正→加工→出力まで60fpsに揃えます。CameraDirector内部144Hz/Replay API送信最大60Hz、既存30/120/144fps選択と低い録画上限を維持。公開API/Template/UI/カメラ/GPU効果/録画時間補正/LoL専用音声を変えず、実fpsをruntimeへ表示します。
+共有camera/ReplayAPIのKeep-Alive、遅いAPI向け姿勢制限、細かい速度POST削減をレビューして専用ブランチへ分離。統合テストで受領cameraの全モード0.40倍下限が従来スローを変えると検出し、0.35倍を維持しました。公開API・TargetLock・LoL専用音声・GPU効果・60fps録画/時間補正/加工を保ちます。
 
-全pytest303件成功（27.86秒、失敗/skipなし）。追加6ケースでジョブのfps制限とカメラ時計/テンプレート不変、実FFmpegで60fpsの時間補正と連続PTS/終端丸め1フレーム以内を検査。共有jobsの正確なblobと担当/統合一致を確認。完全版266/差分6、差分適用後268ソース一致、全45ブランチbundleを保存し個人ファイルを除外。前回ExportOptと全旧版を保持。
+新Windows診断は統合前Capture60版の4本完了、GPU Bloom + NVENC成功、加工46.9～51.6秒。色補正/粒子/合成/変換のCPU処理は残り、PC全体CPU83～88%はアプリ単独の値と区別します。今回DOFは未選択。生診断/個人パス/録画は配布せず集計のみ保存。
 
-この新しい録画60fps版のWindows実機速度/音声同期は未検証。前回診断は設定が異なり厳密な改善率を算出しません。前回ExportOptを比較先とするDraft PRでmainへマージしません。WindowsはブランチのCode→Download ZIP→別フォルダ展開→LoL_AutoCine/START_GPU.bat。同じ60 FPS/同じ効果で1シーンと4シーン連続を再確認してください。
+全pytest311件成功（30.71秒、失敗/skipなし）。新8ケース、実Tk/HTTP/FFmpeg/子プロセス、切断・HTTP500・同時接続・POST重複送信防止、GPU/録画/音声等37ファイルのバイト一致、既存UI15メソッドのAST一致、担当/共有blob/統合一致を確認。完全版272/差分12/差分適用後274ソース一致、全48ブランチbundleと全旧配布物を保存。
+
+新統合版のWindows実機UI/カメラ/音声同期は未検証。前回Capture60を比較先とするDraft PRでmainへマージしません。Code→Download ZIP→別フォルダ展開→LoL_AutoCine/START_GPU.bat。タブホイール、カメラ再生中ミラーFX、同じ1シーン/4シーン連続を確認してください。

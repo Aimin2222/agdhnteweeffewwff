@@ -212,6 +212,8 @@ def test_ui_snapshots_full_roster_as_isolated_plain_data():
         app.players.clear()
         assert template.kill_icon_players[1]['name'] == 'Two'
         assert app.current_template().kill_icon_players == []
-        assert 'v5.10.3' in root.title()
+        from pathlib import Path
+        version = (Path(__file__).resolve().parents[1] / 'VERSION.txt').read_text().strip()
+        assert 'v' + version in root.title()
     finally:
         root.destroy()

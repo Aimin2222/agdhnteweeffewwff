@@ -391,7 +391,7 @@ class FocusCircleViz(tk.Canvas):
 class App:
     def __init__(self, root: tk.Tk):
         self.root = root
-        root.title(f"{APP} v5.10.3 - 円形ぼかし / 色と説明")
+        root.title(f"{APP} v5.10.4 - タブ操作 / ミラーFX / カメラ安定化")
         sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
         root.geometry(f"{min(1560, sw - 40)}x{min(960, sh - 90)}+10+10")
         root.option_add("*Font", FONT)
@@ -423,6 +423,9 @@ class App:
         self._status_refresh_pending = False
         self._gpu_refresh_pending = False
         self._status_poll_token = None
+        # Camera playback is a background job too; allow preview FX only for it,
+        # never while recording or exporting, to keep WGC/audio jobs responsive.
+        self._preview_fx_during_camera = False
         self._photo = None
         self._checked_watchdog_active = False
         self.out_root = Path(os.path.expanduser("~")) / "Videos" / "LoL_AutoCine"
@@ -550,7 +553,7 @@ class App:
         top.pack(fill="x")
         brand_box = ttk.Frame(top)
         brand_box.pack(side="left")
-        ttk.Label(brand_box, text="◈  LoL AutoCine v5.10.3", style="CompactTitle.TLabel").pack(anchor="w")
+        ttk.Label(brand_box, text="◈  LoL AutoCine v5.10.4", style="CompactTitle.TLabel").pack(anchor="w")
 
         nav = ttk.Frame(top)
         nav.pack(side="left", padx=(15, 0))
@@ -740,13 +743,15 @@ class App:
         tools = ttk.Frame(preview_card, style="Card.TFrame")
         tools.pack(fill="x", pady=(0, 7))
         ttk.Button(tools, text="ミラー ON / OFF", command=self.on_mirror_toggle).pack(side="left")
-        ttk.Checkbutton(tools, text="編集中の見た目を反映", variable=self.var_live).pack(side="left", padx=10)
+        ttk.Checkbutton(tools, text="FXをミラーに反映", variable=self.var_live).pack(side="left", padx=10)
         ttk.Button(tools, text="▶ 再生", style="Accent.TButton", command=self.on_preview_play).pack(side="right", padx=4)
         ttk.Button(tools, text="■ 停止", command=self.on_preview_stop).pack(side="right", padx=4)
         ttk.Button(tools, text="1枚だけ更新", command=self.on_exact_still).pack(side="right", padx=4)
 
         self.canvas = tk.Canvas(preview_card, bg="#111827", width=560, height=230, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
+        ttk.Label(preview_card, text="ぼかし・色はミラー再生中にも簡易表示（LoL本体の画面にはかかりません）。完成MP4は書き出し処理で適用。",
+                  style="CardMuted.TLabel").pack(anchor="w")
         ttk.Label(preview_card, text="上段：準備・プレビュー・検出シーン　／　下段：全幅エディタ（境界ドラッグで高さ調整）",
                   style="CardMuted.TLabel").pack(anchor="w", pady=(4,0))
 
@@ -1681,16 +1686,19 @@ class App:
             return 'break'  # prevents Tk's combobox/spinbox class binding
         def visit(parent):
             for widget in parent.winfo_children():
-                if isinstance(widget, (ttk.Combobox, ttk.Spinbox, tk.Spinbox)):
+                if isinstance(widget, (ttk.Combobox, ttk.Spinbox, tk.Spinbox, ttk.Notebook)):
                     for sequence in ('<MouseWheel>', '<Button-4>', '<Button-5>'):
                         widget.bind(sequence, intercept, add=False)
                 visit(widget)
         visit(self.root)
-        # Bind the Tcl widget *classes* as well: Notebook pages, floating popup
-        # editors, or future widgets created after this setup need the same
-        # behaviour.  Always consume the wheel before Tk's readonly-combobox
-        # class binding is allowed to change its selection.
-        for widget_class in ('TCombobox', 'TSpinbox', 'Spinbox'):
+        # The advanced '基本 / カラー・FX / 録画・出力' tabs are a ttk.Notebook.
+        # Tk switches Notebook tabs on the mouse wheel by default.  Treat the
+        # Notebook header AND its pages as scrolling surfaces instead; tabs
+        # change only through a deliberate click/keyboard navigation.
+        # Bind widgets and the Tcl class (for newly-created notebook controls).
+        # Bind the Tcl widget *classes* as well: future controls created
+        # after setup must have the same wheel semantics.
+        for widget_class in ('TCombobox', 'TSpinbox', 'Spinbox', 'TNotebook'):
             for sequence in ('<MouseWheel>', '<Button-4>', '<Button-5>'):
                 self.root.bind_class(widget_class, sequence, intercept)
 
@@ -2496,6 +2504,7 @@ class App:
         self.busy = True
         self.q.put(("busy", True))
         name = getattr(fn, "__name__", "worker")
+        self._preview_fx_during_camera = (name == '_preview_play')
         _diag_write(RUN_LOG, f"BG_STAGE start_requested fn={name}")
 
         def w():
@@ -2517,6 +2526,7 @@ class App:
                         pass
                     self._checked_watchdog_active = False
                 _diag_write(RUN_LOG, f"BG_STAGE worker_finally fn={name}")
+                self._preview_fx_during_camera = False
                 self.q.put(("busy", False))
         try:
             threading.Thread(target=w, daemon=True, name=f"AutoCine-{name}").start()
@@ -2528,6 +2538,7 @@ class App:
                 except Exception:
                     pass
                 self._checked_watchdog_active = False
+            self._preview_fx_during_camera = False
             self.q.put(("busy", False))
             _diag_write(CRASH_LOG, f"BG_THREAD_START_ERROR {name}: {e}")
             raise
@@ -3224,10 +3235,11 @@ class App:
             cw, ch = max(160, self.canvas.winfo_width()), max(90, self.canvas.winfo_height())
             live = bool(self.var_live.get())
             mirror_on = self.source is not None and self.source.running
+            preview_fx = live and (not self.busy or self._preview_fx_during_camera)
             self.canvas.delete("all")
             rgb, kind = self._current_frame_rgb(cw, ch)
             if rgb is not None:
-                if live and not self.busy:
+                if preview_fx:
                     t = self.current_template()
                     if hasattr(self, "curve_editor"):
                         self.curve_editor.set_histogram(rgb)
@@ -3237,20 +3249,20 @@ class App:
                     rgb = compose_compare(rgb, t, preview_title(t, self._selected_multikill()), float(self.var_split.get()))
                 self._photo = ImageTk.PhotoImage(Image.fromarray(rgb))
                 self.canvas.create_image(cw // 2, ch // 2, image=self._photo)
-                if live and not self.busy:
+                if preview_fx:
                     cam = STYLES.get(t.style, t.style)
                     hud = "HUD安全モード" if t.hide_hud else "HUDそのまま"
                     self.canvas.create_text(8, 8, anchor="nw", fill="#a7f3d0",
-                                            text=f"テンプレ反映 / カメラ: {cam} / {hud}")
+                                            text=f"ミラー上の簡易FX表示 / カメラ: {cam} / {hud}")
             else:
                 self.canvas.create_text(cw // 2, ch // 2, anchor="center",
                                         fill="#94A3B8", font=("Meiryo UI", 12, "bold"),
                                         text="LoLミラーを開始するとここに実映像が表示されます")
         except Exception:
             pass
-        # During encoding, don't run costly Tk/PIL CPU preview effects at 60 Hz.
-        # Mirror remains visible; update it at ~10 Hz while a job is running.
-        self.root.after(100 if self.busy else 16, self._preview_tick)
+        # Rendering/export: ~10Hz unfiltered. Camera-only preview: ~15Hz
+        # filtered; avoids blocking Tk when circular DOF is CPU-composited.
+        self.root.after(67 if self._preview_fx_during_camera else (100 if self.busy else 16), self._preview_tick)
 
     def on_exact_still(self) -> None:
         try:
