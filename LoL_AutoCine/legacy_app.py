@@ -1351,6 +1351,8 @@ class App:
         self._update_dof_mode_ui()
         ttk.Button(fx_page, text="★ おすすめ：キャラをくっきり・背景を柔らかく",
                    command=self._apply_focus_preset).pack(fill="x", pady=(0,7))
+        ttk.Button(fx_page, text="▣ 実際のミラーでぼかしを比較",
+                   command=self._preview_dof_from_live).pack(fill="x", pady=(0,7))
 
         # Premiere/AE系の演出。難しい編集を覚えなくても、チェックを入れるだけで使える。
         fx_box = ttk.LabelFrame(fx_page, text="映像演出（チェックするだけでOK）", padding=8)
@@ -1379,15 +1381,22 @@ class App:
                 cell = ttk.Frame(sec, style="Card.TFrame"); cell.grid(row=row_idx, column=col_idx, sticky="ew", padx=4, pady=2)
                 var = tk.BooleanVar(value=False); sval = tk.DoubleVar(value=float(VIDEO_EFFECT_DEFAULTS.get(key, 0.25)))
                 self.effect_vars[key] = var; self.effect_strength_vars[key] = sval
-                ttk.Checkbutton(cell, text=EFFECT_LABEL_JA.get(key, label), variable=var).pack(side="left")
+                switch=ttk.Checkbutton(cell,text=EFFECT_LABEL_JA.get(key,label),variable=var)
+                switch.pack(side="left")
                 help_message = EFFECT_LABEL_JA.get(key, key) + "：" + EFFECT_HELP_JA.get(
                     key, "ONにすると映像に演出が加わります。")
                 help_button = ttk.Button(cell, text="?", width=2,
                                          command=lambda k=key: self._show_effect_help(k))
                 help_button.pack(side="left", padx=(2,3))
                 bind_effect_hover_tip(help_button, help_message, delay_ms=500)
-                ttk.Scale(cell, from_=0.05, to=1.0, variable=sval, length=70).pack(side="left", fill="x", expand=True, padx=4)
-                ttk.Entry(cell, textvariable=sval, width=5, justify="right").pack(side="right")
+                fx_parameters=ttk.Frame(cell,style="Card.TFrame")
+                ttk.Scale(fx_parameters,from_=0.05,to=1.0,variable=sval,length=70).pack(side="left",fill="x",expand=True,padx=4)
+                ttk.Entry(fx_parameters,textvariable=sval,width=5,justify="right").pack(side="right")
+                def toggle_strength(*_,enabled=var,controls=fx_parameters):
+                    if enabled.get(): controls.pack(side="right",fill="x",expand=True)
+                    else: controls.pack_forget()
+                var.trace_add("write",toggle_strength)
+                toggle_strength()
         ttk.Button(fx_box, text="全エフェクトOFF", command=self._clear_video_effects).pack(fill="x", pady=(5, 0))
 
         self.var_tr=tk.StringVar(); ttk.Label(output, text="切替", style="Card.TLabel").pack(anchor="w")
@@ -1984,6 +1993,28 @@ class App:
         if hasattr(self,"_invalidate_preview_snapshot"):
             self._invalidate_preview_snapshot()
 
+    def _preview_dof_from_live(self):
+        """Show current real LoL mirror before/after using existing DOF engine."""
+        frame,where=self._current_frame_rgb(960,540)
+        if frame is None:
+            messagebox.showinfo("DOFを確認","LoLミラーを開始してから押してください。",parent=self.root)
+            return
+        from core.preview import grade_rgb,apply_video_effect_preview
+        t=self.current_template()
+        t.dof_enabled=True
+        original=Image.fromarray(frame.astype(np.uint8))
+        result=Image.fromarray(apply_video_effect_preview(grade_rgb(frame,t),t))
+        comparison=Image.new("RGB",(original.width*2,original.height))
+        comparison.paste(original,(0,0))
+        comparison.paste(result,(original.width,0))
+        comparison.thumbnail((1080,400),Image.Resampling.LANCZOS)
+        dlg=tk.Toplevel(self.root)
+        dlg.title("LoL実フレーム：左＝原画 / 右＝FXプレビュー")
+        photo=ImageTk.PhotoImage(comparison,master=dlg)
+        label=ttk.Label(dlg,image=photo)
+        label.image=photo
+        label.pack(padx=12,pady=12)
+
     def _open_kill_frame_gallery(self):
         from ui.kill_frame_gallery import open_gallery
         return open_gallery(self)
@@ -2066,7 +2097,15 @@ class App:
     def _register_scrolling_controls(self):
         """Mousewheel scrolls containing panel; never changes a closed combobox."""
         def intercept(event):
-            # These handlers return 'break' before the root input binding runs.
+            # Never grab the native expanded popdown scroll and pass it
+            # through to the underlying editor panels.
+            if isinstance(event.widget,ttk.Combobox):
+                try:
+                    popup=self.root.tk.call("ttk::combobox::PopdownWindow",str(event.widget))
+                    if int(self.root.tk.call("winfo","ismapped",popup)):
+                        return "break"
+                except tk.TclError:
+                    pass
             self._preview_input(event)
             for panel in (self.left_scroll, self.right_scroll, self.center_edit_scroll):
                 if panel._pointer_inside(event):
@@ -3377,10 +3416,8 @@ class App:
             style_id = d.get('smart_highlight_style', 'auto')
             if style_id in SMART_STYLES:
                 self.var_smart_highlight_style.set(SMART_STYLES[style_id])
-            if d.get("montage_fx") in ("cut", "flash", "dark"):
-                self.var_montage_fx.set({"cut": "なし（従来の高速連結）",
-                                         "flash": "光るカット（白い閃光）",
-                                         "dark": "暗転カット（シネマ）"}[d["montage_fx"]])
+            if d.get("montage_fx") in MONTAGE_LABELS:
+                self.var_montage_fx.set(MONTAGE_LABELS[d["montage_fx"]])
             restored_mode = d.get("edit_mode", "easy")
             if restored_mode in ("easy", "advanced"):
                 self.var_edit_mode.set(restored_mode)
