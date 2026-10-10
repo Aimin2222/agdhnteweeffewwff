@@ -115,5 +115,5 @@ def test_scan_can_return_assists(monkeypatch, blue_player, mode, roles):
 def test_ui_forwards_scanned_mode_and_installs_hover():
     source = (Path(__file__).resolve().parents[1] / "legacy_app.py").read_text(encoding="utf-8")
     assert "self._run_bg(self._scan, self.var_event_mode.get())" in source
-    assert "need_rescan = getattr(self, \"_last_scan_mode\", None) != event_mode" in source
+    assert "need_rescan = getattr(self, \"_last_scan_mode\", event_mode) != event_mode" in source
     assert "HoverHelp(help_button," in source
