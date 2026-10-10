@@ -817,7 +817,23 @@ class App:
         self._template_tone_canvas = tk.Canvas(f, width=141, height=23, bg="#FFFFFF",
                                                 highlightthickness=0)
         self._template_tone_canvas.pack(anchor="w", pady=(1,5))
-        ttk.Button(f, text="▣  色見本つきテンプレート一覧を開く",
+        ttk.Button(f, text="A：かんたん色見本カードを開閉",
+                   command=self._toggle_inline_template_cards).pack(fill="x", pady=(3,2))
+        self._inline_color_cards=ttk.Frame(f, style="Card.TFrame")
+        from ui.template_gallery import template_info, draw_color_bars
+        for preset in ("クリア・アクション（視認性重視）", "アイスブルー・シネマ",
+                       "ゴールド・フィニッシュ", "ネオン・モンタージュ"):
+            if preset not in self.templates:
+                continue
+            details=template_info(self.templates[preset])
+            chip=ttk.Frame(self._inline_color_cards,style="Card.TFrame")
+            chip.pack(fill="x",pady=(2,2))
+            bar=tk.Canvas(chip,width=132,height=23,highlightthickness=0,bg="#FFFFFF")
+            bar.pack(side="left")
+            draw_color_bars(bar,details["colors"])
+            ttk.Button(chip,text=preset[:13],width=17,
+                       command=lambda n=preset:self._choose_easy_preset(n)).pack(side="left",padx=4)
+        ttk.Button(f, text="B：全テンプレート図鑑を開く",
                    command=self._open_template_gallery).pack(fill="x", pady=(3,0))
 
         # ---- center: preview / timeline / camera --------------------------
