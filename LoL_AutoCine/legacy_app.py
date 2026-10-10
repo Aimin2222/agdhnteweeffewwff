@@ -25,6 +25,7 @@ from core import paths                                             # noqa: E402
 from core.kill_icons import STYLES as KILL_ICON_STYLES, REVERSE_STYLES as KILL_ICON_REVERSE
 from core.kill_icons import POSITIONS as KILL_ICON_POSITIONS, REVERSE_POSITIONS as KILL_ICON_REVERSE_POSITIONS
 from core.kill_icons import REVERSE_MARK_STYLES as KILL_MARK_REVERSE
+from core.montage_fx import MONTAGE_LABELS, MONTAGE_REVERSE
 from core.camera import INTENSITY_JP, STYLES, CAMERA_SIDE_CHOICES        # noqa: E402
 from core.capture import CaptureError, SyntheticSource, WGCWindowSource   # noqa: E402
 from core.effects import (FOG_PRESETS, GRADE_JP, TRANSITIONS, Template, one_click_templates, gpu_encoder_available, gpu_pipeline_status,
@@ -103,7 +104,7 @@ def rev(d: dict) -> dict:
     return {v: k for k, v in d.items()}
 
 
-def bind_effect_hover_tip(widget, explanation: str, delay_ms: int = 1000) -> None:
+def bind_effect_hover_tip(widget, explanation: str, delay_ms: int = 500) -> None:
     """Show the existing Japanese FX help near the '?' after a one-second hover."""
     state = {"job": None, "popup": None}
 
@@ -642,7 +643,7 @@ class App:
         self.var_int = tk.StringVar(value="standard")
         self.var_hud_choice = tk.StringVar(value=HUD_MODES['hidden'])
         self.var_hud_summary = tk.StringVar(value=hud_summary('hidden'))
-        self.var_montage_fx = tk.StringVar(value="なし（従来の高速連結）")
+        self.var_montage_fx = tk.StringVar(value=MONTAGE_LABELS["cut"])
 
         top = ttk.Frame(r, padding=(9, 1, 9, 0))
         top.pack(fill="x")
@@ -654,6 +655,7 @@ class App:
         nav.pack(side="left", padx=(15, 0))
         ttk.Button(nav, text="⌂  ホーム", style="Nav.TButton", command=lambda: self._focus_home()).pack(side="left")
         ttk.Button(nav, text="▣  テンプレート", style="Nav.TButton", command=self._open_template_gallery).pack(side="left")
+        ttk.Button(nav, text="✦  キルフレーム図鑑", style="Nav.TButton", command=self._open_kill_frame_gallery).pack(side="left")
         ttk.Button(nav, text="✓  自動診断", style="Nav.TButton", command=self.on_automatic_qa).pack(side="left")
         ttk.Button(nav, text="▰  参考動画", style="Nav.TButton", command=lambda: self._focus_reference()).pack(side="left")
         ttk.Button(nav, text="⚙  設定", style="Nav.TButton", command=self._focus_settings).pack(side="left")
@@ -682,7 +684,7 @@ class App:
                             command=self._apply_edit_mode).pack(side="left", padx=(0, 8))
         # Studio workspace shortcuts, intentionally scoped to explicit Ctrl+number.
         # Never rebind single keys used by LoL or text/number entry fields.
-        for num, zone in enumerate(("scene", "camera", "color", "output"), start=1):
+        for num, zone in enumerate(("scene", "camera", "color", "fx", "output"), start=1):
             r.bind(f"<Control-Key-{num}>", lambda _e, z=zone: self._focus_editor_zone(z), add="+")
         self.edit_mode_hint = ttk.Label(mode_bar, style="Muted.TLabel")
         self.edit_mode_hint.pack(side="left", padx=12)
@@ -903,7 +905,7 @@ class App:
         self.editor_zone_bar.pack(fill="x", pady=(5, 7))
         ttk.Label(self.editor_zone_bar, text="編集ワークスペース", style="Section.TLabel").pack(side="left", padx=(0, 12))
         for title, zone in (("▣ シーン", "scene"), ("◉ カメラ", "camera"),
-                            ("◈ カラー・FX", "color"), ("▤ 出力", "output")):
+                            ("◈ カラー", "color"), ("✦ FX", "fx"), ("▤ 出力", "output")):
             ttk.Radiobutton(self.editor_zone_bar, text=title, variable=self.var_editor_zone,
                             value=zone, style="Mode.TRadiobutton",
                             command=self._apply_editor_zone).pack(side="left", padx=(0, 4))
@@ -960,7 +962,7 @@ class App:
         easy_montage_row.pack(fill="x", pady=(7,1))
         ttk.Label(easy_montage_row, text="動画のつなぎ目", style="Card.TLabel", width=16).pack(side="left")
         ttk.Combobox(easy_montage_row, state="readonly", textvariable=self.var_montage_fx,
-                     values=["なし（従来の高速連結）", "光るカット（白い閃光）", "暗転カット（シネマ）"],
+                     values=list(MONTAGE_LABELS.values()),
                      width=28).pack(side="left", fill="x", expand=True)
 
         self._mode_detail_sections = []
@@ -1310,7 +1312,7 @@ class App:
         self.cb_effect_preset.bind("<<ComboboxSelected>>", lambda _e: self._apply_effect_preset(self.var_effect_preset.get()))
         ttk.Label(fx_box, text="各エフェクトはON/OFFと強さを個別に変更できます。迷ったらプリセットだけでOK。",
                   style="CardMuted.TLabel", wraplength=560).pack(anchor="w", pady=(0, 6))
-        self.effect_help_text=tk.StringVar(value="効果名の『？』へカーソルを1秒置くと説明が表示されます。クリックでも確認できます。")
+        self.effect_help_text=tk.StringVar(value="効果名の『？』へカーソルを0.5秒置くと説明が表示されます。クリックでも確認できます。")
         ttk.Label(fx_box, textvariable=self.effect_help_text, style="CardMuted.TLabel",
                   wraplength=920, justify="left").pack(fill="x", pady=(1,7))
         self.effect_vars = {}
@@ -1331,7 +1333,7 @@ class App:
                 help_button = ttk.Button(cell, text="?", width=2,
                                          command=lambda k=key: self._show_effect_help(k))
                 help_button.pack(side="left", padx=(2,3))
-                bind_effect_hover_tip(help_button, help_message, delay_ms=1000)
+                bind_effect_hover_tip(help_button, help_message, delay_ms=500)
                 ttk.Scale(cell, from_=0.05, to=1.0, variable=sval, length=70).pack(side="left", fill="x", expand=True, padx=4)
                 ttk.Entry(cell, textvariable=sval, width=5, justify="right").pack(side="right")
         ttk.Button(fx_box, text="全エフェクトOFF", command=self._clear_video_effects).pack(fill="x", pady=(5, 0))
@@ -1443,7 +1445,7 @@ class App:
                         variable=self.var_smart_montage).pack(anchor="w", pady=(0,5))
         ttk.Label(output, text="モンタージュ専用の切替演出", style="Card.TLabel").pack(anchor="w", pady=(5,2))
         ttk.Combobox(output, state="readonly", textvariable=self.var_montage_fx,
-                     values=["なし（従来の高速連結）", "光るカット（白い閃光）", "暗転カット（シネマ）"],
+                     values=list(MONTAGE_LABELS.values()),
                      width=29).pack(fill="x", pady=(0,2))
         ttk.Label(output, text="クリップのつなぎ目だけに適用。『なし』は再エンコードせず高速に連結します。",
                   style="CardMuted.TLabel", wraplength=950).pack(anchor="w", pady=(0,4))
@@ -2991,7 +2993,7 @@ class App:
         for k, v in self.sl.items():
             v.set(getattr(t, k))
         self.var_tr.set(TRANSITIONS.get(t.transition, t.transition))
-        self.var_montage_fx.set({"cut":"なし（従来の高速連結）", "flash":"光るカット（白い閃光）", "dark":"暗転カット（シネマ）"}.get(getattr(t,"montage_fx","cut"), "なし（従来の高速連結）"))
+        self.var_montage_fx.set(MONTAGE_LABELS.get(getattr(t,"montage_fx","cut"),MONTAGE_LABELS["cut"]))
         self.var_kill_icon_style.set(KILL_ICON_STYLES.get(getattr(t, "kill_icon_style", "off"), KILL_ICON_STYLES["off"]))
         self.var_kill_icon_position.set(KILL_ICON_POSITIONS.get(getattr(t, "kill_icon_position", "right-top"), KILL_ICON_POSITIONS["right-top"]))
         self.var_kill_icon_scale.set(float(getattr(t, "kill_icon_scale", 1.0)))
@@ -3115,7 +3117,7 @@ class App:
         for k, v in self.sl.items():
             setattr(t, k, float(v.get()))
         t.transition = rev(TRANSITIONS).get(self.var_tr.get(), "fade")
-        t.montage_fx = {"なし（従来の高速連結）":"cut", "光るカット（白い閃光）":"flash", "暗転カット（シネマ）":"dark"}.get(self.var_montage_fx.get(),"cut")
+        t.montage_fx = MONTAGE_REVERSE.get(self.var_montage_fx.get(),"cut")
         t.pre, t.post = float(self.var_pre.get()), float(self.var_post.get())
         t.merge_multikill = bool(self.var_merge.get())
         t.title_text = self.var_title.get().strip()
@@ -3301,7 +3303,7 @@ class App:
                                              "encoder_policy": {'GPU優先（NVENC）':'gpu','CPU優先（libx264）':'cpu'}.get(self.var_encoder_policy.get(),'auto'),
                                              "smart_montage": bool(self.var_smart_montage.get()),
                                              "smart_composition": bool(self.var_smart_composition.get()),
-                                             "montage_fx": {"なし（従来の高速連結）":"cut", "光るカット（白い閃光）":"flash", "暗転カット（シネマ）":"dark"}.get(self.var_montage_fx.get(),"cut")}, ensure_ascii=False), encoding="utf-8")
+                                             "montage_fx": MONTAGE_REVERSE.get(self.var_montage_fx.get(),"cut")}, ensure_ascii=False), encoding="utf-8")
         except Exception:
             pass
 
