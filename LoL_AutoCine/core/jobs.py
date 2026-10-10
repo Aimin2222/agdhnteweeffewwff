@@ -274,7 +274,15 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
                     log: Callable = lambda m: None,
                     audio_factory: Optional[Callable] = None) -> ClipTake:
     """1クリップ録画。HUD非表示は呼び出し側 (run_auto_edit) が行う。"""
-    plan, rig = _prepare_clip_capture(api, source, player, tpl, start, kills, stop, log)
+    try:
+        plan, rig = _prepare_clip_capture(api, source, player, tpl, start, kills, stop, log)
+    except Exception:
+        try:
+            if player is not None:
+                restore_mirror_camera(api, player, 65.0, log)
+        except Exception as restore_error:
+            log(f"準備失敗後のミラー復帰をスキップ: {restore_error}")
+        raise
     take = ClipTake(rig=rig)
     saved_hud = {}
     if tpl.hide_hud:
@@ -389,7 +397,15 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
 def preview_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, end: float, kills: list,
                  stop=None, log: Callable = lambda m: None) -> RigInfo:
     """録画せずに、テンプレートのカメラ演出(追従/ズーム/スロー/HUD非表示)をLoL上で再生して確認する。"""
-    plan, rig = _setup_clip(api, player, tpl, start, kills, log)
+    try:
+        plan, rig = _setup_clip(api, player, tpl, start, kills, log)
+    except Exception:
+        try:
+            if player is not None:
+                restore_mirror_camera(api, player, 65.0, log)
+        except Exception as restore_error:
+            log(f"準備失敗後のミラー復帰をスキップ: {restore_error}")
+        raise
     director = CameraDirector(api, plan)
     cam_dist = getattr(tpl, "third_dist", 950.0) if getattr(rig, "third", False) else None
     if cam_dist is None and rig is not None and rig.v is not None:

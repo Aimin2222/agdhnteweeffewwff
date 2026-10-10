@@ -444,19 +444,28 @@ class FocusCircleViz(tk.Canvas):
 
 
 def _render_live_preview(request):
-    source, width, height, template, title, split = request
+    source, width, height, template, title, split, canvas_width, canvas_height = request
     frame = source.latest()
     if frame is None:
         return None
-    image = Image.fromarray(frame[..., [2, 1, 0]])
-    image.thumbnail((width, height), Image.Resampling.LANCZOS)
+    # Pillow's raw decoder avoids NumPy's full-size advanced channel indexing.
+    # Alpha from WGC is ignored: it is not guaranteed to be opaque.
+    image = Image.frombytes('RGB', (frame.shape[1], frame.shape[0]),
+                            frame.tobytes(), 'raw', 'BGRX')
+    image.thumbnail((width, height), Image.Resampling.BILINEAR, reducing_gap=2.0)
     original = np.asarray(image)
     rgb = original
     if template is not None:
         rgb = apply_camera_preview(rgb, template)
         rgb = apply_video_effect_preview(rgb, template, phase=0.5)
         rgb = compose_compare(rgb, template, title, split)
-    return rgb, original
+    image = Image.fromarray(rgb)
+    ratio = min(canvas_width / image.width, canvas_height / image.height)
+    if ratio != 1:
+        image = image.resize((max(1, round(image.width * ratio)),
+                              max(1, round(image.height * ratio))), Image.Resampling.BILINEAR)
+    # All resize work is finished before the UI uploads pixels to Tk.
+    return image, original
 
 class App:
     def __init__(self, root: tk.Tk):
@@ -538,18 +547,22 @@ class App:
         self._scene_loading = False
         self._live_preview = LatestPreview(_render_live_preview)
         self._preview_presented = None
+        self._preview_snapshot = None
+        self._preview_input_at = 0.0
+        self._preview_image_item = self._preview_text_item = None
         self._histogram_updated = 0.0
         self._badge_preview_pending = False
         self._build()
         self._register_scrolling_controls()
         self._load_settings()
+        self._install_preview_tracking()
         try:
             if self.scene_project_path.exists():
                 self.scene_project = SceneProject.load(self.scene_project_path)
         except Exception as e:
             self.log(f"シーンプロジェクトの復元をスキップ: {e}")
         self.root.after(80, self._pump)
-        # UIプレビューはTkinter/PIL/NumpyのCPU合成。書き出し側はGPU Hybridを使用。
+        # UIプレビューはTkinter/PIL/NumpyのCPU合成。書き出し側はGPU Fullを使用。
         # 簡易合成は別スレッドで最大15Hz。録画・最終出力のFPSとは独立。
         self.root.after(16, self._preview_tick)
         self.log("起動しました。①から順に、または上部の『★ これで自動作成』を押してください。")
@@ -3179,7 +3192,7 @@ class App:
     def on_scan(self) -> None:
         if not self._need_lock():
             return
-        self._run_bg(self._scan)
+        self._run_bg(self._scan, self.var_event_mode.get())
 
     def _need_lock(self) -> bool:
         if self.locked is None:
@@ -3197,8 +3210,12 @@ class App:
         res = scan_kills(self.api, p, progress=lambda *a: self.q.put(("scan", *a)), stop=self.stop_ev,
                          diag_dir=ROOT / "diagnostics", event_mode=mode)
         self.kills = res.kills
+        self._last_scan_mode = selected_mode
         self.checked_kills = set(range(len(self.kills)))
         self.q.put(("kills",))
+        kill_count = sum(getattr(k, 'role', 'kill') == 'kill' for k in res.kills)
+        assist_count = sum(getattr(k, 'role', 'kill') == 'assist' for k in res.kills)
+        self.log(f"スキャン内訳: キル {kill_count}件 / アシスト {assist_count}件")
         self.log(f"スキャン完了: イベント {res.total_events} 件 / 対象シーン {len(res.kills)} 件 / モード {selected_mode}"
                  + ("" if res.complete else " (途中で中断)"))
 
@@ -3240,7 +3257,9 @@ class App:
                     pass
             self.lbl_job.configure(text=f"全検出シーン {len(self.kills)} 件: 開始準備中…")
             _diag_write(RUN_LOG, "ALL_STAGE enqueue_worker")
-            self._run_bg(self._make, False, template, montage, "キル", *scene_config)
+            event_mode = self.var_event_mode.get()
+            need_rescan = getattr(self, '_last_scan_mode', event_mode) != event_mode
+            self._run_bg(self._make, need_rescan, template, montage, event_mode, *scene_config)
             _diag_write(RUN_LOG, "ALL_STAGE queued")
         except Exception:
             _diag_write(CRASH_LOG, "ALL_CALLBACK_ERROR\n" + traceback.format_exc())
@@ -3373,6 +3392,8 @@ class App:
         self._mirror.stop()
         self.source = None
         self.canvas.delete("all")
+        self._preview_image_item = self._preview_text_item = None
+        self._preview_presented = None
         self.log("ミラーOFF。")
         if hasattr(self, "var_mirror"):
             self.var_mirror.set(False)
@@ -3393,49 +3414,85 @@ class App:
             return self.kills[sel[0]].multikill
         return 1
 
+    def _preview_input(self, _event=None) -> None:
+        self._preview_input_at = time.monotonic()
+
+    def _invalidate_preview_snapshot(self, *_args) -> None:
+        self._preview_snapshot = None
+        self._preview_input()
+
+    def _install_preview_tracking(self) -> None:
+        # Traces only invalidate data; they never render pixels or read Tk in a worker.
+        variables = [v for k, v in vars(self).items()
+                     if k.startswith('var_') and isinstance(v, tk.Variable)]
+        for mapping in (self.sl, self.effect_vars, self.effect_strength_vars):
+            variables.extend(mapping.values())
+        for variable in {str(v): v for v in variables}.values():
+            variable.trace_add('write', self._invalidate_preview_snapshot)
+        for event in ('<ButtonPress>', '<B1-Motion>', '<MouseWheel>', '<Button-4>',
+                      '<Button-5>', '<KeyPress>', '<<NotebookTabChanged>>'):
+            self.root.bind(event, self._preview_input, add='+')
+
+    def _preview_template_snapshot(self):
+        if self._preview_snapshot is None:
+            template = self.current_template()
+            self._preview_snapshot = template, json.dumps(template.to_dict(), sort_keys=True)
+        return self._preview_snapshot
+
     def _preview_tick(self) -> None:
         if self._closing:
             return
         preview_fx = bool(self.var_live.get()) and (not self.busy or self._preview_fx_during_camera)
+        editing = time.monotonic() - self._preview_input_at < .25
         try:
             cw, ch = max(160, self.canvas.winfo_width()), max(90, self.canvas.winfo_height())
             if self.source is not None and self.source.running:
                 # Snapshot Tk values here. The worker gets only data and the capture source.
-                t = self.current_template() if preview_fx else None
+                t, settings_key = self._preview_template_snapshot() if preview_fx else (None, '')
                 title = preview_title(t, self._selected_multikill()) if t is not None else ''
                 split = float(self.var_split.get()) if t is not None else 0.0
-                key = (id(self.source), cw, ch, json.dumps(t.to_dict(), sort_keys=True) if t else '', title, split)
+                key = (id(self.source), cw, ch, settings_key, title, split)
                 result = self._live_preview.result(key)
-                self._live_preview.submit(key, (self.source, min(cw, 960), min(ch, 540), t, title, split))
+                # During drags/scrolls lower only the approximate mirror workload.
+                # Export templates, recording clocks and output resolution are untouched.
+                limit_w, limit_h = (640, 360) if editing else (960, 540)
+                self._live_preview.submit(key, (self.source, min(cw, limit_w), min(ch, limit_h),
+                                               t, title, split, cw, ch))
                 if result is not None and result is not self._preview_presented:
-                    rgb, original = result[1]
-                    image = Image.fromarray(rgb)
-                    ratio = min(cw / image.width, ch / image.height)
-                    if ratio != 1:
-                        image = image.resize((max(1, round(image.width * ratio)), max(1, round(image.height * ratio))))
+                    image, original = result[1]
                     self._photo = ImageTk.PhotoImage(image)
-                    self.canvas.delete("all")
-                    self.canvas.create_image(cw // 2, ch // 2, image=self._photo)
+                    if self._preview_image_item is None:
+                        self.canvas.delete('all')
+                        self._preview_image_item = self.canvas.create_image(cw // 2, ch // 2, image=self._photo)
+                        self._preview_text_item = self.canvas.create_text(8, 8, anchor='nw', fill='#a7f3d0')
+                    else:
+                        self.canvas.itemconfigure(self._preview_image_item, image=self._photo)
+                        self.canvas.coords(self._preview_image_item, cw // 2, ch // 2)
                     self._preview_presented = result
                     if preview_fx:
                         cam = STYLES.get(t.style, t.style)
                         hud = "HUD安全モード" if t.hide_hud else "HUDそのまま"
-                        self.canvas.create_text(8, 8, anchor="nw", fill="#a7f3d0",
-                                                text=f"ミラー上の簡易FX表示 / カメラ: {cam} / {hud}")
+                        self.canvas.itemconfigure(self._preview_text_item,
+                                                  text=f"ミラー上の簡易FX表示 / カメラ: {cam} / {hud}")
                         now = time.monotonic()
                         if (hasattr(self, "curve_editor") and self.curve_editor.winfo_viewable()
                                 and now - self._histogram_updated >= .5):
                             self.curve_editor.set_histogram(original[::4, ::4])
                             self._histogram_updated = now
+                    else:
+                        self.canvas.itemconfigure(self._preview_text_item, text='')
             else:
-                self._preview_presented = None
-                self.canvas.delete("all")
-                self.canvas.create_text(cw // 2, ch // 2, anchor="center",
+                if self._preview_presented is not None or self._preview_text_item is None:
+                    self._preview_presented = None
+                    self._preview_image_item = None
+                    self.canvas.delete("all")
+                    self._preview_text_item = self.canvas.create_text(cw // 2, ch // 2, anchor="center",
                                         fill="#94A3B8", font=("Meiryo UI", 12, "bold"),
                                         text="LoLミラーを開始するとここに実映像が表示されます")
         except (ValueError, tk.TclError):
             pass  # A numeric entry may be temporarily empty while the user edits it.
-        self.root.after(100 if self.busy and not preview_fx else (67 if preview_fx else 33), self._preview_tick)
+        delay = 167 if editing else (100 if self.busy and not preview_fx else (67 if preview_fx else 50))
+        self.root.after(delay, self._preview_tick)
 
     def on_exact_still(self) -> None:
         try:

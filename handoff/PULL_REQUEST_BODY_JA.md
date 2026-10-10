@@ -1,11 +1,11 @@
-約8.9秒の映像加工に約49～55秒かかる受領診断では、NVENC・GPUぼかしが成功していても色/周辺減光/粒子/枠/フェード/合成がCPUに残り、主映像がCPUとOpenCLの間を2回往復していました。
+ミラーONでカラー・エフェクト／書き出しの設定エリアが重いという報告に対応します。受領診断では16回すべて、NVDEC・OpenCL GPU加工・NVENC・1080p/60fpsで正常終了。一方、ミラーワーカーのLANCZOS縮小とTk側のPhotoImage転送が定期スタックに見られ、GPU比較テストの実行記録はありませんでした。
 
-新しいGPUFullStageは色/LUT/カーブ、全22映像演出、時間ブラー、円/帯DOF、Bloom、周辺減光/粒子、BPM/キルアクセント、枠/フォグ、タイトル/実チャンピオンキル画像をGPUへ対応させます。色の定義は既存FFmpegからテンプレート単位で一度LUTへ焼き、GPUで補間。144fps素材は加工前60fpsへ絞り、主映像のOpenCL転送は各1回、PNGはGPUで再利用。時刻/fpsメタデータを補い、旧Zoom tmix scale=4の白飛びを正規化して修正しました。
+ミラー用BGRA→RGB/縮小を高速化、表示サイズへの拡大をワーカーへ移動し、Canvas itemを再利用。Tkテンプレートは変更時だけ取得し、設定/スライダー/タブ/スクロール操作中はミラーだけ約6fpsへ抑え、操作後に通常頻度へ戻します。ライブミラーはCPUの近似合成であり、GPU描画へ移行したとは主張しません。書き出し1080p/60fps、GPU Full、LoL専用音声、TargetLockは維持。
 
-素材の実プローブ成功時だけNVDEC。NVENCへRGBAを渡し最終色変換をハードウェアへ委ね、libx264再試行では互換yuv420pへ戻します。OpenCL失敗/タイムアウト/意図しないモノクロ化は同じ設定/タイトル/装飾/イベント/音声をCPUへ再試行。モンタージュflash/darkもGPU対応、cutは無加工copy、音声はstream copy。
+TEST_GPU_RENDERはアプリと同じpy -3を優先し、ローカルvenv/pythonへフォールバック。起動直後からログを作成し、依存import/選択画面の失敗、キャンセル、6ケース完了と終了コードを記録し、終了画面をpauseします。
 
-受領v5106ホットフィックスの安全な録画後ミラー復帰とホバー説明を統合し、v5105のクリック説明/非同期UI/TargetLock/LoL専用Native録音/録画60fpsとカメラ144Hzを維持。UI/Tk、音声、制御/I/O、入口YUV→RGBA、ミラー簡易合成はCPUです。CPUゼロやCUDA/OpenCLゼロコピーを主張しません。
+受領v5.10.6 UI差分からRED側Orbitのside_yaw、キル＋アシスト検出モード/遅れたアシスト情報、ガラス斬撃と中央なし、準備失敗後ミラー復帰を内容で統合。既存のホバー/クリックと再試行付きミラー復帰を維持し、古いGPUファイルを上書きしていません。
 
-全回帰348件成功（35.67秒、失敗/skipなし）。CPU PoCLによるシェーダー実行で色MAE0.52～1.10/255、時間履歴最大誤差1.5/255、60fps/装飾時刻/全演出のグラフを検証。実FFmpegで144fps→60fps、音声offset/mux、GPUモンタージュと音声copy確認。実Tkのホバー/操作も検査。Windows/NVIDIA実機の性能/画質/LoL動作は未検証。担当ガード、パッケージ、復元と保存検証をhandoffへ記録。旧51ブランチ/旧配布物を保持。
+検証: 全回帰369件成功（38.08秒、失敗/skipなし）、実Tkの大きなミラーと設定操作、起動例外ログ、Git担当ガード、全ソースのZIP/Gitパッチ再現。合成1080pの画像準備中央値60.18ms→29.81ms（Linux CPU、Tk転送やWindows実機速度を含まない）。実FFmpegで比較ツール6ケースのCPUフォールバックも成功し、起動・結果ログを確認。新Windows版の実機確認は未実施。
 
-WindowsではCode→Download ZIP→別フォルダ→START_GPU.bat。TEST_GPU_RENDER.batで同じraw素材の6ケースをまとめて比較し、通常アプリで音声/カメラ/複数シーン確認後COLLECT_DIAGNOSTICS。前回v5105を比較先とするDraft PRで、mainへマージしません。
+旧54ブランチ/旧配布物は保持。前回GPU Full v5.10.6を比較先とするDraft PRで、mainへマージしません。Windows取得は本ブランチのCode→Download ZIP、別フォルダへ展開してSTART_GPU.bat。今回のまとめテストはLoL_AutoCine/docs/WINDOWS_TEST_v5107_JA.mdに記載。
