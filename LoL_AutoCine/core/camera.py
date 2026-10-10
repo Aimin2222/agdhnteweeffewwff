@@ -420,8 +420,14 @@ class CameraPlan:
                 return None
             rot = dict(self.rig.rot)
             elev = self.third_pose_at(t)[1]
-            rot[self.rig.pitch_axis] = self.rig.pitch_sign * (
+            pitch = self.rig.pitch_sign * (
                 90.0 - elev if self.rig.pitch_complement else elev)
+            # 5.10.13 RED 180-degree rear-view correction could invert the
+            # calibrated FPS pitch specifically in normal third-person mode.
+            # Keep cinema/FPS/Lolnam untouched (already good in user footage).
+            if self.style == "third" and 90.0 < abs(self.side_yaw) % 360.0 < 270.0:
+                pitch = -pitch
+            rot[self.rig.pitch_axis] = max(-80.0, min(80.0, pitch))
 
             # TRUE ORBITの視線。カメラ位置を回しただけでは横を向くため、
             # 同じ軌道角だけ水平Yawも回して、常にキャラクター中心へ向ける。
@@ -443,6 +449,14 @@ class CameraPlan:
         motion = float(self.third_yaw) + self.keyframe_values(t)[0] + orbit_delta
         if self.smart_composition:
             motion = max(-55.0, min(55.0, motion))
+        if self.style in ("third", "third_cinema"):
+            # Gentle kill-event reframing in the calibrated local coordinate
+            # system; never add an unconditional extra RED 180-degree flip.
+            ks=tuple(self.kill_times) or (self.kill_time,)
+            cue=max((window(t,k-1.8,k-.6,k+.4,k+1.5) for k in ks),default=0.)
+            is_red=90.0 < (abs(self.side_yaw) % 360.0) < 270.0
+            nudge=(7.0 if self.style=="third" else 4.0) * (-1.0 if is_red else 1.0)
+            motion += nudge * cue
         return self.side_yaw + motion
 
     def _lolnam_orbit(self, t):
