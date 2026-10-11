@@ -83,3 +83,20 @@ def test_dev_camera_qa_requires_completed_whole_match_scan(monkeypatch):
         assert shown
     finally:
         root.destroy()
+
+def test_camera_repeated_selection_reuses_stable_non_pitch_axis():
+    from core.camera import stabilize_non_pitch_rotation
+    prior={'x':35.0,'y':15.0,'z':0.0}
+    rolled={'x':35.0,'y':195.0,'z':0.0}
+    notes=[]
+    chosen=stabilize_non_pitch_rotation(rolled,prior,'x',log=notes.append)
+    assert chosen['y']==15.0 and notes
+    normal={'x':35.0,'y':20.0,'z':0.0}
+    assert stabilize_non_pitch_rotation(normal,prior,'x')['y']==20.0
+    assert stabilize_non_pitch_rotation(normal,prior,'y')['x']==35.0
+
+def test_skin_theme_display_names_uniquely_roundtrip_to_style_ids():
+    from core.kill_icons import STYLES, REVERSE_STYLES
+    assert len(set(STYLES.values())) == len(STYLES)
+    for key, label in STYLES.items():
+        assert REVERSE_STYLES[label] == key
