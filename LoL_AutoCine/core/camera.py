@@ -220,6 +220,7 @@ class CameraPlan:
     smart_composition: bool = False   # optional visibility-safe framing
     smart_impact: float = 0.0         # optional kill-time speed envelope
     side_yaw: float = 0.0            # v5.10.5: side-aware orbit bias; calibrated rig unchanged
+    target_team: str = "ORDER"        # RED-only FPS framing; BLUE and Lolnam unchanged
 
     @staticmethod
     def _keyframe_channel(frames, left_idx: int, key: str, local_t: float) -> float:
@@ -411,7 +412,16 @@ class CameraPlan:
         if self.rig.v is None:
             return (0.0, self.height, 0.0)
         s = self.scale_at(t)
-        return (self.rig.v[0] * s, self.rig.v[1] * s + self.height, self.rig.v[2] * s)
+        offset = (self.rig.v[0] * s, self.rig.v[1] * s + self.height, self.rig.v[2] * s)
+        if self.style == "fps" and str(self.target_team).upper() in ("RED", "CHAOS"):
+            # User's RED FPS footage places the champion low-left. Preserve
+            # BLUE/Lolnam and reduce the RED camera's right/high bias gently.
+            # Horizontal right vector follows the measured rig basis.
+            hx, hz = self.rig.h if self.rig.h else (0.0, -1.0)
+            return (offset[0] + hz * 85.0,
+                    max(MIN_CLEARANCE, offset[1] - 100.0),
+                    offset[2] - hx * 85.0)
+        return offset
 
     def rotation_at(self, t: float) -> Optional[dict]:
         """確定版Orbitの三人称視線。カメラ位置の公転と同じ基準。"""
@@ -459,6 +469,8 @@ class CameraPlan:
             # Applying an extra opposite sign here breaks that geometry and
             # introduces asymmetry exactly at the kill event.
             nudge = 7.0 if self.style == "third" else 4.0
+            if is_red and self.style == "third":
+                nudge = 4.0  # less sideways drift on RED normal third
             motion += nudge * cue
         if self.smart_composition:
             # Clamp the FINAL motion including kill cue. This prevents the
