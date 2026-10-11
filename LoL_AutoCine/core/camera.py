@@ -220,6 +220,7 @@ class CameraPlan:
     smart_composition: bool = False   # optional visibility-safe framing
     smart_impact: float = 0.0         # optional kill-time speed envelope
     side_yaw: float = 0.0            # v5.10.5: side-aware orbit bias; calibrated rig unchanged
+    team: str = "ORDER"             # appended: preserve old positional arguments
 
     @staticmethod
     def _keyframe_channel(frames, left_idx: int, key: str, local_t: float) -> float:
@@ -411,6 +412,8 @@ class CameraPlan:
         if self.rig.v is None:
             return (0.0, self.height, 0.0)
         s = self.scale_at(t)
+        if self.style == 'fps' and str(self.team).upper() in ('CHAOS', 'RED'):
+            s *= .76  # received RED-only FPS composition adjustment
         return (self.rig.v[0] * s, self.rig.v[1] * s + self.height, self.rig.v[2] * s)
 
     def rotation_at(self, t: float) -> Optional[dict]:
@@ -422,11 +425,11 @@ class CameraPlan:
             elev = self.third_pose_at(t)[1]
             pitch = self.rig.pitch_sign * (
                 90.0 - elev if self.rig.pitch_complement else elev)
-            # 5.10.13 RED 180-degree rear-view correction could invert the
-            # calibrated FPS pitch specifically in normal third-person mode.
-            # Keep cinema/FPS/Lolnam untouched (already good in user footage).
+            # Preserve the calibrated vertical sign for RED too. Horizontal
+            # rotation does not imply a pitch inversion. Keep the existing
+            # RED-normal safety limit scoped to this mode only.
             if self.style == "third" and 90.0 < abs(self.side_yaw) % 360.0 < 270.0:
-                pitch = max(-80.0, min(80.0, -pitch))
+                pitch = max(-80.0, min(80.0, pitch))
             rot[self.rig.pitch_axis] = pitch
 
             # TRUE ORBITの視線。カメラ位置を回しただけでは横を向くため、

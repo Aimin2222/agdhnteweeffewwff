@@ -20,7 +20,7 @@ GPU_FILES = {"core/auto_qa.py", "RUN_AUTOTEST.bat", "core/effects.py", "core/gpu
              "core/kill_icons.py", "tests/test_v5991_portrait_pairs.py",
              "core/performance_diagnostics.py", "tests/test_v585_filters.py",
              "tests/test_v585_diagnostics.py", "tests/test_v31_regressions.py"}
-UI_FILES = {"tests/test_v51014_studio_nle.py", "tests/test_v51014_responsiveness.py", "tests/test_v51011_gallery_camera_qa.py", "tests/test_v51012_allscan_quality_camera.py", "tests/test_v51013_player_filter.py", "tests/test_v5108_premium_gallery.py", "tests/test_v51010_real_scene_material.py", "tests/test_v51010_gallery_responsiveness.py", "tests/test_v5107_mirror_controls.py", "tests/test_v5106_hover_help.py", "tests/test_v5105_preview_responsiveness.py", "tests/test_v5105_killfeed_glow_side_help.py", "tests/test_v5104_notebook_livefx_camera.py", "legacy_app.py", "tests/test_editor_ui_contract.py",
+UI_FILES = {"tests/test_v51015_ui_restructure.py", "tests/test_v51015_async_ui.py", "tests/test_v51014_studio_nle.py", "tests/test_v51014_responsiveness.py", "tests/test_v51011_gallery_camera_qa.py", "tests/test_v51012_allscan_quality_camera.py", "tests/test_v51013_player_filter.py", "tests/test_v5108_premium_gallery.py", "tests/test_v51010_real_scene_material.py", "tests/test_v51010_gallery_responsiveness.py", "tests/test_v5107_mirror_controls.py", "tests/test_v5106_hover_help.py", "tests/test_v5105_preview_responsiveness.py", "tests/test_v5105_killfeed_glow_side_help.py", "tests/test_v5104_notebook_livefx_camera.py", "legacy_app.py", "tests/test_editor_ui_contract.py",
             "tests/test_checked_dispatch.py", "tests/gui_smoke.py",
             "tests/test_scene_studio.py", "tests/test_scene_studio_gui.py",
             "tests/test_scene_sequence.py", "tests/test_scene_keyframes_v592.py",
@@ -53,6 +53,7 @@ INFRA_FILES = {
     'tools/package_v51010.py',
     'tools/package_v51013.py',
     'tools/package_v51014.py',
+    'tools/package_v51015.py',
     'tools/package_v599.py',
 }
 

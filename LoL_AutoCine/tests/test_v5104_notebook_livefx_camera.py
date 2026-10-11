@@ -22,21 +22,20 @@ def gui(tmp_path, monkeypatch):
     root.destroy()
 
 
-def test_advanced_notebook_wheel_does_not_switch_tab(gui):
+def test_workspace_has_no_nested_notebook_and_wheel_does_not_change_page(gui):
     app, root = gui
-    nb=app._editor_advanced_tabs
-    assert nb.winfo_class() == 'TNotebook'
-    assert root.bind_class('TNotebook', '<MouseWheel>')
-    nb.select(1)  # Color FX
+    assert app._editor_advanced_tabs is None
+    for zone in ('color','fx','output'):
+        app.var_editor_zone.set(zone)
+        app._apply_editor_zone()
+        root.update_idletasks()
+        assert app._editor_advanced_pages[zone].winfo_manager()=='pack'
+    app.var_editor_zone.set('color')
+    app._apply_editor_zone()
+    before=app.var_editor_zone.get()
+    app.editor_zone_bar.event_generate('<MouseWheel>',delta=-120)
     root.update()
-    before=nb.select()
-    for key, kw in [('<MouseWheel>', {'delta': -120}), ('<MouseWheel>', {'delta': 120}),
-                    ('<Button-4>',{}),('<Button-5>',{})]:
-        nb.event_generate(key, **kw)
-        root.update()
-        assert nb.select() == before, f'wheeling switched {key}'
-    nb.select(2)  # Clicking the intended tab (select API) is still allowed.
-    assert nb.index('current') == 2
+    assert app.var_editor_zone.get()==before
 
 
 def test_live_fx_draw_during_camera_preview_only(gui, monkeypatch):

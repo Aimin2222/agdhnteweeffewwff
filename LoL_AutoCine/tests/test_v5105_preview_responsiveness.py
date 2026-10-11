@@ -93,11 +93,13 @@ def test_mirror_fx_does_not_block_sliders_tab_switch_or_tk_callbacks(tmp_path, m
             app.sl['grade_strength'].set(value)
         app.var_edit_mode.set('advanced')
         app._apply_edit_mode(log=False)
-        app._editor_advanced_tabs.select(1)
+        app._focus_editor_zone('color')
+        assert app._editor_advanced_pages['color'].winfo_manager()=='pack'
         root.update()
         assert heartbeat and not release.is_set()
         assert app.sl['grade_strength'].get() == .8
-        assert app._editor_advanced_tabs.index('current') == 1
+        assert app.var_editor_zone.get() == 'color'
+        assert app._editor_advanced_pages['color'].winfo_manager() == 'pack'
         app._preview_tick()  # Submit the latest settings while old work is still blocked.
         key = app._live_preview._key
         release.set()

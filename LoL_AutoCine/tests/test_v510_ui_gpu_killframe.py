@@ -28,22 +28,20 @@ def test_nav_opens_real_workspaces(gui):
     assert a._nav_template_card.winfo_manager()=='pack'
 
 
-def test_wheel_on_detection_combo_never_changes_value(gui):
+def test_detection_mode_uses_readable_radio_buttons_and_wheel_is_stable(gui):
     a,r=gui
-    combos=[]
+    radios=[]
     def visit(p):
         for widget in p.winfo_children():
-            if isinstance(widget,ttk.Combobox) and widget.cget('textvariable')==str(a.var_event_mode):
-                combos.append(widget)
+            if isinstance(widget,ttk.Radiobutton) and widget.cget('variable')==str(a.var_event_mode):
+                radios.append(widget)
             visit(widget)
     visit(r)
-    assert len(combos)==1
-    widget=combos[0]
+    assert len(radios)==3
     a.var_event_mode.set('キル')
-    widget.event_generate('<MouseWheel>',delta=-120)
+    radios[0].event_generate('<MouseWheel>',delta=-120)
     r.update()
     assert a.var_event_mode.get()=='キル'
-    assert widget.bind('<MouseWheel>')
 
 
 def test_click_on_bracket_toggles_scene_not_other_columns(gui):

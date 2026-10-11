@@ -109,15 +109,15 @@ def test_editor_events_slow_only_mirror_and_resume(app, monkeypatch):
     assert app.current_template().fps == 60
 
 
-def test_notebook_wheel_marks_input_before_native_binding_is_blocked(app):
+def test_workspace_replaces_nested_notebook_without_resetting_mirror(app):
     app.var_edit_mode.set('advanced')
     app._apply_edit_mode(log=False)
     app.var_editor_zone.set('color')
     app._apply_editor_zone()
-    app.root.update()
-    notebook = app._editor_advanced_tabs
-    before = notebook.select()
-    app._preview_input_at = 0
-    notebook.event_generate('<MouseWheel>', delta=-120)
-    assert app._preview_input_at > 0
-    assert notebook.select() == before
+    app.root.update_idletasks()
+    assert app._editor_advanced_tabs is None
+    assert app._editor_advanced_pages['color'].winfo_manager()=='pack'
+    app.var_editor_zone.set('fx')
+    app._apply_editor_zone()
+    assert app._editor_advanced_pages['fx'].winfo_manager()=='pack'
+    assert not app._editor_advanced_pages['color'].winfo_manager()
