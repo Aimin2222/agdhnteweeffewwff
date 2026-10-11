@@ -209,7 +209,24 @@ class ScrollFrame(ttk.Frame):
         except tk.TclError:
             return False
 
+    def _any_dropdown_open(self) -> bool:
+        """Return True while any native ttk dropdown is visible."""
+        try:
+            stack = list(self.winfo_toplevel().winfo_children())
+            while stack:
+                w = stack.pop()
+                if isinstance(w, ttk.Combobox):
+                    pop = self.tk.call("ttk::combobox::PopdownWindow", str(w))
+                    if int(self.tk.call("winfo", "ismapped", pop)):
+                        return True
+                stack.extend(w.winfo_children())
+        except tk.TclError:
+            pass
+        return False
+
     def _global_wheel(self, e) -> None:
+        if self._any_dropdown_open():
+            return
         if not self._pointer_inside(e):
             return
         # Inner listboxes and text editors already have native scroll handlers.
@@ -2097,15 +2114,10 @@ class App:
     def _register_scrolling_controls(self):
         """Mousewheel scrolls containing panel; never changes a closed combobox."""
         def intercept(event):
-            # Never grab the native expanded popdown scroll and pass it
-            # through to the underlying editor panels.
-            if isinstance(event.widget,ttk.Combobox):
-                try:
-                    popup=self.root.tk.call("ttk::combobox::PopdownWindow",str(event.widget))
-                    if int(self.root.tk.call("winfo","ismapped",popup)):
-                        return "break"
-                except tk.TclError:
-                    pass
+            # Let the native expanded listbox scroll on its own; never
+            # forward those wheel events to an underlying scrollable panel.
+            if self.left_scroll._any_dropdown_open():
+                return "break"
             self._preview_input(event)
             for panel in (self.left_scroll, self.right_scroll, self.center_edit_scroll):
                 if panel._pointer_inside(event):
