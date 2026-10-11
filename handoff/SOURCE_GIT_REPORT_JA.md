@@ -1,64 +1,31 @@
-# v5.10.15 保存報告
+# v5.10.15 PortraitCrashFix 保存報告
 
-ソース: /workspace/LoL_AutoCine、branch integration/v5.10.15、HEAD c76ba0cc1ba20296724f219a61d9a43f6d269b74、remoteなし。
-取得用: /workspace/agdhnteweeffewwff、branch codex/lol-autocine-v51015-ui-scan-camera-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
-開始時とソース保存完了時のgit status --shortは空。最終状態はVERIFICATION_v5.10.15.jsonへ記録。mainにはマージしない。
+ソース /workspace/LoL_AutoCine、integration/v5.10.15-portraitfix、HEAD 068c26b34125b940571cc481619f372531f2224b、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51015-portrait-crashfix-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時と保存後のstatus --shortは空。mainへマージしない。
 
 ## git log -3 --oneline（ソース）
-
 ```text
-c76ba0c Document reviewed v5.10.15 integration and preserve full regression and packaging workflow
-d0ef125 Merge portrait color assertion correction
-66f8b52 Merge RED camera boundary regression tests
+068c26b Document narrow portrait compatibility integration and preserve independent branch ownership
+f49fff5 Merge narrow Player and dictionary portrait API compatibility fix
+8a6198d Preserve received v5.10.15 Player portrait compatibility fix on raw UI base
 ```
-
 ## git remote -v（取得用）
-
 ```text
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
-
-## v5.10.14からの追加・変更一覧
-
+## 前回Codex v5.10.15からの実変更
 ```text
-A	README_CODEX_v51015_JA.md
-A	README_v5.10.15_JA.md
-A	TESTLIST_v5.10.15_JA.md
-M	VERSION.txt
-M	core/camera.py
-M	core/effects.py
-M	core/jobs.py
 M	core/kill_icons.py
-A	docs/AutoCine_v5.10.15_実装仕様書.md
-A	docs/CODEX_INTEGRATION_v51015_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_v5.10.15.json
-A	docs/RECEIVED_TEST_RESULTS_v5.10.15_JA.md
-A	docs/WINDOWS_TEST_v51015_JA.md
-M	legacy_app.py
-A	patches/history/v5.10.15/v5.10.15_from_v5.10.14.patch
-M	tests/test_gpu_montage_v51014.py
-M	tests/test_gpu_shared_v51013.py
-A	tests/test_gpu_shared_v51015.py
-M	tests/test_v51014_studio_nle.py
-A	tests/test_v51015_async_ui.py
-A	tests/test_v51015_ui_restructure.py
-M	tests/test_v5102_circle_focus_preset.py
-M	tests/test_v5104_notebook_livefx_camera.py
-M	tests/test_v5105_preview_responsiveness.py
-M	tests/test_v5107_mirror_controls.py
-M	tests/test_v510_ui_gpu_killframe.py
-M	tests/test_v595_workspace.py
-M	tests/test_v596_hud_batch.py
+A	docs/CODEX_INTEGRATION_PORTRAITFIX_v51015_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_PORTRAITFIX_v5.10.15.json
+A	docs/WINDOWS_TEST_PORTRAITFIX_v51015_JA.md
+A	patches/history/v5.10.15_PortraitCrashFix/CHANGES_v5.10.15_PortraitCrashFix.patch
+A	patches/history/v5.10.15_PortraitCrashFix/MERGE_INSTRUCTIONS_JA.md
+A	tests/test_v51015_portrait_player_compat.py
 M	tools/check_parallel_integration.py
-A	tools/package_v51015.py
-A	ui/check_indicator.py
-M	ui/frame_comparison.py
-A	ui/scene_champion.py
+A	tools/package_v51015_portraitfix.py
 ```
-
-## 元v5.8.5からの追加・変更・移動一覧
-
+## 元v5.8.5からの実変更
 ```text
 M	.gitignore
 M	README.md
@@ -165,6 +132,7 @@ A	docs/CODEX_GPU_ANALYSIS_JA.md
 A	docs/CODEX_GPU_EFFECTS_v5.10.3_JA.md
 A	docs/CODEX_GPU_REVIEW_v5.9.8_JA.md
 A	docs/CODEX_INTEGRATION_CONTRACT_JA.md
+A	docs/CODEX_INTEGRATION_PORTRAITFIX_v51015_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.10.0_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.10.1_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.10.3_JA.md
@@ -204,6 +172,7 @@ A	docs/CODEX_SHARED_API_REVIEW_CAPTURE60_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_CAPTURE_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_EXPORT_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_MIRROR_v5.10.3.json
+A	docs/CODEX_SHARED_API_REVIEW_PORTRAITFIX_v5.10.15.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1.json
@@ -236,6 +205,7 @@ A	docs/RECEIVED_TEST_RESULTS_v5.10.15_JA.md
 A	docs/REQUIREMENTS_SCENESTUDIO_JA.md
 A	docs/SPEC_v5.10.14_JA.md
 A	docs/TEST_PLAN_v5.9.0_JA.md
+A	docs/WINDOWS_TEST_PORTRAITFIX_v51015_JA.md
 A	docs/WINDOWS_TEST_v51010_JA.md
 A	docs/WINDOWS_TEST_v51013_JA.md
 A	docs/WINDOWS_TEST_v51014_JA.md
@@ -292,6 +262,8 @@ A	patches/history/v5.10.10_from_v5.10.9.patch
 A	patches/history/v5.10.12_from_v5.10.11.patch
 A	patches/history/v5.10.14/v5.10.14_from_codex_v51013.patch
 A	patches/history/v5.10.15/v5.10.15_from_v5.10.14.patch
+A	patches/history/v5.10.15_PortraitCrashFix/CHANGES_v5.10.15_PortraitCrashFix.patch
+A	patches/history/v5.10.15_PortraitCrashFix/MERGE_INSTRUCTIONS_JA.md
 A	patches/history/v5.10.8_from_codex_v5.10.7.patch
 A	patches/history/v51011_from_v51010.patch
 A	patches/history/v51013_reviewed_code.patch
@@ -336,6 +308,7 @@ A	tests/test_v51013_player_filter.py
 A	tests/test_v51014_responsiveness.py
 A	tests/test_v51014_studio_nle.py
 A	tests/test_v51015_async_ui.py
+A	tests/test_v51015_portrait_player_compat.py
 A	tests/test_v51015_ui_restructure.py
 A	tests/test_v5101_scroll_check_warmup.py
 A	tests/test_v5102_circle_focus_preset.py
@@ -363,6 +336,7 @@ A	tools/package_v51010.py
 A	tools/package_v51013.py
 A	tools/package_v51014.py
 A	tools/package_v51015.py
+A	tools/package_v51015_portraitfix.py
 A	tools/package_v5103.py
 A	tools/package_v5103_capture60.py
 A	tools/package_v5103_capturefix.py
@@ -395,4 +369,6 @@ A	ui/studio_localization.py
 A	ui/template_gallery.py
 ```
 
-全417ソース/Python145、全80ブランチをbundleへ保存。旧76ブランチ先端、GPU/録画/LoL音声等21ファイル、PNG37種類のバイト一致を確認。camera/jobsは共有レビュー済み。GPUエンジン/切替演出は前回から完全一致、GPU担当ファイルeffects/kill_iconsは表示名と互換別名だけ変更。受領19パス差分はarchive原本とhistoryへ保存。旧配布物123件はバイト単位で保持。個人設定/プロジェクト/録画を削除しない。
+全424ソース/Python147・全83ブランチをbundleへ保存。旧80ブランチ先端、既存415ファイルと37PNGは不変。旧配布物131件をバイト保持。未保存の変更はなし。個人設定/録画/診断は追加・削除しない。
+
+GitHubから固定payloadを取得して424ソース/83refs/ZIPとbundleのハッシュ一致を確認。復元先代表92テスト成功、セットアップ再実行で424ソース/83refs/設定相当3ファイル保持、status clean。install_script/start_skillを保存して読戻し一致を確認、他の環境設定は保持。Publish未実施。これは同じクラウド実行環境の別フォルダ検証で、Windows/NVIDIA実機の検証ではない。

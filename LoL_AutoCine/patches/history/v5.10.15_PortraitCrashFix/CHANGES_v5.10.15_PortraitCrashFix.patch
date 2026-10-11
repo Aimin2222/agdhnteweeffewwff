@@ -1,0 +1,57 @@
+--- a/LoL_AutoCine/core/kill_icons.py
++++ b/LoL_AutoCine/core/kill_icons.py
+@@ -489,7 +489,12 @@
+ def _icon_id(player):
+     import re
+     # The replay raw character code is usually Riot's Data Dragon ID.
+-    raw=(player.get("selection_name") or player.get("raw_champion") or "")
++    # Player dataclasses arrive from scene selection; video effects also pass
++    # plain dicts. Preserve both contracts and never access Tk from here.
++    if isinstance(player, dict):
++        raw = player.get("selection_name") or player.get("raw_champion") or ""
++    else:
++        raw = getattr(player, "selection_name", "") or getattr(player, "raw_champion", "") or ""
+     raw=str(raw).replace("game_character_displayname_", "")
+     synonyms={"Wukong":"MonkeyKing", "FiddleSticks":"Fiddlesticks", "NunuWillump":"Nunu",
+               "RenataGlasc":"Renata", "Kaisa":"Kaisa", "Khazix":"Khazix"}
+--- /dev/null
++++ b/LoL_AutoCine/tests/test_v51015_portrait_player_compat.py
+@@ -0,0 +1,38 @@
++"""Regression for Windows crash.log: Player has no .get()."""
++from pathlib import Path
++
++import pytest
++from PIL import Image
++
++from core.kill_icons import _icon_id, champion_icon
++from core.players import Player
++
++
++def make_player(selection_name="Ahri", raw_champion="game_character_displayname_Ahri"):
++    return Player(0, "Test", "Test#JP1", "Test", "Ahri", "ORDER",
++                  raw_champion=raw_champion, selection_name=selection_name)
++
++
++def test_identifier_accepts_player_dataclass_without_get():
++    assert _icon_id(make_player()) == "Ahri"
++
++
++def test_identifier_preserves_plain_dictionary_behavior():
++    assert _icon_id({"selection_name": "Wukong"}) == "MonkeyKing"
++    assert _icon_id({"raw_champion": "game_character_displayname_Ahri"}) == "Ahri"
++
++
++def test_identifier_falls_back_to_dataclass_raw_champion():
++    assert _icon_id(make_player(selection_name="")) == "Ahri"
++
++
++def test_identifier_rejects_unknown_or_unsafe_names():
++    assert _icon_id(make_player(selection_name="../evil")) is None
++    assert _icon_id({"selection_name": ""}) is None
++
++
++def test_cached_icon_is_returned_for_dataclass_and_dict(tmp_path):
++    pic = tmp_path / "Ahri.png"
++    Image.new("RGBA", (12, 12), (33, 88, 188, 255)).save(pic)
++    assert champion_icon(make_player(), cache_dir=tmp_path, download=False) == pic
++    assert champion_icon({"selection_name":"Ahri"}, cache_dir=tmp_path, download=False) == pic
