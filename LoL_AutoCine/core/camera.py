@@ -123,9 +123,10 @@ TRY_TPS = __import__("os").environ.get("AUTOCINE_TRY_TPS", "0") == "1"
 # Replay API は seek/再生直後に cameraRotation の返却が不安定な場合があり、
 # プレビューでは成功したのに録画開始時だけ FPS 判定へ落ちることがあるため。
 _TPS_CALIBRATION = {}
+_TPS_STABLE_ROTATIONS = {}
 
 
-def clear_tps_calibration(selection_name: str | None = None) -> None:
+def clear_tps_calibration(selection_name: str | None = None, *, preserve_rotation: bool = False) -> None:
     """Forget cached 3rd-person rig data.
 
     Re-selecting the same camera preset repeatedly can leave Replay API in a
@@ -134,11 +135,44 @@ def clear_tps_calibration(selection_name: str | None = None) -> None:
     """
     if selection_name is None:
         _TPS_CALIBRATION.clear()
+        if not preserve_rotation:
+            _TPS_STABLE_ROTATIONS.clear()
         return
     target = str(selection_name or '')
     doomed = [key for key in list(_TPS_CALIBRATION) if key and str(key[0]) == target]
     for key in doomed:
         _TPS_CALIBRATION.pop(key, None)
+    if not preserve_rotation:
+        for key in list(_TPS_STABLE_ROTATIONS):
+            if key[0] == target:
+                _TPS_STABLE_ROTATIONS.pop(key, None)
+
+
+def stabilize_non_pitch_rotation(current, cached, pitch_axis, log=lambda _m: None):
+    """Reject an abrupt 180-degree roll/yaw returned after switching view twice.
+
+    Preserve the last *successful* non-pitch axes only when the current Replay
+    API reading differs by more than 110 degrees. Pitch continues to use the
+    calibrated side-specific formula, not an extra negative sign.
+    """
+    if not isinstance(current, dict) or not isinstance(cached, dict):
+        return current
+    result = dict(current)
+    for axis in ("x", "y", "z"):
+        if axis == pitch_axis or axis not in cached or axis not in current:
+            continue
+        try:
+            previous = float(cached[axis])
+            incoming = float(current[axis])
+        except (TypeError, ValueError, OverflowError):
+            continue
+        if not math.isfinite(previous) or not math.isfinite(incoming):
+            continue
+        difference = (incoming - previous + 180.0) % 360.0 - 180.0
+        if abs(difference) >= 110.0:
+            result[axis] = cached[axis]
+            log(f"カメラ診断: {axis}軸の突然の{difference:.0f}度回転を回避（前回の安定値を使用）")
+    return result
 
 
 def smoothstep(x: float) -> float:
@@ -877,6 +911,8 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
             # 最小限の回転を作る。Replay側が補正できるよう三人称を維持する。
             rot_use = {"x": 0.0, "y": 0.0, "z": 0.0}
         rot_use[axis] = sign * (90.0 - third_elev if pitch_complement else third_elev)
+        stable = _TPS_STABLE_ROTATIONS.get((sel, axis)) or (cached.get('rot') if cached else None)
+        rot_use = stabilize_non_pitch_rotation(rot_use, stable, axis, log=log)
     else:
         if style in THIRD_STYLES:
             note_extra = " (保存済み三人称リグもなく、方向を特定できないためFPS風)"
@@ -938,6 +974,8 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
 def _cache_success(cache_key, P, v, rot, h, axis, sign, log, note,
                    pitch_complement=False) -> RigInfo:
     """成功した三人称リグを次の seek/録画でも再利用できる形で保存する。"""
+    if axis and isinstance(rot, dict):
+        _TPS_STABLE_ROTATIONS[(cache_key[0], axis)] = dict(rot)
     _TPS_CALIBRATION[cache_key] = {
         "P": tuple(P) if P is not None else None,
         "v": tuple(v) if v is not None else None,

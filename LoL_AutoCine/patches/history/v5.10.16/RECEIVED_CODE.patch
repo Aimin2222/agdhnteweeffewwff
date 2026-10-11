@@ -1,0 +1,976 @@
+diff --git a/VERSION.txt b/VERSION.txt
+index edbb5dc..3ed4166 100644
+--- a/VERSION.txt
++++ b/VERSION.txt
+@@ -1 +1 @@
+-5.10.15
++5.10.16-test
+diff --git a/core/camera.py b/core/camera.py
+index 6497f4b..372484f 100644
+--- a/core/camera.py
++++ b/core/camera.py
+@@ -125,6 +125,33 @@ TRY_TPS = __import__("os").environ.get("AUTOCINE_TRY_TPS", "0") == "1"
+ _TPS_CALIBRATION = {}
+ 
+ 
++def stabilize_non_pitch_rotation(current, cached, pitch_axis, log=lambda _m: None):
++    """Reject an abrupt 180-degree roll/yaw returned after switching view twice.
++
++    Preserve the last *successful* non-pitch axes only when the current Replay
++    API reading differs by more than 110 degrees. Pitch continues to use the
++    calibrated side-specific formula, not an extra negative sign.
++    """
++    if not isinstance(current, dict) or not isinstance(cached, dict):
++        return current
++    result = dict(current)
++    for axis in ("x", "y", "z"):
++        if axis == pitch_axis or axis not in cached or axis not in current:
++            continue
++        try:
++            previous = float(cached[axis])
++            incoming = float(current[axis])
++        except (TypeError, ValueError, OverflowError):
++            continue
++        if not math.isfinite(previous) or not math.isfinite(incoming):
++            continue
++        difference = (incoming - previous + 180.0) % 360.0 - 180.0
++        if abs(difference) >= 110.0:
++            result[axis] = cached[axis]
++            log(f"カメラ診断: {axis}軸の突然の{difference:.0f}度回転を回避（前回の安定値を使用）")
++    return result
++
++
+ def smoothstep(x: float) -> float:
+     x = min(1.0, max(0.0, x))
+     return x * x * (3 - 2 * x)
+@@ -861,6 +888,8 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float =
+             # 最小限の回転を作る。Replay側が補正できるよう三人称を維持する。
+             rot_use = {"x": 0.0, "y": 0.0, "z": 0.0}
+         rot_use[axis] = sign * (90.0 - third_elev if pitch_complement else third_elev)
++        if cached:
++            rot_use = stabilize_non_pitch_rotation(rot_use, cached.get("rot"), axis, log=log)
+     else:
+         if style in THIRD_STYLES:
+             note_extra = " (保存済み三人称リグもなく、方向を特定できないためFPS風)"
+diff --git a/core/camera_qa.py b/core/camera_qa.py
+new file mode 100644
+index 0000000..3bfb282
+--- /dev/null
++++ b/core/camera_qa.py
+@@ -0,0 +1,135 @@
++# -*- coding: utf-8 -*-
++"""Opt-in, eight-clip RED/BLUE camera and audio QA for live LoL replays.
++
++The user must click the button. Never starts automatically in the background.
++All heavyweight recording uses existing jobs.run_auto_edit and restores the
++game camera/HUD via the same production cleanup paths.
++"""
++from __future__ import annotations
++
++from dataclasses import replace
++from datetime import datetime
++import json
++from pathlib import Path
++
++from .jobs import run_auto_edit
++from .scanner import filter_scanned_events
++
++QA_MODES = (
++    ("third", "通常三人称"),
++    ("third_cinema", "三人称シネマ"),
++    ("fps", "FPS"),
++    ("lolnam_cinema", "Lolnam風シネマ"),
++)
++
++def plan_eight_cases(players, events, preferred=None):
++    """Return 8 ordered scenarios; empty event sets make testing impossible."""
++    result = []
++    for team, side in (("CHAOS", "RED"), ("ORDER", "BLUE")):
++        candidates = []
++        for p in players:
++            if getattr(p, "team", None) != team:
++                continue
++            scenes = filter_scanned_events(events, p, "both")
++            if scenes:
++                # Prefer the currently selected player if that side has one.
++                preference = 1 if p is preferred or getattr(p, "slot", None) == getattr(preferred, "slot", None) else 0
++                candidates.append((preference, len(scenes), p, scenes))
++        if not candidates:
++            raise ValueError(f"{side}側に録画できるキル/アシストが見つかりません。全体スキャンを確認してください。")
++        candidates.sort(key=lambda x: (x[0], x[1]), reverse=True)
++        _, _, player, scenes = candidates[0]
++        # A representative middle event avoids replay opening/closing edges.
++        chosen = scenes[len(scenes)//2]
++        for mode, label in QA_MODES:
++            result.append((side, player, chosen, mode, label))
++    return result
++
++def run_camera_record_test(api, source, players, events, preferred, template, destination,
++                           *, stop=None, log=lambda _m: None, audio_factory=None, progress=None):
++    """Record four modes per side, returning the report path.
++
++    Only one clip per style is created; capture and game audio use exactly the
++    same production pipeline as ordinary montage exports. No 8 simultaneous
++    recorders, no Tk widget access from the worker.
++    """
++    plan = plan_eight_cases(players, events, preferred)
++    folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
++    folder.mkdir(parents=True, exist_ok=True)
++    manifest = {
++        "version": "5.10.15",
++        "kind": "live_replay_camera_test",
++        "expected_clips": len(plan),
++        "outputs": [],
++        "montage_tests": [],
++        "limitations": "Framing must be judged visually on Windows. Audio/codec need playback or ffprobe.",
++    }
++    def flush():
++        (folder / "results.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
++    flush()
++    for index, (side, player, scene, mode, label) in enumerate(plan, 1):
++        if stop is not None and stop.is_set():
++            log("8本テスト: ユーザー操作により中止しました。")
++            break
++        clip_template = replace(template)
++        clip_template.name = f"CameraQA {side} {label}"
++        clip_template.style = mode
++        clip_template.camera_side = "auto"
++        clip_template.merge_multikill = False
++        clip_template.smart_highlight_enabled = False
++        clip_template.smart_composition = False
++        clip_template.smart_montage = False
++        clip_template.kill_icon_style = "off"
++        clip_template.fps = 60
++        clip_template.capture_fps = 60
++        clip_template.pre = min(3.0, max(1.0, float(template.pre)))
++        clip_template.post = min(3.0, max(1.0, float(template.post)))
++        current = {"number": index, "side": side, "mode": mode, "label": label,
++                   "player": player.label(), "event_time": float(scene.time), "outputs": [],
++                   "failed": []}
++        log(f"8本テスト [{index}/8]: {side} / {label} / {player.label()} / {scene.time:.1f}s")
++        if progress:
++            progress(index-1, 8, round(100*(index-1)/8,1), f"{side} {label} を録画中")
++        try:
++            result = run_auto_edit(
++                api, source, player, [scene], clip_template, folder / f"{index:02d}_{side}_{mode}",
++                False, progress=None, stop=stop, log=log, audio_factory=audio_factory)
++            current["outputs"] = [str(p) for p in result.outputs]
++            current["failed"] = [[int(i), str(msg)] for i,msg in result.failed]
++            if not result.outputs and not result.failed:
++                current["failed"].append([0, "録画結果がありません"])
++        except Exception as exc:
++            current["failed"].append([0, f"{type(exc).__name__}: {exc}"])
++            log(f"8本テスト [{index}/8] 失敗: {exc}")
++        manifest["outputs"].append(current)
++        flush()
++        if progress:
++            progress(index, 8, round(100*index/8,1), f"{side} {label} 完了")
++    # Reuse recorded MP4s for every transition: do not spend another LoL
++    # capture/audio session on identical footage. Keep the outputs separate.
++    generated = [Path(p) for row in manifest["outputs"] for p in row["outputs"]]
++    ready = [p for p in generated if p.is_file()]
++    if len(ready) >= 2 and not (stop is not None and stop.is_set()):
++        from .montage_fx import MONTAGE_LABELS, render_montage
++        for style in MONTAGE_LABELS:
++            if stop is not None and stop.is_set():
++                break
++            dest = folder / f"transition_{style}.mp4"
++            outcome = {"style": style, "label": MONTAGE_LABELS[style],
++                       "outputs": [], "failed": []}
++            try:
++                applied = render_montage(ready[:2], dest, style=style, logger=log)
++                outcome["applied_style"] = applied
++                if dest.is_file():
++                    outcome["outputs"] = [str(dest)]
++                else:
++                    outcome["failed"] = ["MP4 was not created"]
++            except Exception as exc:
++                outcome["failed"] = [f"{type(exc).__name__}: {exc}"]
++                log(f"つなぎ演出テスト {style}: {exc}")
++            manifest["montage_tests"].append(outcome)
++            flush()
++    manifest["completed_clips"] = sum(bool(row["outputs"]) for row in manifest["outputs"])
++    manifest["canceled"] = bool(stop is not None and stop.is_set())
++    flush()
++    return folder / "results.json"
+diff --git a/core/effects.py b/core/effects.py
+index f9eddb9..35d74b0 100644
+--- a/core/effects.py
++++ b/core/effects.py
+@@ -200,6 +200,7 @@ class Template:
+     camera_side: str = "auto"  # v5.10.5: auto / blue / red (append: old positional templates safe)
+     kill_sparkle_intensity: float = 1.0  # v5.10.8: corner rays/star flares
+     kill_stack_gap: int = 4  # v5.10.8: additional pixels between simultaneous kills
++    kill_icon_motion: str = "instant"  # badge entrance, legacy behavior by default
+ 
+     def __post_init__(self) -> None:
+         # v5.10.3: preserve older project JSON but retire the accidentally-added
+@@ -772,7 +773,7 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
+         return with_badges(g, badge_idx, badge_entries, duration=duration,
+                            position=t.kill_icon_position, scale=t.kill_icon_scale,
+                            seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
+-                           style=badge_style, stack_gap=getattr(t, "kill_stack_gap", 4))
++                           style=badge_style, motion=getattr(t, 'kill_icon_motion', 'instant'), stack_gap=getattr(t, "kill_stack_gap", 4))
+     def add_pair_inputs(command, loop=True):
+         for badge_path, _ in badge_entries:
+             if loop:
+@@ -896,6 +897,7 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
+         "kill_icon_style": badge_style,
+         "kill_icon_pairs_resolved": len(badge_entries),
+         "kill_icon_position": getattr(t, "kill_icon_position", "right-top"),
++        "kill_icon_motion": getattr(t, "kill_icon_motion", "instant"),
+         "kill_icon_scale": getattr(t, "kill_icon_scale", 1.0),
+         "kill_icon_duration": getattr(t, "kill_icon_duration", 1.55),
+         "kill_icon_opacity": getattr(t, "kill_icon_opacity", 1.0),
+diff --git a/core/kill_icons.py b/core/kill_icons.py
+index 979ed30..645be8d 100644
+--- a/core/kill_icons.py
++++ b/core/kill_icons.py
+@@ -25,11 +25,11 @@ STYLES = {
+     "royal_deluxe": "ロイヤル・デラックス（金）",
+     "gold_wing": "黄金の翼章",
+     "neon_show": "ネオン・ステージ",
+-    "kda_style": "K/DA風・ステージピンク",
+-    "project_style": "PROJECT風・サイバー装甲",
+-    "star_magic": "スターガーディアン風・光翼",
+-    "spirit_blossom": "精霊の花祭り風・桜",
+-    "high_noon": "ハイヌーン風・烈火",
++    "kda_style": "K/DA風",
++    "project_style": "PROJECT風",
++    "star_magic": "スターガーディアン風",
++    "spirit_blossom": "精霊の花祭り風",
++    "high_noon": "ハイヌーン風",
+     "obsidian_violet": "黒曜石・紫晶",
+     "emerald_relic": "エメラルド・レリック",
+     "crimson_mythic": "クリムゾン・ミシック",
+@@ -41,21 +41,32 @@ STYLES = {
+     "user_frame_02": "黄金の双翼（シンプル）",
+     "user_frame_03": "黄金の剣翼（シャープ）",
+     "user_frame_04": "黒金の鳳凰（高級感）",
+-    "user_frame_05": "PROJECT風・蒼紫ネオン",
++    "user_frame_05": "PROJECT風・ブルー",
+     "user_frame_06": "電脳ネオン・光翼",
+     "user_frame_07": "紅蓮メタル（炎の王冠）",
+-    "user_frame_08": "K/DA風・ローズクリスタル",
+-    "user_frame_09": "PROJECT風・紅蓮メカ",
++    "user_frame_08": "K/DA風・ローズ",
++    "user_frame_09": "PROJECT風・レッド",
+     "user_frame_10": "蒼天・氷結の光翼",
+-    "user_frame_11": "スターガーディアン風・光翼",
++    "user_frame_11": "スターガーディアン風・星の翼",
+     "user_frame_12": "エメラルド・翠緑の紋章",
+-    "user_frame_13": "精霊の花祭り風・桜翼",
++    "user_frame_13": "精霊の花祭り風・桜の翼",
+     "user_frame_14": "ネオンアイドル・シアン紫",
+-    "user_frame_15": "ハイヌーン風・金炎",
++    "user_frame_15": "ハイヌーン風・ゴールド",
+     "user_frame_16": "黒曜石・紫金の翼",
+ }
+ 
+ REVERSE_STYLES = {label: code for code, label in STYLES.items()}
++REVERSE_STYLES["ハイヌーン風・金炎"] = "user_frame_15"
++REVERSE_STYLES["精霊の花祭り風・桜翼"] = "user_frame_13"
++REVERSE_STYLES["スターガーディアン風・光翼"] = "user_frame_11"
++REVERSE_STYLES["PROJECT風・紅蓮メカ"] = "user_frame_09"
++REVERSE_STYLES["K/DA風・ローズクリスタル"] = "user_frame_08"
++REVERSE_STYLES["PROJECT風・蒼紫ネオン"] = "user_frame_05"
++REVERSE_STYLES["ハイヌーン風・烈火"] = "high_noon"
++REVERSE_STYLES["精霊の花祭り風・桜"] = "spirit_blossom"
++REVERSE_STYLES["スターガーディアン風・光翼"] = "star_magic"
++REVERSE_STYLES["PROJECT風・サイバー装甲"] = "project_style"
++REVERSE_STYLES["K/DA風・ステージピンク"] = "kda_style"
+ # Preserve previous display labels as aliases for the same stable style IDs.
+ REVERSE_STYLES.update({'なし（従来どおり）': 'off', 'シンプル': 'simple', 'シネマ・ゴールド': 'cinema', 'ネオン・ブルー': 'neon', 'インパクト・レッド': 'impact', 'プレミアム・ゴールド（高発光）': 'premium_gold', '黒曜石×ゴールド': 'obsidian_gold', 'ネオン・クリスタル': 'neon_crystal', '星と翼の幻想': 'star_guardian', '炎熱ゴシック': 'inferno_gothic', 'サイバーパンク': 'cyberpunk', 'ロイヤル・デラックス（金）': 'royal_deluxe', '黄金の翼章': 'gold_wing', 'ネオン・ステージ': 'neon_show', 'ポップアイドル（K/DA風）': 'kda_style', 'PROJECT風サイバー': 'project_style', '星の守護者風・光翼': 'star_magic', '精霊の花祭り風': 'spirit_blossom', 'ハイヌーン風・炎': 'high_noon', '黒曜石・紫晶': 'obsidian_violet', 'エメラルド・レリック': 'emerald_relic', 'クリムゾン・ミシック': 'crimson_mythic', '蒼天クリスタル': 'celestial_blue', 'ネオン決闘': 'neon_duel', '紫の宝石フレーム': 'purple_crystal', '黒曜石・黄金（別装飾）': 'classic_obsidian', '追加素材 01': 'user_frame_01', '追加素材 02': 'user_frame_02', '追加素材 03': 'user_frame_03', '追加素材 04': 'user_frame_04', '追加素材 05': 'user_frame_05', '追加素材 06': 'user_frame_06', '追加素材 07': 'user_frame_07', '追加素材 08': 'user_frame_08', '追加素材 09': 'user_frame_09', '追加素材 10': 'user_frame_10', '追加素材 11': 'user_frame_11', '追加素材 12': 'user_frame_12', '追加素材 13': 'user_frame_13', '追加素材 14': 'user_frame_14', '追加素材 15': 'user_frame_15', '追加素材 16': 'user_frame_16'})
+ 
+@@ -600,8 +611,28 @@ def badge_plan(badges, duration, seconds):
+     return [entry for entry in planned if entry['end']>entry['start']]
+ 
+ 
++MOTION_STYLES = {"instant":"一気に表示","slide_left":"左から登場","slide_right":"右から登場","slide_up":"下から登場","slide_down":"上から登場","pop":"パッと飛び出す"}
++MOTION_REVERSE = {v:k for k,v in MOTION_STYLES.items()}
++
++
++def badge_motion_xy(position, motion, start, base_x, base_y):
++    """Pure FFmpeg overlay coordinates; always settle at the original position."""
++    motion = motion if motion in MOTION_STYLES else "instant"
++    if motion == "instant":
++        return base_x, base_y
++    # Smoothstep of remaining time, 0 after the first 260ms. No dependence on
++    # input dimensions beyond W,H,w,h (built-in overlay expression variables).
++    u = f"max(0,min(1,1-(t-{float(start):.3f})/0.260))"
++    easing = f"({u}*{u}*(3-2*{u}))"
++    if motion == "slide_left": return f"({base_x})-(W+20)*{easing}", base_y
++    if motion == "slide_right": return f"({base_x})+(W+20)*{easing}", base_y
++    if motion == "slide_up": return base_x, f"({base_y})+(H+20)*{easing}"
++    if motion == "slide_down": return base_x, f"({base_y})-(H+20)*{easing}"
++    return f"({base_x})+16*exp(-18*max(0,t-{float(start):.3f}))*cos(28*max(0,t-{float(start):.3f}))", base_y
++
++
+ def with_badges(graph: str, badge_input: int, badges, *, duration: float,
+-                position="right-top",scale=1.0,seconds=1.55,opacity=1.0,style="simple",stack_gap=4):
++                position="right-top",scale=1.0,seconds=1.55,opacity=1.0,style="simple",stack_gap=4,motion="instant"):
+     """Show separate portrait pairs as a compact stacked kill feed (max 3 rows)."""
+     if not graph.endswith("[vout]"):
+         raise ValueError("Existing video graph has no [vout]")
+@@ -619,6 +650,7 @@ def with_badges(graph: str, badge_input: int, badges, *, duration: float,
+         row=entry['row']
+         step=int(round(116*scale + normalize_stack_gap(stack_gap)))
+         y=(f"62+{step*row}" if position.endswith('top') else f"H-h-62-{step*row}")
++        x_move,y_move = badge_motion_xy(position,motion,start,x,y)
+         extra=(f"+7*sin(35*(t-{t:.3f}))*exp(-11*abs(t-{t:.3f}))" if normalize(style)=="impact" else "")
+         inlabel=f"pair_src_{n}"
+         outlabel="vout" if n==len(planned)-1 else f"pair_src_{n+1}"
+@@ -626,7 +658,7 @@ def with_badges(graph: str, badge_input: int, badges, *, duration: float,
+         # edges; downsample only inside FFmpeg while keeping the same on-screen size.
+         display_scale = scale * (0.5 if normalize(style) in ASSET_STYLES else 1.0)
+         parts.append(f"[{int(badge_input)+idx}:v]format=rgba,scale=w='trunc(iw*{display_scale:.3f}/2)*2':h='trunc(ih*{display_scale:.3f}/2)*2',colorchannelmixer=aa={opacity:.3f}[pair_img_{n}]")
+-        parts.append(f"[{inlabel}][pair_img_{n}]overlay=x='{x+extra}':y='{y}':format=auto:shortest=0:eof_action=repeat:enable='between(t,{start:.3f},{end:.3f})'[{outlabel}]")
++        parts.append(f"[{inlabel}][pair_img_{n}]overlay=x='{x_move+extra}':y='{y_move}':format=auto:shortest=0:eof_action=repeat:enable='between(t,{start:.3f},{end:.3f})'[{outlabel}]")
+     parts[-1]=parts[-1].replace('[vout]','[pair_finished]')
+     parts.append('[pair_finished]format=yuv420p[vout]')
+     return ';'.join(parts)
+diff --git a/docs/IMPLEMENTATION_AND_WINDOWS_TEST_v51016_JA.md b/docs/IMPLEMENTATION_AND_WINDOWS_TEST_v51016_JA.md
+new file mode 100644
+index 0000000..47f54eb
+--- /dev/null
++++ b/docs/IMPLEMENTATION_AND_WINDOWS_TEST_v51016_JA.md
+@@ -0,0 +1,35 @@
++# LoL AutoCine v5.10.16 実装とWindowsテスト（開発専用）
++
++## ベースと配布
++- ベース: Codex統合 v5.10.15、コミット `0e8e8f65362fd10a3ab9509c3fcbb4580b72691d`
++- 変更作業: `autocine/v5.10.16-ui-motion-qa-codex-safe`
++- 「Windowsテスト用フルZIP」と「Codex統合用差分ZIP」は GitHub Actions の成功実行から別々に取得します。
++- `main` と以前のCodex統合ブランチは書き換えません。
++- Codex差分は元のコミットで `git apply --check` してからレビュー・適用してください。
++
++## 実装
++1. 右側の「スキャン」で未接続時にReplay API接続→プレイヤー取得→試合全体スキャンを連続実行。左側の重複接続ボタンは廃止。
++2. DOFを円形／従来の上下ぼかしのラジオボタンに変更。選択したモードの設定だけを表示。右側の図は概念図（真の奥行き測定ではありません）。
++3. 右側スクロールを高速化し、コンボボックスの展開時のホイール抑制は維持。
++4. カメラ用語を「回り込み」「近づく量」など一般的な名称に変更。内部キーや設定値は維持。
++5. 37枚の既存キルフレームPNGは変更せず、一部の表示名をスキンテーマ風へ変更。旧表示名は読み取り互換保持。
++6. キルフレームの登場方法を追加：瞬時、左から、右から、下から、上から、ポップ。FFmpegのオーバーレイ座標のみ変化させ、既存音声処理は不変更。
++7. カメラ切替時に、前回の成功した視点に対して非ピッチ軸だけ180度近く跳ねるAPI読み取りを抑制。**Windows映像での上下反転解消は未検証。**
++8. 開発用ボタン：RED/BLUE各4カメラ＝8本の短いクリップを録画し、その完成素材から10種類のつなぎ演出を生成。各結果をJSONへ保存。ユーザー操作でのみ開始し、中止できます。
++
++## Windowsでしてほしいテスト
++- [ ] リプレイ再生後、右側の「スキャン」1回で接続、10人取得、試合全体スキャンが終了するか。
++- [ ] プレイヤー・イベント表示を切り替えても、再スキャンしないか。
++- [ ] 円形 DOF を選ぶと円形だけ、従来方式を選ぶと上下ぼかしだけの設定が見えるか。数値が保持されるか。
++- [ ] スクロールが改善され、プルダウン展開中に背後の右パネルが誤スクロールしないか。
++- [ ] 37種類のフレームが表示され、スキンテーマ名と実際の絵柄に違和感がないか。
++- [ ] 6種類の登場モーションを各1シーンで書き出し、方向や表示時間がおかしくないか。
++- [ ] **重要**：BLUE / REDの通常3人称、シネマ3人称、FPS、Lolnamシネマをそれぞれ2回以上選び、地面と空が上下反転しないか。
++- [ ] 「開発用：カメラ8本＋つなぎ演出10種類を自動テスト」で8本＋10種類が生成され、エラーログがないか。
++- [ ] 1080p/60fps、NVIDIA NVENC（対応PC）、LoLゲーム音、HUD、TargetLock、録画後ミラー復帰が従来どおりか。
++- [ ] `results.json`、該当するMP4、`AutoCine_Diagnostics.zip`を共有できるか。
++
++## 自動テストと制約
++CIはLinux/Xvfb＋FFmpegを使用し、pytest、構文チェック、差分パッチ適用確認、ZIP CRCを検証します。
++Windows実機LoL・GPUドライバー・音声デバイス・カメラの画作りはCIでは確定できません。
++現時点でアップロード済みの動画/診断ZIPはChatGPT側ファイル実行環境エラーで直接読み直せていません。
+diff --git a/legacy_app.py b/legacy_app.py
+index e54543c..bafc632 100644
+--- a/legacy_app.py
++++ b/legacy_app.py
+@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parent
+ sys.path.insert(0, str(ROOT))
+ 
+ from core import paths                                             # noqa: E402
+-from core.kill_icons import STYLES as KILL_ICON_STYLES, REVERSE_STYLES as KILL_ICON_REVERSE
++from core.kill_icons import STYLES as KILL_ICON_STYLES, REVERSE_STYLES as KILL_ICON_REVERSE, MOTION_STYLES as KILL_MOTIONS, MOTION_REVERSE as KILL_MOTION_REVERSE
+ from core.kill_icons import POSITIONS as KILL_ICON_POSITIONS, REVERSE_POSITIONS as KILL_ICON_REVERSE_POSITIONS
+ from core.kill_icons import REVERSE_MARK_STYLES as KILL_MARK_REVERSE
+ from core.montage_fx import MONTAGE_LABELS, MONTAGE_REVERSE
+@@ -33,6 +33,7 @@ from core.effects import (FOG_PRESETS, GRADE_JP, GRADE_REVERSE, TRANSITIONS, Tem
+ from core.reference_safe import make_remixes, save_template as save_reference_template, load_template as load_reference_template, template_from_references  # noqa: E402
+ from core.audio import PreferredGameAudio, SyntheticAudio               # noqa: E402
+ from core.jobs import preview_clip, run_auto_edit                  # noqa: E402
++from core.camera_qa import run_camera_record_test                   # noqa: E402
+ from core.preview import apply_camera_preview, apply_video_effect_preview, compose_compare, preview_title, render_exact_still   # noqa: E402
+ from core.launcher import watch_replay                             # noqa: E402
+ from core.players import Player, parse_players                     # noqa: E402
+@@ -225,11 +226,11 @@ class ScrollFrame(ttk.Frame):
+     def scroll_wheel(self, e) -> None:
+         delta = getattr(e, "delta", 0)
+         if delta:
+-            units = -max(-8, min(8, int(delta / 120)))
++            units = -max(-16, min(16, int(delta / 120) * 4))
+         elif getattr(e, "num", None) == 4:
+-            units = -3
++            units = -6
+         else:
+-            units = 3
++            units = 6
+         self.canvas.yview_scroll(units, "units")
+ 
+     def scroll_to(self, widget) -> None:
+@@ -550,6 +551,7 @@ class App:
+         self.var_smart_highlight_enabled = tk.BooleanVar(value=False)
+         self.var_kill_icon_style = tk.StringVar(value=KILL_ICON_STYLES['off'])
+         self.var_kill_icon_position = tk.StringVar(value=KILL_ICON_POSITIONS['right-top'])
++        self.var_kill_icon_motion = tk.StringVar(value=KILL_MOTIONS['instant'])
+         self.var_kill_icon_scale = tk.DoubleVar(value=1.0)
+         self.var_kill_icon_duration = tk.DoubleVar(value=1.55)
+         self.var_kill_icon_opacity = tk.DoubleVar(value=1.0)
+@@ -787,7 +789,7 @@ class App:
+         ttk.Button(f, text="最近のリプレイを再生", command=self.on_play_recent).pack(fill="x", pady=2)
+         ttk.Label(f, text="APIキー不要。game.cfgを自動設定します。", style="CardMuted.TLabel", wraplength=270).pack(fill="x", pady=(4, 0))
+ 
+-        ttk.Button(f, text="③ 接続して10人を取得", command=self.on_connect).pack(fill="x", pady=(3,5))
++        ttk.Label(f, text="接続と10人の取得は右側の「スキャン」で自動実行します。", style="CardMuted.TLabel",wraplength=270).pack(fill="x",pady=(3,5))
+         f = fold_section(left, "プレイヤー一覧（確認・手動指定はここ）")
+         self.tree = ttk.Treeview(f, columns=("team", "champ", "name"), show="headings", height=8, selectmode="browse")
+         for c, t, w in (("team", "チーム", 55), ("champ", "チャンピオン", 95), ("name", "プレイヤー", 125)):
+@@ -1170,7 +1172,7 @@ class App:
+         ttk.Button(target_row, text="◉  キル対象（自動）", command=lambda: self.log("追従対象: キル対象（自動）")).pack(side="left", fill="x", expand=True)
+         ttk.Button(target_row, text="▶  対象を手動指定", command=self.on_lock).pack(side="left", fill="x", expand=True, padx=(6, 0))
+ 
+-        camera_more=fold_section(cam,"距離・高さ・Orbit・モーション詳細")
++        camera_more=fold_section(cam,"距離・高さ・回り込み・動きの詳細")
+         # all existing camera sliders remain available in the center
+         self.sl, self.sl_labels = {}, {}
+         def _slider_range(key):
+@@ -1211,11 +1213,11 @@ class App:
+                      values=list(CAMERA_SIDE_CHOICES.values()), width=25).pack(fill="x", pady=(0, 3))
+         ttk.Label(left_cam, text="自動は固定した選手のブルー/レッド所属で反転。\n手動設定も可能。既存TargetLockは維持します。",
+                   style="CardMuted.TLabel", justify="left").pack(anchor="w")
+-        ttk.Label(right_cam, text="Orbit（横回転）", style="Card.TLabel", font=("Meiryo UI", 10, "bold")).pack(anchor="w", pady=(0, 3))
++        ttk.Label(right_cam, text="カメラの左右移動・回り込み", style="Card.TLabel", font=("Meiryo UI", 10, "bold")).pack(anchor="w", pady=(0, 3))
+         slider(right_cam, "third_dist", "三人称 距離", 500, 1400)
+         slider(right_cam, "third_yaw", "回転角", -180, 180)
+-        slider(right_cam, "motion_arc", "自動Orbit角", 0, 45)
+-        slider(right_cam, "motion_dolly", "自動ドリー", 0, 15)
++        slider(right_cam, "motion_arc", "自動で回り込む角度", 0, 45)
++        slider(right_cam, "motion_dolly", "自動で近づく量", 0, 15)
+         yawbar = ttk.Frame(right_cam, style="Card.TFrame"); yawbar.pack(fill="x", pady=2)
+         ttk.Button(yawbar, text="↶ -90°", command=lambda: self.sl["third_yaw"].set(max(-180, self.sl["third_yaw"].get()-90))).pack(side="left", expand=True, fill="x", padx=(0, 2))
+         ttk.Button(yawbar, text="0°", command=lambda: self.sl["third_yaw"].set(0)).pack(side="left", expand=True, fill="x", padx=2)
+@@ -1329,19 +1331,24 @@ class App:
+         ttk.Label(dof_controls, text="まずDOFぼかしを上げます。円の内側はそのまま、外側がぼけます（実際の深度推定ではありません）。",
+                   style="CardMuted.TLabel", wraplength=860).pack(anchor="w")
+         self.var_dof_shape=tk.StringVar(value="円形（おすすめ）")
+-        ttk.Combobox(dof_controls, state="readonly", textvariable=self.var_dof_shape,
+-                     values=["円形（おすすめ）", "従来の上下ぼかし"], width=30).pack(anchor="w", pady=(4,3))
++        dof_mode_row = ttk.Frame(dof_controls, style="Card.TFrame")
++        dof_mode_row.pack(fill="x", pady=(4, 4))
++        for label in ("円形（おすすめ）", "従来の上下ぼかし"):
++            ttk.Radiobutton(dof_mode_row, text=label, variable=self.var_dof_shape,
++                            value=label).pack(side="left", padx=(0, 14))
+         slider(dof_controls,"dof_blur","周囲のぼかし強度",0,12)
+-        self.var_dof_circle_hint = ttk.Label(dof_controls, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
++        circle_dof = ttk.Frame(dof_controls, style="Card.TFrame")
++        self._circle_dof_panel = circle_dof
++        self.var_dof_circle_hint = ttk.Label(circle_dof, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
+                                              style="CardMuted.TLabel", wraplength=880)
+         self.var_dof_circle_hint.pack(anchor="w", pady=(3,5))
+-        slider(dof_controls,"dof_center_x","円の中心・左右",.05,.95)
+-        slider(dof_controls,"dof_center_y","円の中心・上下",.05,.95)
+-        slider(dof_controls,"dof_radius","くっきりする円の半径",.08,.65)
+-        slider(dof_controls,"dof_feather","境界のなめらかさ",.025,.35)
+-        ttk.Label(dof_controls, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
++        slider(circle_dof,"dof_center_x","円の中心・左右",.05,.95)
++        slider(circle_dof,"dof_center_y","円の中心・上下",.05,.95)
++        slider(circle_dof,"dof_radius","くっきりする円の半径",.08,.65)
++        slider(circle_dof,"dof_feather","境界のなめらかさ",.025,.35)
++        ttk.Label(circle_dof, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
+                   style="CardMuted.TLabel", wraplength=950).pack(anchor="w", pady=(0,4))
+-        self.dof_viz = FocusCircleViz(dof_controls, self.sl['dof_center_x'], self.sl['dof_center_y'],
++        self.dof_viz = FocusCircleViz(circle_dof, self.sl['dof_center_x'], self.sl['dof_center_y'],
+                                      self.sl['dof_radius'], self.sl['dof_feather'])
+         self.dof_viz.pack(fill="x", pady=(2,6))
+         legacy_dof = ttk.LabelFrame(dof_controls, text="従来の上下ぼかし用（互換設定）", padding=5)
+@@ -1429,6 +1436,9 @@ class App:
+         ttk.Label(output, text="装飾位置", style="Card.TLabel").pack(anchor="w", pady=(2, 1))
+         ttk.Combobox(output, state="readonly", textvariable=self.var_kill_icon_position,
+                      values=list(KILL_ICON_POSITIONS.values()), width=28).pack(fill="x", pady=(0, 3))
++        ttk.Label(output, text="キルフレームの登場方法", style="Card.TLabel").pack(anchor="w")
++        ttk.Combobox(output, state="readonly", textvariable=self.var_kill_icon_motion,
++                     values=list(KILL_MOTIONS.values()), width=28).pack(fill="x", pady=(0, 4))
+         badge_details = ttk.Frame(output, style="Card.TFrame")
+         badge_details.pack(fill="x", pady=(2, 5))
+         for caption, variable, lower, upper, inc in (
+@@ -1547,9 +1557,9 @@ class App:
+         # Keep scene selection and render progress at the top of the inspector, even
+         # when the user switches to camera/color/output editing zones.
+         f = card(right, "◉  検出シーン")
+-        ttk.Button(f, text="① 試合全体を一括スキャン（最初に1回）", command=self.on_scan).pack(fill="x", pady=(0,6))
++        ttk.Button(f, text="① スキャン（接続・10人取得・試合全体）", command=self.on_scan, style="Accent.TButton").pack(fill="x", pady=(0,6))
+         self.pb_scan = ttk.Progressbar(f, maximum=100); self.pb_scan.pack(fill="x", pady=2)
+-        self.lbl_scan = ttk.Label(f, text="未スキャン｜左の『接続して10人を取得』から開始", style="CardMuted.TLabel", wraplength=300)
++        self.lbl_scan = ttk.Label(f, text="未スキャン｜スキャンを押すだけで接続・プレイヤー取得から開始", style="CardMuted.TLabel", wraplength=300)
+         self.lbl_scan.pack(fill="x", pady=(0,5))
+         ttk.Label(f, text="② 表示するイベント", style="Card.TLabel").pack(anchor="w")
+         mode_row=ttk.Frame(f,style="Card.TFrame"); mode_row.pack(fill="x",pady=(2,6))
+@@ -1577,6 +1587,11 @@ class App:
+         ttk.Button(f, text="▶ 選択シーンを作成", command=self.on_make_selected).pack(fill="x", pady=(5,0), ipady=3)
+         ttk.Button(f, text="✓ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
+         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
++        ttk.Separator(f).pack(fill="x",pady=(8,6))
++        ttk.Button(f, text="開発用：カメラ8本＋つなぎ演出10種類を自動テスト",
++                   command=self.on_dev_camera_qa).pack(fill="x",pady=(0,3))
++        ttk.Label(f, text="全体スキャン後に1回だけ押してください。同じ録画素材を使って演出を比較します（開発中のみ）。",
++                  style="CardMuted.TLabel",wraplength=300).pack(fill="x")
+ 
+         f = card(right, "☁  出力状況")
+         self.pb_job=ttk.Progressbar(f, maximum=100); self.pb_job.pack(fill="x")
+@@ -1619,21 +1634,39 @@ class App:
+         ttk.Label(row, textvariable=self.sl_labels["fog_strength"], width=7, anchor="e", style="CardMuted.TLabel").pack(side="right")
+         ttk.Label(f, text="カーブ補正ポイント", style="CardMuted.TLabel").pack(anchor="w", pady=(5, 2))
+         ttk.Entry(f, textvariable=self.var_curve_points).pack(fill="x")
+-        ttk.Label(f, text="DOF詳細", style="CardMuted.TLabel").pack(anchor="w", pady=(6, 2))
+-        for key, label in (("dof_blur", "DOFぼかし"), ("dof_focus_distance", "フォーカス距離"),
+-                           ("dof_near_distance", "近距離"), ("dof_far_distance", "遠距離")):
+-            row = ttk.Frame(f, style="Card.TFrame"); row.pack(fill="x", pady=2)
+-            ttk.Label(row, text=label, width=11, style="Card.TLabel").pack(side="left")
+-            lo, hi = self._slider_range(key)
+-            ttk.Scale(row, from_=lo, to=hi, variable=self.sl[key]).pack(side="left", fill="x", expand=True, padx=4)
+-            ttk.Entry(row, textvariable=self.sl[key], width=9, justify="right").pack(side="right")
++        ttk.Label(f, text="背景ぼかし（DOF）の種類", style="CardMuted.TLabel").pack(anchor="w", pady=(6, 2))
++        quick_dof_choice = ttk.Frame(f, style="Card.TFrame")
++        quick_dof_choice.pack(fill="x")
++        for label in ("円形（おすすめ）", "従来の上下ぼかし"):
++            ttk.Radiobutton(quick_dof_choice, text=label, variable=self.var_dof_shape,
++                            value=label).pack(anchor="w")
++        self._quick_dof_hint = ttk.Label(f, text="", style="CardMuted.TLabel", wraplength=280)
++        self._quick_dof_hint.pack(fill="x", pady=(2, 4))
++        self._quick_dof_diagram = tk.Canvas(f, height=88, bg="#F5F8FC", highlightthickness=1,
++                                             highlightbackground="#D4DEE8")
++        self._quick_dof_diagram.pack(fill="x", pady=(0, 4))
++        self._quick_circle_dof = ttk.Frame(f, style="Card.TFrame")
++        self._quick_band_dof = ttk.Frame(f, style="Card.TFrame")
++        for parent, controls in (
++            (self._quick_circle_dof, (("dof_blur", "ぼかし強度"), ("dof_center_x", "左右の中心"),
++                                      ("dof_center_y", "上下の中心"), ("dof_radius", "くっきりする範囲"),
++                                      ("dof_feather", "境界の柔らかさ"))),
++            (self._quick_band_dof, (("dof_blur", "ぼかし強度"), ("dof_focus_distance", "基準距離"),
++                                   ("dof_near_distance", "手前側"), ("dof_far_distance", "奥側")))):
++            for key, label in controls:
++                row = ttk.Frame(parent, style="Card.TFrame"); row.pack(fill="x", pady=2)
++                ttk.Label(row, text=label, width=13, style="Card.TLabel").pack(side="left")
++                lo, hi = self._slider_range(key)
++                ttk.Scale(row, from_=lo, to=hi, variable=self.sl[key]).pack(side="left", fill="x", expand=True, padx=4)
++                ttk.Entry(row, textvariable=self.sl[key], width=9, justify="right").pack(side="right")
++        self._update_dof_mode_ui()
+ 
+         f = card(right, "◈  カメラ詳細")
+-        ttk.Label(f, text="カメラ距離 / 高さ / Orbit", style="Card.TLabel").pack(anchor="w")
++        ttk.Label(f, text="カメラ距離 / 高さ / 左右回転", style="Card.TLabel").pack(anchor="w")
+         for key, label in (("dist_scale", "追従距離"), ("cam_height", "高さ"),
+                            ("third_elev", "三人称 仰角"), ("third_dist", "三人称 距離"),
+-                           ("third_yaw", "Orbit回転"), ("motion_arc", "自動Orbit角"),
+-                           ("motion_dolly", "自動ドリー")):
++                           ("third_yaw", "Orbit回転"), ("motion_arc", "自動で回り込む角度"),
++                           ("motion_dolly", "自動で近づく量")):
+             row = ttk.Frame(f, style="Card.TFrame"); row.pack(fill="x", pady=2)
+             ttk.Label(row, text=label, width=11, style="Card.TLabel").pack(side="left")
+             lo, hi = self._slider_range(key)
+@@ -3091,15 +3124,36 @@ class App:
+             raise
+ 
+     def _update_dof_mode_ui(self):
+-        """Do not present obsolete near/far controls while circular focus is active."""
+-        panel = getattr(self, '_legacy_dof_panel', None)
+-        if panel is None:
+-            return
+-        if self.var_dof_shape.get() == '従来の上下ぼかし':
+-            if not panel.winfo_manager():
+-                panel.pack(fill='x', pady=(2, 6))
+-        elif panel.winfo_manager():
+-            panel.pack_forget()
++        """Only one DOF mode is visible; keep all stored values unchanged."""
++        band = self.var_dof_shape.get() == "従来の上下ぼかし"
++        for panel, visible in (
++            (getattr(self, "_circle_dof_panel", None), not band),
++            (getattr(self, "_legacy_dof_panel", None), band),
++            (getattr(self, "_quick_circle_dof", None), not band),
++            (getattr(self, "_quick_band_dof", None), band)):
++            if panel is None:
++                continue
++            if visible and not panel.winfo_manager():
++                panel.pack(fill="x", pady=(3, 5))
++            elif not visible and panel.winfo_manager():
++                panel.pack_forget()
++        label = getattr(self, "_quick_dof_hint", None)
++        if label is not None:
++            label.configure(text=(
++                "画面中央の横帯はくっきり残し、上下の部分をぼかします。従来方式で実際の距離測定ではありません。"
++                if band else "中央の円だけをくっきり残し、周りをぼかします。キャラの自動追跡ではありません。"))
++        canvas = getattr(self, "_quick_dof_diagram", None)
++        if canvas is not None:
++            canvas.delete("all")
++            width = max(220, canvas.winfo_width())
++            canvas.create_rectangle(8, 7, width-8, 79, fill="#CBD5E1", outline="#B8C5D6")
++            if band:
++                canvas.create_rectangle(8, 32, width-8, 53, fill="#EFF6FF", outline="#2070C6", width=2)
++                canvas.create_text(width/2, 43, text="中央をくっきり", fill="#1659AA")
++            else:
++                canvas.create_oval(width/2-52, 12, width/2+52, 74,
++                                   fill="#EFF6FF", outline="#2070C6", width=2)
++                canvas.create_text(width/2, 42, text="主役", fill="#1659AA")
+ 
+     def _apply_focus_preset(self):
+         """One click circular focus without editing TargetLock or changing audio."""
+@@ -3161,6 +3215,7 @@ class App:
+         self.var_montage_fx.set(MONTAGE_LABELS.get(getattr(t,"montage_fx","cut"),MONTAGE_LABELS["cut"]))
+         self.var_kill_icon_style.set(KILL_ICON_STYLES.get(getattr(t, "kill_icon_style", "off"), KILL_ICON_STYLES["off"]))
+         self.var_kill_icon_position.set(KILL_ICON_POSITIONS.get(getattr(t, "kill_icon_position", "right-top"), KILL_ICON_POSITIONS["right-top"]))
++        self.var_kill_icon_motion.set(KILL_MOTIONS.get(getattr(t, "kill_icon_motion", "instant"), KILL_MOTIONS["instant"]))
+         self.var_kill_icon_scale.set(float(getattr(t, "kill_icon_scale", 1.0)))
+         self.var_kill_icon_duration.set(float(getattr(t, "kill_icon_duration", 1.55)))
+         self.var_kill_icon_opacity.set(float(getattr(t, "kill_icon_opacity", 1.0)))
+@@ -3309,6 +3364,7 @@ class App:
+         t.smart_highlight_style = SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto')
+         t.kill_icon_style = KILL_ICON_REVERSE.get(self.var_kill_icon_style.get(), 'off')
+         t.kill_icon_position = KILL_ICON_REVERSE_POSITIONS.get(self.var_kill_icon_position.get(), 'right-top')
++        t.kill_icon_motion = KILL_MOTION_REVERSE.get(self.var_kill_icon_motion.get(), 'instant')
+         from core.kill_icons import normalize_options
+         (_pos, t.kill_icon_scale, t.kill_icon_duration, t.kill_icon_opacity) = normalize_options(
+             t.kill_icon_position, self.var_kill_icon_scale.get(),
+@@ -3400,6 +3456,8 @@ class App:
+                 self.var_kill_icon_style.set(KILL_ICON_STYLES[d["kill_icon_style"]])
+             if d.get("kill_icon_position") in KILL_ICON_POSITIONS:
+                 self.var_kill_icon_position.set(KILL_ICON_POSITIONS[d["kill_icon_position"]])
++            if d.get("kill_icon_motion") in KILL_MOTIONS:
++                self.var_kill_icon_motion.set(KILL_MOTIONS[d["kill_icon_motion"]])
+             from core.kill_icons import normalize_options
+             (_p, badge_scale, badge_duration, badge_opacity) = normalize_options(
+                 d.get("kill_icon_position"), d.get("kill_icon_scale"),
+@@ -3453,6 +3511,7 @@ class App:
+                                              "hud_mode": self.var_hud_mode.get(),
+                                              "kill_icon_style": KILL_ICON_REVERSE.get(self.var_kill_icon_style.get(), "off"),
+                                              "kill_icon_position": KILL_ICON_REVERSE_POSITIONS.get(self.var_kill_icon_position.get(), "right-top"),
++                                             "kill_icon_motion": KILL_MOTION_REVERSE.get(self.var_kill_icon_motion.get(), "instant"),
+                                              "kill_icon_scale": float(self.var_kill_icon_scale.get()),
+                                              "kill_icon_duration": float(self.var_kill_icon_duration.get()),
+                                              "kill_icon_opacity": float(self.var_kill_icon_opacity.get()),
+@@ -3673,11 +3732,13 @@ class App:
+         if self.busy:
+             self.log("別の処理が完了してからスキャンしてください。")
+             return
+-        if not self.players:
+-            messagebox.showinfo(APP, "先に接続して10人のプレイヤーを取得してください。")
+-            return
+         if self._match_scan_cache and self._match_scan_cache.complete:
+-            self._filter_scanned_for_locked()
++            if self.locked is not None:
++                self._filter_scanned_for_locked()
++            else:
++                self.kills = list(self._match_scan_cache.kills)
++                self.checked_kills = set(range(len(self.kills)))
++                self._fill_kills()
+             self.log("スキャン済みの試合イベントを再利用しました")
+             return
+         self._run_bg(self._scan, self.var_event_mode.get())
+@@ -3689,6 +3750,12 @@ class App:
+         return True
+ 
+     def _scan(self, event_mode: str | None = None) -> None:
++        if not self.players:
++            self.log("スキャン: Replay APIへ接続し、プレイヤー一覧を取得しています…")
++            self._connect()
++            if not self.players:
++                self.log("スキャンを中止しました。リプレイ再生と接続を確認してください。")
++                return
+         session = self._replay_generation
+         p = self.locked
+         if self._match_scan_cache and self._match_scan_cache.complete:
+@@ -3723,6 +3790,35 @@ class App:
+         self.log(f"スキャン完了: イベント {res.total_events} 件 / 対象シーン {len(self.kills)} 件 / モード {selected_mode}"
+                  + ("" if res.complete else " (途中で中断)"))
+ 
++    def on_dev_camera_qa(self):
++        """User-initiated, disposable test suite. Capture Tk values on UI thread."""
++        if self.busy:
++            messagebox.showinfo(APP, "別の作業が終わってから開始してください。")
++            return
++        cache = self._match_scan_cache
++        if cache is None or not cache.complete:
++            messagebox.showinfo(APP, "先に右側の「スキャン」を完了してください。")
++            return
++        self._run_bg(self._record_camera_qa, self.current_template(),
++                     list(self.players), list(cache.events), self.locked, Path(self.out_root))
++
++    def _record_camera_qa(self, tpl, players, events, preferred, destination):
++        """Worker: records 8 representative clips, then post-processes 10 variants."""
++        src = None
++        own = False
++        try:
++            src, own = self._ensure_source()
++            factory = ((lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else
++                       (lambda path: PreferredGameAudio(path))) if tpl.game_audio else None
++            report = run_camera_record_test(self.api,src,players,events,preferred,
++                        tpl,destination,stop=self.stop_ev,log=self.log,
++                        audio_factory=factory,
++                        progress=lambda *values:self.q.put(("job",*values)))
++            self.log(f"開発用一括テストの結果: {report}")
++        finally:
++            if own and src is not None:
++                src.stop()
++
+     def _ensure_source(self):
+         if self._mirror.pending:
+             raise CaptureError("ミラー開始準備中です。映像が表示されてから書き出してください。")
+diff --git a/tests/test_gpu_champion_pair_v599.py b/tests/test_gpu_champion_pair_v599.py
+index a0e8658..3988102 100644
+--- a/tests/test_gpu_champion_pair_v599.py
++++ b/tests/test_gpu_champion_pair_v599.py
+@@ -12,7 +12,7 @@ def test_previous_template_positions_and_roster_isolation():
+     old = Template(smart_composition=True, kill_icon_style='neon')
+     appended={'kill_icon_players','encoder_policy','kill_frame_color','kill_glow_color',
+               'kill_glow_enabled','kill_glow_strength','kill_frame_width','kill_mark_style'}
+-    values = [getattr(old, f.name) for f in fields(Template) if f.name not in appended | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather', 'camera_side', 'kill_sparkle_intensity', 'kill_stack_gap'}]
++    values = [getattr(old, f.name) for f in fields(Template) if f.name not in appended | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather', 'camera_side', 'kill_sparkle_intensity', 'kill_stack_gap', 'kill_icon_motion'}]
+     copy = Template(*values)
+     assert copy.smart_composition and copy.kill_icon_style == 'neon'
+     copy.kill_icon_players.append({'name': 'Test'})
+diff --git a/tests/test_gpu_highlight_v598.py b/tests/test_gpu_highlight_v598.py
+index c0db5c2..88e05a7 100644
+--- a/tests/test_gpu_highlight_v598.py
++++ b/tests/test_gpu_highlight_v598.py
+@@ -9,7 +9,7 @@ def test_v597_positional_arguments_stay_in_place():
+     template = Template(fog_enabled=True, montage_fx='dark',
+                         scene_keyframes=[{'time': 0, 'yaw': 4}])
+     new = {'smart_highlight_enabled', 'smart_highlight_style', 'highlight_pulse'} | {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration', 'kill_icon_opacity', 'smart_composition', 'smart_montage', 'kill_icon_players'} | {'encoder_policy', 'kill_frame_color', 'kill_glow_color', 'kill_glow_enabled', 'kill_glow_strength', 'kill_frame_width', 'kill_mark_style'}
+-    previous = [getattr(template, field.name) for field in fields(Template) if field.name not in new | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather','camera_side', 'kill_sparkle_intensity', 'kill_stack_gap'}]
++    previous = [getattr(template, field.name) for field in fields(Template) if field.name not in new | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather','camera_side', 'kill_sparkle_intensity', 'kill_stack_gap', 'kill_icon_motion'}]
+     restored = Template(*previous)
+     assert restored.fog_enabled and restored.montage_fx == 'dark'
+     assert restored.scene_keyframes == [{'time': 0, 'yaw': 4}]
+diff --git a/tests/test_gpu_killbadges_v599.py b/tests/test_gpu_killbadges_v599.py
+index 91ef609..0d208c4 100644
+--- a/tests/test_gpu_killbadges_v599.py
++++ b/tests/test_gpu_killbadges_v599.py
+@@ -19,7 +19,7 @@ def test_v598_template_positions_are_preserved():
+     previous = Template(smart_highlight_enabled=True, highlight_pulse=.7, montage_fx='dark')
+     new = {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration',
+            'kill_icon_opacity', 'smart_composition', 'smart_montage', 'kill_icon_players'} | {'encoder_policy', 'kill_frame_color', 'kill_glow_color', 'kill_glow_enabled', 'kill_glow_strength', 'kill_frame_width', 'kill_mark_style'}
+-    values = [getattr(previous, f.name) for f in fields(Template) if f.name not in new | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather', 'camera_side', 'kill_sparkle_intensity', 'kill_stack_gap'}]
++    values = [getattr(previous, f.name) for f in fields(Template) if f.name not in new | {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather', 'camera_side', 'kill_sparkle_intensity', 'kill_stack_gap', 'kill_icon_motion'}]
+     restored = Template(*values)
+     assert restored.smart_highlight_enabled and restored.highlight_pulse == .7
+     assert restored.montage_fx == 'dark' and restored.kill_icon_style == 'off'
+diff --git a/tests/test_gpu_montage_v597.py b/tests/test_gpu_montage_v597.py
+index a1d626f..00644bc 100644
+--- a/tests/test_gpu_montage_v597.py
++++ b/tests/test_gpu_montage_v597.py
+@@ -13,7 +13,7 @@ from core.effects import Template
+ def test_v596_positional_template_fields_are_preserved():
+     previous = Template(fog_enabled=True, scene_keyframes=[{'time': 0, 'yaw': 8}])
+     names = [f.name for f in fields(Template)
+-             if f.name not in {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather','camera_side', 'kill_sparkle_intensity', 'kill_stack_gap'} | {'montage_fx', 'smart_highlight_enabled', 'smart_highlight_style', 'highlight_pulse'} | {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration', 'kill_icon_opacity', 'smart_composition', 'smart_montage', 'kill_icon_players'} | {'encoder_policy', 'kill_frame_color', 'kill_glow_color', 'kill_glow_enabled', 'kill_glow_strength', 'kill_frame_width', 'kill_mark_style'}]
++             if f.name not in {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather','camera_side', 'kill_sparkle_intensity', 'kill_stack_gap', 'kill_icon_motion'} | {'montage_fx', 'smart_highlight_enabled', 'smart_highlight_style', 'highlight_pulse'} | {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration', 'kill_icon_opacity', 'smart_composition', 'smart_montage', 'kill_icon_players'} | {'encoder_policy', 'kill_frame_color', 'kill_glow_color', 'kill_glow_enabled', 'kill_glow_strength', 'kill_frame_width', 'kill_mark_style'}]
+     restored = Template(*(getattr(previous, name) for name in names))
+     assert restored.fog_enabled
+     assert restored.scene_keyframes == previous.scene_keyframes
+diff --git a/tests/test_gpu_shared_camera_contract.py b/tests/test_gpu_shared_camera_contract.py
+index 980d05d..bb535d2 100644
+--- a/tests/test_gpu_shared_camera_contract.py
++++ b/tests/test_gpu_shared_camera_contract.py
+@@ -36,7 +36,7 @@ def test_legacy_camera_positional_arguments_are_preserved():
+ def test_legacy_template_positional_arguments_and_new_default_isolation():
+     legacy = Template(fog_enabled=True, dof_enabled=True, template_origin="custom")
+     old_values = [getattr(legacy, field.name) for field in fields(Template)
+-                  if field.name not in {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather','camera_side', 'kill_sparkle_intensity', 'kill_stack_gap'} | {"scene_keyframes", "montage_fx", "smart_highlight_enabled",
++                  if field.name not in {'dof_shape', 'dof_center_x', 'dof_center_y', 'dof_radius', 'dof_feather','camera_side', 'kill_sparkle_intensity', 'kill_stack_gap', 'kill_icon_motion'} | {"scene_keyframes", "montage_fx", "smart_highlight_enabled",
+                                         "smart_highlight_style", "highlight_pulse"} | {'kill_icon_style', 'kill_icon_position', 'kill_icon_scale', 'kill_icon_duration', 'kill_icon_opacity', 'smart_composition', 'smart_montage', 'kill_icon_players'} | {'encoder_policy', 'kill_frame_color', 'kill_glow_color', 'kill_glow_enabled', 'kill_glow_strength', 'kill_frame_width', 'kill_mark_style'}]
+     restored = Template(*old_values)
+     assert restored.fog_enabled and restored.dof_enabled
+diff --git a/tests/test_v51012_allscan_quality_camera.py b/tests/test_v51012_allscan_quality_camera.py
+index ed04fa1..5abe56e 100644
+--- a/tests/test_v51012_allscan_quality_camera.py
++++ b/tests/test_v51012_allscan_quality_camera.py
+@@ -79,7 +79,7 @@ def test_grades_more_distinct_from_default():
+ 
+ def test_ui_supports_scan_once_then_player_and_team_filter():
+     code=(Path(__file__).resolve().parents[1]/'legacy_app.py').read_text('utf-8')
+-    assert '試合全体を一括スキャン' in code
++    assert '① スキャン（接続・10人取得・試合全体）' in code
+     assert 'self._match_scan_cache' in code
+     assert 'self._filter_scanned_for_locked()' in code
+     assert 'self.var_team_filter' in code
+diff --git a/tests/test_v51016_motion_dof_and_camera_qa.py b/tests/test_v51016_motion_dof_and_camera_qa.py
+new file mode 100644
+index 0000000..65b0443
+--- /dev/null
++++ b/tests/test_v51016_motion_dof_and_camera_qa.py
+@@ -0,0 +1,102 @@
++# -*- coding: utf-8 -*-
++"""Safe regressions for v5.10.16. Real Windows camera framing is manual QA."""
++from pathlib import Path
++import tkinter as tk
++import pytest
++from core.kill_icons import MOTION_STYLES, badge_motion_xy, with_badges, STYLES, ASSET_STYLES
++from core.camera_qa import plan_eight_cases
++from core.players import Player
++from core.effects import Template
++
++def test_entrance_modes_are_bounded_and_keep_instant_legacy():
++    assert len(MOTION_STYLES) == 6
++    assert badge_motion_xy('right-top','instant',4.0,'W-w-32','62') == ('W-w-32','62')
++    for name in MOTION_STYLES:
++        x,y=badge_motion_xy('right-top',name,4.0,'W-w-32','62')
++        assert isinstance(x,str) and isinstance(y,str)
++        assert len(x)<350 and len(y)<350
++    assert 'H+20' in badge_motion_xy('right-top','slide_up',4,'W-w-32','62')[1]
++
++def test_motion_reaches_real_overlay_and_unknown_input_is_failsafe():
++    badges=[(Path('dummy.png'),4.0)]
++    graph=with_badges('[in]null[vout]',1,badges,duration=9.0,motion='slide_left')
++    assert 'overlay=x=' in graph and 'W+20' in graph
++    assert graph.endswith('[vout]')
++    assert with_badges('[in]null[vout]',1,badges,duration=9,motion='unknown').endswith('[vout]')
++
++def test_template_default_keeps_previous_static_kill_frame():
++    assert Template().kill_icon_motion == 'instant'
++    assert len(ASSET_STYLES)==37
++    assert 'K/DA' in STYLES['user_frame_08']
++
++def test_8_camera_plan_uses_both_teams_and_real_events():
++    blue=Player(0,'Blue','Blue#JP','Blue','Ahri','ORDER')
++    red=Player(5,'Red','Red#JP','Red','LeeSin','CHAOS')
++    events=[dict(event_id=1,time=30.0,killer='Blue',victim='Red',assisters=[]),
++            dict(event_id=2,time=60.0,killer='Red',victim='Blue',assisters=[])]
++    cases=plan_eight_cases([blue,red],events)
++    assert len(cases)==8
++    assert [x[0] for x in cases]==['RED']*4+['BLUE']*4
++
++def test_dof_radio_panels_never_show_both():
++    import legacy_app
++    root=tk.Tk()
++    try:
++        app=legacy_app.App(root)
++        app.var_dof_shape.set('円形（おすすめ）')
++        root.update_idletasks()
++        assert app._circle_dof_panel.winfo_manager()
++        assert app._quick_circle_dof.winfo_manager()
++        assert not app._legacy_dof_panel.winfo_manager()
++        assert not app._quick_band_dof.winfo_manager()
++        app.var_dof_shape.set('従来の上下ぼかし')
++        root.update_idletasks()
++        assert app._legacy_dof_panel.winfo_manager()
++        assert app._quick_band_dof.winfo_manager()
++        assert not app._circle_dof_panel.winfo_manager()
++        assert not app._quick_circle_dof.winfo_manager()
++    finally:
++        root.destroy()
++
++def test_scan_button_starts_background_before_player_connected():
++    import legacy_app
++    root=tk.Tk()
++    try:
++        app=legacy_app.App(root)
++        app.players=[]
++        calls=[]
++        app._run_bg=lambda fn,*args:calls.append((fn.__name__,args))
++        app.on_scan()
++        assert calls and calls[-1][0]=='_scan'
++    finally:
++        root.destroy()
++
++def test_dev_camera_qa_requires_completed_whole_match_scan(monkeypatch):
++    import legacy_app
++    root=tk.Tk()
++    try:
++        app=legacy_app.App(root)
++        shown=[]
++        monkeypatch.setattr(legacy_app.messagebox,'showinfo',lambda *args,**kw:shown.append(args))
++        app._match_scan_cache=None
++        app.on_dev_camera_qa()
++        assert shown
++    finally:
++        root.destroy()
++
++def test_camera_repeated_selection_reuses_stable_non_pitch_axis():
++    from core.camera import stabilize_non_pitch_rotation
++    prior={'x':35.0,'y':15.0,'z':0.0}
++    rolled={'x':35.0,'y':195.0,'z':0.0}
++    notes=[]
++    chosen=stabilize_non_pitch_rotation(rolled,prior,'x',log=notes.append)
++    assert chosen['y']==15.0 and notes
++    normal={'x':35.0,'y':20.0,'z':0.0}
++    assert stabilize_non_pitch_rotation(normal,prior,'x')['y']==20.0
++    assert stabilize_non_pitch_rotation(normal,prior,'y')['x']==35.0
++
++def test_skin_theme_display_names_uniquely_roundtrip_to_style_ids():
++    from core.kill_icons import STYLES, REVERSE_STYLES
++    assert len(set(STYLES.values())) == len(STYLES)
++    for key, label in STYLES.items():
++        assert REVERSE_STYLES[label] == key
+diff --git a/tests/test_v5105_killfeed_glow_side_help.py b/tests/test_v5105_killfeed_glow_side_help.py
+index fefa537..af472e2 100644
+--- a/tests/test_v5105_killfeed_glow_side_help.py
++++ b/tests/test_v5105_killfeed_glow_side_help.py
+@@ -45,7 +45,7 @@ def test_template_camera_side_append_compatibility():
+     assert data['camera_side']=='red'
+     old=Template()
+     assert old.camera_side=='auto'
+-    assert [f.name for f in fields(Template)][-3:] == ['camera_side', 'kill_sparkle_intensity', 'kill_stack_gap']
++    assert [f.name for f in fields(Template)][-4:] == ['camera_side', 'kill_sparkle_intensity', 'kill_stack_gap', 'kill_icon_motion']
+ 
+ 
+ def test_actual_glow_works_and_portraits_are_unchanged(tmp_path):
+diff --git a/ui/check_indicator.py b/ui/check_indicator.py
+index 3384300..2dca1b1 100644
+--- a/ui/check_indicator.py
++++ b/ui/check_indicator.py
+@@ -1,32 +1,38 @@
+ # -*- coding: utf-8 -*-
+-"""High contrast blue ✓ indicator for multi-selection checkboxes.
+-
+-Radio buttons retain their native single-choice indicators.
+-"""
++"""Antialiased high-DPI blue ✓ checkbox images for the white UI."""
+ from tkinter import ttk
+ from PIL import Image, ImageDraw, ImageTk
+ 
+ 
+ def install(root, style):
+     try:
+-        def pic(selected=False, disabled=False):
+-            im=Image.new('RGBA',(21,21),(0,0,0,0))
+-            d=ImageDraw.Draw(im)
+-            d.rounded_rectangle((1,1,19,19),radius=4,outline=(115,129,150,255),width=2,
+-                                fill=(45,110,218,255) if selected else (255,255,255,255))
+-            if selected:
+-                d.line([(5,10),(9,14),(16,6)],fill=(255,255,255,255),width=3,joint='curve')
++        size, oversample = 26, 4
++        def icon(checked=False, disabled=False):
++            S=oversample
++            im=Image.new("RGBA",(size*S,size*S),(0,0,0,0))
++            pen=ImageDraw.Draw(im)
++            fill=(38,110,215,255) if checked else (255,255,255,255)
++            border=(34,91,184,255) if checked else (124,139,163,255)
++            pen.rounded_rectangle((3*S,3*S,23*S,23*S),radius=5*S,
++                                  fill=fill,outline=border,width=2*S)
++            if checked:
++                pen.line([(7*S,13*S),(11*S,17*S),(19*S,8*S)],
++                         fill=(255,255,255,255),width=3*S,joint="curve")
++            im=im.resize((size,size),Image.Resampling.LANCZOS)
+             if disabled:
+-                im.putalpha(im.getchannel('A').point(lambda a:int(a*.42)))
++                im.putalpha(im.getchannel("A").point(lambda alpha:int(alpha*0.4)))
+             return ImageTk.PhotoImage(im,master=root)
+-        unchecked=pic();checked=pic(True);disabled=pic(False,True)
+-        root._autocine_check_images=(unchecked,checked,disabled)
+-        style.element_create('AutoCine.Check', 'image', unchecked,
+-                             ('selected',checked),('disabled',disabled),sticky='w')
+-        style.layout('TCheckbutton', [('Checkbutton.padding', {'sticky':'nswe','children':[
+-            ('AutoCine.Check', {'side':'left','sticky':'w'}),
+-            ('Checkbutton.label', {'side':'left','sticky':'w'})]})])
+-        style.configure('TCheckbutton',padding=(2,3))
++        unchecked,checked,disabled_unchecked,disabled_checked=(
++            icon(),icon(True),icon(False,True),icon(True,True))
++        root._autocine_check_images=(unchecked,checked,disabled_unchecked,disabled_checked)
++        style.element_create("AutoCine.Check","image",unchecked,
++                             ("disabled","selected",disabled_checked),
++                             ("disabled",disabled_unchecked),
++                             ("selected",checked),sticky="w")
++        style.layout("TCheckbutton",[("Checkbutton.padding",{"sticky":"nswe","children":[
++            ("AutoCine.Check",{"side":"left","sticky":"w"}),
++            ("Checkbutton.label",{"side":"left","sticky":"w"})]})])
++        style.configure("TCheckbutton",padding=(2,3))
+         return True
+     except Exception:
+         return False

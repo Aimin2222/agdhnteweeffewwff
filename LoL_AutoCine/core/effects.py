@@ -200,8 +200,11 @@ class Template:
     camera_side: str = "auto"  # v5.10.5: auto / blue / red (append: old positional templates safe)
     kill_sparkle_intensity: float = 1.0  # v5.10.8: corner rays/star flares
     kill_stack_gap: int = 4  # v5.10.8: additional pixels between simultaneous kills
+    kill_icon_motion: str = "instant"  # badge entrance, legacy behavior by default
 
     def __post_init__(self) -> None:
+        from .kill_icons import normalize_motion
+        self.kill_icon_motion = normalize_motion(self.kill_icon_motion)
         # v5.10.3: preserve older project JSON but retire the accidentally-added
         # circular pixelation effect. Never expose or export it again.
         if isinstance(self.video_effects, dict):
@@ -772,7 +775,7 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
         return with_badges(g, badge_idx, badge_entries, duration=duration,
                            position=t.kill_icon_position, scale=t.kill_icon_scale,
                            seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
-                           style=badge_style, stack_gap=getattr(t, "kill_stack_gap", 4))
+                           style=badge_style, motion=getattr(t, 'kill_icon_motion', 'instant'), stack_gap=getattr(t, "kill_stack_gap", 4))
     def add_pair_inputs(command, loop=True):
         for badge_path, _ in badge_entries:
             if loop:
@@ -896,6 +899,7 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
         "kill_icon_style": badge_style,
         "kill_icon_pairs_resolved": len(badge_entries),
         "kill_icon_position": getattr(t, "kill_icon_position", "right-top"),
+        "kill_icon_motion": getattr(t, "kill_icon_motion", "instant"),
         "kill_icon_scale": getattr(t, "kill_icon_scale", 1.0),
         "kill_icon_duration": getattr(t, "kill_icon_duration", 1.55),
         "kill_icon_opacity": getattr(t, "kill_icon_opacity", 1.0),

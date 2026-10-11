@@ -1,34 +1,44 @@
-# v5.10.15 ScanFix 保存報告
+# v5.10.16-test 保存状況
 
-ソース /workspace/LoL_AutoCine、integration/v5.10.15-scanfix、HEAD e62be60d41fefd41dfc01568211c75bb3fd86ff6、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51015-scan-dof-camera-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時と保存後のstatus --shortは空。mainへマージしない。
+ソース /workspace/LoL_AutoCine、integration/v5.10.16、HEAD beb18e06463bdc02bf43993a3bd60f95c4173121、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51016-motion-cameraqa-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時ソース/取得用status --shortは空。mainへマージしない。未保存の変更はなし（最終verification参照）。
 
 ## git log -3 --oneline（ソース）
 ```text
-e62be60 Merge preview fixture update for explicit calibration reset
-b9224e6 Supply locked player to existing keyframe preview calibration regression fixture
-75bcd20 Document reviewed ScanFix ownership shared camera API and reproducible Windows delivery
+beb18e0 Document v5.10.16 integration ownership Windows tests and reproducible delivery
+1ef8bff Merge GPU motion and camera QA regression coverage
+e1d4ce7 Verify resident badge motion recording reuse cancellation and camera cache lifecycle
 ```
 ## git remote -v（取得用）
 ```text
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
-## 前回Codex v5.10.15からの実変更
+## 前回ScanFixからの実変更
 ```text
+M	VERSION.txt
 M	core/camera.py
+A	core/camera_qa.py
+M	core/effects.py
+M	core/gpu_full.py
 M	core/kill_icons.py
-A	docs/CODEX_INTEGRATION_SCANFIX_v51015_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_SCANFIX_v5.10.15.json
-A	docs/WINDOWS_TEST_SCANFIX_v51015_JA.md
+A	docs/CODEX_INTEGRATION_v51016_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.16.json
+A	docs/WINDOWS_TEST_v51016_JA.md
 M	legacy_app.py
-A	patches/history/v5.10.15_ScanFix/RECEIVED_NOTES_JA.md
-A	patches/history/v5.10.15_ScanFix/v51015_scanfix_reviewed_code.patch
+A	patches/history/v5.10.16/RECEIVED_CODE.patch
+A	patches/history/v5.10.16/RECEIVED_README_JA.txt
+M	tests/test_gpu_champion_pair_v599.py
+M	tests/test_gpu_highlight_v598.py
+M	tests/test_gpu_killbadges_v599.py
+M	tests/test_gpu_montage_v597.py
+A	tests/test_gpu_motion_camera_qa.py
+M	tests/test_gpu_shared_camera_contract.py
 M	tests/test_v51012_allscan_quality_camera.py
-A	tests/test_v51015_scanfix_workflow.py
 M	tests/test_v51015_ui_restructure.py
-M	tests/test_v594_live_preview.py
+A	tests/test_v51016_motion_dof_and_camera_qa.py
+M	tests/test_v5105_killfeed_glow_side_help.py
 M	tools/check_parallel_integration.py
-A	tools/package_v51015_scanfix.py
+A	tools/package_v51016.py
 M	ui/check_indicator.py
 ```
 ## 元v5.8.5からの実変更
@@ -101,6 +111,7 @@ A	assets/kill_badges/user_frame_16.png
 A	core/auto_qa.py
 M	core/camera.py
 A	core/camera_clock.py
+A	core/camera_qa.py
 M	core/capture.py
 A	core/capture_process.py
 A	core/capture_worker.py
@@ -120,8 +131,8 @@ M	core/recorder.py
 M	core/replay_api.py
 M	core/scanner.py
 A	docs/APP_PACKAGING_PLAN_JA.md
-A	docs/AutoCine_v5.10.14_実装仕様書.md
-A	docs/AutoCine_v5.10.15_実装仕様書.md
+A	"docs/AutoCine_v5.10.14_\345\256\237\350\243\205\344\273\225\346\247\230\346\233\270.md"
+A	"docs/AutoCine_v5.10.15_\345\256\237\350\243\205\344\273\225\346\247\230\346\233\270.md"
 A	docs/CHANGELOG_v5.8.6_JA.md
 A	docs/CHANGELOG_v5.9.4_JA.md
 A	docs/CHANGELOG_v5.9.5_JA.md
@@ -157,6 +168,7 @@ A	docs/CODEX_INTEGRATION_v51012_JA.md
 A	docs/CODEX_INTEGRATION_v51013_JA.md
 A	docs/CODEX_INTEGRATION_v51014_JA.md
 A	docs/CODEX_INTEGRATION_v51015_JA.md
+A	docs/CODEX_INTEGRATION_v51016_JA.md
 A	docs/CODEX_INTEGRATION_v5104_JA.md
 A	docs/CODEX_INTEGRATION_v5105_JA.md
 A	docs/CODEX_INTEGRATION_v5106_JA.md
@@ -189,6 +201,7 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.10.12.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.13.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.14.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.15.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.16.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.4.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.5.json
@@ -219,6 +232,7 @@ A	docs/WINDOWS_TEST_v51010_JA.md
 A	docs/WINDOWS_TEST_v51013_JA.md
 A	docs/WINDOWS_TEST_v51014_JA.md
 A	docs/WINDOWS_TEST_v51015_JA.md
+A	docs/WINDOWS_TEST_v51016_JA.md
 A	docs/WINDOWS_TEST_v5105_JA.md
 A	docs/WINDOWS_TEST_v5106_JA.md
 A	docs/WINDOWS_TEST_v5107_JA.md
@@ -275,6 +289,8 @@ A	patches/history/v5.10.15_PortraitCrashFix/CHANGES_v5.10.15_PortraitCrashFix.pa
 A	patches/history/v5.10.15_PortraitCrashFix/MERGE_INSTRUCTIONS_JA.md
 A	patches/history/v5.10.15_ScanFix/RECEIVED_NOTES_JA.md
 A	patches/history/v5.10.15_ScanFix/v51015_scanfix_reviewed_code.patch
+A	patches/history/v5.10.16/RECEIVED_CODE.patch
+A	patches/history/v5.10.16/RECEIVED_README_JA.txt
 A	patches/history/v5.10.8_from_codex_v5.10.7.patch
 A	patches/history/v51011_from_v51010.patch
 A	patches/history/v51013_reviewed_code.patch
@@ -295,6 +311,7 @@ A	tests/test_gpu_killbadges_v599.py
 A	tests/test_gpu_material_v51010.py
 A	tests/test_gpu_montage_v51014.py
 A	tests/test_gpu_montage_v597.py
+A	tests/test_gpu_motion_camera_qa.py
 A	tests/test_gpu_opencl_bloom.py
 A	tests/test_gpu_replay_warmup_v5101.py
 A	tests/test_gpu_restore_mirror_v5106.py
@@ -322,6 +339,7 @@ A	tests/test_v51015_async_ui.py
 A	tests/test_v51015_portrait_player_compat.py
 A	tests/test_v51015_scanfix_workflow.py
 A	tests/test_v51015_ui_restructure.py
+A	tests/test_v51016_motion_dof_and_camera_qa.py
 A	tests/test_v5101_scroll_check_warmup.py
 A	tests/test_v5102_circle_focus_preset.py
 A	tests/test_v5103_nonblocking_dispatch.py
@@ -350,6 +368,7 @@ A	tools/package_v51014.py
 A	tools/package_v51015.py
 A	tools/package_v51015_portraitfix.py
 A	tools/package_v51015_scanfix.py
+A	tools/package_v51016.py
 A	tools/package_v5103.py
 A	tools/package_v5103_capture60.py
 A	tools/package_v5103_capturefix.py
@@ -382,6 +401,4 @@ A	ui/studio_localization.py
 A	ui/template_gallery.py
 ```
 
-全431ソース/Python149・全87ブランチをbundleへ保存。旧83ブランチ先端、既存416ファイルと37PNGは不変。旧配布物139件をバイト保持。未保存の変更はなし。個人設定/録画/診断は追加・削除しない。
-
-GitHubから固定payloadを取得して431ソース/87refs/ZIPとbundleのハッシュ一致を確認。復元先代表120テスト成功、セットアップ再実行で431ソース/87refs/設定相当3ファイル保持、status clean。install_script/start_skillを保存して読戻し一致を確認、他の環境設定は保持。Publish未実施。これは同じクラウド実行環境の別フォルダ検証で、Windows/NVIDIA実機の検証ではない。
+全440ソース/Python153・全91ブランチをbundleへ保存。旧87先端・37PNG・GPU/音声/録画の保護20パス保持。旧配布物148件を保持。個人設定/録画/診断は追加・削除しない。

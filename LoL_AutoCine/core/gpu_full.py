@@ -163,7 +163,7 @@ class GPUFullStage:
     def _build(self, t, duration, events, ffmpeg, title_index, badge_index, badges, lut_index, size):
         from PIL import Image
         from .effects import color_filters, FOG_RGB
-        from .kill_icons import badge_plan, normalize_options, normalize, ASSET_STYLES
+        from .kill_icons import badge_plan, normalize_options, normalize, ASSET_STYLES, badge_motion_xy, normalize_motion
         active = {k: max(0.,min(1.,float(v))) for k,v in t.video_effects.items() if float(v)>.001}
         unknown = set(active)-set(EFFECT_ORDER)
         if unknown:
@@ -341,16 +341,20 @@ class GPUFullStage:
             stages.append(f'[{badge_index+entry["index"]}:v]settb=1/{int(t.fps)},setpts=0,format=rgba,hwupload[{label}]')
             # GPU scales and applies opacity; PNG rasterization happens once.
             x='size.x-ow-32' if position.startswith('right') else '32.0f'
-            if normalize(t.kill_icon_style)=='impact':
-                x+=f'+7*sin(35*(time-{number(entry["time"])}))*exp(-11*fabs(time-{number(entry["time"])}))'
             # Same scaled badge height + unscaled editor gap as CPU compositing.
             from .kill_icons import normalize_stack_gap
             row=int(round(116*scale + normalize_stack_gap(getattr(t, 'kill_stack_gap', 4))))*entry['row']
             y=f'62.0f+{row}' if position.endswith('top') else f'size.y-oh-62-{row}'
+            x,y=badge_motion_xy(position,getattr(t,'kill_icon_motion','instant'),entry['start'],x,y,backend='opencl')
+            if normalize(t.kill_icon_style)=='impact':
+                x+=f'+7*sin(35*(time-{number(entry["time"])}))*exp(-11*fabs(time-{number(entry["time"])}))'
             alpha=f'{number(opacity)}*(time>={number(entry["start"])} && time<={number(entry["end"])})'
             material_scale = scale * (0.5 if normalize(t.kill_icon_style) in ASSET_STYLES else 1.0)
             self._overlay(step,f'badge_{n}',label,x,y,alpha,material_scale)
-        if plan: self.effects.add('kill_icons')
+        if plan:
+            self.effects.add('kill_icons')
+            if normalize_motion(getattr(t,'kill_icon_motion','instant'))!='instant':
+                self.effects.add('kill_icon_motion')
         # program_opencl does not advertise its input frame rate. Re-establish
         # timestamps and rate with metadata filters to prevent default 25fps
         # output, duplicate EOF frames, or endless PNG-driven framesync.

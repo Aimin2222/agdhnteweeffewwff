@@ -19,15 +19,15 @@ def install(root, style):
             canvas=size*scale
             im=Image.new('RGBA',(canvas,canvas),(0,0,0,0))
             d=ImageDraw.Draw(im)
-            border=(149,163,184,255)
+            border=(124,139,163,255)
             fill=(255,255,255,255)
             if selected:
-                fill=(46,111,219,255) if not pressed else (38,95,195,255)
-                border=(46,111,219,255)
+                fill=(38,110,215,255) if not pressed else (38,95,195,255)
+                border=(38,110,215,255)
             elif pressed:
                 fill=(244,247,251,255)
                 border=(119,133,155,255)
-            _rounded(d,(3*scale,3*scale,(size-3)*scale,(size-3)*scale),6*scale,
+            _rounded(d,(3*scale,3*scale,(size-3)*scale,(size-3)*scale),5*scale,
                      fill=fill,outline=border,width=2*scale)
             if selected:
                 pts=[(6.5,13.2),(11.0,17.3),(19.0,8.2)]
