@@ -1,12 +1,12 @@
 # v5.10.15 PortraitCrashFix 保存報告
 
-ソース /workspace/LoL_AutoCine、integration/v5.10.15-portraitfix、HEAD 068c26b34125b940571cc481619f372531f2224b、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51015-portrait-crashfix-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時と保存後のstatus --shortは空。mainへマージしない。
+ソース /workspace/LoL_AutoCine、integration/v5.10.15-scanfix、HEAD e62be60d41fefd41dfc01568211c75bb3fd86ff6、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51015-scan-dof-camera-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時と保存後のstatus --shortは空。mainへマージしない。
 
 ## git log -3 --oneline（ソース）
 ```text
-068c26b Document narrow portrait compatibility integration and preserve independent branch ownership
-f49fff5 Merge narrow Player and dictionary portrait API compatibility fix
-8a6198d Preserve received v5.10.15 Player portrait compatibility fix on raw UI base
+e62be60 Merge preview fixture update for explicit calibration reset
+b9224e6 Supply locked player to existing keyframe preview calibration regression fixture
+75bcd20 Document reviewed ScanFix ownership shared camera API and reproducible Windows delivery
 ```
 ## git remote -v（取得用）
 ```text
@@ -15,15 +15,21 @@ origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 ## 前回Codex v5.10.15からの実変更
 ```text
+M	core/camera.py
 M	core/kill_icons.py
-A	docs/CODEX_INTEGRATION_PORTRAITFIX_v51015_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_PORTRAITFIX_v5.10.15.json
-A	docs/WINDOWS_TEST_PORTRAITFIX_v51015_JA.md
-A	patches/history/v5.10.15_PortraitCrashFix/CHANGES_v5.10.15_PortraitCrashFix.patch
-A	patches/history/v5.10.15_PortraitCrashFix/MERGE_INSTRUCTIONS_JA.md
-A	tests/test_v51015_portrait_player_compat.py
+A	docs/CODEX_INTEGRATION_SCANFIX_v51015_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_SCANFIX_v5.10.15.json
+A	docs/WINDOWS_TEST_SCANFIX_v51015_JA.md
+M	legacy_app.py
+A	patches/history/v5.10.15_ScanFix/RECEIVED_NOTES_JA.md
+A	patches/history/v5.10.15_ScanFix/v51015_scanfix_reviewed_code.patch
+M	tests/test_v51012_allscan_quality_camera.py
+A	tests/test_v51015_scanfix_workflow.py
+M	tests/test_v51015_ui_restructure.py
+M	tests/test_v594_live_preview.py
 M	tools/check_parallel_integration.py
-A	tools/package_v51015_portraitfix.py
+A	tools/package_v51015_scanfix.py
+M	ui/check_indicator.py
 ```
 ## 元v5.8.5からの実変更
 ```text
@@ -145,6 +151,7 @@ A	docs/CODEX_INTEGRATION_RESULTS_v5.9.6_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.7_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.8_JA.md
 A	docs/CODEX_INTEGRATION_RESULTS_v5.9.9_JA.md
+A	docs/CODEX_INTEGRATION_SCANFIX_v51015_JA.md
 A	docs/CODEX_INTEGRATION_v51010_JA.md
 A	docs/CODEX_INTEGRATION_v51012_JA.md
 A	docs/CODEX_INTEGRATION_v51013_JA.md
@@ -173,6 +180,7 @@ A	docs/CODEX_SHARED_API_REVIEW_CAPTURE_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_EXPORT_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_MIRROR_v5.10.3.json
 A	docs/CODEX_SHARED_API_REVIEW_PORTRAITFIX_v5.10.15.json
+A	docs/CODEX_SHARED_API_REVIEW_SCANFIX_v5.10.15.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.0_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1.json
@@ -206,6 +214,7 @@ A	docs/REQUIREMENTS_SCENESTUDIO_JA.md
 A	docs/SPEC_v5.10.14_JA.md
 A	docs/TEST_PLAN_v5.9.0_JA.md
 A	docs/WINDOWS_TEST_PORTRAITFIX_v51015_JA.md
+A	docs/WINDOWS_TEST_SCANFIX_v51015_JA.md
 A	docs/WINDOWS_TEST_v51010_JA.md
 A	docs/WINDOWS_TEST_v51013_JA.md
 A	docs/WINDOWS_TEST_v51014_JA.md
@@ -264,6 +273,8 @@ A	patches/history/v5.10.14/v5.10.14_from_codex_v51013.patch
 A	patches/history/v5.10.15/v5.10.15_from_v5.10.14.patch
 A	patches/history/v5.10.15_PortraitCrashFix/CHANGES_v5.10.15_PortraitCrashFix.patch
 A	patches/history/v5.10.15_PortraitCrashFix/MERGE_INSTRUCTIONS_JA.md
+A	patches/history/v5.10.15_ScanFix/RECEIVED_NOTES_JA.md
+A	patches/history/v5.10.15_ScanFix/v51015_scanfix_reviewed_code.patch
 A	patches/history/v5.10.8_from_codex_v5.10.7.patch
 A	patches/history/v51011_from_v51010.patch
 A	patches/history/v51013_reviewed_code.patch
@@ -309,6 +320,7 @@ A	tests/test_v51014_responsiveness.py
 A	tests/test_v51014_studio_nle.py
 A	tests/test_v51015_async_ui.py
 A	tests/test_v51015_portrait_player_compat.py
+A	tests/test_v51015_scanfix_workflow.py
 A	tests/test_v51015_ui_restructure.py
 A	tests/test_v5101_scroll_check_warmup.py
 A	tests/test_v5102_circle_focus_preset.py
@@ -337,6 +349,7 @@ A	tools/package_v51013.py
 A	tools/package_v51014.py
 A	tools/package_v51015.py
 A	tools/package_v51015_portraitfix.py
+A	tools/package_v51015_scanfix.py
 A	tools/package_v5103.py
 A	tools/package_v5103_capture60.py
 A	tools/package_v5103_capturefix.py
@@ -369,6 +382,4 @@ A	ui/studio_localization.py
 A	ui/template_gallery.py
 ```
 
-全424ソース/Python147・全83ブランチをbundleへ保存。旧80ブランチ先端、既存415ファイルと37PNGは不変。旧配布物131件をバイト保持。未保存の変更はなし。個人設定/録画/診断は追加・削除しない。
-
-GitHubから固定payloadを取得して424ソース/83refs/ZIPとbundleのハッシュ一致を確認。復元先代表92テスト成功、セットアップ再実行で424ソース/83refs/設定相当3ファイル保持、status clean。install_script/start_skillを保存して読戻し一致を確認、他の環境設定は保持。Publish未実施。これは同じクラウド実行環境の別フォルダ検証で、Windows/NVIDIA実機の検証ではない。
+全431ソース/Python149・全87ブランチをbundleへ保存。旧83ブランチ先端、既存416ファイルと37PNGは不変。旧配布物139件をバイト保持。未保存の変更はなし。個人設定/録画/診断は追加・削除しない。

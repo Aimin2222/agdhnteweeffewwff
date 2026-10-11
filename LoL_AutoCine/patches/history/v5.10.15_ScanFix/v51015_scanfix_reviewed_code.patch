@@ -1,0 +1,611 @@
+diff --git a/core/camera.py b/core/camera.py
+index 4ff2007..e57f158 100644
+--- a/core/camera.py
++++ b/core/camera.py
+@@ -125,6 +125,22 @@ TRY_TPS = __import__("os").environ.get("AUTOCINE_TRY_TPS", "0") == "1"
+ _TPS_CALIBRATION = {}
+ 
+ 
++def clear_tps_calibration(selection_name: str | None = None) -> None:
++    """Forget cached 3rd-person rig data.
++
++    Re-selecting the same camera preset repeatedly can leave Replay API in a
++    stale pitch-sign state on some replays. Allow the UI to explicitly reset
++    cached rig calibration without touching the rest of the camera pipeline.
++    """
++    if selection_name is None:
++        _TPS_CALIBRATION.clear()
++        return
++    target = str(selection_name or '')
++    doomed = [key for key in list(_TPS_CALIBRATION) if key and str(key[0]) == target]
++    for key in doomed:
++        _TPS_CALIBRATION.pop(key, None)
++
++
+ def smoothstep(x: float) -> float:
+     x = min(1.0, max(0.0, x))
+     return x * x * (3 - 2 * x)
+diff --git a/core/kill_icons.py b/core/kill_icons.py
+index 6f2f5f1..3ef25b6 100644
+--- a/core/kill_icons.py
++++ b/core/kill_icons.py
+@@ -13,49 +13,91 @@ from pathlib import Path
+ STYLES = {
+     "off": "なし（従来どおり）",
+     "simple": "シンプル",
+-    "cinema": "シネマ・ゴールド",
+-    "neon": "ネオン・ブルー",
+-    "impact": "インパクト・レッド",
+-    "premium_gold": "黄金王冠・プレミアム（高発光）",
+-    "obsidian_gold": "黒曜石×ゴールド",
+-    "neon_crystal": "ネオン・クリスタル",
+-    "star_guardian": "星と翼の幻想",
+-    "inferno_gothic": "炎熱ゴシック",
++    "cinema": "ゴールド",
++    "neon": "ネオン",
++    "impact": "インパクト",
++    "premium_gold": "プレミアムゴールド",
++    "obsidian_gold": "オブシディアンゴールド",
++    "neon_crystal": "ネオンクリスタル",
++    "star_guardian": "スターウィング",
++    "inferno_gothic": "インフェルノ",
+     "cyberpunk": "サイバーパンク",
+-    "royal_deluxe": "ロイヤル・デラックス（金）",
+-    "gold_wing": "黄金の翼章",
+-    "neon_show": "ネオン・ステージ",
+-    "kda_style": "K/DA風・ステージピンク",
+-    "project_style": "PROJECT風・サイバー装甲",
+-    "star_magic": "スターガーディアン風・光翼",
+-    "spirit_blossom": "精霊の花祭り風・桜",
+-    "high_noon": "ハイヌーン風・烈火",
+-    "obsidian_violet": "黒曜石・紫晶",
+-    "emerald_relic": "エメラルド・レリック",
+-    "crimson_mythic": "クリムゾン・ミシック",
+-    "celestial_blue": "蒼天クリスタル",
+-    "neon_duel": "ネオン決闘",
+-    "purple_crystal": "紫の宝石フレーム",
+-    "classic_obsidian": "黒曜石・黄金（別装飾）",
+-    "user_frame_01": "黄金の鳳凰（豪華な光翼）",
+-    "user_frame_02": "黄金の双翼（シンプル）",
+-    "user_frame_03": "黄金の剣翼（シャープ）",
+-    "user_frame_04": "黒金の鳳凰（高級感）",
+-    "user_frame_05": "PROJECT風・蒼紫ネオン",
+-    "user_frame_06": "電脳ネオン・光翼",
+-    "user_frame_07": "紅蓮メタル（炎の王冠）",
+-    "user_frame_08": "K/DA風・ローズクリスタル",
+-    "user_frame_09": "PROJECT風・紅蓮メカ",
+-    "user_frame_10": "蒼天・氷結の光翼",
+-    "user_frame_11": "スターガーディアン風・光翼",
+-    "user_frame_12": "エメラルド・翠緑の紋章",
+-    "user_frame_13": "精霊の花祭り風・桜翼",
+-    "user_frame_14": "ネオンアイドル・シアン紫",
+-    "user_frame_15": "ハイヌーン風・金炎",
+-    "user_frame_16": "黒曜石・紫金の翼",
++    "royal_deluxe": "ロイヤルゴールド",
++    "gold_wing": "ゴールドウィング",
++    "neon_show": "ネオンショー",
++    "kda_style": "ステージピンク",
++    "project_style": "サイバーアーマー",
++    "star_magic": "ライトウィング",
++    "spirit_blossom": "桜",
++    "high_noon": "ハイヌーン",
++    "obsidian_violet": "オブシディアンバイオレット",
++    "emerald_relic": "エメラルド",
++    "crimson_mythic": "クリムゾン",
++    "celestial_blue": "セレスティアルブルー",
++    "neon_duel": "ネオンデュエル",
++    "purple_crystal": "パープルクリスタル",
++    "classic_obsidian": "クラシックオブシディアン",
++    "user_frame_01": "ゴールドフェザー",
++    "user_frame_02": "ダブルウィング",
++    "user_frame_03": "ブレードウィング",
++    "user_frame_04": "ノワールフェザー",
++    "user_frame_05": "サイバーパープル",
++    "user_frame_06": "ネオンフェザー",
++    "user_frame_07": "フレイムクラウン",
++    "user_frame_08": "ローズクリスタル",
++    "user_frame_09": "クリムゾンサイバー",
++    "user_frame_10": "フロストウィング",
++    "user_frame_11": "スターライト",
++    "user_frame_12": "エメラルドクレスト",
++    "user_frame_13": "桜ウィング",
++    "user_frame_14": "ネオンアイドル",
++    "user_frame_15": "サンファイア",
++    "user_frame_16": "アメジストウィング",
+ }
+ 
++
+ REVERSE_STYLES = {label: code for code, label in STYLES.items()}
++REVERSE_STYLES.update({
++    "シネマ・ゴールド": "cinema",
++    "ネオン・ブルー": "neon",
++    "インパクト・レッド": "impact",
++    "黄金王冠・プレミアム（高発光）": "premium_gold",
++    "黒曜石×ゴールド": "obsidian_gold",
++    "ネオン・クリスタル": "neon_crystal",
++    "星と翼の幻想": "star_guardian",
++    "炎熱ゴシック": "inferno_gothic",
++    "ロイヤル・デラックス（金）": "royal_deluxe",
++    "黄金の翼章": "gold_wing",
++    "ネオン・ステージ": "neon_show",
++    "K/DA風・ステージピンク": "kda_style",
++    "PROJECT風・サイバー装甲": "project_style",
++    "スターガーディアン風・光翼": "star_magic",
++    "精霊の花祭り風・桜": "spirit_blossom",
++    "ハイヌーン風・烈火": "high_noon",
++    "黒曜石・紫晶": "obsidian_violet",
++    "エメラルド・レリック": "emerald_relic",
++    "クリムゾン・ミシック": "crimson_mythic",
++    "蒼天クリスタル": "celestial_blue",
++    "ネオン決闘": "neon_duel",
++    "紫の宝石フレーム": "purple_crystal",
++    "黒曜石・黄金（別装飾）": "classic_obsidian",
++    "黄金の鳳凰（豪華な光翼）": "user_frame_01",
++    "黄金の双翼（シンプル）": "user_frame_02",
++    "黄金の剣翼（シャープ）": "user_frame_03",
++    "黒金の鳳凰（高級感）": "user_frame_04",
++    "PROJECT風・蒼紫ネオン": "user_frame_05",
++    "電脳ネオン・光翼": "user_frame_06",
++    "紅蓮メタル（炎の王冠）": "user_frame_07",
++    "K/DA風・ローズクリスタル": "user_frame_08",
++    "PROJECT風・紅蓮メカ": "user_frame_09",
++    "蒼天・氷結の光翼": "user_frame_10",
++    "スターガーディアン風・光翼": "user_frame_11",
++    "エメラルド・翠緑の紋章": "user_frame_12",
++    "精霊の花祭り風・桜翼": "user_frame_13",
++    "ネオンアイドル・シアン紫": "user_frame_14",
++    "ハイヌーン風・金炎": "user_frame_15",
++    "黒曜石・紫金の翼": "user_frame_16",
++})
+ POSITIONS = {
+     "right-top": "右上（おすすめ）",
+     "right-bottom": "右下",
+diff --git a/legacy_app.py b/legacy_app.py
+index 18676ae..35d9cfe 100644
+--- a/legacy_app.py
++++ b/legacy_app.py
+@@ -11,7 +11,7 @@ import traceback
+ import faulthandler
+ import hashlib
+ import tkinter as tk
+-from dataclasses import fields
++from dataclasses import fields, replace
+ from pathlib import Path
+ from tkinter import filedialog, messagebox, simpledialog, colorchooser, ttk
+ 
+@@ -26,18 +26,18 @@ from core.kill_icons import STYLES as KILL_ICON_STYLES, REVERSE_STYLES as KILL_I
+ from core.kill_icons import POSITIONS as KILL_ICON_POSITIONS, REVERSE_POSITIONS as KILL_ICON_REVERSE_POSITIONS
+ from core.kill_icons import REVERSE_MARK_STYLES as KILL_MARK_REVERSE
+ from core.montage_fx import MONTAGE_LABELS, MONTAGE_REVERSE
+-from core.camera import INTENSITY_JP, STYLES, CAMERA_SIDE_CHOICES        # noqa: E402
++from core.camera import INTENSITY_JP, STYLES, CAMERA_SIDE_CHOICES, clear_tps_calibration        # noqa: E402
+ from core.capture import CaptureError, SyntheticSource, WGCWindowSource   # noqa: E402
+ from core.effects import (FOG_PRESETS, GRADE_JP, TRANSITIONS, Template, one_click_templates, gpu_encoder_available, gpu_pipeline_status,
+                             VIDEO_EFFECT_CATEGORIES, VIDEO_EFFECT_DEFAULTS, VIDEO_EFFECT_LABELS)   # noqa: E402
+ from core.reference_safe import make_remixes, save_template as save_reference_template, load_template as load_reference_template, template_from_references  # noqa: E402
+ from core.audio import PreferredGameAudio, SyntheticAudio               # noqa: E402
+-from core.jobs import preview_clip, run_auto_edit                  # noqa: E402
++from core.jobs import preview_clip, run_auto_edit, safe_name                  # noqa: E402
+ from core.preview import apply_camera_preview, apply_video_effect_preview, compose_compare, preview_title, render_exact_still   # noqa: E402
+ from core.launcher import watch_replay                             # noqa: E402
+ from core.players import Player, parse_players                     # noqa: E402
+ from core.replay_api import ReplayAPI                              # noqa: E402
+-from core.scanner import scan_kills                                # noqa: E402
++from core.scanner import scan_kills, filter_scanned_events                                # noqa: E402
+ from ui.scene_timeline import SceneTimeline                     # noqa: E402
+ from ui.live_preview import LatestPreview
+ from ui.redraw import request_redraw
+@@ -787,7 +787,7 @@ class App:
+         ttk.Button(f, text="最近のリプレイを再生", command=self.on_play_recent).pack(fill="x", pady=2)
+         ttk.Label(f, text="APIキー不要。game.cfgを自動設定します。", style="CardMuted.TLabel", wraplength=270).pack(fill="x", pady=(4, 0))
+ 
+-        ttk.Button(f, text="③ 接続して10人を取得", command=self.on_connect).pack(fill="x", pady=(3,5))
++        ttk.Label(f, text="10人のプレイヤー取得は右側の『スキャン』にまとめました。ここは取得後の確認・固定だけに使います。", style="CardMuted.TLabel", wraplength=270).pack(fill="x", pady=(4, 0))
+         f = fold_section(left, "プレイヤー一覧（確認・手動指定はここ）")
+         self.tree = ttk.Treeview(f, columns=("team", "champ", "name"), show="headings", height=8, selectmode="browse")
+         for c, t, w in (("team", "チーム", 55), ("champ", "チャンピオン", 95), ("name", "プレイヤー", 125)):
+@@ -1547,9 +1547,9 @@ class App:
+         # Keep scene selection and render progress at the top of the inspector, even
+         # when the user switches to camera/color/output editing zones.
+         f = card(right, "◉  検出シーン")
+-        ttk.Button(f, text="① 試合全体を一括スキャン（最初に1回）", command=self.on_scan).pack(fill="x", pady=(0,6))
++        ttk.Button(f, text="① スキャン（接続→10人取得→試合全体）", style="Accent.TButton", command=self.on_scan).pack(fill="x", pady=(0,6))
+         self.pb_scan = ttk.Progressbar(f, maximum=100); self.pb_scan.pack(fill="x", pady=2)
+-        self.lbl_scan = ttk.Label(f, text="未スキャン｜左の『接続して10人を取得』から開始", style="CardMuted.TLabel", wraplength=300)
++        self.lbl_scan = ttk.Label(f, text="未スキャン｜①を押すと接続→10人取得→試合全体スキャンをまとめて実行します", style="CardMuted.TLabel", wraplength=300)
+         self.lbl_scan.pack(fill="x", pady=(0,5))
+         ttk.Label(f, text="② 表示するイベント", style="Card.TLabel").pack(anchor="w")
+         mode_row=ttk.Frame(f,style="Card.TFrame"); mode_row.pack(fill="x",pady=(2,6))
+@@ -1576,6 +1576,9 @@ class App:
+         ttk.Button(kb2, text="全解除", command=self.on_uncheck_all).pack(side="left", fill="x", expand=True, padx=(3,0))
+         ttk.Button(f, text="▶ 選択シーンを作成", command=self.on_make_selected).pack(fill="x", pady=(5,0), ipady=3)
+         ttk.Button(f, text="✓ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
++        ttk.Separator(f, orient="horizontal").pack(fill="x", pady=(8, 6))
++        ttk.Button(f, text="開発用：カメラ/演出テストを一括作成", command=self.on_dev_test_bundle).pack(fill="x", pady=(0,3))
++        ttk.Label(f, text="試合全体スキャン後、BLUE/REDの代表キルとモンタージュ演出をまとめて書き出す一時機能です。完成版では削除予定。", style="CardMuted.TLabel", wraplength=290).pack(fill="x")
+         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
+ 
+         f = card(right, "☁  出力状況")
+@@ -1619,14 +1622,30 @@ class App:
+         ttk.Label(row, textvariable=self.sl_labels["fog_strength"], width=7, anchor="e", style="CardMuted.TLabel").pack(side="right")
+         ttk.Label(f, text="カーブ補正ポイント", style="CardMuted.TLabel").pack(anchor="w", pady=(5, 2))
+         ttk.Entry(f, textvariable=self.var_curve_points).pack(fill="x")
+-        ttk.Label(f, text="DOF詳細", style="CardMuted.TLabel").pack(anchor="w", pady=(6, 2))
++        ttk.Label(f, text="DOFモード", style="CardMuted.TLabel").pack(anchor="w", pady=(6, 2))
++        ttk.Combobox(f, state="readonly", textvariable=self.var_dof_shape,
++                     values=["円形（おすすめ）", "従来の上下ぼかし"]).pack(fill="x", pady=(0,4))
++        self._quick_dof_hint = ttk.Label(f, text="", style="CardMuted.TLabel", wraplength=520)
++        self._quick_dof_hint.pack(anchor="w", pady=(0, 4))
++        self._quick_dof_diagram = tk.Canvas(f, width=250, height=86, bg="#FFFFFF", highlightthickness=1, highlightbackground="#D0D5DD")
++        self._quick_dof_diagram.pack(anchor="w", pady=(0, 6))
++        self._quick_dof_circle_panel = ttk.Frame(f, style="Card.TFrame")
++        self._quick_dof_legacy_panel = ttk.Frame(f, style="Card.TFrame")
++        for key, label in (("dof_blur", "DOFぼかし"), ("dof_center_x", "中心X"),
++                           ("dof_center_y", "中心Y"), ("dof_radius", "半径"), ("dof_feather", "境界ぼかし")):
++            row = ttk.Frame(self._quick_dof_circle_panel, style="Card.TFrame"); row.pack(fill="x", pady=2)
++            ttk.Label(row, text=label, width=11, style="Card.TLabel").pack(side="left")
++            lo, hi = self._slider_range(key)
++            ttk.Scale(row, from_=lo, to=hi, variable=self.sl[key]).pack(side="left", fill="x", expand=True, padx=4)
++            ttk.Entry(row, textvariable=self.sl[key], width=9, justify="right").pack(side="right")
+         for key, label in (("dof_blur", "DOFぼかし"), ("dof_focus_distance", "フォーカス距離"),
+                            ("dof_near_distance", "近距離"), ("dof_far_distance", "遠距離")):
+-            row = ttk.Frame(f, style="Card.TFrame"); row.pack(fill="x", pady=2)
++            row = ttk.Frame(self._quick_dof_legacy_panel, style="Card.TFrame"); row.pack(fill="x", pady=2)
+             ttk.Label(row, text=label, width=11, style="Card.TLabel").pack(side="left")
+             lo, hi = self._slider_range(key)
+             ttk.Scale(row, from_=lo, to=hi, variable=self.sl[key]).pack(side="left", fill="x", expand=True, padx=4)
+             ttk.Entry(row, textvariable=self.sl[key], width=9, justify="right").pack(side="right")
++        self._update_dof_mode_ui()
+ 
+         f = card(right, "◈  カメラ詳細")
+         ttk.Label(f, text="カメラ距離 / 高さ / Orbit", style="Card.TLabel").pack(anchor="w")
+@@ -2911,6 +2930,8 @@ class App:
+         if hasattr(self, 'var_camera_status'):
+             self.var_camera_status.set(f"再生中：{STYLES.get(tpl.style, tpl.style)} / 対象: "
+                                        f"{self.locked.champion if self.locked else '未固定'} / 実機カメラを判定中")
++        if self.locked is not None:
++            clear_tps_calibration(self.locked.selection_name or self.locked.champion)
+         self._run_bg(self._preview_play, tpl, kill)
+ 
+     def _schedule_project_save(self):
+@@ -3182,15 +3203,50 @@ class App:
+             raise
+ 
+     def _update_dof_mode_ui(self):
+-        """Do not present obsolete near/far controls while circular focus is active."""
++        """Show only the controls that belong to the selected DOF mode."""
+         panel = getattr(self, '_legacy_dof_panel', None)
+-        if panel is None:
+-            return
+-        if self.var_dof_shape.get() == '従来の上下ぼかし':
+-            if not panel.winfo_manager():
+-                panel.pack(fill='x', pady=(2, 6))
+-        elif panel.winfo_manager():
+-            panel.pack_forget()
++        legacy = self.var_dof_shape.get() == '従来の上下ぼかし'
++        if panel is not None:
++            if legacy:
++                if not panel.winfo_manager():
++                    panel.pack(fill='x', pady=(2, 6))
++            elif panel.winfo_manager():
++                panel.pack_forget()
++        circle_panel = getattr(self, '_quick_dof_circle_panel', None)
++        legacy_panel = getattr(self, '_quick_dof_legacy_panel', None)
++        if circle_panel is not None and legacy_panel is not None:
++            if legacy:
++                if circle_panel.winfo_manager():
++                    circle_panel.pack_forget()
++                if not legacy_panel.winfo_manager():
++                    legacy_panel.pack(fill='x', pady=(2, 6))
++            else:
++                if legacy_panel.winfo_manager():
++                    legacy_panel.pack_forget()
++                if not circle_panel.winfo_manager():
++                    circle_panel.pack(fill='x', pady=(2, 6))
++        hint = getattr(self, '_quick_dof_hint', None)
++        if hint is not None:
++            hint.configure(text=(
++                '従来の上下ぼかし：画面中央の横帯をくっきり残し、上側と下側をぼかす互換モードです。'
++                if legacy else
++                '円形（おすすめ）：主役のまわりを◯で残し、その外側だけをぼかします。TargetLockと相性が良い標準モードです。'))
++        canvas = getattr(self, '_quick_dof_diagram', None)
++        if canvas is not None:
++            canvas.delete('all')
++            canvas.create_rectangle(1, 1, 249, 85, outline='#D0D5DD', fill='#FFFFFF')
++            if legacy:
++                canvas.create_rectangle(12, 12, 238, 74, outline='', fill='#EEF2F6')
++                canvas.create_rectangle(12, 31, 238, 55, outline='#7B8794', fill='#FFFFFF')
++                canvas.create_text(125, 20, text='ぼかし', fill='#6B7280', font=('Meiryo UI', 9))
++                canvas.create_text(125, 43, text='くっきり帯', fill='#174EA6', font=('Meiryo UI', 10, 'bold'))
++                canvas.create_text(125, 66, text='ぼかし', fill='#6B7280', font=('Meiryo UI', 9))
++            else:
++                canvas.create_rectangle(12, 12, 238, 74, outline='', fill='#EEF2F6')
++                canvas.create_oval(83, 18, 167, 68, outline='#174EA6', width=2, fill='#FFFFFF')
++                canvas.create_text(125, 43, text='主役', fill='#174EA6', font=('Meiryo UI', 10, 'bold'))
++                canvas.create_text(46, 43, text='ぼかし', fill='#6B7280', font=('Meiryo UI', 9))
++                canvas.create_text(205, 43, text='ぼかし', fill='#6B7280', font=('Meiryo UI', 9))
+ 
+     def _apply_focus_preset(self):
+         """One click circular focus without editing TargetLock or changing audio."""
+@@ -3733,7 +3789,7 @@ class App:
+             time.sleep(1.0)
+         self.players = parse_players(raw)
+         self.q.put(("players",))
+-        self.log(f"プレイヤー {len(self.players)} 人を取得しました。対象を選んで『固定』を押してください。")
++        self.log(f"プレイヤー {len(self.players)} 人を取得しました。左の一覧で確認し、必要なら対象を固定してください。")
+         if len(self.players) < 10:
+             self.log("※10人未満です (カスタム/ボット戦の可能性)。")
+ 
+@@ -3752,7 +3808,6 @@ class App:
+         if self._match_scan_cache is None or not self._match_scan_cache.complete or self.locked is None:
+             return
+         self._refresh_scene_player_filter_choices()
+-        from core.scanner import filter_scanned_events
+         mode={"キル": "kill", "アシスト": "assist", "キル＋アシスト": "both"}.get(self.var_event_mode.get(), "kill")
+         self.kills = filter_scanned_events(self._match_scan_cache.events, self.locked, mode)
+         self.checked_kills = set(range(len(self.kills)))
+@@ -3764,11 +3819,13 @@ class App:
+         if self.busy:
+             self.log("別の処理が完了してからスキャンしてください。")
+             return
+-        if not self.players:
+-            messagebox.showinfo(APP, "先に接続して10人のプレイヤーを取得してください。")
+-            return
+         if self._match_scan_cache and self._match_scan_cache.complete:
+-            self._filter_scanned_for_locked()
++            if self.locked is not None:
++                self._filter_scanned_for_locked()
++            else:
++                self.kills = list(self._match_scan_cache.kills)
++                self.checked_kills = set(range(len(self.kills)))
++                self._fill_kills()
+             self.log("スキャン済みの試合イベントを再利用しました")
+             return
+         self._run_bg(self._scan, self.var_event_mode.get())
+@@ -3780,6 +3837,12 @@ class App:
+         return True
+ 
+     def _scan(self, event_mode: str | None = None) -> None:
++        if not self.players:
++            self.log("スキャン準備: Replay APIへ接続し、10人のプレイヤーを取得します…")
++            self._connect()
++            if not self.players:
++                self.log("プレイヤー一覧を取得できなかったため、スキャンを開始できません。")
++                return
+         session = self._replay_generation
+         p = self.locked
+         if self._match_scan_cache and self._match_scan_cache.complete:
+@@ -3803,7 +3866,6 @@ class App:
+             self.log("再接続前のスキャン結果を破棄しました。")
+             return
+         self._match_scan_cache = res if res.complete and not self.stop_ev.is_set() else None
+-        from core.scanner import filter_scanned_events
+         self.kills = filter_scanned_events(res.events, p, mode) if p is not None else res.kills
+         self._last_scan_mode = selected_mode
+         self.checked_kills = set(range(len(self.kills)))
+@@ -3814,6 +3876,91 @@ class App:
+         self.log(f"スキャン完了: イベント {res.total_events} 件 / 対象シーン {len(self.kills)} 件 / モード {selected_mode}"
+                  + ("" if res.complete else " (途中で中断)"))
+ 
++    def _pick_dev_test_sources(self):
++        if not self.players or self._match_scan_cache is None or not self._match_scan_cache.complete:
++            return {}, None
++        teams = {"ORDER": [], "CHAOS": []}
++        for player in self.players:
++            if player.team not in teams:
++                continue
++            kills = filter_scanned_events(self._match_scan_cache.events, player, "kill")
++            if kills:
++                teams[player.team].append((player, kills))
++        chosen = {}
++        for team in ("ORDER", "CHAOS"):
++            if teams[team]:
++                chosen[team] = max(teams[team], key=lambda item: len(item[1]))
++        montage_source = None
++        ordered = sorted([item for plist in teams.values() for item in plist], key=lambda item: len(item[1]), reverse=True)
++        for player, kills in ordered:
++            if len(kills) >= 2:
++                montage_source = (player, kills)
++                break
++        return chosen, montage_source
++
++    def on_dev_test_bundle(self) -> None:
++        if self.busy:
++            messagebox.showinfo(APP, "別の処理を実行中です。")
++            return
++        if self._match_scan_cache is None or not self._match_scan_cache.complete:
++            messagebox.showinfo(APP, "先に試合全体スキャンを完了してください。")
++            return
++        chosen, montage_source = self._pick_dev_test_sources()
++        if not chosen:
++            messagebox.showinfo(APP, "BLUE/REDのキルシーンを見つけられませんでした。")
++            return
++        tpl = self.current_template()
++        self._run_bg(self._make_dev_test_bundle, tpl, chosen, montage_source)
++
++    def _make_dev_test_bundle(self, tpl, chosen, montage_source):
++        src = None
++        own = False
++        try:
++            src, own = self._ensure_source()
++            factory = None
++            if tpl.game_audio:
++                factory = (lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else (lambda path: PreferredGameAudio(path))
++            out_root = self.out_root / '_dev_replay_qa'
++            out_root.mkdir(parents=True, exist_ok=True)
++            made = 0
++            camera_styles = [('third', 'third_normal'), ('third_cinema', 'third_cinema'), ('fps', 'fps'), ('lolnam_cinema', 'lolnam_cinema')]
++            for team in ('ORDER', 'CHAOS'):
++                sample = chosen.get(team)
++                if not sample:
++                    continue
++                player, kills = sample
++                first = [kills[0]]
++                for style_code, slug in camera_styles:
++                    clear_tps_calibration(player.selection_name or player.champion)
++                    case_tpl = replace(tpl, style=style_code, montage_fx='cut')
++                    case_root = out_root / f'{team.lower()}_{safe_name(player.name)}_{slug}'
++                    self.log(f'開発テスト: {team} / {player.champion} / {STYLES.get(style_code, style_code)}')
++                    res = run_auto_edit(self.api, src, player, list(first), case_tpl, case_root, False,
++                                        progress=lambda *a:self.q.put(('job',*a)), stop=self.stop_ev,
++                                        log=self.log, audio_factory=factory)
++                    made += len(res.outputs)
++            if montage_source is not None:
++                player, kills = montage_source
++                montage_kills = list(kills[:min(4, len(kills))])
++                for fx in MONTAGE_LABELS:
++                    clear_tps_calibration(player.selection_name or player.champion)
++                    case_tpl = replace(tpl, style='third_cinema', montage_fx=fx)
++                    case_root = out_root / f'montage_{fx}_{safe_name(player.name)}'
++                    self.log(f'開発テスト: モンタージュ {MONTAGE_LABELS[fx]} / {player.champion}')
++                    res = run_auto_edit(self.api, src, player, montage_kills, case_tpl, case_root, True,
++                                        progress=lambda *a:self.q.put(('job',*a)), stop=self.stop_ev,
++                                        log=self.log, audio_factory=factory)
++                    made += len(res.outputs)
++                    if res.montage is not None:
++                        made += 1
++            self.log(f'開発テスト一括作成完了: 出力 {made} 件 / 保存先 {out_root}')
++        finally:
++            if own and src is not None:
++                try:
++                    src.stop()
++                except Exception:
++                    pass
++
+     def _ensure_source(self):
+         if self._mirror.pending:
+             raise CaptureError("ミラー開始準備中です。映像が表示されてから書き出してください。")
+@@ -4021,7 +4168,8 @@ class App:
+         return None, "empty"
+ 
+     def _camera_selection_changed(self, *_args):
+-        """Label the SELECTED preset, never misstate it as the active Replay API mode."""
++        """Label the selected preset and drop stale third-person calibration."""
++        clear_tps_calibration()
+         if hasattr(self, 'var_camera_status') and hasattr(self, 'var_style'):
+             choice=self.var_style.get()
+             self.var_camera_status.set(f'設定：{choice}（▶再生で実際の動作を確認）')
+@@ -4159,6 +4307,8 @@ class App:
+         if hasattr(self, 'var_camera_status'):
+             self.var_camera_status.set(f"再生中：{STYLES.get(tpl.style, tpl.style)} / 対象: "
+                                        f"{self.locked.champion if self.locked else '未固定'} / 実機カメラを判定中")
++        if self.locked is not None:
++            clear_tps_calibration(self.locked.selection_name or self.locked.champion)
+         self._run_bg(self._preview_play, tpl, kill)
+ 
+     def _preview_play(self, tpl, kill) -> None:
+diff --git a/tests/test_v51012_allscan_quality_camera.py b/tests/test_v51012_allscan_quality_camera.py
+index ed04fa1..4e3865b 100644
+--- a/tests/test_v51012_allscan_quality_camera.py
++++ b/tests/test_v51012_allscan_quality_camera.py
+@@ -79,7 +79,7 @@ def test_grades_more_distinct_from_default():
+ 
+ def test_ui_supports_scan_once_then_player_and_team_filter():
+     code=(Path(__file__).resolve().parents[1]/'legacy_app.py').read_text('utf-8')
+-    assert '試合全体を一括スキャン' in code
++    assert '① スキャン（接続→10人取得→試合全体）' in code
+     assert 'self._match_scan_cache' in code
+     assert 'self._filter_scanned_for_locked()' in code
+     assert 'self.var_team_filter' in code
+diff --git a/tests/test_v51015_ui_restructure.py b/tests/test_v51015_ui_restructure.py
+index e45dfb9..185c62c 100644
+--- a/tests/test_v51015_ui_restructure.py
++++ b/tests/test_v51015_ui_restructure.py
+@@ -88,10 +88,31 @@ def test_kill_frame_styles_are_named_and_complete():
+     root=Path(__file__).resolve().parents[1]
+     assert all((root/'assets'/'kill_badges'/file).exists() for file in ASSET_STYLES.values())
+     assert all(not STYLES[f'user_frame_{i:02d}'].startswith('追加素材') for i in range(1,17))
+-    assert 'K/DA' in STYLES['user_frame_08']
++    assert STYLES['user_frame_08'] == 'ローズクリスタル'
+     assert '桜' in STYLES['user_frame_13']
+ 
+ 
++def test_quick_dof_panel_switches_between_circle_and_legacy_only():
++    root,app=build()
++    try:
++        app.var_dof_shape.set('円形（おすすめ）')
++        root.update_idletasks()
++        assert app._quick_dof_circle_panel.winfo_manager() == 'pack'
++        assert not app._quick_dof_legacy_panel.winfo_manager()
++        app.var_dof_shape.set('従来の上下ぼかし')
++        root.update_idletasks()
++        assert app._quick_dof_legacy_panel.winfo_manager() == 'pack'
++        assert not app._quick_dof_circle_panel.winfo_manager()
++    finally:
++        root.destroy()
++
++
++def test_scan_button_text_shows_integrated_connect_workflow():
++    code=(Path(__file__).resolve().parents[1]/'legacy_app.py').read_text('utf-8')
++    assert '① スキャン（接続→10人取得→試合全体）' in code
++    assert '接続して10人を取得' not in code
++
++
+ def test_grade_labels_explain_colors():
+     assert '青緑' in GRADE_JP['tealorange']
+     assert 'ゴールド' in GRADE_JP['golden']
+diff --git a/ui/check_indicator.py b/ui/check_indicator.py
+index 3384300..dd40709 100644
+--- a/ui/check_indicator.py
++++ b/ui/check_indicator.py
+@@ -7,22 +7,51 @@ from tkinter import ttk
+ from PIL import Image, ImageDraw, ImageTk
+ 
+ 
++def _rounded(draw, xy, radius, *, fill=None, outline=None, width=1):
++    draw.rounded_rectangle(xy, radius=radius, fill=fill, outline=outline, width=width)
++
++
+ def install(root, style):
+     try:
+-        def pic(selected=False, disabled=False):
+-            im=Image.new('RGBA',(21,21),(0,0,0,0))
++        def pic(selected=False, disabled=False, pressed=False):
++            size=26
++            scale=4
++            canvas=size*scale
++            im=Image.new('RGBA',(canvas,canvas),(0,0,0,0))
+             d=ImageDraw.Draw(im)
+-            d.rounded_rectangle((1,1,19,19),radius=4,outline=(115,129,150,255),width=2,
+-                                fill=(45,110,218,255) if selected else (255,255,255,255))
++            border=(149,163,184,255)
++            fill=(255,255,255,255)
++            if selected:
++                fill=(46,111,219,255) if not pressed else (38,95,195,255)
++                border=(46,111,219,255)
++            elif pressed:
++                fill=(244,247,251,255)
++                border=(119,133,155,255)
++            _rounded(d,(3*scale,3*scale,(size-3)*scale,(size-3)*scale),6*scale,
++                     fill=fill,outline=border,width=2*scale)
+             if selected:
+-                d.line([(5,10),(9,14),(16,6)],fill=(255,255,255,255),width=3,joint='curve')
++                pts=[(6.5,13.2),(11.0,17.3),(19.0,8.2)]
++                pts=[(x*scale,y*scale) for x,y in pts]
++                d.line(pts,fill=(255,255,255,255),width=3*scale,joint='curve')
++            im=im.resize((size,size),Image.Resampling.LANCZOS)
+             if disabled:
+-                im.putalpha(im.getchannel('A').point(lambda a:int(a*.42)))
++                alpha=im.getchannel('A').point(lambda a:int(a*0.45))
++                im.putalpha(alpha)
+             return ImageTk.PhotoImage(im,master=root)
+-        unchecked=pic();checked=pic(True);disabled=pic(False,True)
+-        root._autocine_check_images=(unchecked,checked,disabled)
++        unchecked=pic();checked=pic(True);pressed=pic(False,False,True)
++        checked_pressed=pic(True,False,True);disabled=pic(False,True);checked_disabled=pic(True,True)
++        root._autocine_check_images=(unchecked,checked,pressed,checked_pressed,disabled,checked_disabled)
++        try:
++            style.element_delete('AutoCine.Check')
++        except Exception:
++            pass
+         style.element_create('AutoCine.Check', 'image', unchecked,
+-                             ('selected',checked),('disabled',disabled),sticky='w')
++                             ('active', pressed),
++                             ('selected', checked),
++                             ('active', 'selected', checked_pressed),
++                             ('disabled', disabled),
++                             ('disabled', 'selected', checked_disabled),
++                             sticky='w')
+         style.layout('TCheckbutton', [('Checkbutton.padding', {'sticky':'nswe','children':[
+             ('AutoCine.Check', {'side':'left','sticky':'w'}),
+             ('Checkbutton.label', {'side':'left','sticky':'w'})]})])

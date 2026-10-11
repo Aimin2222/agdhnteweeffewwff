@@ -1,12 +1,13 @@
 {
-  "source_head": "068c26b34125b940571cc481619f372531f2224b",
-  "source_branch": "integration/v5.10.15-portraitfix",
-  "source_files": 424,
-  "python_files": 147,
-  "bundle_file": "LoL_AutoCine_v5.10.15_PortraitCrashFix_GPUFull_all_branches.bundle",
-  "bundle_sha256": "9994dd17a800b00a233387e5859bf0818d5229c73e20565527ac3f98bb8682ed",
+  "source_head": "e62be60d41fefd41dfc01568211c75bb3fd86ff6",
+  "source_branch": "integration/v5.10.15-scanfix",
+  "source_files": 431,
+  "python_files": 149,
+  "bundle_file": "LoL_AutoCine_v5.10.15_ScanUI_DOF_Checkbox_CameraFix_GPUFull_all_branches.bundle",
+  "bundle_sha256": "032fb6bf567b5a2795361f101fd28eec641b995dd7e1bedf613b3b4b12eeb600",
   "branches": [
     "archive/received-portraitfix-v51015 31a88fd34c07601aa0136acbf68102c8751e2e9c",
+    "archive/received-scanfix-v51015 cb0f0e9d92ed01787838c14c967e89d9a12d6a08",
     "archive/received-ui-v51010 0d368de4b202e8b73ca8fa1a85b92f3102dabe98",
     "archive/received-ui-v51011 e16d12958ee9d8b31d3f2e9011a0896554e5aabe",
     "archive/received-ui-v51012 5983c9173c92b6f08c7079b6ba830498809ca883",
@@ -27,6 +28,7 @@
     "feature/gpu-material-v51010 40864bc743ef3e83faa92deaf36d3af15b972937",
     "feature/gpu-montage-v51014 9173a8971a0831fb48b5d89e97dc4b4efe97896b",
     "feature/gpu-portraitfix-v51015 8a6198d306d31c170f307e06d2008eefe0390521",
+    "feature/gpu-scanfix-v51015 f36dc306243ca7c7fd2935fbb34860f72481134d",
     "feature/gpu-shared-v51012 9d3630c840274cf3947a419c34c5fb51a001db6d",
     "feature/gpu-shared-v51013 60aaf2ea838165ccc62dff99bc39b8f1736103d9",
     "feature/gpu-shared-v5104 4462635e6887e3cf38bf687b120eebe4be415d45",
@@ -52,6 +54,7 @@
     "feature/ui-real-scenes-v51010 b704dbc6741b45a325b2a419c48b225872c30783",
     "feature/ui-responsive-v5105 754117d578ca3c5765e96d17a3efaf376c60eda2",
     "feature/ui-scan-v51015 5dc86d19bebbd32a18827c18d23a36a594a24e34",
+    "feature/ui-scanfix-v51015 b9224e6fdbb2731c00d3b8f4ed8d3dd472ecd313",
     "feature/ui-scenestudio-v590 dd1cabdea7f5feb3656115f36bf6abcee486a349",
     "feature/ui-scroll-v5101 c05d7497c1114aa43ffd2e19d6f7b6b7bee73b0e",
     "feature/ui-sequence-v591 e3a4298894d44c4a333c12c77bf4e28856d01e84",
@@ -66,6 +69,7 @@
     "integration/v5.10.14 8d9356e3f8bfba47bce912924cece7e861bf416c",
     "integration/v5.10.15 c76ba0cc1ba20296724f219a61d9a43f6d269b74",
     "integration/v5.10.15-portraitfix 068c26b34125b940571cc481619f372531f2224b",
+    "integration/v5.10.15-scanfix e62be60d41fefd41dfc01568211c75bb3fd86ff6",
     "integration/v5.10.3 9dc795ded438d0ce4510e9d99fd699ec9155230f",
     "integration/v5.10.3-capture60 2a7a538540cbce9c13aae49da4a156cfd7ff4671",
     "integration/v5.10.3-capturefix 86a1165658082daaff902649dd56eb7a4895ed09",
@@ -91,7 +95,7 @@
     "stable/v5.8.5 96b928a7385537317e73bad5235a28984fe94716"
   ],
   "artifacts": {
-    "LoL_AutoCine_v5.10.15_PortraitCrashFix_GPUFull_Windows_Full.zip": "e9228042b898a81557bc5edf23a45938f943febad6905465520bc8e5c0934820",
-    "LoL_AutoCine_v5.10.15_PortraitCrashFix_GPUFull_Codex_MergeChanges.zip": "1fdf0700339c38534ad120a71334e2efb2113491253c903ef90df44801ee137d"
+    "LoL_AutoCine_v5.10.15_ScanUI_DOF_Checkbox_CameraFix_GPUFull_Windows_Full.zip": "7fbf9768914c5fea6b3fe0f7e62d4339f9dfafbe3e30390abb1ef23a9be1b588",
+    "LoL_AutoCine_v5.10.15_ScanUI_DOF_Checkbox_CameraFix_GPUFull_Codex_MergeChanges.zip": "9c494b32a3804f0628dcfd63fe853baf39f947e37d767d320fc385e9bf6253e5"
   }
 }

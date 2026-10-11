@@ -1,22 +1,22 @@
-# v5.10.15 PortraitCrashFix GPUFull
+# v5.10.15 Scan / DOF / Checkbox / CameraFix GPUFull
 
-完全版: handoff/LoL_AutoCine_v5.10.15_PortraitCrashFix_GPUFull_Windows_Full.zip をGitHubで開き **Download raw file**。または codex/lol-autocine-v51015-portrait-crashfix-handoff ブランチの **Code → Download ZIP**。旧版と別フォルダへ展開しLoL_AutoCine/START_GPU.batで起動。Windows取得にmainマージ/環境Publishは不要。
+完全版: handoff/LoL_AutoCine_v5.10.15_ScanUI_DOF_Checkbox_CameraFix_GPUFull_Windows_Full.zip をGitHubで開き **Download raw file**。または codex/lol-autocine-v51015-scan-dof-camera-handoff ブランチの **Code → Download ZIP**。旧版と別フォルダへ展開しLoL_AutoCine/START_GPU.bat。mainマージ/環境Publishは取得に不要。
 
-Player形式と辞書形式の両方をcore/kill_icons画像ID取得APIで安全に扱う小さい修正。既存UIは辞書snapshotを渡しているので、Linuxで同じWindows画面クラッシュを再現したという意味ではない。GPU/60fps/NVENC/音声/TargetLock/UIは前回版と同一。CPUゼロや物理GPU速度は主張しない。
+右側①ボタンへ接続/プレイヤー取得/試合全体スキャンを統合。円形DOFと従来帯DOFは中央/右側とも排他表示し値を保持。チェックは高解像度から縮小し、選択済みのhover/disabledで表示を保つ。カメラ再選択/プレビューは校正キャッシュをリセット。表示名は簡潔にし旧名全件と保存IDを保持。画像Player互換も保持。
 
-全574テスト成功（失敗/skip/除外なし）。完全ZIP422ファイル、Gitパッチ適用後424ソース一致。旧80refs/415ファイル/37PNG保持。今回のWindows/NVIDIA/LoL実機は未確認。まとめテスト: LoL_AutoCine/docs/WINDOWS_TEST_PORTRAITFIX_v51015_JA.md（画像連続選択、未キャッシュ/オフライン、ミラーON、1080p60fps+GPU+LoL音声）。
+開発用一括録画はBLUE/RED代表キルの4カメラと、対象に2キル以上あれば全10切替モンタージュを_dev_replay_qaへ出力。既存GPU/LoL専用音声のrun_auto_editをworkerから使用。中止後は次のケースへ進まず入力を解放。生成に時間がかかる開発補助機能。GPU/60fps/音声/TargetLock/カメラ座標は前回と同じ。
 
-MergeChangesは前回Codex統合v5.10.15基準。別バージョンへ単純上書きしない。Gitパッチは先に--check、単体Gitルートでは-p2を追加。
+最終Linux/Xvfb全585テスト成功（失敗/skip/除外なし）。最初の実行でネイティブ終了2回（原因未確定）。記録付き再実行は584成功・既存プレビューテスト1失敗、模擬プレイヤー情報を補完後に全件を再検証。再発しないという保証はしない。今回Windows/NVIDIA/LoL実機は未確認。
+
+完全ZIP429ファイル、差分適用後431ソース一致。旧83refs/416既存ファイル/37PNG保持。MergeChangesは前回PortraitCrashFix基準、別版に単純上書きしない。確認手順はLoL_AutoCine/docs/WINDOWS_TEST_SCANFIX_v51015_JA.md。
 
 ## ローカルGit復元
 ```sh
-git clone --single-branch --branch codex/lol-autocine-v51015-portrait-crashfix-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_PortraitFix_Handoff
-git clone --branch integration/v5.10.15-portraitfix LoL_AutoCine_PortraitFix_Handoff/handoff/LoL_AutoCine_v5.10.15_PortraitCrashFix_GPUFull_all_branches.bundle LoL_AutoCine_PortraitFix_Dev
-cd LoL_AutoCine_PortraitFix_Dev
-git branch feature/gpu-portraitfix-v51015 origin/feature/gpu-portraitfix-v51015
-git branch feature/ui-scan-v51015 origin/feature/ui-scan-v51015
+git clone --single-branch --branch codex/lol-autocine-v51015-scan-dof-camera-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_ScanFix_Handoff
+git clone --branch integration/v5.10.15-scanfix LoL_AutoCine_ScanFix_Handoff/handoff/LoL_AutoCine_v5.10.15_ScanUI_DOF_Checkbox_CameraFix_GPUFull_all_branches.bundle LoL_AutoCine_ScanFix_Dev
+cd LoL_AutoCine_ScanFix_Dev
+git branch feature/gpu-scanfix-v51015 origin/feature/gpu-scanfix-v51015
+git branch feature/ui-scanfix-v51015 origin/feature/ui-scanfix-v51015
 git status --short
 ```
-全83ブランチがorigin/*で復元される。originはローカルbundle。担当ガードはdocs/CODEX_INTEGRATION_PORTRAITFIX_v51015_JA.md。旧設定/録画/プロジェクトを残して移行。
-
-GitHubから固定payloadを取得して424ソース/83refs/ZIPとbundleのハッシュ一致を確認。復元先代表92テスト成功、セットアップ再実行で424ソース/83refs/設定相当3ファイル保持、status clean。install_script/start_skillを保存して読戻し一致を確認、他の環境設定は保持。Publish未実施。これは同じクラウド実行環境の別フォルダ検証で、Windows/NVIDIA実機の検証ではない。
+全87ブランチをorigin/*として復元。originはローカルbundle。docs/CODEX_INTEGRATION_SCANFIX_v51015_JA.mdの担当ガードを実行。設定/録画/プロジェクトは保管。
