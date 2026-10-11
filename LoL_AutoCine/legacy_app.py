@@ -3670,6 +3670,18 @@ class App:
         if cache is None or not cache.complete or self.stop_ev.is_set():
             self.log("自動実機テスト: スキャン未完了。テストは開始しません。")
             return
+        # Reuse the existing 10+ offline/runtime checks as preflight, then
+        # record real 8/16-shot camera matrix. No duplicate QA implementation.
+        from core.auto_qa import run_checks
+        preflight = None
+        try:
+            preflight = run_checks(ROOT, report_file=ROOT / "diagnostics" / "selftest_latest.json",
+                                   api=self.api)
+            self.log(f"実機QA事前診断: {preflight['passed']}成功 / {preflight['warnings']}注意 / {preflight['failed']}失敗")
+        except Exception as exc:
+            self.log("実機QA事前診断の読み取りエラー（録画検査は続行）: " + str(exc))
+        if self.stop_ev.is_set():
+            return
         src, owned = self._ensure_source()
         try:
             factory = None
@@ -3680,6 +3692,14 @@ class App:
                 ROOT / "diagnostics" / "replay_qa", audio_factory=factory,
                 stop=self.stop_ev, events_per_team=events_per_team, log=self.log,
                 progress=lambda *a: self.q.put(("job", *a)))
+            if preflight is not None:
+                import json
+                report["preflight"] = {"passed": preflight["passed"],
+                                      "warnings": preflight["warnings"],
+                                      "failed": preflight["failed"],
+                                      "checks": preflight["checks"]}
+                (Path(report["outputs_root"]) / "replay_qa_report.json").write_text(
+                    json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
             self.log(f"実機テスト完了: {report['passed']}成功 / {report['failed']}失敗"
                      + ("（中止）" if report["cancelled"] else ""))
             self.log("生成動画とreplay_qa_report.json: " + report["outputs_root"])
