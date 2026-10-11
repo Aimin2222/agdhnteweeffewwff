@@ -33,6 +33,7 @@ from core.effects import (FOG_PRESETS, GRADE_JP, GRADE_REVERSE, TRANSITIONS, Tem
 from core.reference_safe import make_remixes, save_template as save_reference_template, load_template as load_reference_template, template_from_references  # noqa: E402
 from core.audio import PreferredGameAudio, SyntheticAudio               # noqa: E402
 from core.jobs import preview_clip, run_auto_edit                  # noqa: E402
+from core.camera_qa import run_camera_record_test                   # noqa: E402
 from core.preview import apply_camera_preview, apply_video_effect_preview, compose_compare, preview_title, render_exact_still   # noqa: E402
 from core.launcher import watch_replay                             # noqa: E402
 from core.players import Player, parse_players                     # noqa: E402
@@ -1586,6 +1587,11 @@ class App:
         ttk.Button(f, text="▶ 選択シーンを作成", command=self.on_make_selected).pack(fill="x", pady=(5,0), ipady=3)
         ttk.Button(f, text="✓ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
+        ttk.Separator(f).pack(fill="x",pady=(8,6))
+        ttk.Button(f, text="開発用：カメラ8本＋つなぎ演出10種類を自動テスト",
+                   command=self.on_dev_camera_qa).pack(fill="x",pady=(0,3))
+        ttk.Label(f, text="全体スキャン後に1回だけ押してください。同じ録画素材を使って演出を比較します（開発中のみ）。",
+                  style="CardMuted.TLabel",wraplength=300).pack(fill="x")
 
         f = card(right, "☁  出力状況")
         self.pb_job=ttk.Progressbar(f, maximum=100); self.pb_job.pack(fill="x")
@@ -3783,6 +3789,35 @@ class App:
         self.log(f"スキャン内訳: キル {kill_count}件 / アシスト {assist_count}件")
         self.log(f"スキャン完了: イベント {res.total_events} 件 / 対象シーン {len(self.kills)} 件 / モード {selected_mode}"
                  + ("" if res.complete else " (途中で中断)"))
+
+    def on_dev_camera_qa(self):
+        """User-initiated, disposable test suite. Capture Tk values on UI thread."""
+        if self.busy:
+            messagebox.showinfo(APP, "別の作業が終わってから開始してください。")
+            return
+        cache = self._match_scan_cache
+        if cache is None or not cache.complete:
+            messagebox.showinfo(APP, "先に右側の「スキャン」を完了してください。")
+            return
+        self._run_bg(self._record_camera_qa, self.current_template(),
+                     list(self.players), list(cache.events), self.locked, Path(self.out_root))
+
+    def _record_camera_qa(self, tpl, players, events, preferred, destination):
+        """Worker: records 8 representative clips, then post-processes 10 variants."""
+        src = None
+        own = False
+        try:
+            src, own = self._ensure_source()
+            factory = ((lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else
+                       (lambda path: PreferredGameAudio(path))) if tpl.game_audio else None
+            report = run_camera_record_test(self.api,src,players,events,preferred,
+                        tpl,destination,stop=self.stop_ev,log=self.log,
+                        audio_factory=factory,
+                        progress=lambda *values:self.q.put(("job",*values)))
+            self.log(f"開発用一括テストの結果: {report}")
+        finally:
+            if own and src is not None:
+                src.stop()
 
     def _ensure_source(self):
         if self._mirror.pending:
