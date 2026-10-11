@@ -5,3 +5,5 @@
 検証: APIテスト修正前4失敗・1成功→修正後5成功、Linux/Xvfb全574成功（失敗/skip/除外なし）、pip check/構文/担当ガード。完全版ZIP422ファイルと差分適用後424ソース一致、私有ファイル除外。旧80ref先端/415既存ファイルと旧配布物を保持し全83ブランチをbundle保存。Windows/NVIDIA/LoL実機は未確認。
 
 前回Codex v5.10.15ブランチを比較先とするDraft PR、mainへマージしません。取得はhandoff完全ZIP→Download raw file、またはCode→Download ZIP。旧版と別フォルダへ展開してSTART_GPU.bat。Windowsテストはdocs/WINDOWS_TEST_PORTRAITFIX_v51015_JA.md。
+
+GitHubから固定payloadを取得して424ソース/83refs/ZIPとbundleのハッシュ一致を確認。復元先代表92テスト成功、セットアップ再実行で424ソース/83refs/設定相当3ファイル保持、status clean。install_script/start_skillを保存して読戻し一致を確認、他の環境設定は保持。Publish未実施。これは同じクラウド実行環境の別フォルダ検証で、Windows/NVIDIA実機の検証ではない。

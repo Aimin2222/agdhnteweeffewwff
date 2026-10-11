@@ -370,3 +370,5 @@ A	ui/template_gallery.py
 ```
 
 全424ソース/Python147・全83ブランチをbundleへ保存。旧80ブランチ先端、既存415ファイルと37PNGは不変。旧配布物131件をバイト保持。未保存の変更はなし。個人設定/録画/診断は追加・削除しない。
+
+GitHubから固定payloadを取得して424ソース/83refs/ZIPとbundleのハッシュ一致を確認。復元先代表92テスト成功、セットアップ再実行で424ソース/83refs/設定相当3ファイル保持、status clean。install_script/start_skillを保存して読戻し一致を確認、他の環境設定は保持。Publish未実施。これは同じクラウド実行環境の別フォルダ検証で、Windows/NVIDIA実機の検証ではない。

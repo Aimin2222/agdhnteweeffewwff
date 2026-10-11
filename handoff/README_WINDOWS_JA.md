@@ -18,3 +18,5 @@ git branch feature/ui-scan-v51015 origin/feature/ui-scan-v51015
 git status --short
 ```
 全83ブランチがorigin/*で復元される。originはローカルbundle。担当ガードはdocs/CODEX_INTEGRATION_PORTRAITFIX_v51015_JA.md。旧設定/録画/プロジェクトを残して移行。
+
+GitHubから固定payloadを取得して424ソース/83refs/ZIPとbundleのハッシュ一致を確認。復元先代表92テスト成功、セットアップ再実行で424ソース/83refs/設定相当3ファイル保持、status clean。install_script/start_skillを保存して読戻し一致を確認、他の環境設定は保持。Publish未実施。これは同じクラウド実行環境の別フォルダ検証で、Windows/NVIDIA実機の検証ではない。
