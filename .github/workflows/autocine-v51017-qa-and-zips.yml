@@ -2,7 +2,7 @@ name: AutoCine v5.10.17 QA and RED camera evidence and two ZIPs
 on:
   push:
     branches:
-      - autocine/v5.10.17-ui-motion-qa-codex-safe
+      - autocine/v5.10.17-redcam-evidence-badge-qa
   workflow_dispatch:
 
 permissions:
@@ -70,8 +70,8 @@ jobs:
           with zipfile.ZipFile(diff,"w",zipfile.ZIP_DEFLATED) as z:
               z.write(patch,patch.name)
               z.write(readme,readme.name)
-              z.write(root/"tests"/"test_v51017_motion_dof_and_camera_qa.py",
-                      "tests/test_v51017_motion_dof_and_camera_qa.py")
+              z.write(root/"tests"/"test_v51017_badge_camera_evidence.py",
+                      "tests/test_v51017_badge_camera_evidence.py")
           for p in [full,diff]:
               with zipfile.ZipFile(p) as z:
                   bad=z.testzip()
