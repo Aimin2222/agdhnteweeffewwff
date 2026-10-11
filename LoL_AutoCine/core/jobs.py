@@ -11,6 +11,7 @@
 from __future__ import annotations
 import re
 import time
+import json
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Optional
@@ -222,6 +223,29 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                        side_yaw=((profile['yaw'] - 8.0 if tpl.style == 'third' and side_choice == 'auto' and str(getattr(player, 'team', '')).upper() in ('CHAOS', 'RED') else profile['yaw']) if live_third else 0.0),
                        team=getattr(player, 'team', 'ORDER'),
                       sel_name=player.selection_name or player.champion)
+    # QA-only readout: compare RED/BLUE rotations and positions numerically.
+    # No extra Replay API writes; normal production clips are unchanged.
+    if str(getattr(tpl, "name", "")).startswith("CameraQA "):
+        try:
+            log("CAMERA_QA_POSE " + json.dumps({
+                "side": str(getattr(player, "team", "?")),
+                "style": str(tpl.style),
+                "time": float(start),
+                "camera_mode": str(rig.mode),
+                "third_person_enabled": bool(rig.third),
+                "pitch_axis": str(rig.pitch_axis),
+                "pitch_sign": float(rig.pitch_sign),
+                "pitch_complement": bool(rig.pitch_complement),
+                "baseline_rotation": rig.rot,
+                "baseline_player_position": rig.P,
+                "baseline_horizontal_direction": rig.h,
+                "baseline_offset": rig.v,
+                "side_heading_degrees": float(plan.side_yaw),
+                "initial_camera_offset": plan.offset_at(start),
+                "initial_camera_rotation": plan.rotation_at(start),
+            }, ensure_ascii=False, default=str))
+        except Exception as diagnostic_error:
+            log(f"カメラQA数値ログ取得失敗（録画は継続）: {diagnostic_error}")
     if rig.mode == "top" and tpl.style in ("cinema", "follow"):
         plan.style = "cinema_top" if tpl.style == "cinema" else "top"   # 実際に使えるモードに合わせる
     if plan.style in ("third", "third_cinema", "lolnam_cinema"):
