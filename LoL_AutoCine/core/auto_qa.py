@@ -63,7 +63,10 @@ def run_checks(root, *, report_file=None, api=None):
                     rot={'x':-32,'y':0,'z':0})
         blue=CameraPlan(style='third',rig=rig,side_yaw=side_yaw_for('ORDER'))
         red=CameraPlan(style='third',rig=rig,side_yaw=side_yaw_for('CHAOS'))
-        a,b=blue.offset_at(0),red.offset_at(0)
+        # Baseline 180-degree sides are symmetric OUTSIDE the kill cue.
+        # RED-specific +4° versus BLUE +7° kill nudges are deliberate and
+        # must not be misdiagnosed as a calibration failure at kill_time=0.
+        a,b=blue.offset_at(-100),red.offset_at(-100)
         assert abs(a[0]+b[0])<1e-4 and abs(a[2]+b[2])<1e-4
         assert abs(a[1]-b[1])<1e-4 and a[1]>250
         return 'ブルー/レッドの追従位置180°対称を検証（数学テスト）'
