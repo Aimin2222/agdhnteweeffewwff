@@ -27,7 +27,8 @@ def test_red_normal_third_pitch_corrected_without_touching_fps_or_lolnam():
     blue=CameraPlan(style="third",rig=rig,third_elev=31,side_yaw=-12.)
     red=CameraPlan(style="third",rig=rig,third_elev=31,side_yaw=192.)
     assert blue.rotation_at(0)["x"] > 0
-    assert red.rotation_at(0)["x"] < 0
+    # RED's horizontal 180-degree orbit cannot reverse the vertical pitch.
+    assert red.rotation_at(0)["x"] == blue.rotation_at(0)["x"]
     cine=CameraPlan(style="third_cinema",rig=rig,third_elev=31,side_yaw=192.)
     assert cine.rotation_at(0)["x"] > 0
     lolnam=CameraPlan(style="lolnam_cinema",rig=rig,third_elev=31,side_yaw=192.)
