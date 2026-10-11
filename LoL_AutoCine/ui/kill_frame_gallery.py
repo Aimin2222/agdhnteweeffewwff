@@ -45,6 +45,9 @@ class KillFrameGallery:
         self._rendered={}
         self._queue=list(STYLES)
         self._ready=Queue()
+        self._preview_ready=Queue()
+        self._preview_ticket=0
+        self._width_after=None
         self._stopping=False
         self._preview_after=None
         self._chosen='premium_gold' if 'premium_gold' in STYLES else 'cinema'
@@ -78,7 +81,7 @@ class KillFrameGallery:
         self.grid_parent=ttk.Frame(self.canvas)
         self.grid_parent.bind("<Configure>",lambda _e:self.canvas.configure(scrollregion=self.canvas.bbox("all")))
         self.grid_id=self.canvas.create_window((0,0),window=self.grid_parent,anchor="nw")
-        self.canvas.bind("<Configure>",lambda e:self.canvas.itemconfigure(self.grid_id,width=e.width))
+        self.canvas.bind("<Configure>",self._on_canvas_resize)
         self.canvas.configure(yscrollcommand=bar.set)
         self.canvas.pack(side="left",fill="both",expand=True)
         bar.pack(side="right",fill="y")
@@ -122,6 +125,19 @@ class KillFrameGallery:
         Thread(target=self._render_all,daemon=True,name="AutoCine-KillFrames").start()
         self.win.after(30,self._fill_batch)
 
+    def _on_canvas_resize(self, event):
+        """Avoid rebuilding 42 card layouts on every pixel during sash dragging."""
+        width=max(260,int(event.width))
+        if self._width_after is not None:
+            try:self.win.after_cancel(self._width_after)
+            except tk.TclError:pass
+        self._width_after=self.win.after(90,lambda w=width:self._apply_canvas_width(w))
+
+    def _apply_canvas_width(self,width):
+        self._width_after=None
+        if self.win.winfo_exists():
+            self.canvas.itemconfigure(self.grid_id,width=width)
+
     def _render(self,style,glow_strength=1.,glow_enabled=True):
         tmp=Path(self._workdir.name)/f"badge_{style}_{int(glow_strength*100)}_{int(glow_enabled)}.png"
         if style == "off":
@@ -161,8 +177,21 @@ class KillFrameGallery:
                         self._photos.append(photo)
                         label.configure(image=photo,text="")
                     break
+        try:
+            for _ in range(2):
+                ticket,picture,error=self._preview_ready.get_nowait()
+                if ticket != self._preview_ticket:
+                    continue
+                if error:
+                    self.preview.configure(image="",text="プレビュー不可: "+error)
+                else:
+                    photo=ImageTk.PhotoImage(picture,master=self.win)
+                    self.preview.configure(image=photo,text="")
+                    self._main_photo=photo
+        except Empty:
+            pass
         self.status.configure(text=f"読み込み：{len(STYLES)-len(self._queue)} / {len(STYLES)}")
-        if self._queue:self.win.after(45,self._fill_batch)
+        if not self._stopping:self.win.after(85,self._fill_batch)
 
     def _queue_preview(self):
         if self._preview_after:
@@ -170,16 +199,22 @@ class KillFrameGallery:
         self._preview_after=self.win.after(180,self._refresh_preview)
 
     def _refresh_preview(self):
+        """Heavy PIL compositing belongs to workers, never the Tk event loop."""
         self._preview_after=None
-        if not self.win.winfo_exists(): return
-        try:
-            image=self._render(self._chosen,float(self.strength.get()),bool(self.glow_enabled.get()))
-            image.thumbnail((460,175),Image.Resampling.LANCZOS)
-            photo=ImageTk.PhotoImage(image,master=self.win)
-            self.preview.configure(image=photo,text="")
-            self._main_photo=photo
-        except Exception as error:
-            self.preview.configure(image="",text=str(error))
+        if not self.win.winfo_exists():return
+        self._preview_ticket+=1
+        ticket=self._preview_ticket
+        style=self._chosen
+        glow=float(self.strength.get())
+        enabled=bool(self.glow_enabled.get())
+        def work():
+            try:
+                picture=self._render(style,glow,enabled)
+                picture.thumbnail((460,175),Image.Resampling.LANCZOS)
+                self._preview_ready.put((ticket,picture,None))
+            except Exception as exc:
+                self._preview_ready.put((ticket,None,str(exc)))
+        Thread(target=work,daemon=True,name="AutoCine-KillFramePreview").start()
 
     def select(self,style,apply=False):
         if style not in STYLES:return
@@ -237,7 +272,10 @@ class KillFrameGallery:
         if self._preview_after:
             try:self.win.after_cancel(self._preview_after)
             except tk.TclError:pass
-        self._workdir.cleanup()
+        if self._width_after:
+            try:self.win.after_cancel(self._width_after)
+            except tk.TclError:pass
+        # The background reader can still be using an asset during close.
         self.win.destroy()
 
 
