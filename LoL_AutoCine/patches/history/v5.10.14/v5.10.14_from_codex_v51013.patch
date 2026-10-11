@@ -1,0 +1,1289 @@
+diff --git a/LoL_AutoCine/TESTLIST_v5.10.14_JA.md b/LoL_AutoCine/TESTLIST_v5.10.14_JA.md
+new file mode 100644
+index 0000000..2850622
+--- /dev/null
++++ b/LoL_AutoCine/TESTLIST_v5.10.14_JA.md
+@@ -0,0 +1,23 @@
++# v5.10.14 Windows実機まとめテスト
++
++**準備：** v5.10.13と別のフォルダに展開。LoLのリプレイを再生し、対象選手を固定する。
++
++- [ ] 1. 上部「キルフレーム図鑑」から全フレームを検索・大きくプレビュー・適用できる
++- [ ] 2. 図鑑を開くためにLoLミラーやスキャンが不要。実際の出力ではチャンピオン肖像が正しい
++- [ ] 3. ゴールド／ネオン／スキンテーマ風など37種の素材が欠けずに見られる
++- [ ] 4. 閉じたComboboxのホイールで設定値が勝手に変わらない。選択肢を開いたとき背景が動かない
++- [ ] 5. 自動作成、スマート自動編集、スマートモンタージュ、自動ディレクターの説明を理解できる
++- [ ] 6. 映像演出の「？」で0.5秒後に説明が表示され、マウスを離すと消える
++- [ ] 7. かんたん編集の仕上がりに0.5秒ホバー→ミラーの原画／色補正後が比較できる
++- [ ] 8. 詳細編集の「シーン」内、グラフ／キーフレーム／シーン別FXが展開・収納できる。保存値は変わらない
++- [ ] 9. 詳細編集「カメラ」内で既存の全パラメータにアクセスし、設定保存とプレビューができる
++- [ ] 10. 詳細編集「カラー」「FX」「出力」が別タブで表示され、機能ON時に詳細欄が展開される
++- [ ] 11. 円形ぼかし／従来の上下ぼかしが切り替わり、LoLミラーの原画／FX比較ができる
++- [ ] 12. RED側の通常三人称追従が上下反転せず、壁や地面に突っ込まない
++- [ ] 13. RED側の三人称シネマと通常三人称でキル瞬間の被写体が見えやすくなった
++- [ ] 14. BLUE側のLolnam風とFPSが前版より悪化していない
++- [ ] 15. モンタージュの10種類が選択でき、2クリップ以上で違いを見比べられる
++- [ ] 16. 書き出した動画の音声がずれず、1920×1080／60fps／LoLゲーム音を維持する
++- [ ] 17. Codex側GPU書き出しと競合しない。診断にGPU/CPUの実際の経路が記録されている
++
++**不具合時に送るもの：** 対象カメラ名とBLUE/RED、該当MP4、`AutoCine_Diagnostics.zip`、問題画面のスクリーンショット。
+diff --git a/LoL_AutoCine/VERSION.txt b/LoL_AutoCine/VERSION.txt
+index 8f4d1c1..732122a 100644
+--- a/LoL_AutoCine/VERSION.txt
++++ b/LoL_AutoCine/VERSION.txt
+@@ -1 +1 @@
+-5.10.13
++5.10.14
+diff --git a/LoL_AutoCine/core/camera.py b/LoL_AutoCine/core/camera.py
+index d6cc4e9..942fc88 100644
+--- a/LoL_AutoCine/core/camera.py
++++ b/LoL_AutoCine/core/camera.py
+@@ -420,8 +420,14 @@ class CameraPlan:
+                 return None
+             rot = dict(self.rig.rot)
+             elev = self.third_pose_at(t)[1]
+-            rot[self.rig.pitch_axis] = self.rig.pitch_sign * (
++            pitch = self.rig.pitch_sign * (
+                 90.0 - elev if self.rig.pitch_complement else elev)
++            # 5.10.13 RED 180-degree rear-view correction could invert the
++            # calibrated FPS pitch specifically in normal third-person mode.
++            # Keep cinema/FPS/Lolnam untouched (already good in user footage).
++            if self.style == "third" and 90.0 < abs(self.side_yaw) % 360.0 < 270.0:
++                pitch = -pitch
++            rot[self.rig.pitch_axis] = max(-80.0, min(80.0, pitch))
+ 
+             # TRUE ORBITの視線。カメラ位置を回しただけでは横を向くため、
+             # 同じ軌道角だけ水平Yawも回して、常にキャラクター中心へ向ける。
+@@ -443,6 +449,21 @@ class CameraPlan:
+         motion = float(self.third_yaw) + self.keyframe_values(t)[0] + orbit_delta
+         if self.smart_composition:
+             motion = max(-55.0, min(55.0, motion))
++        if self.style in ("third", "third_cinema"):
++            # Gentle kill-event reframing in the calibrated local coordinate
++            # system; never add an unconditional extra RED 180-degree flip.
++            ks=tuple(self.kill_times) or (self.kill_time,)
++            cue=max((window(t,k-1.8,k-.6,k+.4,k+1.5) for k in ks),default=0.)
++            is_red=90.0 < (abs(self.side_yaw) % 360.0) < 270.0
++            # A 180° BLUE/RED base heading already mirrors the entire orbit.
++            # Applying an extra opposite sign here breaks that geometry and
++            # introduces asymmetry exactly at the kill event.
++            nudge = 7.0 if self.style == "third" else 4.0
++            motion += nudge * cue
++        if self.smart_composition:
++            # Clamp the FINAL motion including kill cue. This prevents the
++            # supplemental nudge bypassing the safe ±55° bound.
++            motion = max(-55.0, min(55.0, motion))
+         return self.side_yaw + motion
+ 
+     def _lolnam_orbit(self, t):
+diff --git a/LoL_AutoCine/core/montage_fx.py b/LoL_AutoCine/core/montage_fx.py
+index 55d9061..cfe9f03 100644
+--- a/LoL_AutoCine/core/montage_fx.py
++++ b/LoL_AutoCine/core/montage_fx.py
+@@ -11,7 +11,20 @@ import math
+ import re
+ import subprocess
+ 
+-MONTAGE_FX = {"cut", "flash", "dark"}
++MONTAGE_LABELS = {
++    "cut": "なし（高速連結）",
++    "flash": "白いフラッシュ",
++    "dark": "シネマ暗転",
++    "white": "ホワイトアウト",
++    "soft": "ソフトディゾルブ風",
++    "gold": "ゴールドライト",
++    "cool": "クールブルー",
++    "pulse": "インパクトパルス",
++    "cinema": "フィルムフラッシュ",
++    "shadow": "ディープシャドウ",
++}
++MONTAGE_REVERSE = {label: key for key,label in MONTAGE_LABELS.items()}
++MONTAGE_FX = set(MONTAGE_LABELS)
+ 
+ 
+ def get_duration(path: Path, *, ffprobe: str = "ffprobe", ffmpeg: str = "ffmpeg") -> float:
+@@ -58,15 +71,24 @@ def montage_filter(style: str, cuts: list[float]) -> str:
+         raise ValueError("未知のモンタージュ演出: " + style)
+     if style == "cut" or not cuts:
+         return "null"
+-    if style == "flash":
+-        # 2 frame wide flicker at 60fps; avoid full-white screen or seizure-like strobing
+-        terms = [f"0.22*max(0,1-abs(t-{x:.4f})/0.09)" for x in cuts]
+-    else:
+-        terms = [f"-0.24*max(0,1-abs(t-{x:.4f})/0.18)" for x in cuts]
+-    # Note: FFmpeg filter argument escaping is handled by passing the entire
+-    # filter as one subprocess argument (not through a shell).
+-    return "eq=brightness='" + "+".join(terms) + "':eval=frame"
+-
++    profiles = {
++        "flash": (.22, .09), "dark": (-.24, .18),
++        "white": (.34, .24), "soft": (.11, .30),
++        "gold": (.19, .22), "cool": (.10, .20),
++        "pulse": (.28, .11), "cinema": (.16, .16),
++        "shadow": (-.34, .23),
++    }
++    amount, width = profiles[style]
++    terms=[f"{amount:.3f}*max(0,1-abs(t-{x:.4f})/{width:.3f})" for x in cuts]
++    # Safe continuous pulses preserve 1080p/60fps and original game audio.
++    graph="eq=brightness='"+"+".join(terms)+"':eval=frame"
++    if style in ("gold","cinema"):
++        graph+=",colorbalance=rs=0.02:gs=0.008:bs=-0.018"
++    elif style=="cool":
++        graph+=",colorbalance=rs=-0.022:bs=0.035"
++    elif style=="pulse":
++        graph+=",eq=saturation=1.11"
++    return graph
+ 
+ def render_montage(clips, dst, style="cut", *, concat=None, ffmpeg=None,
+                    ffprobe="ffprobe", encoder=None, logger=None, encoder_policy='auto') -> str:
+@@ -102,7 +124,7 @@ def render_montage(clips, dst, style="cut", *, concat=None, ffmpeg=None,
+                     n = args.index("-r")
+                     del args[n:n+2]
+                 from .gpu_full import render_gpu_montage
+-                if render_gpu_montage(ffmpeg,raw,dst,style,boundaries,args,logger):
++                if style in ("flash", "dark") and render_gpu_montage(ffmpeg,raw,dst,style,boundaries,args,logger):
+                     return style
+             cmd = [ffmpeg, "-y", "-hide_banner", "-loglevel", "error", "-i", str(raw),
+                    "-vf", filt, "-map", "0:v:0", "-map", "0:a?", *args,
+diff --git "a/LoL_AutoCine/docs/AutoCine_v5.10.14_\345\256\237\350\243\205\344\273\225\346\247\230\346\233\270.md" "b/LoL_AutoCine/docs/AutoCine_v5.10.14_\345\256\237\350\243\205\344\273\225\346\247\230\346\233\270.md"
+new file mode 100644
+index 0000000..448512b
+--- /dev/null
++++ "b/LoL_AutoCine/docs/AutoCine_v5.10.14_\345\256\237\350\243\205\344\273\225\346\247\230\346\233\270.md"
+@@ -0,0 +1,73 @@
++# LoL AutoCine v5.10.14 実装仕様書
++
++作成日：2026-10-10  
++基準：`codex/lol-autocine-v51013-match-camera-handoff`  
++主目的：**ワンクリックの簡単編集を守りつつ、詳細編集の情報密度を整理し、RED側カメラの誤構図を改善する。**
++
++## 1. 開発原則
++- Windows/Tkinter・LoL Replay API・TargetLock・ゲーム専用音声・GPUエンコーダの既存インターフェースを維持する
++- 設定値はUIを切り替えても変更・リセットしない。かんたん編集と詳細編集で同じテンプレート変数を共有する
++- デフォルトは16:9・1080p・60fps・音声同期を維持
++- 高価なリアルタイム追跡やLoL内メニューの強制変更を行わない
++- カメラが有効かはWindowsリプレイで評価し、数値単体の検証結果を実映像品質の保証としない
++
++## 2. 画面構成
++- 上段：リプレイ準備／対象プレイヤー選択／検出シーン／常時ミラー
++- かんたん編集：自動作成、スマート自動編集、スマートモンタージュ、仕上がり、キルフレーム図鑑、モンタージュ切替
++- 詳細編集：**シーン／カメラ／カラー／FX／出力**に分離。シーン内のグラフ・カメラキーフレーム・シーンFXは折りたたみ
++- 詳細編集の右側にある既存の重複操作パネルは非表示にするが、機能・データは削除しない
++- 旧「基本」設定は互換性のため仕上げ側の内部タブから編集できるよう残す
++
++## 3. 機能別要件・実装（ユーザー指定1〜12）
++| ID | 機能 | 実装仕様と操作 |
++|---|---|---|
++| 01 | キルフレーム図鑑 | 独立ウィンドウ。実試合不使用の中立サンプル肖像、全スタイル検索、一覧画像、右側の大きいプレビュー、選択・適用と追加発光0〜2 |
++| 02 | プルダウン誤スクロール防止 | 閉じたComboboxのホイールによる選択変更を防ぐ。開いたPopdown時は背後の編集領域をスクロールしない |
++| 03 | 意味説明 | 自動作成・スマート自動編集・自動ディレクター・スマートモンタージュの意味をかんたん編集に短文で表示 |
++| 04 | ホバー | 映像演出の「？」に0.5秒でツールチップ。外すと消える |
++| 05 | 詳細編集整理 | 不要な常時表示を抑え、同じ設定に接続した折りたたみ式のシーン・キーフレーム・FX・カメラ詳細を利用 |
++| 06 | RED側三人称追従 | REDで三人称通常のピッチ補正の極性を変更し、異常な上下反転を防ぐ。FPS・Lolnamの既存計算は触れない |
++| 07 | キル構図補正 | 三人称通常・シネマでキル時刻周辺に小さなYaw補正を付与。常時180度加算は行わない |
++| 08 | カラー・FX・出力分離 | 編集バー「シーン／カメラ／カラー／FX／出力」。旧設定と処理を共有 |
++| 09 | DOF分離 | FX側のDOFをONで展開。円形・従来上下ぼかしを既存選択から切替。実際のミラー1フレームで原画／適用後を比較 |
++| 10 | トランジション増加 | カット／フラッシュ／暗転／ホワイトアウト／ソフト／金色／クールブルー／パルス／映画フラッシュ／シャドウ計10種。厳密なクロスディゾルブではなく「光・明るさによる切替アクセント」 |
++| 11 | 仕上がりホバー | かんたん編集で仕上がりボタンに0.5秒ホバーすると現在のミラーから取得できた原画・選択テンプレートのカラーを左右比較。ミラー未接続時は説明表示 |
++| 12 | 色味の分かる名称 | かんたん編集の仕上がりを「自然（LoL色）」「シネマ（映画色）」「鮮やか（高彩度）」と表示。テンプレート内部IDや保存互換性は維持 |
++
++## 4. その他（13〜15）
++- キルフレーム：かんたん編集と詳細編集の両方から専用図鑑を開ける。既存スタイルと追加素材は維持
++- カメラ表示：選択設定とReplay APIの実動作表示を区別するv5.10.11以降の処理を維持
++- 機能重複：右側のLoLnam/自動モーションの詳細重複パネルは詳細編集時に隠し、下段カメラ設定に集約
++
++## 5. キルフレーム図鑑
++- UI：検索・2列カード・サンプル人物を示す中立プレースホルダ・大きなプレビュー・発光スライダー・適用
++- 合成：`core.kill_icons.make_badge` を再利用。実試合では後段の合成でキラーと被キル者の公式チャンピオン肖像に差し替える
++- 新たな外部権利素材や画面の個人名は同梱しない
++- 背景は透過RGBA。画像サイズは従来どおり書き出し側と整合
++
++## 6. RED側カメラ計算
++- 三人称通常ではRED補正をキャリブレーション軸に合わせる。カメラ投影が上下反転した場合に校正したピッチの符号を調整し、極端な角度を抑制
++- BLUE/FPS/Lolnamの合格済み経路は極力変更しない
++- 三人称通常・シネマはキル時刻の近傍だけ約4〜7°の補正を適用し、シーン冒頭と終端は元の視点へ復帰
++- Terrain遮蔽を画像認識して判定する機能は今回含まない。RED側実機で4パターン再チェックが必要
++
++## 7. トランジションと音声
++- 各切替時刻の小さな明るさ・色合いの時間窓をFFmpegで適用。フレーム数を増減せず、元のゲーム音はstream copy
++- `flash` / `dark` は既存のGPU Full対応経路を残す。新スタイルの一部はFFmpeg CPUフィルタの後処理になるため、GPU処理100%とは主張しない
++- 結合失敗時には既存の無加工結合へ戻すフェイルセーフを維持
++
++## 8. データ互換性
++- `Template`・`Shot`とJSON形式の既存項目を追加削除せず維持
++- キルフレーム37素材の読み込みを維持し、設定済みプロジェクトを開いたとき同じ選択内容を表示
++- ワンクリック、GPU、LoL専用音声、HUD、TargetLockは変更対象外
++
++## 9. テスト・受入基準
++- Python構文コンパイル、旧回帰テスト、カメラ計算、全キルフレーム合成、UI開閉、トランジションの短いMP4エンコード
++- 実機：下記 `TESTLIST_v5.10.14_JA.md` を使ってRED4本／BLUE4本の追従構図・LoL音声・GPU書き出しを確認する
++- 画面上の左右比較が表示されないときはミラーを開始し、最新フレームを取得して再試行する
++- 実際のLoL映像による評価が終わるまでカメラ品質を「完全修正」とは表現しない
++
++## 10. 運用・Codex統合
++- Windows用フルZIP：別フォルダに解凍して `START.bat` 起動
++- Codex差分ZIP：`codex/lol-autocine-v51013-match-camera-handoff` ベースのパッチ。Codex側のGPU新変更がある場合はGPU関連ファイルを上書きせず手動マージ
++- 差分の `git apply --check` が通ることを配布前に確認する
+diff --git a/LoL_AutoCine/docs/SPEC_v5.10.14_JA.md b/LoL_AutoCine/docs/SPEC_v5.10.14_JA.md
+new file mode 100644
+index 0000000..579ff3d
+--- /dev/null
++++ b/LoL_AutoCine/docs/SPEC_v5.10.14_JA.md
+@@ -0,0 +1,60 @@
++# LoL AutoCine v5.10.14 実装仕様書
++更新日: 2026-10-11
++
++## 1. 目的・互換性
++「リプレイの全体スキャンを1度だけ行い、対象とシーンを選べばワンクリックで1080p/60fpsのゲーム音付きハイライトを作れる」という既存コンセプトを維持する。既存TargetLock、Replay API、BLUE/RED、GPUエンコーダ、プロセス単位のLoL専用音声、HUD設定、全37種類の画像ベースキルフレームを削除しない。シーン選択、編集プロジェクト、テンプレートの保存形式を互換維持。変更は原則UI層に局所化する。
++
++## 2. かんたん編集
++- 自動作成: 既存の全シーン書き出し。スマート自動編集とは異なり自動演出の追加を行わず、現在設定に従う。
++- スマート自動編集: キル前後カメラ・キル瞬間の演出を自動調整する既存処理。
++- スマートモンタージュ: チェックされた複数シーンの見せ場を後半に配置する既存オプション。出力モンタージュON時に適用。
++- 自動ディレクター: キル数に応じカメラ動きを調整する既存オプション。4項目それぞれのON条件と説明を直接表示。
++- 仕上がり: 自然・シネマ・ダイナミックを0.5秒ホバーでプレビュー、選択で適用。ホバーは設定値を変更しない。
++- キルフレーム: スタイル選択から「図鑑」へ移動し、固定サンプルで見た目を確認して適用する。
++
++## 3. キルフレーム図鑑
++- 実シーン不要。既存の37種類の透過PNGと従来ベクター型の計41種類+無効を一覧化。
++- カードの大きな静止画は固定の左右肖像窓を使い、フレームを上から重ねる。チャンピオンPNGが存在しない場合にはテキスト付きプレースホルダーを使用し、固定のキャラクター顔を捏造しない。
++- 検索・大カテゴリ絞り込み・選択・拡大。選択で全体スタイルを更新し、かんたん編集/詳細編集の値を同期。
++- 発光の強弱は既存の「発光量」変数に紐づける。高解像度PNGは縮小・合成時の画質を維持。
++
++## 4. 詳細編集・表示制御
++- 下部ワークスペースを「シーン」「カメラ」「カラー」「FX」「出力」へ分割。切替操作で編集状態・シーン保存・ミラー状態を初期化しない。
++- シーン: 「シーン別演出ON」で各シーンの設定を出し、キーフレーム・個別カラー・FXは独立した折りたたみセクション。隠れた操作の設定値をリセットしない。
++- カメラ: 既存カメラモードと距離・仰角・Orbitを一箇所で管理。右側は詳細スライダーを重複表示しないでリンクから下部へ誘導。
++- カラー: 全体グレード・トーンカーブ・Fogを表示。Fog / CurveはON時だけ詳細を展開する。
++- FX: 全映像演出・DOFを表示。DOFは円形ぼかし/従来上下ぼかしを分け、強さとプレビューを表示。円形は2D画面座標ベースであり自動被写体追跡ではない。
++- 出力: 1080p/60fps、GPU/CPU優先、音声、HUD、キルフレーム、モンタージュと出力先の設定を集約する。
++- 右側の用途が被るパネルは初期非表示にする。値を参照している既存変数を削除しない。
++
++## 5. 誤操作防止・説明
++- 閉じたComboboxのホイールで値を変更しない。開いているポップダウンは候補だけをスクロールし背景スクロールを止める（Tk側のネイティブイベントを優先）。
++- SpinboxとNotebookもホイールによる意図しない値/タブ変更を防ぐ。
++- 既存の「?」ヘルプの発火遅延を500msへ。再描画やキャプチャを説明ポップアップ起動の副作用にしない。
++- カラーグレードとテンプレートのラベルを色味が伝わる日本語にする。ただし保存キーは変更せず旧設定読み込みに互換。
++
++## 6. カメラの改善
++- RED三人称追従は上下反転を避けるためキャリブレーションで得たpitch_axis / pitch_signの妥当性を検証し、安全な仰角範囲を優先。Yaw 180度反転をPitchへ二重適用しない。
++- BLUE/RED別の安全距離・Yaw基準を維持し、Kill/Assistの瞬間は急激に変化させず軽い構図バイアスを適用する。
++- Lolnam風シネマとBLUE側FPSは実映像で良好だった既定値を不用意に変更しない。
++- 実際のReplay APIに対する可視性はWindows実機動画で確認する。自動的な映像判定ができない場合、改善を保証しない。
++
++## 7. トランジション
++- 既存のカット・白フラッシュ・暗転に加え、短いディゾルブ相当、ソフトグロー、アンバー、寒色、フィルム調、軽いグリッチを安全な単一映像フィルターとして追加。
++- ゲーム音トラックをストリームコピーし、時間軸の増減を発生させない。実際のクリップを混ぜる「真のクロスディゾルブ」と混同しない。
++- GPU経路が新スタイルを未対応ならCPUフィルターへ安全にフォールバックし、ログに経路を残す。
++
++## 8. テストと受入条件
++1. GUI起動・かんたん/詳細切替・5タブ切替に例外なし。
++2. キルフレーム41種+OFFすべてが図鑑で選択可能。PNGの37素材が存在し、サンプル書き出し結果が正しい。
++3. ゲームリプレイ未接続でもキル図鑑が表示でき、現在のミラーは勝手にOFFにならない。
++4. スキャン後の表示プレイヤー切替で再スキャンされない。
++5. チェックボックス・シーン保存・Camera/FX値がタブ切替前後で保持される。
++6. ホバー説明の遅延500ms。プルダウン開閉時は背景スクロールが不要に進まない。
++7. RED 3人称追従の向きと上下、通常3人称、シネマ、FPS、LolnamシネマをBLUEとREDで実映像比較。
++8. DOF円形/従来、FOG/Curve、トランジションそれぞれで効果を確認。
++9. 最終1080p/60fps、LoL専用音声、HUD、NVENC、GPUモンタージュ、終了後カメラ復元の回帰確認。
++10. ネットワーク未接続・FFmpeg不在の失敗時も診断ログが残り、既存機能を壊さない。
++
++## 9. Codexへの統合上の注意
++GPU/音声コアは現在のCodex実装を優先。競合時にcore/gpu_full.py・core/gpu_pipeline.py・core/audio.pyを旧版に戻してはいけない。GitHubの専用ブランチでテスト後に統合する。新モンタージュスタイルはGPU最適化未実装のため安全CPUフォールバックあり。
+diff --git a/LoL_AutoCine/legacy_app.py b/LoL_AutoCine/legacy_app.py
+index 5b0223a..8f1ff56 100644
+--- a/LoL_AutoCine/legacy_app.py
++++ b/LoL_AutoCine/legacy_app.py
+@@ -25,6 +25,7 @@ from core import paths                                             # noqa: E402
+ from core.kill_icons import STYLES as KILL_ICON_STYLES, REVERSE_STYLES as KILL_ICON_REVERSE
+ from core.kill_icons import POSITIONS as KILL_ICON_POSITIONS, REVERSE_POSITIONS as KILL_ICON_REVERSE_POSITIONS
+ from core.kill_icons import REVERSE_MARK_STYLES as KILL_MARK_REVERSE
++from core.montage_fx import MONTAGE_LABELS, MONTAGE_REVERSE
+ from core.camera import INTENSITY_JP, STYLES, CAMERA_SIDE_CHOICES        # noqa: E402
+ from core.capture import CaptureError, SyntheticSource, WGCWindowSource   # noqa: E402
+ from core.effects import (FOG_PRESETS, GRADE_JP, TRANSITIONS, Template, one_click_templates, gpu_encoder_available, gpu_pipeline_status,
+@@ -103,7 +104,7 @@ def rev(d: dict) -> dict:
+     return {v: k for k, v in d.items()}
+ 
+ 
+-def bind_effect_hover_tip(widget, explanation: str, delay_ms: int = 1000) -> None:
++def bind_effect_hover_tip(widget, explanation: str, delay_ms: int = 500) -> None:
+     """Show the existing Japanese FX help near the '?' after a one-second hover."""
+     state = {"job": None, "popup": None}
+ 
+@@ -154,6 +155,25 @@ def bind_effect_hover_tip(widget, explanation: str, delay_ms: int = 1000) -> Non
+ 
+ 
+ 
++def fold_section(parent, caption: str, initially_open: bool = False):
++    """Tk pack-based disclosure. Widgets and values survive collapsing."""
++    outer=ttk.Frame(parent,style="Card.TFrame")
++    outer.pack(fill="x",pady=(6,4))
++    body=ttk.Frame(outer,style="Card.TFrame")
++    def toggle():
++        if body.winfo_manager():
++            body.pack_forget()
++            button.configure(text="▶ "+caption)
++        else:
++            body.pack(fill="x",padx=8,pady=(4,6))
++            button.configure(text="▼ "+caption)
++    button=ttk.Button(outer,text=("▼ " if initially_open else "▶ ")+caption,command=toggle)
++    button.pack(fill="x")
++    if initially_open:
++        body.pack(fill="x",padx=8,pady=(4,6))
++    return body
++
++
+ class ScrollFrame(ttk.Frame):
+     """縦スクロールできるパネル。子ウィジェット/Scale/Scrollbar上でもホイールを奪わずパネルをスクロールする。"""
+ 
+@@ -642,7 +662,7 @@ class App:
+         self.var_int = tk.StringVar(value="standard")
+         self.var_hud_choice = tk.StringVar(value=HUD_MODES['hidden'])
+         self.var_hud_summary = tk.StringVar(value=hud_summary('hidden'))
+-        self.var_montage_fx = tk.StringVar(value="なし（従来の高速連結）")
++        self.var_montage_fx = tk.StringVar(value=MONTAGE_LABELS["cut"])
+ 
+         top = ttk.Frame(r, padding=(9, 1, 9, 0))
+         top.pack(fill="x")
+@@ -654,6 +674,7 @@ class App:
+         nav.pack(side="left", padx=(15, 0))
+         ttk.Button(nav, text="⌂  ホーム", style="Nav.TButton", command=lambda: self._focus_home()).pack(side="left")
+         ttk.Button(nav, text="▣  テンプレート", style="Nav.TButton", command=self._open_template_gallery).pack(side="left")
++        ttk.Button(nav, text="✦  キルフレーム図鑑", style="Nav.TButton", command=self._open_kill_frame_gallery).pack(side="left")
+         ttk.Button(nav, text="✓  自動診断", style="Nav.TButton", command=self.on_automatic_qa).pack(side="left")
+         ttk.Button(nav, text="▰  参考動画", style="Nav.TButton", command=lambda: self._focus_reference()).pack(side="left")
+         ttk.Button(nav, text="⚙  設定", style="Nav.TButton", command=self._focus_settings).pack(side="left")
+@@ -682,7 +703,7 @@ class App:
+                             command=self._apply_edit_mode).pack(side="left", padx=(0, 8))
+         # Studio workspace shortcuts, intentionally scoped to explicit Ctrl+number.
+         # Never rebind single keys used by LoL or text/number entry fields.
+-        for num, zone in enumerate(("scene", "camera", "color", "output"), start=1):
++        for num, zone in enumerate(("scene", "camera", "color", "fx", "output"), start=1):
+             r.bind(f"<Control-Key-{num}>", lambda _e, z=zone: self._focus_editor_zone(z), add="+")
+         self.edit_mode_hint = ttk.Label(mode_bar, style="Muted.TLabel")
+         self.edit_mode_hint.pack(side="left", padx=12)
+@@ -903,7 +924,7 @@ class App:
+         self.editor_zone_bar.pack(fill="x", pady=(5, 7))
+         ttk.Label(self.editor_zone_bar, text="編集ワークスペース", style="Section.TLabel").pack(side="left", padx=(0, 12))
+         for title, zone in (("▣ シーン", "scene"), ("◉ カメラ", "camera"),
+-                            ("◈ カラー・FX", "color"), ("▤ 出力", "output")):
++                            ("◈ カラー", "color"), ("✦ FX", "fx"), ("▤ 出力", "output")):
+             ttk.Radiobutton(self.editor_zone_bar, text=title, variable=self.var_editor_zone,
+                             value=zone, style="Mode.TRadiobutton",
+                             command=self._apply_editor_zone).pack(side="left", padx=(0, 4))
+@@ -917,8 +938,12 @@ class App:
+         ttk.Label(eh, text="★ かんたん作成", style="Section.TLabel").pack(side="left")
+         ttk.Label(eh, text="難しい設定は後から変更できます", style="CardMuted.TLabel").pack(side="right")
+         ttk.Label(easy, text="① リプレイを開く → ② 対象プレイヤーを選ぶ → ③ ボタン1つでキル/アシストを検出して動画を作成", style="CardMuted.TLabel", wraplength=900).pack(anchor="w", pady=(4, 7))
+-        ttk.Button(easy, text="★ これで自動作成（おすすめ）", style="Accent.TButton", command=self.on_one_click).pack(fill="x", ipady=4)
+-        ttk.Button(easy, text="✨ スマート自動編集：カメラ＋キル瞬間の演出を自動作成", command=self.on_smart_one_click).pack(fill="x", pady=(4,0))
++        ttk.Button(easy, text="★ 自動作成（標準）", style="Accent.TButton", command=self.on_one_click).pack(fill="x", ipady=4)
++        ttk.Label(easy, text="現在の設定でキル／アシストを自動抽出して書き出します。初めてならこちら。",
++                  style="CardMuted.TLabel", wraplength=880).pack(anchor="w",pady=(1,5))
++        ttk.Button(easy, text="✨ スマート自動編集（演出重視）", command=self.on_smart_one_click).pack(fill="x", pady=(4,0))
++        ttk.Label(easy, text="キル前後のズーム・カメラの回り込み・短い発光を自動で加えて出力します。",
++                  style="CardMuted.TLabel", wraplength=880).pack(anchor="w",pady=(1,5))
+         smart_row = ttk.Frame(easy, style="Card.TFrame")
+         smart_row.pack(fill="x", pady=(6,2))
+         ttk.Label(smart_row, text="自動カメラ演出", style="Card.TLabel", width=16).pack(side="left")
+@@ -931,21 +956,26 @@ class App:
+         ttk.Label(badge_easy, text="キルアイコン装飾", style="Card.TLabel", width=16).pack(side="left")
+         ttk.Combobox(badge_easy, state="readonly", textvariable=self.var_kill_icon_style,
+                      values=list(KILL_ICON_STYLES.values()), width=26).pack(side="left", fill="x", expand=True)
+-        ttk.Checkbutton(easy, text="スマートモンタージュ（見せ場を後半に配置・自然な切り替え）",
++        ttk.Button(badge_easy,text="▣ 見た目で選ぶ",command=self._open_kill_frame_gallery).pack(side="left",padx=4)
++        ttk.Checkbutton(easy, text="スマートモンタージュ（見せ場を後半に配置）",
+                         variable=self.var_smart_montage).pack(anchor="w", pady=(5, 2))
++        ttk.Label(easy,text="ONなら複数キルの順番を見せ場中心に自動構成。OFFは時刻順を優先。",
++                  style="CardMuted.TLabel",wraplength=880).pack(anchor="w")
+         quick_presets = ttk.Frame(easy, style="Card.TFrame")
+         quick_presets.pack(fill="x", pady=(10, 3))
+         ttk.Label(quick_presets, text="仕上がり", style="Card.TLabel").pack(side="left", padx=(0, 6))
+-        for title, key in (("自然", "三人称 自然め"),
+-                           ("シネマ", "Lolnam風スムーズ"),
+-                           ("ダイナミック", "Lolnam風ダイナミック")):
+-            ttk.Button(quick_presets, text=title,
+-                       command=lambda k=key: self._choose_easy_preset(k)).pack(side="left", padx=3, fill="x", expand=True)
++        for title, key in (("自然（LoL色）", "三人称 自然め"),
++                           ("シネマ（映画色）", "Lolnam風スムーズ"),
++                           ("鮮やか（高彩度）", "Lolnam風ダイナミック")):
++            button=ttk.Button(quick_presets, text=title,
++                       command=lambda k=key: self._choose_easy_preset(k))
++            button.pack(side="left", padx=3, fill="x", expand=True)
++            self._bind_preset_hover(button,key)
+         self.lbl_easy_preset = ttk.Label(easy, textvariable=self.var_tpl, style="CardMuted.TLabel")
+         self.lbl_easy_preset.pack(anchor="w", pady=(0, 3))
+         ttk.Checkbutton(easy, text="自動ディレクター：キル数に合わせてカメラ演出を自動調整（任意）",
+                         variable=self.var_auto_director).pack(anchor="w", pady=(6, 1))
+-        ttk.Label(easy, text="ONなら自動作成前に既存のOrbit/ドリー設定を調整します。OFFでは以前の挙動のまま。",
++        ttk.Label(easy, text="ON：キル数・シーンに合わせOrbitとドリーを調整。OFF：選んだカメラ設定を優先。",
+                   style="CardMuted.TLabel").pack(anchor="w")
+         hud_easy = ttk.Frame(easy, style="Card.TFrame")
+         hud_easy.pack(fill="x", pady=(12, 2))
+@@ -960,7 +990,7 @@ class App:
+         easy_montage_row.pack(fill="x", pady=(7,1))
+         ttk.Label(easy_montage_row, text="動画のつなぎ目", style="Card.TLabel", width=16).pack(side="left")
+         ttk.Combobox(easy_montage_row, state="readonly", textvariable=self.var_montage_fx,
+-                     values=["なし（従来の高速連結）", "光るカット（白い閃光）", "暗転カット（シネマ）"],
++                     values=list(MONTAGE_LABELS.values()),
+                      width=28).pack(side="left", fill="x", expand=True)
+ 
+         self._mode_detail_sections = []
+@@ -977,7 +1007,7 @@ class App:
+         self._mode_detail_sections.append(scene_card)
+         self._editor_scene = scene_card
+         scene_card.pack(fill="x", pady=(0, 8))
+-        ttk.Label(scene_card, text="◈ シーン別ディレクター / 編集プロジェクト", style="Section.TLabel").pack(anchor="w")
++        ttk.Label(scene_card, text="◈ シーン編集 — 基本設定 → 必要なら詳細を開く", style="Section.TLabel").pack(anchor="w")
+         ttk.Checkbutton(scene_card, text="シーン別演出を使用（各クリップにカメラ設定を反映）",
+                         variable=self.var_scene_mode).pack(anchor="w", pady=(5, 2))
+         ttk.Label(scene_card, text="右の検出シーンを選ぶ → 値を調整 →『このシーンに保存』。三人称はLolnam風カメラへ切替、FPS/俯瞰はそのまま。",
+@@ -1004,31 +1034,33 @@ class App:
+         ttk.Label(sr, text="演出強度", style="Card.TLabel").pack(side="left")
+         ttk.Combobox(sr, textvariable=self.var_shot_intensity, state="readonly", width=12,
+                      values=list(SHOT_INTENSITY_JA.values())).pack(side="left", padx=(4,10))
++        scene_pose_group=fold_section(scene_card,"カメラの動き・グラフ（細かく調整）")
+         self.scene_vars = {}
+         for title,key,lo,hi,initial in (("Orbit°", "arc",0,75,10),("Dolly%","dolly",0,15,3),
+                                          ("Yaw°","yaw",-180,180,0),("キル前s","pre",1,15,4),
+                                          ("キル後s","post",1,15,3)):
+             self.scene_vars[key] = tk.DoubleVar(value=initial)
+-            segment=ttk.Frame(scene_card, style="Card.TFrame");segment.pack(fill="x",pady=1)
++            segment=ttk.Frame(scene_pose_group, style="Card.TFrame");segment.pack(fill="x",pady=1)
+             ttk.Label(segment, text=title, width=12, style="Card.TLabel").pack(side="left")
+             ttk.Scale(segment, variable=self.scene_vars[key], from_=lo, to=hi).pack(side="left", fill="x", expand=True, padx=(0,6))
+             ttk.Spinbox(segment, from_=lo,to=hi,increment=0.5,textvariable=self.scene_vars[key],width=7).pack(side="right")
+-        self.shot_motion_graph=ShotMotionGraph(scene_card, self._scene_shot_from_ui)
++        self.shot_motion_graph=ShotMotionGraph(scene_pose_group, self._scene_shot_from_ui)
+         self.shot_motion_graph.pack(fill="x",pady=(5,2))
+-        ttk.Label(scene_card, text="横軸はキルまでの時間。青=画角 / 緑=カメラ距離 / 紫=回り込み角。線は見やすいよう各項目を別々に拡大しています。",
++        ttk.Label(scene_pose_group, text="横軸はキルまでの時間。青=画角 / 緑=カメラ距離 / 紫=回り込み角。線は見やすいよう各項目を別々に拡大しています。",
+                   style="CardMuted.TLabel", wraplength=1100).pack(anchor="w", pady=(0,4))
+ 
+         # v5.9.2: Optional camera keyframe lane, relative to the kill event.
+-        kf_head = ttk.Frame(scene_card, style="Card.TFrame"); kf_head.pack(fill="x", pady=(8,3))
++        keyframe_group=fold_section(scene_card,"キーフレーム（詳細・手動カメラ補正）")
++        kf_head = ttk.Frame(keyframe_group, style="Card.TFrame"); kf_head.pack(fill="x", pady=(8,3))
+         ttk.Label(kf_head, text="◈ カメラキーフレーム（キル瞬間 = 0秒）", style="Section.TLabel").pack(side="left")
+-        ttk.Label(scene_card, text="回転・寄り・FOVの補正値。空なら従来の自動カメラ。変更後は『このシーンに保存』で確定。",
++        ttk.Label(keyframe_group, text="回転・寄り・FOVの補正値。空なら従来の自動カメラ。変更後は『このシーンに保存』で確定。",
+                   style="CardMuted.TLabel", wraplength=760).pack(anchor="w")
+         self._edit_keyframes = []
+-        self.kf_list = tk.Listbox(scene_card, height=4, exportselection=False,
++        self.kf_list = tk.Listbox(keyframe_group, height=4, exportselection=False,
+                                   bg="#FFFFFF", fg="#172033", selectbackground="#BFDBFE", relief="flat")
+         self.kf_list.pack(fill="x", pady=(3,3))
+         self.kf_list.bind('<<ListboxSelect>>', self.on_keyframe_selection)
+-        kf_inputs = ttk.Frame(scene_card, style="Card.TFrame"); kf_inputs.pack(fill="x")
++        kf_inputs = ttk.Frame(keyframe_group, style="Card.TFrame"); kf_inputs.pack(fill="x")
+         self.kf_vars = {}
+         for title, field_name, lo, hi, value in (("時刻s", "time", -15, 15, 0),
+             ("回転°", "yaw", -70, 70, 0), ("寄り%", "zoom", -30, 30, 0),
+@@ -1037,11 +1069,11 @@ class App:
+             self.kf_vars[field_name] = tk.DoubleVar(value=value)
+             ttk.Spinbox(kf_inputs, from_=lo, to=hi, increment=0.5,
+                         textvariable=self.kf_vars[field_name], width=6).pack(side="left", padx=(0,5))
+-        kf_actions=ttk.Frame(scene_card,style="Card.TFrame"); kf_actions.pack(fill="x",pady=(4,4))
++        kf_actions=ttk.Frame(keyframe_group,style="Card.TFrame"); kf_actions.pack(fill="x",pady=(4,4))
+         ttk.Button(kf_actions,text="＋ 追加 / 選択を更新",command=self.on_keyframe_upsert).pack(side="left")
+         ttk.Button(kf_actions,text="－ 選択を削除",command=self.on_keyframe_remove).pack(side="left",padx=5)
+         ttk.Button(kf_actions,text="動きをプレビュー",command=self.on_keyframe_preview).pack(side="left")
+-        preset_actions = ttk.Frame(scene_card, style="Card.TFrame")
++        preset_actions = ttk.Frame(keyframe_group, style="Card.TFrame")
+         preset_actions.pack(fill="x", pady=(4, 3))
+         ttk.Label(preset_actions, text="キーフレームの型", style="Card.TLabel").pack(side="left", padx=(0, 6))
+         for caption, pattern in (("自然な回り込み", "soft_orbit"),
+@@ -1050,16 +1082,17 @@ class App:
+             ttk.Button(preset_actions, text=caption,
+                        command=lambda p=pattern: self.on_keyframe_preset(p)).pack(side="left", padx=3)
+ 
+-        fx_head = ttk.Frame(scene_card,style="Card.TFrame"); fx_head.pack(fill="x",pady=(8,3))
++        scene_fx_group=fold_section(scene_card,"このシーンだけの色・FX・キルフレーム")
++        fx_head = ttk.Frame(scene_fx_group,style="Card.TFrame"); fx_head.pack(fill="x",pady=(8,3))
+         ttk.Label(fx_head,text="◈ シーンごとの色・エフェクト",style="Section.TLabel").pack(side="left")
+         self.var_scene_fx_enabled = tk.BooleanVar(value=False)
+-        scene_badge = ttk.Frame(scene_card, style="Card.TFrame")
++        scene_badge = ttk.Frame(scene_fx_group, style="Card.TFrame")
+         scene_badge.pack(fill="x", pady=(3, 5))
+         self.var_scene_kill_icon = tk.StringVar(value="全体設定を引き継ぐ")
+         ttk.Label(scene_badge, text="このシーンのキルアイコン", style="Card.TLabel").pack(side="left", padx=(0, 8))
+         ttk.Combobox(scene_badge, state="readonly", textvariable=self.var_scene_kill_icon,
+                      values=["全体設定を引き継ぐ", *KILL_ICON_STYLES.values()], width=25).pack(side="left")
+-        ttk.Checkbutton(scene_card,text="このシーンだけ色・エフェクトを上書き（OFFは全体設定を引き継ぐ）",
++        ttk.Checkbutton(scene_fx_group,text="このシーンだけ色・エフェクトを上書き（OFFは全体設定を引き継ぐ）",
+                         variable=self.var_scene_fx_enabled).pack(anchor="w")
+         self.scene_fx_vars={}
+         for label,key,lo,hi,default in (("色温度", "temperature",-1,1,0),
+@@ -1067,13 +1100,13 @@ class App:
+                                        ("Focus Blur", "focus_blur",0,1,0),
+                                        ("DOFぼかし", "dof_blur",0,20,0),
+                                        ("キル瞬間の強調", "highlight_pulse",0,1,0)):
+-            fx_row=ttk.Frame(scene_card,style="Card.TFrame");fx_row.pack(fill="x",pady=1)
++            fx_row=ttk.Frame(scene_fx_group,style="Card.TFrame");fx_row.pack(fill="x",pady=1)
+             ttk.Label(fx_row,text=label,width=14,style="Card.TLabel").pack(side="left")
+             v=tk.DoubleVar(value=default);self.scene_fx_vars[key]=v
+             ttk.Scale(fx_row,variable=v,from_=lo,to=hi).pack(side="left",fill="x",expand=True,padx=5)
+             ttk.Spinbox(fx_row,from_=lo,to=hi,increment=0.05,textvariable=v,width=7).pack(side="left")
+ 
+-        ttk.Label(scene_card, text="キル瞬間の強調は短時間だけ明るさ・彩度を上げます（0で無効）。カメラ曲線と同じキル時刻に同期します。",
++        ttk.Label(scene_fx_group, text="キル瞬間の強調は短時間だけ明るさ・彩度を上げます（0で無効）。カメラ曲線と同じキル時刻に同期します。",
+                   style="CardMuted.TLabel", wraplength=870).pack(anchor="w", pady=(2,4))
+         for _variable in (self.var_shot_profile,self.var_shot_intensity,*self.scene_vars.values()):
+             _variable.trace_add('write',lambda *_: self.shot_motion_graph.request_redraw())
+@@ -1137,6 +1170,7 @@ class App:
+         ttk.Button(target_row, text="◉  キル対象（自動）", command=lambda: self.log("追従対象: キル対象（自動）")).pack(side="left", fill="x", expand=True)
+         ttk.Button(target_row, text="▶  対象を手動指定", command=self.on_lock).pack(side="left", fill="x", expand=True, padx=(6, 0))
+ 
++        camera_more=fold_section(cam,"距離・高さ・Orbit・モーション詳細")
+         # all existing camera sliders remain available in the center
+         self.sl, self.sl_labels = {}, {}
+         def _slider_range(key):
+@@ -1163,7 +1197,7 @@ class App:
+             ent.pack(side="right")
+             self.sl[key] = v; self.sl_labels[key] = ent
+ 
+-        cam_grid = ttk.Frame(cam, style="Card.TFrame")
++        cam_grid = ttk.Frame(camera_more, style="Card.TFrame")
+         cam_grid.pack(fill="x")
+         left_cam = ttk.Frame(cam_grid, style="Card.TFrame"); left_cam.pack(side="left", fill="both", expand=True, padx=(0, 10))
+         right_cam = ttk.Frame(cam_grid, style="Card.TFrame"); right_cam.pack(side="left", fill="both", expand=True)
+@@ -1187,7 +1221,7 @@ class App:
+         ttk.Button(yawbar, text="0°", command=lambda: self.sl["third_yaw"].set(0)).pack(side="left", expand=True, fill="x", padx=2)
+         ttk.Button(yawbar, text="+90° ↷", command=lambda: self.sl["third_yaw"].set(min(180, self.sl["third_yaw"].get()+90))).pack(side="left", expand=True, fill="x", padx=(2, 0))
+ 
+-        motion = ttk.Frame(cam, style="Card.TFrame", padding=(0, 8, 0, 0)); motion.pack(fill="x")
++        motion = ttk.Frame(camera_more, style="Card.TFrame", padding=(0, 8, 0, 0)); motion.pack(fill="x")
+         ttk.Label(motion, text="自動カメラモーション", style="Card.TLabel", font=("Meiryo UI", 10, "bold")).pack(anchor="w")
+         self.var_motion_profile = tk.StringVar(value="Cinematic（Lolnam風）")
+         self.cb_motion_profile = ttk.Combobox(motion, state="readonly", textvariable=self.var_motion_profile,
+@@ -1210,15 +1244,17 @@ class App:
+         self._mode_detail_sections.append(advanced)
+         self._editor_advanced = advanced
+         advanced.pack(fill="x", pady=(0, 8))
+-        ttk.Label(advanced, text="カラー・エフェクト / 書き出し", style="Section.TLabel").pack(anchor="w")
++        ttk.Label(advanced, text="仕上げ（基本／カラー／FX／出力）", style="Section.TLabel").pack(anchor="w")
+         nb = ttk.Notebook(advanced); nb.pack(fill="x", pady=(7, 0))
+         self._editor_advanced_tabs = nb
+         basic = ttk.Frame(nb, padding=8, style="Card.TFrame")
+         color = ttk.Frame(nb, padding=8, style="Card.TFrame")
++        fx_page = ttk.Frame(nb, padding=8, style="Card.TFrame")
+         output = ttk.Frame(nb, padding=8, style="Card.TFrame")
+         nb.add(basic, text="基本")
+-        nb.add(color, text="カラー・FX")
+-        nb.add(output, text="録画・出力")
++        nb.add(color, text="カラー")
++        nb.add(fx_page, text="FX・DOF")
++        nb.add(output, text="出力")
+ 
+         ttk.Label(basic, text="テンプレート", style="Card.TLabel").pack(anchor="w")
+         self.cb_tpl_quick = ttk.Combobox(basic, state="readonly", textvariable=self.var_tpl, values=list(self.templates))
+@@ -1250,42 +1286,60 @@ class App:
+         ttk.Combobox(color, state="readonly", textvariable=self.var_grade, values=list(GRADE_JP.values())).pack(fill="x", pady=3)
+         for args in (("grade_strength","色の強さ",0,1.4),("temperature","色温度",-1,1),("contrast","コントラスト",0.6,1.6),("exposure","露出",-0.3,0.3),("vibrance","自然な彩度",-1,1.5),("vignette","ビネット",0,1),("grain","グレイン",0,1),("bloom","ブルーム",0,1),("bars","シネマ枠",0,1)):
+             slider(color,*args)
+-        self.var_fog=tk.BooleanVar(value=False); ttk.Checkbutton(color, text="Fogを有効化", variable=self.var_fog).pack(anchor="w", pady=(6,2))
+-        self.var_fog_preset=tk.StringVar(value=FOG_LABEL_JA["teal"]); ttk.Combobox(color, state="readonly", textvariable=self.var_fog_preset, values=list(FOG_LABEL_JA.values())).pack(fill="x")
+-        slider(color,"fog_strength","Fog強度",0,1)
+-        self.fog_viz = FogViz(color, self.sl["fog_strength"])
++        self.var_fog=tk.BooleanVar(value=False)
++        ttk.Checkbutton(color,text="FOG補正",variable=self.var_fog).pack(anchor="w",pady=(6,2))
++        fog_controls=ttk.Frame(color,style="Card.TFrame")
++        def show_fog(*_):
++            if self.var_fog.get():fog_controls.pack(fill="x")
++            else:fog_controls.pack_forget()
++        self.var_fog.trace_add("write",show_fog)
++        self.var_fog_preset=tk.StringVar(value=FOG_LABEL_JA["teal"]); ttk.Combobox(fog_controls, state="readonly", textvariable=self.var_fog_preset, values=list(FOG_LABEL_JA.values())).pack(fill="x")
++        slider(fog_controls,"fog_strength","Fog強度",0,1)
++        self.fog_viz = FogViz(fog_controls, self.sl["fog_strength"])
+         self.fog_viz.pack(fill="x", pady=(0,4))
+-        self.var_curve=tk.BooleanVar(value=False); ttk.Checkbutton(color, text="カーブ補正を有効化（lolnam系）", variable=self.var_curve).pack(anchor="w", pady=(6,2))
++        self.var_curve=tk.BooleanVar(value=False)
++        ttk.Checkbutton(color,text="カーブ補正（LoLnam風）",variable=self.var_curve).pack(anchor="w",pady=(6,2))
++        curve_controls=ttk.Frame(color,style="Card.TFrame")
++        def show_curve(*_):
++            if self.var_curve.get():curve_controls.pack(fill="x")
++            else:curve_controls.pack_forget()
++        self.var_curve.trace_add("write",show_curve)
+         self.var_curve_points=tk.StringVar(value="0/0 0.25/0.20 0.50/0.50 0.75/0.80 1/1")
+-        curve_head = ttk.Frame(color, style="Card.TFrame"); curve_head.pack(fill="x", pady=(4,2))
++        curve_head = ttk.Frame(curve_controls, style="Card.TFrame"); curve_head.pack(fill="x", pady=(4,2))
+         ttk.Label(curve_head, text="トーンカーブ（LoLnam風）", style="CardMuted.TLabel").pack(side="left")
+         ttk.Button(curve_head, text="初期値に戻す", command=lambda: self.curve_editor.reset()).pack(side="right")
+-        self.curve_editor = CurveEditor(color, self.var_curve_points, self.var_curve_points.get(), height=230)
++        self.curve_editor = CurveEditor(curve_controls, self.var_curve_points, self.var_curve_points.get(), height=230)
+         self.curve_editor.pack(fill="x", pady=(0,4))
+-        ttk.Label(color, text="点をクリックで追加 / ドラッグで移動。数値は x/y（0.000〜1.000）で入力できます。",
++        ttk.Label(curve_controls, text="点をクリックで追加 / ドラッグで移動。数値は x/y（0.000〜1.000）で入力できます。",
+                   style="CardMuted.TLabel", wraplength=560).pack(anchor="w")
+-        ttk.Entry(color, textvariable=self.var_curve_points).pack(fill="x", pady=(4,0))
++        ttk.Entry(curve_controls, textvariable=self.var_curve_points).pack(fill="x", pady=(4,0))
+         self.var_dof=tk.BooleanVar(value=False)
+-        ttk.Checkbutton(color, text="円形DOF：キャラ付近をくっきり、周囲をぼかす", variable=self.var_dof).pack(anchor="w", pady=(8,3))
+-        ttk.Label(color, text="まずDOFぼかしを上げます。円の内側はそのまま、外側がぼけます（実際の深度推定ではありません）。",
++        ttk.Checkbutton(fx_page,text="DOF：キャラの周囲をぼかす（ONで詳細表示）",
++                        variable=self.var_dof).pack(anchor="w",pady=(8,3))
++        dof_controls=ttk.Frame(fx_page,style="Card.TFrame")
++        def show_dof(*_):
++            if self.var_dof.get():dof_controls.pack(fill="x")
++            else:dof_controls.pack_forget()
++        self.var_dof.trace_add("write",show_dof)
++        ttk.Label(dof_controls, text="まずDOFぼかしを上げます。円の内側はそのまま、外側がぼけます（実際の深度推定ではありません）。",
+                   style="CardMuted.TLabel", wraplength=860).pack(anchor="w")
+         self.var_dof_shape=tk.StringVar(value="円形（おすすめ）")
+-        ttk.Combobox(color, state="readonly", textvariable=self.var_dof_shape,
++        ttk.Combobox(dof_controls, state="readonly", textvariable=self.var_dof_shape,
+                      values=["円形（おすすめ）", "従来の上下ぼかし"], width=30).pack(anchor="w", pady=(4,3))
+-        slider(color,"dof_blur","周囲のぼかし強度",0,12)
+-        self.var_dof_circle_hint = ttk.Label(color, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
++        slider(dof_controls,"dof_blur","周囲のぼかし強度",0,12)
++        self.var_dof_circle_hint = ttk.Label(dof_controls, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
+                                              style="CardMuted.TLabel", wraplength=880)
+         self.var_dof_circle_hint.pack(anchor="w", pady=(3,5))
+-        slider(color,"dof_center_x","円の中心・左右",.05,.95)
+-        slider(color,"dof_center_y","円の中心・上下",.05,.95)
+-        slider(color,"dof_radius","くっきりする円の半径",.08,.65)
+-        slider(color,"dof_feather","境界のなめらかさ",.025,.35)
+-        ttk.Label(color, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
++        slider(dof_controls,"dof_center_x","円の中心・左右",.05,.95)
++        slider(dof_controls,"dof_center_y","円の中心・上下",.05,.95)
++        slider(dof_controls,"dof_radius","くっきりする円の半径",.08,.65)
++        slider(dof_controls,"dof_feather","境界のなめらかさ",.025,.35)
++        ttk.Label(dof_controls, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
+                   style="CardMuted.TLabel", wraplength=950).pack(anchor="w", pady=(0,4))
+-        self.dof_viz = FocusCircleViz(color, self.sl['dof_center_x'], self.sl['dof_center_y'],
++        self.dof_viz = FocusCircleViz(dof_controls, self.sl['dof_center_x'], self.sl['dof_center_y'],
+                                      self.sl['dof_radius'], self.sl['dof_feather'])
+         self.dof_viz.pack(fill="x", pady=(2,6))
+-        legacy_dof = ttk.LabelFrame(color, text="従来の上下ぼかし用（互換設定）", padding=5)
++        legacy_dof = ttk.LabelFrame(dof_controls, text="従来の上下ぼかし用（互換設定）", padding=5)
+         self._legacy_dof_panel = legacy_dof
+         # These controls are intentionally collapsed in the new circle mode.
+         ttk.Label(legacy_dof, text="『従来の上下ぼかし』を選んだ場合だけ使います。円形モードでは変更不要。",
+@@ -1295,11 +1349,13 @@ class App:
+         slider(legacy_dof,"dof_far_distance","遠距離",100,20000)
+         self.var_dof_shape.trace_add('write', lambda *_: self._update_dof_mode_ui())
+         self._update_dof_mode_ui()
+-        ttk.Button(color, text="★ おすすめ：キャラをくっきり・背景を柔らかく",
++        ttk.Button(fx_page, text="★ おすすめ：キャラをくっきり・背景を柔らかく",
+                    command=self._apply_focus_preset).pack(fill="x", pady=(0,7))
++        ttk.Button(fx_page, text="▣ 実際のミラーでぼかしを比較",
++                   command=self._preview_dof_from_live).pack(fill="x", pady=(0,7))
+ 
+         # Premiere/AE系の演出。難しい編集を覚えなくても、チェックを入れるだけで使える。
+-        fx_box = ttk.LabelFrame(color, text="映像演出（チェックするだけでOK）", padding=8)
++        fx_box = ttk.LabelFrame(fx_page, text="映像演出（チェックするだけでOK）", padding=8)
+         fx_box.pack(fill="x", pady=(8, 0))
+         fx_top = ttk.Frame(fx_box, style="Card.TFrame"); fx_top.pack(fill="x", pady=(0, 5))
+         ttk.Label(fx_top, text="演出プリセット", style="Card.TLabel").pack(side="left")
+@@ -1310,7 +1366,7 @@ class App:
+         self.cb_effect_preset.bind("<<ComboboxSelected>>", lambda _e: self._apply_effect_preset(self.var_effect_preset.get()))
+         ttk.Label(fx_box, text="各エフェクトはON/OFFと強さを個別に変更できます。迷ったらプリセットだけでOK。",
+                   style="CardMuted.TLabel", wraplength=560).pack(anchor="w", pady=(0, 6))
+-        self.effect_help_text=tk.StringVar(value="効果名の『？』へカーソルを1秒置くと説明が表示されます。クリックでも確認できます。")
++        self.effect_help_text=tk.StringVar(value="効果名の『？』へカーソルを0.5秒置くと説明が表示されます。クリックでも確認できます。")
+         ttk.Label(fx_box, textvariable=self.effect_help_text, style="CardMuted.TLabel",
+                   wraplength=920, justify="left").pack(fill="x", pady=(1,7))
+         self.effect_vars = {}
+@@ -1325,15 +1381,22 @@ class App:
+                 cell = ttk.Frame(sec, style="Card.TFrame"); cell.grid(row=row_idx, column=col_idx, sticky="ew", padx=4, pady=2)
+                 var = tk.BooleanVar(value=False); sval = tk.DoubleVar(value=float(VIDEO_EFFECT_DEFAULTS.get(key, 0.25)))
+                 self.effect_vars[key] = var; self.effect_strength_vars[key] = sval
+-                ttk.Checkbutton(cell, text=EFFECT_LABEL_JA.get(key, label), variable=var).pack(side="left")
++                switch=ttk.Checkbutton(cell,text=EFFECT_LABEL_JA.get(key,label),variable=var)
++                switch.pack(side="left")
+                 help_message = EFFECT_LABEL_JA.get(key, key) + "：" + EFFECT_HELP_JA.get(
+                     key, "ONにすると映像に演出が加わります。")
+                 help_button = ttk.Button(cell, text="?", width=2,
+                                          command=lambda k=key: self._show_effect_help(k))
+                 help_button.pack(side="left", padx=(2,3))
+-                bind_effect_hover_tip(help_button, help_message, delay_ms=1000)
+-                ttk.Scale(cell, from_=0.05, to=1.0, variable=sval, length=70).pack(side="left", fill="x", expand=True, padx=4)
+-                ttk.Entry(cell, textvariable=sval, width=5, justify="right").pack(side="right")
++                bind_effect_hover_tip(help_button, help_message, delay_ms=500)
++                fx_parameters=ttk.Frame(cell,style="Card.TFrame")
++                ttk.Scale(fx_parameters,from_=0.05,to=1.0,variable=sval,length=70).pack(side="left",fill="x",expand=True,padx=4)
++                ttk.Entry(fx_parameters,textvariable=sval,width=5,justify="right").pack(side="right")
++                def toggle_strength(*_,enabled=var,controls=fx_parameters):
++                    if enabled.get(): controls.pack(side="right",fill="x",expand=True)
++                    else: controls.pack_forget()
++                var.trace_add("write",toggle_strength)
++                toggle_strength()
+         ttk.Button(fx_box, text="全エフェクトOFF", command=self._clear_video_effects).pack(fill="x", pady=(5, 0))
+ 
+         self.var_tr=tk.StringVar(); ttk.Label(output, text="切替", style="Card.TLabel").pack(anchor="w")
+@@ -1352,8 +1415,10 @@ class App:
+         ttk.Label(output, text="プレビュー/カメラ制御は最大144Hz。最終MP4は1080p・60fpsを標準。", style="CardMuted.TLabel", wraplength=520).pack(anchor="w", pady=(0,4))
+         self.var_montage=tk.BooleanVar(value=True); ttk.Checkbutton(output, text="完成クリップを1本のモンタージュにする", variable=self.var_montage).pack(anchor="w", pady=4)
+         ttk.Label(output, text="キルアイコンの装飾（全シーン共通）", style="Card.TLabel").pack(anchor="w", pady=(5,2))
+-        ttk.Combobox(output, state="readonly", textvariable=self.var_kill_icon_style,
+-                     values=list(KILL_ICON_STYLES.values()), width=29).pack(fill="x", pady=(0,4))
++        combo_badge=ttk.Frame(output,style="Card.TFrame");combo_badge.pack(fill="x",pady=(0,4))
++        ttk.Combobox(combo_badge, state="readonly", textvariable=self.var_kill_icon_style,
++                     values=list(KILL_ICON_STYLES.values()), width=29).pack(side="left",fill="x",expand=True)
++        ttk.Button(combo_badge,text="図鑑",command=self._open_kill_frame_gallery).pack(side="left",padx=4)
+         ttk.Label(output, text="装飾位置", style="Card.TLabel").pack(anchor="w", pady=(2, 1))
+         ttk.Combobox(output, state="readonly", textvariable=self.var_kill_icon_position,
+                      values=list(KILL_ICON_POSITIONS.values()), width=28).pack(fill="x", pady=(0, 3))
+@@ -1443,7 +1508,7 @@ class App:
+                         variable=self.var_smart_montage).pack(anchor="w", pady=(0,5))
+         ttk.Label(output, text="モンタージュ専用の切替演出", style="Card.TLabel").pack(anchor="w", pady=(5,2))
+         ttk.Combobox(output, state="readonly", textvariable=self.var_montage_fx,
+-                     values=["なし（従来の高速連結）", "光るカット（白い閃光）", "暗転カット（シネマ）"],
++                     values=list(MONTAGE_LABELS.values()),
+                      width=29).pack(fill="x", pady=(0,2))
+         ttk.Label(output, text="クリップのつなぎ目だけに適用。『なし』は再エンコードせず高速に連結します。",
+                   style="CardMuted.TLabel", wraplength=950).pack(anchor="w", pady=(0,4))
+@@ -1669,7 +1734,7 @@ class App:
+                     continue
+                 # Advanced: same global camera/color controls live in the center workspaces.
+                 # Keep widgets instantiated and bound to the same variables, but don't duplicate them.
+-                if not easy and title.startswith(("◈  カラー・FX", "◈  カメラ詳細")):
++                if not easy and title.startswith(("◈  カラー・FX", "◈  カメラ詳細", "◈  LoLnam", "✧  自動カメラモーション")):
+                     continue
+                 panel.pack(in_=parent, fill="x", pady=(0, 8))
+         if hasattr(self, "edit_mode_hint"):
+@@ -1690,6 +1755,7 @@ class App:
+             "scene": (self._editor_timeline, self._editor_scene),
+             "camera": (self._editor_camera,),
+             "color": (self._editor_advanced,),
++            "fx": (self._editor_advanced,),
+             "output": (self._editor_advanced,),
+         }
+         if zone not in visibility:
+@@ -1697,13 +1763,14 @@ class App:
+             self.var_editor_zone.set(zone)
+         for panel in visibility[zone]:
+             panel.pack(fill="x", pady=(0, 8))
+-        if zone in ("color", "output") and hasattr(self, "_editor_advanced_tabs"):
+-            self._editor_advanced_tabs.select(1 if zone == "color" else 2)
++        if zone in ("color", "fx", "output") and hasattr(self, "_editor_advanced_tabs"):
++            self._editor_advanced_tabs.select({"color": 1, "fx": 2, "output": 3}[zone])
+         descriptions = {
+             "scene": "検出シーンごとの演出・キーフレーム・順番を編集。選択したキルは右側で切り替えます。",
+             "camera": "全体カメラの追従・Orbit・距離を設定。シーン別のキーフレームは［シーン］へ。",
+-            "color": "カラー・FXの全体設定。シーンだけに適用する色は［シーン］で上書き。",
+-            "output": "書き出し・音声・LUT・出力フォルダの設定。シーンの選択は右側から。",
++            "color": "カラーグレード・トーンカーブ・FOG補正。色の調整をまとめました。",
++            "fx": "ぼかし・DOF・映像演出。ONにした項目だけ詳細を開けます。",
++            "output": "書き出し・音声・LUT・出力フォルダ。シーンの選択は右側から。",
+         }
+         self.editor_zone_hint.configure(text=descriptions[zone])
+         quick_output = getattr(self, "_right_quick_output", None)
+@@ -1714,7 +1781,7 @@ class App:
+ 
+     def _focus_editor_zone(self, zone: str) -> None:
+         """Jump to a focused edit workspace without changing render settings."""
+-        if zone not in ("scene", "camera", "color", "output"):
++        if zone not in ("scene", "camera", "color", "fx", "output"):
+             return
+         self.var_edit_mode.set("advanced")
+         self.var_editor_zone.set(zone)
+@@ -1926,6 +1993,84 @@ class App:
+         if hasattr(self,"_invalidate_preview_snapshot"):
+             self._invalidate_preview_snapshot()
+ 
++    def _preview_dof_from_live(self):
++        """Show current real LoL mirror before/after using existing DOF engine."""
++        frame,where=self._current_frame_rgb(960,540)
++        if frame is None:
++            messagebox.showinfo("DOFを確認","LoLミラーを開始してから押してください。",parent=self.root)
++            return
++        from core.preview import grade_rgb,apply_video_effect_preview
++        t=self.current_template()
++        t.dof_enabled=True
++        original=Image.fromarray(frame.astype(np.uint8))
++        result=Image.fromarray(apply_video_effect_preview(grade_rgb(frame,t),t))
++        comparison=Image.new("RGB",(original.width*2,original.height))
++        comparison.paste(original,(0,0))
++        comparison.paste(result,(original.width,0))
++        comparison.thumbnail((1080,400),Image.Resampling.LANCZOS)
++        dlg=tk.Toplevel(self.root)
++        dlg.title("LoL実フレーム：左＝原画 / 右＝FXプレビュー")
++        photo=ImageTk.PhotoImage(comparison,master=dlg)
++        label=ttk.Label(dlg,image=photo)
++        label.image=photo
++        label.pack(padx=12,pady=12)
++
++    def _open_kill_frame_gallery(self):
++        from ui.kill_frame_gallery import open_gallery
++        return open_gallery(self)
++
++    def _bind_preset_hover(self, widget, preset_name):
++        """500ms real-frame hover preview; no applying until the user clicks."""
++        state={"after":None,"window":None,"photo":None}
++        def hide(_event=None):
++            if state["after"] is not None:
++                try:widget.after_cancel(state["after"])
++                except tk.TclError:pass
++            state["after"]=None
++            if state["window"] is not None:
++                try:state["window"].destroy()
++                except tk.TclError:pass
++            state["window"]=None
++            state["photo"]=None
++        def show():
++            state["after"]=None
++            if not widget.winfo_exists() or preset_name not in self.templates:return
++            t=self.templates[preset_name]
++            popup=tk.Toplevel(widget)
++            popup.overrideredirect(True)
++            popup.attributes("-topmost",True)
++            popup.geometry(f"+{widget.winfo_rootx()}+{widget.winfo_rooty()+widget.winfo_height()+5}")
++            popup.configure(bg="#111C30")
++            state["window"]=popup
++            try:
++                from ui.template_gallery import template_info
++                info=template_info(t)
++                frame,origin=self._current_frame_rgb(240,135)
++                if frame is not None:
++                    from core.preview import grade_rgb
++                    before=Image.fromarray(frame.astype(np.uint8)).resize((240,135))
++                    after=Image.fromarray(grade_rgb(np.asarray(before),t))
++                    row=Image.new("RGB",(480,135))
++                    row.paste(before,(0,0));row.paste(after,(240,0))
++                    photo=ImageTk.PhotoImage(row,master=popup)
++                    state["photo"]=photo
++                    tk.Label(popup,image=photo,bg="#111C30").pack(padx=9,pady=(9,3))
++                tk.Label(popup,text="左：元の試合　／　右：このテンプレートの色",
++                         bg="#111C30",fg="white").pack()
++                tk.Label(popup,text=f'{preset_name}\n色：{info["tone"]}　カメラ：{info["camera"]}',
++                         bg="#111C30",fg="#E2E8F0",justify="left").pack(padx=9,pady=9)
++            except Exception as exc:
++                tk.Label(popup,text=f"色見本を取得できません：{exc}",
++                         bg="#111C30",fg="white").pack(padx=8,pady=8)
++            popup.bind("<Enter>",lambda _e:None)
++            popup.bind("<Leave>",hide,add="+")
++        def schedule(_event=None):
++            hide()
++            state["after"]=widget.after(500,show)
++        widget.bind("<Enter>",schedule,add="+")
++        widget.bind("<Leave>",hide,add="+")
++        widget.bind("<ButtonPress>",hide,add="+")
++
+     def _focus_template(self):
+         self.left_scroll.scroll_to(self._nav_template_card)
+         self.tpl_combo.focus_set()
+@@ -1952,7 +2097,15 @@ class App:
+     def _register_scrolling_controls(self):
+         """Mousewheel scrolls containing panel; never changes a closed combobox."""
+         def intercept(event):
+-            # These handlers return 'break' before the root input binding runs.
++            # Never grab the native expanded popdown scroll and pass it
++            # through to the underlying editor panels.
++            if isinstance(event.widget,ttk.Combobox):
++                try:
++                    popup=self.root.tk.call("ttk::combobox::PopdownWindow",str(event.widget))
++                    if int(self.root.tk.call("winfo","ismapped",popup)):
++                        return "break"
++                except tk.TclError:
++                    pass
+             self._preview_input(event)
+             for panel in (self.left_scroll, self.right_scroll, self.center_edit_scroll):
+                 if panel._pointer_inside(event):
+@@ -2991,7 +3144,7 @@ class App:
+         for k, v in self.sl.items():
+             v.set(getattr(t, k))
+         self.var_tr.set(TRANSITIONS.get(t.transition, t.transition))
+-        self.var_montage_fx.set({"cut":"なし（従来の高速連結）", "flash":"光るカット（白い閃光）", "dark":"暗転カット（シネマ）"}.get(getattr(t,"montage_fx","cut"), "なし（従来の高速連結）"))
++        self.var_montage_fx.set(MONTAGE_LABELS.get(getattr(t,"montage_fx","cut"),MONTAGE_LABELS["cut"]))
+         self.var_kill_icon_style.set(KILL_ICON_STYLES.get(getattr(t, "kill_icon_style", "off"), KILL_ICON_STYLES["off"]))
+         self.var_kill_icon_position.set(KILL_ICON_POSITIONS.get(getattr(t, "kill_icon_position", "right-top"), KILL_ICON_POSITIONS["right-top"]))
+         self.var_kill_icon_scale.set(float(getattr(t, "kill_icon_scale", 1.0)))
+@@ -3115,7 +3268,7 @@ class App:
+         for k, v in self.sl.items():
+             setattr(t, k, float(v.get()))
+         t.transition = rev(TRANSITIONS).get(self.var_tr.get(), "fade")
+-        t.montage_fx = {"なし（従来の高速連結）":"cut", "光るカット（白い閃光）":"flash", "暗転カット（シネマ）":"dark"}.get(self.var_montage_fx.get(),"cut")
++        t.montage_fx = MONTAGE_REVERSE.get(self.var_montage_fx.get(),"cut")
+         t.pre, t.post = float(self.var_pre.get()), float(self.var_post.get())
+         t.merge_multikill = bool(self.var_merge.get())
+         t.title_text = self.var_title.get().strip()
+@@ -3263,10 +3416,8 @@ class App:
+             style_id = d.get('smart_highlight_style', 'auto')
+             if style_id in SMART_STYLES:
+                 self.var_smart_highlight_style.set(SMART_STYLES[style_id])
+-            if d.get("montage_fx") in ("cut", "flash", "dark"):
+-                self.var_montage_fx.set({"cut": "なし（従来の高速連結）",
+-                                         "flash": "光るカット（白い閃光）",
+-                                         "dark": "暗転カット（シネマ）"}[d["montage_fx"]])
++            if d.get("montage_fx") in MONTAGE_LABELS:
++                self.var_montage_fx.set(MONTAGE_LABELS[d["montage_fx"]])
+             restored_mode = d.get("edit_mode", "easy")
+             if restored_mode in ("easy", "advanced"):
+                 self.var_edit_mode.set(restored_mode)
+@@ -3301,7 +3452,7 @@ class App:
+                                              "encoder_policy": {'GPU優先（NVENC）':'gpu','CPU優先（libx264）':'cpu'}.get(self.var_encoder_policy.get(),'auto'),
+                                              "smart_montage": bool(self.var_smart_montage.get()),
+                                              "smart_composition": bool(self.var_smart_composition.get()),
+-                                             "montage_fx": {"なし（従来の高速連結）":"cut", "光るカット（白い閃光）":"flash", "暗転カット（シネマ）":"dark"}.get(self.var_montage_fx.get(),"cut")}, ensure_ascii=False), encoding="utf-8")
++                                             "montage_fx": MONTAGE_REVERSE.get(self.var_montage_fx.get(),"cut")}, ensure_ascii=False), encoding="utf-8")
+         except Exception:
+             pass
+ 
+diff --git a/LoL_AutoCine/tests/test_v51014_studio_nle.py b/LoL_AutoCine/tests/test_v51014_studio_nle.py
+new file mode 100644
+index 0000000..b88bb75
+--- /dev/null
++++ b/LoL_AutoCine/tests/test_v51014_studio_nle.py
+@@ -0,0 +1,87 @@
++# -*- coding: utf-8 -*-
++"""v5.10.14 spec-linked regression checks. Live LoL quality remains manual."""
++from pathlib import Path
++import tkinter as tk
++import pytest
++
++from core.camera import CameraPlan, RigInfo
++from core.kill_icons import STYLES
++from core.montage_fx import MONTAGE_FX, MONTAGE_LABELS, montage_filter
++from ui.kill_frame_gallery import sample_portrait
++
++
++def test_all_montage_choices_have_distinct_active_filter():
++    assert len(MONTAGE_LABELS)>=10
++    for style in MONTAGE_FX:
++        graph=montage_filter(style,[4.0])
++        if style=="cut":
++            assert graph=="null"
++        else:
++            assert graph.startswith("eq=brightness=")
++            assert "t-4.0000" in graph
++
++
++def test_red_normal_third_pitch_corrected_without_touching_fps_or_lolnam():
++    rig=RigInfo(mode="fps",third=True,rot={"x":59.,"y":5.,"z":0.},
++                pitch_axis="x",pitch_sign=1.,pitch_complement=True,h=(0.,-1.))
++    blue=CameraPlan(style="third",rig=rig,third_elev=31,side_yaw=-12.)
++    red=CameraPlan(style="third",rig=rig,third_elev=31,side_yaw=192.)
++    assert blue.rotation_at(0)["x"] > 0
++    assert red.rotation_at(0)["x"] < 0
++    cine=CameraPlan(style="third_cinema",rig=rig,third_elev=31,side_yaw=192.)
++    assert cine.rotation_at(0)["x"] > 0
++    lolnam=CameraPlan(style="lolnam_cinema",rig=rig,third_elev=31,side_yaw=192.)
++    assert lolnam.rotation_at(0) is not None
++
++
++def test_frame_gallery_shows_all_existing_styles():
++    assert len(STYLES)>30
++    image=sample_portrait((33,88,160),"A")
++    assert image.size==(180,180)
++    src=(Path(__file__).resolve().parents[1]/"ui"/"kill_frame_gallery.py").read_text("utf-8")
++    assert "for idx,(style,title) in enumerate(STYLES.items())" in src
++    assert "make_badge(tmp,style" in src
++
++
++def test_ui_modes_preserve_core_variables():
++    import legacy_app
++    root=tk.Tk()
++    root.geometry("1420x860")
++    app=legacy_app.App(root)
++    try:
++        root.update()
++        assert app.var_auto_director.get() is False
++        assert app.var_kill_icon_style.get()
++        assert hasattr(app,"_open_kill_frame_gallery")
++        app.var_edit_mode.set("advanced")
++        app._apply_edit_mode()
++        for zone,tab in (("color",1),("fx",2),("output",3)):
++            app._focus_editor_zone(zone)
++            root.update_idletasks()
++            assert app._editor_advanced_tabs.index("current")==tab
++        assert app.var_edit_mode.get()=="advanced"
++        assert app.var_auto_director.get() is False
++        assert app.var_dof.get() is False
++    finally:
++        root.destroy()
++
++
++def test_gui_kill_gallery_open_without_live_replay():
++    import legacy_app
++    root=tk.Tk()
++    app=legacy_app.App(root)
++    try:
++        win=app._open_kill_frame_gallery()
++        assert win.winfo_exists()
++        assert app._kill_frame_gallery._chosen in STYLES
++        app._kill_frame_gallery.select("cinema",apply=True)
++        assert app.var_kill_icon_style.get()==STYLES["cinema"]
++        win.destroy()
++    finally:
++        root.destroy()
++
++
++def test_spec_and_testlist_present():
++    base=Path(__file__).resolve().parents[1]
++    assert (base/"docs"/"AutoCine_v5.10.14_実装仕様書.md").is_file()
++    assert (base/"TESTLIST_v5.10.14_JA.md").is_file()
+diff --git a/LoL_AutoCine/tests/test_v595_workspace.py b/LoL_AutoCine/tests/test_v595_workspace.py
+index e1d10c6..3ea28db 100644
+--- a/LoL_AutoCine/tests/test_v595_workspace.py
++++ b/LoL_AutoCine/tests/test_v595_workspace.py
+@@ -38,8 +38,11 @@ def test_workspace_shows_one_center_zone_and_persists_settings():
+         app.var_editor_zone.set('color'); app._apply_editor_zone()
+         assert app._editor_advanced.winfo_manager()=='pack'
+         assert app._editor_advanced_tabs.index('current') == 1
+-        app.var_editor_zone.set('output'); app._apply_editor_zone()
++        # v5.10.14 has separate Color (1), FX (2), Output (3) pages.
++        app.var_editor_zone.set('fx'); app._apply_editor_zone()
+         assert app._editor_advanced_tabs.index('current') == 2
++        app.var_editor_zone.set('output'); app._apply_editor_zone()
++        assert app._editor_advanced_tabs.index('current') == 3
+         assert not app._right_quick_output.winfo_manager()
+         app.var_editor_zone.set('scene'); app._apply_editor_zone()
+         assert app._right_quick_output.winfo_manager()=='pack'
+diff --git a/LoL_AutoCine/ui/kill_frame_gallery.py b/LoL_AutoCine/ui/kill_frame_gallery.py
+new file mode 100644
+index 0000000..3403848
+--- /dev/null
++++ b/LoL_AutoCine/ui/kill_frame_gallery.py
+@@ -0,0 +1,250 @@
++# -*- coding: utf-8 -*-
++"""Full kill-frame gallery independent of the current LoL replay.
++
++Keeps game/video thread untouched. UI thumbnails are generated in small batches
++from the same core.kill_icons.make_badge renderer used for exported videos.
++"""
++from __future__ import annotations
++
++from pathlib import Path
++from tempfile import TemporaryDirectory
++from queue import Queue, Empty
++from threading import Thread
++import tkinter as tk
++from tkinter import ttk
++
++from PIL import Image, ImageTk, ImageDraw
++
++from core.kill_icons import STYLES, make_badge, ASSET_STYLES
++
++
++def sample_portrait(rgb, name: str):
++    """Neutral sample portrait; never impersonates a LoL champion or a live scene."""
++    canvas = Image.new("RGB", (180, 180), rgb)
++    d = ImageDraw.Draw(canvas)
++    d.ellipse((30, 20, 150, 140), fill=tuple(min(255,x+40) for x in rgb))
++    d.rounded_rectangle((42, 120, 138, 185), radius=22, fill=tuple(max(0,x-25) for x in rgb))
++    d.text((9, 8), name, fill=(245, 245, 250))
++    return canvas
++
++
++def display_name(style):
++    return STYLES.get(style, style)
++
++
++class KillFrameGallery:
++    """Searchable scrollable 2-column gallery with a right-side large preview."""
++    def __init__(self, app):
++        self.app=app
++        self.win=tk.Toplevel(app.root)
++        self.win.title("LoL AutoCine｜キルフレーム図鑑")
++        self.win.geometry("1080x740")
++        self.win.minsize(740, 500)
++        self.win._kill_gallery=self
++        self._photos=[]
++        self._rendered={}
++        self._queue=list(STYLES)
++        self._ready=Queue()
++        self._stopping=False
++        self._preview_after=None
++        self._chosen='premium_gold' if 'premium_gold' in STYLES else 'cinema'
++        self._workdir=TemporaryDirectory(prefix="autocine_kill_gallery_")
++        self.win.protocol("WM_DELETE_WINDOW", self.close)
++        tmp=Path(self._workdir.name)
++        a=tmp/"sample_left.png";b=tmp/"sample_right.png"
++        sample_portrait((57,109,191),"A").save(a)
++        sample_portrait((177,65,97),"B").save(b)
++        self._icons=(a,b)
++
++        heading=ttk.Frame(self.win,padding=10)
++        heading.pack(fill="x")
++        ttk.Label(heading,text="キルフレーム図鑑",font=("Meiryo UI",15,"bold")).pack(side="left")
++        ttk.Label(heading,text="試合の撮影は不要。選択後はかんたん編集・詳細編集の両方に反映。",
++                  wraplength=460).pack(side="left",padx=(18,4))
++        self.search=tk.StringVar()
++        self.group=tk.StringVar(value="すべて")
++        self.groups=("すべて","追加素材","ゴールド・炎","ネオン・サイバー","スキンテーマ風","その他")
++        ttk.Combobox(heading,textvariable=self.group,values=self.groups,state="readonly",width=17).pack(side="right",padx=(7,4))
++        self.group.trace_add("write",self.filter_cards)
++        ttk.Entry(heading,textvariable=self.search,width=22).pack(side="right")
++        ttk.Label(heading,text="検索：",style="CardMuted.TLabel").pack(side="right")
++        main=ttk.PanedWindow(self.win,orient="horizontal")
++        main.pack(fill="both",expand=True)
++        left=ttk.Frame(main)
++        right=ttk.Frame(main,padding=12)
++        main.add(left,weight=3);main.add(right,weight=2)
++        self.canvas=tk.Canvas(left,background="#F6F7F9",highlightthickness=0)
++        bar=ttk.Scrollbar(left,orient="vertical",command=self.canvas.yview)
++        self.grid_parent=ttk.Frame(self.canvas)
++        self.grid_parent.bind("<Configure>",lambda _e:self.canvas.configure(scrollregion=self.canvas.bbox("all")))
++        self.grid_id=self.canvas.create_window((0,0),window=self.grid_parent,anchor="nw")
++        self.canvas.bind("<Configure>",lambda e:self.canvas.itemconfigure(self.grid_id,width=e.width))
++        self.canvas.configure(yscrollcommand=bar.set)
++        self.canvas.pack(side="left",fill="both",expand=True)
++        bar.pack(side="right",fill="y")
++        self.cards=[]
++        for idx,(style,title) in enumerate(STYLES.items()):
++            panel=ttk.Frame(self.grid_parent,padding=7,style="Card.TFrame")
++            panel.grid(row=idx//2,column=idx%2,sticky="nsew",padx=4,pady=4)
++            ttk.Label(panel,text=title,wraplength=290).pack(anchor="w")
++            image=ttk.Label(panel,text="プレビュー準備中…",cursor="hand2")
++            image.pack(fill="x")
++            image.bind("<Button-1>",lambda _e,s=style:self.select(s))
++            ttk.Button(panel,text="選択・適用",command=lambda s=style:self.select(s,apply=True)).pack(fill="x",pady=(3,0))
++            self.cards.append((style,title,panel,image))
++        self.grid_parent.columnconfigure(0,weight=1)
++        self.grid_parent.columnconfigure(1,weight=1)
++        self.search.trace_add("write",self.filter_cards)
++        self.canvas.bind("<MouseWheel>",self._wheel)
++        self.grid_parent.bind("<MouseWheel>",self._wheel)
++        for _,_,panel,im in self.cards:
++            panel.bind("<MouseWheel>",self._wheel)
++            im.bind("<MouseWheel>",self._wheel)
++        ttk.Label(right,text="大きく確認",font=("Meiryo UI",12,"bold")).pack(anchor="w")
++        self.title=ttk.Label(right,text="",wraplength=440)
++        self.title.pack(anchor="w",pady=(4,8))
++        self.preview=ttk.Label(right,text="読み込み中…")
++        self.preview.pack(fill="x",pady=(6,8))
++        ttk.Button(right,text="▣ さらに拡大して確認",command=self.zoom_preview).pack(fill="x",pady=(0,8))
++        ttk.Label(right,text="青／赤は見本の肖像です。実際の書き出しでは試合のチャンピオンアイコンになります。",
++                  wraplength=410).pack(anchor="w")
++        self.strength=tk.DoubleVar(value=float(app.var_kill_glow_strength.get()))
++        ttk.Label(right,text="発光量（0〜2）").pack(anchor="w",pady=(12,1))
++        ttk.Scale(right,variable=self.strength,from_=0,to=2,command=lambda _s:self._queue_preview()).pack(fill="x")
++        self.glow_enabled=tk.BooleanVar(value=app.var_kill_glow_enabled.get())
++        ttk.Checkbutton(right,text="追加発光をON",variable=self.glow_enabled,command=self._queue_preview).pack(anchor="w")
++        ttk.Button(right,text="このフレームを適用",style="Accent.TButton",
++                   command=lambda:self.select(self._chosen,apply=True)).pack(fill="x",pady=(10,5))
++        ttk.Button(right,text="閉じる",command=self.close).pack(fill="x")
++        self.status=ttk.Label(right,text="37種類以上を順に読み込んでいます。",wraplength=430)
++        self.status.pack(anchor="w",pady=7)
++        self.select(self._chosen)
++        Thread(target=self._render_all,daemon=True,name="AutoCine-KillFrames").start()
++        self.win.after(30,self._fill_batch)
++
++    def _render(self,style,glow_strength=1.,glow_enabled=True):
++        tmp=Path(self._workdir.name)/f"badge_{style}_{int(glow_strength*100)}_{int(glow_enabled)}.png"
++        if style == "off":
++            im=Image.new("RGBA",(385,116),(0,0,0,0))
++            d=ImageDraw.Draw(im)
++            d.rounded_rectangle((54,35,331,86),radius=8,fill=(20,30,46,192))
++            d.text((128,51),"NO FRAME",fill=(226,233,240,255))
++            return im
++        if not tmp.is_file():
++            make_badge(tmp,style,killer_icon=self._icons[0],victim_icon=self._icons[1],
++                       glow_strength=glow_strength,glow_enabled=glow_enabled)
++        with Image.open(tmp) as im: return im.convert("RGBA").copy()
++
++    def _render_all(self):
++        """Keep PIL/large PNG decoding off the Tk event thread."""
++        for style in STYLES:
++            if self._stopping:
++                return
++            try:
++                picture=self._render(style,1.)
++                picture.thumbnail((280,92),Image.Resampling.LANCZOS)
++                self._ready.put((style,picture,None))
++            except Exception as error:
++                self._ready.put((style,None,str(error)))
++
++    def _fill_batch(self):
++        if not self.win.winfo_exists() or self._stopping:return
++        for _ in range(3):
++            try:style,im,error=self._ready.get_nowait()
++            except Empty:break
++            if style in self._queue:self._queue.remove(style)
++            for key,_,_,label in self.cards:
++                if key==style:
++                    if error:label.configure(text="プレビュー不可: "+error)
++                    else:
++                        photo=ImageTk.PhotoImage(im,master=self.win)
++                        self._photos.append(photo)
++                        label.configure(image=photo,text="")
++                    break
++        self.status.configure(text=f"読み込み：{len(STYLES)-len(self._queue)} / {len(STYLES)}")
++        if self._queue:self.win.after(45,self._fill_batch)
++
++    def _queue_preview(self):
++        if self._preview_after:
++            self.win.after_cancel(self._preview_after)
++        self._preview_after=self.win.after(180,self._refresh_preview)
++
++    def _refresh_preview(self):
++        self._preview_after=None
++        if not self.win.winfo_exists(): return
++        try:
++            image=self._render(self._chosen,float(self.strength.get()),bool(self.glow_enabled.get()))
++            image.thumbnail((460,175),Image.Resampling.LANCZOS)
++            photo=ImageTk.PhotoImage(image,master=self.win)
++            self.preview.configure(image=photo,text="")
++            self._main_photo=photo
++        except Exception as error:
++            self.preview.configure(image="",text=str(error))
++
++    def select(self,style,apply=False):
++        if style not in STYLES:return
++        self._chosen=style
++        self.title.configure(text=f"{STYLES[style]} — {'素材型・高画質' if style in ASSET_STYLES else '描画型'}")
++        self._queue_preview()
++        if apply:
++            self.app.var_kill_icon_style.set(STYLES[style])
++            self.app.var_kill_glow_strength.set(float(self.strength.get()))
++            self.app.var_kill_glow_enabled.set(bool(self.glow_enabled.get()))
++            self.app._save_settings()
++            self.app.log("キルフレーム図鑑から適用: "+STYLES[style])
++
++    def zoom_preview(self):
++        popup=tk.Toplevel(self.win)
++        popup.title("キルフレームを大きく確認")
++        popup.geometry("860x330")
++        ttk.Label(popup,text=STYLES[self._chosen],font=("Meiryo UI",13,"bold")).pack(pady=8)
++        try:
++            img=self._render(self._chosen,float(self.strength.get()),bool(self.glow_enabled.get()))
++            image=img.resize((770,232),Image.Resampling.LANCZOS)
++            photo=ImageTk.PhotoImage(image,master=popup)
++            label=ttk.Label(popup,image=photo)
++            label.image=photo
++            label.pack(pady=6)
++        except Exception as exc:
++            ttk.Label(popup,text=str(exc)).pack(pady=20)
++
++    def _category(self, style):
++        if style.startswith("user_frame_"):return "追加素材"
++        if any(x in style for x in ("gold","royal","inferno","noon","wing")):return "ゴールド・炎"
++        if any(x in style for x in ("neon","cyber","project","crystal")):return "ネオン・サイバー"
++        if any(x in style for x in ("kda","star","spirit","celestial")):return "スキンテーマ風"
++        return "その他"
++
++    def filter_cards(self,*_):
++        token=self.search.get().strip().casefold()
++        group=self.group.get()
++        idx=0
++        for style,title,panel,_ in self.cards:
++            if (not token or token in title.casefold() or token in style.casefold()) and (group=="すべて" or group==self._category(style)):
++                panel.grid(row=idx//2,column=idx%2,sticky="nsew",padx=4,pady=4)
++                idx+=1
++            else:panel.grid_remove()
++        self.canvas.yview_moveto(0)
++
++    def _wheel(self,e):
++        d=getattr(e,'delta',0)
++        n=-int(d/120) if d else (-3 if getattr(e,'num',0)==4 else 3)
++        self.canvas.yview_scroll(n,"units")
++        return "break"
++
++    def close(self):
++        self._stopping=True
++        if self._preview_after:
++            try:self.win.after_cancel(self._preview_after)
++            except tk.TclError:pass
++        self._workdir.cleanup()
++        self.win.destroy()
++
++
++def open_gallery(app):
++    previous=getattr(app,'_kill_frame_gallery',None)
++    if previous and previous.win.winfo_exists():
++        previous.win.lift()
++        return previous.win
++    app._kill_frame_gallery=KillFrameGallery(app)
++    return app._kill_frame_gallery.win

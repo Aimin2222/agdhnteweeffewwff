@@ -8,6 +8,7 @@ from __future__ import annotations
 from functools import lru_cache
 import math
 import os
+import re
 from pathlib import Path
 import subprocess
 import tempfile
@@ -397,13 +398,39 @@ def decode_probe(ffmpeg, source, mtime_ns):
         return False,str(e)[-450:]
 
 
+
+def _montage_frame_count(ffmpeg, source):
+    """Count video frames, independent of AAC/container duration padding."""
+    import json, shutil
+    sibling=Path(ffmpeg).with_name('ffprobe.exe' if str(ffmpeg).lower().endswith('.exe') else 'ffprobe')
+    probe=str(sibling) if sibling.is_file() else shutil.which('ffprobe')
+    if probe:
+        try:
+            result=subprocess.run([probe,'-v','error','-select_streams','v:0',
+                '-show_entries','stream=nb_frames','-of','json',str(source)],
+                capture_output=True,text=True,timeout=15)
+            count=int(json.loads(result.stdout)['streams'][0]['nb_frames'])
+            if result.returncode==0 and count>0:return count
+        except (OSError,ValueError,KeyError,IndexError,TypeError,subprocess.TimeoutExpired):
+            pass
+    # Bundled Windows FFmpeg may have no ffprobe. This only copies compressed
+    # video packets into a null muxer; it performs no decoding or pixel work.
+    result=subprocess.run([ffmpeg,'-hide_banner','-loglevel','error','-i',str(source),
+        '-map','0:v:0','-c:v','copy','-an','-progress','pipe:1','-f','null','-'],
+        capture_output=True,text=True,timeout=30)
+    counts=re.findall(r'^frame=(\d+)',result.stdout,re.MULTILINE)
+    if result.returncode or not counts or int(counts[-1])<=0:
+        raise ValueError('Montage source frame count could not be verified')
+    return int(counts[-1])
+
 def render_gpu_montage(ffmpeg, source, output, style, cuts, encoding, logger=None):
     """Optional GPU cut accents; stream-copy audio and retain the input clock."""
     import re
+    from .montage_fx import MONTAGE_PROFILES
     from .gpu_pipeline import detect
     from .effects import Template
     from .performance_diagnostics import run_render, _encoder_name
-    if mode() != 'full' or not detect().full_gpu_runtime_ok:
+    if style not in MONTAGE_PROFILES or mode() != 'full' or not detect().full_gpu_runtime_ok:
         return False
     try:
         header=subprocess.run([ffmpeg,'-hide_banner','-i',str(source)],capture_output=True,
@@ -415,21 +442,38 @@ def render_gpu_montage(ffmpeg, source, output, style, cuts, encoding, logger=Non
         # Constant frame rate is required by frame-index timing. App exports
         # integer CFR; foreign fractional/VFR clips keep the existing t graph.
         if abs(fps-round(fps))>.001: raise ValueError('Non-integer montage FPS: CPU timing preserved')
-        width,height=(.09,.22) if style=='flash' else (.18,-.24)
+        height,width,post=MONTAGE_PROFILES[style]
+        frame_count=_montage_frame_count(ffmpeg,source)
         pulse='+'.join(f'{number(height)}*max(0.0f,1-fabs(time-{number(c)})/{number(width)})' for c in cuts)
         with tempfile.TemporaryDirectory(prefix='autocine-montage-gpu-') as folder:
             path=Path(folder)/'montage.cl'
+            body=f'c.xyz=eq_rgb(c.xyz,1,{pulse or "0.0f"},1);'
+            extra_inputs=[]
+            if post:
+                # Reuse the validated FFmpeg color LUT, once per style. Full
+                # video frames sample the LUT on the GPU, after the pulse.
+                from PIL import Image
+                lut=Path(folder)/'montage_lut.png'
+                Image.frombytes('RGB',(1089,33),_bake_color(ffmpeg,post)).save(lut)
+                body+='c.xyz=apply_lut(aux,c.xyz);'
+                extra_inputs=['-i',str(lut)]
             path.write_text('#define FPS '+number(fps)+'\n'+shader_source(Template())+COMMON+
-                            kernel('montage',f'c.xyz=eq_rgb(c.xyz,1,{pulse or "0.0f"},1);'),encoding='utf-8')
-            filt=f"format=rgba,hwupload,program_opencl=source='{esc(path)}':kernel=montage,setpts=N/({int(fps)}*TB),fps={int(fps)},hwdownload,format=rgba"
+                            kernel('montage',body,inputs=2 if post else 1),encoding='utf-8')
+            main=f'[0:v]settb=1/{int(fps)},setpts=N,format=rgba,hwupload[mg_src]'
+            if post:
+                main+=f';[1:v]settb=1/{int(fps)},setpts=0,format=rgba,hwupload[mg_lut]'
+            inputs='[mg_src][mg_lut]' if post else '[mg_src]'
+            filt=main+f";{inputs}program_opencl=source='{esc(path)}':kernel=montage:inputs={2 if post else 1},trim=end_frame={frame_count},setpts=N/({int(fps)}*TB),fps={int(fps)},hwdownload,format=rgba[vout]"
             args=list(encoding)
             if 'h264_nvenc' in args and '-pix_fmt' in args: args[args.index('-pix_fmt')+1]='rgba'
             cmd=[ffmpeg,'-y','-hide_banner','-loglevel','error','-init_hw_device',OPENCL_DEVICE,
-                 '-filter_hw_device','ocl','-i',str(source),'-vf',filt,'-map','0:v:0','-map','0:a?',
-                 *args,'-c:a','copy','-movflags','+faststart',str(output)]
+                 '-filter_hw_device','ocl','-i',str(source),*extra_inputs,'-filter_complex',filt,
+                 '-map','[vout]','-map','0:a?',*args,'-frames:v',str(frame_count),
+                 '-c:a','copy','-movflags','+faststart',str(output)]
             r=run_render(cmd,output=output,gpu_effects=['montage_'+style],effect_values={},timeout=900,
                          pipeline_info={'stage':'montage','full_gpu_pipeline':True,'cpu_video_effects':[],
-                                        'montage_style':style,'input_fps':fps,'filter_graph':filt})
+                                        'montage_style':style,'input_fps':fps,'input_frames':frame_count,
+                                        'filter_graph':filt,'prepared_color_lut':bool(post)})
             if r.returncode or not Path(output).is_file() or Path(output).stat().st_size<1024:
                 raise RuntimeError(r.stderr[-800:] or 'GPU montage output missing')
             if logger:
