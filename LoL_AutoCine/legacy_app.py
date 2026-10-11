@@ -659,6 +659,8 @@ class App:
         style.map("OutlineAccent.TButton", background=[("active", "#EEF6FF")])
         style.configure("TCheckbutton", background=panel, foreground=fg)
         style.map("TCheckbutton", background=[("active", panel)])
+        from ui.checkmark_style import install as install_checkmark_style
+        install_checkmark_style(r, style)
         style.configure("TRadiobutton", background=panel, foreground=fg)
         style.map("TRadiobutton", background=[("active", panel)])
         style.configure("TCombobox", fieldbackground="#FFFFFF", background="#FFFFFF", foreground=fg, bordercolor=line, lightcolor=line, darkcolor=line, padding=6)
