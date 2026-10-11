@@ -7,3 +7,5 @@
 検証: Linux/Xvfb全542件成功（失敗/skipなし）、担当衝突ガード、完全ZIP400ファイルとGit差分適用後402ソース一致、個人ファイル除外。旧72ブランチ先端と旧配布物を保持し、全76ブランチをbundle保存。9演出のOpenCLは検証用CPU PoCLで実行、60fps/60フレーム/音声同一性を確認。製品のCPU OpenCL拒否は維持。Windows/NVIDIA/LoLの今回の画質と速度は未検証。まとめテストはLoL_AutoCine/docs/WINDOWS_TEST_v51014_JA.md。
 
 前回v5.10.13を比較先とするDraft PR。mainにはマージしません。このブランチCode→Download ZIPまたはhandoff完全版ZIP→Download raw fileで取得し、別フォルダへ展開してSTART_GPU.batを実行できます。
+
+GitHub fresh cloneと固定payloadからのセットアップ復元で402ソース・76refs・ZIP/bundleハッシュ一致、代表126テスト成功。再実行で全ソース/全ブランチ/個人テストファイル3件保持。検証済みinstall_script/start_skillを下書き保存しreadback確認、他の環境設定は保持、Publishは実行していません。

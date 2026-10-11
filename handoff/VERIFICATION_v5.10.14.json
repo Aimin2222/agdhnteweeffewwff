@@ -321,9 +321,20 @@
   "old_handoff_files_retained": 115,
   "compileall_passed": true,
   "pip_check_passed": true,
-  "source_and_delivery_clean_after_commit": false,
-  "github_fresh_restore": null,
-  "environment_config_saved": false,
+  "source_and_delivery_clean_after_commit": true,
+  "github_fresh_restore": {
+    "payload_commit": "ff756d2ed7eadb32f9690932ac1ea44be9b4481f",
+    "source_head": "8d9356e3f8bfba47bce912924cece7e861bf416c",
+    "all_source_bytes_match": true,
+    "github_download_source_bytes_match": true,
+    "source_files": 402,
+    "local_branch_count": 76,
+    "all_branch_refs_match": true,
+    "bundle_and_zip_hashes_match": true,
+    "guard_status": "ok",
+    "status_before_private_markers": "clean"
+  },
+  "environment_config_saved": true,
   "main_unchanged": "c2a79ac3e7816c74b7d7fb15a5a32a32dd8fa16b",
   "opencl_kernel_validation": {
     "device": "CPU PoCL explicitly enabled only for kernel validation",
@@ -385,5 +396,36 @@
       }
     },
     "production_cpu_opencl_rejected": true
-  }
+  },
+  "delivery_payload_commit": "ff756d2ed7eadb32f9690932ac1ea44be9b4481f",
+  "restored_representative_pytest": {
+    "tests": "126",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "time": "8.258"
+  },
+  "repeat_setup": {
+    "existing_checkout_not_reset": true,
+    "head_and_all_76_branch_refs_preserved": true,
+    "all_402_source_files_preserved": true,
+    "private_files_preserved": 3,
+    "status": "clean"
+  },
+  "environment_config_save": {
+    "draft_id": "b166c036-9092-422c-a5ad-54ef690f13f9~cecfgdraft_6acb15fae1f481979f2e6779ddbc37a8",
+    "base_version_id": "b166c036-9092-422c-a5ad-54ef690f13f9~cecfgver_6acb1081823c8197904cf68a743bc3e5",
+    "install_script_and_start_skill_readback_match": true,
+    "other_settings_preserved": [
+      "repositories",
+      "network_policy",
+      "secrets",
+      "runtime_requirements",
+      "pending_runtime_requirements"
+    ],
+    "requires_publish": true,
+    "published": false,
+    "tested_payload_commit": "ff756d2ed7eadb32f9690932ac1ea44be9b4481f"
+  },
+  "draft_pr": "https://github.com/Aimin2222/agdhnteweeffewwff/pull/28"
 }

@@ -26,3 +26,5 @@ git status --short
 ```
 
 全76ブランチがorigin/*として復元されます。originはローカルbundle。担当ガード/共有レビューはdocs/CODEX_INTEGRATION_v51014_JA.md。旧設定/録画/プロジェクトを残して移行してください。
+
+GitHubから新規取得し、402ソース/76refs/ZIPとbundleのハッシュ一致、復元後代表126テスト（8.30秒）を確認。セットアップ再実行で個人ファイル相当3件を保持しました。次回クラウド用の設定は下書きだけ保存してあり、Windows取得にはPublish不要です。
