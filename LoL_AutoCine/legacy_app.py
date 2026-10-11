@@ -780,7 +780,6 @@ class App:
         ttk.Label(f, text="APIキー不要。game.cfgを自動設定します。", style="CardMuted.TLabel", wraplength=270).pack(fill="x", pady=(4, 0))
 
         f = card(left, "2  対象プレイヤー")
-        ttk.Button(f, text="接続して10人を取得", command=self.on_connect).pack(fill="x", pady=(0, 5))
         self.tree = ttk.Treeview(f, columns=("team", "champ", "name"), show="headings", height=8, selectmode="browse")
         for c, t, w in (("team", "チーム", 55), ("champ", "チャンピオン", 95), ("name", "プレイヤー", 125)):
             self.tree.heading(c, text=t); self.tree.column(c, width=w, anchor="w")
@@ -796,8 +795,8 @@ class App:
         ttk.Label(f, text="検出対象", style="CardMuted.TLabel").pack(anchor="w", pady=(0, 3))
         ttk.Combobox(f, state="readonly", textvariable=self.var_event_mode,
                      values=["キル", "アシスト", "キル＋アシスト"]).pack(fill="x", pady=(0, 5))
-        ttk.Button(f, text="① 試合全体を一括スキャン（1回だけ）", command=self.on_scan).pack(fill="x")
-        ttk.Label(f, text="② スキャン後は上の選手を選んで「この人を対象にする」。再スキャン不要。",
+        ttk.Button(f, text="① 接続＋試合全体をスキャン（1回だけ）", command=self.on_scan).pack(fill="x")
+        ttk.Label(f, text="接続・10人取得・イベント検出をまとめて実行。対象は右の検出シーンから切替できます。",
                   style="CardMuted.TLabel", wraplength=290).pack(fill="x", pady=(4,3))
         self.var_team_filter = tk.StringVar(value="全チーム")
         team_filter = ttk.Combobox(f, state="readonly", textvariable=self.var_team_filter,
@@ -808,6 +807,10 @@ class App:
         self.pb_scan = ttk.Progressbar(f, maximum=100); self.pb_scan.pack(fill="x", pady=6)
         self.lbl_scan = ttk.Label(f, text="まだスキャンしていません", style="CardMuted.TLabel", wraplength=270)
         self.lbl_scan.pack(fill="x")
+        ttk.Button(f, text="▶ 自動カメラ・録画テスト（RED/BLUE 計8本）",
+                   command=self.on_auto_camera_record_test).pack(fill="x", pady=(7,2))
+        ttk.Label(f, text="一括スキャン後に実行。両チームの通常三人称・シネマ・FPS・Lolnamを各1本録画。完成動画と結果JSONを保存します。",
+                  style="CardMuted.TLabel", wraplength=290).pack(fill="x", pady=(0,5))
 
 
         # 参考映像とテンプレートは準備・スキャンの後に配置する。
@@ -1327,16 +1330,17 @@ class App:
         ttk.Combobox(dof_controls, state="readonly", textvariable=self.var_dof_shape,
                      values=["円形（おすすめ）", "従来の上下ぼかし"], width=30).pack(anchor="w", pady=(4,3))
         slider(dof_controls,"dof_blur","周囲のぼかし強度",0,12)
-        self.var_dof_circle_hint = ttk.Label(dof_controls, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
+        self._circle_dof_panel = circle_controls = ttk.Frame(dof_controls, style="Card.TFrame")
+        self.var_dof_circle_hint = ttk.Label(circle_controls, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
                                              style="CardMuted.TLabel", wraplength=880)
         self.var_dof_circle_hint.pack(anchor="w", pady=(3,5))
-        slider(dof_controls,"dof_center_x","円の中心・左右",.05,.95)
-        slider(dof_controls,"dof_center_y","円の中心・上下",.05,.95)
-        slider(dof_controls,"dof_radius","くっきりする円の半径",.08,.65)
-        slider(dof_controls,"dof_feather","境界のなめらかさ",.025,.35)
-        ttk.Label(dof_controls, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
+        slider(circle_controls,"dof_center_x","円の中心・左右",.05,.95)
+        slider(circle_controls,"dof_center_y","円の中心・上下",.05,.95)
+        slider(circle_controls,"dof_radius","くっきりする円の半径",.08,.65)
+        slider(circle_controls,"dof_feather","境界のなめらかさ",.025,.35)
+        ttk.Label(circle_controls, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
                   style="CardMuted.TLabel", wraplength=950).pack(anchor="w", pady=(0,4))
-        self.dof_viz = FocusCircleViz(dof_controls, self.sl['dof_center_x'], self.sl['dof_center_y'],
+        self.dof_viz = FocusCircleViz(circle_controls, self.sl['dof_center_x'], self.sl['dof_center_y'],
                                      self.sl['dof_radius'], self.sl['dof_feather'])
         self.dof_viz.pack(fill="x", pady=(2,6))
         legacy_dof = ttk.LabelFrame(dof_controls, text="従来の上下ぼかし用（互換設定）", padding=5)
@@ -2325,6 +2329,8 @@ class App:
                     done, total, pct, msg = a
                     self.pb_job["value"] = pct
                     self.lbl_job.configure(text=f"{msg}  ({done}/{total}  {pct:.0f}%)")
+                elif kind == "camera_qa_done":
+                    self.log("自動カメラ・録画テストの結果: " + str(a[0]))
                 elif kind == "players":
                     self._fill_players()
                     self._refresh_scene_player_filter_choices()
@@ -3077,15 +3083,21 @@ class App:
             raise
 
     def _update_dof_mode_ui(self):
-        """Do not present obsolete near/far controls while circular focus is active."""
-        panel = getattr(self, '_legacy_dof_panel', None)
-        if panel is None:
+        """Only one selected DOF UI is visible; preserve both sets of values."""
+        legacy = getattr(self, '_legacy_dof_panel', None)
+        circle = getattr(self, '_circle_dof_panel', None)
+        if legacy is None or circle is None:
             return
         if self.var_dof_shape.get() == '従来の上下ぼかし':
-            if not panel.winfo_manager():
-                panel.pack(fill='x', pady=(2, 6))
-        elif panel.winfo_manager():
-            panel.pack_forget()
+            if circle.winfo_manager():
+                circle.pack_forget()
+            if not legacy.winfo_manager():
+                legacy.pack(fill='x', pady=(2, 6))
+        else:
+            if legacy.winfo_manager():
+                legacy.pack_forget()
+            if not circle.winfo_manager():
+                circle.pack(fill='x', pady=(2, 6))
 
     def _apply_focus_preset(self):
         """One click circular focus without editing TargetLock or changing audio."""
@@ -3595,7 +3607,7 @@ class App:
             how = watch_replay(self.lol_dir, p)
             self.api._autocine_record_primed = False  # new replay requires new first-frame initialization
             self._reset_match_state()
-            self.log(f"リプレイを起動 ({how}): {p.name}  → 読み込み完了後『接続してプレイヤー取得』")
+            self.log(f"リプレイを起動 ({how}): {p.name}  → 読み込み完了後『接続＋試合全体をスキャン』")
         except Exception as e:
             self.log(f"起動失敗: {e}")
             messagebox.showerror(APP, str(e))
@@ -3620,7 +3632,7 @@ class App:
         self.log("Replay API に接続中… (リプレイの読み込み完了まで待ちます)")
         if not self.api.wait_ready(timeout=90, stop=self.stop_ev):
             self.log("接続できません。game.cfg設定→LoL再起動→リプレイ再生を確認してください。")
-            return
+            return False
         for _ in range(20):                       # プレイヤー一覧が揃うまで待つ
             raw = self.api.playerlist()
             if len(raw) >= 2:
@@ -3631,6 +3643,7 @@ class App:
         self.log(f"プレイヤー {len(self.players)} 人を取得しました。対象を選んで『固定』を押してください。")
         if len(self.players) < 10:
             self.log("※10人未満です (カスタム/ボット戦の可能性)。")
+        return bool(self.players)
 
     def on_lock(self) -> None:
         if self.busy:
@@ -3656,17 +3669,70 @@ class App:
         self.log(f"試合全体のキャッシュから {self.locked.label()}：{len(self.kills)} 件（{mode}）")
 
     def on_scan(self) -> None:
+        """Single click: connect, fetch roster and scan the whole match once."""
         if self.busy:
             self.log("別の処理が完了してからスキャンしてください。")
-            return
-        if not self.players:
-            messagebox.showinfo(APP, "先に接続して10人のプレイヤーを取得してください。")
             return
         if self._match_scan_cache and self._match_scan_cache.complete:
             self._filter_scanned_for_locked()
             self.log("スキャン済みの試合イベントを再利用しました")
             return
-        self._run_bg(self._scan, self.var_event_mode.get())
+        mode=self.var_event_mode.get()
+        if not self.players:
+            self._run_bg(self._connect_then_scan, mode)
+        else:
+            self._run_bg(self._scan, mode)
+
+    def _connect_then_scan(self, mode: str) -> None:
+        """Worker only: no Tk variable access while waiting for Replay API."""
+        if not self._connect():
+            self.log("接続できなかったため、全体スキャンは開始していません。")
+            return
+        if self.stop_ev.is_set():
+            return
+        self._scan(mode)
+
+    def on_auto_camera_record_test(self) -> None:
+        """Opt-in real 8-clip test, never a simulated math-only self-test."""
+        if self.busy:
+            messagebox.showinfo(APP, "別の処理が完了するまでお待ちください。")
+            return
+        scan = self._match_scan_cache
+        if scan is None or not scan.complete:
+            messagebox.showinfo(APP, "先に『接続＋試合全体をスキャン』を完了してください。")
+            return
+        from core.camera_qa import plan_eight_cases
+        try:
+            plan_eight_cases(list(self.players), list(scan.events), self.locked)
+            template=self.current_template()  # capture Tk values in the UI thread
+        except Exception as exc:
+            messagebox.showerror(APP, f"8本録画の準備ができません: {exc}")
+            return
+        if not messagebox.askyesno("自動カメラ・録画テスト",
+                "実際のLoLリプレイを操作して計8本の動画を順番に録画します。\n"
+                "RED4本・BLUE4本／ゲーム音も録音します。処理中の停止は［中止］から可能です。\n\n"
+                "テストを開始しますか？"):
+            return
+        self._run_bg(self._run_auto_camera_record_test,
+                     list(self.players), list(scan.events), self.locked, template,
+                     Path(self.out_root))
+
+    def _run_auto_camera_record_test(self, players, events, preferred, template, root) -> None:
+        """Worker: same WGC/audio/GPU/export code as normal production recording."""
+        from core.camera_qa import run_camera_record_test
+        src, own = self._ensure_source()
+        try:
+            template.game_audio=True
+            factory=(lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else (lambda path: PreferredGameAudio(path))
+            result=run_camera_record_test(self.api, src, players, events, preferred,
+                template, root, stop=self.stop_ev, log=self.log,
+                audio_factory=factory,
+                progress=lambda *args:self.q.put(("job",*args)))
+            self.log(f"自動カメラ8本テスト完了: {result}")
+            self.q.put(("camera_qa_done", str(result)))
+        finally:
+            if own:
+                src.stop()
 
     def _need_lock(self) -> bool:
         if self.locked is None:
