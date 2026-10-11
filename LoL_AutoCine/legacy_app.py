@@ -1040,6 +1040,14 @@ class App:
                   style="CardMuted.TLabel", wraplength=770).pack(anchor="w")
         self.scene_selected_label = ttk.Label(scene_card, text="シーン未選択（スキャン後に右の一覧を選択）", style="Card.TLabel")
         self.scene_selected_label.pack(anchor="w", pady=(6,3))
+        champion_row = ttk.Frame(scene_card, style="Card.TFrame")
+        champion_row.pack(fill="x", pady=(0, 4))
+        self.scene_killer_icon_label = ttk.Label(champion_row, text="")
+        self.scene_killer_icon_label.pack(side="left", padx=(0, 8))
+        self.scene_killer_name_var = tk.StringVar(value="シーンを選ぶとキルしたキャラを表示")
+        ttk.Label(champion_row, textvariable=self.scene_killer_name_var, style="Card.TLabel").pack(side="left")
+        self._scene_killer_photo = None
+        self._scene_killer_requests = set()
         thumbs = ttk.Frame(scene_card, style="Card.TFrame")
         thumbs.pack(fill="x", pady=(2,6))
         self.scene_thumbnail = ttk.Label(thumbs, text="サムネイル未保存", style="CardMuted.TLabel")
@@ -2394,6 +2402,11 @@ class App:
                 elif kind == "players":
                     self._fill_players()
                     self._refresh_scene_player_filter_choices()
+                elif kind == "scene_champion_icon":
+                    key, path = a
+                    chosen = self._current_scene()
+                    if chosen is not None and scene_key(chosen) == key:
+                        self._display_killer_icon(path)
                 elif kind == "kills":
                     self._fill_kills()
                     if self.kills:
@@ -2736,10 +2749,49 @@ class App:
                 var.set(getattr(shot, field))
             self.shot_motion_graph.redraw()
             self._show_scene_thumbnail(key)
+            self._update_selected_killer_portrait(kill, key)
             self.scene_selected_label.configure(text=(
                 f"{kill.time:.1f}秒 / {kill.victim} / {'保存済み編集' if key in self.scene_project.shots else '自動推薦値（未保存）'}"))
         finally:
             self._scene_loading = False
+
+    def _update_selected_killer_portrait(self, kill, key):
+        """Use the REAL killer champion icon, not a fabricated mock character."""
+        from core.kill_icons import _player_for_name, champion_icon
+        player = _player_for_name(getattr(kill, "killer", ""), self.players)
+        champ = (player or {}).get("champion", "") if player else ""
+        self.scene_killer_name_var.set(
+            "キルしたキャラ：" + (str(champ) or str(getattr(kill, "killer", "不明"))))
+        self._scene_killer_photo = None
+        self.scene_killer_icon_label.configure(image="", text="")
+        if not player:
+            return
+        icon_path = champion_icon(player, download=False)
+        if icon_path is not None:
+            self._display_killer_icon(icon_path)
+            return
+        if key in self._scene_killer_requests:
+            return
+        self._scene_killer_requests.add(key)
+        def worker():
+            try:
+                icon = champion_icon(player, download=True)
+                if icon is not None:
+                    self.q.put(("scene_champion_icon", key, str(icon)))
+            finally:
+                self._scene_killer_requests.discard(key)
+        threading.Thread(target=worker, daemon=True, name="AutoCine-KillerIcon").start()
+
+    def _display_killer_icon(self, path):
+        try:
+            with Image.open(path) as src:
+                image = src.convert("RGBA").resize((58, 58), Image.Resampling.LANCZOS)
+            photo = ImageTk.PhotoImage(image, master=self.root)
+            self._scene_killer_photo = photo
+            self.scene_killer_icon_label.configure(image=photo, text="")
+        except Exception as exc:
+            self.scene_killer_icon_label.configure(image="", text="アイコン取得不可")
+            self.log("キラー肖像の読み込み失敗: " + str(exc))
 
     def _scene_thumbnail_path(self, key):
         digest = hashlib.sha256(key.encode('utf-8')).hexdigest()[:24]
