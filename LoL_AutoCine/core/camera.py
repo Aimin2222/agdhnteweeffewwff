@@ -125,6 +125,33 @@ TRY_TPS = __import__("os").environ.get("AUTOCINE_TRY_TPS", "0") == "1"
 _TPS_CALIBRATION = {}
 
 
+def stabilize_non_pitch_rotation(current, cached, pitch_axis, log=lambda _m: None):
+    """Reject an abrupt 180-degree roll/yaw returned after switching view twice.
+
+    Preserve the last *successful* non-pitch axes only when the current Replay
+    API reading differs by more than 110 degrees. Pitch continues to use the
+    calibrated side-specific formula, not an extra negative sign.
+    """
+    if not isinstance(current, dict) or not isinstance(cached, dict):
+        return current
+    result = dict(current)
+    for axis in ("x", "y", "z"):
+        if axis == pitch_axis or axis not in cached or axis not in current:
+            continue
+        try:
+            previous = float(cached[axis])
+            incoming = float(current[axis])
+        except (TypeError, ValueError, OverflowError):
+            continue
+        if not math.isfinite(previous) or not math.isfinite(incoming):
+            continue
+        difference = (incoming - previous + 180.0) % 360.0 - 180.0
+        if abs(difference) >= 110.0:
+            result[axis] = cached[axis]
+            log(f"カメラ診断: {axis}軸の突然の{difference:.0f}度回転を回避（前回の安定値を使用）")
+    return result
+
+
 def smoothstep(x: float) -> float:
     x = min(1.0, max(0.0, x))
     return x * x * (3 - 2 * x)
@@ -861,6 +888,8 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
             # 最小限の回転を作る。Replay側が補正できるよう三人称を維持する。
             rot_use = {"x": 0.0, "y": 0.0, "z": 0.0}
         rot_use[axis] = sign * (90.0 - third_elev if pitch_complement else third_elev)
+        if cached:
+            rot_use = stabilize_non_pitch_rotation(rot_use, cached.get("rot"), axis, log=log)
     else:
         if style in THIRD_STYLES:
             note_extra = " (保存済み三人称リグもなく、方向を特定できないためFPS風)"
