@@ -50,7 +50,7 @@ def test_automatic_bot_writes_a_machine_readable_report(tmp_path):
     output=tmp_path/'report.json'
     result=run_checks(root,report_file=output)
     disk=json.loads(output.read_text('utf-8'))
-    assert disk['failed']==0, disk
+    assert disk['failed']==0, [x for x in disk['checks'] if x['status']=='fail']
     assert disk['passed']>=7 and len(disk['checks'])>=8
     assert any('三人称' in n or 'カメラ' in n for n in disk['notes']+list(x['name'] for x in disk['checks']))
 
