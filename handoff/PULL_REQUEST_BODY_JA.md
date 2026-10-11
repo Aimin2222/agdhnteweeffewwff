@@ -9,3 +9,5 @@ RED通常三人称は余分なpitch反転を撤廃し、自動yawだけ192→184
 検証: Linux/Xvfb全569件成功（失敗/skip/除外なし）、担当衝突ガード、完全ZIP415ファイルとGit差分適用後417ソース一致、個人ファイル除外。旧76ブランチ先端と旧配布物を保持し、全80ブランチをbundle保存。受領側507件・1ファイル除外の記録は別文書へ保存し、ミラー応答性テストも新ページへ更新して除外せず実行しました。Windows/NVIDIA/LoLの今回の画質と速度は未検証。まとめテストはLoL_AutoCine/docs/WINDOWS_TEST_v51015_JA.md。
 
 前回v5.10.14を比較先とするDraft PR。mainにはマージしません。このブランチCode→Download ZIPまたはhandoff完全版ZIP→Download raw fileで取得し、別フォルダへ展開してSTART_GPU.batを実行できます。
+
+GitHub fresh cloneと固定payloadのセットアップ復元で417ソース・80refs・ZIP/bundleハッシュ一致、代表146テスト成功。再実行で全ソース/全ブランチ/個人設定相当3ファイル保持。全回帰テスト569件は72.03秒。検証済みinstall_script/start_skillを下書き保存しreadback確認、他の環境設定は保持、Publishは実行していません。
