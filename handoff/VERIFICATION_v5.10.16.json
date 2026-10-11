@@ -849,7 +849,66 @@
   "old_handoff_files_retained": 148,
   "compileall_passed": true,
   "pip_check_passed": true,
-  "github_fresh_restore": null,
-  "environment_config_saved": false,
-  "main_unchanged": "c2a79ac3e7816c74b7d7fb15a5a32a32dd8fa16b"
+  "github_fresh_restore": {
+    "payload_commit": "0cee6936466bbe782d9ad9f590409d53a549691d",
+    "source_head": "beb18e06463bdc02bf43993a3bd60f95c4173121",
+    "source_files": 440,
+    "local_branch_count": 91,
+    "all_source_bytes_match": true,
+    "github_download_source_bytes_match": true,
+    "all_branch_refs_match": true,
+    "bundle_and_zip_hashes_match": true,
+    "guard_status": "ok",
+    "status_before_private_markers": "clean",
+    "github_checkout": "fresh remote single-branch clone, existing local object cache used; sparse files only",
+    "new_cloud_task_or_publish_tested": false
+  },
+  "environment_config_saved": {
+    "draft_id": "b166c036-9092-422c-a5ad-54ef690f13f9~cecfgdraft_6acb15fae1f481979f2e6779ddbc37a8",
+    "status": "saved",
+    "requires_publish": true,
+    "revision": 34,
+    "readback_matches": true,
+    "unrelated_config_fields_preserved": [
+      "draft_id",
+      "base_version_id",
+      "repositories",
+      "network_policy",
+      "secrets",
+      "runtime_requirements",
+      "pending_runtime_requirements"
+    ],
+    "published": false
+  },
+  "main_unchanged": "c2a79ac3e7816c74b7d7fb15a5a32a32dd8fa16b",
+  "setup_repeat": {
+    "source_files_preserved": 440,
+    "all_91_branch_tips_preserved": true,
+    "all_3_private_markers_preserved": true,
+    "same_head": true,
+    "git_status": "clean",
+    "repeat_setup_exit_code": 0
+  },
+  "restore_test_attempts": [
+    {
+      "outcome": "native_exit_132_Illegal_instruction",
+      "attempts": 2,
+      "second_attempt_last_test": "test_jobs_forward_keyframes_without_mutating_template",
+      "cause": "unconfirmed; no fatal stack captured",
+      "no_completed_junit_result": true
+    },
+    {
+      "outcome": "completed",
+      "tests": 95,
+      "failures": 0,
+      "skipped": 0,
+      "time": "12.422",
+      "diagnostic_condition": "single main-thread gc.collect before test_jobs_forward_keyframes_without_mutating_template; logging only elsewhere, GC enabled, no excluded tests",
+      "scope": "different from standard test conditions"
+    }
+  ],
+  "test_stability_issue_unresolved": true,
+  "published": false,
+  "all_148_old_handoff_files_retained": true,
+  "source_git_status_clean": true
 }

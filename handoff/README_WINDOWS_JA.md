@@ -19,3 +19,5 @@ git status --short
 ```
 
 全91refsはorigin/*で復元。originはローカルbundle。既存設定/録画/プロジェクトを保管。担当ガードはdocs/CODEX_INTEGRATION_v51016_JA.md。
+
+GitHub復元で全440ソース/91refs/配布物hash一致、再setupで3個人ファイル相当を保持。復元先代表テストは通常実行と記録のみ診断でIllegal instruction/132が2回発生、原因未確定。直前のメインスレッドGC回収を1回加える診断条件では95成功（12.45秒）。標準条件での復元先代表全件完走は未確認。全604成功と区別し、Windowsの修正効果やLinuxテスト安定化を主張しない。

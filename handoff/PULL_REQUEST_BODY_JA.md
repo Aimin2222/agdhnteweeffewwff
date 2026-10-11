@@ -7,3 +7,5 @@
 検証: Linux/Xvfb全604成功、失敗/skip/除外なし。6モーションのCPUとOpenCLカーネル実出力は60fps/位置一致。OpenCLは検証用CPU PoCLであり、NVIDIA性能・Windows/LoLは未検証。旧ScanFix全件で原因未確定のネイティブ終了2回があり、今回は再発なし。GPU/音声/録画20保護パス・37PNG・旧87refを保持、全91refsをbundle保存。完全ZIPと差分適用のソース一致、個人ファイル除外を確認。
 
 前回ScanFixを比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、またはCode→Download ZIPで取得して別フォルダでSTART_GPU.bat。実機手順はdocs/WINDOWS_TEST_v51016_JA.md。環境PublishはWindows取得に不要。
+
+GitHub復元で全440ソース/91refs/配布物hash一致、再setupで3個人ファイル相当を保持。復元先代表テストは通常実行と記録のみ診断でIllegal instruction/132が2回発生、原因未確定。直前のメインスレッドGC回収を1回加える診断条件では95成功（12.45秒）。標準条件での復元先代表全件完走は未確認。全604成功と区別し、Windowsの修正効果やLinuxテスト安定化を主張しない。
