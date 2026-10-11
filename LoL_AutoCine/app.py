@@ -40,7 +40,27 @@ _ensure_dependencies()
 from legacy_app import App
 
 
+def _enable_high_dpi() -> None:
+    """Request native Windows DPI rendering instead of OS bitmap stretching."""
+    if sys.platform != "win32":
+        return
+    try:
+        import ctypes
+        # Windows 10+: per-monitor v2, for crisp checkboxes on 125-200% monitors.
+        result = ctypes.windll.user32.SetProcessDpiAwarenessContext(ctypes.c_void_p(-4))
+        if result:
+            return
+    except Exception:
+        pass
+    try:
+        import ctypes
+        ctypes.windll.shcore.SetProcessDpiAwareness(1)
+    except Exception:
+        pass
+
+
 def main() -> None:
+    _enable_high_dpi()
     root = tk.Tk()
     App(root)
     root.mainloop()
