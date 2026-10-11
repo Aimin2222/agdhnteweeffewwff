@@ -94,8 +94,29 @@ def test_kill_frame_styles_are_named_and_complete():
     root=Path(__file__).resolve().parents[1]
     assert all((root/'assets'/'kill_badges'/file).exists() for file in ASSET_STYLES.values())
     assert all(not STYLES[f'user_frame_{i:02d}'].startswith('追加素材') for i in range(1,17))
-    assert 'K/DA' in STYLES['user_frame_08']
+    assert STYLES['user_frame_08'] == 'ローズクリスタル'
     assert '桜' in STYLES['user_frame_13']
+
+
+def test_quick_dof_panel_switches_between_circle_and_legacy_only():
+    root,app=build()
+    try:
+        app.var_dof_shape.set('円形（おすすめ）')
+        root.update_idletasks()
+        assert app._quick_dof_circle_panel.winfo_manager() == 'pack'
+        assert not app._quick_dof_legacy_panel.winfo_manager()
+        app.var_dof_shape.set('従来の上下ぼかし')
+        root.update_idletasks()
+        assert app._quick_dof_legacy_panel.winfo_manager() == 'pack'
+        assert not app._quick_dof_circle_panel.winfo_manager()
+    finally:
+        root.destroy()
+
+
+def test_scan_button_text_shows_integrated_connect_workflow():
+    code=(Path(__file__).resolve().parents[1]/'legacy_app.py').read_text('utf-8')
+    assert '① スキャン（接続→10人取得→試合全体）' in code
+    assert '接続して10人を取得' not in code
 
 
 def test_grade_labels_explain_colors():
@@ -114,3 +135,23 @@ def test_red_fps_camera_moves_closer_blue_unchanged():
     assert abs(ro[2])<abs(bo[2])
     assert ro[1]<bo[1]
     assert b.offset_at(0)==(192.,1000.,-320.)
+
+
+def test_main_dof_controls_show_only_selected_mode_preserving_values():
+    root,app=build()
+    try:
+        app.var_dof.set(True)
+        app.sl['dof_center_x'].set(.37)
+        app.sl['dof_focus_distance'].set(4200)
+        app.var_dof_shape.set('円形（おすすめ）')
+        root.update_idletasks()
+        assert app._circle_dof_panel.winfo_manager()=='pack'
+        assert not app._legacy_dof_panel.winfo_manager()
+        app.var_dof_shape.set('従来の上下ぼかし')
+        root.update_idletasks()
+        assert not app._circle_dof_panel.winfo_manager()
+        assert app._legacy_dof_panel.winfo_manager()=='pack'
+        assert app.sl['dof_center_x'].get()==.37
+        assert app.sl['dof_focus_distance'].get()==4200
+    finally:
+        root.destroy()

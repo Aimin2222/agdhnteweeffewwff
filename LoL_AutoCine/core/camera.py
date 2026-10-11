@@ -125,6 +125,22 @@ TRY_TPS = __import__("os").environ.get("AUTOCINE_TRY_TPS", "0") == "1"
 _TPS_CALIBRATION = {}
 
 
+def clear_tps_calibration(selection_name: str | None = None) -> None:
+    """Forget cached 3rd-person rig data.
+
+    Re-selecting the same camera preset repeatedly can leave Replay API in a
+    stale pitch-sign state on some replays. Allow the UI to explicitly reset
+    cached rig calibration without touching the rest of the camera pipeline.
+    """
+    if selection_name is None:
+        _TPS_CALIBRATION.clear()
+        return
+    target = str(selection_name or '')
+    doomed = [key for key in list(_TPS_CALIBRATION) if key and str(key[0]) == target]
+    for key in doomed:
+        _TPS_CALIBRATION.pop(key, None)
+
+
 def smoothstep(x: float) -> float:
     x = min(1.0, max(0.0, x))
     return x * x * (3 - 2 * x)

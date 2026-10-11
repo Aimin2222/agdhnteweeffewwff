@@ -11,7 +11,7 @@ import traceback
 import faulthandler
 import hashlib
 import tkinter as tk
-from dataclasses import fields
+from dataclasses import fields, replace
 from pathlib import Path
 from tkinter import filedialog, messagebox, simpledialog, colorchooser, ttk
 
@@ -26,18 +26,18 @@ from core.kill_icons import STYLES as KILL_ICON_STYLES, REVERSE_STYLES as KILL_I
 from core.kill_icons import POSITIONS as KILL_ICON_POSITIONS, REVERSE_POSITIONS as KILL_ICON_REVERSE_POSITIONS
 from core.kill_icons import REVERSE_MARK_STYLES as KILL_MARK_REVERSE
 from core.montage_fx import MONTAGE_LABELS, MONTAGE_REVERSE
-from core.camera import INTENSITY_JP, STYLES, CAMERA_SIDE_CHOICES        # noqa: E402
+from core.camera import INTENSITY_JP, STYLES, CAMERA_SIDE_CHOICES, clear_tps_calibration        # noqa: E402
 from core.capture import CaptureError, SyntheticSource, WGCWindowSource   # noqa: E402
 from core.effects import (FOG_PRESETS, GRADE_JP, GRADE_REVERSE, TRANSITIONS, Template, one_click_templates, gpu_encoder_available, gpu_pipeline_status,
                             VIDEO_EFFECT_CATEGORIES, VIDEO_EFFECT_DEFAULTS, VIDEO_EFFECT_LABELS)   # noqa: E402
 from core.reference_safe import make_remixes, save_template as save_reference_template, load_template as load_reference_template, template_from_references  # noqa: E402
 from core.audio import PreferredGameAudio, SyntheticAudio               # noqa: E402
-from core.jobs import preview_clip, run_auto_edit                  # noqa: E402
+from core.jobs import preview_clip, run_auto_edit, safe_name                  # noqa: E402
 from core.preview import apply_camera_preview, apply_video_effect_preview, compose_compare, preview_title, render_exact_still   # noqa: E402
 from core.launcher import watch_replay                             # noqa: E402
 from core.players import Player, parse_players                     # noqa: E402
 from core.replay_api import ReplayAPI                              # noqa: E402
-from core.scanner import scan_kills                                # noqa: E402
+from core.scanner import scan_kills, filter_scanned_events                                # noqa: E402
 from ui.scene_timeline import SceneTimeline                     # noqa: E402
 from ui.live_preview import LatestPreview
 from ui.redraw import request_redraw
@@ -787,7 +787,7 @@ class App:
         ttk.Button(f, text="最近のリプレイを再生", command=self.on_play_recent).pack(fill="x", pady=2)
         ttk.Label(f, text="APIキー不要。game.cfgを自動設定します。", style="CardMuted.TLabel", wraplength=270).pack(fill="x", pady=(4, 0))
 
-        ttk.Button(f, text="③ 接続して10人を取得", command=self.on_connect).pack(fill="x", pady=(3,5))
+        ttk.Label(f, text="10人のプレイヤー取得は右側の『スキャン』にまとめました。ここは取得後の確認・固定だけに使います。", style="CardMuted.TLabel", wraplength=270).pack(fill="x", pady=(4, 0))
         f = fold_section(left, "プレイヤー一覧（確認・手動指定はここ）")
         self.tree = ttk.Treeview(f, columns=("team", "champ", "name"), show="headings", height=8, selectmode="browse")
         for c, t, w in (("team", "チーム", 55), ("champ", "チャンピオン", 95), ("name", "プレイヤー", 125)):
@@ -1332,16 +1332,18 @@ class App:
         ttk.Combobox(dof_controls, state="readonly", textvariable=self.var_dof_shape,
                      values=["円形（おすすめ）", "従来の上下ぼかし"], width=30).pack(anchor="w", pady=(4,3))
         slider(dof_controls,"dof_blur","周囲のぼかし強度",0,12)
-        self.var_dof_circle_hint = ttk.Label(dof_controls, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
+        circle_dof = ttk.Frame(dof_controls, style="Card.TFrame")
+        self._circle_dof_panel = circle_dof
+        self.var_dof_circle_hint = ttk.Label(circle_dof, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
                                              style="CardMuted.TLabel", wraplength=880)
         self.var_dof_circle_hint.pack(anchor="w", pady=(3,5))
-        slider(dof_controls,"dof_center_x","円の中心・左右",.05,.95)
-        slider(dof_controls,"dof_center_y","円の中心・上下",.05,.95)
-        slider(dof_controls,"dof_radius","くっきりする円の半径",.08,.65)
-        slider(dof_controls,"dof_feather","境界のなめらかさ",.025,.35)
-        ttk.Label(dof_controls, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
+        slider(circle_dof,"dof_center_x","円の中心・左右",.05,.95)
+        slider(circle_dof,"dof_center_y","円の中心・上下",.05,.95)
+        slider(circle_dof,"dof_radius","くっきりする円の半径",.08,.65)
+        slider(circle_dof,"dof_feather","境界のなめらかさ",.025,.35)
+        ttk.Label(circle_dof, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
                   style="CardMuted.TLabel", wraplength=950).pack(anchor="w", pady=(0,4))
-        self.dof_viz = FocusCircleViz(dof_controls, self.sl['dof_center_x'], self.sl['dof_center_y'],
+        self.dof_viz = FocusCircleViz(circle_dof, self.sl['dof_center_x'], self.sl['dof_center_y'],
                                      self.sl['dof_radius'], self.sl['dof_feather'])
         self.dof_viz.pack(fill="x", pady=(2,6))
         legacy_dof = ttk.LabelFrame(dof_controls, text="従来の上下ぼかし用（互換設定）", padding=5)
@@ -1547,9 +1549,9 @@ class App:
         # Keep scene selection and render progress at the top of the inspector, even
         # when the user switches to camera/color/output editing zones.
         f = card(right, "◉  検出シーン")
-        ttk.Button(f, text="① 試合全体を一括スキャン（最初に1回）", command=self.on_scan).pack(fill="x", pady=(0,6))
+        ttk.Button(f, text="① スキャン（接続→10人取得→試合全体）", style="Accent.TButton", command=self.on_scan).pack(fill="x", pady=(0,6))
         self.pb_scan = ttk.Progressbar(f, maximum=100); self.pb_scan.pack(fill="x", pady=2)
-        self.lbl_scan = ttk.Label(f, text="未スキャン｜左の『接続して10人を取得』から開始", style="CardMuted.TLabel", wraplength=300)
+        self.lbl_scan = ttk.Label(f, text="未スキャン｜①を押すと接続→10人取得→試合全体スキャンをまとめて実行します", style="CardMuted.TLabel", wraplength=300)
         self.lbl_scan.pack(fill="x", pady=(0,5))
         ttk.Label(f, text="② 表示するイベント", style="Card.TLabel").pack(anchor="w")
         mode_row=ttk.Frame(f,style="Card.TFrame"); mode_row.pack(fill="x",pady=(2,6))
@@ -1576,6 +1578,9 @@ class App:
         ttk.Button(kb2, text="全解除", command=self.on_uncheck_all).pack(side="left", fill="x", expand=True, padx=(3,0))
         ttk.Button(f, text="▶ 選択シーンを作成", command=self.on_make_selected).pack(fill="x", pady=(5,0), ipady=3)
         ttk.Button(f, text="✓ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
+        ttk.Separator(f, orient="horizontal").pack(fill="x", pady=(8, 6))
+        ttk.Button(f, text="開発用：カメラ/演出テストを一括作成", command=self.on_dev_test_bundle).pack(fill="x", pady=(0,3))
+        ttk.Label(f, text="試合全体スキャン後、BLUE/REDの代表キルとモンタージュ演出をまとめて書き出す一時機能です。完成版では削除予定。", style="CardMuted.TLabel", wraplength=290).pack(fill="x")
         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
 
         f = card(right, "☁  出力状況")
@@ -1619,14 +1624,30 @@ class App:
         ttk.Label(row, textvariable=self.sl_labels["fog_strength"], width=7, anchor="e", style="CardMuted.TLabel").pack(side="right")
         ttk.Label(f, text="カーブ補正ポイント", style="CardMuted.TLabel").pack(anchor="w", pady=(5, 2))
         ttk.Entry(f, textvariable=self.var_curve_points).pack(fill="x")
-        ttk.Label(f, text="DOF詳細", style="CardMuted.TLabel").pack(anchor="w", pady=(6, 2))
-        for key, label in (("dof_blur", "DOFぼかし"), ("dof_focus_distance", "フォーカス距離"),
-                           ("dof_near_distance", "近距離"), ("dof_far_distance", "遠距離")):
-            row = ttk.Frame(f, style="Card.TFrame"); row.pack(fill="x", pady=2)
+        ttk.Label(f, text="DOFモード", style="CardMuted.TLabel").pack(anchor="w", pady=(6, 2))
+        ttk.Combobox(f, state="readonly", textvariable=self.var_dof_shape,
+                     values=["円形（おすすめ）", "従来の上下ぼかし"]).pack(fill="x", pady=(0,4))
+        self._quick_dof_hint = ttk.Label(f, text="", style="CardMuted.TLabel", wraplength=520)
+        self._quick_dof_hint.pack(anchor="w", pady=(0, 4))
+        self._quick_dof_diagram = tk.Canvas(f, width=250, height=86, bg="#FFFFFF", highlightthickness=1, highlightbackground="#D0D5DD")
+        self._quick_dof_diagram.pack(anchor="w", pady=(0, 6))
+        self._quick_dof_circle_panel = ttk.Frame(f, style="Card.TFrame")
+        self._quick_dof_legacy_panel = ttk.Frame(f, style="Card.TFrame")
+        for key, label in (("dof_blur", "DOFぼかし"), ("dof_center_x", "中心X"),
+                           ("dof_center_y", "中心Y"), ("dof_radius", "半径"), ("dof_feather", "境界ぼかし")):
+            row = ttk.Frame(self._quick_dof_circle_panel, style="Card.TFrame"); row.pack(fill="x", pady=2)
             ttk.Label(row, text=label, width=11, style="Card.TLabel").pack(side="left")
             lo, hi = self._slider_range(key)
             ttk.Scale(row, from_=lo, to=hi, variable=self.sl[key]).pack(side="left", fill="x", expand=True, padx=4)
             ttk.Entry(row, textvariable=self.sl[key], width=9, justify="right").pack(side="right")
+        for key, label in (("dof_blur", "DOFぼかし"), ("dof_focus_distance", "フォーカス距離"),
+                           ("dof_near_distance", "近距離"), ("dof_far_distance", "遠距離")):
+            row = ttk.Frame(self._quick_dof_legacy_panel, style="Card.TFrame"); row.pack(fill="x", pady=2)
+            ttk.Label(row, text=label, width=11, style="Card.TLabel").pack(side="left")
+            lo, hi = self._slider_range(key)
+            ttk.Scale(row, from_=lo, to=hi, variable=self.sl[key]).pack(side="left", fill="x", expand=True, padx=4)
+            ttk.Entry(row, textvariable=self.sl[key], width=9, justify="right").pack(side="right")
+        self._update_dof_mode_ui()
 
         f = card(right, "◈  カメラ詳細")
         ttk.Label(f, text="カメラ距離 / 高さ / Orbit", style="Card.TLabel").pack(anchor="w")
@@ -2820,6 +2841,8 @@ class App:
         if hasattr(self, 'var_camera_status'):
             self.var_camera_status.set(f"再生中：{STYLES.get(tpl.style, tpl.style)} / 対象: "
                                        f"{self.locked.champion if self.locked else '未固定'} / 実機カメラを判定中")
+        if self.locked is not None:
+            clear_tps_calibration(self.locked.selection_name or self.locked.champion)
         self._run_bg(self._preview_play, tpl, kill)
 
     def _schedule_project_save(self):
@@ -3091,15 +3114,56 @@ class App:
             raise
 
     def _update_dof_mode_ui(self):
-        """Do not present obsolete near/far controls while circular focus is active."""
+        """Show only the controls that belong to the selected DOF mode."""
         panel = getattr(self, '_legacy_dof_panel', None)
-        if panel is None:
-            return
-        if self.var_dof_shape.get() == '従来の上下ぼかし':
-            if not panel.winfo_manager():
-                panel.pack(fill='x', pady=(2, 6))
-        elif panel.winfo_manager():
-            panel.pack_forget()
+        legacy = self.var_dof_shape.get() == '従来の上下ぼかし'
+        if panel is not None:
+            if legacy:
+                if not panel.winfo_manager():
+                    panel.pack(fill='x', pady=(2, 6))
+            elif panel.winfo_manager():
+                panel.pack_forget()
+        circle = getattr(self, '_circle_dof_panel', None)
+        if circle is not None:
+            if legacy:
+                circle.pack_forget()
+            elif not circle.winfo_manager():
+                circle.pack(fill='x', pady=(2, 6))
+        circle_panel = getattr(self, '_quick_dof_circle_panel', None)
+        legacy_panel = getattr(self, '_quick_dof_legacy_panel', None)
+        if circle_panel is not None and legacy_panel is not None:
+            if legacy:
+                if circle_panel.winfo_manager():
+                    circle_panel.pack_forget()
+                if not legacy_panel.winfo_manager():
+                    legacy_panel.pack(fill='x', pady=(2, 6))
+            else:
+                if legacy_panel.winfo_manager():
+                    legacy_panel.pack_forget()
+                if not circle_panel.winfo_manager():
+                    circle_panel.pack(fill='x', pady=(2, 6))
+        hint = getattr(self, '_quick_dof_hint', None)
+        if hint is not None:
+            hint.configure(text=(
+                '従来の上下ぼかし：画面中央の横帯をくっきり残し、上側と下側をぼかす互換モードです。'
+                if legacy else
+                '円形（おすすめ）：主役のまわりを◯で残し、その外側だけをぼかします。TargetLockと相性が良い標準モードです。'))
+        canvas = getattr(self, '_quick_dof_diagram', None)
+        if canvas is not None:
+            canvas.delete('all')
+            canvas.create_rectangle(1, 1, 249, 85, outline='#D0D5DD', fill='#FFFFFF')
+            if legacy:
+                canvas.create_rectangle(12, 12, 238, 74, outline='', fill='#EEF2F6')
+                canvas.create_rectangle(12, 31, 238, 55, outline='#7B8794', fill='#FFFFFF')
+                canvas.create_text(125, 20, text='ぼかし', fill='#6B7280', font=('Meiryo UI', 9))
+                canvas.create_text(125, 43, text='くっきり帯', fill='#174EA6', font=('Meiryo UI', 10, 'bold'))
+                canvas.create_text(125, 66, text='ぼかし', fill='#6B7280', font=('Meiryo UI', 9))
+            else:
+                canvas.create_rectangle(12, 12, 238, 74, outline='', fill='#EEF2F6')
+                canvas.create_oval(83, 18, 167, 68, outline='#174EA6', width=2, fill='#FFFFFF')
+                canvas.create_text(125, 43, text='主役', fill='#174EA6', font=('Meiryo UI', 10, 'bold'))
+                canvas.create_text(46, 43, text='ぼかし', fill='#6B7280', font=('Meiryo UI', 9))
+                canvas.create_text(205, 43, text='ぼかし', fill='#6B7280', font=('Meiryo UI', 9))
 
     def _apply_focus_preset(self):
         """One click circular focus without editing TargetLock or changing audio."""
@@ -3609,7 +3673,7 @@ class App:
             how = watch_replay(self.lol_dir, p)
             self.api._autocine_record_primed = False  # new replay requires new first-frame initialization
             self._reset_match_state()
-            self.log(f"リプレイを起動 ({how}): {p.name}  → 読み込み完了後『接続してプレイヤー取得』")
+            self.log(f"リプレイを起動 ({how}): {p.name}  → 読み込み完了後右側の『① スキャン』")
         except Exception as e:
             self.log(f"起動失敗: {e}")
             messagebox.showerror(APP, str(e))
@@ -3642,7 +3706,7 @@ class App:
             time.sleep(1.0)
         self.players = parse_players(raw)
         self.q.put(("players",))
-        self.log(f"プレイヤー {len(self.players)} 人を取得しました。対象を選んで『固定』を押してください。")
+        self.log(f"プレイヤー {len(self.players)} 人を取得しました。左の一覧で確認し、必要なら対象を固定してください。")
         if len(self.players) < 10:
             self.log("※10人未満です (カスタム/ボット戦の可能性)。")
 
@@ -3661,7 +3725,6 @@ class App:
         if self._match_scan_cache is None or not self._match_scan_cache.complete or self.locked is None:
             return
         self._refresh_scene_player_filter_choices()
-        from core.scanner import filter_scanned_events
         mode={"キル": "kill", "アシスト": "assist", "キル＋アシスト": "both"}.get(self.var_event_mode.get(), "kill")
         self.kills = filter_scanned_events(self._match_scan_cache.events, self.locked, mode)
         self.checked_kills = set(range(len(self.kills)))
@@ -3673,11 +3736,13 @@ class App:
         if self.busy:
             self.log("別の処理が完了してからスキャンしてください。")
             return
-        if not self.players:
-            messagebox.showinfo(APP, "先に接続して10人のプレイヤーを取得してください。")
-            return
         if self._match_scan_cache and self._match_scan_cache.complete:
-            self._filter_scanned_for_locked()
+            if self.locked is not None:
+                self._filter_scanned_for_locked()
+            else:
+                self.kills = list(self._match_scan_cache.kills)
+                self.checked_kills = set(range(len(self.kills)))
+                self._fill_kills()
             self.log("スキャン済みの試合イベントを再利用しました")
             return
         self._run_bg(self._scan, self.var_event_mode.get())
@@ -3689,6 +3754,12 @@ class App:
         return True
 
     def _scan(self, event_mode: str | None = None) -> None:
+        if not self.players:
+            self.log("スキャン準備: Replay APIへ接続し、10人のプレイヤーを取得します…")
+            self._connect()
+            if not self.players:
+                self.log("プレイヤー一覧を取得できなかったため、スキャンを開始できません。")
+                return
         session = self._replay_generation
         p = self.locked
         if self._match_scan_cache and self._match_scan_cache.complete:
@@ -3712,7 +3783,6 @@ class App:
             self.log("再接続前のスキャン結果を破棄しました。")
             return
         self._match_scan_cache = res if res.complete and not self.stop_ev.is_set() else None
-        from core.scanner import filter_scanned_events
         self.kills = filter_scanned_events(res.events, p, mode) if p is not None else res.kills
         self._last_scan_mode = selected_mode
         self.checked_kills = set(range(len(self.kills)))
@@ -3722,6 +3792,107 @@ class App:
         self.log(f"スキャン内訳: キル {kill_count}件 / アシスト {assist_count}件")
         self.log(f"スキャン完了: イベント {res.total_events} 件 / 対象シーン {len(self.kills)} 件 / モード {selected_mode}"
                  + ("" if res.complete else " (途中で中断)"))
+
+    def _pick_dev_test_sources(self):
+        if not self.players or self._match_scan_cache is None or not self._match_scan_cache.complete:
+            return {}, None
+        teams = {"ORDER": [], "CHAOS": []}
+        for player in self.players:
+            if player.team not in teams:
+                continue
+            kills = filter_scanned_events(self._match_scan_cache.events, player, "kill")
+            if kills:
+                teams[player.team].append((player, kills))
+        chosen = {}
+        for team in ("ORDER", "CHAOS"):
+            if teams[team]:
+                chosen[team] = max(teams[team], key=lambda item: len(item[1]))
+        montage_source = None
+        ordered = sorted([item for plist in teams.values() for item in plist], key=lambda item: len(item[1]), reverse=True)
+        for player, kills in ordered:
+            if len(kills) >= 2:
+                montage_source = (player, kills)
+                break
+        return chosen, montage_source
+
+    def on_dev_test_bundle(self) -> None:
+        if self.busy:
+            messagebox.showinfo(APP, "別の処理を実行中です。")
+            return
+        if self._match_scan_cache is None or not self._match_scan_cache.complete:
+            messagebox.showinfo(APP, "先に試合全体スキャンを完了してください。")
+            return
+        chosen, montage_source = self._pick_dev_test_sources()
+        if not chosen:
+            messagebox.showinfo(APP, "BLUE/REDのキルシーンを見つけられませんでした。")
+            return
+        tpl = self.current_template()
+        self._run_bg(self._make_dev_test_bundle, tpl, chosen, montage_source)
+
+    def _make_dev_test_bundle(self, tpl, chosen, montage_source):
+        src = None
+        own = False
+        try:
+            if self.stop_ev.is_set():
+                self.log('開発テスト一括作成を中止しました。')
+                return
+            src, own = self._ensure_source()
+            factory = None
+            if tpl.game_audio:
+                factory = (lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else (lambda path: PreferredGameAudio(path))
+            out_root = self.out_root / '_dev_replay_qa'
+            out_root.mkdir(parents=True, exist_ok=True)
+            made = 0
+            camera_styles = [('third', 'third_normal'), ('third_cinema', 'third_cinema'), ('fps', 'fps'), ('lolnam_cinema', 'lolnam_cinema')]
+            for team in ('ORDER', 'CHAOS'):
+                sample = chosen.get(team)
+                if not sample:
+                    continue
+                player, kills = sample
+                first = [kills[0]]
+                for style_code, slug in camera_styles:
+                    if self.stop_ev.is_set():
+                        self.log('開発テスト一括作成を中止しました。')
+                        return
+                    clear_tps_calibration(player.selection_name or player.champion)
+                    case_tpl = replace(tpl, style=style_code, montage_fx='cut')
+                    case_root = out_root / f'{team.lower()}_{safe_name(player.name)}_{slug}'
+                    self.log(f'開発テスト: {team} / {player.champion} / {STYLES.get(style_code, style_code)}')
+                    res = run_auto_edit(self.api, src, player, list(first), case_tpl, case_root, False,
+                                        progress=lambda *a:self.q.put(('job',*a)), stop=self.stop_ev,
+                                        log=self.log, audio_factory=factory)
+                    made += len(res.outputs)
+                    if res.failed:
+                        self.log(f'開発テスト: 失敗 {len(res.failed)} 件（診断ログを確認）')
+            if montage_source is not None:
+                player, kills = montage_source
+                montage_kills = list(kills[:min(4, len(kills))])
+                for fx in MONTAGE_LABELS:
+                    if self.stop_ev.is_set():
+                        self.log('開発テスト一括作成を中止しました。')
+                        return
+                    clear_tps_calibration(player.selection_name or player.champion)
+                    case_tpl = replace(tpl, style='third_cinema', montage_fx=fx)
+                    case_root = out_root / f'montage_{fx}_{safe_name(player.name)}'
+                    self.log(f'開発テスト: モンタージュ {MONTAGE_LABELS[fx]} / {player.champion}')
+                    res = run_auto_edit(self.api, src, player, montage_kills, case_tpl, case_root, True,
+                                        progress=lambda *a:self.q.put(('job',*a)), stop=self.stop_ev,
+                                        log=self.log, audio_factory=factory)
+                    made += len(res.outputs)
+                    if res.failed:
+                        self.log(f'開発テスト: 失敗 {len(res.failed)} 件（診断ログを確認）')
+                    if res.montage is not None:
+                        made += 1
+            if self.stop_ev.is_set():
+                self.log('開発テスト一括作成を中止しました。')
+                return
+            self.log(f'開発テスト一括作成完了: 出力 {made} 件 / 保存先 {out_root}')
+        finally:
+            if own and src is not None:
+                try:
+                    src.stop()
+                except Exception:
+                    pass
 
     def _ensure_source(self):
         if self._mirror.pending:
@@ -3930,7 +4101,8 @@ class App:
         return None, "empty"
 
     def _camera_selection_changed(self, *_args):
-        """Label the SELECTED preset, never misstate it as the active Replay API mode."""
+        """Label the selected preset and drop stale third-person calibration."""
+        clear_tps_calibration()
         if hasattr(self, 'var_camera_status') and hasattr(self, 'var_style'):
             choice=self.var_style.get()
             self.var_camera_status.set(f'設定：{choice}（▶再生で実際の動作を確認）')
@@ -4068,6 +4240,8 @@ class App:
         if hasattr(self, 'var_camera_status'):
             self.var_camera_status.set(f"再生中：{STYLES.get(tpl.style, tpl.style)} / 対象: "
                                        f"{self.locked.champion if self.locked else '未固定'} / 実機カメラを判定中")
+        if self.locked is not None:
+            clear_tps_calibration(self.locked.selection_name or self.locked.champion)
         self._run_bg(self._preview_play, tpl, kill)
 
     def _preview_play(self, tpl, kill) -> None:

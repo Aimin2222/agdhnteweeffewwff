@@ -19,6 +19,7 @@ def test_unsaved_keyframes_go_to_actual_replay_preview():
         _current_scene=lambda: SimpleNamespace(time=173.5),
         _need_lock=lambda: True,
         busy=False,
+        locked=SimpleNamespace(selection_name='Ahri', champion='Ahri'),
         _scene_shot_from_ui=lambda: Shot(keyframes=frames),
         current_template=lambda: saved_tpl,
         _run_bg=lambda fn,*args: preview_calls.append((fn,args)),
