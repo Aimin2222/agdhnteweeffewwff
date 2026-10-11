@@ -2,7 +2,7 @@ name: AutoCine v5.10.15 Unified Replay RED Camera QA ZIPs
 on:
   push:
     branches:
-      - autocine/v5.10.15-ui-camera-full
+      - autocine/v5.10.15-unified-replay-redcam-qa
   workflow_dispatch:
 
 permissions:
@@ -61,7 +61,7 @@ jobs:
                   if not p.is_file() or p.suffix==".pyc" or any(x in p.parts for x in (".pytest_cache","__pycache__","diagnostics")):
                       continue
                   z.write(p,p.as_posix())
-          patch=out/"v5.10.15_from_codex_v51013.patch"
+          patch=out/"v5.10.15_from_v5.10.14.patch"
           patch.write_bytes(subprocess.check_output(
               ["git","diff","--binary",base+"...HEAD","--","LoL_AutoCine"]))
           assert patch.stat().st_size>2000
