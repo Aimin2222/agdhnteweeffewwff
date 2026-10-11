@@ -780,7 +780,10 @@ class App:
         ttk.Label(f, text="APIキー不要。game.cfgを自動設定します。", style="CardMuted.TLabel", wraplength=270).pack(fill="x", pady=(4, 0))
 
         f = card(left, "2  対象プレイヤー")
-        ttk.Button(f, text="接続して10人を取得", command=self.on_connect).pack(fill="x", pady=(0, 5))
+        ttk.Button(f, text="▶ リプレイに接続 ＋ 試合全体をスキャン", style="Accent.TButton",
+                   command=self.on_connect_and_scan).pack(fill="x", pady=(0, 5), ipady=4)
+        ttk.Label(f, text="① LoLのリプレイを起動 → ② このボタンを1回押すだけ。10人・キル・アシストを取得します。",
+                  style="CardMuted.TLabel", wraplength=285).pack(fill="x", pady=(0,5))
         self.tree = ttk.Treeview(f, columns=("team", "champ", "name"), show="headings", height=8, selectmode="browse")
         for c, t, w in (("team", "チーム", 55), ("champ", "チャンピオン", 95), ("name", "プレイヤー", 125)):
             self.tree.heading(c, text=t); self.tree.column(c, width=w, anchor="w")
@@ -796,8 +799,7 @@ class App:
         ttk.Label(f, text="検出対象", style="CardMuted.TLabel").pack(anchor="w", pady=(0, 3))
         ttk.Combobox(f, state="readonly", textvariable=self.var_event_mode,
                      values=["キル", "アシスト", "キル＋アシスト"]).pack(fill="x", pady=(0, 5))
-        ttk.Button(f, text="① 試合全体を一括スキャン（1回だけ）", command=self.on_scan).pack(fill="x")
-        ttk.Label(f, text="② スキャン後は上の選手を選んで「この人を対象にする」。再スキャン不要。",
+        ttk.Label(f, text="接続と同時に全10人をスキャンします。対象を変えるときは「検出シーン」の表示プレイヤーを切り替えてください。",
                   style="CardMuted.TLabel", wraplength=290).pack(fill="x", pady=(4,3))
         self.var_team_filter = tk.StringVar(value="全チーム")
         team_filter = ttk.Combobox(f, state="readonly", textvariable=self.var_team_filter,
@@ -808,7 +810,19 @@ class App:
         self.pb_scan = ttk.Progressbar(f, maximum=100); self.pb_scan.pack(fill="x", pady=6)
         self.lbl_scan = ttk.Label(f, text="まだスキャンしていません", style="CardMuted.TLabel", wraplength=270)
         self.lbl_scan.pack(fill="x")
-
+        if os.environ.get("AUTOCINE_DEV_QA", "1") != "0":
+            qa_panel = ttk.LabelFrame(f, text="開発用・実機テスト（正式版では削除可）", padding=6)
+            qa_panel.pack(fill="x", pady=(9,2))
+            ttk.Label(qa_panel, text="リプレイ起動後に押すと、BLUE/RED × 4カメラを自動録画して診断に保存します。",
+                      style="CardMuted.TLabel", wraplength=265).pack(fill="x")
+            self.var_qa_events_per_team = tk.IntVar(value=1)
+            ttk.Radiobutton(qa_panel, text="8本（推奨・各陣営1シーン）", variable=self.var_qa_events_per_team,
+                            value=1).pack(anchor="w")
+            ttk.Radiobutton(qa_panel, text="16本（各陣営2シーン）", variable=self.var_qa_events_per_team,
+                            value=2).pack(anchor="w")
+            ttk.Button(qa_panel, text="▶ 自動カメラ・録画テスト", command=self.on_replay_qa).pack(fill="x", pady=(5,0))
+            ttk.Label(qa_panel, text="ゲームを操作・録画するのはボタン押下時だけ。中止ボタンで停止できます。",
+                      style="CardMuted.TLabel", wraplength=265).pack(fill="x", pady=3)
 
         # 参考映像とテンプレートは準備・スキャンの後に配置する。
         f = card(left, "▶  参考動画の追加")
@@ -1327,16 +1341,18 @@ class App:
         ttk.Combobox(dof_controls, state="readonly", textvariable=self.var_dof_shape,
                      values=["円形（おすすめ）", "従来の上下ぼかし"], width=30).pack(anchor="w", pady=(4,3))
         slider(dof_controls,"dof_blur","周囲のぼかし強度",0,12)
-        self.var_dof_circle_hint = ttk.Label(dof_controls, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
+        dof_circle_controls = ttk.LabelFrame(dof_controls, text="円形ぼかしの詳細", padding=7)
+        self._dof_circle_panel = dof_circle_controls
+        self.var_dof_circle_hint = ttk.Label(dof_circle_controls, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
                                              style="CardMuted.TLabel", wraplength=880)
         self.var_dof_circle_hint.pack(anchor="w", pady=(3,5))
-        slider(dof_controls,"dof_center_x","円の中心・左右",.05,.95)
-        slider(dof_controls,"dof_center_y","円の中心・上下",.05,.95)
-        slider(dof_controls,"dof_radius","くっきりする円の半径",.08,.65)
-        slider(dof_controls,"dof_feather","境界のなめらかさ",.025,.35)
-        ttk.Label(dof_controls, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
+        slider(dof_circle_controls,"dof_center_x","円の中心・左右",.05,.95)
+        slider(dof_circle_controls,"dof_center_y","円の中心・上下",.05,.95)
+        slider(dof_circle_controls,"dof_radius","くっきりする円の半径",.08,.65)
+        slider(dof_circle_controls,"dof_feather","境界のなめらかさ",.025,.35)
+        ttk.Label(dof_circle_controls, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
                   style="CardMuted.TLabel", wraplength=950).pack(anchor="w", pady=(0,4))
-        self.dof_viz = FocusCircleViz(dof_controls, self.sl['dof_center_x'], self.sl['dof_center_y'],
+        self.dof_viz = FocusCircleViz(dof_circle_controls, self.sl['dof_center_x'], self.sl['dof_center_y'],
                                      self.sl['dof_radius'], self.sl['dof_feather'])
         self.dof_viz.pack(fill="x", pady=(2,6))
         legacy_dof = ttk.LabelFrame(dof_controls, text="従来の上下ぼかし用（互換設定）", padding=5)
@@ -3077,15 +3093,19 @@ class App:
             raise
 
     def _update_dof_mode_ui(self):
-        """Do not present obsolete near/far controls while circular focus is active."""
-        panel = getattr(self, '_legacy_dof_panel', None)
-        if panel is None:
+        """Show exactly one of circular or legacy band DOF parameters."""
+        band = getattr(self, '_legacy_dof_panel', None)
+        circle = getattr(self, '_dof_circle_panel', None)
+        if band is None or circle is None:
             return
         if self.var_dof_shape.get() == '従来の上下ぼかし':
-            if not panel.winfo_manager():
-                panel.pack(fill='x', pady=(2, 6))
-        elif panel.winfo_manager():
-            panel.pack_forget()
+            circle.pack_forget()
+            if not band.winfo_manager():
+                band.pack(fill='x', pady=(2,6))
+        else:
+            band.pack_forget()
+            if not circle.winfo_manager():
+                circle.pack(fill='x', pady=(2,6))
 
     def _apply_focus_preset(self):
         """One click circular focus without editing TargetLock or changing audio."""
@@ -3601,7 +3621,67 @@ class App:
             messagebox.showerror(APP, str(e))
 
     def on_connect(self) -> None:
+        # Compatibility for pre-v5.10.15 caller; new primary button also scans.
         self._run_bg(self._connect)
+
+    def on_connect_and_scan(self) -> None:
+        """Single user action: connect to the already-running replay and cache all events."""
+        if self.busy:
+            return
+        if self._match_scan_cache is not None and getattr(self._match_scan_cache, "complete", False):
+            self.log("このリプレイはスキャン済み。別の対象は検出シーンの一覧で切り替えてください。")
+            return
+        mode = self.var_event_mode.get()
+        self._run_bg(self._connect_and_scan_worker, mode)
+
+    def _connect_and_scan_worker(self, event_mode="キル") -> None:
+        self._connect()
+        if self.stop_ev.is_set() or not self.players:
+            self.log("Replay API接続が完了しなかったため、一括スキャンは行いません。")
+            return
+        self.log("プレイヤー情報取得完了。試合全体のキル・アシストを一括スキャンします。")
+        self._scan(event_mode)
+        if self._match_scan_cache is not None:
+            self.log("接続＋スキャン完了。右の『検出シーン → 表示プレイヤー』で対象を選んでください。")
+
+    def on_replay_qa(self) -> None:
+        """Opt-in developer QA; never runs automatically on startup/reconnect."""
+        if self.busy:
+            return
+        from tkinter import messagebox
+        count = int(getattr(self, "var_qa_events_per_team", tk.IntVar(value=1)).get())
+        tpl = self.current_template()  # Tk snapshot only on main thread.
+        self._run_bg(self._run_replay_qa_worker, tpl, count)
+
+    def _run_replay_qa_worker(self, tpl, events_per_team=1) -> None:
+        from core.replay_qa import run_replay_qa
+        if not self.players:
+            self._connect()
+        if not self.players or self.stop_ev.is_set():
+            self.log("自動実機テスト: LoLリプレイに接続できませんでした。")
+            return
+        if not self._match_scan_cache or not self._match_scan_cache.complete:
+            self._scan("キル")
+        cache = self._match_scan_cache
+        if cache is None or not cache.complete or self.stop_ev.is_set():
+            self.log("自動実機テスト: スキャン未完了。テストは開始しません。")
+            return
+        src, owned = self._ensure_source()
+        try:
+            factory = None
+            if tpl.game_audio:
+                factory = (lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else (lambda path: PreferredGameAudio(path))
+            report = run_replay_qa(
+                self.api, src, tuple(self.players), list(cache.events), tpl,
+                ROOT / "diagnostics" / "replay_qa", audio_factory=factory,
+                stop=self.stop_ev, events_per_team=events_per_team, log=self.log,
+                progress=lambda *a: self.q.put(("job", *a)))
+            self.log(f"実機テスト完了: {report['passed']}成功 / {report['failed']}失敗"
+                     + ("（中止）" if report["cancelled"] else ""))
+            self.log("生成動画とreplay_qa_report.json: " + report["outputs_root"])
+        finally:
+            if owned:
+                src.stop()
 
     def _reset_match_state(self):
         # Plain data only: callers may run in a worker. Tk updates use the queue.
