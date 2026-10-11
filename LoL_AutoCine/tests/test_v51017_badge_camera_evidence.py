@@ -61,3 +61,31 @@ def test_badge_motion_qa_skips_when_no_recorded_video(tmp_path,monkeypatch):
     manifest=json.loads(result.read_text(encoding="utf-8"))
     assert len(manifest["outputs"])==8 and manifest["completed_clips"]==0
     assert manifest["badge_motion_tests"]==[]
+
+
+
+def test_badge_motion_graph_is_accepted_by_real_ffmpeg(tmp_path):
+    """A generated MP4, not just matching text, demonstrates real overlay support."""
+    import shutil
+    import subprocess
+    import pytest
+    from core.kill_icons import make_badge, with_badges
+    from core.gpu_binary import ffmpeg_exe
+    exe=str(ffmpeg_exe())
+    if not shutil.which(exe) and not Path(exe).is_file():
+        pytest.skip("FFmpeg is not installed")
+    raw=tmp_path/"base.mp4"
+    final=tmp_path/"qa_motion.mp4"
+    badge=make_badge(tmp_path/"badge.png","cinema")
+    subprocess.run([exe,"-y","-hide_banner","-loglevel","error",
+                    "-f","lavfi","-i","color=c=gray:s=640x360:r=30:d=2",
+                    "-c:v","libx264","-pix_fmt","yuv420p",str(raw)],
+                   check=True,capture_output=True,timeout=40)
+    graph=with_badges("[0:v]format=yuv420p[vout]",1,[(badge,.45)],
+                      duration=2,seconds=1.2,style="cinema",motion="slide_up")
+    subprocess.run([exe,"-y","-hide_banner","-loglevel","error","-i",str(raw),
+                    "-loop","1","-framerate","30","-i",str(badge),
+                    "-filter_complex",graph,"-map","[vout]","-c:v","libx264",
+                    "-preset","ultrafast","-pix_fmt","yuv420p","-t","2",str(final)],
+                   check=True,capture_output=True,timeout=60)
+    assert final.is_file() and final.stat().st_size>800
