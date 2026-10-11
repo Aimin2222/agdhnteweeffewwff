@@ -993,6 +993,8 @@ class App:
                        command=lambda k=key: self._choose_easy_preset(k))
             button.pack(side="left", padx=3, fill="x", expand=True)
             self._bind_preset_hover(button,key)
+        ttk.Button(easy, text="🔍 仕上がりを大きく比較（原画／色補正後）",
+                   command=self._open_large_preset_preview).pack(fill="x", pady=(3, 6))
         self.lbl_easy_preset = ttk.Label(easy, textvariable=self.var_tpl, style="CardMuted.TLabel")
         self.lbl_easy_preset.pack(anchor="w", pady=(0, 3))
         ttk.Checkbutton(easy, text="自動ディレクター：キル数に合わせてカメラ演出を自動調整（任意）",
@@ -1014,6 +1016,8 @@ class App:
         ttk.Combobox(easy_montage_row, state="readonly", textvariable=self.var_montage_fx,
                      values=list(MONTAGE_LABELS.values()),
                      width=28).pack(side="left", fill="x", expand=True)
+        ttk.Label(easy, text="つなぎ目演出：2本以上のクリップを1本にまとめる時に適用。10種類から選べます。",
+                  style="CardMuted.TLabel", wraplength=850).pack(anchor="w", pady=(0,4))
 
         self._mode_detail_sections = []
         timeline = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
@@ -2032,6 +2036,33 @@ class App:
             self.var_kill_mark_style.set("LoL風・撃破エンブレム（オリジナル）")
         if hasattr(self,"_invalidate_preview_snapshot"):
             self._invalidate_preview_snapshot()
+
+    def _open_large_preset_preview(self):
+        """Open a readable 2-up REAL-mirror comparison, no settings mutation."""
+        if self.var_tpl.get() not in self.templates:
+            return
+        frame, _source = self._current_frame_rgb(960, 540)
+        if frame is None:
+            messagebox.showinfo("仕上がりを比較",
+                "ミラーを開始してLoLのシーンを映してから押してください。\n"
+                "この比較はLoLの実フレームのみを使います。", parent=self.root)
+            return
+        from core.preview import grade_rgb
+        original = Image.fromarray(frame.astype(np.uint8)).convert("RGB")
+        after = Image.fromarray(grade_rgb(np.asarray(original), self.templates[self.var_tpl.get()]))
+        both = Image.new("RGB", (original.width * 2, original.height))
+        both.paste(original, (0, 0))
+        both.paste(after, (original.width, 0))
+        both.thumbnail((1440, 810), Image.Resampling.LANCZOS)
+        win = tk.Toplevel(self.root)
+        win.title("仕上がりの大きな比較｜左＝LoL原画　右＝色補正後")
+        win.geometry(f"{both.width + 20}x{both.height + 65}")
+        ttk.Label(win, text=f"左：原画　　右：{self.var_tpl.get()}",
+                  font=("Meiryo UI", 11, "bold")).pack(padx=12, pady=8)
+        photo = ImageTk.PhotoImage(both, master=win)
+        label = ttk.Label(win, image=photo)
+        label.image = photo
+        label.pack(padx=10, pady=4)
 
     def _preview_dof_from_live(self):
         """Show current real LoL mirror before/after using existing DOF engine."""
