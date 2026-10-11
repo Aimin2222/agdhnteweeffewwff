@@ -1261,17 +1261,16 @@ class App:
         self._mode_detail_sections.append(advanced)
         self._editor_advanced = advanced
         advanced.pack(fill="x", pady=(0, 8))
-        ttk.Label(advanced, text="仕上げ（基本／カラー／FX／出力）", style="Section.TLabel").pack(anchor="w")
-        nb = ttk.Notebook(advanced); nb.pack(fill="x", pady=(7, 0))
-        self._editor_advanced_tabs = nb
-        basic = ttk.Frame(nb, padding=8, style="Card.TFrame")
-        color = ttk.Frame(nb, padding=8, style="Card.TFrame")
-        fx_page = ttk.Frame(nb, padding=8, style="Card.TFrame")
-        output = ttk.Frame(nb, padding=8, style="Card.TFrame")
-        nb.add(basic, text="基本")
-        nb.add(color, text="カラー")
-        nb.add(fx_page, text="FX・DOF")
-        nb.add(output, text="出力")
+        self._advanced_section_title = ttk.Label(advanced, text="基本設定", style="Section.TLabel")
+        self._advanced_section_title.pack(anchor="w")
+        # Single-layer editor: the top workspace selector owns navigation.
+        # 'basic' is shown below Scene to preserve all legacy project controls.
+        basic = ttk.Frame(advanced, padding=8, style="Card.TFrame")
+        color = ttk.Frame(advanced, padding=8, style="Card.TFrame")
+        fx_page = ttk.Frame(advanced, padding=8, style="Card.TFrame")
+        output = ttk.Frame(advanced, padding=8, style="Card.TFrame")
+        self._editor_advanced_pages = {"basic":basic, "color":color, "fx":fx_page, "output":output}
+        self._editor_advanced_tabs = None
 
         ttk.Label(basic, text="テンプレート", style="Card.TLabel").pack(anchor="w")
         self.cb_tpl_quick = ttk.Combobox(basic, state="readonly", textvariable=self.var_tpl, values=list(self.templates))
@@ -1769,7 +1768,7 @@ class App:
             panel.pack_forget()
         zone = self.var_editor_zone.get()
         visibility = {
-            "scene": (self._editor_timeline, self._editor_scene),
+            "scene": (self._editor_timeline, self._editor_scene, self._editor_advanced),
             "camera": (self._editor_camera,),
             "color": (self._editor_advanced,),
             "fx": (self._editor_advanced,),
@@ -1780,8 +1779,19 @@ class App:
             self.var_editor_zone.set(zone)
         for panel in visibility[zone]:
             panel.pack(fill="x", pady=(0, 8))
-        if zone in ("color", "fx", "output") and hasattr(self, "_editor_advanced_tabs"):
-            self._editor_advanced_tabs.select({"color": 1, "fx": 2, "output": 3}[zone])
+        # Keep page widgets alive, simply show the single chosen page.
+        if hasattr(self, "_editor_advanced_pages"):
+            for page in self._editor_advanced_pages.values():
+                page.pack_forget()
+            active_page = "basic" if zone == "scene" else zone
+            if active_page in self._editor_advanced_pages:
+                self._editor_advanced_pages[active_page].pack(fill="x", pady=(7, 0))
+                self._advanced_section_title.configure(text={
+                    "basic": "基本設定（シーン共通）",
+                    "color": "カラー",
+                    "fx": "FX・DOF",
+                    "output": "出力・音声・キルフレーム",
+                }[active_page])
         descriptions = {
             "scene": "検出シーンごとの演出・キーフレーム・順番を編集。選択したキルは右側で切り替えます。",
             "camera": "全体カメラの追従・Orbit・距離を設定。シーン別のキーフレームは［シーン］へ。",
