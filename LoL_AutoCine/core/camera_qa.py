@@ -11,6 +11,10 @@ from dataclasses import replace
 from datetime import datetime
 import json
 from pathlib import Path
+import subprocess
+
+from .gpu_binary import ffmpeg_exe
+from .kill_icons import MOTION_STYLES, make_badge, with_badges
 
 from .jobs import run_auto_edit
 from .scanner import filter_scanned_events
@@ -57,11 +61,12 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
     folder.mkdir(parents=True, exist_ok=True)
     manifest = {
-        "version": "5.10.15",
+        "version": "5.10.17-test",
         "kind": "live_replay_camera_test",
         "expected_clips": len(plan),
         "outputs": [],
         "montage_tests": [],
+        "badge_motion_tests": [],
         "limitations": "Framing must be judged visually on Windows. Audio/codec need playback or ffprobe.",
     }
     def flush():
@@ -86,14 +91,22 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         clip_template.post = min(3.0, max(1.0, float(template.post)))
         current = {"number": index, "side": side, "mode": mode, "label": label,
                    "player": player.label(), "event_time": float(scene.time), "outputs": [],
-                   "failed": []}
+                   "failed": [], "camera_diagnostics": []}
+        def capture_camera_log(message):
+            # Numeric camera setup data from the normal production path.
+            if str(message).startswith("CAMERA_QA_POSE "):
+                try:
+                    current["camera_diagnostics"].append(json.loads(str(message).split(" ", 1)[1]))
+                except (ValueError, IndexError, TypeError):
+                    pass
+            log(message)
         log(f"8本テスト [{index}/8]: {side} / {label} / {player.label()} / {scene.time:.1f}s")
         if progress:
             progress(index-1, 8, round(100*(index-1)/8,1), f"{side} {label} を録画中")
         try:
             result = run_auto_edit(
                 api, source, player, [scene], clip_template, folder / f"{index:02d}_{side}_{mode}",
-                False, progress=None, stop=stop, log=log, audio_factory=audio_factory)
+                False, progress=None, stop=stop, log=capture_camera_log, audio_factory=audio_factory)
             current["outputs"] = [str(p) for p in result.outputs]
             current["failed"] = [[int(i), str(msg)] for i,msg in result.failed]
             if not result.outputs and not result.failed:
@@ -128,6 +141,49 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
                 outcome["failed"] = [f"{type(exc).__name__}: {exc}"]
                 log(f"つなぎ演出テスト {style}: {exc}")
             manifest["montage_tests"].append(outcome)
+            flush()
+    # The eight camera QA clips intentionally disable kill badges so camera
+    # geometry is unobstructed. Render six *separate* badge-motion clips from
+    # an already-recorded MP4; otherwise the user cannot check entrance FX.
+    if ready and not (stop is not None and stop.is_set()):
+        from .kill_icons import STYLES
+        theme = template.kill_icon_style if template.kill_icon_style in STYLES and template.kill_icon_style != "off" else "cinema"
+        badge = folder / "badge_motion_qa_image.png"
+        try:
+            make_badge(badge, theme)
+            for motion, label in MOTION_STYLES.items():
+                if stop is not None and stop.is_set():
+                    break
+                dest = folder / f"badge_motion_{motion}.mp4"
+                entry = {"motion": motion, "label": label, "outputs": [], "failed": []}
+                try:
+                    # FFmpeg filter used by production, not a Python mock;
+                    # no additional game capture or sound recording.
+                    duration = 3.0
+                    graph = with_badges("[0:v]format=yuv420p[vout]", 1,
+                                        [(badge, 0.45)], duration=duration,
+                                        position="right-top", scale=1.0,
+                                        seconds=2.1, style=theme, motion=motion)
+                    cmd = [str(ffmpeg_exe()), "-hide_banner", "-loglevel", "error", "-y",
+                           "-i", str(ready[0]),
+                           "-loop", "1", "-framerate", "60", "-i", str(badge),
+                           "-filter_complex", graph,
+                           "-map", "[vout]", "-map", "0:a?",
+                           "-c:v", "libx264", "-preset", "veryfast", "-crf", "22",
+                           "-pix_fmt", "yuv420p", "-c:a", "copy",
+                           "-t", str(duration), str(dest)]
+                    subprocess.run(cmd, check=True, capture_output=True, timeout=180)
+                    if not dest.is_file() or dest.stat().st_size == 0:
+                        raise RuntimeError("テスト動画が生成されませんでした")
+                    entry["outputs"] = [str(dest)]
+                except Exception as exc:
+                    entry["failed"].append(f"{type(exc).__name__}: {exc}")
+                    log(f"キルフレーム登場 {label} のテスト失敗: {exc}")
+                manifest["badge_motion_tests"].append(entry)
+                flush()
+        except Exception as exc:
+            manifest["badge_motion_tests"].append({"motion": "setup", "outputs": [],
+                                                    "failed": [str(exc)]})
             flush()
     manifest["completed_clips"] = sum(bool(row["outputs"]) for row in manifest["outputs"])
     manifest["canceled"] = bool(stop is not None and stop.is_set())
