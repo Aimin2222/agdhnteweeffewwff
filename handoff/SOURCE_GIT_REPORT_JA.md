@@ -1,4 +1,4 @@
-# v5.10.15 PortraitCrashFix 保存報告
+# v5.10.15 ScanFix 保存報告
 
 ソース /workspace/LoL_AutoCine、integration/v5.10.15-scanfix、HEAD e62be60d41fefd41dfc01568211c75bb3fd86ff6、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51015-scan-dof-camera-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時と保存後のstatus --shortは空。mainへマージしない。
 
@@ -383,3 +383,5 @@ A	ui/template_gallery.py
 ```
 
 全431ソース/Python149・全87ブランチをbundleへ保存。旧83ブランチ先端、既存416ファイルと37PNGは不変。旧配布物139件をバイト保持。未保存の変更はなし。個人設定/録画/診断は追加・削除しない。
+
+GitHubから固定payloadを取得して431ソース/87refs/ZIPとbundleのハッシュ一致を確認。復元先代表120テスト成功、セットアップ再実行で431ソース/87refs/設定相当3ファイル保持、status clean。install_script/start_skillを保存して読戻し一致を確認、他の環境設定は保持。Publish未実施。これは同じクラウド実行環境の別フォルダ検証で、Windows/NVIDIA実機の検証ではない。

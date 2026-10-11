@@ -10,3 +10,5 @@ DOF中央/右側とも円形と従来帯の設定を排他表示し、値は保�
 
 前回PortraitCrashFixを比較先とするDraft PR。mainにはマージしません。完全ZIP→Download raw file、またはCode→Download ZIPで取得し別フォルダへ展開してSTART_GPU.bat。Windowsテストはdocs/WINDOWS_TEST_SCANFIX_v51015_JA.md。
 
+
+GitHubから固定payloadを取得して431ソース/87refs/ZIPとbundleのハッシュ一致を確認。復元先代表120テスト成功、セットアップ再実行で431ソース/87refs/設定相当3ファイル保持、status clean。install_script/start_skillを保存して読戻し一致を確認、他の環境設定は保持。Publish未実施。これは同じクラウド実行環境の別フォルダ検証で、Windows/NVIDIA実機の検証ではない。

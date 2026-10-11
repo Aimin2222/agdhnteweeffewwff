@@ -20,3 +20,5 @@ git branch feature/ui-scanfix-v51015 origin/feature/ui-scanfix-v51015
 git status --short
 ```
 全87ブランチをorigin/*として復元。originはローカルbundle。docs/CODEX_INTEGRATION_SCANFIX_v51015_JA.mdの担当ガードを実行。設定/録画/プロジェクトは保管。
+
+GitHubから固定payloadを取得して431ソース/87refs/ZIPとbundleのハッシュ一致を確認。復元先代表120テスト成功、セットアップ再実行で431ソース/87refs/設定相当3ファイル保持、status clean。install_script/start_skillを保存して読戻し一致を確認、他の環境設定は保持。Publish未実施。これは同じクラウド実行環境の別フォルダ検証で、Windows/NVIDIA実機の検証ではない。
