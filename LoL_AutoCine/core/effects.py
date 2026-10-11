@@ -180,7 +180,6 @@ class Template:
     kill_icon_scale: float = 1.0
     kill_icon_duration: float = 1.55
     kill_icon_opacity: float = 1.0
-    kill_icon_motion: str = "instant"  # badge entrance, legacy behavior by default
     smart_composition: bool = False  # safer distance/elevation around the locked player
     smart_montage: bool = False  # only smart auto-edit reorders unpinned scenes
     kill_icon_players: list = field(default_factory=list)  # transient replay roster for real champion portraits
@@ -201,6 +200,7 @@ class Template:
     camera_side: str = "auto"  # v5.10.5: auto / blue / red (append: old positional templates safe)
     kill_sparkle_intensity: float = 1.0  # v5.10.8: corner rays/star flares
     kill_stack_gap: int = 4  # v5.10.8: additional pixels between simultaneous kills
+    kill_icon_motion: str = "instant"  # badge entrance, legacy behavior by default
 
     def __post_init__(self) -> None:
         # v5.10.3: preserve older project JSON but retire the accidentally-added
