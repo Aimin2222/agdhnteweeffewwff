@@ -25,11 +25,11 @@ STYLES = {
     "royal_deluxe": "ロイヤル・デラックス（金）",
     "gold_wing": "黄金の翼章",
     "neon_show": "ネオン・ステージ",
-    "kda_style": "K/DA風・ステージピンク",
-    "project_style": "PROJECT風・サイバー装甲",
-    "star_magic": "スターガーディアン風・光翼",
-    "spirit_blossom": "精霊の花祭り風・桜",
-    "high_noon": "ハイヌーン風・烈火",
+    "kda_style": "K/DA風",
+    "project_style": "PROJECT風",
+    "star_magic": "スターガーディアン風",
+    "spirit_blossom": "精霊の花祭り風",
+    "high_noon": "ハイヌーン風",
     "obsidian_violet": "黒曜石・紫晶",
     "emerald_relic": "エメラルド・レリック",
     "crimson_mythic": "クリムゾン・ミシック",
@@ -41,21 +41,32 @@ STYLES = {
     "user_frame_02": "黄金の双翼（シンプル）",
     "user_frame_03": "黄金の剣翼（シャープ）",
     "user_frame_04": "黒金の鳳凰（高級感）",
-    "user_frame_05": "PROJECT風・蒼紫ネオン",
+    "user_frame_05": "PROJECT風・ブルー",
     "user_frame_06": "電脳ネオン・光翼",
     "user_frame_07": "紅蓮メタル（炎の王冠）",
-    "user_frame_08": "K/DA風・ローズクリスタル",
-    "user_frame_09": "PROJECT風・紅蓮メカ",
+    "user_frame_08": "K/DA風・ローズ",
+    "user_frame_09": "PROJECT風・レッド",
     "user_frame_10": "蒼天・氷結の光翼",
     "user_frame_11": "スターガーディアン風・光翼",
     "user_frame_12": "エメラルド・翠緑の紋章",
-    "user_frame_13": "精霊の花祭り風・桜翼",
+    "user_frame_13": "精霊の花祭り風・桜",
     "user_frame_14": "ネオンアイドル・シアン紫",
-    "user_frame_15": "ハイヌーン風・金炎",
+    "user_frame_15": "ハイヌーン風・ゴールド",
     "user_frame_16": "黒曜石・紫金の翼",
 }
 
 REVERSE_STYLES = {label: code for code, label in STYLES.items()}
+REVERSE_STYLES["ハイヌーン風・金炎"] = "user_frame_15"
+REVERSE_STYLES["精霊の花祭り風・桜翼"] = "user_frame_13"
+REVERSE_STYLES["スターガーディアン風・光翼"] = "user_frame_11"
+REVERSE_STYLES["PROJECT風・紅蓮メカ"] = "user_frame_09"
+REVERSE_STYLES["K/DA風・ローズクリスタル"] = "user_frame_08"
+REVERSE_STYLES["PROJECT風・蒼紫ネオン"] = "user_frame_05"
+REVERSE_STYLES["ハイヌーン風・烈火"] = "high_noon"
+REVERSE_STYLES["精霊の花祭り風・桜"] = "spirit_blossom"
+REVERSE_STYLES["スターガーディアン風・光翼"] = "star_magic"
+REVERSE_STYLES["PROJECT風・サイバー装甲"] = "project_style"
+REVERSE_STYLES["K/DA風・ステージピンク"] = "kda_style"
 # Preserve previous display labels as aliases for the same stable style IDs.
 REVERSE_STYLES.update({'なし（従来どおり）': 'off', 'シンプル': 'simple', 'シネマ・ゴールド': 'cinema', 'ネオン・ブルー': 'neon', 'インパクト・レッド': 'impact', 'プレミアム・ゴールド（高発光）': 'premium_gold', '黒曜石×ゴールド': 'obsidian_gold', 'ネオン・クリスタル': 'neon_crystal', '星と翼の幻想': 'star_guardian', '炎熱ゴシック': 'inferno_gothic', 'サイバーパンク': 'cyberpunk', 'ロイヤル・デラックス（金）': 'royal_deluxe', '黄金の翼章': 'gold_wing', 'ネオン・ステージ': 'neon_show', 'ポップアイドル（K/DA風）': 'kda_style', 'PROJECT風サイバー': 'project_style', '星の守護者風・光翼': 'star_magic', '精霊の花祭り風': 'spirit_blossom', 'ハイヌーン風・炎': 'high_noon', '黒曜石・紫晶': 'obsidian_violet', 'エメラルド・レリック': 'emerald_relic', 'クリムゾン・ミシック': 'crimson_mythic', '蒼天クリスタル': 'celestial_blue', 'ネオン決闘': 'neon_duel', '紫の宝石フレーム': 'purple_crystal', '黒曜石・黄金（別装飾）': 'classic_obsidian', '追加素材 01': 'user_frame_01', '追加素材 02': 'user_frame_02', '追加素材 03': 'user_frame_03', '追加素材 04': 'user_frame_04', '追加素材 05': 'user_frame_05', '追加素材 06': 'user_frame_06', '追加素材 07': 'user_frame_07', '追加素材 08': 'user_frame_08', '追加素材 09': 'user_frame_09', '追加素材 10': 'user_frame_10', '追加素材 11': 'user_frame_11', '追加素材 12': 'user_frame_12', '追加素材 13': 'user_frame_13', '追加素材 14': 'user_frame_14', '追加素材 15': 'user_frame_15', '追加素材 16': 'user_frame_16'})
 
@@ -600,8 +611,28 @@ def badge_plan(badges, duration, seconds):
     return [entry for entry in planned if entry['end']>entry['start']]
 
 
+MOTION_STYLES = {"instant":"一気に表示","slide_left":"左から登場","slide_right":"右から登場","slide_up":"下から登場","slide_down":"上から登場","pop":"パッと飛び出す"}
+MOTION_REVERSE = {v:k for k,v in MOTION_STYLES.items()}
+
+
+def badge_motion_xy(position, motion, start, base_x, base_y):
+    """Pure FFmpeg overlay coordinates; always settle at the original position."""
+    motion = motion if motion in MOTION_STYLES else "instant"
+    if motion == "instant":
+        return base_x, base_y
+    # Smoothstep of remaining time, 0 after the first 260ms. No dependence on
+    # input dimensions beyond W,H,w,h (built-in overlay expression variables).
+    u = f"max(0,min(1,1-(t-{float(start):.3f})/0.260))"
+    easing = f"({u}*{u}*(3-2*{u}))"
+    if motion == "slide_left": return f"({base_x})-(W+20)*{easing}", base_y
+    if motion == "slide_right": return f"({base_x})+(W+20)*{easing}", base_y
+    if motion == "slide_up": return base_x, f"({base_y})+(H+20)*{easing}"
+    if motion == "slide_down": return base_x, f"({base_y})-(H+20)*{easing}"
+    return f"({base_x})+16*exp(-18*max(0,t-{float(start):.3f}))*cos(28*max(0,t-{float(start):.3f}))", base_y
+
+
 def with_badges(graph: str, badge_input: int, badges, *, duration: float,
-                position="right-top",scale=1.0,seconds=1.55,opacity=1.0,style="simple",stack_gap=4):
+                position="right-top",scale=1.0,seconds=1.55,opacity=1.0,style="simple",stack_gap=4,motion="instant"):
     """Show separate portrait pairs as a compact stacked kill feed (max 3 rows)."""
     if not graph.endswith("[vout]"):
         raise ValueError("Existing video graph has no [vout]")
@@ -619,6 +650,7 @@ def with_badges(graph: str, badge_input: int, badges, *, duration: float,
         row=entry['row']
         step=int(round(116*scale + normalize_stack_gap(stack_gap)))
         y=(f"62+{step*row}" if position.endswith('top') else f"H-h-62-{step*row}")
+        x_move,y_move = badge_motion_xy(position,motion,start,x,y)
         extra=(f"+7*sin(35*(t-{t:.3f}))*exp(-11*abs(t-{t:.3f}))" if normalize(style)=="impact" else "")
         inlabel=f"pair_src_{n}"
         outlabel="vout" if n==len(planned)-1 else f"pair_src_{n+1}"
@@ -626,7 +658,7 @@ def with_badges(graph: str, badge_input: int, badges, *, duration: float,
         # edges; downsample only inside FFmpeg while keeping the same on-screen size.
         display_scale = scale * (0.5 if normalize(style) in ASSET_STYLES else 1.0)
         parts.append(f"[{int(badge_input)+idx}:v]format=rgba,scale=w='trunc(iw*{display_scale:.3f}/2)*2':h='trunc(ih*{display_scale:.3f}/2)*2',colorchannelmixer=aa={opacity:.3f}[pair_img_{n}]")
-        parts.append(f"[{inlabel}][pair_img_{n}]overlay=x='{x+extra}':y='{y}':format=auto:shortest=0:eof_action=repeat:enable='between(t,{start:.3f},{end:.3f})'[{outlabel}]")
+        parts.append(f"[{inlabel}][pair_img_{n}]overlay=x='{x_move+extra}':y='{y_move}':format=auto:shortest=0:eof_action=repeat:enable='between(t,{start:.3f},{end:.3f})'[{outlabel}]")
     parts[-1]=parts[-1].replace('[vout]','[pair_finished]')
     parts.append('[pair_finished]format=yuv420p[vout]')
     return ';'.join(parts)
