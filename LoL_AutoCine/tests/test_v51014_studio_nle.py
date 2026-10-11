@@ -55,10 +55,15 @@ def test_ui_modes_preserve_core_variables():
         assert hasattr(app,"_open_kill_frame_gallery")
         app.var_edit_mode.set("advanced")
         app._apply_edit_mode()
-        for zone,tab in (("color",1),("fx",2),("output",3)):
+        assert app._editor_advanced_tabs is None  # v5.10.15 removed nested tabs
+        for zone in ("scene","camera","color","fx","output"):
             app._focus_editor_zone(zone)
             root.update_idletasks()
-            assert app._editor_advanced_tabs.index("current")==tab
+            assert app.var_editor_zone.get()==zone
+            if zone in ("scene","color","fx","output"):
+                page = "basic" if zone=="scene" else zone
+                assert app._editor_advanced_pages[page].winfo_manager()=="pack"
+                assert all(not p.winfo_manager() for k,p in app._editor_advanced_pages.items() if k!=page)
         assert app.var_edit_mode.get()=="advanced"
         assert app.var_auto_director.get() is False
         assert app.var_dof.get() is False
