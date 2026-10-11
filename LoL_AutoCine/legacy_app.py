@@ -3632,9 +3632,9 @@ class App:
         """Single user action: connect to the already-running replay and cache all events."""
         if self.busy:
             return
-        if self._match_scan_cache is not None and getattr(self._match_scan_cache, "complete", False):
-            self.log("このリプレイはスキャン済み。別の対象は検出シーンの一覧で切り替えてください。")
-            return
+        # A different replay can be started from inside the LoL client rather
+        # than AutoCine's own Open button. Always reconnect and scan on an
+        # explicit click; _connect clears the old match cache correctly.
         mode = self.var_event_mode.get()
         self._run_bg(self._connect_and_scan_worker, mode)
 
