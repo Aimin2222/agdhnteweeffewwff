@@ -1,11 +1,13 @@
-ミラーONで新しい図鑑や比較表示を使う際、フレーム取得・画像加工・拡大処理が画面操作を止めないよう、UI外の最新要求ワーカーへ移します。v5.10.14の5作業領域、折りたたみ、図鑑、500msホバー/DOF比較を前回Codex統合v5.10.13へ担当ブランチを分けて統合しました。
+ミラーONで新しい大きな仕上がり比較やキラー画像を表示する際、画像処理がUIを止めないよう、照会・取得・加工を最新要求ワーカーへ移します。v5.10.15のスキャン操作集約、独立5編集ページ、青チェック、DOF直下表示と素材/カラー名を、前回Codex統合v5.10.14へ担当ブランチを分けて統合しました。
 
-切替演出はcutの高速コピーと9種類のGPU Full/OpenCLへ接続。映像フレーム数と60fps時刻を明示し音声はcopy、色付き演出は一度準備したLUTをGPUで適用。GPU非対応/失敗時のCPUフォールバックは実フィルターと理由を記録します。NVENCとGPUエフェクトを区別し、静止画/ライブミラーのCPU近似表示は残ります。
+キャッシュ取得もワーカーで行い、最後のシーン/プリセットとリプレイ世代だけ表示。画像が取得できなければ名前を表示し、閉じる/destroyで停止します。旧設定の表示名は互換別名で読み込み、保存キーは不変。
 
-旧切替演出名と手動カメラ基準角の互換性を維持。RED通常三人称のpitch補正は当該モードだけに限定、BLUE/シネマ/FPS/Lolnamは保持。旧GPUレンダー、録画、LoL専用音声、TargetLock、37素材を保持。RED自動192°と今回の上下補正は実機の良否未確認。
+RED通常三人称は余分なpitch反転を撤廃し、自動yawだけ192→184°。手動blue/red0/180°は保持。RED FPSだけ既存offsetを0.76倍、teamをCameraPlan末尾に既定ORDERで追加。BLUE/シネマ/Lolnam/TargetLockは保持。今回の構図の良否はWindows実映像未確認です。
 
-検証: Linux/Xvfb全542件成功（失敗/skipなし）、担当衝突ガード、完全ZIP400ファイルとGit差分適用後402ソース一致、個人ファイル除外。旧72ブランチ先端と旧配布物を保持し、全76ブランチをbundle保存。9演出のOpenCLは検証用CPU PoCLで実行、60fps/60フレーム/音声同一性を確認。製品のCPU OpenCL拒否は維持。Windows/NVIDIA/LoLの今回の画質と速度は未検証。まとめテストはLoL_AutoCine/docs/WINDOWS_TEST_v51014_JA.md。
+既存GPUエンジン・9切替演出・cut高速コピー・60fps時刻/フレーム数、LoL専用音声/録画/同期と37素材を保持。GPU/録画/音声等21ファイルと37PNGは前回と完全一致。effects/kill_iconsの変更は表示名と旧表示名の互換別名だけ。CPU制御/静止画/ミラー近似は残ります。
 
-前回v5.10.13を比較先とするDraft PR。mainにはマージしません。このブランチCode→Download ZIPまたはhandoff完全版ZIP→Download raw fileで取得し、別フォルダへ展開してSTART_GPU.batを実行できます。
+検証: Linux/Xvfb全569件成功（失敗/skip/除外なし）、担当衝突ガード、完全ZIP415ファイルとGit差分適用後417ソース一致、個人ファイル除外。旧76ブランチ先端と旧配布物を保持し、全80ブランチをbundle保存。受領側507件・1ファイル除外の記録は別文書へ保存し、ミラー応答性テストも新ページへ更新して除外せず実行しました。Windows/NVIDIA/LoLの今回の画質と速度は未検証。まとめテストはLoL_AutoCine/docs/WINDOWS_TEST_v51015_JA.md。
 
-GitHub fresh cloneと固定payloadからのセットアップ復元で402ソース・76refs・ZIP/bundleハッシュ一致、代表126テスト成功。再実行で全ソース/全ブランチ/個人テストファイル3件保持。検証済みinstall_script/start_skillを下書き保存しreadback確認、他の環境設定は保持、Publishは実行していません。
+前回v5.10.14を比較先とするDraft PR。mainにはマージしません。このブランチCode→Download ZIPまたはhandoff完全版ZIP→Download raw fileで取得し、別フォルダへ展開してSTART_GPU.batを実行できます。
+
+GitHub fresh cloneと固定payloadのセットアップ復元で417ソース・80refs・ZIP/bundleハッシュ一致、代表146テスト成功。再実行で全ソース/全ブランチ/個人設定相当3ファイル保持。全回帰テスト569件は72.03秒。検証済みinstall_script/start_skillを下書き保存しreadback確認、他の環境設定は保持、Publishは実行していません。

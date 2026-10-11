@@ -50,11 +50,27 @@ GRADES: dict = {
                        bm=-0.045, rh=0.09, gh=0.04, bh=-0.07),
 }
 GRADE_JP = {
-    "default": "デフォルト（色補正なし）", "lolnam": "Lolnam風シネマ",
-    "drama": "ドラマ", "fade": "フェード", "highcontrast": "高コントラスト",
-    "standard": "標準", "film": "フィルム", "noir": "ノワール", "dark": "ダーク", "sunset": "夕日",
-    "midnight": "深夜青", "tealorange": "ティール&オレンジ", "neon": "ネオン", "purple": "紫霧", "iceblue": "アイスブルー", "golden": "シネマゴールド",
+    "default": "無補正（LoL本来の色）",
+    "lolnam": "青緑×オレンジ（Lolnam映画風）",
+    "drama": "暗め・重厚なドラマ色",
+    "fade": "低コントラスト・淡い色",
+    "highcontrast": "メリハリ強め・高彩度",
+    "standard": "標準（自然な色）",
+    "film": "暖かい映画フィルム色",
+    "noir": "モノクロ・ノワール",
+    "dark": "暗部強め・シック",
+    "sunset": "夕日・オレンジ暖色",
+    "midnight": "深夜ブルー（寒色）",
+    "tealorange": "青緑×橙の映画色",
+    "neon": "ビビッドネオン（高彩度）",
+    "purple": "紫・幻想的ネオン",
+    "iceblue": "氷のような青（寒色）",
+    "golden": "シネマゴールド（金色・暖色）",
 }
+
+# Earlier saved UI labels remain readable; new labels are display-only.
+GRADE_REVERSE = {'デフォルト（色補正なし）': 'default', 'Lolnam風シネマ': 'lolnam', 'ドラマ': 'drama', 'フェード': 'fade', '高コントラスト': 'highcontrast', '標準': 'standard', 'フィルム': 'film', 'ノワール': 'noir', 'ダーク': 'dark', '夕日': 'sunset', '深夜青': 'midnight', 'ティール&オレンジ': 'tealorange', 'ネオン': 'neon', '紫霧': 'purple', 'アイスブルー': 'iceblue', 'シネマゴールド': 'golden'}
+GRADE_REVERSE.update({label: code for code, label in GRADE_JP.items()})
 
 TRANSITIONS = {"cut": "カット", "fade": "フェード", "flash": "フラッシュ"}
 FOG_PRESETS = {

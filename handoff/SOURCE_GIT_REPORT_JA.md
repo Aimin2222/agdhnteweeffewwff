@@ -1,15 +1,15 @@
-# v5.10.14 保存報告
+# v5.10.15 保存報告
 
-ソース: /workspace/LoL_AutoCine、branch integration/v5.10.14、HEAD 8d9356e3f8bfba47bce912924cece7e861bf416c、remoteなし。
-取得用: /workspace/agdhnteweeffewwff、branch codex/lol-autocine-v51014-studio-gpu-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
-開始時とソース保存完了時のgit status --shortは空。最終状態はVERIFICATION_v5.10.14.jsonへ記録。mainにはマージしない。
+ソース: /workspace/LoL_AutoCine、branch integration/v5.10.15、HEAD c76ba0cc1ba20296724f219a61d9a43f6d269b74、remoteなし。
+取得用: /workspace/agdhnteweeffewwff、branch codex/lol-autocine-v51015-ui-scan-camera-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。
+開始時とソース保存完了時のgit status --shortは空。最終状態はVERIFICATION_v5.10.15.jsonへ記録。mainにはマージしない。
 
 ## git log -3 --oneline（ソース）
 
 ```text
-8d9356e Document reviewed Studio GPU integration, Windows tests and reproducible packaging
-a03ae7e Merge responsive studio regression coverage
-4f93138 Merge manual camera and saved transition compatibility fixes
+c76ba0c Document reviewed v5.10.15 integration and preserve full regression and packaging workflow
+d0ef125 Merge portrait color assertion correction
+66f8b52 Merge RED camera boundary regression tests
 ```
 
 ## git remote -v（取得用）
@@ -19,32 +19,42 @@ origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
 
-## v5.10.13からの追加・変更一覧
+## v5.10.14からの追加・変更一覧
 
 ```text
-A	README_CODEX_v51014_JA.md
-A	TESTLIST_v5.10.14_JA.md
+A	README_CODEX_v51015_JA.md
+A	README_v5.10.15_JA.md
+A	TESTLIST_v5.10.15_JA.md
 M	VERSION.txt
 M	core/camera.py
-M	core/gpu_full.py
-M	core/montage_fx.py
-A	docs/AutoCine_v5.10.14_実装仕様書.md
-A	docs/CODEX_INTEGRATION_v51014_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_v5.10.14.json
-A	docs/SPEC_v5.10.14_JA.md
-A	docs/WINDOWS_TEST_v51014_JA.md
+M	core/effects.py
+M	core/jobs.py
+M	core/kill_icons.py
+A	docs/AutoCine_v5.10.15_実装仕様書.md
+A	docs/CODEX_INTEGRATION_v51015_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.15.json
+A	docs/RECEIVED_TEST_RESULTS_v5.10.15_JA.md
+A	docs/WINDOWS_TEST_v51015_JA.md
 M	legacy_app.py
-A	patches/history/v5.10.14/v5.10.14_from_codex_v51013.patch
-A	tests/test_gpu_montage_v51014.py
+A	patches/history/v5.10.15/v5.10.15_from_v5.10.14.patch
+M	tests/test_gpu_montage_v51014.py
 M	tests/test_gpu_shared_v51013.py
-A	tests/test_v51014_responsiveness.py
-A	tests/test_v51014_studio_nle.py
+A	tests/test_gpu_shared_v51015.py
+M	tests/test_v51014_studio_nle.py
+A	tests/test_v51015_async_ui.py
+A	tests/test_v51015_ui_restructure.py
+M	tests/test_v5102_circle_focus_preset.py
+M	tests/test_v5104_notebook_livefx_camera.py
+M	tests/test_v5105_preview_responsiveness.py
+M	tests/test_v5107_mirror_controls.py
+M	tests/test_v510_ui_gpu_killframe.py
 M	tests/test_v595_workspace.py
 M	tests/test_v596_hud_batch.py
 M	tools/check_parallel_integration.py
-A	tools/package_v51014.py
-A	ui/frame_comparison.py
-A	ui/kill_frame_gallery.py
+A	tools/package_v51015.py
+A	ui/check_indicator.py
+M	ui/frame_comparison.py
+A	ui/scene_champion.py
 ```
 
 ## 元v5.8.5からの追加・変更・移動一覧
@@ -53,10 +63,12 @@ A	ui/kill_frame_gallery.py
 M	.gitignore
 M	README.md
 A	README_CODEX_v51014_JA.md
+A	README_CODEX_v51015_JA.md
 A	README_v5.10.10_JA.md
 A	README_v5.10.11_JA.md
 A	README_v5.10.12_JA.md
 A	README_v5.10.13_JA.md
+A	README_v5.10.15_JA.md
 A	README_v5.10.5_JA.md
 A	README_v5.10.8_JA.md
 A	README_v5.10.9_JA.md
@@ -70,6 +82,7 @@ A	TESTLIST_v5.10.11_JA.md
 A	TESTLIST_v5.10.12_JA.md
 A	TESTLIST_v5.10.13_JA.md
 A	TESTLIST_v5.10.14_JA.md
+A	TESTLIST_v5.10.15_JA.md
 A	TESTLIST_v5.10.9_JA.md
 A	TEST_GPU_RENDER.bat
 M	VERSION.txt
@@ -135,6 +148,7 @@ M	core/replay_api.py
 M	core/scanner.py
 A	docs/APP_PACKAGING_PLAN_JA.md
 A	docs/AutoCine_v5.10.14_実装仕様書.md
+A	docs/AutoCine_v5.10.15_実装仕様書.md
 A	docs/CHANGELOG_v5.8.6_JA.md
 A	docs/CHANGELOG_v5.9.4_JA.md
 A	docs/CHANGELOG_v5.9.5_JA.md
@@ -167,6 +181,7 @@ A	docs/CODEX_INTEGRATION_v51010_JA.md
 A	docs/CODEX_INTEGRATION_v51012_JA.md
 A	docs/CODEX_INTEGRATION_v51013_JA.md
 A	docs/CODEX_INTEGRATION_v51014_JA.md
+A	docs/CODEX_INTEGRATION_v51015_JA.md
 A	docs/CODEX_INTEGRATION_v5104_JA.md
 A	docs/CODEX_INTEGRATION_v5105_JA.md
 A	docs/CODEX_INTEGRATION_v5106_JA.md
@@ -196,6 +211,7 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.10.10.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.12.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.13.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.14.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.15.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.4.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.5.json
@@ -216,12 +232,14 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.9.9_JA.md
 A	docs/DESIGN_SCENESTUDIO_JA.md
 A	docs/DIAGNOSTIC_FINDINGS_v5.9.4_JA.md
 A	docs/HANDOFF_MASTER_2026-10-09_JA.md
+A	docs/RECEIVED_TEST_RESULTS_v5.10.15_JA.md
 A	docs/REQUIREMENTS_SCENESTUDIO_JA.md
 A	docs/SPEC_v5.10.14_JA.md
 A	docs/TEST_PLAN_v5.9.0_JA.md
 A	docs/WINDOWS_TEST_v51010_JA.md
 A	docs/WINDOWS_TEST_v51013_JA.md
 A	docs/WINDOWS_TEST_v51014_JA.md
+A	docs/WINDOWS_TEST_v51015_JA.md
 A	docs/WINDOWS_TEST_v5105_JA.md
 A	docs/WINDOWS_TEST_v5106_JA.md
 A	docs/WINDOWS_TEST_v5107_JA.md
@@ -273,6 +291,7 @@ A	patches/history/ui_changes_v5.9.1.patch
 A	patches/history/v5.10.10_from_v5.10.9.patch
 A	patches/history/v5.10.12_from_v5.10.11.patch
 A	patches/history/v5.10.14/v5.10.14_from_codex_v51013.patch
+A	patches/history/v5.10.15/v5.10.15_from_v5.10.14.patch
 A	patches/history/v5.10.8_from_codex_v5.10.7.patch
 A	patches/history/v51011_from_v51010.patch
 A	patches/history/v51013_reviewed_code.patch
@@ -302,6 +321,7 @@ A	tests/test_gpu_shared_camera_v594.py
 A	tests/test_gpu_shared_replay_v5104.py
 A	tests/test_gpu_shared_ui5106.py
 A	tests/test_gpu_shared_v51013.py
+A	tests/test_gpu_shared_v51015.py
 A	tests/test_gpu_test_launcher.py
 A	tests/test_parallel_integration.py
 A	tests/test_scene_keyframes_v592.py
@@ -315,6 +335,8 @@ A	tests/test_v51012_allscan_quality_camera.py
 A	tests/test_v51013_player_filter.py
 A	tests/test_v51014_responsiveness.py
 A	tests/test_v51014_studio_nle.py
+A	tests/test_v51015_async_ui.py
+A	tests/test_v51015_ui_restructure.py
 A	tests/test_v5101_scroll_check_warmup.py
 A	tests/test_v5102_circle_focus_preset.py
 A	tests/test_v5103_nonblocking_dispatch.py
@@ -340,6 +362,7 @@ A	tools/package_v5101.py
 A	tools/package_v51010.py
 A	tools/package_v51013.py
 A	tools/package_v51014.py
+A	tools/package_v51015.py
 A	tools/package_v5103.py
 A	tools/package_v5103_capture60.py
 A	tools/package_v5103_capturefix.py
@@ -354,6 +377,7 @@ A	tools/package_v5107.py
 A	tools/package_v599.py
 A	tools/setup_gpu_ffmpeg.py
 A	ui/__init__.py
+A	ui/check_indicator.py
 A	ui/frame_comparison.py
 A	ui/highlight_director.py
 A	ui/hud_presets.py
@@ -363,6 +387,7 @@ A	ui/mirror_capture.py
 A	ui/motion_graph.py
 A	ui/redraw.py
 A	ui/scene_batch.py
+A	ui/scene_champion.py
 A	ui/scene_project.py
 A	ui/scene_timeline.py
 A	ui/smart_montage.py
@@ -370,4 +395,4 @@ A	ui/studio_localization.py
 A	ui/template_gallery.py
 ```
 
-全402ソース/Python139、全76ブランチをbundleへ保存。旧72ブランチ先端、GPU/録画/LoL音声等19ファイル、PNG37種類のバイト一致を確認。cameraは共有レビュー済み。GPU Fullの追加差分は切替演出の範囲で、既存主レンダーの60fps時刻/フレーム数の修正を保持。入れ子ZIPの受領パッチは原本ブランチとhistoryへ保存。旧配布物115件はバイト単位で保持。個人設定/プロジェクト/録画を削除しない。
+全417ソース/Python145、全80ブランチをbundleへ保存。旧76ブランチ先端、GPU/録画/LoL音声等21ファイル、PNG37種類のバイト一致を確認。camera/jobsは共有レビュー済み。GPUエンジン/切替演出は前回から完全一致、GPU担当ファイルeffects/kill_iconsは表示名と互換別名だけ変更。受領19パス差分はarchive原本とhistoryへ保存。旧配布物123件はバイト単位で保持。個人設定/プロジェクト/録画を削除しない。

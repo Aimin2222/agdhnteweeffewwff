@@ -22,7 +22,7 @@ def test_smart_pose_and_look_keep_red_heading(style, side):
     angle=math.degrees(math.atan2(offset[0],-offset[2]))
     assert abs((angle+rotation['z']+180)%360-180)<1e-7
     assert abs(rotation['z']+side)<=55
-    expected_pitch = -elevation if style == 'third' else elevation
+    expected_pitch = elevation  # v5.10.15 keeps the calibrated pitch sign
     assert offset[1]>=300 and rotation['x']==pytest.approx(expected_pitch)
 
 

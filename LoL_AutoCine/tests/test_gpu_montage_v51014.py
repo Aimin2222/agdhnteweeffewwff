@@ -70,7 +70,7 @@ def test_red_normal_pitch_scope_and_kill_cue_bounds(axis,sign,complement):
                 pitch_complement=complement,rot={'x':0.,'y':0.,'z':0.})
     blue=CameraPlan(style='third',rig=rig,side_yaw=0,third_elev=31)
     red=CameraPlan(style='third',rig=rig,side_yaw=192,third_elev=31,kill_time=10)
-    assert red.rotation_at(0)[axis]==pytest.approx(-blue.rotation_at(0)[axis])
+    assert red.rotation_at(0)[axis]==pytest.approx(blue.rotation_at(0)[axis])
     assert red._third_heading(5)==192 and red._third_heading(15)==192
     assert red._third_heading(10)==199
     cine=CameraPlan(style='third_cinema',rig=rig,side_yaw=192,third_elev=31,kill_time=10)

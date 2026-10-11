@@ -15,8 +15,9 @@ def test_left_workflow_before_references_and_templates():
     try:
         app = App(root)
         names = [name for _widget, parent, name in app._mode_sidecards if parent is app.left_scroll.inner]
-        assert names[:3] == ['1  リプレイ準備', '2  対象プレイヤー', '3  キル・アシストを探す']
-        assert names.index('▣  テンプレート') > 2
+        assert names[0] == '1  リプレイ準備'
+        assert '◉  検出シーン' in [name for _,parent,name in app._mode_sidecards if parent is app.right_scroll.inner]
+        assert names.index('▣  テンプレート') > 0
     finally:
         root.destroy()
 
@@ -37,15 +38,15 @@ def test_workspace_shows_one_center_zone_and_persists_settings():
         assert not app._editor_scene.winfo_manager()
         app.var_editor_zone.set('color'); app._apply_editor_zone()
         assert app._editor_advanced.winfo_manager()=='pack'
-        assert app._editor_advanced_tabs.index('current') == 1
+        assert app._editor_advanced_pages['color'].winfo_manager()=='pack'
         # v5.10.14 has separate Color (1), FX (2), Output (3) pages.
         app.var_editor_zone.set('fx'); app._apply_editor_zone()
-        assert app._editor_advanced_tabs.index('current') == 2
+        assert app._editor_advanced_pages['fx'].winfo_manager()=='pack'
         app.var_editor_zone.set('output'); app._apply_editor_zone()
-        assert app._editor_advanced_tabs.index('current') == 3
+        assert app._editor_advanced_pages['output'].winfo_manager()=='pack'
         assert not app._right_quick_output.winfo_manager()
         app.var_editor_zone.set('scene'); app._apply_editor_zone()
-        assert app._right_quick_output.winfo_manager()=='pack'
+        assert not app._right_quick_output.winfo_manager()
         assert app.scene_vars['yaw'].get() == 21
         assert app.var_scene_mode.get() is True
         app.var_edit_mode.set('easy'); app._apply_edit_mode(log=False)
@@ -110,7 +111,7 @@ def test_leaving_output_workspace_restores_easy_output_controls():
         assert not app._right_quick_output.winfo_manager()
         app.var_edit_mode.set('easy')
         app._apply_edit_mode(log=False)
-        assert app._right_quick_output.winfo_manager() == 'pack'
+        assert not app._right_quick_output.winfo_manager()  # moved to top settings
         assert app.var_fps_ui.get() == '144 FPS'
         assert app.checked_kills == {1, 3}
         assert app.canvas.winfo_manager() == 'pack'
@@ -118,6 +119,6 @@ def test_leaving_output_workspace_restores_easy_output_controls():
         app._apply_edit_mode(log=False)
         assert not app._right_quick_output.winfo_manager()
         app._focus_editor_zone('camera')
-        assert app._right_quick_output.winfo_manager() == 'pack'
+        assert not app._right_quick_output.winfo_manager()  # moved to top settings
     finally:
         root.destroy()

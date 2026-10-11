@@ -30,7 +30,7 @@ def test_gui_focus_controls_and_preset(gui):
 def test_gui_selected_template_explains_intended_look(gui):
     app,_=gui
     app.apply_template('アイスブルー・シネマ')
-    assert app.var_grade.get()=='アイスブルー'
+    assert app.var_grade.get()=='氷のような青（寒色）'
     assert app.template_hint.cget('text')==TEMPLATE_HELP_JA['アイスブルー・シネマ']
     app.apply_template('エピック・チームファイト')
     assert app.current_template().style=='cinema_top'

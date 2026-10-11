@@ -219,7 +219,8 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                        smart_composition=bool(getattr(tpl, 'smart_composition', False)),
                        smart_impact=(float(getattr(tpl, 'highlight_pulse', 0.0))
                                      if getattr(tpl, 'smart_highlight_enabled', False) else 0.0), rig=rig,
-                       side_yaw=(profile['yaw'] if live_third else 0.0),
+                       side_yaw=((profile['yaw'] - 8.0 if tpl.style == 'third' and side_choice == 'auto' and str(getattr(player, 'team', '')).upper() in ('CHAOS', 'RED') else profile['yaw']) if live_third else 0.0),
+                       team=getattr(player, 'team', 'ORDER'),
                       sel_name=player.selection_name or player.champion)
     if rig.mode == "top" and tpl.style in ("cinema", "follow"):
         plan.style = "cinema_top" if tpl.style == "cinema" else "top"   # 実際に使えるモードに合わせる

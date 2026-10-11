@@ -30,17 +30,21 @@ def render_comparison(request):
     except Exception as error:return None,'比較画像を生成できません：'+str(error)
 
 
-def open_comparison(parent,source,template,*,title='',width=240,height=135,with_effects=False,hover=False,footer=''):
+def open_comparison(parent,source,template,*,title='',width=240,height=135,with_effects=False,hover=False,footer='',presets=None):
     popup=tk.Toplevel(parent)
     popup.title(title)
     if hover:
         popup.overrideredirect(True);popup.attributes('-topmost',True)
         popup.geometry(f'+{parent.winfo_rootx()}+{parent.winfo_rooty()+parent.winfo_height()+5}')
+    buttons=ttk.Frame(popup)
+    if presets:
+        popup.geometry('1020x690');popup.transient(parent)
+        buttons.pack(fill='x',padx=8,pady=8)
     label=ttk.Label(popup,text='比較画像を準備中…');label.pack(padx=9,pady=9)
     ttk.Label(popup,text='左：元の試合 ／ 右：適用後（静止画の近似）').pack(padx=9)
     if footer:ttk.Label(popup,text=footer,wraplength=width*2).pack(padx=9,pady=9)
     worker=popup._comparison_worker=LatestPreview(render_comparison)
-    state={'closed':False,'after':None}
+    state={'closed':False,'after':None,'generation':0}
     def dispose(event):
         if event.widget is popup:
             state['closed']=True;worker.close()
@@ -48,10 +52,9 @@ def open_comparison(parent,source,template,*,title='',width=240,height=135,with_
                 try:popup.after_cancel(state['after'])
                 except tk.TclError:pass
     popup.bind('<Destroy>',dispose,add='+')
-    worker.submit(1,(source,template.to_dict(),width,height,with_effects))
     def poll():
         if state['closed']:return
-        result=worker.result(1)
+        result=worker.result(state['generation'])
         if result is None:
             state['after']=popup.after(30,poll);return
         picture,reason=result[1]
@@ -60,5 +63,16 @@ def open_comparison(parent,source,template,*,title='',width=240,height=135,with_
             popup._photo=ImageTk.PhotoImage(picture,master=popup)
             label.configure(image=popup._photo,text='')
         state['after']=None
-    state['after']=popup.after(30,poll)
+    def select(selected):
+        if state['closed']:return
+        if state['after'] is not None:popup.after_cancel(state['after'])
+        state['generation']+=1
+        popup._selected_template=selected.name
+        label.configure(image='',text='比較画像を準備中…')
+        worker.submit(state['generation'],(source,selected.to_dict(),width,height,with_effects))
+        state['after']=popup.after(30,poll)
+    for caption,preset in presets or ():
+        ttk.Button(buttons,text=caption,command=lambda p=preset:select(p)).pack(side='left',fill='x',expand=True,padx=4)
+    if presets:ttk.Button(popup,text='閉じる',command=popup.destroy).pack(pady=8)
+    select(presets[0][1] if presets else template)
     return popup
