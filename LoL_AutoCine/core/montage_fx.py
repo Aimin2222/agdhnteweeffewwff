@@ -11,7 +11,38 @@ import math
 import re
 import subprocess
 
-MONTAGE_FX = {"cut", "flash", "dark"}
+MONTAGE_LABELS = {
+    "cut": "なし（高速連結）",
+    "flash": "白いフラッシュ",
+    "dark": "シネマ暗転",
+    "white": "ホワイトアウト",
+    "soft": "ソフトディゾルブ風",
+    "gold": "ゴールドライト",
+    "cool": "クールブルー",
+    "pulse": "インパクトパルス",
+    "cinema": "フィルムフラッシュ",
+    "shadow": "ディープシャドウ",
+}
+MONTAGE_REVERSE = {label: key for key,label in MONTAGE_LABELS.items()}
+# Saved settings from earlier UI versions retain their meaning.
+MONTAGE_REVERSE.update({
+    "なし（従来の高速連結）": "cut",
+    "光るカット（白い閃光）": "flash",
+    "暗転カット（シネマ）": "dark",
+})
+MONTAGE_FX = set(MONTAGE_LABELS)
+
+
+# One definition shared by the CPU fallback and the OpenCL montage renderer.
+MONTAGE_PROFILES = {
+    "flash": (.22, .09, ""), "dark": (-.24, .18, ""),
+    "white": (.34, .24, ""), "soft": (.11, .30, ""),
+    "gold": (.19, .22, "colorbalance=rs=0.02:gs=0.008:bs=-0.018"),
+    "cool": (.10, .20, "colorbalance=rs=-0.022:bs=0.035"),
+    "pulse": (.28, .11, "eq=saturation=1.11"),
+    "cinema": (.16, .16, "colorbalance=rs=0.02:gs=0.008:bs=-0.018"),
+    "shadow": (-.34, .23, ""),
+}
 
 
 def get_duration(path: Path, *, ffprobe: str = "ffprobe", ffmpeg: str = "ffmpeg") -> float:
@@ -58,15 +89,10 @@ def montage_filter(style: str, cuts: list[float]) -> str:
         raise ValueError("未知のモンタージュ演出: " + style)
     if style == "cut" or not cuts:
         return "null"
-    if style == "flash":
-        # 2 frame wide flicker at 60fps; avoid full-white screen or seizure-like strobing
-        terms = [f"0.22*max(0,1-abs(t-{x:.4f})/0.09)" for x in cuts]
-    else:
-        terms = [f"-0.24*max(0,1-abs(t-{x:.4f})/0.18)" for x in cuts]
-    # Note: FFmpeg filter argument escaping is handled by passing the entire
-    # filter as one subprocess argument (not through a shell).
-    return "eq=brightness='" + "+".join(terms) + "':eval=frame"
-
+    amount, width, post = MONTAGE_PROFILES[style]
+    terms=[f"{amount:.3f}*max(0,1-abs(t-{x:.4f})/{width:.3f})" for x in cuts]
+    graph="eq=brightness='"+"+".join(terms)+"':eval=frame"
+    return graph + ("," + post if post else "")
 
 def render_montage(clips, dst, style="cut", *, concat=None, ffmpeg=None,
                    ffprobe="ffprobe", encoder=None, logger=None, encoder_policy='auto') -> str:
@@ -111,7 +137,7 @@ def render_montage(clips, dst, style="cut", *, concat=None, ffmpeg=None,
             result = run_render(cmd, output=dst, gpu_effects=[], effect_values={}, timeout=900,
                                 allow_encoder_retry=encoder is None,
                                 pipeline_info={'stage':'montage','encoder_policy':encoder_policy,
-                                               'cpu_video_effects':['eq'],'montage_style':style})
+                                               'cpu_video_effects':['eq'] + ([post.split('=')[0] for post in [MONTAGE_PROFILES[style][2]] if post]),'montage_style':style})
             used_encoder = _encoder_name(result.args)
             if result.encoder_retry_reason:
                 if logger:
@@ -120,7 +146,7 @@ def render_montage(clips, dst, style="cut", *, concat=None, ffmpeg=None,
                 raise RuntimeError(result.stderr[-800:] or "モンタージュ演出の生成に失敗")
             if logger:
                 logger("モンタージュ演出を適用: " + style + f" / 切り替え {len(boundaries)}回"
-                       + f" / 映像フィルター=CPU eq / エンコーダー={used_encoder} / 音声=copy")
+                       + f" / 映像フィルター=CPU eq{','+MONTAGE_PROFILES[style][2].split('=')[0] if MONTAGE_PROFILES[style][2] else ''} / エンコーダー={used_encoder} / 音声=copy")
             return style
         except Exception as ex:
             if logger:

@@ -38,8 +38,11 @@ def test_workspace_shows_one_center_zone_and_persists_settings():
         app.var_editor_zone.set('color'); app._apply_editor_zone()
         assert app._editor_advanced.winfo_manager()=='pack'
         assert app._editor_advanced_tabs.index('current') == 1
-        app.var_editor_zone.set('output'); app._apply_editor_zone()
+        # v5.10.14 has separate Color (1), FX (2), Output (3) pages.
+        app.var_editor_zone.set('fx'); app._apply_editor_zone()
         assert app._editor_advanced_tabs.index('current') == 2
+        app.var_editor_zone.set('output'); app._apply_editor_zone()
+        assert app._editor_advanced_tabs.index('current') == 3
         assert not app._right_quick_output.winfo_manager()
         app.var_editor_zone.set('scene'); app._apply_editor_zone()
         assert app._right_quick_output.winfo_manager()=='pack'

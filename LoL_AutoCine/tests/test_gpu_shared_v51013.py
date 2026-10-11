@@ -22,7 +22,8 @@ def test_smart_pose_and_look_keep_red_heading(style, side):
     angle=math.degrees(math.atan2(offset[0],-offset[2]))
     assert abs((angle+rotation['z']+180)%360-180)<1e-7
     assert abs(rotation['z']+side)<=55
-    assert offset[1]>=300 and rotation['x']==pytest.approx(elevation)
+    expected_pitch = -elevation if style == 'third' else elevation
+    assert offset[1]>=300 and rotation['x']==pytest.approx(expected_pitch)
 
 
 def test_red_profile_is_explicit_and_manual_choice_still_available():

@@ -53,7 +53,8 @@ def test_gui_presets_and_template_roundtrip(monkeypatch, tmp_path):
         app._apply_edit_mode(log=False)
         app.var_editor_zone.set('output')
         app._apply_editor_zone()
-        assert app._editor_advanced_tabs.index('current') == 2
+        assert app._editor_advanced_tabs.index('current') == 3
+        assert app._editor_advanced_tabs.tab('current', 'text') == '出力'
     finally:
         root.destroy()
 
