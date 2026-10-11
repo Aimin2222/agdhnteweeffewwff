@@ -97,3 +97,26 @@ def test_v51015_documentation_in_distribution():
     root=Path(__file__).resolve().parents[1]
     assert (root/"README_v5.10.15_JA.md").is_file()
     assert (root/"TESTLIST_v5.10.15_JA.md").is_file()
+
+def test_eight_clip_worker_uses_existing_render_path_without_touching_gui(monkeypatch,tmp_path):
+    import json
+    from types import SimpleNamespace
+    from core.effects import Template
+    from core import camera_qa
+    blue=_player(0,"BluePlayer","ORDER")
+    red=_player(5,"RedPlayer","CHAOS")
+    calls=[]
+    def fake_run(api,source,player,scenes,tpl,outdir,montage,**kwargs):
+        calls.append((player.team,tpl.style,tpl.fps,tpl.camera_side,tpl.game_audio,montage))
+        return SimpleNamespace(outputs=[outdir/"out.mp4"],failed=[])
+    monkeypatch.setattr(camera_qa,"run_auto_edit",fake_run)
+    t=Template()
+    t.game_audio=True
+    report=camera_qa.run_camera_record_test(
+        api=object(),source=object(),players=[blue,red],events=_events(),
+        preferred=blue,template=t,destination=tmp_path,log=lambda msg:None)
+    data=json.loads(report.read_text("utf-8"))
+    assert len(data["outputs"])==8 and data["completed_clips"]==8
+    assert [x[0] for x in calls]==["CHAOS"]*4+["ORDER"]*4
+    assert all(x[2]==60 and x[3]=="auto" and x[4] is True and x[5] is False for x in calls)
+    assert t.style=="cinema"  # input template stays untouched
