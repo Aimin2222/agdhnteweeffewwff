@@ -10,96 +10,52 @@ from __future__ import annotations
 import math
 from pathlib import Path
 
-STYLES = {
-    "off": "なし（従来どおり）",
-    "simple": "シンプル",
-    "cinema": "ゴールド",
-    "neon": "ネオン",
-    "impact": "インパクト",
-    "premium_gold": "プレミアムゴールド",
-    "obsidian_gold": "オブシディアンゴールド",
-    "neon_crystal": "ネオンクリスタル",
-    "star_guardian": "スターウィング",
-    "inferno_gothic": "インフェルノ",
-    "cyberpunk": "サイバーパンク",
-    "royal_deluxe": "ロイヤルゴールド",
-    "gold_wing": "ゴールドウィング",
-    "neon_show": "ネオンショー",
-    "kda_style": "ステージピンク",
-    "project_style": "サイバーアーマー",
-    "star_magic": "ライトウィング",
-    "spirit_blossom": "桜",
-    "high_noon": "ハイヌーン",
-    "obsidian_violet": "オブシディアンバイオレット",
-    "emerald_relic": "エメラルド",
-    "crimson_mythic": "クリムゾン",
-    "celestial_blue": "セレスティアルブルー",
-    "neon_duel": "ネオンデュエル",
-    "purple_crystal": "パープルクリスタル",
-    "classic_obsidian": "クラシックオブシディアン",
-    "user_frame_01": "ゴールドフェザー",
-    "user_frame_02": "ダブルウィング",
-    "user_frame_03": "ブレードウィング",
-    "user_frame_04": "ノワールフェザー",
-    "user_frame_05": "サイバーパープル",
-    "user_frame_06": "ネオンフェザー",
-    "user_frame_07": "フレイムクラウン",
-    "user_frame_08": "ローズクリスタル",
-    "user_frame_09": "クリムゾンサイバー",
-    "user_frame_10": "フロストウィング",
-    "user_frame_11": "スターライト",
-    "user_frame_12": "エメラルドクレスト",
-    "user_frame_13": "桜ウィング",
-    "user_frame_14": "ネオンアイドル",
-    "user_frame_15": "サンファイア",
-    "user_frame_16": "アメジストウィング",
-}
-
+STYLES = {'off': 'なし（従来どおり）',
+ 'simple': 'シンプル',
+ 'cinema': 'ゴールド',
+ 'neon': 'ネオン',
+ 'impact': 'インパクト',
+ 'premium_gold': 'プレミアムゴールド',
+ 'obsidian_gold': 'オブシディアンゴールド',
+ 'neon_crystal': 'ネオンクリスタル',
+ 'star_guardian': 'スターウィング',
+ 'inferno_gothic': 'インフェルノ',
+ 'cyberpunk': 'サイバーパンク',
+ 'royal_deluxe': 'ロイヤルゴールド',
+ 'gold_wing': 'ゴールドウィング',
+ 'neon_show': 'ネオンショー',
+ 'kda_style': 'K/DA風',
+ 'project_style': 'PROJECT風',
+ 'star_magic': 'スターガーディアン風',
+ 'spirit_blossom': '精霊の花祭り風',
+ 'high_noon': 'ハイヌーン風',
+ 'obsidian_violet': 'オブシディアンバイオレット',
+ 'emerald_relic': 'エメラルド',
+ 'crimson_mythic': 'クリムゾン',
+ 'celestial_blue': 'セレスティアルブルー',
+ 'neon_duel': 'ネオンデュエル',
+ 'purple_crystal': 'パープルクリスタル',
+ 'classic_obsidian': 'クラシックオブシディアン',
+ 'user_frame_01': 'ゴールドフェザー',
+ 'user_frame_02': 'ダブルウィング',
+ 'user_frame_03': 'ブレードウィング',
+ 'user_frame_04': 'ノワールフェザー',
+ 'user_frame_05': 'PROJECT風・ブルー',
+ 'user_frame_06': 'ネオンフェザー',
+ 'user_frame_07': 'フレイムクラウン',
+ 'user_frame_08': 'K/DA風・ローズ',
+ 'user_frame_09': 'PROJECT風・レッド',
+ 'user_frame_10': 'フロストウィング',
+ 'user_frame_11': 'スターガーディアン風・星の翼',
+ 'user_frame_12': 'エメラルドクレスト',
+ 'user_frame_13': '精霊の花祭り風・桜の翼',
+ 'user_frame_14': 'ネオンアイドル',
+ 'user_frame_15': 'ハイヌーン風・ゴールド',
+ 'user_frame_16': 'アメジストウィング'}
 
 REVERSE_STYLES = {label: code for code, label in STYLES.items()}
-REVERSE_STYLES.update({
-    "シネマ・ゴールド": "cinema",
-    "ネオン・ブルー": "neon",
-    "インパクト・レッド": "impact",
-    "黄金王冠・プレミアム（高発光）": "premium_gold",
-    "黒曜石×ゴールド": "obsidian_gold",
-    "ネオン・クリスタル": "neon_crystal",
-    "星と翼の幻想": "star_guardian",
-    "炎熱ゴシック": "inferno_gothic",
-    "ロイヤル・デラックス（金）": "royal_deluxe",
-    "黄金の翼章": "gold_wing",
-    "ネオン・ステージ": "neon_show",
-    "K/DA風・ステージピンク": "kda_style",
-    "PROJECT風・サイバー装甲": "project_style",
-    "スターガーディアン風・光翼": "star_magic",
-    "精霊の花祭り風・桜": "spirit_blossom",
-    "ハイヌーン風・烈火": "high_noon",
-    "黒曜石・紫晶": "obsidian_violet",
-    "エメラルド・レリック": "emerald_relic",
-    "クリムゾン・ミシック": "crimson_mythic",
-    "蒼天クリスタル": "celestial_blue",
-    "ネオン決闘": "neon_duel",
-    "紫の宝石フレーム": "purple_crystal",
-    "黒曜石・黄金（別装飾）": "classic_obsidian",
-    "黄金の鳳凰（豪華な光翼）": "user_frame_01",
-    "黄金の双翼（シンプル）": "user_frame_02",
-    "黄金の剣翼（シャープ）": "user_frame_03",
-    "黒金の鳳凰（高級感）": "user_frame_04",
-    "PROJECT風・蒼紫ネオン": "user_frame_05",
-    "電脳ネオン・光翼": "user_frame_06",
-    "紅蓮メタル（炎の王冠）": "user_frame_07",
-    "K/DA風・ローズクリスタル": "user_frame_08",
-    "PROJECT風・紅蓮メカ": "user_frame_09",
-    "蒼天・氷結の光翼": "user_frame_10",
-    "スターガーディアン風・光翼": "user_frame_11",
-    "エメラルド・翠緑の紋章": "user_frame_12",
-    "精霊の花祭り風・桜翼": "user_frame_13",
-    "ネオンアイドル・シアン紫": "user_frame_14",
-    "ハイヌーン風・金炎": "user_frame_15",
-    "黒曜石・紫金の翼": "user_frame_16",
-})
-# Preserve previous display labels as aliases for the same stable style IDs.
-REVERSE_STYLES.update({'なし（従来どおり）': 'off', 'シンプル': 'simple', 'シネマ・ゴールド': 'cinema', 'ネオン・ブルー': 'neon', 'インパクト・レッド': 'impact', 'プレミアム・ゴールド（高発光）': 'premium_gold', '黒曜石×ゴールド': 'obsidian_gold', 'ネオン・クリスタル': 'neon_crystal', '星と翼の幻想': 'star_guardian', '炎熱ゴシック': 'inferno_gothic', 'サイバーパンク': 'cyberpunk', 'ロイヤル・デラックス（金）': 'royal_deluxe', '黄金の翼章': 'gold_wing', 'ネオン・ステージ': 'neon_show', 'ポップアイドル（K/DA風）': 'kda_style', 'PROJECT風サイバー': 'project_style', '星の守護者風・光翼': 'star_magic', '精霊の花祭り風': 'spirit_blossom', 'ハイヌーン風・炎': 'high_noon', '黒曜石・紫晶': 'obsidian_violet', 'エメラルド・レリック': 'emerald_relic', 'クリムゾン・ミシック': 'crimson_mythic', '蒼天クリスタル': 'celestial_blue', 'ネオン決闘': 'neon_duel', '紫の宝石フレーム': 'purple_crystal', '黒曜石・黄金（別装飾）': 'classic_obsidian', '追加素材 01': 'user_frame_01', '追加素材 02': 'user_frame_02', '追加素材 03': 'user_frame_03', '追加素材 04': 'user_frame_04', '追加素材 05': 'user_frame_05', '追加素材 06': 'user_frame_06', '追加素材 07': 'user_frame_07', '追加素材 08': 'user_frame_08', '追加素材 09': 'user_frame_09', '追加素材 10': 'user_frame_10', '追加素材 11': 'user_frame_11', '追加素材 12': 'user_frame_12', '追加素材 13': 'user_frame_13', '追加素材 14': 'user_frame_14', '追加素材 15': 'user_frame_15', '追加素材 16': 'user_frame_16'})
+# All previously readable labels keep their exact stable IDs.
+REVERSE_STYLES.update({'なし（従来どおり）': 'off', 'シンプル': 'simple', 'ゴールド': 'cinema', 'ネオン': 'neon', 'インパクト': 'impact', 'プレミアムゴールド': 'premium_gold', 'オブシディアンゴールド': 'obsidian_gold', 'ネオンクリスタル': 'neon_crystal', 'スターウィング': 'star_guardian', 'インフェルノ': 'inferno_gothic', 'サイバーパンク': 'cyberpunk', 'ロイヤルゴールド': 'royal_deluxe', 'ゴールドウィング': 'gold_wing', 'ネオンショー': 'neon_show', 'ステージピンク': 'kda_style', 'サイバーアーマー': 'project_style', 'ライトウィング': 'star_magic', '桜': 'spirit_blossom', 'ハイヌーン': 'high_noon', 'オブシディアンバイオレット': 'obsidian_violet', 'エメラルド': 'emerald_relic', 'クリムゾン': 'crimson_mythic', 'セレスティアルブルー': 'celestial_blue', 'ネオンデュエル': 'neon_duel', 'パープルクリスタル': 'purple_crystal', 'クラシックオブシディアン': 'classic_obsidian', 'ゴールドフェザー': 'user_frame_01', 'ダブルウィング': 'user_frame_02', 'ブレードウィング': 'user_frame_03', 'ノワールフェザー': 'user_frame_04', 'サイバーパープル': 'user_frame_05', 'ネオンフェザー': 'user_frame_06', 'フレイムクラウン': 'user_frame_07', 'ローズクリスタル': 'user_frame_08', 'クリムゾンサイバー': 'user_frame_09', 'フロストウィング': 'user_frame_10', 'スターライト': 'user_frame_11', 'エメラルドクレスト': 'user_frame_12', '桜ウィング': 'user_frame_13', 'ネオンアイドル': 'user_frame_14', 'サンファイア': 'user_frame_15', 'アメジストウィング': 'user_frame_16', 'シネマ・ゴールド': 'cinema', 'ネオン・ブルー': 'neon', 'インパクト・レッド': 'impact', '黄金王冠・プレミアム（高発光）': 'premium_gold', '黒曜石×ゴールド': 'obsidian_gold', 'ネオン・クリスタル': 'neon_crystal', '星と翼の幻想': 'star_guardian', '炎熱ゴシック': 'inferno_gothic', 'ロイヤル・デラックス（金）': 'royal_deluxe', '黄金の翼章': 'gold_wing', 'ネオン・ステージ': 'neon_show', 'K/DA風・ステージピンク': 'kda_style', 'PROJECT風・サイバー装甲': 'project_style', 'スターガーディアン風・光翼': 'user_frame_11', '精霊の花祭り風・桜': 'spirit_blossom', 'ハイヌーン風・烈火': 'high_noon', '黒曜石・紫晶': 'obsidian_violet', 'エメラルド・レリック': 'emerald_relic', 'クリムゾン・ミシック': 'crimson_mythic', '蒼天クリスタル': 'celestial_blue', 'ネオン決闘': 'neon_duel', '紫の宝石フレーム': 'purple_crystal', '黒曜石・黄金（別装飾）': 'classic_obsidian', '黄金の鳳凰（豪華な光翼）': 'user_frame_01', '黄金の双翼（シンプル）': 'user_frame_02', '黄金の剣翼（シャープ）': 'user_frame_03', '黒金の鳳凰（高級感）': 'user_frame_04', 'PROJECT風・蒼紫ネオン': 'user_frame_05', '電脳ネオン・光翼': 'user_frame_06', '紅蓮メタル（炎の王冠）': 'user_frame_07', 'K/DA風・ローズクリスタル': 'user_frame_08', 'PROJECT風・紅蓮メカ': 'user_frame_09', '蒼天・氷結の光翼': 'user_frame_10', 'エメラルド・翠緑の紋章': 'user_frame_12', '精霊の花祭り風・桜翼': 'user_frame_13', 'ネオンアイドル・シアン紫': 'user_frame_14', 'ハイヌーン風・金炎': 'user_frame_15', '黒曜石・紫金の翼': 'user_frame_16', 'プレミアム・ゴールド（高発光）': 'premium_gold', 'ポップアイドル（K/DA風）': 'kda_style', 'PROJECT風サイバー': 'project_style', '星の守護者風・光翼': 'star_magic', '精霊の花祭り風': 'spirit_blossom', 'ハイヌーン風・炎': 'high_noon', '追加素材 01': 'user_frame_01', '追加素材 02': 'user_frame_02', '追加素材 03': 'user_frame_03', '追加素材 04': 'user_frame_04', '追加素材 05': 'user_frame_05', '追加素材 06': 'user_frame_06', '追加素材 07': 'user_frame_07', '追加素材 08': 'user_frame_08', '追加素材 09': 'user_frame_09', '追加素材 10': 'user_frame_10', '追加素材 11': 'user_frame_11', '追加素材 12': 'user_frame_12', '追加素材 13': 'user_frame_13', '追加素材 14': 'user_frame_14', '追加素材 15': 'user_frame_15', '追加素材 16': 'user_frame_16'})
 
 POSITIONS = {
     "right-top": "右上（おすすめ）",
@@ -647,8 +603,42 @@ def badge_plan(badges, duration, seconds):
     return [entry for entry in planned if entry['end']>entry['start']]
 
 
+MOTION_STYLES = {"instant":"一気に表示","slide_left":"左から登場","slide_right":"右から登場","slide_up":"下から登場","slide_down":"上から登場","pop":"パッと飛び出す"}
+MOTION_REVERSE = {v:k for k,v in MOTION_STYLES.items()}
+
+
+def normalize_motion(motion):
+    return motion if isinstance(motion, str) and motion in MOTION_STYLES else "instant"
+
+
+def badge_motion_xy(position, motion, start, base_x, base_y, *, backend="ffmpeg"):
+    """Same bounded entrance for CPU expressions and resident OpenCL compositing."""
+    motion = normalize_motion(motion)
+    if motion == "instant":
+        return base_x, base_y
+    if backend == "ffmpeg":
+        clock, width, height = "t", "W+20", "H+20"
+        elapsed = f"max(0,{clock}-{float(start):.3f})"
+        u = f"max(0,min(1,1-({clock}-{float(start):.3f})/0.260))"
+        easing = f"({u}*{u}*(3-2*{u}))"
+        pop = f"16*exp(-18*{elapsed})*cos(28*{elapsed})"
+    elif backend == "opencl":
+        clock, width, height = "time", "size.x+20.0f", "size.y+20.0f"
+        elapsed = f"fmax(0.0f,{clock}-{float(start):.3f}f)"
+        u = f"clamp(1.0f-({clock}-{float(start):.3f}f)/0.260f,0.0f,1.0f)"
+        easing = f"({u}*{u}*(3.0f-2.0f*{u}))"
+        pop = f"16.0f*exp(-18.0f*{elapsed})*cos(28.0f*{elapsed})"
+    else:
+        raise ValueError("Unknown badge motion backend")
+    if motion == "slide_left": return f"({base_x})-({width})*{easing}", base_y
+    if motion == "slide_right": return f"({base_x})+({width})*{easing}", base_y
+    if motion == "slide_up": return base_x, f"({base_y})+({height})*{easing}"
+    if motion == "slide_down": return base_x, f"({base_y})-({height})*{easing}"
+    return f"({base_x})+{pop}", base_y
+
+
 def with_badges(graph: str, badge_input: int, badges, *, duration: float,
-                position="right-top",scale=1.0,seconds=1.55,opacity=1.0,style="simple",stack_gap=4):
+                position="right-top",scale=1.0,seconds=1.55,opacity=1.0,style="simple",stack_gap=4,motion="instant"):
     """Show separate portrait pairs as a compact stacked kill feed (max 3 rows)."""
     if not graph.endswith("[vout]"):
         raise ValueError("Existing video graph has no [vout]")
@@ -666,6 +656,7 @@ def with_badges(graph: str, badge_input: int, badges, *, duration: float,
         row=entry['row']
         step=int(round(116*scale + normalize_stack_gap(stack_gap)))
         y=(f"62+{step*row}" if position.endswith('top') else f"H-h-62-{step*row}")
+        x_move,y_move = badge_motion_xy(position,motion,start,x,y)
         extra=(f"+7*sin(35*(t-{t:.3f}))*exp(-11*abs(t-{t:.3f}))" if normalize(style)=="impact" else "")
         inlabel=f"pair_src_{n}"
         outlabel="vout" if n==len(planned)-1 else f"pair_src_{n+1}"
@@ -673,7 +664,7 @@ def with_badges(graph: str, badge_input: int, badges, *, duration: float,
         # edges; downsample only inside FFmpeg while keeping the same on-screen size.
         display_scale = scale * (0.5 if normalize(style) in ASSET_STYLES else 1.0)
         parts.append(f"[{int(badge_input)+idx}:v]format=rgba,scale=w='trunc(iw*{display_scale:.3f}/2)*2':h='trunc(ih*{display_scale:.3f}/2)*2',colorchannelmixer=aa={opacity:.3f}[pair_img_{n}]")
-        parts.append(f"[{inlabel}][pair_img_{n}]overlay=x='{x+extra}':y='{y}':format=auto:shortest=0:eof_action=repeat:enable='between(t,{start:.3f},{end:.3f})'[{outlabel}]")
+        parts.append(f"[{inlabel}][pair_img_{n}]overlay=x='{x_move+extra}':y='{y_move}':format=auto:shortest=0:eof_action=repeat:enable='between(t,{start:.3f},{end:.3f})'[{outlabel}]")
     parts[-1]=parts[-1].replace('[vout]','[pair_finished]')
     parts.append('[pair_finished]format=yuv420p[vout]')
     return ';'.join(parts)

@@ -1,14 +1,11 @@
-接続とスキャンの別ボタンを右側①へ統合し、未接続でも接続→プレイヤー取得→試合全体スキャンを単一workerで進めます。完全スキャンのキャッシュとリプレイ世代、既存非同期ミラー/UIを保持。
+キル表示の6登場モーションとDOF radio/スクロール/表示名を受領v5.10.16から統合。CPU式をOpenCL合成にも共有しGPUエフェクトを維持。Template末尾の既定instantで旧設定を保持。三人称の非pitch急反転ガードは校正リセット後も前回成功値を保持し、リプレイ変更では消去。
 
-DOF中央/右側とも円形と従来帯の設定を排他表示し、値は保持。高解像度縮小チェックのselected+active/disabledを優先して表示を維持。カメラ再選択/プレビューの校正キャッシュをリセット。core/camera.pyは消去関数追加のみで座標/pitch/TargetLock不変。キルフレーム名は簡潔にし全旧名alias/保存IDとPortraitCrashFixを保持。
+ユーザー開始QAはRED4/BLUE4を既存LoL専用音声/60fpsで順次録画し、その2本を10切替に再利用する。選択encoder_policyを渡しfallbackをresults.jsonへ明記。Tk snapshot/worker/入力finally解放を保持。中止は次ケースを止め、実行中切替FFmpegは現在の1本が完了してから停止する。
 
-開発用一括録画はBLUE/RED4カメラと全10切替（2キル以上の対象がいる時）を既存GPU・LoL専用音声経路で実行。UIでsnapshotしてworkerへ渡し、中止で次ケースを開始せず、所有入力をfinally解放。
+受領指定GitHub基準0e8e8f6への適用を独立検証し、現在のCodex ScanFixへ機能単位で統合。GPUファイルを旧版で上書きせず、前回ScanFix・PortraitFix・非同期ミラー・全旧alias・37PNGを保持。GPU/UI/統合/受領を分岐し共有8blobを固定レビュー。
 
-検証: 最終Linux/Xvfb全585成功（失敗/skip/除外なし）、pip/構文/担当ガード。完全ZIP429ファイルとGit差分適用後431ソース一致。GPU/60fps/音声/37PNG不変、旧83ref先端/416既存ファイルを保持、全87refsをbundle保存。受領パッチの生ログ/cache/pycは含めず、6ソースのGit差分を再生成。受領側89成功記録とは区別。
+検証: Linux/Xvfb全604成功、失敗/skip/除外なし。6モーションのCPUとOpenCLカーネル実出力は60fps/位置一致。OpenCLは検証用CPU PoCLであり、NVIDIA性能・Windows/LoLは未検証。旧ScanFix全件で原因未確定のネイティブ終了2回があり、今回は再発なし。GPU/音声/録画20保護パス・37PNG・旧87refを保持、全91refsをbundle保存。完全ZIPと差分適用のソース一致、個人ファイル除外を確認。
 
-初回全テスト中にネイティブ終了2回（原因未確定）。記録付き再実行は584成功・プレビューテスト1失敗で、固定プレイヤーを模擬データに補完して全件を再検証。テストは除外していません。Windows/NVIDIA/LoL実機と反転防止効果は未確認。
+前回ScanFixを比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、またはCode→Download ZIPで取得して別フォルダでSTART_GPU.bat。実機手順はdocs/WINDOWS_TEST_v51016_JA.md。環境PublishはWindows取得に不要。
 
-前回PortraitCrashFixを比較先とするDraft PR。mainにはマージしません。完全ZIP→Download raw file、またはCode→Download ZIPで取得し別フォルダへ展開してSTART_GPU.bat。Windowsテストはdocs/WINDOWS_TEST_SCANFIX_v51015_JA.md。
-
-
-GitHubから固定payloadを取得して431ソース/87refs/ZIPとbundleのハッシュ一致を確認。復元先代表120テスト成功、セットアップ再実行で431ソース/87refs/設定相当3ファイル保持、status clean。install_script/start_skillを保存して読戻し一致を確認、他の環境設定は保持。Publish未実施。これは同じクラウド実行環境の別フォルダ検証で、Windows/NVIDIA実機の検証ではない。
+GitHub復元で全440ソース/91refs/配布物hash一致、再setupで3個人ファイル相当を保持。復元先代表テストは通常実行と記録のみ診断でIllegal instruction/132が2回発生、原因未確定。直前のメインスレッドGC回収を1回加える診断条件では95成功（12.45秒）。標準条件での復元先代表全件完走は未確認。全604成功と区別し、Windowsの修正効果やLinuxテスト安定化を主張しない。
