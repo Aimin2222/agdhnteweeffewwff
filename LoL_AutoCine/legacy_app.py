@@ -642,6 +642,10 @@ class App:
         style.map("OutlineAccent.TButton", background=[("active", "#EEF6FF")])
         style.configure("TCheckbutton", background=panel, foreground=fg)
         style.map("TCheckbutton", background=[("active", panel)])
+        # Supersampled PIL indicator: blue tick, smooth anti-aliased edges.
+        # Optional UI-only enhancement; ttk defaults remain if unsupported.
+        from ui.check_style import install as install_crisp_checkboxes
+        install_crisp_checkboxes(r, style)
         style.configure("TRadiobutton", background=panel, foreground=fg)
         style.map("TRadiobutton", background=[("active", panel)])
         style.configure("TCombobox", fieldbackground="#FFFFFF", background="#FFFFFF", foreground=fg, bordercolor=line, lightcolor=line, darkcolor=line, padding=6)
