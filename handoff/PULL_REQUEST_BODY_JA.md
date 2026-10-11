@@ -1,13 +1,7 @@
-ミラーONで新しい大きな仕上がり比較やキラー画像を表示する際、画像処理がUIを止めないよう、照会・取得・加工を最新要求ワーカーへ移します。v5.10.15のスキャン操作集約、独立5編集ページ、青チェック、DOF直下表示と素材/カラー名を、前回Codex統合v5.10.14へ担当ブランチを分けて統合しました。
+チャンピオン画像のID取得APIにPlayerオブジェクトを渡すと、辞書専用get呼び出しでAttributeErrorになるため、Playerと辞書の両形式を受け付けるよう修正しました。既存のID検証、旧名互換、キャッシュ処理を保持しています。現在のUIは既に辞書スナップショットを渡すため、同じWindows画面クラッシュをLinuxで再現したという意味ではありません。
 
-キャッシュ取得もワーカーで行い、最後のシーン/プリセットとリプレイ世代だけ表示。画像が取得できなければ名前を表示し、閉じる/destroyで停止します。旧設定の表示名は互換別名で読み込み、保存キーは不変。
+受領パッチはraw UI archiveへ適用して完成ファイルと一致を確認後、GPU担当ブランチへ小さくcherry-pick。GPU・UIの所有権検査で旧kill_iconsによる上書きを検出します。GPUエンジン/60fps/NVENC/LoL専用音声/カメラ/TargetLock/全UI/37PNGは前回版と同一。
 
-RED通常三人称は余分なpitch反転を撤廃し、自動yawだけ192→184°。手動blue/red0/180°は保持。RED FPSだけ既存offsetを0.76倍、teamをCameraPlan末尾に既定ORDERで追加。BLUE/シネマ/Lolnam/TargetLockは保持。今回の構図の良否はWindows実映像未確認です。
+検証: APIテスト修正前4失敗・1成功→修正後5成功、Linux/Xvfb全574成功（失敗/skip/除外なし）、pip check/構文/担当ガード。完全版ZIP422ファイルと差分適用後424ソース一致、私有ファイル除外。旧80ref先端/415既存ファイルと旧配布物を保持し全83ブランチをbundle保存。Windows/NVIDIA/LoL実機は未確認。
 
-既存GPUエンジン・9切替演出・cut高速コピー・60fps時刻/フレーム数、LoL専用音声/録画/同期と37素材を保持。GPU/録画/音声等21ファイルと37PNGは前回と完全一致。effects/kill_iconsの変更は表示名と旧表示名の互換別名だけ。CPU制御/静止画/ミラー近似は残ります。
-
-検証: Linux/Xvfb全569件成功（失敗/skip/除外なし）、担当衝突ガード、完全ZIP415ファイルとGit差分適用後417ソース一致、個人ファイル除外。旧76ブランチ先端と旧配布物を保持し、全80ブランチをbundle保存。受領側507件・1ファイル除外の記録は別文書へ保存し、ミラー応答性テストも新ページへ更新して除外せず実行しました。Windows/NVIDIA/LoLの今回の画質と速度は未検証。まとめテストはLoL_AutoCine/docs/WINDOWS_TEST_v51015_JA.md。
-
-前回v5.10.14を比較先とするDraft PR。mainにはマージしません。このブランチCode→Download ZIPまたはhandoff完全版ZIP→Download raw fileで取得し、別フォルダへ展開してSTART_GPU.batを実行できます。
-
-GitHub fresh cloneと固定payloadのセットアップ復元で417ソース・80refs・ZIP/bundleハッシュ一致、代表146テスト成功。再実行で全ソース/全ブランチ/個人設定相当3ファイル保持。全回帰テスト569件は72.03秒。検証済みinstall_script/start_skillを下書き保存しreadback確認、他の環境設定は保持、Publishは実行していません。
+前回Codex v5.10.15ブランチを比較先とするDraft PR、mainへマージしません。取得はhandoff完全ZIP→Download raw file、またはCode→Download ZIP。旧版と別フォルダへ展開してSTART_GPU.bat。Windowsテストはdocs/WINDOWS_TEST_PORTRAITFIX_v51015_JA.md。

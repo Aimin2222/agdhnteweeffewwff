@@ -492,7 +492,12 @@ def _player_for_name(name, roster):
 def _icon_id(player):
     import re
     # The replay raw character code is usually Riot's Data Dragon ID.
-    raw=(player.get("selection_name") or player.get("raw_champion") or "")
+    # Player dataclasses arrive from scene selection; video effects also pass
+    # plain dicts. Preserve both contracts and never access Tk from here.
+    if isinstance(player, dict):
+        raw = player.get("selection_name") or player.get("raw_champion") or ""
+    else:
+        raw = getattr(player, "selection_name", "") or getattr(player, "raw_champion", "") or ""
     raw=str(raw).replace("game_character_displayname_", "")
     synonyms={"Wukong":"MonkeyKing", "FiddleSticks":"Fiddlesticks", "NunuWillump":"Nunu",
               "RenataGlasc":"Renata", "Kaisa":"Kaisa", "Khazix":"Khazix"}
