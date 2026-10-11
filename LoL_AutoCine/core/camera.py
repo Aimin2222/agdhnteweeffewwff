@@ -422,11 +422,10 @@ class CameraPlan:
             elev = self.third_pose_at(t)[1]
             pitch = self.rig.pitch_sign * (
                 90.0 - elev if self.rig.pitch_complement else elev)
-            # 5.10.13 RED 180-degree rear-view correction could invert the
-            # calibrated FPS pitch specifically in normal third-person mode.
-            # Keep cinema/FPS/Lolnam untouched (already good in user footage).
-            if self.style == "third" and 90.0 < abs(self.side_yaw) % 360.0 < 270.0:
-                pitch = -pitch
+            # The side offset is a horizontal yaw. Never flip pitch on RED:
+            # the calibrated pitch sign belongs to the Replay API rig, not
+            # the team. Flipping it made the sky/ground swap vertically.
+            # Both BLUE and RED use the SAME elevation-to-pitch conversion.
             rot[self.rig.pitch_axis] = max(-80.0, min(80.0, pitch))
 
             # TRUE ORBITの視線。カメラ位置を回しただけでは横を向くため、
