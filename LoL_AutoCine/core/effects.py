@@ -180,6 +180,7 @@ class Template:
     kill_icon_scale: float = 1.0
     kill_icon_duration: float = 1.55
     kill_icon_opacity: float = 1.0
+    kill_icon_motion: str = "instant"  # badge entrance, legacy behavior by default
     smart_composition: bool = False  # safer distance/elevation around the locked player
     smart_montage: bool = False  # only smart auto-edit reorders unpinned scenes
     kill_icon_players: list = field(default_factory=list)  # transient replay roster for real champion portraits
@@ -772,7 +773,7 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
         return with_badges(g, badge_idx, badge_entries, duration=duration,
                            position=t.kill_icon_position, scale=t.kill_icon_scale,
                            seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
-                           style=badge_style, stack_gap=getattr(t, "kill_stack_gap", 4))
+                           style=badge_style, motion=getattr(t, 'kill_icon_motion', 'instant'), stack_gap=getattr(t, "kill_stack_gap", 4))
     def add_pair_inputs(command, loop=True):
         for badge_path, _ in badge_entries:
             if loop:
@@ -896,6 +897,7 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
         "kill_icon_style": badge_style,
         "kill_icon_pairs_resolved": len(badge_entries),
         "kill_icon_position": getattr(t, "kill_icon_position", "right-top"),
+        "kill_icon_motion": getattr(t, "kill_icon_motion", "instant"),
         "kill_icon_scale": getattr(t, "kill_icon_scale", 1.0),
         "kill_icon_duration": getattr(t, "kill_icon_duration", 1.55),
         "kill_icon_opacity": getattr(t, "kill_icon_opacity", 1.0),
