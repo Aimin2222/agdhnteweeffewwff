@@ -87,7 +87,9 @@ def run_replay_qa(api, source, players, events, template, destination, *,
         local_tpl = replace(template, style=case["camera"], name="QA_" + title,
                             pre=2.0, post=2.0, merge_multikill=False,
                             smart_highlight_enabled=False, smart_montage=False,
-                            montage_fx="cut", motion_arc=0.0, motion_dolly=0.0)
+                            montage_fx="cut", motion_arc=0.0, motion_dolly=0.0,
+                            camera_side="auto", third_yaw=0.0,
+                            smart_composition=True, dof_enabled=False)
         local_tpl.bgm_path = ""
         local_tpl.bgm_volume = 0.0
         case_result = {"side": side, "camera": case["camera"],
