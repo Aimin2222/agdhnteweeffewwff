@@ -1330,19 +1330,24 @@ class App:
         ttk.Label(dof_controls, text="まずDOFぼかしを上げます。円の内側はそのまま、外側がぼけます（実際の深度推定ではありません）。",
                   style="CardMuted.TLabel", wraplength=860).pack(anchor="w")
         self.var_dof_shape=tk.StringVar(value="円形（おすすめ）")
-        ttk.Combobox(dof_controls, state="readonly", textvariable=self.var_dof_shape,
-                     values=["円形（おすすめ）", "従来の上下ぼかし"], width=30).pack(anchor="w", pady=(4,3))
+        dof_mode_row = ttk.Frame(dof_controls, style="Card.TFrame")
+        dof_mode_row.pack(fill="x", pady=(4, 4))
+        for label in ("円形（おすすめ）", "従来の上下ぼかし"):
+            ttk.Radiobutton(dof_mode_row, text=label, variable=self.var_dof_shape,
+                            value=label).pack(side="left", padx=(0, 14))
         slider(dof_controls,"dof_blur","周囲のぼかし強度",0,12)
-        self.var_dof_circle_hint = ttk.Label(dof_controls, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
+        circle_dof = ttk.Frame(dof_controls, style="Card.TFrame")
+        self._circle_dof_panel = circle_dof
+        self.var_dof_circle_hint = ttk.Label(circle_dof, text="画面の真ん中付近を目安にしています。固定したキャラがずれる時だけ中心位置を調整してください。",
                                              style="CardMuted.TLabel", wraplength=880)
         self.var_dof_circle_hint.pack(anchor="w", pady=(3,5))
-        slider(dof_controls,"dof_center_x","円の中心・左右",.05,.95)
-        slider(dof_controls,"dof_center_y","円の中心・上下",.05,.95)
-        slider(dof_controls,"dof_radius","くっきりする円の半径",.08,.65)
-        slider(dof_controls,"dof_feather","境界のなめらかさ",.025,.35)
-        ttk.Label(dof_controls, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
+        slider(circle_dof,"dof_center_x","円の中心・左右",.05,.95)
+        slider(circle_dof,"dof_center_y","円の中心・上下",.05,.95)
+        slider(circle_dof,"dof_radius","くっきりする円の半径",.08,.65)
+        slider(circle_dof,"dof_feather","境界のなめらかさ",.025,.35)
+        ttk.Label(circle_dof, text="円の内側はくっきり、外側をぼかします。TargetLockでキャラが中央付近に映る前提の2D処理で、自動追跡ではありません。",
                   style="CardMuted.TLabel", wraplength=950).pack(anchor="w", pady=(0,4))
-        self.dof_viz = FocusCircleViz(dof_controls, self.sl['dof_center_x'], self.sl['dof_center_y'],
+        self.dof_viz = FocusCircleViz(circle_dof, self.sl['dof_center_x'], self.sl['dof_center_y'],
                                      self.sl['dof_radius'], self.sl['dof_feather'])
         self.dof_viz.pack(fill="x", pady=(2,6))
         legacy_dof = ttk.LabelFrame(dof_controls, text="従来の上下ぼかし用（互換設定）", padding=5)
@@ -1623,14 +1628,32 @@ class App:
         ttk.Label(row, textvariable=self.sl_labels["fog_strength"], width=7, anchor="e", style="CardMuted.TLabel").pack(side="right")
         ttk.Label(f, text="カーブ補正ポイント", style="CardMuted.TLabel").pack(anchor="w", pady=(5, 2))
         ttk.Entry(f, textvariable=self.var_curve_points).pack(fill="x")
-        ttk.Label(f, text="DOF詳細", style="CardMuted.TLabel").pack(anchor="w", pady=(6, 2))
-        for key, label in (("dof_blur", "DOFぼかし"), ("dof_focus_distance", "フォーカス距離"),
-                           ("dof_near_distance", "近距離"), ("dof_far_distance", "遠距離")):
-            row = ttk.Frame(f, style="Card.TFrame"); row.pack(fill="x", pady=2)
-            ttk.Label(row, text=label, width=11, style="Card.TLabel").pack(side="left")
-            lo, hi = self._slider_range(key)
-            ttk.Scale(row, from_=lo, to=hi, variable=self.sl[key]).pack(side="left", fill="x", expand=True, padx=4)
-            ttk.Entry(row, textvariable=self.sl[key], width=9, justify="right").pack(side="right")
+        ttk.Label(f, text="背景ぼかし（DOF）の種類", style="CardMuted.TLabel").pack(anchor="w", pady=(6, 2))
+        quick_dof_choice = ttk.Frame(f, style="Card.TFrame")
+        quick_dof_choice.pack(fill="x")
+        for label in ("円形（おすすめ）", "従来の上下ぼかし"):
+            ttk.Radiobutton(quick_dof_choice, text=label, variable=self.var_dof_shape,
+                            value=label).pack(anchor="w")
+        self._quick_dof_hint = ttk.Label(f, text="", style="CardMuted.TLabel", wraplength=280)
+        self._quick_dof_hint.pack(fill="x", pady=(2, 4))
+        self._quick_dof_diagram = tk.Canvas(f, height=88, bg="#F5F8FC", highlightthickness=1,
+                                             highlightbackground="#D4DEE8")
+        self._quick_dof_diagram.pack(fill="x", pady=(0, 4))
+        self._quick_circle_dof = ttk.Frame(f, style="Card.TFrame")
+        self._quick_band_dof = ttk.Frame(f, style="Card.TFrame")
+        for parent, controls in (
+            (self._quick_circle_dof, (("dof_blur", "ぼかし強度"), ("dof_center_x", "左右の中心"),
+                                      ("dof_center_y", "上下の中心"), ("dof_radius", "くっきりする範囲"),
+                                      ("dof_feather", "境界の柔らかさ"))),
+            (self._quick_band_dof, (("dof_blur", "ぼかし強度"), ("dof_focus_distance", "基準距離"),
+                                   ("dof_near_distance", "手前側"), ("dof_far_distance", "奥側")))):
+            for key, label in controls:
+                row = ttk.Frame(parent, style="Card.TFrame"); row.pack(fill="x", pady=2)
+                ttk.Label(row, text=label, width=13, style="Card.TLabel").pack(side="left")
+                lo, hi = self._slider_range(key)
+                ttk.Scale(row, from_=lo, to=hi, variable=self.sl[key]).pack(side="left", fill="x", expand=True, padx=4)
+                ttk.Entry(row, textvariable=self.sl[key], width=9, justify="right").pack(side="right")
+        self._update_dof_mode_ui()
 
         f = card(right, "◈  カメラ詳細")
         ttk.Label(f, text="カメラ距離 / 高さ / 左右回転", style="Card.TLabel").pack(anchor="w")
@@ -3095,15 +3118,36 @@ class App:
             raise
 
     def _update_dof_mode_ui(self):
-        """Do not present obsolete near/far controls while circular focus is active."""
-        panel = getattr(self, '_legacy_dof_panel', None)
-        if panel is None:
-            return
-        if self.var_dof_shape.get() == '従来の上下ぼかし':
-            if not panel.winfo_manager():
-                panel.pack(fill='x', pady=(2, 6))
-        elif panel.winfo_manager():
-            panel.pack_forget()
+        """Only one DOF mode is visible; keep all stored values unchanged."""
+        band = self.var_dof_shape.get() == "従来の上下ぼかし"
+        for panel, visible in (
+            (getattr(self, "_circle_dof_panel", None), not band),
+            (getattr(self, "_legacy_dof_panel", None), band),
+            (getattr(self, "_quick_circle_dof", None), not band),
+            (getattr(self, "_quick_band_dof", None), band)):
+            if panel is None:
+                continue
+            if visible and not panel.winfo_manager():
+                panel.pack(fill="x", pady=(3, 5))
+            elif not visible and panel.winfo_manager():
+                panel.pack_forget()
+        label = getattr(self, "_quick_dof_hint", None)
+        if label is not None:
+            label.configure(text=(
+                "画面中央の横帯はくっきり残し、上下の部分をぼかします。従来方式で実際の距離測定ではありません。"
+                if band else "中央の円だけをくっきり残し、周りをぼかします。キャラの自動追跡ではありません。"))
+        canvas = getattr(self, "_quick_dof_diagram", None)
+        if canvas is not None:
+            canvas.delete("all")
+            width = max(220, canvas.winfo_width())
+            canvas.create_rectangle(8, 7, width-8, 79, fill="#CBD5E1", outline="#B8C5D6")
+            if band:
+                canvas.create_rectangle(8, 32, width-8, 53, fill="#EFF6FF", outline="#2070C6", width=2)
+                canvas.create_text(width/2, 43, text="中央をくっきり", fill="#1659AA")
+            else:
+                canvas.create_oval(width/2-52, 12, width/2+52, 74,
+                                   fill="#EFF6FF", outline="#2070C6", width=2)
+                canvas.create_text(width/2, 42, text="主役", fill="#1659AA")
 
     def _apply_focus_preset(self):
         """One click circular focus without editing TargetLock or changing audio."""
