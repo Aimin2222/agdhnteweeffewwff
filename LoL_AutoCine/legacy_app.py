@@ -909,9 +909,14 @@ class App:
         ttk.Button(tools, text="ミラー開始", command=self.on_mirror_start).pack(side="left")
         ttk.Button(tools, text="停止", command=lambda: self.on_mirror_stop(reason="停止ボタン")) .pack(side="left", padx=(4,0))
         ttk.Checkbutton(tools, text="FXをミラーに反映", variable=self.var_live).pack(side="left", padx=10)
+        ttk.Label(tools, text="ミラー画質", style="CardMuted.TLabel").pack(side="left", padx=(5,3))
         quality = ttk.Combobox(tools, textvariable=self.var_preview_quality, state="readonly",
                                values=("操作優先", "表示サイズで確認"), width=17)
         quality.pack(side="left")
+        bind_effect_hover_tip(quality,
+            "操作優先：内部640〜960pxでプレビュー処理。表示サイズで確認：ミラー表示領域に合わせて処理。\n"
+            "完成MP4の1920×1080・60fpsやGPUエンコードとは別の設定です。",
+            delay_ms=500)
         quality.bind("<<ComboboxSelected>>", lambda _: self._save_settings())
         ttk.Button(tools, text="▶ 再生", style="Accent.TButton", command=self.on_preview_play).pack(side="right", padx=4)
         ttk.Button(tools, text="■ 停止", command=self.on_preview_stop).pack(side="right", padx=4)
@@ -1330,12 +1335,20 @@ class App:
                   style="CardMuted.TLabel", wraplength=560).pack(anchor="w")
         ttk.Entry(curve_controls, textvariable=self.var_curve_points).pack(fill="x", pady=(4,0))
         self.var_dof=tk.BooleanVar(value=False)
-        ttk.Checkbutton(fx_page,text="DOF：キャラの周囲をぼかす（ONで詳細表示）",
-                        variable=self.var_dof).pack(anchor="w",pady=(8,3))
+        self._dof_toggle_widget = ttk.Checkbutton(
+            fx_page, text="DOF（ぼかし）を有効にする ▶ 詳細を表示",
+            variable=self.var_dof)
+        self._dof_toggle_widget.pack(anchor="w", pady=(8, 3))
         dof_controls=ttk.Frame(fx_page,style="Card.TFrame")
+        self._dof_controls = dof_controls
         def show_dof(*_):
-            if self.var_dof.get():dof_controls.pack(fill="x")
-            else:dof_controls.pack_forget()
+            if self.var_dof.get():
+                if not dof_controls.winfo_manager():
+                    dof_controls.pack(fill="x", after=self._dof_toggle_widget)
+                self._dof_toggle_widget.configure(text="DOF（ぼかし）有効 ▼ 詳細を表示中")
+            else:
+                dof_controls.pack_forget()
+                self._dof_toggle_widget.configure(text="DOF（ぼかし）を有効にする ▶ 詳細を表示")
         self.var_dof.trace_add("write",show_dof)
         ttk.Label(dof_controls, text="まずDOFぼかしを上げます。円の内側はそのまま、外側がぼけます（実際の深度推定ではありません）。",
                   style="CardMuted.TLabel", wraplength=860).pack(anchor="w")
