@@ -79,7 +79,8 @@ def test_grades_more_distinct_from_default():
 
 def test_ui_supports_scan_once_then_player_and_team_filter():
     code=(Path(__file__).resolve().parents[1]/'legacy_app.py').read_text('utf-8')
-    assert '試合全体を一括スキャン' in code
+    assert '接続＋試合全体をスキャン' in code
+    assert '_connect_then_scan' in code
     assert 'self._match_scan_cache' in code
     assert 'self._filter_scanned_for_locked()' in code
     assert 'self.var_team_filter' in code
