@@ -50,10 +50,22 @@ GRADES: dict = {
                        bm=-0.045, rh=0.09, gh=0.04, bh=-0.07),
 }
 GRADE_JP = {
-    "default": "デフォルト（色補正なし）", "lolnam": "Lolnam風シネマ",
-    "drama": "ドラマ", "fade": "フェード", "highcontrast": "高コントラスト",
-    "standard": "標準", "film": "フィルム", "noir": "ノワール", "dark": "ダーク", "sunset": "夕日",
-    "midnight": "深夜青", "tealorange": "ティール&オレンジ", "neon": "ネオン", "purple": "紫霧", "iceblue": "アイスブルー", "golden": "シネマゴールド",
+    "default": "補正なし｜LoL本来の色",
+    "lolnam": "LoLnam風｜映画的な青緑・暖色",
+    "drama": "ドラマ｜メリハリのある陰影",
+    "fade": "淡いフィルム｜低コントラスト",
+    "highcontrast": "くっきり｜強コントラスト",
+    "standard": "自然色｜控えめな補正",
+    "film": "フィルム｜柔らかい映画色",
+    "noir": "ノワール｜暗め・低彩度",
+    "dark": "ダーク｜暗部を強調",
+    "sunset": "夕焼け｜オレンジ暖色",
+    "midnight": "深夜ブルー｜冷たい青",
+    "tealorange": "青緑×橙｜シネマ定番",
+    "neon": "ネオン｜鮮やかな発色",
+    "purple": "紫霧｜紫の幻想色",
+    "iceblue": "氷青｜澄んだ寒色",
+    "golden": "黄金色｜暖色シネマ",
 }
 
 TRANSITIONS = {"cut": "カット", "fade": "フェード", "flash": "フラッシュ"}
