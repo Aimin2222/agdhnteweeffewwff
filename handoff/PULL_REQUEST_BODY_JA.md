@@ -9,3 +9,5 @@ reference_review_latest.logをQA_Supportの既知名へ追加し各1MB末尾原b
 検証: Linux/Xvfb全739成功（失敗/skip/除外なし、63.704秒）、関連76件成功。実日本語名60fps動画から6時点シート/JSON/ZIP・原本不変、picker file/folder/cancel/root解放、異なる日本語出力先、実RED relative pitch/height/manual、最新referenceログの原byte/1MBを確認。旧GPU/UI/音声/QA/encoding回帰も成功。完全ZIP CRC/ソース一致/差分apply/個人ファイル除外/旧refsと配布物保持を検証。Windows/LoL画角・BAT候補選択・日本語CMDパス/NVIDIA性能は未確認、過去native原因は未確定。
 
 前回v5.10.22を比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、別フォルダSTART_GPU.bat。実機手順docs/WINDOWS_TEST_v51023_JA.md。
+
+GitHubから別checkout/bundle復元で全517ソース/119refs/ZIP・bundle hashes一致。復元先代表230成功19.84秒、失敗/skip/除外なし、GC有効・強制GCなし。再setupで517ソース/119refs/3個人設定相当のバイト保持/status clean。これは同一クラウド内の別フォルダ検証で新しいcloud task/Windows/Publish検証とは別。環境install_script/start_skillをrevision41へ保存してreadback確認、他の既知設定保持、Publishは未実行。次回環境へ反映する場合だけ環境設定で確認・保存後Publish。

@@ -371,7 +371,82 @@
   "old_handoff_files_retained": 211,
   "compileall_passed": true,
   "pip_check_passed": true,
-  "github_fresh_restore": null,
-  "environment_config_saved": false,
-  "main_unchanged": "c2a79ac3e7816c74b7d7fb15a5a32a32dd8fa16b"
+  "github_fresh_restore": {
+    "payload_commit": "3806b8a712eb189118c6189ea708d501db7bdf74",
+    "source_head": "c048f3580bd2fe74954d7544b2737dc4f804511b",
+    "source_files": 517,
+    "local_branch_count": 119,
+    "all_source_bytes_match": true,
+    "github_download_source_bytes_match": true,
+    "all_branch_refs_match": true,
+    "bundle_and_zip_hashes_match": true,
+    "guard_status": "ok",
+    "status_before_private_markers": "clean",
+    "github_checkout": "fresh remote single-branch clone, existing local object cache used; sparse files only",
+    "new_cloud_task_or_publish_tested": false
+  },
+  "environment_config_saved": true,
+  "main_unchanged": "c2a79ac3e7816c74b7d7fb15a5a32a32dd8fa16b",
+  "fresh_representative_pytest": {
+    "tests": "230",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "time": "19.832"
+  },
+  "representative_test_paths": [
+    "tests/test_gpu_badge_qa_v51017.py",
+    "tests/test_gpu_capture_isolation.py",
+    "tests/test_gpu_full_pipeline.py",
+    "tests/test_gpu_motion_camera_qa.py",
+    "tests/test_gpu_opencl_bloom.py",
+    "tests/test_gpu_releaseqa_v51018.py",
+    "tests/test_gpu_shared_camera_contract.py",
+    "tests/test_gpu_spatial_qa_v51019.py",
+    "tests/test_v51010_gallery_responsiveness.py",
+    "tests/test_v51014_responsiveness.py",
+    "tests/test_v51015_portrait_player_compat.py",
+    "tests/test_v51015_scanfix_workflow.py",
+    "tests/test_v51015_ui_restructure.py",
+    "tests/test_v51016_motion_dof_and_camera_qa.py",
+    "tests/test_v51017_badge_camera_evidence.py",
+    "tests/test_v51018_release_qa.py",
+    "tests/test_v51019_camera_ui_reliability.py",
+    "tests/test_gpu_camera_isolation_v51020.py",
+    "tests/test_v51020_camera_mode_isolation.py",
+    "tests/test_gpu_camera_director_v51021.py",
+    "tests/test_v51021_camera_bat_color.py",
+    "tests/test_gpu_qa_support_v51022.py",
+    "tests/test_v51022_oneclick_utf8_camera.py",
+    "tests/test_encoding_audit_v51022.py",
+    "tests/test_gpu_reference_framing_v51023.py",
+    "tests/test_v51023_reference_framing.py"
+  ],
+  "setup_repeat_preservation": {
+    "source_files_preserved": 517,
+    "private_marker_files_preserved": 3,
+    "all_119_ref_tips_preserved": true,
+    "head_preserved": true,
+    "status": "clean",
+    "pip_check_compileall_tk_startup": true
+  },
+  "environment_config": {
+    "revision": 41,
+    "saved_fields": [
+      "install_script",
+      "start_skill"
+    ],
+    "known_other_fields_unchanged": true,
+    "readback_verified": true,
+    "published": false,
+    "status": "saved"
+  },
+  "targeted_pytest": {
+    "passed": 76,
+    "failed": 0,
+    "time_seconds": 5.21
+  },
+  "draft_pr": "https://github.com/Aimin2222/agdhnteweeffewwff/pull/39",
+  "bundle_windows_autocrlf_protected": true,
+  "tracked_encoding_audit_passed_source_and_restored_checkout": true
 }
