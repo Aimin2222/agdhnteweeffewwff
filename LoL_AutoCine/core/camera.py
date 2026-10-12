@@ -376,6 +376,9 @@ class CameraPlan:
             a = min(1.3, self.intensity)
             elev = self.third_elev - 9.0 * a * w
             dist = self.third_dist * (1.0 - 0.30 * a * w)
+            if self.team in ("CHAOS", "RED") and self.style == "third_cinema":
+                # RED QA #2: kill became an extreme close-up; keep combat visible.
+                dist = max(dist, self.third_dist * 0.92)
             sin_e = max(math.sin(math.radians(max(10.0, elev))), MIN_CAM_HEIGHT / max(dist, 1.0))
             sin_e = min(0.98, sin_e)
             e = math.asin(sin_e)
@@ -419,6 +422,10 @@ class CameraPlan:
             close_amount = (0.30 * a + dolly / 100.0) * impact
             wide_amount = (0.045 * max(0, multi-1)) * cue
             dist_factor = max(0.52, 1.0 - close_amount + min(0.16, wide_amount))
+            if self.team in ("CHAOS", "RED"):
+                # RED QA #4: protagonist disappears at maximum dolly-in.
+                dist_factor = max(0.92, dist_factor)
+                orbit_delta = max(-10.0, min(10.0, orbit_delta))
             dist = self.third_dist * dist_factor
             low_total = 9.0 * a + low * 0.55
             elev = self.third_elev - low_total * max(cue, impact * 0.9)
@@ -470,22 +477,35 @@ class CameraPlan:
     def rotation_at(self, t: float) -> Optional[dict]:
         """確定版Orbitの三人称視線。カメラ位置の公転と同じ基準。"""
         if self.style == "geo_aim":
-            # Experimental geometry-first targeting. We explicitly aim
-            # from the camera's relative 3-D offset back at the selected
-            # champion, rather than rotating stale top-camera Euler angles.
-            # Replay API Euler X/Y conventions still need Windows validation.
             if self.rig is None or not self.rig.third:
                 return None
             x, y, z = self.third_pose_at(t)[0]
-            horizontal = math.hypot(x,z)
+            horizontal = math.hypot(x, z)
             if horizontal < 1.0:
                 return None
+            if getattr(self, "_camera_axis_safety", False) and self.team in ("CHAOS", "RED"):
+                # Windows QA #5 used Y=200deg and showed the sky. RED's good
+                # third_cinema and Lolnam shots both use X=heading, Y=elevation,
+                # Z=0 instead. The previous geographic formula swapped them.
+                yaw = -self._third_heading(t)
+                pitch = max(18.0, min(58.0, self.third_pose_at(t)[1]))
+                return {"x": yaw, "y": pitch, "z": 0.0}
+            # Preserve the BLUE #10 framing which was visually approved.
             return {"x": math.degrees(math.atan2(y,horizontal)),
                     "y": math.degrees(math.atan2(-x,-z)) % 360.0,
                     "z": 0.0}
         if self.style in ("third", "third_cinema"):
             if self.rig is None or not self.rig.third or not self.rig.rot or not self.rig.pitch_axis:
                 return None
+            if self.style == "third" and getattr(self, "_camera_axis_safety", False):
+                # Windows QA #1 and #6 saw a spurious X pitch calibration.
+                # It drove yaw through Z=-184deg (roll/inversion) and used a
+                # camera-to-player baseline 7–8k units away. Calibration for
+                # good shots #2/#7/#9 uses X yaw, Y pitch, Z=0; use that
+                # engine-axis convention just for the broken normal preset.
+                return {"x": -self._third_heading(t),
+                        "y": max(18.0, min(58.0, self.third_pose_at(t)[1])),
+                        "z": 0.0}
             rot = dict(self.rig.rot)
             elev = self.third_pose_at(t)[1]
             pitch = self.rig.pitch_sign * (
@@ -897,6 +917,22 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
         log("カメラ: " + info.note)
         return info
 
+    # Some Replay API seeks return an *old top-camera coordinate* after
+    # player FPS positioning has already advanced. QA #1/#6 measured 7–8k
+    # horizontal game units, while good #2/#7 were about 1.8–2.6k. Never
+    # use such a stale coordinate to establish the normal-third orbit axis.
+    if style == "third" and current_v is not None:
+        horizontal_distance = math.hypot(current_v[0], current_v[2])
+        if horizontal_distance > 4500.0:
+            if cached and cached.get("h"):
+                h = tuple(cached["h"])
+                log(f"カメラ: stale top-camera基準 {horizontal_distance:.0f} を破棄して前回の安定方位を再利用")
+            else:
+                # Empirical rear direction shared by QA's good RED #2 and BLUE #7.
+                # This is a conservative fallback, not a map-location detector.
+                h = (-0.52, -math.sqrt(1.0-0.52**2))
+                log(f"カメラ: stale top-camera基準 {horizontal_distance:.0f} を破棄して安全後方方位で再計算")
+
     if h is None:
         hl = math.hypot(v[0], v[2])
         h = (v[0] / hl, v[2] / hl) if hl > 50 else (0.0, -1.0)
@@ -926,8 +962,14 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
             # 最小限の回転を作る。Replay側が補正できるよう三人称を維持する。
             rot_use = {"x": 0.0, "y": 0.0, "z": 0.0}
         rot_use[axis] = sign * (90.0 - third_elev if pitch_complement else third_elev)
-        stable = _TPS_STABLE_ROTATIONS.get((sel, axis)) or (cached.get('rot') if cached else None)
-        rot_use = stabilize_non_pitch_rotation(rot_use, stable, axis, log=log)
+        forced_axes = style == "third" or (style == "geo_aim" and str(p.team).upper() in ("CHAOS", "RED"))
+        if forced_axes:
+            # Keep the safe Y pitch convention consistent with the cached rig.
+            axis, sign, pitch_complement = "y", 1.0, False
+            rot_use = {"x": 0.0, "y": max(18.0, min(58.0, float(third_elev))), "z": 0.0}
+        else:
+            stable = _TPS_STABLE_ROTATIONS.get((sel, axis)) or (cached.get('rot') if cached else None)
+            rot_use = stabilize_non_pitch_rotation(rot_use, stable, axis, log=log)
     else:
         if style in THIRD_STYLES:
             note_extra = " (保存済み三人称リグもなく、方向を特定できないためFPS風)"

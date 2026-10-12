@@ -1,13 +1,15 @@
-新規カラー既定を無補正へ変更し、テンプレート選択/旧保存IDを維持。図鑑のopen/close/destroyを追跡して背後パネルwheelを抑制し、従来非同期preview/worker終了を保持する。
+受領v5.10.19の通常third/RED geoのaxis safety、stale top基準の除外、REDシネマ/Lolnamの接近制限を補正候補として統合。BLUE geoの従来式は保持し、強制Y pitchとrig metadataを一致させ旧stable cacheで補正が取り消されないようにする。Windows構図・主役・水平線の改善は未確認。
 
-ユーザー開始QAにデータ専用JSON計画を追加。既知camera/transition/motionと100〜500MBを検証し、64KB/3秒制限、通信失敗時は付属計画へ戻す。付属計画ではRED/BLUE各5視点（従来4＋geo_aim実験）を実行し、plan未指定APIは従来8本。geoは相対offsetから視線を計算する選択時だけの機能で、既存カメラ式/TargetLock/RED184度/手動向きを保持。数値と実フレーム比較表は参考で、主役・水平線・地形の自動合格判定ではない。
+初期状態は無加工/vignette・grain・bloom0/cut。既存プリセット/効果選択は保持。かんたん/詳細でテンプレート選択を共有しA/B図鑑を維持、色微調整4項目はON時だけ表示して値を保持。
 
-QA結果を500MB以下の直接ZIPに保存。ZIP入れ子なし、大きなMP4は1MBずつstreamして番号partへ分割し復元手順付き。原動画/元JSON/既存ZIPを保持、repeatは新しい名前。出力名を先に計画して最終JSONをZIPにも保存。symlink/外部パスを含めない。前回GPU確認動画/60fps/元音声copy/encoder_policy/素材再利用を維持し、色・DOFを二重適用しない。中止は現在の1本を終えて残り停止、追加比較表/ZIPを開始しない。
+QAはRED/BLUE別確認MP4と3時点画像、従来10演出/6キル登場に加えて2素材の6空間切替を追加。CPU固定をOpenCL GPU＋選択encoder_policy＋診断＋CPU xfade fallbackへ接続。延長をhardware frame cloneと明示フレーム数で制御し60fpsを固定。空間確認だけ無音、通常のLoL音声と通常モンタージュは維持。再録画しない。前回500MB直接ZIP/1MBstream/最終JSON一致/元動画・既存ZIP保持/データ専用plan制限も保持。
 
-受領指定基準へのapply --check/適用と受領v17からの差分13パスをレビューし、現行Codex v17へ機能別統合。GPU/UI/共有8blobを固定レビュー、旧95refと過去配布物/37PNG/GPUエンジン/音声/録画を保持し全99refs bundle保存。
+受領指定v15GitHub基準へapply --check/適用を独立検証。受領v18との差分16パスを現行Codex v18へ選択統合し、GPUエンジン/音声/録画/37PNG/旧99ref/過去配布物を保持、全103refs bundle保存。共有8blobを固定レビュー。添付の実機/Release記述は受領側資料として区別。
 
-検証: Linux/Xvfb全635成功82.14秒（失敗/skip/除外なし）、分割再結合/元データ保持/再出力/最終JSON一致、データplan拒否/通信fallback、geometry offset整合、短い動画の実フレーム比較/直接ZIP/CRC。Windows/LoL/物理NVIDIA速度とgeo画角は未確認。前回Linux native終了の原因は未確定、今回全件で再発なし。完全ZIPと差分適用の全ソース一致・個人ファイル除外を確認。
+検証: Linux/Xvfb全653成功52.61秒（失敗/skip/除外なし）。6空間OpenCL kernelをCPU PoCLで実行し各95フレーム/60fps/両端素材一致と模様付き中間画像の差を検証。2side reels/3時点4カメラ/5比較画像/直接ZIP/CRCも実動画で確認。物理NVIDIA/Windows/LoL速度・カメラ構図は未確認。過去Linux native終了は原因未確定、今回は全件で再発なし。完全ZIPと差分適用のソース一致・個人ファイル除外を確認。
 
-前回v5.10.17を比較先とするDraft PR、mainへマージしません。完全ZIP→Download raw file、またはCode→Download ZIP。別フォルダでSTART_GPU.bat、実機手順はdocs/WINDOWS_TEST_v51018_JA.md。
+前回v5.10.18を比較先とするDraft PR、mainへマージしません。完全ZIP→Download raw file、またはCode→Download ZIP。別フォルダでSTART_GPU.bat、実機手順はdocs/WINDOWS_TEST_v51019_JA.md。
 
-GitHub復元で463ソース/99refs/配布物hash一致。代表126テスト成功12.66秒（強制GCなし・GC有効）。再setupでも463ソース/99refs/3個人設定相当ファイルを保持/status clean。実URLのデータ専用QA計画も取得・検証成功。同じ実行環境の別フォルダ検証でPublish/新タスク/Windows実機とは区別します。
+復元中の既存capture終了テストがerror通知とrunning=Falseの間を観測し143成功/1失敗。終了状態まで待つ条件へテストだけ修正し、error/latest例外検証は維持。録画実装を変えず全653を再検証して成功。初回配布snapshotはGit commit8bed683へ保存し、現在のZIP/bundleは修正後の版。bundleはバイナリ属性でWindows改行変換を防止。3時点は時間割合による参考サンプルで、実キル瞬間の自動特定ではありません。
+
+最終GitHub復元で475ソース/103refs/配布物hash一致。修正版代表144テスト成功12.25秒（強制GCなし・GC有効）。再setupでも475ソース/103refs/3個人設定相当ファイルを保持/status clean。データ専用QA計画の実URL取得・検証も成功。同じ実行環境の別フォルダ検証でPublish/新タスク/Windows実機とは区別します。

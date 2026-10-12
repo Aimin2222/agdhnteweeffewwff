@@ -1,25 +1,29 @@
-# v5.10.18-test ReleaseQA / DirectZIP / GPUFull
+# v5.10.19-test CameraUI / SpatialQA / GPUFull
 
-完全版 **handoff/LoL_AutoCine_v5.10.18_ReleaseQA_DirectZIP_GPUFull_Windows_Full.zip** をGitHubで開き **Download raw file**。または **codex/lol-autocine-v51018-releaseqa-directzip-handoff** の **Code → Download ZIP**。旧版と別フォルダへ展開してLoL_AutoCine/START_GPU.bat。Windows取得にmainマージ/環境Publishは不要。
+完全版 **handoff/LoL_AutoCine_v5.10.19_CameraUI_SpatialQA_GPUFull_Windows_Full.zip** をGitHubで開き **Download raw file**。または **codex/lol-autocine-v51019-camera-ui-qa-handoff** の **Code → Download ZIP**。旧版と別フォルダへ展開してLoL_AutoCine/START_GPU.bat。Windows取得にmainマージ/環境Publish不要。
 
-新規カラー既定を無補正にし、図鑑open中は背後パネルwheelを抑制。QAボタンでデータ専用計画を取得（失敗時付属へ）、既知操作/64KB/3秒/100〜500MBだけ許可。付属計画はRED/BLUE各5カメラ（従来4＋geo_aim実験）と10切替/6登場モーション。plan未指定APIは従来8本。geoは選択時だけ相対座標で視線を計算し、従来カメラ式は保持。数値/実フレーム比較表は参考値で、主役や上下反転を自動合格判定しない。
+通常third/RED geoのyaw=X・pitch=Y・roll0、古いtop基準の除外、REDシネマ/Lolnam接近制限を受領の補正候補として統合。BLUE geo従来式は保持。強制軸とrig metadataを一致させ、旧stable cacheで補正を取り消さない。カメラの画角・主役・上下反転改善はWindows未確認。
 
-QA結果は500MB以下の直接ZIPへ保存しZIPの入れ子なし。巨大MP4は1MBずつstreamしてpartへ分割、結合手順付き。原動画/JSON/既存ZIPを消さず、repeatは別名。出力名を先に計画しZIP内JSONを最終結果と一致。従来GPU Full/60fps/LoL専用音声/素材再利用/encoder policyを維持。静止画/音声/I/O/制御/ミラー近似はCPUも使う。
+初期状態を無加工/vignette/grain/bloom0/cutへ、明示プリセットは選べる。かんたん/詳細の共有テンプレートとA/B図鑑、ON時だけ色微調整4項目、値保持。既存ミラー/DOF/スキャン/出力/図鑑scrollを保持。
 
-Linux/Xvfb全635成功82.14秒（失敗/skip/除外なし）。合成の実動画から2カメラ比較/2画像と直接ZIP/final JSON/CRCを検証。大きな動画の分割・再結合・元データ保持/再出力/symlink除外もテスト。Windows/LoL/NVIDIA速度とgeo実構図は未確認。前回native終了の原因は未確定で、今回成功を恒久修正とは扱わない。
+QAはRED/BLUE別の確認MP4、前/中/後3時点比較、従来10演出と6キル登場に加え6空間切替を追加。再録画せず2素材を既存OpenCL deviceで合成しencoder_policy/実FX経路/実encoder/fallbackを記録。空間確認動画だけ無音、通常録画・side reelsは元音声を保持。GPU不可/失敗/timeoutはCPU xfade。通常モンタージュを置換しない。500MB直接ZIP/1MBstream/元動画・JSON・既存ZIP保持/最終JSON一致を維持。
 
-完全ZIP461ファイル、差分適用後463ソース一致。旧95refsを保持し全99refs bundle。差分基準は前回Codex v5.10.17-test。実機手順はLoL_AutoCine/docs/WINDOWS_TEST_v51018_JA.md。QA中止は現在の1本を終えて残り停止、比較表/ZIPも追加開始しない。
+Linux/Xvfb全653成功52.61秒（失敗/skip/除外なし）。6空間GPU kernelは検証用CPU PoCLで各95フレーム/60fps/先頭と末尾の素材一致、模様付き中間映像の差を検証。2side reels/3時点4カメラ/5比較画像と直接ZIP/CRCを実動画で検証。物理NVIDIA/Windows/LoL速度・構図は未確認。過去native終了は原因未確定で、今回成功を恒久修正とは扱わない。
+
+完全ZIP473ファイル、差分適用後475ソース一致。旧99refsを保持し全103refs bundle。差分基準は前回Codex v5.10.18-test。実機手順はLoL_AutoCine/docs/WINDOWS_TEST_v51019_JA.md。中止は現在の1本を終えて残り停止、比較/ZIPを追加開始しない。
 
 ## ローカルGit復元
 ```sh
-git clone --single-branch --branch codex/lol-autocine-v51018-releaseqa-directzip-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v51018_Handoff
-git clone --branch integration/v5.10.18 LoL_AutoCine_v51018_Handoff/handoff/LoL_AutoCine_v5.10.18_ReleaseQA_DirectZIP_GPUFull_all_branches.bundle LoL_AutoCine_v51018_Dev
-cd LoL_AutoCine_v51018_Dev
-git branch feature/gpu-releaseqa-v51018 origin/feature/gpu-releaseqa-v51018
-git branch feature/ui-releaseqa-v51018 origin/feature/ui-releaseqa-v51018
+git clone --single-branch --branch codex/lol-autocine-v51019-camera-ui-qa-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v51019_Handoff
+git clone --branch integration/v5.10.19 LoL_AutoCine_v51019_Handoff/handoff/LoL_AutoCine_v5.10.19_CameraUI_SpatialQA_GPUFull_all_branches.bundle LoL_AutoCine_v51019_Dev
+cd LoL_AutoCine_v51019_Dev
+git branch feature/gpu-cameraqa-v51019 origin/feature/gpu-cameraqa-v51019
+git branch feature/ui-cameraqa-v51019 origin/feature/ui-cameraqa-v51019
 git status --short
 ```
 
-全99refsはorigin/*で復元。originはローカルbundle。設定/録画/プロジェクトを保管。担当ガードはdocs/CODEX_INTEGRATION_v51018_JA.md。
+全103refsはorigin/*で復元。originはローカルbundle。設定/録画/プロジェクトを保管。担当ガードはdocs/CODEX_INTEGRATION_v51019_JA.md。
 
-GitHub復元で463ソース/99refs/配布物hash一致。代表126テスト成功12.66秒（強制GCなし・GC有効）。再setupでも463ソース/99refs/3個人設定相当ファイルを保持/status clean。実URLのデータ専用QA計画も取得・検証成功。同じ実行環境の別フォルダ検証でPublish/新タスク/Windows実機とは区別します。
+復元中の既存capture終了テストがerror通知とrunning=Falseの間を観測し143成功/1失敗。終了状態まで待つ条件へテストだけ修正し、error/latest例外検証は維持。録画実装を変えず全653を再検証して成功。初回配布snapshotはGit commit8bed683へ保存し、現在のZIP/bundleは修正後の版。bundleはバイナリ属性でWindows改行変換を防止。3時点は時間割合による参考サンプルで、実キル瞬間の自動特定ではありません。
+
+最終GitHub復元で475ソース/103refs/配布物hash一致。修正版代表144テスト成功12.25秒（強制GCなし・GC有効）。再setupでも475ソース/103refs/3個人設定相当ファイルを保持/status clean。データ専用QA計画の実URL取得・検証も成功。同じ実行環境の別フォルダ検証でPublish/新タスク/Windows実機とは区別します。

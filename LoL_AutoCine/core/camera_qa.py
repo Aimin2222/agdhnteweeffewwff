@@ -22,6 +22,8 @@ from .qa_package import split_test_results
 from .qa_plan import validate_plan
 from .camera_geometry import inspect_rig
 from .qa_visual import make_qa_contact_sheets
+from .qa_reels import assemble_side_reels
+from .qa_true_transitions import TRANSITION_PREVIEWS, render_true_transition
 
 QA_MODES = (
     ("third", "通常三人称"),
@@ -83,6 +85,8 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         "outputs": [],
         "montage_tests": [],
         "badge_motion_tests": [],
+        "spatial_transition_tests": [],
+        "side_review_reels": {},
         "limitations": "Framing must be judged visually on Windows. Audio/codec need playback or ffprobe.",
     }
     def flush():
@@ -122,8 +126,9 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         if progress:
             progress(index-1, len(scenarios), round(100*(index-1)/len(scenarios),1), f"{side} {label} を録画中")
         try:
+            (folder / side).mkdir(exist_ok=True)
             result = run_auto_edit(
-                api, source, player, [scene], clip_template, folder / f"{index:02d}_{side}_{mode}",
+                api, source, player, [scene], clip_template, folder / side / f"{index:02d}_{mode}",
                 False, progress=None, stop=stop, log=capture_camera_log, audio_factory=audio_factory)
             current["outputs"] = [str(p) for p in result.outputs]
             current["failed"] = [[int(i), str(msg)] for i,msg in result.failed]
@@ -138,8 +143,15 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
             progress(index, len(scenarios), round(100*index/len(scenarios),1), f"{side} {label} 完了")
     # Reuse recorded MP4s for every transition: do not spend another LoL
     # capture/audio session on identical footage. Keep the outputs separate.
+    if not (stop is not None and stop.is_set()):
+        manifest["side_review_reels"] = assemble_side_reels(folder, manifest["outputs"], log=log)
+        flush()
     generated = [Path(p) for row in manifest["outputs"] for p in row["outputs"]]
     ready = [p for p in generated if p.is_file()]
+    quality = [Path(p) for side in ("RED", "BLUE") for row in manifest["outputs"]
+               if row["side"] == side and row["mode"] == "third_cinema"
+               for p in row["outputs"] if Path(p).is_file()]
+    join_sources = quality if len(quality) == 2 else ready[:2]
     if len(ready) >= 2 and not (stop is not None and stop.is_set()):
         from .montage_fx import MONTAGE_LABELS, render_montage
         for style in MONTAGE_LABELS:
@@ -147,11 +159,12 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
                 continue
             if stop is not None and stop.is_set():
                 break
-            dest = folder / f"transition_{style}.mp4"
+            (folder / "Transitions").mkdir(exist_ok=True)
+            dest = folder / "Transitions" / f"transition_{style}.mp4"
             outcome = {"style": style, "label": MONTAGE_LABELS[style],
                        "outputs": [], "failed": []}
             try:
-                applied = render_montage(ready[:2], dest, style=style, logger=log, encoder_policy=template.encoder_policy)
+                applied = render_montage(join_sources, dest, style=style, logger=log, encoder_policy=template.encoder_policy)
                 outcome["applied_style"] = applied
                 if applied != style:
                     outcome["failed"].append(f"Requested {style}, applied {applied}")
@@ -164,13 +177,31 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
                 log(f"つなぎ演出テスト {style}: {exc}")
             manifest["montage_tests"].append(outcome)
             flush()
+    if config is not None and len(join_sources) >= 2 and not (stop is not None and stop.is_set()):
+        for style in config["spatial_transition_previews"]:
+            if stop is not None and stop.is_set():
+                break
+            row = {"style": style, "label": TRANSITION_PREVIEWS[style], "outputs": [],
+                   "failed": [], "qa_only": True, "no_audio": True}
+            try:
+                dest = folder / "Transitions" / "SpatialPreviews" / f"spatial_{style}.mp4"
+                render_true_transition(join_sources[0], join_sources[1], dest, style,
+                                       log=log, encoder_policy=template.encoder_policy)
+                row["outputs"] = [str(dest)]
+                row["render"] = json.loads(dest.with_suffix(".render.json").read_text())
+            except Exception as exc:
+                row["failed"].append(f"{type(exc).__name__}: {exc}")
+                log(f"空間切替 {style} の確認動画を作成できません: {exc}")
+            manifest["spatial_transition_tests"].append(row)
+            flush()
     # Reuse the recorded clip, including its LoL audio, for motion QA.
     # Only the test badge is added: do not apply the clip's color/DOF twice.
     if ready and not (stop is not None and stop.is_set()):
         theme = normalize(template.kill_icon_style)
         if theme == "off":
             theme = "cinema"
-        badge = folder / "badge_motion_qa_image.png"
+        (folder / "KillFrames").mkdir(exist_ok=True)
+        badge = folder / "KillFrames" / "badge_motion_qa_image.png"
         try:
             duration = min(3.0, get_duration(ready[0], ffmpeg=str(ffmpeg_exe())))
             if duration <= 0:
@@ -181,7 +212,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
                     continue
                 if stop is not None and stop.is_set():
                     break
-                dest = folder / f"badge_motion_{motion}.mp4"
+                dest = folder / "KillFrames" / f"badge_motion_{motion}.mp4"
                 entry = {"motion": motion, "label": label, "outputs": [], "failed": []}
                 try:
                     entry["render"] = render_badge_motion(
@@ -202,7 +233,9 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     # Cancellation skips optional frame extraction and packaging, preserving files.
     if not (stop is not None and stop.is_set()) and (config is None or config["include_visual_comparison"]):
         try:
-            manifest["visual_qa"] = make_qa_contact_sheets(folder, manifest["outputs"], manifest["montage_tests"], log=log)
+            manifest["visual_qa"] = make_qa_contact_sheets(folder, manifest["outputs"], manifest["montage_tests"] +
+                [dict(row, style="spatial_"+row["style"]) for row in manifest["spatial_transition_tests"]],
+                log=log, transition_inputs=join_sources)
         except Exception as exc:
             manifest["visual_qa_error"] = str(exc)
             log(f"比較画像生成失敗（録画結果は保持）: {exc}")

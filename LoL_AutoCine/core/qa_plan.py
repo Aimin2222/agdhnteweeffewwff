@@ -6,11 +6,12 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 REMOTE_PLAN = ("https://raw.githubusercontent.com/Aimin2222/agdhnteweeffewwff/"
-               "refs/heads/codex/lol-autocine-v51018-releaseqa-directzip-handoff/"
+               "refs/heads/codex/lol-autocine-v51019-camera-ui-qa-handoff/"
                "LoL_AutoCine/qa/test_plan.json")
 LOCAL_PLAN = Path(__file__).resolve().parents[1] / "qa" / "test_plan.json"
 ALLOWED_CAMERA = ("third", "third_cinema", "fps", "lolnam_cinema", "geo_aim")
 ALLOWED_MONTAGE = ("cut", "flash", "dark", "white", "soft", "gold", "cool", "pulse", "cinema", "shadow")
+ALLOWED_SPATIAL = ("fade", "wipeleft", "slideright", "circleopen", "pixelize", "smoothup")
 ALLOWED_BADGE = ("instant", "slide_left", "slide_right", "slide_up", "slide_down", "pop")
 
 
@@ -41,6 +42,7 @@ def validate_plan(value):
         "camera_modes": choose("camera_modes", ALLOWED_CAMERA),
         "montage_styles": choose("montage_styles", ALLOWED_MONTAGE),
         "badge_motions": choose("badge_motions", ALLOWED_BADGE),
+        "spatial_transition_previews": choose("spatial_transition_previews", ALLOWED_SPATIAL),
         "max_zip_mb": size,
         "include_visual_comparison": visual,
     }

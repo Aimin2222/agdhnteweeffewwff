@@ -1,41 +1,47 @@
-# v5.10.18-test 保存状況
+# v5.10.19-test 保存状況
 
-ソース /workspace/LoL_AutoCine、integration/v5.10.18、HEAD f8ee3c1d7c099a99fa2383b42af74255f47b5726、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51018-releaseqa-directzip-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時ソース/取得用status --shortは空。未保存なし、mainへマージしない。
+ソース /workspace/LoL_AutoCine、integration/v5.10.19、HEAD f12b79994efb260eff42a143007cb21cced86266、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51019-camera-ui-qa-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時ソース/取得用status --shortは空。未保存なし、mainへマージしない。
 
 ## git log -3 --oneline（ソース）
 ```text
-f8ee3c1 Document v5.10.18 bounded QA archives geometry scope ownership and Windows tests
-903156c Integrate v5.10.18 gallery scrolling neutral fresh color and planned QA button
-5ccf9d0 Integrate v5.10.18 streaming QA archives and opt-in geometry
+f12b799 Document v5.10.19 camera candidate scope GPU spatial QA ownership and Windows verification
+85ad419 Integrate v5.10.19 shared template and easy color UI
+c854bc1 Integrate v5.10.19 camera candidates and GPU spatial QA
 ```
 ## git remote -v（取得用）
 ```text
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
-## 前回v5.10.17からの実変更
+## 前回v5.10.18からの実変更
 ```text
 M	VERSION.txt
 M	core/camera.py
-A	core/camera_geometry.py
 M	core/camera_qa.py
 M	core/effects.py
+A	core/gpu_qa_transitions.py
 M	core/jobs.py
-A	core/qa_package.py
-A	core/qa_plan.py
-A	core/qa_visual.py
-A	docs/CODEX_INTEGRATION_v51018_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_v5.10.18.json
-A	docs/WINDOWS_TEST_v51018_JA.md
+M	core/qa_plan.py
+A	core/qa_reels.py
+A	core/qa_true_transitions.py
+M	core/qa_visual.py
+A	docs/CODEX_INTEGRATION_v51019_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.19.json
+A	docs/RECEIVED_IMPLEMENTATION_v51019_JA.md
+A	docs/WINDOWS_TEST_v51019_JA.md
 M	legacy_app.py
-A	patches/history/v5.10.18/RECEIVED_CODE.patch
-A	patches/history/v5.10.18/RECEIVED_README_JA.txt
-A	qa/test_plan.json
-A	tests/test_gpu_releaseqa_v51018.py
-A	tests/test_v51018_release_qa.py
+A	patches/history/v5.10.19/RECEIVED_CODE.patch
+A	patches/history/v5.10.19/RECEIVED_README_JA.txt
+M	qa/test_plan.json
+M	tests/test_gpu_motion_camera_qa.py
+M	tests/test_gpu_releaseqa_v51018.py
+A	tests/test_gpu_spatial_qa_v51019.py
+M	tests/test_v51018_release_qa.py
+A	tests/test_v51019_camera_ui_reliability.py
+M	tests/test_v5101_scroll_check_warmup.py
+M	tests/test_v595_workspace.py
 M	tools/check_parallel_integration.py
-A	tools/package_v51018.py
-M	ui/kill_frame_gallery.py
+A	tools/package_v51019.py
 ```
 ## 元v5.8.5からの実変更
 ```text
@@ -119,6 +125,7 @@ A	core/gpu_binary.py
 A	core/gpu_bloom.py
 A	core/gpu_full.py
 M	core/gpu_pipeline.py
+A	core/gpu_qa_transitions.py
 A	core/highlight_pulse.py
 M	core/jobs.py
 A	core/kill_icons.py
@@ -127,6 +134,8 @@ M	core/performance_diagnostics.py
 M	core/preview.py
 A	core/qa_package.py
 A	core/qa_plan.py
+A	core/qa_reels.py
+A	core/qa_true_transitions.py
 A	core/qa_visual.py
 M	core/recorder.py
 M	core/replay_api.py
@@ -172,6 +181,7 @@ A	docs/CODEX_INTEGRATION_v51015_JA.md
 A	docs/CODEX_INTEGRATION_v51016_JA.md
 A	docs/CODEX_INTEGRATION_v51017_JA.md
 A	docs/CODEX_INTEGRATION_v51018_JA.md
+A	docs/CODEX_INTEGRATION_v51019_JA.md
 A	docs/CODEX_INTEGRATION_v5104_JA.md
 A	docs/CODEX_INTEGRATION_v5105_JA.md
 A	docs/CODEX_INTEGRATION_v5106_JA.md
@@ -207,6 +217,7 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.10.15.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.16.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.17.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.18.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.19.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.4.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.5.json
@@ -227,6 +238,7 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.9.9_JA.md
 A	docs/DESIGN_SCENESTUDIO_JA.md
 A	docs/DIAGNOSTIC_FINDINGS_v5.9.4_JA.md
 A	docs/HANDOFF_MASTER_2026-10-09_JA.md
+A	docs/RECEIVED_IMPLEMENTATION_v51019_JA.md
 A	docs/RECEIVED_RED_CAMERA_EVIDENCE_v51017_JA.md
 A	docs/RECEIVED_TEST_RESULTS_v5.10.15_JA.md
 A	docs/REQUIREMENTS_SCENESTUDIO_JA.md
@@ -241,6 +253,7 @@ A	docs/WINDOWS_TEST_v51015_JA.md
 A	docs/WINDOWS_TEST_v51016_JA.md
 A	docs/WINDOWS_TEST_v51017_JA.md
 A	docs/WINDOWS_TEST_v51018_JA.md
+A	docs/WINDOWS_TEST_v51019_JA.md
 A	docs/WINDOWS_TEST_v5105_JA.md
 A	docs/WINDOWS_TEST_v5106_JA.md
 A	docs/WINDOWS_TEST_v5107_JA.md
@@ -303,6 +316,8 @@ A	patches/history/v5.10.17/RECEIVED_CODE.patch
 A	patches/history/v5.10.17/RECEIVED_README_JA.txt
 A	patches/history/v5.10.18/RECEIVED_CODE.patch
 A	patches/history/v5.10.18/RECEIVED_README_JA.txt
+A	patches/history/v5.10.19/RECEIVED_CODE.patch
+A	patches/history/v5.10.19/RECEIVED_README_JA.txt
 A	patches/history/v5.10.8_from_codex_v5.10.7.patch
 A	patches/history/v51011_from_v51010.patch
 A	patches/history/v51013_reviewed_code.patch
@@ -337,6 +352,7 @@ A	tests/test_gpu_shared_replay_v5104.py
 A	tests/test_gpu_shared_ui5106.py
 A	tests/test_gpu_shared_v51013.py
 A	tests/test_gpu_shared_v51015.py
+A	tests/test_gpu_spatial_qa_v51019.py
 A	tests/test_gpu_test_launcher.py
 A	tests/test_parallel_integration.py
 A	tests/test_scene_keyframes_v592.py
@@ -357,6 +373,7 @@ A	tests/test_v51015_ui_restructure.py
 A	tests/test_v51016_motion_dof_and_camera_qa.py
 A	tests/test_v51017_badge_camera_evidence.py
 A	tests/test_v51018_release_qa.py
+A	tests/test_v51019_camera_ui_reliability.py
 A	tests/test_v5101_scroll_check_warmup.py
 A	tests/test_v5102_circle_focus_preset.py
 A	tests/test_v5103_nonblocking_dispatch.py
@@ -388,6 +405,7 @@ A	tools/package_v51015_scanfix.py
 A	tools/package_v51016.py
 A	tools/package_v51017.py
 A	tools/package_v51018.py
+A	tools/package_v51019.py
 A	tools/package_v5103.py
 A	tools/package_v5103_capture60.py
 A	tools/package_v5103_capturefix.py
@@ -420,4 +438,11 @@ A	ui/studio_localization.py
 A	ui/template_gallery.py
 ```
 
-全463ソース/Python164・全99refs bundle。旧95先端・37PNG・GPUエンジン/音声/録画保護22パス保持。旧配布物166件バイト保持。新規カラー既定・実験geo camera・QA/図鑑以外の通常機能を保持。個人設定/録画/診断は追加・削除しない。
+全475ソース/Python170・全103refs bundle。旧99先端・37PNG・GPUエンジン/音声/録画保護22パス保持。旧配布物175件バイト保持。カメラ補正は受領候補としてレビュー、実構図未確認。個人設定/録画/診断は追加・削除しない。
+
+最終source HEAD 26c90ed8236c3341d05327c55000eb1b85666213。capture終了テスト同期と説明追記を保存、録画実装は不変。未保存なし。
+```text
+26c90ed Clarify reference frame sampling and capture test synchronization evidence
+89ff598 Integrate capture-exit test synchronization without changing recording implementation
+04f6db9 Wait for completed capture-child exit before checking error propagation
+```

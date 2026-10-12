@@ -88,7 +88,8 @@ def test_comparison_sheet_written_using_supplied_frame_samples(monkeypatch,tmp_p
     report=qa_visual.make_qa_contact_sheets(
         tmp_path, [{"number":1,"side":"RED","mode":"third","outputs":["fake.mp4"]}],
         [{"style":"cut","outputs":["fake.mp4"]},{"style":"flash","outputs":["fake.mp4"]}])
-    assert len(report["images"])==2
+    assert len(report["images"])>=2
+    assert any("camera_3frames.jpg" in path for path in report["images"])
     assert all(Path(name).exists() for name in report["images"])
     assert report["transitions"][1]["similar_at_join"]
 

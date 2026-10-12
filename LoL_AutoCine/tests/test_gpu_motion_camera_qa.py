@@ -33,7 +33,7 @@ def test_qa_records_once_reuses_clips_and_preserves_audio_encoder(tmp_path, monk
         if len(recorded) == cancel_after: stop.set()
         return SimpleNamespace(outputs=[p], failed=[])
     def montage(clips, dest, **kw):
-        assert list(clips) == recorded[:2] and kw['encoder_policy'] == 'gpu'
+        assert list(clips) == [recorded[1], recorded[5]] and kw['encoder_policy'] == 'gpu'
         montages.append(kw['style']); Path(dest).write_bytes(b'montage')
         return kw['style']
     monkeypatch.setattr(qa, 'run_auto_edit', record)

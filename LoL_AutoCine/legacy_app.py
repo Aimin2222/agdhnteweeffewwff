@@ -842,43 +842,6 @@ class App:
         self.lbl_reference = ttk.Label(f, text="参考動画 0本 / 未解析", style="CardMuted.TLabel", wraplength=270)
         self.lbl_reference.pack(fill="x", pady=(5, 0))
 
-        f = card(left, "▣  テンプレート")
-        self._nav_template_card = f
-        self.tpl_combo = ttk.Combobox(f, state="readonly", textvariable=self.var_tpl, values=list(self.templates))
-        self.tpl_combo.pack(fill="x", pady=(0, 7))
-        self.tpl_combo.bind("<<ComboboxSelected>>", lambda _e: self.apply_template(self.var_tpl.get()))
-        self.template_hint = ttk.Label(f, text="プリセットを選ぶとカメラ・色・切替がまとめて設定されます。",
-                                       style="CardMuted.TLabel", wraplength=400, justify="left")
-        self.template_hint.pack(fill="x", pady=(3, 5))
-        # Option A: compact live tone swatch. Option B: the complete gallery
-        # can be opened from the top navigation. No duplicated decorative buttons.
-        self._template_tone_text = tk.StringVar(value="色：テンプレート選択後に表示")
-        ttk.Label(f, textvariable=self._template_tone_text, style="CardMuted.TLabel",
-                  wraplength=255, justify="left").pack(anchor="w", pady=(1,3))
-        self._template_tone_canvas = tk.Canvas(f, width=141, height=23, bg="#FFFFFF",
-                                                highlightthickness=0)
-        self._template_tone_canvas.pack(anchor="w", pady=(1,5))
-        ttk.Button(f, text="A：かんたん色見本カードを開閉",
-                   command=self._toggle_inline_template_cards).pack(fill="x", pady=(3,2))
-        self._inline_color_cards=ttk.Frame(f, style="Card.TFrame")
-        from ui.template_gallery import template_info, draw_color_bars
-        for preset in ("クリア・アクション（視認性重視）", "アイスブルー・シネマ",
-                       "ゴールド・フィニッシュ", "ネオン・モンタージュ"):
-            if preset not in self.templates:
-                continue
-            details=template_info(self.templates[preset])
-            chip=ttk.Frame(self._inline_color_cards,style="Card.TFrame")
-            chip.pack(fill="x",pady=(2,2))
-            bar=tk.Canvas(chip,width=132,height=23,highlightthickness=0,bg="#FFFFFF")
-            bar.pack(side="left")
-            draw_color_bars(bar,details["colors"])
-            ttk.Button(chip,text=preset[:13],width=17,
-                       command=lambda n=preset:self._choose_easy_preset(n)).pack(side="left",padx=4)
-        ttk.Button(f, text="B：全テンプレート図鑑（実シーン比較）",
-                   command=self._open_template_gallery).pack(fill="x", pady=(3,0))
-        ttk.Label(f, text="スキャン→シーン選択→実画面保存で、補正前/後を比較します。",
-                  style="CardMuted.TLabel", wraplength=255).pack(anchor="w", pady=(2,0))
-
         # ---- center: preview / timeline / camera --------------------------
         preview_card = ttk.Frame(preview_host, style="Card.TFrame", padding=(6, 5))
         preview_card.pack(fill="both", expand=True, pady=(0, 8))
@@ -942,9 +905,55 @@ class App:
         easy = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
         self._mode_easy_section = easy
         easy.pack(fill="x", pady=(5, 8))
+        f = ttk.Frame(easy, style="Card.TFrame", padding=(10, 8))
+        f.pack(fill="x", pady=(7, 9))
+        ttk.Label(f, text="▣ テンプレート（かんたん編集）", style="Section.TLabel").pack(anchor="w", pady=(0, 6))
+        self._nav_template_card = f
+        self.tpl_combo = ttk.Combobox(f, state="readonly", textvariable=self.var_tpl, values=list(self.templates))
+        self.tpl_combo.pack(fill="x", pady=(0, 7))
+        self.tpl_combo.bind("<<ComboboxSelected>>", lambda _e: self.apply_template(self.var_tpl.get()))
+        self.template_hint = ttk.Label(f, text="プリセットを選ぶとカメラ・色・切替がまとめて設定されます。",
+                                       style="CardMuted.TLabel", wraplength=400, justify="left")
+        self.template_hint.pack(fill="x", pady=(3, 5))
+        # Option A: compact live tone swatch. Option B: the complete gallery
+        # can be opened from the top navigation. No duplicated decorative buttons.
+        self._template_tone_text = tk.StringVar(value="色：テンプレート選択後に表示")
+        ttk.Label(f, textvariable=self._template_tone_text, style="CardMuted.TLabel",
+                  wraplength=255, justify="left").pack(anchor="w", pady=(1,3))
+        self._template_tone_canvas = tk.Canvas(f, width=141, height=23, bg="#FFFFFF",
+                                                highlightthickness=0)
+        self._template_tone_canvas.pack(anchor="w", pady=(1,5))
+        ttk.Button(f, text="A：かんたん色見本カードを開閉",
+                   command=self._toggle_inline_template_cards).pack(fill="x", pady=(3,2))
+        self._inline_color_cards=ttk.Frame(f, style="Card.TFrame")
+        from ui.template_gallery import template_info, draw_color_bars
+        for preset in ("クリア・アクション（視認性重視）", "アイスブルー・シネマ",
+                       "ゴールド・フィニッシュ", "ネオン・モンタージュ"):
+            if preset not in self.templates:
+                continue
+            details=template_info(self.templates[preset])
+            chip=ttk.Frame(self._inline_color_cards,style="Card.TFrame")
+            chip.pack(fill="x",pady=(2,2))
+            bar=tk.Canvas(chip,width=132,height=23,highlightthickness=0,bg="#FFFFFF")
+            bar.pack(side="left")
+            draw_color_bars(bar,details["colors"])
+            ttk.Button(chip,text=preset[:13],width=17,
+                       command=lambda n=preset:self._choose_easy_preset(n)).pack(side="left",padx=4)
+        ttk.Button(f, text="B：全テンプレート図鑑（実シーン比較）",
+                   command=self._open_template_gallery).pack(fill="x", pady=(3,0))
+        ttk.Label(f, text="スキャン→シーン選択→実画面保存で、補正前/後を比較します。",
+                  style="CardMuted.TLabel", wraplength=255).pack(anchor="w", pady=(2,0))
+
+
         eh = ttk.Frame(easy, style="Card.TFrame"); eh.pack(fill="x")
         ttk.Label(eh, text="★ かんたん作成", style="Section.TLabel").pack(side="left")
         ttk.Label(eh, text="難しい設定は後から変更できます", style="CardMuted.TLabel").pack(side="right")
+        self.var_easy_color_custom = tk.BooleanVar(value=False)
+        ttk.Checkbutton(easy, text="色だけ細かく調整する（ONで設定を表示）",
+                        variable=self.var_easy_color_custom,
+                        command=self._update_easy_color_controls).pack(anchor="w", pady=(2, 2))
+        self._easy_color_panel = ttk.Frame(easy, style="Card.TFrame")
+
         ttk.Label(easy, text="① リプレイを開く → ② 対象プレイヤーを選ぶ → ③ ボタン1つでキル/アシストを検出して動画を作成", style="CardMuted.TLabel", wraplength=900).pack(anchor="w", pady=(4, 7))
         ttk.Button(easy, text="★ 自動作成（標準）", style="Accent.TButton", command=self.on_one_click).pack(fill="x", ipady=4)
         ttk.Label(easy, text="現在の設定でキル／アシストを自動抽出して書き出します。初めてならこちら。",
@@ -1265,6 +1274,17 @@ class App:
         output = ttk.Frame(advanced, padding=8, style="Card.TFrame")
         self._editor_advanced_pages = {"color": color, "fx": fx_page, "output": output}
         ttk.Label(color, text="◈ カラー｜映像全体の色・トーンを調整", style="Section.TLabel").pack(anchor="w", pady=(0,8))
+        tpl_advanced = ttk.Frame(color, style="Card.TFrame")
+        tpl_advanced.pack(fill="x", pady=(1, 8))
+        ttk.Label(tpl_advanced, text="▣ テンプレート（詳細編集）", style="Section.TLabel").pack(anchor="w")
+        self.advanced_tpl_combo = ttk.Combobox(tpl_advanced, state="readonly",
+                textvariable=self.var_tpl, values=list(self.templates))
+        self.advanced_tpl_combo.pack(fill="x", pady=(4, 3))
+        self.advanced_tpl_combo.bind("<<ComboboxSelected>>",
+                lambda _event: self.apply_template(self.var_tpl.get()))
+        ttk.Button(tpl_advanced, text="全テンプレート図鑑（実シーン比較）",
+                   command=self._open_template_gallery).pack(fill="x", pady=(2, 0))
+
         ttk.Label(fx_page, text="✦ FX｜ぼかし・DOF・映像演出", style="Section.TLabel").pack(anchor="w", pady=(0,8))
         ttk.Label(output, text="▤ 出力｜書き出しと音声・キルフレーム", style="Section.TLabel").pack(anchor="w", pady=(0,8))
         basic=fold_section(output, "基本設定・カメラプリセット（必要なときに開く）")
@@ -1299,6 +1319,20 @@ class App:
         ttk.Combobox(color, state="readonly", textvariable=self.var_grade, values=list(GRADE_JP.values())).pack(fill="x", pady=3)
         for args in (("grade_strength","色の強さ",0,1.4),("temperature","色温度",-1,1),("contrast","コントラスト",0.6,1.6),("exposure","露出",-0.3,0.3),("vibrance","自然な彩度",-1,1.5),("vignette","ビネット",0,1),("grain","グレイン",0,1),("bloom","ブルーム",0,1),("bars","シネマ枠",0,1)):
             slider(color,*args)
+        # Shares the same variables as detail editor: easy slider changes
+        # appear in the real output immediately and remain editable in detail.
+        for key, label, lo, hi in (
+            ("grade_strength", "色補正の強さ", 0.0, 1.4),
+            ("temperature", "色の暖かさ", -1.0, 1.0),
+            ("contrast", "明暗のメリハリ", 0.6, 1.6),
+            ("vibrance", "色の鮮やかさ", -1.0, 1.5),
+        ):
+            color_row = ttk.Frame(self._easy_color_panel, style="Card.TFrame")
+            color_row.pack(fill="x", pady=2)
+            ttk.Label(color_row, text=label, width=17, style="Card.TLabel").pack(side="left")
+            ttk.Scale(color_row, from_=lo, to=hi,
+                      variable=self.sl[key]).pack(side="left", fill="x", expand=True, padx=4)
+            ttk.Entry(color_row, textvariable=self.sl[key], width=8, justify="right").pack(side="right")
         self.var_fog=tk.BooleanVar(value=False)
         ttk.Checkbutton(color,text="FOG補正",variable=self.var_fog).pack(anchor="w",pady=(6,2))
         fog_controls=ttk.Frame(color,style="Card.TFrame")
@@ -2121,10 +2155,28 @@ class App:
         widget.bind('<ButtonPress>',hide,add='+')
         widget.bind('<Destroy>',lambda event:hide() if event.widget is widget else None,add='+')
 
+    def _update_easy_color_controls(self):
+        panel = getattr(self, "_easy_color_panel", None)
+        if panel is None:
+            return
+        show = bool(self.var_easy_color_custom.get())
+        if show and not panel.winfo_manager():
+            panel.pack(fill="x", pady=(3, 8))
+        elif not show and panel.winfo_manager():
+            panel.pack_forget()
+
     def _focus_template(self):
-        self.left_scroll.scroll_to(self._nav_template_card)
-        self.tpl_combo.focus_set()
-        self.log('テンプレート: 左側のプリセット選択へ移動しました')
+        # The shared template chooser now lives inside the editor, never in
+        # a separate left panel. Preserve the existing A/B preview controls.
+        if self.var_edit_mode.get() == "advanced":
+            self.var_editor_zone.set("color")
+            self._apply_editor_zone()
+            picker = self.advanced_tpl_combo
+        else:
+            picker = self.tpl_combo
+        self.center_edit_scroll.scroll_to(picker)
+        picker.focus_set()
+        self.log("テンプレート: 編集画面内の選択欄を表示しました")
 
     def _focus_reference(self):
         # Reference cards are intentionally hidden in easy mode; reveal them.

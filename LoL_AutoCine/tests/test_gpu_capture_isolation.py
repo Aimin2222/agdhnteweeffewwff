@@ -164,8 +164,10 @@ def test_child_exit_after_start_propagates_instead_of_recording_stale_frame(work
     worker('later-crash');source=WGCWindowSource()
     try:
         source.start();session=source._session
-        wait_for(lambda:session.error is not None)
-        assert not source.running
+        # Error text is populated before native-log IO and terminal-state publication.
+        # Wait for the completed exit instead of observing the transient notification.
+        wait_for(lambda:not source.running)
+        assert session.error is not None
         with pytest.raises(CaptureError,match='code=18'):source.latest()
     finally:source.stop()
 

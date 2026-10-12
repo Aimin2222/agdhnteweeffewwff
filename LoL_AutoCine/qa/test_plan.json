@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "plan_id": "2026-10-12-red-blue-geometric-camera-and-visual-review",
+  "plan_id": "2026-10-12-red-blue-recenter-xfade-color-ui-review",
   "title": "RED/BLUE構図・FX差分・フレーム動き自動検証",
   "camera_modes": [
     "third",
@@ -38,5 +38,13 @@
     "kill action in frame",
     "transition style visually distinct"
   ],
-  "note": "This is a data-only plan. It can be updated on the selected QA branch without changing executable application code."
+  "note": "This is a data-only plan. It can be updated on the selected QA branch without changing executable application code.",
+  "spatial_transition_previews": [
+    "fade",
+    "wipeleft",
+    "slideright",
+    "circleopen",
+    "pixelize",
+    "smoothup"
+  ]
 }
