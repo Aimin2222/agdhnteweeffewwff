@@ -75,7 +75,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
     folder.mkdir(parents=True, exist_ok=True)
     manifest = {
-        "version": "5.10.21-test",
+        "version": "5.10.22-test",
         "kind": "live_replay_camera_test",
         "expected_clips": len(scenarios),
         "test_plan": config,
