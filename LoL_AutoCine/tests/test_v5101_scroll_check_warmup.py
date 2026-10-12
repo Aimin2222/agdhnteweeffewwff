@@ -59,7 +59,11 @@ def test_late_control_scrolls_panel_and_keeps_keyboard_selection(gui):
     value = tk.StringVar(value='one')
     late = ttk.Combobox(panel.inner, state='readonly',
                        values=('one', 'two', 'three'), textvariable=value)
-    late.pack()
+    # Programmatic wheel events must target a VISIBLE control.
+    # After moving the template to the center, the synthetic late control
+    # would otherwise sit below the viewport and Tk drops its event.
+    first_child = next(w for w in panel.inner.winfo_children() if w is not late)
+    late.pack(before=first_child)
     # The relocated template leaves the sidebars shorter. Ensure the panel
     # genuinely has scrollable content before asserting wheel movement.
     overflow = ttk.Frame(panel.inner, height=1800)
