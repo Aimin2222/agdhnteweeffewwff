@@ -6,6 +6,37 @@ were accepted compositions; no new yaw/pitch adjustment is applied to them.
 Angle signs must still be verified in real Windows LoL replay footage.
 """
 from __future__ import annotations
+import math
+
+
+def target_center_rotation(camera_offset: tuple) -> dict:
+    """RED Replay camera Euler convention: X=azimuth, Y=downward elevation.
+
+    camera_offset is camera_position - target_position in LoL world axes.
+    The stable BLUE geometric convention uses X=pitch/Y=yaw, but confirmed
+    RED #2 and #4 clips instead use X=yaw/Y=pitch. DO NOT share Euler axis
+    layout across teams or modes. Camera must point from offset towards 0.
+    """
+    dx, dy, dz = (float(v) for v in camera_offset)
+    if not all(math.isfinite(v) for v in (dx, dy, dz)):
+        raise ValueError("Non-finite camera offset")
+    horizontal = math.hypot(dx, dz)
+    if horizontal < 1.0:
+        raise ValueError("Camera offset has no stable horizontal heading")
+    # atan2 wraps the 180-degree boundary stably, with no additional roll.
+    return {
+        "x": math.degrees(math.atan2(-dx, -dz)),
+        "y": max(14.0, min(72.0, math.degrees(math.atan2(dy, horizontal)))),
+        "z": 0.0,
+    }
+
+
+def yaw_alignment_error(camera_offset: tuple, rotation: dict) -> float:
+    """Return absolute angular mismatch (degrees) in RED camera axes."""
+    aimed = target_center_rotation(camera_offset)["x"]
+    yaw = float(rotation["x"])
+    return abs((yaw - aimed + 180.0) % 360.0 - 180.0)
+
 
 
 SHOT_TUNING = {
