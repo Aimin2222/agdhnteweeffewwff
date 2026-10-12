@@ -3670,6 +3670,16 @@ class App:
         try:
             t, errors = template_from_references(paths, name, camera_base)
             save_reference_template(t, self.reference_template_dir / (name + ".json"))
+            # In the same worker, render reference frame contact sheets.
+            # This uses only local frames; no attempt to guess 3-D camera
+            # positions from an MP4, and no Tk operations off the UI thread.
+            try:
+                from core.reference_contact import extract_reference_contact
+                contact = extract_reference_contact(
+                    paths, self.reference_template_dir / (name + "_QA"), log=self.log)
+                self.log(f"参考動画の比較画像と数値: {contact.parent}")
+            except Exception as qa_error:
+                self.log(f"参考動画の比較資料は作れませんでした（テンプレートは保存済み）: {qa_error}")
             # UI更新はキュー経由。Tk変数をワーカースレッドから触らない。
             self.q.put(("reference_done", t, errors))
         except Exception as e:
