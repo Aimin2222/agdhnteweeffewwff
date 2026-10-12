@@ -2198,7 +2198,17 @@ class App:
             if popup_open():
                 return 'break'
             self._preview_input(event)
-            for panel in (self.left_scroll, self.right_scroll, self.center_edit_scroll):
+            # A combobox inside a scroll panel must scroll THAT panel even
+            # when Tk reports stale pointer root coordinates (especially
+            # with multiple panels / programmatically generated wheel
+            # events). Native dropdowns were filtered above.
+            widget_path = str(getattr(event, "widget", ""))
+            panels = (self.left_scroll, self.right_scroll, self.center_edit_scroll)
+            for panel in panels:
+                if widget_path.startswith(str(panel) + "."):
+                    panel.scroll_wheel(event)
+                    return 'break'
+            for panel in panels:
                 if panel._pointer_inside(event):
                     panel.scroll_wheel(event)
                     break
