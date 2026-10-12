@@ -21,7 +21,7 @@
 ## MAKE_REFERENCE_SHEETS.bat
 ZIPである必要はない。MP4、MOV、MKV、WEBMファイルのドラッグ、あるいは動画フォルダーをドラッグする。ZIPを渡す場合は展開。BATをダブルクリックしても、動画ファイル／フォルダー選択ダイアログを開く。
 - Windows CMDの誤解析を防ぐためBAT本体はASCIIのみ。
-- 本体START.batと同じ `py -3` を優先し、pyがなければ.venv/venv/Pythonへフォールバックする。以前は別の仮想環境を優先し、必要なPillowなどがない可能性があった。
+- 使用可能な候補（.venv、venv、PATHのpython、py -3）を一つずつ検査し、`PIL`と`imageio_ffmpeg`を実際にimportできるPythonだけを選ぶ。GitHub Windowsテストで `py -3` が別環境を指し、`ModuleNotFoundError: No module named 'PIL'` が再現したため、この検証を追加。必要なライブラリがどの候補にも無い場合はコマンドを案内する。
 - Windowsの日本語フォルダー・ファイルパスも想定。成功時は元ファイルの隣に `_AutoCineReferenceReview_...`、フォルダーの場合は中の `_AutoCineReferenceReview` に比較画像ZIP。
 - 失敗時に画面を閉じず、ログを `diagnostics/reference_review_latest.log` と `%TEMP%\AutoCine_ReferenceReview_latest.log` に保存してユーザーが送れるようにする。
 - テスト用の短いMP4でBAT動作を確認するWindows CIとpytestを追加。**実際のxMedia動画を確認できたという意味ではない**。
