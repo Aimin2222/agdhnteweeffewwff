@@ -74,8 +74,19 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
                                 modes=config['camera_modes'] if config else None)
     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
     folder.mkdir(parents=True, exist_ok=True)
+    project_root = Path(__file__).resolve().parents[1]
+    installed_version = (project_root / "VERSION.txt").read_text(
+        encoding="utf-8").strip()
+    import hashlib
+    camera_fingerprint = hashlib.sha256(
+        (project_root / "core" / "camera.py").read_bytes() +
+        (project_root / "core" / "camera_tuning.py").read_bytes()
+    ).hexdigest()[:16]
     manifest = {
-        "version": "5.10.25-test",
+        "version": "5.10.26-test",
+        "installed_version": installed_version,
+        "camera_code_fingerprint": camera_fingerprint,
+        "version_mismatch": installed_version != "5.10.26-test",
         "kind": "live_replay_camera_test",
         "expected_clips": len(scenarios),
         "test_plan": config,
@@ -271,6 +282,9 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         "RED/BLUE各フォルダーの*_camera_review_all.mp4：カメラごとの連続比較。\\n"
         "Transitions：場面切替の比較動画。 KillFrames：登場動作。\\n"
         "QA_Support：最新の診断ログ断片。\\n"
+        f"実行版：{installed_version}（カメラコードID：{camera_fingerprint}）。\\n"
+        "古いresults.json（例：5.10.23-test）の映像と混同しないでください。\\n"
+        "flat_upper_background_ratioは空・マップ外の可能性を示す目安であり、キル検出ではありません。\\n"
         "映像内の対象の位置が適切かはWindows実機で目視確認が必要です。\\n"
     ).replace("\\n", "\n")
     (support_dir / "READ_ME_FIRST_JA.md").write_text(notes, encoding="utf-8")
