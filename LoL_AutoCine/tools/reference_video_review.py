@@ -1,0 +1,112 @@
+# -*- coding: utf-8 -*-
+"""Local batch-reference review for xMedia and unviewable clip uploads.
+
+Video bytes stay on Windows. This helper writes only small JPEG contact
+sheets and JSON; never executes code from videos, downloads from the web,
+or uploads anything to GitHub. It does not perform AI character detection.
+"""
+from __future__ import annotations
+import argparse
+from io import BytesIO
+import json
+from pathlib import Path
+import re
+import subprocess
+import zipfile
+
+from PIL import Image, ImageDraw, ImageOps
+
+
+VIDEO_SUFFIXES = {".mp4", ".mov", ".mkv", ".webm"}
+SAMPLE_FRACTIONS = (0.06, 0.22, 0.38, 0.54, 0.70, 0.88)
+
+
+def sanitized_filename(name, limit=88):
+    safe = re.sub(r'[^a-zA-Z0-9_.-]+', '_', name).strip('._')
+    return (safe or 'reference')[:limit]
+
+
+def find_reference_videos(directory):
+    directory=Path(directory)
+    if not directory.is_dir():
+        raise FileNotFoundError(f"Not a video folder: {directory}")
+    return sorted(p for p in directory.rglob("*")
+                  if p.is_file() and p.suffix.lower() in VIDEO_SUFFIXES)
+
+
+def create_sheets(input_folder, output_folder, *, ffmpeg=None, logger=print):
+    from core.gpu_binary import ffmpeg_exe
+    from core.montage_fx import get_duration
+    executable=str(ffmpeg or ffmpeg_exe())
+    output=Path(output_folder)
+    output.mkdir(parents=True,exist_ok=True)
+    shots=output/"frames"
+    shots.mkdir(exist_ok=True)
+    videos=find_reference_videos(input_folder)
+    report={"schema_version":1,"video_count":len(videos),"items":[],
+            "notice":"Human/assistant visual review required; no AI tracking or upload."}
+    for index,path in enumerate(videos,1):
+        entry={"number":index,"original_name":path.name,
+               "relative_path":str(path.relative_to(input_folder)),
+               "size_bytes":path.stat().st_size,"samples":[],
+               "contact_sheet":None,"errors":[]}
+        try:
+            length=float(get_duration(path,ffmpeg=executable))
+            if not (0.2<=length<7200):
+                raise ValueError("Unsupported duration")
+            entry["duration_seconds"]=round(length,3)
+            tiles=[]
+            for sample,ratio in enumerate(SAMPLE_FRACTIONS,1):
+                second=max(0.0,min(length-.06,length*ratio))
+                command=[executable,"-nostdin","-hide_banner","-loglevel","error",
+                         "-ss",f"{second:.3f}","-i",str(path),
+                         "-frames:v","1","-vf","scale=480:270",
+                         "-f","image2pipe","-vcodec","png","-"]
+                result=subprocess.run(command,capture_output=True,timeout=40)
+                if result.returncode!=0 or not result.stdout:
+                    entry["errors"].append(f"frame {sample}: "+str(result.stderr[-200:]))
+                    continue
+                with Image.open(BytesIO(result.stdout)) as raw:
+                    img=raw.convert("RGB").copy()
+                tiles.append((img,second))
+                entry["samples"].append(round(second,2))
+            if tiles:
+                # Three columns, two rows, all frames labeled by actual time.
+                w,h,band=480,270,24
+                sheet=Image.new("RGB",(w*3,(h+band)*2),"#e6ebf2")
+                draw=ImageDraw.Draw(sheet)
+                for n,(img,second) in enumerate(tiles):
+                    x=(n%3)*w
+                    y=(n//3)*(h+band)
+                    sheet.paste(img,(x,y+band))
+                    draw.text((x+8,y+5),f"Frame {n+1} | {second:.2f} s",fill="#182338")
+                filename=f"{index:03d}_{sanitized_filename(path.stem)}.jpg"
+                destination=shots/filename
+                sheet.save(destination,quality=86,optimize=True)
+                entry["contact_sheet"]=str(destination.relative_to(output))
+                logger(f"[{index}/{len(videos)}] {path.name} -> {filename}")
+        except (OSError,ValueError,subprocess.SubprocessError) as exc:
+            entry["errors"].append(f"{type(exc).__name__}: {exc}")
+            logger(f"[{index}/{len(videos)}] Could not inspect {path.name}: {exc}")
+        report["items"].append(entry)
+        (output/"reference_review.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
+    with zipfile.ZipFile(output/"ReferenceReview_contact_sheets.zip","w",compression=zipfile.ZIP_DEFLATED) as z:
+        z.write(output/"reference_review.json","reference_review.json")
+        for entry in report["items"]:
+            if entry["contact_sheet"]:
+                p=output/entry["contact_sheet"]
+                z.write(p,entry["contact_sheet"])
+    return output/"ReferenceReview_contact_sheets.zip"
+
+
+def main():
+    parser=argparse.ArgumentParser(description="Create contact sheets for every reference MP4")
+    parser.add_argument("input_folder",type=Path,help="Folder containing reference video clips")
+    parser.add_argument("--output",type=Path,default=Path("ReferenceReview"))
+    args=parser.parse_args()
+    out=create_sheets(args.input_folder,args.output)
+    print("Contact-sheet ZIP:",out)
+
+
+if __name__=="__main__":
+    main()
