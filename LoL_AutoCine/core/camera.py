@@ -365,6 +365,7 @@ class CameraPlan:
             # カメラがキャラの周囲を公転する動き。Yは高さとして固定する。
             extra_yaw, zoom, _ = self.keyframe_values(t)
             dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
+            dist *= max(0.87, min(1.15, float(getattr(self, "_live_dist_factor", 1.0))))
             # BLUE #6 is cropped at the top. Allow breathing room only in
             # normal third, not in approved geo_aim or RED cinema presets.
             if (self.style == "third" and self.team not in ("CHAOS", "RED")
@@ -421,6 +422,7 @@ class CameraPlan:
 
         extra_yaw, zoom, _ = self.keyframe_values(t)
         dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
+        dist *= max(0.87, min(1.15, float(getattr(self, "_live_dist_factor", 1.0))))
         elev = max(12.0, min(58.0, elev))
         if self.smart_composition:
             dist = max(dist, self.third_dist * 0.88)
@@ -448,6 +450,12 @@ class CameraPlan:
         if self.rig is None or self.rig.mode != "fps":
             return (0.0, self.height, 0.0)
         if self.rig.third:
+            return self.third_pose_at(t)[0]
+        if self.style == "fps" and getattr(self, "_live_fps_recenter", False):
+            # The original FPS camera reused the absolute top-camera delta,
+            # which on BLUE #8 can aim entirely at the map edge. Build a
+            # camera offset around the locked player, exactly like the
+            # calibrated follow cameras, while retaining the FPS label/controls.
             return self.third_pose_at(t)[0]
         if self.rig.v is None:
             return (0.0, self.height, 0.0)
@@ -480,6 +488,20 @@ class CameraPlan:
                 "z": 0.0}
 
     def rotation_at(self, t: float) -> Optional[dict]:
+        """Optional side+mode-only composition corrections on a stable base."""
+        rot = self._raw_rotation_at(t)
+        if rot is None:
+            return None
+        adjustment = getattr(self, "_live_angle_bias", {})
+        if not adjustment:
+            return rot
+        corrected = dict(rot)
+        for axis in ("x", "y", "z"):
+            if axis in adjustment:
+                corrected[axis] = float(corrected.get(axis, 0.0)) + float(adjustment[axis])
+        return corrected
+
+    def _raw_rotation_at(self, t: float) -> Optional[dict]:
         """確定版Orbitの三人称視線。カメラ位置の公転と同じ基準。"""
         if self.style == "fps" and getattr(self, "_live_fps_recenter", False):
             if self.rig is None or self.rig.v is None:
