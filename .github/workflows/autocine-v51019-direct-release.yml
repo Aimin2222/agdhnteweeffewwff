@@ -33,7 +33,21 @@ jobs:
       - name: Regression tests
         working-directory: LoL_AutoCine
         run: |
-          xvfb-run -a python -m pytest -q tests --disable-warnings -x
+          python - <<'PY'
+          # Isolate Tk/FFmpeg/Xvfb processes so destroyed Tk root callbacks
+          # cannot accumulate for 600 tests and segfault the GUI runner.
+          from pathlib import Path
+          import subprocess,sys
+          files=sorted(Path('tests').rglob('test_*.py'))
+          assert files, "No test files found"
+          chunk=12
+          for n in range(0,len(files),chunk):
+              batch=files[n:n+chunk]
+              print(f"=== Batch {n//chunk+1}: {len(batch)} test files ===",flush=True)
+              cmd=["xvfb-run","-a",sys.executable,"-m","pytest","-q",
+                   "--disable-warnings","-x",*[str(p) for p in batch]]
+              subprocess.run(cmd,check=True)
+          PY
       - name: Build and verify Windows and Codex ZIPs
         run: |
           python - <<'PY'
