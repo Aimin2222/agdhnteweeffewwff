@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "plan_id": "2026-10-12-red1-back-fps3-pullback-blue8-red2-4-protect-utf8-onclick",
+  "plan_id": "2026-10-12-red1-recenter-red3-fps-vector-blue5-modes-further-back",
   "title": "v5.10.22 毎回自動収集: カメラ10本・切替・登場FX・比較画像・診断",
   "camera_modes": [
     "third",
@@ -25,16 +25,12 @@
   "max_zip_mb": 500,
   "include_visual_comparison": true,
   "manual_review": [
-    "RED #1: camera further out and character in central area",
-    "RED #2: do not change approved cinematic framing",
-    "RED #3: camera further out and no giant close-up",
-    "RED #4: protect approved Lolnam cinema",
-    "RED #5: move back and recenter",
-    "BLUE #6/7/9/10: preserve latest usable visuals",
-    "BLUE #8: move camera backward while preserving battle visibility",
-    "Full scan and capture after one click, including first connect",
-    "Japanese Windows CMD: no mojibake; reference MP4 name accepted",
-    "Comparison pictures, diagnostics and all final ZIP parts included"
+    "RED #1: visually center Vi by moving camera orientation without Z roll",
+    "RED #2/#4/#5: previously approved compositions are a no-change baseline",
+    "RED #3: no extreme close-up; killer and victim visible across pre/kill/post",
+    "BLUE #6/#7/#8/#9/#10: retreat camera and retain combat in-frame",
+    "BAT: MP4 and folder work; double-click prompts; Japanese filenames; no ZIP required",
+    "Always collect comparison JPG, direct MP4, diagnostics and all <=500MB ZIPs"
   ],
   "note": "3 distinct legacy tests instead of 10 similar brightness pulses; 6 spatial motions remain QA only. Results go into 500 MB max direct ZIPs.",
   "spatial_transition_previews": [

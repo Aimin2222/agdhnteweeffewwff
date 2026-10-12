@@ -1,0 +1,395 @@
+diff --git a/MAKE_REFERENCE_SHEETS.bat b/MAKE_REFERENCE_SHEETS.bat
+index 61562c1..ad15e22 100644
+--- a/MAKE_REFERENCE_SHEETS.bat
++++ b/MAKE_REFERENCE_SHEETS.bat
+@@ -1,15 +1,50 @@
+ @echo off
+-rem This batch file is deliberately 7-bit ASCII to avoid CP932/UTF-8 cmd.exe parsing corruption.
+-chcp 65001 >nul
++rem ASCII-only Windows CMD launcher. Source media remains UTF-8/Unicode.
+ setlocal DisableDelayedExpansion
++chcp 65001 >nul
+ set "PYTHONUTF8=1"
+ set "PYTHONIOENCODING=utf-8"
++set "PYTHONUNBUFFERED=1"
+ set "RESULT=0"
+ cd /d "%~dp0"
+-title AutoCine - Reference Video Review
++title AutoCine Reference Video Review
+ set "SOURCE=%~1"
+ set "LOG=%TEMP%\AutoCine_ReferenceReview_latest.log"
+-if "%SOURCE%"=="" goto USAGE
++if not exist "diagnostics" mkdir "diagnostics" >nul 2>&1
++set "RUNEXE="
++set "RUNARG="
++rem Interpreter selection must verify PIL/imageio. The Windows py launcher
++rem can point to a different Python from one installed by setup-python.
++if exist ".venv\Scripts\python.exe" (
++  ".venv\Scripts\python.exe" -c "import PIL, imageio_ffmpeg" >nul 2>&1
++  if not errorlevel 1 set "RUNEXE=.venv\Scripts\python.exe"
++)
++if not defined RUNEXE (
++  if exist "venv\Scripts\python.exe" (
++    "venv\Scripts\python.exe" -c "import PIL, imageio_ffmpeg" >nul 2>&1
++    if not errorlevel 1 set "RUNEXE=venv\Scripts\python.exe"
++  )
++)
++if not defined RUNEXE (
++  where python >nul 2>&1
++  if not errorlevel 1 (
++    python -c "import PIL, imageio_ffmpeg" >nul 2>&1
++    if not errorlevel 1 set "RUNEXE=python"
++  )
++)
++if not defined RUNEXE (
++  where py >nul 2>&1
++  if not errorlevel 1 (
++    py -3 -c "import PIL, imageio_ffmpeg" >nul 2>&1
++    if not errorlevel 1 (
++      set "RUNEXE=py"
++      set "RUNARG=-3"
++    )
++  )
++)
++if not defined RUNEXE goto PY_MISSING
++if "%SOURCE%"=="" goto PICK_SOURCE
++if /I "%~x1"==".zip" goto ZIP_INPUT
+ if not exist "%SOURCE%" goto MISSING
+ set "OUTPUT=%~dp1_AutoCineReferenceReview_%~n1"
+ pushd "%SOURCE%" >nul 2>&1
+@@ -17,32 +52,42 @@ if errorlevel 1 goto SOURCE_READY
+ popd
+ set "OUTPUT=%SOURCE%\_AutoCineReferenceReview"
+ :SOURCE_READY
+-set "RUNPY=python"
+-if exist ".venv\Scripts\python.exe" set "RUNPY=.venv\Scripts\python.exe"
+-if exist "venv\Scripts\python.exe" set "RUNPY=venv\Scripts\python.exe"
+-echo [AutoCine] Starting reference video review.
+ echo [AutoCine] Input: "%SOURCE%"
+ echo [AutoCine] Output: "%OUTPUT%"
+ echo [AutoCine] Log: "%LOG%"
+-"%RUNPY%" -m tools.reference_video_review "%SOURCE%" --output "%OUTPUT%" > "%LOG%" 2>&1
++"%RUNEXE%" %RUNARG% -m tools.reference_video_review "%SOURCE%" --output "%OUTPUT%" > "%LOG%" 2>&1
++goto CHECK_RESULT
++:PICK_SOURCE
++echo [AutoCine] No file dropped. Opening MP4/folder picker.
++"%RUNEXE%" %RUNARG% -m tools.reference_video_review > "%LOG%" 2>&1
++goto CHECK_RESULT
++:CHECK_RESULT
+ set "EXITCODE=%ERRORLEVEL%"
+-if exist "%LOG%" type "%LOG%"
++if exist "%LOG%" (
++  type "%LOG%"
++  copy /y "%LOG%" "diagnostics\reference_review_latest.log" >nul 2>&1
++)
+ if not "%EXITCODE%"=="0" goto FAILED
+-echo [AutoCine] COMPLETE: "%OUTPUT%\ReferenceReview_contact_sheets.zip"
++echo [AutoCine] COMPLETE. The contact sheet ZIP is in the output folder.
+ goto DONE
+-:USAGE
+-echo [USAGE] Drag a video file (MP4/MOV/MKV/WEBM) or a folder onto this BAT.
+-echo [USAGE] Unzip archives before dropping videos or folders.
+-set "RESULT=1"
++:PY_MISSING
++echo [ERROR] Python with Pillow and imageio-ffmpeg was not found.
++echo [ERROR] Run: py -3 -m pip install pillow imageio-ffmpeg
++echo [ERROR] Then retry the MP4 or folder drop.
++set "RESULT=4"
++goto DONE
++:ZIP_INPUT
++echo [ERROR] Do not drop a ZIP archive. Extract it first, then drop an MP4 or folder.
++set "RESULT=2"
+ goto DONE
+ :MISSING
+-echo [ERROR] Input path does not exist: "%SOURCE%"
++echo [ERROR] Input path not found: "%SOURCE%"
+ set "RESULT=2"
+ goto DONE
+ :FAILED
+-echo [ERROR] Reference-video review failed. Exit code: %EXITCODE%
+-echo [ERROR] Please attach this log file:
+-echo "%LOG%"
++echo [ERROR] Reference video processing failed. Exit code: %EXITCODE%
++echo [ERROR] Please send diagnostics\reference_review_latest.log
++echo [ERROR] Fallback copy: "%LOG%"
+ set "RESULT=3"
+ :DONE
+ echo.
+diff --git a/core/camera.py b/core/camera.py
+index 2adbd1b..0bfda54 100644
+--- a/core/camera.py
++++ b/core/camera.py
+@@ -516,8 +516,18 @@ class CameraPlan:
+             if self.rig is None or self.rig.v is None:
+                 return None
+             if self.team in ("CHAOS", "RED"):
+-                return {"x": -float(self.side_yaw or 192.0),
+-                        "y": 42.0, "z": 0.0}
++                # RED FPS #3 kept the subject high and off-screen: it sent a
++                # fixed 42-degree downward pitch even when the target from
++                # the actual camera offset was only ~28 degrees below the
++                # horizon. Aim at that target-relative offset instead.
++                dx, dy, dz = self.offset_at(t)
++                horizontal = math.hypot(dx, dz)
++                if horizontal < 1.0:
++                    return None
++                look_down = math.degrees(math.atan2(dy, horizontal))
++                return {"x": -float(getattr(self, "_live_fps_side_heading", 192.0)),
++                        "y": max(18.0, min(52.0, look_down + 3.0)),
++                        "z": 0.0}
+             x, y, z = self.offset_at(t)
+             horizontal = math.hypot(x, z)
+             if horizontal < 1.0:
+diff --git a/core/camera_qa.py b/core/camera_qa.py
+index 2651d60..fcfa537 100644
+--- a/core/camera_qa.py
++++ b/core/camera_qa.py
+@@ -75,7 +75,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
+     folder.mkdir(parents=True, exist_ok=True)
+     manifest = {
+-        "version": "5.10.22-test",
++        "version": "5.10.23-test",
+         "kind": "live_replay_camera_test",
+         "expected_clips": len(scenarios),
+         "test_plan": config,
+diff --git a/core/camera_tuning.py b/core/camera_tuning.py
+index d8b1f1c..8709696 100644
+--- a/core/camera_tuning.py
++++ b/core/camera_tuning.py
+@@ -10,16 +10,16 @@ from __future__ import annotations
+ 
+ SHOT_TUNING = {
+     # Side, camera mode -> relative distance, Euler-axis screen adjustment.
+-    ("RED", "third"):       {"distance": 1.13, "angles": {"z": 3.0}},
++    ("RED", "third"):       {"distance": 1.13, "angles": {"x": 4.0}},
+     ("RED", "third_cinema"):{"distance": .96, "angles": {}},
+-    ("RED", "fps"):         {"distance": 1.0, "angles": {"x": -4.0, "y": 4.0}, "fps_back": 1.60},
++    ("RED", "fps"):         {"distance": 1.0, "angles": {}, "fps_back": 1.60},
+     ("RED", "lolnam_cinema"):{"distance": 1.0, "angles": {"x": -3.0, "y": -3.0}},
+     ("RED", "geo_aim"):     {"distance": 1.12, "angles": {"x": -4.0}},
+-    ("BLUE", "third"):      {"distance": 1.0, "angles": {"x": 3.0}},
+-    ("BLUE", "third_cinema"):{"distance": 1.0, "angles": {}},   # protected #7
+-    ("BLUE", "fps"):        {"distance": 1.0, "angles": {}, "fps_back": 1.22},
+-    ("BLUE", "lolnam_cinema"):{"distance": 1.0, "angles": {"x": 2.5}},
+-    ("BLUE", "geo_aim"):    {"distance": 1.0, "angles": {"x": 2.5}},
++    ("BLUE", "third"):      {"distance": 1.10, "angles": {"x": 3.0}},
++    ("BLUE", "third_cinema"):{"distance": 1.08, "angles": {}},   # modest backward only
++    ("BLUE", "fps"):        {"distance": 1.0, "angles": {}, "fps_back": 1.38},
++    ("BLUE", "lolnam_cinema"):{"distance": 1.08, "angles": {"x": 2.5}},
++    ("BLUE", "geo_aim"):    {"distance": 1.08, "angles": {"x": 2.5}},
+ }
+ 
+ 
+diff --git a/core/qa_plan.py b/core/qa_plan.py
+index 7dbe747..c8c8a4a 100644
+--- a/core/qa_plan.py
++++ b/core/qa_plan.py
+@@ -6,7 +6,7 @@ from pathlib import Path
+ from urllib.request import Request, urlopen
+ 
+ REMOTE_PLAN = ("https://raw.githubusercontent.com/Aimin2222/agdhnteweeffewwff/"
+-               "refs/heads/autocine/v5.10.22-utf8-singleclick-camera-qa/"
++               "refs/heads/autocine/v5.10.23-framing-reference-launcher/"
+                "LoL_AutoCine/qa/test_plan.json")
+ LOCAL_PLAN = Path(__file__).resolve().parents[1] / "qa" / "test_plan.json"
+ ALLOWED_CAMERA = ("third", "third_cinema", "fps", "lolnam_cinema", "geo_aim")
+diff --git a/qa/test_plan.json b/qa/test_plan.json
+index 1b12342..cd66f1c 100644
+--- a/qa/test_plan.json
++++ b/qa/test_plan.json
+@@ -1,6 +1,6 @@
+ {
+   "schema_version": 1,
+-  "plan_id": "2026-10-12-red1-back-fps3-pullback-blue8-red2-4-protect-utf8-onclick",
++  "plan_id": "2026-10-12-red1-recenter-red3-fps-vector-blue5-modes-further-back",
+   "title": "v5.10.22 毎回自動収集: カメラ10本・切替・登場FX・比較画像・診断",
+   "camera_modes": [
+     "third",
+@@ -25,16 +25,12 @@
+   "max_zip_mb": 500,
+   "include_visual_comparison": true,
+   "manual_review": [
+-    "RED #1: camera further out and character in central area",
+-    "RED #2: do not change approved cinematic framing",
+-    "RED #3: camera further out and no giant close-up",
+-    "RED #4: protect approved Lolnam cinema",
+-    "RED #5: move back and recenter",
+-    "BLUE #6/7/9/10: preserve latest usable visuals",
+-    "BLUE #8: move camera backward while preserving battle visibility",
+-    "Full scan and capture after one click, including first connect",
+-    "Japanese Windows CMD: no mojibake; reference MP4 name accepted",
+-    "Comparison pictures, diagnostics and all final ZIP parts included"
++    "RED #1: visually center Vi by moving camera orientation without Z roll",
++    "RED #2/#4/#5: previously approved compositions are a no-change baseline",
++    "RED #3: no extreme close-up; killer and victim visible across pre/kill/post",
++    "BLUE #6/#7/#8/#9/#10: retreat camera and retain combat in-frame",
++    "BAT: MP4 and folder work; double-click prompts; Japanese filenames; no ZIP required",
++    "Always collect comparison JPG, direct MP4, diagnostics and all <=500MB ZIPs"
+   ],
+   "note": "3 distinct legacy tests instead of 10 similar brightness pulses; 6 spatial motions remain QA only. Results go into 500 MB max direct ZIPs.",
+   "spatial_transition_previews": [
+diff --git a/tests/test_v51021_camera_bat_color.py b/tests/test_v51021_camera_bat_color.py
+index 57ca4d0..679a0a9 100644
+--- a/tests/test_v51021_camera_bat_color.py
++++ b/tests/test_v51021_camera_bat_color.py
+@@ -20,7 +20,7 @@ def test_single_mp4_can_be_dropped_on_reference_bat(tmp_path):
+ 
+ def test_cam_modes_are_isolated_and_blue7_is_protected():
+     b7=shot_tuning("ORDER","third_cinema")
+-    assert b7["distance"]==1.0 and b7["angles"]=={}
++    assert b7["distance"]==1.08 and b7["angles"]=={}  # v5.10.23: user-requested backward camera
+     assert shot_tuning("CHAOS","third_cinema")["angles"]=={}
+     assert shot_tuning("CHAOS","third")["distance"]>1.0
+     assert shot_tuning("CHAOS","lolnam_cinema")["angles"]
+diff --git a/tests/test_v51022_oneclick_utf8_camera.py b/tests/test_v51022_oneclick_utf8_camera.py
+index f703e59..bfba528 100644
+--- a/tests/test_v51022_oneclick_utf8_camera.py
++++ b/tests/test_v51022_oneclick_utf8_camera.py
+@@ -14,7 +14,7 @@ def test_red2_red4_blue7_blue9_approved_camera_profiles_untouched():
+     assert shot_tuning("RED", "lolnam_cinema")["distance"] == 1.0
+     assert shot_tuning("RED", "lolnam_cinema")["angles"] == {"x": -3.0, "y": -3.0}
+     assert shot_tuning("ORDER", "third_cinema")["angles"] == {}
+-    assert shot_tuning("ORDER", "lolnam_cinema")["distance"] == 1.0
++    assert shot_tuning("ORDER", "lolnam_cinema")["distance"] == 1.08  # v5.10.23 BLUE retreat
+ 
+ 
+ def test_red1_and_fps_and_blue8_are_independent_tuning():
+diff --git a/tests/test_v51023_reference_framing.py b/tests/test_v51023_reference_framing.py
+new file mode 100644
+index 0000000..276e464
+--- /dev/null
++++ b/tests/test_v51023_reference_framing.py
+@@ -0,0 +1,80 @@
++# -*- coding: utf-8 -*-
++"""v5.10.23: check targeted live camera fixes and robust reference launcher."""
++from pathlib import Path
++import math
++import pytest
++from core.camera import CameraPlan,RigInfo
++from core.camera_tuning import shot_tuning
++from tools.reference_video_review import find_reference_videos,choose_source
++
++
++def test_approved_red2_red4_red5_modes_are_unchanged():
++    assert shot_tuning("CHAOS","third_cinema")["distance"]==0.96
++    assert shot_tuning("CHAOS","third_cinema")["angles"]=={}
++    assert shot_tuning("CHAOS","lolnam_cinema")=={
++        "side":"RED","mode":"lolnam_cinema","distance":1.0,
++        "angles":{"x":-3.0,"y":-3.0},"fps_back":1.0}
++    assert shot_tuning("RED","geo_aim")["distance"]==1.12
++
++
++def test_red1_has_no_roll_angle_and_aim_bias_is_independent():
++    red=shot_tuning("RED","third")
++    assert red["angles"]=={"x":4.0}
++    assert "z" not in red["angles"]
++    assert shot_tuning("BLUE","third")["angles"]=={"x":3.0}
++
++
++@pytest.mark.parametrize("mode",["third","third_cinema","fps","lolnam_cinema","geo_aim"])
++def test_each_blue_camera_pulled_back_without_shared_overrides(mode):
++    tuning=shot_tuning("BLUE",mode)
++    if mode=="fps":
++        assert tuning["fps_back"]>=1.35
++    else:
++        assert tuning["distance"]>=1.08
++    tuning["angles"]["x"]=777  # returned copy must not mutate global configs
++    assert shot_tuning("BLUE",mode)["angles"].get("x")!=777
++
++
++def test_red_fps_live_pitch_matches_relative_vector_not_fixed_42():
++    rig=RigInfo(mode="fps",third=False,rot={"x":0.0,"y":56.0,"z":0.0},
++                v=(0,0,0),h=(-.49,-.87))
++    plan=CameraPlan(style="fps",rig=rig,team="CHAOS",
++                    third_dist=950,third_elev=28,side_yaw=0)
++    plan._live_fps_recenter=True
++    plan._live_fps_side_heading=192.0
++    plan._live_fps_back=1.6
++    rot=plan.rotation_at(0.0)
++    pos=plan.offset_at(0.0)
++    reference_pitch=math.degrees(math.atan2(pos[1],math.hypot(pos[0],pos[2])))
++    assert rot["x"] == pytest.approx(-192.0)
++    assert rot["y"] == pytest.approx(reference_pitch+3.0)
++    assert rot["z"] == 0.0
++    assert rot["y"] < 42.0
++
++
++def test_reference_launcher_accepts_mp4_and_rejects_zip(tmp_path):
++    mp4=tmp_path/"参照 動画.mp4"
++    mp4.write_bytes(b"fake")
++    assert find_reference_videos(mp4)==[mp4]
++    folder=tmp_path/"日本語 フォルダー"
++    folder.mkdir()
++    assert find_reference_videos(folder)==[]
++    from pathlib import Path
++    runner=(Path(__file__).resolve().parents[1]/"MAKE_REFERENCE_SHEETS.bat").read_text(encoding="ascii")
++    assert "where py" in runner
++    assert ":PICK_SOURCE" in runner
++    assert 'if /I "%~x1"==".zip"' in runner
++    assert "reference_review_latest.log" in runner
++
++
++def test_cli_can_launch_selector_without_drag_drop(monkeypatch,tmp_path):
++    from tools import reference_video_review as r
++    fake=tmp_path/"x.mp4"
++    fake.write_bytes(b"example")
++    monkeypatch.setattr(r,"choose_source",lambda:fake)
++    calls=[]
++    monkeypatch.setattr(r,"create_sheets",lambda source,out:calls.append((source,out)) or out/"ReferenceReview_contact_sheets.zip")
++    monkeypatch.setattr("sys.argv",["reference_video_review"])
++    r.main()
++    assert calls[0][0]==fake
++    assert calls[0][1].parent==fake.parent
+diff --git a/tools/reference_video_review.py b/tools/reference_video_review.py
+index 05e6cdc..a437b47 100644
+--- a/tools/reference_video_review.py
++++ b/tools/reference_video_review.py
+@@ -107,12 +107,44 @@ def create_sheets(input_folder, output_folder, *, ffmpeg=None, logger=print):
+     return output/"ReferenceReview_contact_sheets.zip"
+ 
+ 
++def choose_source():
++    """When BAT is double-clicked, choose an MP4 or a video folder."""
++    import tkinter as tk
++    from tkinter import filedialog, messagebox
++    root = tk.Tk()
++    root.withdraw()
++    try:
++        selected = filedialog.askopenfilename(
++            title="AutoCine - 参考動画のMP4を選択（キャンセルでフォルダーを選択）",
++            filetypes=[("動画", "*.mp4 *.mov *.mkv *.webm"),
++                       ("すべてのファイル", "*.*")])
++        if not selected:
++            selected = filedialog.askdirectory(title="AutoCine - 動画フォルダーを選択")
++        if not selected:
++            return None
++        return Path(selected)
++    finally:
++        root.destroy()
++
++
+ def main():
+     parser=argparse.ArgumentParser(description="Create contact sheets for every reference MP4")
+-    parser.add_argument("input_folder",type=Path,help="A folder of videos or one MP4/MOV/MKV/WEBM")
+-    parser.add_argument("--output",type=Path,default=Path("ReferenceReview"))
++    parser.add_argument("input_folder",nargs="?",type=Path,
++                        help="A video file or a folder. Omit to open a picker.")
++    parser.add_argument("--output",type=Path,default=None)
+     args=parser.parse_args()
+-    out=create_sheets(args.input_folder,args.output)
++    source=args.input_folder if args.input_folder is not None else choose_source()
++    if source is None:
++        print("No reference video selected; nothing was changed.")
++        return
++    if source.suffix.lower()==".zip":
++        raise ValueError("ZIPは直接入力できません。展開してMP4か動画フォルダーを指定してください。")
++    # Default destination next to the selected source and never inside MP4.
++    dest = args.output
++    if dest is None:
++        dest = (source/"_AutoCineReferenceReview" if source.is_dir()
++                else source.parent / ("_AutoCineReferenceReview_"+sanitized_filename(source.stem)))
++    out=create_sheets(source,dest)
+     print("Contact-sheet ZIP:",out)
+ 
+ 

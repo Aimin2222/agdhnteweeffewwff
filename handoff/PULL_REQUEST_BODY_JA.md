@@ -1,15 +1,11 @@
-開発QAを未接続/未スキャンから1回で開始できるようにし、UI snapshot→1ワーカーで接続・全体scan・QA撮影・演出/画像・直接ZIPを連続実行。complete cache再利用、二重押し抑制、partial/失敗/停止時は録画しない。既存通常出力/開発bundle/ミラー応答を保持。
+参考BATが別Pythonを選んでPillowをimportできない候補に対応し、.venv/venv/PATH python/py -3を実importで検査。引数なしは動画→フォルダpicker、cancelは比較出力なし、ドラッグ単体/フォルダ/ZIP展開案内も保持。Python直後の終了status、ASCII/UTF8/unbuffered、TEMPとdiagnosticsログ、Python不足/入力不在ログを保持。helper出力先は日本語stemを保持して別動画の出力衝突を防止、picker parent/rootを明示解放。元動画不変・前回空入力/Path補正保持。
 
-2 BATをASCII化しPython UTF8環境と失敗終了コードを保持。tracked UTF8 auditを追加し、受領root.parent基準をGit root基準へ補正して単体/配布内Git双方で個人ファイルを読まず検査。
+RED1 roll biasを外しX+4、RED FPS固定42度と追加angle biasを実offsetからのpitch+3へ変更。手動0/180と高さ/距離倍率/旧直接planは保持。RED2/4/5は不変、BLUE5モードを距離係数で後退。受領補正候補として統合し構図改善はWindows未確認。
 
-QA_Supportへ読み方と指定6診断の末尾各最大1MBを元バイトのままコピー。source不変/symlink除外/失敗で成功録画を無効化しない/中止時追加しない。既存ZIPが.logを除外したため、QA_Support直下の既知名・1MB以下だけ許可。1MBstream/500MB/元動画・JSON・旧ZIP/別名再出力/最終JSON一致/直接ZIPを保持。時間割合サンプルを実キル時刻自動認識と表示しない。外部送信なし。
+reference_review_latest.logをQA_Supportの既知名へ追加し各1MB末尾原byte保持。前回ワンクリックQA・cache/partial/二重押し/stop/Tk snapshot・1MBstream/500MB直接ZIP/最終JSON一致/元動画・旧ZIP/3時間割合サンプルを保持。ユーザー動画・ログの自動送信なし。
 
-受領RED1/3/5・BLUE8の引き構図と限定角度は試験候補。RED2/4/BLUE7/9を保持。FPS高さと手動0/180、有限値/倍率制限、キャッシュ分離/TargetLock/ディレクターgain/APIを維持。実構図とZ角の見え方はWindows未確認。
+受領指定v15基準へ独立apply --check/適用し、受領v22から12パス差分だけ現行Codex v22へレビュー統合。旧GPU22FX/60fps/LoL専用音声/録画/NVENC/診断/fallback/37PNG/115refs/211旧配布物保持、全119refs bundleと共有8blobレビュー。描画/音声/録画本体byte不変。添付の実機/CI/MP4未解析/Release記述は受領側資料として区別。
 
-受領指定v15基準へ独立apply --check/適用し、受領v21の15パス差分だけ現行Codex v21へレビュー統合。旧GPU全22FX/60fps/LoL専用音声/録画/NVENC/診断/fallback/37PNG/111refs/202旧配布物を保持、全115refs bundleと共有8blobレビュー。エフェクト/録画/音声の本体はbyte不変。添付の実機/CI612件/Release記述は受領側資料として区別。
+検証: Linux/Xvfb全739成功（失敗/skip/除外なし、63.704秒）、関連76件成功。実日本語名60fps動画から6時点シート/JSON/ZIP・原本不変、picker file/folder/cancel/root解放、異なる日本語出力先、実RED relative pitch/height/manual、最新referenceログの原byte/1MBを確認。旧GPU/UI/音声/QA/encoding回帰も成功。完全ZIP CRC/ソース一致/差分apply/個人ファイル除外/旧refsと配布物保持を検証。Windows/LoL画角・BAT候補選択・日本語CMDパス/NVIDIA性能は未確認、過去native原因は未確定。
 
-検証: Linux/Xvfb全719成功（失敗/skip/除外なし、60.969秒）。関連初回63成功/1失敗で.log除外を検出し修正、追加チェック含む65成功。実workerでTk snapshot/二重押し、cache/partial/stop、1MB tail原本不変/ZIP内ログと最終JSON一致、FPS height/manual、単体・nested Gitでignored不正UTFファイルを監査しないこと、旧GPU/UI/音声/ZIP回帰を確認。完全ZIP CRC/ソース一致/差分apply/個人ファイル除外/旧refsと配布物保持を検証。Windows/NVIDIA/LoL画角と日本語BAT実行は未確認、過去native終了原因は未確定。
-
-前回v5.10.21を比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、別フォルダSTART_GPU.bat。実機手順docs/WINDOWS_TEST_v51022_JA.md。
-
-GitHubから別checkout/bundle復元で全508ソース/115refs/ZIP・bundle hashes一致。復元先代表210成功17.16秒、失敗/skip/除外なし、GC有効・強制GCなし。再setupで508ソース/115refs/3個人設定相当のバイト保持/status clean。これは同一クラウド内の別フォルダ検証で新しいcloud task/Windows/Publish検証とは別。環境install_script/start_skillをrevision40へ保存してreadback確認、他の既知設定保持、Publishは未実行。次回環境へ反映する場合だけ環境設定で確認・保存後Publish。
+前回v5.10.22を比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、別フォルダSTART_GPU.bat。実機手順docs/WINDOWS_TEST_v51023_JA.md。

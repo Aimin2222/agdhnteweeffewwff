@@ -548,8 +548,15 @@ class CameraPlan:
             if self.rig is None or self.rig.v is None:
                 return None
             if self.team in ("CHAOS", "RED"):
+                # Use the actual target-relative position, including independent
+                # height and pullback, while preserving manual 0/180 headings.
+                dx, dy, dz = self.offset_at(t)
+                horizontal = math.hypot(dx, dz)
+                if horizontal < 1.0:
+                    return None
+                look_down = math.degrees(math.atan2(dy, horizontal))
                 return {"x": -float(getattr(self, "_live_fps_side_heading", self.side_yaw or 192.0)),
-                        "y": 42.0, "z": 0.0}
+                        "y": max(18.0, min(52.0, look_down + 3.0)), "z": 0.0}
             x, y, z = self.offset_at(t)
             horizontal = math.hypot(x, z)
             if horizontal < 1.0:
