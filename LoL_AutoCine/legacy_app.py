@@ -948,6 +948,12 @@ class App:
         eh = ttk.Frame(easy, style="Card.TFrame"); eh.pack(fill="x")
         ttk.Label(eh, text="★ かんたん作成", style="Section.TLabel").pack(side="left")
         ttk.Label(eh, text="難しい設定は後から変更できます", style="CardMuted.TLabel").pack(side="right")
+        self.var_easy_color_custom = tk.BooleanVar(value=False)
+        ttk.Checkbutton(easy, text="色だけ細かく調整する（ONで設定を表示）",
+                        variable=self.var_easy_color_custom,
+                        command=self._update_easy_color_controls).pack(anchor="w", pady=(2, 2))
+        self._easy_color_panel = ttk.Frame(easy, style="Card.TFrame")
+
         ttk.Label(easy, text="① リプレイを開く → ② 対象プレイヤーを選ぶ → ③ ボタン1つでキル/アシストを検出して動画を作成", style="CardMuted.TLabel", wraplength=900).pack(anchor="w", pady=(4, 7))
         ttk.Button(easy, text="★ 自動作成（標準）", style="Accent.TButton", command=self.on_one_click).pack(fill="x", ipady=4)
         ttk.Label(easy, text="現在の設定でキル／アシストを自動抽出して書き出します。初めてならこちら。",
@@ -1313,6 +1319,20 @@ class App:
         ttk.Combobox(color, state="readonly", textvariable=self.var_grade, values=list(GRADE_JP.values())).pack(fill="x", pady=3)
         for args in (("grade_strength","色の強さ",0,1.4),("temperature","色温度",-1,1),("contrast","コントラスト",0.6,1.6),("exposure","露出",-0.3,0.3),("vibrance","自然な彩度",-1,1.5),("vignette","ビネット",0,1),("grain","グレイン",0,1),("bloom","ブルーム",0,1),("bars","シネマ枠",0,1)):
             slider(color,*args)
+        # Shares the same variables as detail editor: easy slider changes
+        # appear in the real output immediately and remain editable in detail.
+        for key, label, lo, hi in (
+            ("grade_strength", "色補正の強さ", 0.0, 1.4),
+            ("temperature", "色の暖かさ", -1.0, 1.0),
+            ("contrast", "明暗のメリハリ", 0.6, 1.6),
+            ("vibrance", "色の鮮やかさ", -1.0, 1.5),
+        ):
+            color_row = ttk.Frame(self._easy_color_panel, style="Card.TFrame")
+            color_row.pack(fill="x", pady=2)
+            ttk.Label(color_row, text=label, width=17, style="Card.TLabel").pack(side="left")
+            ttk.Scale(color_row, from_=lo, to=hi,
+                      variable=self.sl[key]).pack(side="left", fill="x", expand=True, padx=4)
+            ttk.Entry(color_row, textvariable=self.sl[key], width=8, justify="right").pack(side="right")
         self.var_fog=tk.BooleanVar(value=False)
         ttk.Checkbutton(color,text="FOG補正",variable=self.var_fog).pack(anchor="w",pady=(6,2))
         fog_controls=ttk.Frame(color,style="Card.TFrame")
@@ -2129,6 +2149,16 @@ class App:
         widget.bind('<Leave>',hide,add='+')
         widget.bind('<ButtonPress>',hide,add='+')
         widget.bind('<Destroy>',lambda event:hide() if event.widget is widget else None,add='+')
+
+    def _update_easy_color_controls(self):
+        panel = getattr(self, "_easy_color_panel", None)
+        if panel is None:
+            return
+        show = bool(self.var_easy_color_custom.get())
+        if show and not panel.winfo_manager():
+            panel.pack(fill="x", pady=(3, 8))
+        elif not show and panel.winfo_manager():
+            panel.pack_forget()
 
     def _focus_template(self):
         # The shared template chooser now lives inside the editor, never in
