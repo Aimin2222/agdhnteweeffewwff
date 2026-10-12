@@ -55,7 +55,7 @@ def test_dynamically_added_combobox_uses_wheel_guard(gui):
 
 def test_late_control_scrolls_panel_and_keeps_keyboard_selection(gui):
     app, root = gui
-    panel = app.left_scroll
+    panel = app.right_scroll
     value = tk.StringVar(value='one')
     late = ttk.Combobox(panel.inner, state='readonly',
                        values=('one', 'two', 'three'), textvariable=value)
