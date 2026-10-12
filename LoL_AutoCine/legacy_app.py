@@ -1648,9 +1648,9 @@ class App:
         ttk.Button(f, text="✓ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
         ttk.Separator(f).pack(fill="x",pady=(8,6))
-        ttk.Button(f, text="開発用：指定テストを一括作成・500MB ZIPに保存",
+        ttk.Button(f, text="開発用：1回で接続→全体スキャン→動画・画像→500MB ZIP",
                    command=self.on_dev_camera_qa).pack(fill="x",pady=(0,3))
-        ttk.Label(f, text="全体スキャン後に1回だけ押してください。同じ録画素材を使って演出を比較します（開発中のみ）。",
+        ttk.Label(f, text="最初に1回押すだけ。既にスキャン済みなら結果を再利用します。RED/BLUEカメラ、場面切替、キルフレーム、診断情報を自動収集（開発中のみ）。",
                   style="CardMuted.TLabel",wraplength=300).pack(fill="x")
 
         f = card(right, "☁  出力状況")
