@@ -842,7 +842,10 @@ class App:
         self.lbl_reference = ttk.Label(f, text="参考動画 0本 / 未解析", style="CardMuted.TLabel", wraplength=270)
         self.lbl_reference.pack(fill="x", pady=(5, 0))
 
-        f = card(left, "▣  テンプレート")
+        # The same live template controls belong in the editor, not the left
+        # replay/navigation sidebar. Both easy and advanced modes share them.
+        f = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
+        f.pack(fill="x", pady=(0, 8))
         self._nav_template_card = f
         self.tpl_combo = ttk.Combobox(f, state="readonly", textvariable=self.var_tpl, values=list(self.templates))
         self.tpl_combo.pack(fill="x", pady=(0, 7))
@@ -942,6 +945,10 @@ class App:
         easy = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
         self._mode_easy_section = easy
         easy.pack(fill="x", pady=(5, 8))
+        self.var_easy_color_custom = tk.BooleanVar(value=False)
+        ttk.Checkbutton(easy, text="色合いの数値を調整する", variable=self.var_easy_color_custom,
+                        command=self._update_easy_color_panel).pack(anchor="w", pady=(6, 2))
+        self._easy_color_panel = ttk.Frame(easy, style="Card.TFrame")
         eh = ttk.Frame(easy, style="Card.TFrame"); eh.pack(fill="x")
         ttk.Label(eh, text="★ かんたん作成", style="Section.TLabel").pack(side="left")
         ttk.Label(eh, text="難しい設定は後から変更できます", style="CardMuted.TLabel").pack(side="right")
@@ -1299,6 +1306,18 @@ class App:
         ttk.Combobox(color, state="readonly", textvariable=self.var_grade, values=list(GRADE_JP.values())).pack(fill="x", pady=3)
         for args in (("grade_strength","色の強さ",0,1.4),("temperature","色温度",-1,1),("contrast","コントラスト",0.6,1.6),("exposure","露出",-0.3,0.3),("vibrance","自然な彩度",-1,1.5),("vignette","ビネット",0,1),("grain","グレイン",0,1),("bloom","ブルーム",0,1),("bars","シネマ枠",0,1)):
             slider(color,*args)
+        # Lightweight controls for casual users. These are the SAME Tk
+        # variables as the advanced color editor, never a second set of data.
+        for key, label in (("grade_strength","色の強さ"), ("contrast","明暗の差"),
+                           ("temperature","暖色・寒色"), ("vibrance","色の鮮やかさ"),
+                           ("vignette","四隅の暗さ")):
+            line = ttk.Frame(self._easy_color_panel,style="Card.TFrame")
+            line.pack(fill="x", pady=2)
+            ttk.Label(line,text=label,width=13,style="Card.TLabel").pack(side="left")
+            lo,hi = self._slider_range(key)
+            ttk.Scale(line, from_=lo, to=hi,variable=self.sl[key]).pack(side="left",fill="x",expand=True,padx=4)
+            ttk.Entry(line,textvariable=self.sl[key],width=8,justify="right").pack(side="right")
+        self._update_easy_color_panel()
         self.var_fog=tk.BooleanVar(value=False)
         ttk.Checkbutton(color,text="FOG補正",variable=self.var_fog).pack(anchor="w",pady=(6,2))
         fog_controls=ttk.Frame(color,style="Card.TFrame")
@@ -1758,6 +1777,11 @@ class App:
         # creative color grade before the user chooses one.
         self.apply_template(self.var_tpl.get())
         self.var_grade.set(GRADE_JP["default"])
+        # Default is not an opt-in color/FX preset. Do not silently darken
+        # the corners or add grain/glow when starting for the first time.
+        for key in ("vignette","grain","bloom","bars"):
+            if key in self.sl:
+                self.sl[key].set(0.0)
         self._apply_edit_mode(log=False)
 
         # A compact log window is available from the settings/diagnostics button.
@@ -1779,12 +1803,18 @@ class App:
                 panel.pack_forget()
             if easy:
                 self._mode_easy_section.pack(fill="x", pady=(0, 8))
+                self._nav_template_card.pack_forget()
+                self._nav_template_card.pack(fill="x", pady=(0,8),
+                                             before=self._mode_easy_section)
                 # Duplicate right-side quick output stays unmounted; top 設定 opens the real output page.
                 quick_output = getattr(self, "_right_quick_output", None)
                 if quick_output is not None:
                     quick_output.pack_forget()
             else:
                 self.editor_zone_bar.pack(fill="x", pady=(0, 4))
+                self._nav_template_card.pack_forget()
+                self._nav_template_card.pack(fill="x", pady=(0,8),
+                                             before=self.editor_zone_bar)
                 self.editor_zone_hint.pack(fill="x", padx=13, pady=(0, 6))
                 self._apply_editor_zone()
         if hasattr(self, "_mode_sidecards"):
@@ -2117,9 +2147,19 @@ class App:
         widget.bind('<Destroy>',lambda event:hide() if event.widget is widget else None,add='+')
 
     def _focus_template(self):
-        self.left_scroll.scroll_to(self._nav_template_card)
+        self.center_edit_scroll.scroll_to(self._nav_template_card)
         self.tpl_combo.focus_set()
-        self.log('テンプレート: 左側のプリセット選択へ移動しました')
+        self.log('テンプレート: かんたん編集／詳細編集内のテンプレートへ移動しました')
+
+    def _update_easy_color_panel(self):
+        panel = getattr(self, "_easy_color_panel", None)
+        if panel is None:
+            return
+        if self.var_easy_color_custom.get():
+            if not panel.winfo_manager():
+                panel.pack(fill="x", pady=(2, 8))
+        elif panel.winfo_manager():
+            panel.pack_forget()
 
     def _focus_reference(self):
         # Reference cards are intentionally hidden in easy mode; reveal them.
