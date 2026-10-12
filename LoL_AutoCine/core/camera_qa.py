@@ -20,6 +20,8 @@ from .jobs import run_auto_edit
 from .scanner import filter_scanned_events
 from .qa_package import split_test_results
 from .qa_plan import validate_plan
+from .camera_geometry import inspect_rig
+from .qa_visual import make_qa_contact_sheets
 
 QA_MODES = (
     ("third", "通常三人称"),
@@ -107,7 +109,9 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
             # Numeric camera setup data from the normal production path.
             if str(message).startswith("CAMERA_QA_POSE "):
                 try:
-                    current["camera_diagnostics"].append(json.loads(str(message).split(" ", 1)[1]))
+                    pose = json.loads(str(message).split(" ", 1)[1])
+                    pose["geometry_validation"] = inspect_rig(pose)
+                    current["camera_diagnostics"].append(pose)
                 except (ValueError, IndexError, TypeError):
                     pass
             log(message)
@@ -200,6 +204,13 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
             manifest["badge_motion_tests"].append({"motion": "setup", "outputs": [],
                                                     "failed": [str(exc)]})
             flush()
+    if config is None or config.get("include_visual_comparison", True):
+        try:
+            manifest["visual_qa"] = make_qa_contact_sheets(
+                folder,manifest["outputs"],manifest["montage_tests"],log=log)
+        except Exception as visual_error:
+            manifest["visual_qa_error"] = str(visual_error)
+            log("比較画像生成失敗（録画・ZIP作成は継続）: " + str(visual_error))
     manifest["completed_clips"] = sum(bool(row["outputs"]) for row in manifest["outputs"])
     manifest["canceled"] = bool(stop is not None and stop.is_set())
     flush()
