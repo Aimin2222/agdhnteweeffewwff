@@ -9,7 +9,7 @@ REMOTE_PLAN = ("https://raw.githubusercontent.com/Aimin2222/agdhnteweeffewwff/"
                "refs/heads/autocine/v5.10.18-smart-camera-qa-directzip/"
                "LoL_AutoCine/qa/test_plan.json")
 LOCAL_PLAN = Path(__file__).resolve().parents[1] / "qa" / "test_plan.json"
-ALLOWED_CAMERA = ("third", "third_cinema", "fps", "lolnam_cinema")
+ALLOWED_CAMERA = ("third", "third_cinema", "fps", "lolnam_cinema", "geo_aim")
 ALLOWED_MONTAGE = ("cut", "flash", "dark", "white", "soft", "gold", "cool", "pulse", "cinema", "shadow")
 ALLOWED_BADGE = ("instant", "slide_left", "slide_right", "slide_up", "slide_down", "pop")
 
