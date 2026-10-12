@@ -1,0 +1,292 @@
+diff --git a/core/camera_qa.py b/core/camera_qa.py
+index 2346356..481892d 100644
+--- a/core/camera_qa.py
++++ b/core/camera_qa.py
+@@ -75,7 +75,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
+     folder.mkdir(parents=True, exist_ok=True)
+     manifest = {
+-        "version": "5.10.24-test",
++        "version": "5.10.25-test",
+         "kind": "live_replay_camera_test",
+         "expected_clips": len(scenarios),
+         "test_plan": config,
+diff --git a/core/camera_tuning.py b/core/camera_tuning.py
+index a62e940..b59ef07 100644
+--- a/core/camera_tuning.py
++++ b/core/camera_tuning.py
+@@ -46,7 +46,7 @@ SHOT_TUNING = {
+     ("RED", "fps"):         {"distance": 1.0, "angles": {}, "fps_back": 1.60},
+     ("RED", "lolnam_cinema"):{"distance": 1.0, "angles": {"x": -3.0, "y": -3.0}},
+     ("RED", "geo_aim"):     {"distance": 1.12, "angles": {"x": -4.0}},
+-    ("BLUE", "third"):      {"distance": 1.10, "angles": {"x": 3.0}},
++    ("BLUE", "third"):      {"distance": 1.10, "angles": {"x": -2.0}},  # #6: shift subject lower in frame, no orbit/distance changes
+     ("BLUE", "third_cinema"):{"distance": 1.08, "angles": {}},   # modest backward only
+     ("BLUE", "fps"):        {"distance": 1.0, "angles": {}, "fps_back": 1.38},
+     ("BLUE", "lolnam_cinema"):{"distance": 1.08, "angles": {"x": 2.5}},
+diff --git a/core/qa_plan.py b/core/qa_plan.py
+index b836b85..f93508b 100644
+--- a/core/qa_plan.py
++++ b/core/qa_plan.py
+@@ -6,7 +6,7 @@ from pathlib import Path
+ from urllib.request import Request, urlopen
+ 
+ REMOTE_PLAN = ("https://raw.githubusercontent.com/Aimin2222/agdhnteweeffewwff/"
+-               "refs/heads/autocine/v5.10.24-target-geometric-red-qa/"
++               "refs/heads/autocine/v5.10.25-blue6-framing-reference-handoff/"
+                "LoL_AutoCine/qa/test_plan.json")
+ LOCAL_PLAN = Path(__file__).resolve().parents[1] / "qa" / "test_plan.json"
+ ALLOWED_CAMERA = ("third", "third_cinema", "fps", "lolnam_cinema", "geo_aim")
+diff --git a/qa/test_plan.json b/qa/test_plan.json
+index 0384d70..52efb5f 100644
+--- a/qa/test_plan.json
++++ b/qa/test_plan.json
+@@ -1,7 +1,7 @@
+ {
+   "schema_version": 1,
+-  "plan_id": "2026-10-12-red1-and3-geometric-camera-aim-approved-modes-safe-videozip",
+-  "title": "v5.10.22 毎回自動収集: カメラ10本・切替・登場FX・比較画像・診断",
++  "plan_id": "2026-10-13-blue6-subject-position-reference-qa",
++  "title": "v5.10.25 毎回自動収集: 10カメラ・切替・登場FX・画像・診断",
+   "camera_modes": [
+     "third",
+     "third_cinema",
+@@ -25,13 +25,12 @@
+   "max_zip_mb": 500,
+   "include_visual_comparison": true,
+   "manual_review": [
+-    "RED #1: character visibly central at PRE/KILL/POST; no roll",
+-    "RED #3: character visibly central at PRE/KILL/POST, no top-right offscreen",
+-    "RED #2/#4/#5: exactly same approved look; do not modify engine logic",
+-    "BLUE #6: PRE framing must not crop the selected champion; B #7/#8/#9/#10 keep approved composition",
+-    "reference: MP4, 29 video folder or video ZIP accepted; file names and original mapped in report",
+-    "QA: collect all RED/BLUE clips, per-side review reels, transitions, motion FX, screenshots, results and diagnostics",
+-    "Final ZIP parts <=500MB; no nested archives"
++    "BLUE 6 通常3人称: キル前・瞬間・後に主役と敵が上端へ切れないか（v5.10.24と比べる）",
++    "RED 1, RED 3: 既に中央寄せされたキル瞬間を維持、天地反転なし",
++    "RED 2/4/5: 今回一切パラメータを変更しない。過去の良い構図を維持",
++    "BLUE 7/8/9/10: 位置・視線とも変更なし、問題あれば実動画確認",
++    "xMedia参考動画は静止画と代表例の説明のみ確認済み。動きの正確な抽出は元MP4復旧後",
++    "各モードのPRE/KILL/POST、RED/BLUE集約MP4、Transition/Badge/診断JSONを収集、<=500MBの単層ZIPに分割"
+   ],
+   "note": "3 distinct legacy tests instead of 10 similar brightness pulses; 6 spatial motions remain QA only. Results go into 500 MB max direct ZIPs.",
+   "spatial_transition_previews": [
+diff --git a/qa/xmedia_reference_notes_v51025.json b/qa/xmedia_reference_notes_v51025.json
+new file mode 100644
+index 0000000..c2e53c8
+--- /dev/null
++++ b/qa/xmedia_reference_notes_v51025.json
+@@ -0,0 +1,116 @@
++{
++  "schema_version": 1,
++  "scope": "Reference contact-sheet images and user-provided descriptions only; full motion extraction not yet completed",
++  "processing_status": "4 representative effects mapped; 29-video full frame-by-frame study pending",
++  "samples": [
++    {
++      "id": "aegis_lee_sin",
++      "label": "Aegis Lee Sin",
++      "approx_duration_s": 20.1,
++      "observed_from": "user supplied comparative still frames and description",
++      "visual": "放射状のズームブラーで戦闘の中心に視線誘導",
++      "implemented_parts": [
++        "zoom_blur",
++        "radial_blur",
++        "motion_camera"
++      ],
++      "suggested_preview": {
++        "camera": "third_cinema",
++        "grade": "default",
++        "video_effects": {
++          "zoom_blur": 0.25,
++          "radial_blur": 0.2
++        },
++        "vignette": 0,
++        "bars": 0
++      },
++      "open_questions": [
++        "正確なズーム開始/終了時間",
++        "ズームの強弱と視線方向はフレーム単位の確認が必要"
++      ]
++    },
++    {
++      "id": "ahri_vs_fizz",
++      "label": "Ahri vs Fizz",
++      "approx_duration_s": 9.5,
++      "observed_from": "user supplied monochrome with selective magenta still frame and description",
++      "visual": "背景をモノクロにし、一部のピンク系スキル演出の色を残す",
++      "implemented_parts": [
++        "noir grade (global grayscale approximation only)"
++      ],
++      "suggested_preview": {
++        "camera": "third_cinema",
++        "grade": "noir",
++        "vignette": 0,
++        "bars": 0
++      },
++      "unimplemented_parts": [
++        "動的なキャラクター/スキル対象のマスクによる部分カラー保持"
++      ],
++      "open_questions": [
++        "人物とスキルの境界",
++        "マスクをどのフレームに追従させるか"
++      ]
++    },
++    {
++      "id": "yasuo_1vs4",
++      "label": "Yasuo 1vs4",
++      "approx_duration_s": 19.8,
++      "observed_from": "user supplied comparatively close third person stills and description",
++      "visual": "低めで近いシネマカメラ、ターゲットへの接近",
++      "implemented_parts": [
++        "third_cinema",
++        "motion_dolly",
++        "motion_arc"
++      ],
++      "suggested_preview": {
++        "camera": "third_cinema",
++        "grade": "default",
++        "motion_arc": 9,
++        "motion_dolly": 4,
++        "vignette": 0,
++        "bars": 0
++      },
++      "open_questions": [
++        "RED/BLUE別の構図の安全性",
++        "壁際での被写体切れ"
++      ]
++    },
++    {
++      "id": "samira_combat",
++      "label": "サミーラ戦闘動画",
++      "approx_duration_s": 9.3,
++      "observed_from": "user supplied highlight still frames and description",
++      "visual": "寄った3Dカメラと強いハイライトの発光",
++      "implemented_parts": [
++        "third_cinema",
++        "bloom",
++        "glint",
++        "flash"
++      ],
++      "suggested_preview": {
++        "camera": "third_cinema",
++        "grade": "default",
++        "bloom": 0.2,
++        "video_effects": {
++          "glint": 0.16,
++          "flash": 0.2
++        },
++        "vignette": 0,
++        "bars": 0
++      },
++      "open_questions": [
++        "発光開始タイミング",
++        "元映像に含まれるスキル光と後付け加工の区別"
++      ]
++    }
++  ],
++  "policy": {
++    "auto_apply_to_qa": false,
++    "apply_to_normal_template": false,
++    "preserve_lol_game_audio": true,
++    "default_video_grade": "default",
++    "disallow_forced_vignette": true,
++    "must_review_actual_motion_before_claiming_exact_reproduction": true
++  }
++}
+diff --git a/tests/test_v51023_reference_framing.py b/tests/test_v51023_reference_framing.py
+index 8136a8e..eff89b8 100644
+--- a/tests/test_v51023_reference_framing.py
++++ b/tests/test_v51023_reference_framing.py
+@@ -21,7 +21,7 @@ def test_red1_has_no_roll_angle_and_aim_bias_is_independent():
+     red=shot_tuning("RED","third")
+     assert red["angles"]=={} # RED1 geometric look-at replaces manual bias
+     assert "z" not in red["angles"]
+-    assert shot_tuning("BLUE","third")["angles"]=={"x":3.0}
++    assert shot_tuning("BLUE","third")["angles"]=={"x":-2.0}  # v5.10.25 BLUE6 only
+ 
+ 
+ @pytest.mark.parametrize("mode",["third","third_cinema","fps","lolnam_cinema","geo_aim"])
+diff --git a/tests/test_v51025_blue6_and_reference_notes.py b/tests/test_v51025_blue6_and_reference_notes.py
+new file mode 100644
+index 0000000..cdec913
+--- /dev/null
++++ b/tests/test_v51025_blue6_and_reference_notes.py
+@@ -0,0 +1,78 @@
++# -*- coding: utf-8 -*-
++"""v5.10.25: single-camera framing guard and honest xMedia study metadata."""
++import json
++from pathlib import Path
++import pytest
++
++from core.camera import CameraPlan, RigInfo
++from core.camera_tuning import shot_tuning
++from core.effects import VIDEO_EFFECT_LABELS
++
++
++def test_blue6_tilt_moves_subject_down_without_changing_camera_position():
++    rig=RigInfo(mode="fps",third=True,h=(-0.52,-0.854166),
++                v=(-7173.99,1860.48,4104.70),
++                rot={"x":0.0,"y":37.0,"z":0.0},
++                pitch_axis="x",pitch_sign=1.0)
++    plan=CameraPlan(style="third",team="ORDER",rig=rig,
++                    third_dist=950.0,third_elev=37.0,side_yaw=-12.0,
++                    kill_time=750.24756)
++    plan._live_blue_geo_look=True
++    plan._live_blue_pulled_back=True
++    plan._camera_axis_safety=True
++    plan._live_dist_factor=shot_tuning("ORDER","third")["distance"]
++    raw_positions=[plan.offset_at(t) for t in (747.25,750.25,753.25)]
++    old_v51024_bias=3.0
++    bias=shot_tuning("ORDER","third")["angles"]["x"]
++    assert bias == -2.0
++    for t in (747.25,750.25,753.25):
++        raw=plan._live_geo_look(t)
++        rot=plan.rotation_at(t) if hasattr(plan,"_live_angle_bias") else None
++        plan._live_angle_bias=dict(shot_tuning("ORDER","third")["angles"])
++        rot=plan.rotation_at(t)
++        assert rot["x"]==pytest.approx(raw["x"]-2.0)
++        assert rot["x"]==pytest.approx((raw["x"]+old_v51024_bias)-5.0)
++        assert rot["y"]==raw["y"]
++        assert rot["z"]==0.0
++        assert 14.0<=rot["x"]<=70.0
++    assert raw_positions==[plan.offset_at(t) for t in (747.25,750.25,753.25)]
++
++
++def test_other_nine_camera_configurations_are_unchanged():
++    expected={
++      ("RED","third"):(1.13,{},1.0),
++      ("RED","third_cinema"):(0.96,{},1.0),
++      ("RED","fps"):(1.0,{},1.60),
++      ("RED","lolnam_cinema"):(1.0,{"x":-3.0,"y":-3.0},1.0),
++      ("RED","geo_aim"):(1.12,{"x":-4.0},1.0),
++      ("BLUE","third_cinema"):(1.08,{},1.0),
++      ("BLUE","fps"):(1.0,{},1.38),
++      ("BLUE","lolnam_cinema"):(1.08,{"x":2.5},1.0),
++      ("BLUE","geo_aim"):(1.08,{"x":2.5},1.0),
++    }
++    for (team,mode),(distance,angles,fps_back) in expected.items():
++        actual=shot_tuning(team,mode)
++        assert actual["distance"]==distance, (team,mode)
++        assert actual["angles"]==angles, (team,mode)
++        assert actual["fps_back"]==fps_back, (team,mode)
++    assert shot_tuning("BLUE","third")["distance"]==1.10
++
++
++def test_reference_catalog_is_opt_in_and_supported_labels():
++    root=Path(__file__).resolve().parents[1]
++    catalog=json.loads((root/"qa"/"xmedia_reference_notes_v51025.json").read_text(encoding="utf-8"))
++    assert len(catalog["samples"])==4
++    ids={sample["id"] for sample in catalog["samples"]}
++    assert ids=={"aegis_lee_sin","ahri_vs_fizz","yasuo_1vs4","samira_combat"}
++    assert catalog["policy"]["auto_apply_to_qa"] is False
++    assert catalog["policy"]["apply_to_normal_template"] is False
++    assert catalog["policy"]["disallow_forced_vignette"] is True
++    for sample in catalog["samples"]:
++        preset=sample["suggested_preview"]
++        assert preset.get("vignette",0)==0
++        assert preset.get("bars",0)==0
++        for effect,amount in preset.get("video_effects",{}).items():
++            assert effect in VIDEO_EFFECT_LABELS, effect
++            assert 0<=amount<=1
++    mono=next(s for s in catalog["samples"] if s["id"]=="ahri_vs_fizz")
++    assert "部分カラー" in " ".join(mono["unimplemented_parts"])

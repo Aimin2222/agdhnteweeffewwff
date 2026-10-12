@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "scope": "Reference contact-sheet images and user-provided descriptions only; full motion extraction not yet completed",
+  "processing_status": "4 representative effects mapped; 29-video full frame-by-frame study pending",
+  "samples": [
+    {
+      "id": "aegis_lee_sin",
+      "label": "Aegis Lee Sin",
+      "approx_duration_s": 20.1,
+      "observed_from": "user supplied comparative still frames and description",
+      "visual": "放射状のズームブラーで戦闘の中心に視線誘導",
+      "implemented_parts": [
+        "zoom_blur",
+        "radial_blur",
+        "motion_camera"
+      ],
+      "suggested_preview": {
+        "camera": "third_cinema",
+        "grade": "default",
+        "video_effects": {
+          "zoom_blur": 0.25,
+          "radial_blur": 0.2
+        },
+        "vignette": 0,
+        "bars": 0
+      },
+      "open_questions": [
+        "正確なズーム開始/終了時間",
+        "ズームの強弱と視線方向はフレーム単位の確認が必要"
+      ]
+    },
+    {
+      "id": "ahri_vs_fizz",
+      "label": "Ahri vs Fizz",
+      "approx_duration_s": 9.5,
+      "observed_from": "user supplied monochrome with selective magenta still frame and description",
+      "visual": "背景をモノクロにし、一部のピンク系スキル演出の色を残す",
+      "implemented_parts": [
+        "noir grade (global grayscale approximation only)"
+      ],
+      "suggested_preview": {
+        "camera": "third_cinema",
+        "grade": "noir",
+        "vignette": 0,
+        "bars": 0
+      },
+      "unimplemented_parts": [
+        "動的なキャラクター/スキル対象のマスクによる部分カラー保持"
+      ],
+      "open_questions": [
+        "人物とスキルの境界",
+        "マスクをどのフレームに追従させるか"
+      ]
+    },
+    {
+      "id": "yasuo_1vs4",
+      "label": "Yasuo 1vs4",
+      "approx_duration_s": 19.8,
+      "observed_from": "user supplied comparatively close third person stills and description",
+      "visual": "低めで近いシネマカメラ、ターゲットへの接近",
+      "implemented_parts": [
+        "third_cinema",
+        "motion_dolly",
+        "motion_arc"
+      ],
+      "suggested_preview": {
+        "camera": "third_cinema",
+        "grade": "default",
+        "motion_arc": 9,
+        "motion_dolly": 4,
+        "vignette": 0,
+        "bars": 0
+      },
+      "open_questions": [
+        "RED/BLUE別の構図の安全性",
+        "壁際での被写体切れ"
+      ]
+    },
+    {
+      "id": "samira_combat",
+      "label": "サミーラ戦闘動画",
+      "approx_duration_s": 9.3,
+      "observed_from": "user supplied highlight still frames and description",
+      "visual": "寄った3Dカメラと強いハイライトの発光",
+      "implemented_parts": [
+        "third_cinema",
+        "bloom",
+        "glint",
+        "flash"
+      ],
+      "suggested_preview": {
+        "camera": "third_cinema",
+        "grade": "default",
+        "bloom": 0.2,
+        "video_effects": {
+          "glint": 0.16,
+          "flash": 0.2
+        },
+        "vignette": 0,
+        "bars": 0
+      },
+      "open_questions": [
+        "発光開始タイミング",
+        "元映像に含まれるスキル光と後付け加工の区別"
+      ]
+    }
+  ],
+  "policy": {
+    "auto_apply_to_qa": false,
+    "apply_to_normal_template": false,
+    "preserve_lol_game_audio": true,
+    "default_video_grade": "default",
+    "disallow_forced_vignette": true,
+    "must_review_actual_motion_before_claiming_exact_reproduction": true
+  }
+}
