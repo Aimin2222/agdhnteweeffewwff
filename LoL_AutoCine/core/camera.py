@@ -31,6 +31,7 @@ INTENSITY_JP = {"natural": "自然め", "standard": "標準", "strong": "強め"
 STYLES = {
     "third_cinema": "三人称シネマ (斜め後ろ・寄り＋ローアングル＋スロー)",
     "third": "三人称 追従のみ",
+    "geo_aim": "座標で主役を追う（実験用）",
     "cinema": "FPS風シネマ (標準視点でドリーイン＋スロー)",
     "fps": "FPS視点 (高さ補正)",
     "orbit": "オービット (実験的)",
@@ -39,9 +40,9 @@ STYLES = {
     "cinema_top": "俯瞰シネマ (ズーム＋スロー・安全)",
     "top": "俯瞰 追従のみ (安全)",
 }
-THIRD_STYLES = ("third_cinema", "third", "lolnam_cinema")
+THIRD_STYLES = ("third_cinema", "third", "lolnam_cinema", "geo_aim")
 FPS_STYLES = ("cinema", "follow", "fps", "lolnam_cinema") + THIRD_STYLES
-CINEMA_STYLES = ("cinema", "cinema_top", "third_cinema", "lolnam_cinema")
+CINEMA_STYLES = ("cinema", "cinema_top", "third_cinema", "lolnam_cinema", "geo_aim")
 
 BASE_FOV = 60.0
 ZERO = {"x": 0.0, "y": 0.0, "z": 0.0}
@@ -366,7 +367,7 @@ class CameraPlan:
 
     def third_pose_at(self, t: float) -> tuple:
         """確定版Orbitの三人称カメラ。キャラクターを中心に水平公転。"""
-        if self.style in ("third", "third_cinema"):
+        if self.style in ("third", "third_cinema", "geo_aim"):
             """三人称: (オフセット, 仰角deg)。シネマではキル周辺で寄りつつローアングル。常に MIN_CAM_HEIGHT 以上。"""
             w = 0.0
             if self.style == "third_cinema":
@@ -468,6 +469,20 @@ class CameraPlan:
 
     def rotation_at(self, t: float) -> Optional[dict]:
         """確定版Orbitの三人称視線。カメラ位置の公転と同じ基準。"""
+        if self.style == "geo_aim":
+            # Experimental geometry-first targeting. We explicitly aim
+            # from the camera's relative 3-D offset back at the selected
+            # champion, rather than rotating stale top-camera Euler angles.
+            # Replay API Euler X/Y conventions still need Windows validation.
+            if self.rig is None or not self.rig.third:
+                return None
+            x, y, z = self.third_pose_at(t)[0]
+            horizontal = math.hypot(x,z)
+            if horizontal < 1.0:
+                return None
+            return {"x": math.degrees(math.atan2(y,horizontal)),
+                    "y": math.degrees(math.atan2(-x,-z)) % 360.0,
+                    "z": 0.0}
         if self.style in ("third", "third_cinema"):
             if self.rig is None or not self.rig.third or not self.rig.rot or not self.rig.pitch_axis:
                 return None

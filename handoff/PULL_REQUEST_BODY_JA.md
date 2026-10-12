@@ -1,11 +1,13 @@
-ユーザー開始CameraQAのRED4/BLUE4出力へ数値証拠を追加。既存rig/planからpitch軸/符号/補角・基準回転/位置/offset・開始時想定offset/rotationを記録しresults.jsonへ格納。QA専用ログでReplay API書込みを増やさず、カメラ式・TargetLock・UIを保持する。画角や水平線の良否を自動判定したとは扱わない。
+新規カラー既定を無補正へ変更し、テンプレート選択/旧保存IDを維持。図鑑のopen/close/destroyを追跡して背後パネルwheelを抑制し、従来非同期preview/worker終了を保持する。
 
-8本/10切替に加え、録画済み映像から6登場モーションMP4を生成。再録画せずmin(3秒,素材長)/60fps/元音声copy。受領のCPU overlay/libx264固定を既存GPUFullStage・選択encoder_policy・診断・安全CPUfallbackへ接続。色/DOFを二重適用せず、実FX経路と実encoder/fallbackを別に記録する。中止は現在の1本終了後に残り停止。
+ユーザー開始QAにデータ専用JSON計画を追加。既知camera/transition/motionと100〜500MBを検証し、64KB/3秒制限、通信失敗時は付属計画へ戻す。付属計画ではRED/BLUE各5視点（従来4＋geo_aim実験）を実行し、plan未指定APIは従来8本。geoは相対offsetから視線を計算する選択時だけの機能で、既存カメラ式/TargetLock/RED184度/手動向きを保持。数値と実フレーム比較表は参考で、主役・水平線・地形の自動合格判定ではない。
 
-受領指定v15GitHub基準へのapply --check/適用を別checkoutで確認。受領v16との差分だけ現行Codex v16へ統合し、古いGPU/カメラ/UIファイルを上書きしない。添付の実機/Actions記録は受領側資料として区別して保存。
+QA結果を500MB以下の直接ZIPに保存。ZIP入れ子なし、大きなMP4は1MBずつstreamして番号partへ分割し復元手順付き。原動画/元JSON/既存ZIPを保持、repeatは新しい名前。出力名を先に計画して最終JSONをZIPにも保存。symlink/外部パスを含めない。前回GPU確認動画/60fps/元音声copy/encoder_policy/素材再利用を維持し、色・DOFを二重適用しない。中止は現在の1本を終えて残り停止、追加比較表/ZIPを開始しない。
 
-検証: Linux/Xvfb全614成功66.45秒（失敗/skip/除外なし）、GPU障害/timeout/CPU比較・音声/60fps/encoder retry診断、QAログのAPI書込不変。6モーションのCPU PoCL OpenCL実出力は各60フレーム/元音声packet一致。物理GPU/Windows/LoL速度と画角は未検証。前回のLinux native終了は原因未確定、今回は全件で再発なし。旧UI/GPUエンジン/録画/音声/37PNG/旧91refを保持し全95refs bundle保存。完全ZIPと差分適用の全ソース一致、個人ファイル除外を確認。
+受領指定基準へのapply --check/適用と受領v17からの差分13パスをレビューし、現行Codex v17へ機能別統合。GPU/UI/共有8blobを固定レビュー、旧95refと過去配布物/37PNG/GPUエンジン/音声/録画を保持し全99refs bundle保存。
 
-前回v5.10.16を比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、またはCode→Download ZIPで取得して別フォルダでSTART_GPU.bat。実機手順はdocs/WINDOWS_TEST_v51017_JA.md。
+検証: Linux/Xvfb全635成功82.14秒（失敗/skip/除外なし）、分割再結合/元データ保持/再出力/最終JSON一致、データplan拒否/通信fallback、geometry offset整合、短い動画の実フレーム比較/直接ZIP/CRC。Windows/LoL/物理NVIDIA速度とgeo画角は未確認。前回Linux native終了の原因は未確定、今回全件で再発なし。完全ZIPと差分適用の全ソース一致・個人ファイル除外を確認。
 
-GitHub復元で450ソース/95refs/配布物hash一致。代表105テスト成功14.57秒（強制GCなし・GC有効）。再setupでも450ソース/95refs/3個人設定相当ファイルを保持/status clean。同じクラウド実行環境の別フォルダ検証で、Publish/新クラウドタスク/Windows実機確認とは区別します。
+前回v5.10.17を比較先とするDraft PR、mainへマージしません。完全ZIP→Download raw file、またはCode→Download ZIP。別フォルダでSTART_GPU.bat、実機手順はdocs/WINDOWS_TEST_v51018_JA.md。
+
+GitHub復元で463ソース/99refs/配布物hash一致。代表126テスト成功12.66秒（強制GCなし・GC有効）。再setupでも463ソース/99refs/3個人設定相当ファイルを保持/status clean。実URLのデータ専用QA計画も取得・検証成功。同じ実行環境の別フォルダ検証でPublish/新タスク/Windows実機とは区別します。

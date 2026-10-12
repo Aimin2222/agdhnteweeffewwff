@@ -34,6 +34,7 @@ from core.reference_safe import make_remixes, save_template as save_reference_te
 from core.audio import PreferredGameAudio, SyntheticAudio               # noqa: E402
 from core.jobs import preview_clip, run_auto_edit, safe_name                  # noqa: E402
 from core.camera_qa import run_camera_record_test, plan_eight_cases  # noqa: E402
+from core.qa_plan import load_qa_plan                                 # noqa: E402
 from core.preview import apply_camera_preview, apply_video_effect_preview, compose_compare, preview_title, render_exact_still   # noqa: E402
 from core.launcher import watch_replay                             # noqa: E402
 from core.players import Player, parse_players                     # noqa: E402
@@ -214,7 +215,17 @@ class ScrollFrame(ttk.Frame):
         # Tk ttk popup listboxes live in separate transient windows. Their wheel
         # event bubbles to bind_all even though the pointer is over the menu.
         # Never scroll the underlying panel while ANY combobox is expanded.
-        if getattr(self.winfo_toplevel(), "_autocine_combobox_popup_open", lambda: False)():
+        top = self.winfo_toplevel()
+        gallery = getattr(top, "_autocine_active_gallery", None)
+        if gallery is not None:
+            try:
+                if gallery.winfo_exists():
+                    # Gallery is a separate Toplevel; do not scroll main panels
+                    # regardless of where the mouse cursor happens to be.
+                    return
+            except tk.TclError:
+                pass
+        if getattr(top, "_autocine_combobox_popup_open", lambda: False)():
             return "break"
         if not self._pointer_inside(e):
             return
@@ -1591,7 +1602,7 @@ class App:
         ttk.Label(f, text="試合全体スキャン後、BLUE/REDの代表キルとモンタージュ演出をまとめて書き出す一時機能です。完成版では削除予定。", style="CardMuted.TLabel", wraplength=290).pack(fill="x")
         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
         ttk.Separator(f).pack(fill="x",pady=(8,6))
-        ttk.Button(f, text="開発用：カメラ8本＋つなぎ演出10種類を自動テスト",
+        ttk.Button(f, text="開発用：指定テストを一括作成・500MB ZIPに保存",
                    command=self.on_dev_camera_qa).pack(fill="x",pady=(0,3))
         ttk.Label(f, text="全体スキャン後に1回だけ押してください。同じ録画素材を使って演出を比較します（開発中のみ）。",
                   style="CardMuted.TLabel",wraplength=300).pack(fill="x")
@@ -1748,8 +1759,10 @@ class App:
         log_sb.pack(side="right", fill="y")
         self._mode_sidecards.append((log_card, right, "log"))
 
-        # Initialize all template-backed controls.
+        # Initialize template camera/FX controls, but do not silently apply a
+        # creative color grade before the user chooses one.
         self.apply_template(self.var_tpl.get())
+        self.var_grade.set(GRADE_JP["default"])
         self._apply_edit_mode(log=False)
 
         # A compact log window is available from the settings/diagnostics button.
@@ -3916,14 +3929,16 @@ class App:
         try:
             if self.stop_ev.is_set():
                 return
-            plan_eight_cases(players, events, preferred)  # Validate before starting capture.
+            qa_plan, plan_source = load_qa_plan(log=self.log)
+            plan_eight_cases(players, events, preferred, modes=qa_plan["camera_modes"])  # Validate before capture.
             src, own = self._ensure_source()
             factory = ((lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else
                        (lambda path: PreferredGameAudio(path))) if tpl.game_audio else None
             report = run_camera_record_test(self.api,src,players,events,preferred,
                         tpl,destination,stop=self.stop_ev,log=self.log,
                         audio_factory=factory,
-                        progress=lambda *values:self.q.put(("job",*values)))
+                        progress=lambda *values:self.q.put(("job",*values)),
+                        plan=qa_plan, plan_source=plan_source)
             self.log(f"開発用一括テストの結果: {report}")
         finally:
             if own and src is not None:
