@@ -17,8 +17,8 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Install minimum reference media deps
@@ -41,6 +41,17 @@ jobs:
           if not exist "%CD%\ci_test_media\_AutoCineReferenceReview\ReferenceReview_contact_sheets.zip" exit /b 4
 
 
+      - name: ZIP drag-and-drop is rejected without failing CI
+        shell: cmd
+        working-directory: LoL_AutoCine
+        run: |
+          echo invalid > ci_test_media\not_a_video.zip
+          call MAKE_REFERENCE_SHEETS.bat "%CD%\ci_test_media\not_a_video.zip"
+          set "REJECT_RC=%ERRORLEVEL%"
+          if not "%REJECT_RC%"=="2" exit /b 1
+          echo [PASS] ZIP rejected with expected status 2
+          exit /b 0
+
       - name: Japanese filename and folder BAT smoke test
         shell: pwsh
         working-directory: LoL_AutoCine
@@ -56,10 +67,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Install GUI and FFmpeg prerequisites
