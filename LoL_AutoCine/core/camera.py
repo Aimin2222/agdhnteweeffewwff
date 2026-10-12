@@ -353,6 +353,11 @@ class CameraPlan:
             a = min(1.3, self.intensity)
             elev = self.third_elev - 9.0 * a * w
             dist = self.third_dist * (1.0 - 0.30 * a * w)
+            if self.style == "third_cinema" and str(self.team).upper() in ("CHAOS","RED"):
+                # Windows QA: RED cinematic zoom was too close during the kill.
+                # Keep the actor in view; BLUE cinematic is already good.
+                dist = max(dist, 0.94 * self.third_dist)
+                elev = max(elev, 34.0)
             sin_e = max(math.sin(math.radians(max(10.0, elev))), MIN_CAM_HEIGHT / max(dist, 1.0))
             sin_e = min(0.98, sin_e)
             e = math.asin(sin_e)
@@ -399,6 +404,12 @@ class CameraPlan:
             dist = self.third_dist * dist_factor
             low_total = 9.0 * a + low * 0.55
             elev = self.third_elev - low_total * max(cue, impact * 0.9)
+            if str(self.team).upper() in ("CHAOS", "RED"):
+                # QA 4: RED Lolnam shot briefly cropped the selected champion.
+                # Reduce extreme zoom while retaining the existing BLUE 9.
+                dist = max(dist, self.third_dist * 0.88)
+                elev = max(elev, 32.0)
+                orbit_delta = max(-14.0, min(14.0, orbit_delta))
             if multi >= 2:
                 elev += 4.0 * cue
         else:
