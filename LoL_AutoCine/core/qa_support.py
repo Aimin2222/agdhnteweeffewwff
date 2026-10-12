@@ -4,7 +4,7 @@ from pathlib import Path
 TAIL_LIMIT_BYTES = 1_000_000
 DIAGNOSTICS = Path(__file__).resolve().parents[1] / 'diagnostics'
 LOG_NAMES = ('runtime.log', 'crash.log', 'last_error.txt', 'audio.log',
-             'capture.log', 'selftest_latest.json')
+             'capture.log', 'selftest_latest.json', 'reference_review_latest.log')
 
 
 def collect_qa_support(folder, *, diagnostics=None, log=lambda _m: None):
