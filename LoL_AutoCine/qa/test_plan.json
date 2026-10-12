@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "plan_id": "2026-10-12-red1-back-fps3-pullback-blue8-red2-4-protect-utf8-onclick",
-  "title": "v5.10.22 毎回自動収集: カメラ10本・切替・登場FX・比較画像・診断",
+  "plan_id": "2026-10-12-red3-canonical-centered-fps-blue-distance-reference-gui",
+  "title": "v5.10.23: RED #1/3再構図、BLUE全体後方補正、MP4ファイル選択・エラー原因特定",
   "camera_modes": [
     "third",
     "third_cinema",
@@ -25,16 +25,13 @@
   "max_zip_mb": 500,
   "include_visual_comparison": true,
   "manual_review": [
-    "RED #1: camera further out and character in central area",
-    "RED #2: do not change approved cinematic framing",
-    "RED #3: camera further out and no giant close-up",
-    "RED #4: protect approved Lolnam cinema",
-    "RED #5: move back and recenter",
-    "BLUE #6/7/9/10: preserve latest usable visuals",
-    "BLUE #8: move camera backward while preserving battle visibility",
-    "Full scan and capture after one click, including first connect",
-    "Japanese Windows CMD: no mojibake; reference MP4 name accepted",
-    "Comparison pictures, diagnostics and all final ZIP parts included"
+    "RED #1 lower-right framing should be centered",
+    "RED #2/#4/#5 must keep their visually-approved compositions",
+    "RED #3 battle and killer should be visible (not extreme corner)",
+    "BLUE #6-10 should show more background/rear perspective",
+    "BAT double-click opens a file/folder picker and outputs contact sheets",
+    "When processing fails a log opens in Notepad",
+    "Video+3-frame images+results+diagnostics and <=500MB ZIP parts"
   ],
   "note": "3 distinct legacy tests instead of 10 similar brightness pulses; 6 spatial motions remain QA only. Results go into 500 MB max direct ZIPs.",
   "spatial_transition_previews": [
