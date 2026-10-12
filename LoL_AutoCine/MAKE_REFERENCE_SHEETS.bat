@@ -9,7 +9,13 @@ set "LOG=%TEMP%\AutoCine_ReferenceReview_latest.log"
 if "%SOURCE%"=="" goto USAGE
 if not exist "%SOURCE%" goto MISSING
 set "OUTPUT=%~dp1_AutoCineReferenceReview_%~n1"
-if exist "%SOURCE%\NUL" set "OUTPUT=%SOURCE%\_AutoCineReferenceReview"
+rem Windows runner does not reliably resolve folder\NUL with IF EXIST.
+rem Use PUSHD (directory only) and preserve the old folder output layout.
+pushd "%SOURCE%" >nul 2>&1
+if errorlevel 1 goto SOURCE_READY
+popd
+set "OUTPUT=%SOURCE%\_AutoCineReferenceReview"
+:SOURCE_READY
 set "RUNPY=python"
 if exist ".venv\Scripts\python.exe" set "RUNPY=.venv\Scripts\python.exe"
 if exist "venv\Scripts\python.exe" set "RUNPY=venv\Scripts\python.exe"
