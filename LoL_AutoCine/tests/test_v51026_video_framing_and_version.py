@@ -24,7 +24,7 @@ def test_detailed_map_not_marked_flat_sky():
             frame.putpixel((x,y), ((x*17+y*7)%200+20,
                                          (x*11+y*23)%200+20,
                                          (x*29+y*3)%200+20))
-    assert flat_upper_background_ratio(frame) < .10
+    assert flat_upper_background_ratio(frame) < .50  # below the actual sky warning threshold
 
 
 def test_dark_or_white_flash_does_not_count_as_green_sky():
