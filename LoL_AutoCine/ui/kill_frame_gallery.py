@@ -79,6 +79,8 @@ class KillFrameGallery:
     def __init__(self, app):
         self.app=app
         self.win=tk.Toplevel(app.root)
+        app.root._autocine_active_gallery = self.win
+        self.win.transient(app.root)
         self.win.title("LoL AutoCine｜キルフレーム図鑑")
         self.win.geometry("1080x740")
         self.win.minsize(740, 500)
@@ -259,7 +261,10 @@ class KillFrameGallery:
         return "break"
 
     def _on_destroy(self,event):
-        if event.widget is self.win:self._stop_workers()
+        if event.widget is self.win:
+            self._stop_workers()
+            if getattr(self.app.root, "_autocine_active_gallery", None) is self.win:
+                self.app.root._autocine_active_gallery = None
 
     def _stop_workers(self):
         if self._stopping:return
@@ -274,6 +279,8 @@ class KillFrameGallery:
 
     def close(self):
         self._stop_workers()
+        if getattr(self.app.root, "_autocine_active_gallery", None) is self.win:
+            self.app.root._autocine_active_gallery = None
         if self.win.winfo_exists():self.win.destroy()
 
 

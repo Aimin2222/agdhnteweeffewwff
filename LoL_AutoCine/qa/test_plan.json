@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "plan_id": "2026-10-12-red-blue-geometric-camera-and-visual-review",
+  "title": "RED/BLUE構図・FX差分・フレーム動き自動検証",
+  "camera_modes": [
+    "third",
+    "third_cinema",
+    "fps",
+    "lolnam_cinema",
+    "geo_aim"
+  ],
+  "montage_styles": [
+    "cut",
+    "flash",
+    "dark",
+    "white",
+    "soft",
+    "gold",
+    "cool",
+    "pulse",
+    "cinema",
+    "shadow"
+  ],
+  "badge_motions": [
+    "instant",
+    "slide_left",
+    "slide_right",
+    "slide_up",
+    "slide_down",
+    "pop"
+  ],
+  "max_zip_mb": 500,
+  "include_visual_comparison": true,
+  "manual_review": [
+    "RED third fallback",
+    "RED camera pitch axis Y",
+    "BLUE distant rig reference",
+    "kill action in frame",
+    "transition style visually distinct"
+  ],
+  "note": "This is a data-only plan. It can be updated on the selected QA branch without changing executable application code."
+}

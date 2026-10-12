@@ -1,23 +1,23 @@
-# v5.10.17-test CameraEvidence / BadgeQA / GPUFull
+# v5.10.18-test ReleaseQA / DirectZIP / GPUFull
 
-完全版 **handoff/LoL_AutoCine_v5.10.17_CameraEvidence_BadgeQA_GPUFull_Windows_Full.zip** をGitHubで開き **Download raw file**。または **codex/lol-autocine-v51017-camera-evidence-badgeqa-handoff** の **Code → Download ZIP**。旧版と別フォルダへ展開してLoL_AutoCine/START_GPU.bat。Windows取得にはmainマージ/環境Publish不要。
+完全版 **handoff/LoL_AutoCine_v5.10.18_ReleaseQA_DirectZIP_GPUFull_Windows_Full.zip** をGitHubで開き **Download raw file**。または **codex/lol-autocine-v51018-releaseqa-directzip-handoff** の **Code → Download ZIP**。旧版と別フォルダへ展開してLoL_AutoCine/START_GPU.bat。Windows取得にmainマージ/環境Publishは不要。
 
-RED4/BLUE4録画のresults.jsonにカメラの数値証拠を追加。ログ用のAPI書込は増やさず、前回のカメラ式/TargetLock/旧UIを保持。8本/10切替に追加して録画済み映像から6登場モーションMP4を生成。再録画/音声再収録なし。受領CPU/libx264固定を既存GPUFullStage/選択encoder_policy/診断/安全CPUfallbackへ接続。60fpsと元音声copy、色/DOF等は二重適用しない。
+新規カラー既定を無補正にし、図鑑open中は背後パネルwheelを抑制。QAボタンでデータ専用計画を取得（失敗時付属へ）、既知操作/64KB/3秒/100〜500MBだけ許可。付属計画はRED/BLUE各5カメラ（従来4＋geo_aim実験）と10切替/6登場モーション。plan未指定APIは従来8本。geoは選択時だけ相対座標で視線を計算し、従来カメラ式は保持。数値/実フレーム比較表は参考値で、主役や上下反転を自動合格判定しない。
 
-Linux/Xvfb全614成功（66.45秒、失敗/skip/除外なし）。6登場QAをCPU PoCL OpenCLで実レンダリングし各60フレーム/音声packet一致を確認。物理NVIDIA/Windows/LoL性能は未確認。前回のLinuxネイティブ終了は原因未確定で、今回全件で再発なし。過去の異常を解決したとは主張しない。CPU制御/音声/I/O/静止画準備/ミラーは残る。
+QA結果は500MB以下の直接ZIPへ保存しZIPの入れ子なし。巨大MP4は1MBずつstreamしてpartへ分割、結合手順付き。原動画/JSON/既存ZIPを消さず、repeatは別名。出力名を先に計画しZIP内JSONを最終結果と一致。従来GPU Full/60fps/LoL専用音声/素材再利用/encoder policyを維持。静止画/音声/I/O/制御/ミラー近似はCPUも使う。
 
-完全ZIP448ファイル、差分適用後450ソース一致。旧91refsを保持し全95refsをbundle保存。差分基準は前回Codex v5.10.16-test。実機手順はLoL_AutoCine/docs/WINDOWS_TEST_v51017_JA.md。QA中止は次ケース停止で、現在の切替/モーションエンコードを終えてから残り停止。
+Linux/Xvfb全635成功82.14秒（失敗/skip/除外なし）。合成の実動画から2カメラ比較/2画像と直接ZIP/final JSON/CRCを検証。大きな動画の分割・再結合・元データ保持/再出力/symlink除外もテスト。Windows/LoL/NVIDIA速度とgeo実構図は未確認。前回native終了の原因は未確定で、今回成功を恒久修正とは扱わない。
+
+完全ZIP461ファイル、差分適用後463ソース一致。旧95refsを保持し全99refs bundle。差分基準は前回Codex v5.10.17-test。実機手順はLoL_AutoCine/docs/WINDOWS_TEST_v51018_JA.md。QA中止は現在の1本を終えて残り停止、比較表/ZIPも追加開始しない。
 
 ## ローカルGit復元
 ```sh
-git clone --single-branch --branch codex/lol-autocine-v51017-camera-evidence-badgeqa-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v51017_Handoff
-git clone --branch integration/v5.10.17 LoL_AutoCine_v51017_Handoff/handoff/LoL_AutoCine_v5.10.17_CameraEvidence_BadgeQA_GPUFull_all_branches.bundle LoL_AutoCine_v51017_Dev
-cd LoL_AutoCine_v51017_Dev
-git branch feature/gpu-camera-evidence-v51017 origin/feature/gpu-camera-evidence-v51017
-git branch feature/ui-camera-evidence-v51017 origin/feature/ui-camera-evidence-v51017
+git clone --single-branch --branch codex/lol-autocine-v51018-releaseqa-directzip-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v51018_Handoff
+git clone --branch integration/v5.10.18 LoL_AutoCine_v51018_Handoff/handoff/LoL_AutoCine_v5.10.18_ReleaseQA_DirectZIP_GPUFull_all_branches.bundle LoL_AutoCine_v51018_Dev
+cd LoL_AutoCine_v51018_Dev
+git branch feature/gpu-releaseqa-v51018 origin/feature/gpu-releaseqa-v51018
+git branch feature/ui-releaseqa-v51018 origin/feature/ui-releaseqa-v51018
 git status --short
 ```
 
-全95refsはorigin/*として復元。originはローカルbundle。既存設定/録画/プロジェクトを保管。担当ガードはdocs/CODEX_INTEGRATION_v51017_JA.md。
-
-GitHub復元で450ソース/95refs/配布物hash一致。代表105テスト成功14.57秒（強制GCなし・GC有効）。再setupでも450ソース/95refs/3個人設定相当ファイルを保持/status clean。同じクラウド実行環境の別フォルダ検証で、Publish/新クラウドタスク/Windows実機確認とは区別します。
+全99refsはorigin/*で復元。originはローカルbundle。設定/録画/プロジェクトを保管。担当ガードはdocs/CODEX_INTEGRATION_v51018_JA.md。

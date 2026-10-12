@@ -1,0 +1,842 @@
+diff --git a/core/camera.py b/core/camera.py
+index 372484f..1fe1eec 100644
+--- a/core/camera.py
++++ b/core/camera.py
+@@ -31,6 +31,7 @@ INTENSITY_JP = {"natural": "自然め", "standard": "標準", "strong": "強め"
+ STYLES = {
+     "third_cinema": "三人称シネマ (斜め後ろ・寄り＋ローアングル＋スロー)",
+     "third": "三人称 追従のみ",
++    "geo_aim": "座標で主役を追う（実験用）",
+     "cinema": "FPS風シネマ (標準視点でドリーイン＋スロー)",
+     "fps": "FPS視点 (高さ補正)",
+     "orbit": "オービット (実験的)",
+@@ -39,9 +40,9 @@ STYLES = {
+     "cinema_top": "俯瞰シネマ (ズーム＋スロー・安全)",
+     "top": "俯瞰 追従のみ (安全)",
+ }
+-THIRD_STYLES = ("third_cinema", "third", "lolnam_cinema")
++THIRD_STYLES = ("third_cinema", "third", "lolnam_cinema", "geo_aim")
+ FPS_STYLES = ("cinema", "follow", "fps", "lolnam_cinema") + THIRD_STYLES
+-CINEMA_STYLES = ("cinema", "cinema_top", "third_cinema", "lolnam_cinema")
++CINEMA_STYLES = ("cinema", "cinema_top", "third_cinema", "lolnam_cinema", "geo_aim")
+ 
+ BASE_FOV = 60.0
+ ZERO = {"x": 0.0, "y": 0.0, "z": 0.0}
+@@ -343,7 +344,7 @@ class CameraPlan:
+ 
+     def third_pose_at(self, t: float) -> tuple:
+         """確定版Orbitの三人称カメラ。キャラクターを中心に水平公転。"""
+-        if self.style in ("third", "third_cinema"):
++        if self.style in ("third", "third_cinema", "geo_aim"):
+             """三人称: (オフセット, 仰角deg)。シネマではキル周辺で寄りつつローアングル。常に MIN_CAM_HEIGHT 以上。"""
+             w = 0.0
+             if self.style == "third_cinema":
+@@ -445,6 +446,20 @@ class CameraPlan:
+ 
+     def rotation_at(self, t: float) -> Optional[dict]:
+         """確定版Orbitの三人称視線。カメラ位置の公転と同じ基準。"""
++        if self.style == "geo_aim":
++            # Experimental geometry-first targeting. We explicitly aim
++            # from the camera's relative 3-D offset back at the selected
++            # champion, rather than rotating stale top-camera Euler angles.
++            # Replay API Euler X/Y conventions still need Windows validation.
++            if self.rig is None or not self.rig.third:
++                return None
++            x, y, z = self.third_pose_at(t)[0]
++            horizontal = math.hypot(x,z)
++            if horizontal < 1.0:
++                return None
++            return {"x": math.degrees(math.atan2(y,horizontal)),
++                    "y": math.degrees(math.atan2(-x,-z)) % 360.0,
++                    "z": 0.0}
+         if self.style in ("third", "third_cinema"):
+             if self.rig is None or not self.rig.third or not self.rig.rot or not self.rig.pitch_axis:
+                 return None
+diff --git a/core/camera_geometry.py b/core/camera_geometry.py
+new file mode 100644
+index 0000000..ead0e97
+--- /dev/null
++++ b/core/camera_geometry.py
+@@ -0,0 +1,52 @@
++# -*- coding: utf-8 -*-
++"""Numeric target/camera geometry checks; no guesswork about screen contents."""
++from __future__ import annotations
++import math
++
++
++def target_direction(camera_position, target_position):
++    """3D unit vector pointing from camera to a known target position."""
++    try:
++        delta = tuple(float(t) - float(c) for c, t in zip(camera_position, target_position))
++        if len(delta) != 3 or not all(math.isfinite(v) for v in delta):
++            return None
++        size = math.sqrt(sum(v*v for v in delta))
++        return tuple(v / size for v in delta) if size > 0.0001 else None
++    except (TypeError, ValueError, OverflowError):
++        return None
++
++
++def inspect_rig(diagnostic, *, expected_distance=950.0):
++    """Classify calibration quality without asserting that a person is visible.
++
++    Replay API top and fps positions can be sampled at different logical
++    times; a baseline separated by thousands of world units is suspicious.
++    This is evidence, not an automatic BLUE/RED axis flip.
++    """
++    flags = []
++    style = str(diagnostic.get("style", ""))
++    third_mode = style in ("third", "third_cinema", "lolnam_cinema")
++    if third_mode and not diagnostic.get("third_person_enabled", False):
++        flags.append("third_person_fell_back_to_top_or_fps")
++    offset = diagnostic.get("baseline_offset")
++    magnitude = None
++    horizontal = None
++    try:
++        v = [float(x) for x in offset]
++        if len(v)==3 and all(math.isfinite(x) for x in v):
++            horizontal = math.hypot(v[0], v[2])
++            magnitude = math.sqrt(sum(x*x for x in v))
++    except (ValueError, TypeError, OverflowError):
++        pass
++    if third_mode and horizontal is not None and horizontal > max(3800.0, 4.0*expected_distance):
++        flags.append("baseline_camera_far_from_target_possible_stale_read")
++    if third_mode and diagnostic.get("pitch_axis") == "y":
++        flags.append("pitch_axis_y_differs_from_common_x_axis_check_required")
++    if third_mode and diagnostic.get("initial_camera_rotation") is None:
++        flags.append("no_explicit_target_rotation")
++    return {
++        "flags": flags,
++        "baseline_distance": round(magnitude, 1) if magnitude is not None else None,
++        "baseline_horizontal_distance": round(horizontal, 1) if horizontal is not None else None,
++        "needs_visual_review": bool(flags) or third_mode,
++    }
+diff --git a/core/camera_qa.py b/core/camera_qa.py
+index cd45fd2..9f76a5a 100644
+--- a/core/camera_qa.py
++++ b/core/camera_qa.py
+@@ -18,6 +18,10 @@ from .kill_icons import MOTION_STYLES, make_badge, with_badges
+ 
+ from .jobs import run_auto_edit
+ from .scanner import filter_scanned_events
++from .qa_package import split_test_results
++from .qa_plan import validate_plan
++from .camera_geometry import inspect_rig
++from .qa_visual import make_qa_contact_sheets
+ 
+ QA_MODES = (
+     ("third", "通常三人称"),
+@@ -25,8 +29,9 @@ QA_MODES = (
+     ("fps", "FPS"),
+     ("lolnam_cinema", "Lolnam風シネマ"),
+ )
++EXPERIMENTAL_QA_MODES = (("geo_aim", "座標追従カメラ（実験）"),)
+ 
+-def plan_eight_cases(players, events, preferred=None):
++def plan_eight_cases(players, events, preferred=None, modes=None):
+     """Return 8 ordered scenarios; empty event sets make testing impossible."""
+     result = []
+     for team, side in (("CHAOS", "RED"), ("ORDER", "BLUE")):
+@@ -34,36 +39,46 @@ def plan_eight_cases(players, events, preferred=None):
+         for p in players:
+             if getattr(p, "team", None) != team:
+                 continue
+-            scenes = filter_scanned_events(events, p, "both")
++            # A kill is a better QA target than an assist: the selected
++            # champion must actually be present at the important moment.
++            kills = filter_scanned_events(events, p, "kill")
++            scenes = kills or filter_scanned_events(events, p, "both")
+             if scenes:
+-                # Prefer the currently selected player if that side has one.
+                 preference = 1 if p is preferred or getattr(p, "slot", None) == getattr(preferred, "slot", None) else 0
+-                candidates.append((preference, len(scenes), p, scenes))
++                candidates.append((bool(kills), len(kills), preference, p, scenes))
+         if not candidates:
+             raise ValueError(f"{side}側に録画できるキル/アシストが見つかりません。全体スキャンを確認してください。")
+-        candidates.sort(key=lambda x: (x[0], x[1]), reverse=True)
+-        _, _, player, scenes = candidates[0]
++        candidates.sort(key=lambda x: (x[0], x[1], x[2]), reverse=True)
++        _, _, _, player, scenes = candidates[0]
+         # A representative middle event avoids replay opening/closing edges.
+         chosen = scenes[len(scenes)//2]
+-        for mode, label in QA_MODES:
+-            result.append((side, player, chosen, mode, label))
++        selected_modes = QA_MODES + (EXPERIMENTAL_QA_MODES if modes is not None and "geo_aim" in modes else ())
++        for mode, label in selected_modes:
++            if modes is None or mode in modes:
++                result.append((side, player, chosen, mode, label))
+     return result
+ 
+ def run_camera_record_test(api, source, players, events, preferred, template, destination,
+-                           *, stop=None, log=lambda _m: None, audio_factory=None, progress=None):
++                           *, stop=None, log=lambda _m: None, audio_factory=None, progress=None,
++                           plan=None, plan_source='bundled'):
+     """Record four modes per side, returning the report path.
+ 
+     Only one clip per style is created; capture and game audio use exactly the
+     same production pipeline as ordinary montage exports. No 8 simultaneous
+     recorders, no Tk widget access from the worker.
+     """
+-    plan = plan_eight_cases(players, events, preferred)
++    config = validate_plan(plan) if plan is not None else None
++    scenarios = plan_eight_cases(players, events, preferred,
++                                modes=config['camera_modes'] if config else None)
+     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
+     folder.mkdir(parents=True, exist_ok=True)
+     manifest = {
+         "version": "5.10.17-test",
+         "kind": "live_replay_camera_test",
+-        "expected_clips": len(plan),
++        "expected_clips": len(scenarios),
++        "test_plan": config,
++        "test_plan_source": plan_source,
++        "qa_archives": [],
+         "outputs": [],
+         "montage_tests": [],
+         "badge_motion_tests": [],
+@@ -72,7 +87,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+     def flush():
+         (folder / "results.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+     flush()
+-    for index, (side, player, scene, mode, label) in enumerate(plan, 1):
++    for index, (side, player, scene, mode, label) in enumerate(scenarios, 1):
+         if stop is not None and stop.is_set():
+             log("8本テスト: ユーザー操作により中止しました。")
+             break
+@@ -96,13 +111,15 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+             # Numeric camera setup data from the normal production path.
+             if str(message).startswith("CAMERA_QA_POSE "):
+                 try:
+-                    current["camera_diagnostics"].append(json.loads(str(message).split(" ", 1)[1]))
++                    pose = json.loads(str(message).split(" ", 1)[1])
++                    pose["geometry_validation"] = inspect_rig(pose)
++                    current["camera_diagnostics"].append(pose)
+                 except (ValueError, IndexError, TypeError):
+                     pass
+             log(message)
+-        log(f"8本テスト [{index}/8]: {side} / {label} / {player.label()} / {scene.time:.1f}s")
++        log(f"カメラテスト [{index}/{len(scenarios)}]: {side} / {label} / {player.label()} / {scene.time:.1f}s")
+         if progress:
+-            progress(index-1, 8, round(100*(index-1)/8,1), f"{side} {label} を録画中")
++            progress(index-1, len(scenarios), round(100*(index-1)/len(scenarios),1), f"{side} {label} を録画中")
+         try:
+             result = run_auto_edit(
+                 api, source, player, [scene], clip_template, folder / f"{index:02d}_{side}_{mode}",
+@@ -113,11 +130,11 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+                 current["failed"].append([0, "録画結果がありません"])
+         except Exception as exc:
+             current["failed"].append([0, f"{type(exc).__name__}: {exc}"])
+-            log(f"8本テスト [{index}/8] 失敗: {exc}")
++            log(f"カメラテスト [{index}/{len(scenarios)}] 失敗: {exc}")
+         manifest["outputs"].append(current)
+         flush()
+         if progress:
+-            progress(index, 8, round(100*index/8,1), f"{side} {label} 完了")
++            progress(index, len(scenarios), round(100*index/len(scenarios),1), f"{side} {label} 完了")
+     # Reuse recorded MP4s for every transition: do not spend another LoL
+     # capture/audio session on identical footage. Keep the outputs separate.
+     generated = [Path(p) for row in manifest["outputs"] for p in row["outputs"]]
+@@ -125,6 +142,8 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+     if len(ready) >= 2 and not (stop is not None and stop.is_set()):
+         from .montage_fx import MONTAGE_LABELS, render_montage
+         for style in MONTAGE_LABELS:
++            if config is not None and style not in config['montage_styles']:
++                continue
+             if stop is not None and stop.is_set():
+                 break
+             dest = folder / f"transition_{style}.mp4"
+@@ -152,6 +171,8 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+         try:
+             make_badge(badge, theme)
+             for motion, label in MOTION_STYLES.items():
++                if config is not None and motion not in config['badge_motions']:
++                    continue
+                 if stop is not None and stop.is_set():
+                     break
+                 dest = folder / f"badge_motion_{motion}.mp4"
+@@ -185,7 +206,24 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+             manifest["badge_motion_tests"].append({"motion": "setup", "outputs": [],
+                                                     "failed": [str(exc)]})
+             flush()
++    if config is None or config.get("include_visual_comparison", True):
++        try:
++            manifest["visual_qa"] = make_qa_contact_sheets(
++                folder,manifest["outputs"],manifest["montage_tests"],log=log)
++        except Exception as visual_error:
++            manifest["visual_qa_error"] = str(visual_error)
++            log("比較画像生成失敗（録画・ZIP作成は継続）: " + str(visual_error))
+     manifest["completed_clips"] = sum(bool(row["outputs"]) for row in manifest["outputs"])
+     manifest["canceled"] = bool(stop is not None and stop.is_set())
+     flush()
++    # Export results directly as <=500MB ZIPs, while leaving loose MP4s intact.
++    try:
++        max_mb = config["max_zip_mb"] if config else 500
++        archives = split_test_results(folder, max_bytes=max_mb * 1_000_000, log=log)
++        manifest["qa_archives"] = [str(item) for item in archives]
++        log(f"テスト結果をZIP {len(archives)} 個に分割（各最大{max_mb}MB）")
++    except Exception as exc:
++        manifest["qa_packaging_error"] = f"{type(exc).__name__}: {exc}"
++        log("テストZIP化に失敗。元MP4とJSONは保持されます: " + str(exc))
++    flush()
+     return folder / "results.json"
+diff --git a/core/effects.py b/core/effects.py
+index 35d74b0..a4b865c 100644
+--- a/core/effects.py
++++ b/core/effects.py
+@@ -118,7 +118,7 @@ class Template:
+     name: str = "カスタム"
+     style: str = "cinema"            # camera.STYLES
+     intensity: str = "standard"      # natural / standard / strong
+-    grade: str = "tealorange"
++    grade: str = "default"  # unset = preserve original LoL colors
+     grade_strength: float = 0.8      # 0-1.4
+     temperature: float = 0.0         # -1..1 (暖色+)
+     contrast: float = 1.0            # 0.6..1.6 (追加)
+diff --git a/core/jobs.py b/core/jobs.py
+index ebf4bf6..1322337 100644
+--- a/core/jobs.py
++++ b/core/jobs.py
+@@ -204,7 +204,7 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
+         raise ReplayApiError(f'リプレイのシーク位置が確定しません ({actual:.2f}s / 目標 {start:.2f}s)')
+     side_choice = getattr(tpl, 'camera_side', 'auto')
+     profile = live_side_profile(getattr(player, 'team', 'ORDER'), side_choice)
+-    live_third = tpl.style in ('third', 'third_cinema', 'lolnam_cinema')
++    live_third = tpl.style in ('third', 'third_cinema', 'lolnam_cinema', 'geo_aim')
+     elev = max(float(getattr(tpl, 'third_elev', 28.0)), profile['elevation']) if live_third else float(getattr(tpl, 'third_elev', 28.0))
+     dist = max(float(getattr(tpl, 'third_dist', 950.0)), profile['distance']) if live_third else float(getattr(tpl, 'third_dist', 950.0))
+     rig = attach_to_player(api, player, tpl.style, dist_scale=tpl.dist_scale, height=tpl.cam_height,
+diff --git a/core/qa_package.py b/core/qa_package.py
+new file mode 100644
+index 0000000..cb7117e
+--- /dev/null
++++ b/core/qa_package.py
+@@ -0,0 +1,97 @@
++# -*- coding: utf-8 -*-
++"""Single-layer, size-bounded ZIP exports for opt-in AutoCine camera QA."""
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import shutil
++import zipfile
++
++DEFAULT_MAX_BYTES = 500_000_000
++# 475MB payload target leaves ample room for headers and manifest; compressed
++# already-encoded MP4s are stored, not deflated again.
++SAFETY_BYTES = 25_000_000
++CHUNK_BYTES = 420_000_000
++
++
++def split_test_results(folder: Path, *, max_bytes: int = DEFAULT_MAX_BYTES,
++                       log=lambda _m: None) -> list[Path]:
++    """Pack MP4s and reports as independent ZIPs of strictly <= max_bytes.
++
++    QA ZIPs never contain ZIPs. A >max-size original is chunked into .part
++    files with a restoration note; original MP4 on disk is never modified.
++    """
++    folder = Path(folder)
++    max_bytes = int(max_bytes)
++    if max_bytes <= 1_000_000:
++        raise ValueError("max_bytes must be greater than 1MB")
++    limit = max_bytes - min(SAFETY_BYTES, max_bytes // 12)
++    chunk_bytes = min(CHUNK_BYTES, max(512_000, limit - 5_000_000))
++    sources = sorted(p for p in folder.rglob("*") if p.is_file()
++                     and p.suffix.lower() in {".mp4", ".json", ".txt", ".md", ".csv", ".jpg", ".png"})
++    if not sources:
++        return []
++    outputs = []
++    current = []
++    used = 0
++    temporary_parts = []
++    restoration = []
++
++    def add_file(item: Path, name: str):
++        nonlocal used, current
++        cost = item.stat().st_size + 4096 + len(name.encode("utf-8"))
++        if cost > limit:
++            raise RuntimeError(f"archive item exceeds maximum: {name}")
++        if current and used + cost > limit:
++            finish()
++        current.append((item, name))
++        used += cost
++
++    def finish():
++        nonlocal used, current
++        if not current:
++            return
++        target = folder / f"{folder.name}_part{len(outputs)+1:03d}.zip"
++        with zipfile.ZipFile(target, "w", compression=zipfile.ZIP_STORED, allowZip64=True) as archive:
++            for path, name in current:
++                archive.write(path, name)
++        if target.stat().st_size > max_bytes:
++            target.unlink(missing_ok=True)
++            raise RuntimeError("Produced archive exceeded the maximum size")
++        with zipfile.ZipFile(target) as archive:
++            if archive.testzip() is not None:
++                raise RuntimeError(f"CRC failed: {target}")
++        outputs.append(target)
++        log(f"QA ZIP完成: {target.name} / {target.stat().st_size/1_000_000:.1f}MB")
++        current, used = [], 0
++
++    try:
++        for path in sources:
++            rel = path.relative_to(folder).as_posix()
++            if path.stat().st_size + 4096 <= limit:
++                add_file(path, rel)
++                continue
++            # Oversized MP4 is chunked without corrupting or deleting the source.
++            n = 0
++            with path.open("rb") as inp:
++                while True:
++                    piece = inp.read(chunk_bytes)
++                    if not piece:
++                        break
++                    n += 1
++                    part = folder / f".qa_split_{len(temporary_parts):05d}.part"
++                    part.write_bytes(piece)
++                    temporary_parts.append(part)
++                    add_file(part, f"{rel}.part{n:03d}")
++            restoration.append({"original": rel, "parts": n,
++                                "instruction": "Restore by binary concatenation in numeric part order."})
++        if restoration:
++            note = folder / ".qa_restoration_notes.txt"
++            note.write_text(json.dumps(restoration, ensure_ascii=False, indent=2), encoding="utf-8")
++            temporary_parts.append(note)
++            add_file(note, "RESTORE_OVERSIZED_FILES.txt")
++        finish()
++        return outputs
++    finally:
++        for p in temporary_parts:
++            p.unlink(missing_ok=True)
+diff --git a/core/qa_plan.py b/core/qa_plan.py
+new file mode 100644
+index 0000000..71e08d1
+--- /dev/null
++++ b/core/qa_plan.py
+@@ -0,0 +1,60 @@
++# -*- coding: utf-8 -*-
++"""Data-only remote test plan; never downloads or executes Python source."""
++from __future__ import annotations
++import json
++from pathlib import Path
++from urllib.request import Request, urlopen
++
++REMOTE_PLAN = ("https://raw.githubusercontent.com/Aimin2222/agdhnteweeffewwff/"
++               "refs/heads/autocine/v5.10.18-smart-camera-qa-directzip/"
++               "LoL_AutoCine/qa/test_plan.json")
++LOCAL_PLAN = Path(__file__).resolve().parents[1] / "qa" / "test_plan.json"
++ALLOWED_CAMERA = ("third", "third_cinema", "fps", "lolnam_cinema", "geo_aim")
++ALLOWED_MONTAGE = ("cut", "flash", "dark", "white", "soft", "gold", "cool", "pulse", "cinema", "shadow")
++ALLOWED_BADGE = ("instant", "slide_left", "slide_right", "slide_up", "slide_down", "pop")
++
++
++def validate_plan(value):
++    """Restrict remote JSON strictly to known test operations and safe sizes."""
++    if not isinstance(value, dict) or value.get("schema_version") != 1:
++        raise ValueError("QA plan schema mismatch")
++    def choose(key, allowed):
++        raw = value.get(key, list(allowed))
++        if not isinstance(raw, list) or not raw or len(raw) > len(allowed):
++            raise ValueError("Invalid QA test list: " + key)
++        if any(not isinstance(x, str) or x not in allowed for x in raw):
++            raise ValueError("Unknown QA test: " + key)
++        return list(dict.fromkeys(raw))
++    try:
++        size = int(value.get("max_zip_mb", 500))
++    except (TypeError, ValueError) as e:
++        raise ValueError("Invalid ZIP size") from e
++    if size < 100 or size > 500:
++        raise ValueError("QA ZIP cap must be 100–500 MB")
++    return {
++        "schema_version": 1,
++        "plan_id": str(value.get("plan_id", "local"))[:128],
++        "camera_modes": choose("camera_modes", ALLOWED_CAMERA),
++        "montage_styles": choose("montage_styles", ALLOWED_MONTAGE),
++        "badge_motions": choose("badge_motions", ALLOWED_BADGE),
++        "max_zip_mb": size,
++        "include_visual_comparison": bool(value.get("include_visual_comparison", True)),
++    }
++
++
++def load_qa_plan(*, log=lambda _m: None, allow_remote=True):
++    local = validate_plan(json.loads(LOCAL_PLAN.read_text(encoding="utf-8")))
++    if not allow_remote:
++        return local, "bundled"
++    try:
++        request = Request(REMOTE_PLAN, headers={"User-Agent": "AutoCine-QA/1"})
++        with urlopen(request, timeout=3) as response:
++            raw = response.read(64 * 1024 + 1)
++        if len(raw) > 64 * 1024:
++            raise ValueError("QA plan is too large")
++        remote = validate_plan(json.loads(raw.decode("utf-8")))
++        log("開発用テスト計画をGitHubから取得: " + remote["plan_id"])
++        return remote, "github"
++    except Exception as exc:
++        log("テスト計画の通信に失敗。付属の計画を使用: " + str(exc))
++        return local, "bundled"
+diff --git a/core/qa_visual.py b/core/qa_visual.py
+new file mode 100644
+index 0000000..12a0348
+--- /dev/null
++++ b/core/qa_visual.py
+@@ -0,0 +1,102 @@
++# -*- coding: utf-8 -*-
++"""Generate actual frame contact sheets and conservative quality measurements.
++
++Not an AI champion detector: empty combat scenes cannot be declared valid
++without gameplay video understanding and actual screen-space person tracking.
++"""
++from __future__ import annotations
++from io import BytesIO
++from pathlib import Path
++import subprocess
++
++from PIL import Image, ImageDraw, ImageFont, ImageStat
++
++from .gpu_binary import ffmpeg_exe
++from .montage_fx import get_duration
++
++
++def frame_at(path: Path, seconds: float, *, width=320, height=180):
++    cmd = [str(ffmpeg_exe()), "-nostdin", "-hide_banner", "-loglevel", "error",
++           "-ss", str(max(0.0, float(seconds))), "-i", str(path), "-frames:v", "1",
++           "-vf", f"scale={width}:{height}", "-f", "image2pipe", "-vcodec", "png", "-"]
++    result = subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
++                            timeout=35)
++    if not result.stdout:
++        raise RuntimeError("No video frame returned")
++    return Image.open(BytesIO(result.stdout)).convert("RGB")
++
++
++def _sheet(entries, destination, *, columns=4):
++    entries = list(entries)
++    if not entries:
++        return None
++    width, height, band = 320, 180, 26
++    rows = (len(entries) + columns - 1) // columns
++    sheet = Image.new("RGB", (width * columns, (height+band) * rows), "#E9EFF6")
++    draw = ImageDraw.Draw(sheet)
++    for idx, (name, image) in enumerate(entries):
++        x = (idx % columns) * width
++        y = (idx // columns) * (height+band)
++        sheet.paste(image, (x,y+band))
++        draw.text((x+8,y+5), str(name)[:36], fill="#17263C")
++    sheet.save(destination, format="JPEG", quality=88)
++    return str(destination)
++
++
++def make_qa_contact_sheets(folder, camera_entries, transition_entries, *, log=lambda _m: None):
++    folder = Path(folder)
++    result = {"camera": [], "transitions": [], "images": [], "limitations":
++              "Brightness and texture are only heuristics: cannot prove a champion or kill is visible."}
++    camera_tiles = []
++    for case in camera_entries:
++        files = case.get("outputs") or []
++        if not files:
++            continue
++        try:
++            img = frame_at(Path(files[0]), 2.0)
++            gray = ImageStat.Stat(img.convert("L"))
++            contrast = round(gray.stddev[0],2)
++            luminance = round(gray.mean[0],2)
++            case_report = {"number": case.get("number"),"side": case.get("side"),
++                           "mode":case.get("mode"),"mean_brightness":luminance,
++                           "texture_contrast":contrast,
++                           "suspected_black_or_flat":luminance<9 or contrast<6}
++            result["camera"].append(case_report)
++            camera_tiles.append((f'{case.get("number")} {case.get("side")} {case.get("mode")}',img))
++        except Exception as exc:
++            log(f"カメラ比較画像取得失敗: {exc}")
++    try:
++        path = _sheet(camera_tiles, folder/"camera_comparison.jpg")
++        if path: result["images"].append(path)
++    except Exception as exc:
++        log("カメラ比較表作成失敗: "+str(exc))
++    transitions = []
++    try:
++        camera_files = [Path(p) for case in camera_entries for p in case.get("outputs",[])]
++        boundary = get_duration(camera_files[0], ffmpeg=str(ffmpeg_exe())) if camera_files else 2.0
++    except Exception:
++        boundary = 2.0
++    for case in transition_entries:
++        files = case.get("outputs") or []
++        if not files:
++            continue
++        try:
++            img = frame_at(Path(files[0]), boundary)
++            transitions.append((case["style"],img))
++        except Exception as exc:
++            log(f"つなぎ演出比較のフレーム取得失敗 ({case.get('style')}): {exc}")
++    try:
++        path = _sheet(transitions,folder/"transition_comparison.jpg",columns=5)
++        if path: result["images"].append(path)
++    except Exception as exc:
++        log("つなぎ比較表作成失敗: "+str(exc))
++    if transitions:
++        reference = next((im for style,im in transitions if style=="cut"),None)
++        if reference is not None:
++            for style,img in transitions:
++                raw_a,raw_b=reference.tobytes(),img.tobytes()
++                delta=round(sum(abs(x-y) for x,y in zip(raw_a,raw_b))/max(1,len(raw_a)),2)
++                result["transitions"].append({"style":style,
++                                              "mean_absolute_difference_from_cut":delta,
++                                              "similar_at_join":style!="cut" and delta<5.0})
++    return result
+diff --git a/legacy_app.py b/legacy_app.py
+index bafc632..6ac2d1e 100644
+--- a/legacy_app.py
++++ b/legacy_app.py
+@@ -34,6 +34,7 @@ from core.reference_safe import make_remixes, save_template as save_reference_te
+ from core.audio import PreferredGameAudio, SyntheticAudio               # noqa: E402
+ from core.jobs import preview_clip, run_auto_edit                  # noqa: E402
+ from core.camera_qa import run_camera_record_test                   # noqa: E402
++from core.qa_plan import load_qa_plan                                 # noqa: E402
+ from core.preview import apply_camera_preview, apply_video_effect_preview, compose_compare, preview_title, render_exact_still   # noqa: E402
+ from core.launcher import watch_replay                             # noqa: E402
+ from core.players import Player, parse_players                     # noqa: E402
+@@ -214,7 +215,17 @@ class ScrollFrame(ttk.Frame):
+         # Tk ttk popup listboxes live in separate transient windows. Their wheel
+         # event bubbles to bind_all even though the pointer is over the menu.
+         # Never scroll the underlying panel while ANY combobox is expanded.
+-        if getattr(self.winfo_toplevel(), "_autocine_combobox_popup_open", lambda: False)():
++        top = self.winfo_toplevel()
++        gallery = getattr(top, "_autocine_active_gallery", None)
++        if gallery is not None:
++            try:
++                if gallery.winfo_exists():
++                    # Gallery is a separate Toplevel; do not scroll main panels
++                    # regardless of where the mouse cursor happens to be.
++                    return
++            except tk.TclError:
++                pass
++        if getattr(top, "_autocine_combobox_popup_open", lambda: False)():
+             return "break"
+         if not self._pointer_inside(e):
+             return
+@@ -1588,7 +1599,7 @@ class App:
+         ttk.Button(f, text="✓ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
+         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
+         ttk.Separator(f).pack(fill="x",pady=(8,6))
+-        ttk.Button(f, text="開発用：カメラ8本＋つなぎ演出10種類を自動テスト",
++        ttk.Button(f, text="開発用：指定テストを一括作成・500MB ZIPに保存",
+                    command=self.on_dev_camera_qa).pack(fill="x",pady=(0,3))
+         ttk.Label(f, text="全体スキャン後に1回だけ押してください。同じ録画素材を使って演出を比較します（開発中のみ）。",
+                   style="CardMuted.TLabel",wraplength=300).pack(fill="x")
+@@ -1743,8 +1754,10 @@ class App:
+         log_sb.pack(side="right", fill="y")
+         self._mode_sidecards.append((log_card, right, "log"))
+ 
+-        # Initialize all template-backed controls.
++        # Initialize template camera/FX controls, but do not silently apply a
++        # creative color grade before the user chooses one.
+         self.apply_template(self.var_tpl.get())
++        self.var_grade.set(GRADE_JP["default"])
+         self._apply_edit_mode(log=False)
+ 
+         # A compact log window is available from the settings/diagnostics button.
+@@ -3810,10 +3823,12 @@ class App:
+             src, own = self._ensure_source()
+             factory = ((lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else
+                        (lambda path: PreferredGameAudio(path))) if tpl.game_audio else None
++            qa_plan, plan_source = load_qa_plan(log=self.log)
+             report = run_camera_record_test(self.api,src,players,events,preferred,
+                         tpl,destination,stop=self.stop_ev,log=self.log,
+                         audio_factory=factory,
+-                        progress=lambda *values:self.q.put(("job",*values)))
++                        progress=lambda *values:self.q.put(("job",*values)),
++                        plan=qa_plan, plan_source=plan_source)
+             self.log(f"開発用一括テストの結果: {report}")
+         finally:
+             if own and src is not None:
+diff --git a/qa/test_plan.json b/qa/test_plan.json
+new file mode 100644
+index 0000000..4ba5bcc
+--- /dev/null
++++ b/qa/test_plan.json
+@@ -0,0 +1,42 @@
++{
++  "schema_version": 1,
++  "plan_id": "2026-10-12-red-blue-geometric-camera-and-visual-review",
++  "title": "RED/BLUE構図・FX差分・フレーム動き自動検証",
++  "camera_modes": [
++    "third",
++    "third_cinema",
++    "fps",
++    "lolnam_cinema",
++    "geo_aim"
++  ],
++  "montage_styles": [
++    "cut",
++    "flash",
++    "dark",
++    "white",
++    "soft",
++    "gold",
++    "cool",
++    "pulse",
++    "cinema",
++    "shadow"
++  ],
++  "badge_motions": [
++    "instant",
++    "slide_left",
++    "slide_right",
++    "slide_up",
++    "slide_down",
++    "pop"
++  ],
++  "max_zip_mb": 500,
++  "include_visual_comparison": true,
++  "manual_review": [
++    "RED third fallback",
++    "RED camera pitch axis Y",
++    "BLUE distant rig reference",
++    "kill action in frame",
++    "transition style visually distinct"
++  ],
++  "note": "This is a data-only plan. It can be updated on the selected QA branch without changing executable application code."
++}
+diff --git a/tests/test_v51018_release_qa.py b/tests/test_v51018_release_qa.py
+new file mode 100644
+index 0000000..69e11ca
+--- /dev/null
++++ b/tests/test_v51018_release_qa.py
+@@ -0,0 +1,105 @@
++# -*- coding: utf-8 -*-
++"""v5.10.18: direct ZIP, optional test plan, geometry and comparison sheets."""
++from pathlib import Path
++from zipfile import ZipFile
++from PIL import Image
++import json
++import pytest
++
++from core.qa_package import split_test_results
++from core.qa_plan import validate_plan, load_qa_plan
++from core.camera_geometry import inspect_rig, target_direction
++from core.camera import CameraPlan, RigInfo
++from core.camera_qa import plan_eight_cases
++from core.players import Player
++from core.effects import Template
++
++
++def test_default_color_is_unmodified_and_templates_can_override():
++    assert Template().grade == "default"
++
++
++def test_latest_qa_plan_is_allowlisted_and_geometric_camera_is_opt_in():
++    plan, source=load_qa_plan(allow_remote=False)
++    assert source=="bundled"
++    assert "geo_aim" in plan["camera_modes"]
++    assert plan["max_zip_mb"]==500
++    with pytest.raises(ValueError):
++        validate_plan(dict(plan, camera_modes=["execute_shell_command"]))
++    with pytest.raises(ValueError):
++        validate_plan(dict(plan, max_zip_mb=1000))
++
++
++def test_archive_is_direct_and_bounded(tmp_path):
++    sub=tmp_path/"CameraQA_Test"
++    sub.mkdir()
++    (sub/"results.json").write_text('{"ok":true}',encoding="utf-8")
++    (sub/"output.mp4").write_bytes(b"video-data"*10000)
++    (sub/"camera_comparison.jpg").write_bytes(b"picture")
++    out=split_test_results(sub,max_bytes=2_000_000)
++    assert len(out)==1 and out[0].suffix==".zip"
++    assert out[0].stat().st_size<2_000_000
++    with ZipFile(out[0]) as z:
++        assert z.testzip() is None
++        names=z.namelist()
++        assert "output.mp4" in names and "results.json" in names
++        assert "camera_comparison.jpg" in names
++        assert not any(n.endswith(".zip") for n in names)
++
++
++def test_geometry_flags_actual_red_fallback_and_blue_stale_baseline():
++    red = dict(style="third", third_person_enabled=False,
++               baseline_offset=None,pitch_axis="",initial_camera_rotation=None)
++    issues=inspect_rig(red)
++    assert "third_person_fell_back_to_top_or_fps" in issues["flags"]
++    blue=dict(style="third",third_person_enabled=True,
++              baseline_offset=[6478,1729,7192],pitch_axis="x",
++              initial_camera_rotation={"x":37,"y":56,"z":12})
++    issues=inspect_rig(blue)
++    assert "baseline_camera_far_from_target_possible_stale_read" in issues["flags"]
++    vec=target_direction((5,2,2),(0,2,2))
++    assert vec==(-1.0,0.0,0.0)
++
++
++def test_geo_aim_is_computed_from_relative_target_position():
++    rig=RigInfo(mode="fps",third=True,rot={"x":37,"y":56,"z":0},
++                pitch_axis="x",h=(1,0),pitch_sign=1)
++    plan=CameraPlan(style="geo_aim",rig=rig,third_elev=37,third_dist=1060,side_yaw=0)
++    rot=plan.rotation_at(0.0)
++    assert rot is not None and set(rot)=={"x","y","z"}
++    assert 0 <= rot["y"] < 360 and 5 < rot["x"] < 80
++    assert rot["z"]==0
++
++
++def test_optional_geometric_qa_adds_one_clip_per_team():
++    blue=Player(0,"Blue","Blue#JP","Blue","Ahri","ORDER")
++    red=Player(5,"Red","Red#JP","Red","LeeSin","CHAOS")
++    events=[dict(event_id=1,time=30,killer="Blue",victim="Red",assisters=[]),
++            dict(event_id=2,time=40,killer="Red",victim="Blue",assisters=[])]
++    assert len(plan_eight_cases([blue,red],events))==8
++    rows=plan_eight_cases([blue,red],events,modes=["third","geo_aim"])
++    assert len(rows)==4 and [x[3] for x in rows]==["third","geo_aim"]*2
++
++
++def test_comparison_sheet_written_using_supplied_frame_samples(monkeypatch,tmp_path):
++    from core import qa_visual
++    monkeypatch.setattr(qa_visual,"frame_at",lambda *args,**kw:Image.new("RGB",(320,180),(30,70,110)))
++    monkeypatch.setattr(qa_visual,"get_duration",lambda *args,**kw:2.0)
++    report=qa_visual.make_qa_contact_sheets(
++        tmp_path, [{"number":1,"side":"RED","mode":"third","outputs":["fake.mp4"]}],
++        [{"style":"cut","outputs":["fake.mp4"]},{"style":"flash","outputs":["fake.mp4"]}])
++    assert len(report["images"])==2
++    assert all(Path(name).exists() for name in report["images"])
++    assert report["transitions"][1]["similar_at_join"]
++
++def test_fresh_ui_starts_with_unmodified_lol_color():
++    import tkinter as tk
++    from legacy_app import App
++    from core.effects import GRADE_JP
++    root=tk.Tk()
++    try:
++        app=App(root)
++        assert app.var_grade.get() == GRADE_JP["default"]
++        assert app.current_template().grade == "default"
++    finally:
++        root.destroy()
+diff --git a/ui/kill_frame_gallery.py b/ui/kill_frame_gallery.py
+index 11a3e84..cce8907 100644
+--- a/ui/kill_frame_gallery.py
++++ b/ui/kill_frame_gallery.py
+@@ -79,6 +79,8 @@ class KillFrameGallery:
+     def __init__(self, app):
+         self.app=app
+         self.win=tk.Toplevel(app.root)
++        app.root._autocine_active_gallery = self.win
++        self.win.transient(app.root)
+         self.win.title("LoL AutoCine｜キルフレーム図鑑")
+         self.win.geometry("1080x740")
+         self.win.minsize(740, 500)
+@@ -259,7 +261,10 @@ class KillFrameGallery:
+         return "break"
+ 
+     def _on_destroy(self,event):
+-        if event.widget is self.win:self._stop_workers()
++        if event.widget is self.win:
++            self._stop_workers()
++            if getattr(self.app.root, "_autocine_active_gallery", None) is self.win:
++                self.app.root._autocine_active_gallery = None
+ 
+     def _stop_workers(self):
+         if self._stopping:return
+@@ -274,6 +279,8 @@ class KillFrameGallery:
+ 
+     def close(self):
+         self._stop_workers()
++        if getattr(self.app.root, "_autocine_active_gallery", None) is self.win:
++            self.app.root._autocine_active_gallery = None
+         if self.win.winfo_exists():self.win.destroy()
+ 
+ 

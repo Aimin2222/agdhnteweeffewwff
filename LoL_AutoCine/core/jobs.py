@@ -70,7 +70,7 @@ def _play_until(api: ReplayAPI, end: float, start: float, tpl: Template, rec: Op
     """end まで再生しつつ、停止検知 (同じ画面を録り続けない) を行う。"""
     t_begin = time.time()
     last_t, last_move = -1.0, time.time()
-    min_speed = 0.35 if tpl.style in ("cinema", "cinema_top", "third_cinema", "lolnam_cinema") else 1.0
+    min_speed = 0.35 if tpl.style in ("cinema", "cinema_top", "third_cinema", "lolnam_cinema", "geo_aim") else 1.0
     wall_limit = (end - start) / min_speed + limit_extra
     while True:
         if stop is not None and stop.is_set():
@@ -204,7 +204,7 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
         raise ReplayApiError(f'リプレイのシーク位置が確定しません ({actual:.2f}s / 目標 {start:.2f}s)')
     side_choice = getattr(tpl, 'camera_side', 'auto')
     profile = live_side_profile(getattr(player, 'team', 'ORDER'), side_choice)
-    live_third = tpl.style in ('third', 'third_cinema', 'lolnam_cinema')
+    live_third = tpl.style in ('third', 'third_cinema', 'lolnam_cinema', 'geo_aim')
     elev = max(float(getattr(tpl, 'third_elev', 28.0)), profile['elevation']) if live_third else float(getattr(tpl, 'third_elev', 28.0))
     dist = max(float(getattr(tpl, 'third_dist', 950.0)), profile['distance']) if live_third else float(getattr(tpl, 'third_dist', 950.0))
     rig = attach_to_player(api, player, tpl.style, dist_scale=tpl.dist_scale, height=tpl.cam_height,
@@ -248,7 +248,7 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
             log(f"カメラQA数値ログ取得失敗（録画は継続）: {diagnostic_error}")
     if rig.mode == "top" and tpl.style in ("cinema", "follow"):
         plan.style = "cinema_top" if tpl.style == "cinema" else "top"   # 実際に使えるモードに合わせる
-    if plan.style in ("third", "third_cinema", "lolnam_cinema"):
+    if plan.style in ("third", "third_cinema", "lolnam_cinema", "geo_aim"):
         log(f"カメラサイド基準: 所属={getattr(player, 'team', 'ORDER')} / "
             f"設定={side_choice} / 校正済み水平補正={plan.side_yaw:.0f}° "
             f"/ 高さ角={elev:.0f}° / 距離={dist:.0f} (世界座標を二重反転しない)")
