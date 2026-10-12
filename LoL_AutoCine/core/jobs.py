@@ -223,6 +223,7 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                        side_yaw=((profile['yaw'] - 8.0 if tpl.style == 'third' and side_choice == 'auto' and str(getattr(player, 'team', '')).upper() in ('CHAOS', 'RED') else profile['yaw']) if live_third else 0.0),
                        team=getattr(player, 'team', 'ORDER'),
                       sel_name=player.selection_name or player.champion)
+    plan._camera_axis_safety = tpl.style in ('third', 'geo_aim')
     # QA-only readout: compare RED/BLUE rotations and positions numerically.
     # No extra Replay API writes; normal production clips are unchanged.
     if str(getattr(tpl, "name", "")).startswith("CameraQA "):

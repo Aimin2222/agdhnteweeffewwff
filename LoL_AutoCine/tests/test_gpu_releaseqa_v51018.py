@@ -77,7 +77,8 @@ def test_short_clip_contact_sheet_samples_inside_video(monkeypatch, tmp_path):
         samples.append(seconds); return Image.new('RGB',(320,180))
     monkeypatch.setattr(qa_visual,'frame_at',frame)
     report = qa_visual.make_qa_contact_sheets(tmp_path,[{'number':1,'side':'RED','mode':'third','outputs':['short.mp4']}],[])
-    assert samples == [.5] and len(report['images']) == 1
+    assert samples == [.2,.5,.82] and all(0 <= t < 1 for t in samples)
+    assert len(report['images']) == 2
 
 
 def test_qa_plan_filters_cases_keeps_gpu_policy_and_final_archive(monkeypatch,tmp_path):

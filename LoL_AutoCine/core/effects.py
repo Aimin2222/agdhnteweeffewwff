@@ -122,11 +122,11 @@ class Template:
     grade_strength: float = 0.8      # 0-1.4
     temperature: float = 0.0         # -1..1 (暖色+)
     contrast: float = 1.0            # 0.6..1.6 (追加)
-    vignette: float = 0.4            # 0-1
-    grain: float = 0.2               # 0-1
-    bloom: float = 0.25              # 0-1
+    vignette: float = 0.0            # 0-1; no forced dark corners before explicit preset
+    grain: float = 0.0               # 0-1; disabled until selected
+    bloom: float = 0.0               # 0-1; disabled until selected
     bars: float = 0.0                # 0-1 (シネマ枠 最大 約 12%)
-    transition: str = "flash"        # cut/fade/flash
+    transition: str = "cut"          # cut/fade/flash, no auto flash
     title_auto: bool = False          # キル数/対戦相手を自動タイトル化
     title_text: str = ""             # 手入力タイトル (空なら文字なし)
     bpm: float = 0.0                 # >0 ならビートに合わせた明滅
@@ -226,6 +226,10 @@ def one_click_templates() -> dict:
     ※「ジャネット風」は動画を直接視聴できていないため、定番のキルモンタージュ表現からの近似。"""
     T = Template
     return {
+        "デフォルト（無加工カラー）": T(name="デフォルト（無加工カラー）",
+                           style="third_cinema", intensity="natural",
+                           grade="default", grade_strength=0,
+                           vignette=0, grain=0, bloom=0, bars=0, transition="cut"),
         "三人称シネマ": T(name="三人称シネマ", style="third_cinema", intensity="standard", grade="tealorange",
                       grade_strength=0.8, vignette=0.4, grain=0.15, bloom=0.25, bars=0.06, transition="flash"),
         "Lolnam風シネマ": T(name="Lolnam風シネマ", style="lolnam_cinema", intensity="standard", grade="tealorange",
@@ -258,7 +262,7 @@ def one_click_templates() -> dict:
                          grade_strength=0.9, temperature=-0.2, vignette=0.35, grain=0.12, bloom=0.45, transition="flash",
                          vibrance=0.5),
         "ネオン・モンタージュ": T(name="ネオン・モンタージュ", style="cinema", intensity="strong", grade="neon",
-                          grade_strength=0.9, vignette=0.3, grain=0.1, bloom=0.5, transition="flash", bpm=128.0),
+                          grade_strength=1.12, vibrance=0.35, vignette=0.18, grain=0.08, bloom=0.44, transition="flash", bpm=128.0),
         "夕焼けシネマ": T(name="夕焼けシネマ", style="orbit", intensity="standard", grade="sunset",
                        grade_strength=0.9, temperature=0.3, vignette=0.4, grain=0.2, bloom=0.35, bars=0.06,
                        transition="fade"),
@@ -266,10 +270,6 @@ def one_click_templates() -> dict:
                             grade_strength=1.0, temperature=0.25, contrast=1.05, vignette=0.6, grain=0.55, bloom=0.2,
                             bars=0.07, transition="fade", exposure=0.03),
         # v5.10.8: an ungraded reference baseline and a one-click kill-glow look.
-        "デフォルト（無加工カラー）": T(name="デフォルト（無加工カラー）",
-                           style="third_cinema", intensity="natural",
-                           grade="default", grade_strength=0,
-                           vignette=0, grain=0, bloom=0, bars=0, transition="cut"),
         "ロイヤルゴールド・キルログ": T(name="ロイヤルゴールド・キルログ",
                            style="third_cinema", intensity="standard",
                            grade="golden", grade_strength=.65,
@@ -285,12 +285,12 @@ def one_click_templates() -> dict:
                           motion_arc=7.0, motion_dolly=2.0),
         "アイスブルー・シネマ": T(name="アイスブルー・シネマ",
                           style="lolnam_cinema", intensity="standard", grade="iceblue",
-                          grade_strength=.65, vignette=.22, grain=.08, bloom=.22,
+                          grade_strength=.98, temperature=-0.22, contrast=1.04, vignette=.16, grain=.06, bloom=.22,
                           bars=.02, transition="fade", motion_profile="smooth",
                           motion_arc=10.0, motion_dolly=3.0),
         "ゴールド・フィニッシュ": T(name="ゴールド・フィニッシュ",
                           style="third_cinema", intensity="standard", grade="golden",
-                          grade_strength=.70, vignette=.27, grain=.09, bloom=.23,
+                          grade_strength=1.05, temperature=.19, contrast=1.07, vignette=.18, grain=.07, bloom=.23,
                           bars=.04, transition="flash", motion_profile="cinematic",
                           motion_arc=13.0, motion_dolly=4.0),
         "エピック・チームファイト": T(name="エピック・チームファイト",
