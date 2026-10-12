@@ -18,6 +18,8 @@ from .kill_icons import MOTION_STYLES, make_badge, with_badges
 
 from .jobs import run_auto_edit
 from .scanner import filter_scanned_events
+from .qa_package import split_test_results
+from .qa_plan import validate_plan
 
 QA_MODES = (
     ("third", "通常三人称"),
@@ -26,7 +28,7 @@ QA_MODES = (
     ("lolnam_cinema", "Lolnam風シネマ"),
 )
 
-def plan_eight_cases(players, events, preferred=None):
+def plan_eight_cases(players, events, preferred=None, modes=None):
     """Return 8 ordered scenarios; empty event sets make testing impossible."""
     result = []
     for team, side in (("CHAOS", "RED"), ("ORDER", "BLUE")):
@@ -46,24 +48,31 @@ def plan_eight_cases(players, events, preferred=None):
         # A representative middle event avoids replay opening/closing edges.
         chosen = scenes[len(scenes)//2]
         for mode, label in QA_MODES:
-            result.append((side, player, chosen, mode, label))
+            if modes is None or mode in modes:
+                result.append((side, player, chosen, mode, label))
     return result
 
 def run_camera_record_test(api, source, players, events, preferred, template, destination,
-                           *, stop=None, log=lambda _m: None, audio_factory=None, progress=None):
+                           *, stop=None, log=lambda _m: None, audio_factory=None, progress=None,
+                           plan=None, plan_source='bundled'):
     """Record four modes per side, returning the report path.
 
     Only one clip per style is created; capture and game audio use exactly the
     same production pipeline as ordinary montage exports. No 8 simultaneous
     recorders, no Tk widget access from the worker.
     """
-    plan = plan_eight_cases(players, events, preferred)
+    config = validate_plan(plan) if plan is not None else None
+    scenarios = plan_eight_cases(players, events, preferred,
+                                modes=config['camera_modes'] if config else None)
     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
     folder.mkdir(parents=True, exist_ok=True)
     manifest = {
         "version": "5.10.17-test",
         "kind": "live_replay_camera_test",
-        "expected_clips": len(plan),
+        "expected_clips": len(scenarios),
+        "test_plan": config,
+        "test_plan_source": plan_source,
+        "qa_archives": [],
         "outputs": [],
         "montage_tests": [],
         "badge_motion_tests": [],
@@ -72,7 +81,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     def flush():
         (folder / "results.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     flush()
-    for index, (side, player, scene, mode, label) in enumerate(plan, 1):
+    for index, (side, player, scene, mode, label) in enumerate(scenarios, 1):
         if stop is not None and stop.is_set():
             log("8本テスト: ユーザー操作により中止しました。")
             break
@@ -100,9 +109,9 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
                 except (ValueError, IndexError, TypeError):
                     pass
             log(message)
-        log(f"8本テスト [{index}/8]: {side} / {label} / {player.label()} / {scene.time:.1f}s")
+        log(f"カメラテスト [{index}/{len(scenarios)}]: {side} / {label} / {player.label()} / {scene.time:.1f}s")
         if progress:
-            progress(index-1, 8, round(100*(index-1)/8,1), f"{side} {label} を録画中")
+            progress(index-1, len(scenarios), round(100*(index-1)/len(scenarios),1), f"{side} {label} を録画中")
         try:
             result = run_auto_edit(
                 api, source, player, [scene], clip_template, folder / f"{index:02d}_{side}_{mode}",
@@ -113,11 +122,11 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
                 current["failed"].append([0, "録画結果がありません"])
         except Exception as exc:
             current["failed"].append([0, f"{type(exc).__name__}: {exc}"])
-            log(f"8本テスト [{index}/8] 失敗: {exc}")
+            log(f"カメラテスト [{index}/{len(scenarios)}] 失敗: {exc}")
         manifest["outputs"].append(current)
         flush()
         if progress:
-            progress(index, 8, round(100*index/8,1), f"{side} {label} 完了")
+            progress(index, len(scenarios), round(100*index/len(scenarios),1), f"{side} {label} 完了")
     # Reuse recorded MP4s for every transition: do not spend another LoL
     # capture/audio session on identical footage. Keep the outputs separate.
     generated = [Path(p) for row in manifest["outputs"] for p in row["outputs"]]
@@ -125,6 +134,8 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     if len(ready) >= 2 and not (stop is not None and stop.is_set()):
         from .montage_fx import MONTAGE_LABELS, render_montage
         for style in MONTAGE_LABELS:
+            if config is not None and style not in config['montage_styles']:
+                continue
             if stop is not None and stop.is_set():
                 break
             dest = folder / f"transition_{style}.mp4"
@@ -152,6 +163,8 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         try:
             make_badge(badge, theme)
             for motion, label in MOTION_STYLES.items():
+                if config is not None and motion not in config['badge_motions']:
+                    continue
                 if stop is not None and stop.is_set():
                     break
                 dest = folder / f"badge_motion_{motion}.mp4"
