@@ -490,3 +490,5 @@ A	ui/studio_localization.py
 A	ui/template_gallery.py
 ```
 全537ソース/Python193・全127refs。旧123先端/37PNG/保護28パス/旧配布物229件保持。GPU・音声・録画・UI・camera/jobs本体byte不変。個人ファイルを追加・削除しない。
+
+sourceのstatus --shortは空、remoteなし。取得用の固定payload 4892a45aef9ced6ebb242989885222048a251990、Draft PR41（前回v24を比較先）。mainは未変更。全変更はコミット保存済み、個人データを除去していない。復元/repeat/全785件と復元代表276件/設定保存の証拠はVERIFICATION_v5.10.25.json。
