@@ -878,7 +878,7 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
     # correlated with inverted RED (1) and empty BLUE (6) in the Windows QA.
     # Side-specific good shots (2/4 RED, 7/9 BLUE) use pitch y instead.
     # Do not overwrite the good cinematic/FPS/Lolnam paths.
-    if style == "third" and isinstance(rot, dict) and axis == "x":
+    if style == "third" and isinstance(rot, dict) and axis != "y":
         team_is_red = str(getattr(p, "team", "")).upper() in ("CHAOS", "RED")
         try:
             can_use_y = math.isfinite(float(rot.get("y")))
