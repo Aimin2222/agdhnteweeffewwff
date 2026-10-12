@@ -41,7 +41,7 @@ def yaw_alignment_error(camera_offset: tuple, rotation: dict) -> float:
 
 SHOT_TUNING = {
     # Side, camera mode -> relative distance, Euler-axis screen adjustment.
-    ("RED", "third"):       {"distance": 1.13, "angles": {"x": 4.0}},
+    ("RED", "third"):       {"distance": 1.13, "angles": {}},
     ("RED", "third_cinema"):{"distance": .96, "angles": {}},
     ("RED", "fps"):         {"distance": 1.0, "angles": {}, "fps_back": 1.60},
     ("RED", "lolnam_cinema"):{"distance": 1.0, "angles": {"x": -3.0, "y": -3.0}},
