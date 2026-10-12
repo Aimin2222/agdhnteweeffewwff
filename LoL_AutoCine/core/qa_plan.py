@@ -6,7 +6,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 REMOTE_PLAN = ("https://raw.githubusercontent.com/Aimin2222/agdhnteweeffewwff/"
-               "refs/heads/autocine/v5.10.22-utf8-singleclick-camera-qa/"
+               "refs/heads/autocine/v5.10.23-fps-center-reference-picker/"
                "LoL_AutoCine/qa/test_plan.json")
 LOCAL_PLAN = Path(__file__).resolve().parents[1] / "qa" / "test_plan.json"
 ALLOWED_CAMERA = ("third", "third_cinema", "fps", "lolnam_cinema", "geo_aim")
