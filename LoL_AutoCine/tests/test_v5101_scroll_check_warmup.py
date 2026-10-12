@@ -60,6 +60,11 @@ def test_late_control_scrolls_panel_and_keeps_keyboard_selection(gui):
     late = ttk.Combobox(panel.inner, state='readonly',
                        values=('one', 'two', 'three'), textvariable=value)
     late.pack()
+    # The relocated template leaves the sidebars shorter. Ensure the panel
+    # genuinely has scrollable content before asserting wheel movement.
+    overflow = ttk.Frame(panel.inner, height=1800)
+    overflow.pack(fill="x")
+    overflow.pack_propagate(False)
     root.update()
     panel.canvas.yview_moveto(0)
     root.update()
