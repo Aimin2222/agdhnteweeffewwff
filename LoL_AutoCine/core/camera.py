@@ -454,6 +454,11 @@ class CameraPlan:
         s = self.scale_at(t)
         if self.style == 'fps' and str(self.team).upper() in ('CHAOS', 'RED'):
             s *= .76  # received RED-only FPS composition adjustment
+        if self.style == "fps" and getattr(self, "_live_fps_recenter", False):
+            # BLUE #8 observed a 2,900-unit rear offset with no player in
+            # frame. Pull this single style toward the locked target, then
+            # point at the target in rotation_at(). RED #3 remains wider.
+            s *= (0.54 if self.team not in ("CHAOS", "RED") else 0.89)
         return (self.rig.v[0] * s, self.rig.v[1] * s + self.height, self.rig.v[2] * s)
 
     def _live_geo_look(self, t: float) -> Optional[dict]:
