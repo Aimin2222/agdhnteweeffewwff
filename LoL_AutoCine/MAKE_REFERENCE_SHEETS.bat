@@ -11,22 +11,38 @@ title AutoCine Reference Video Review
 set "SOURCE=%~1"
 set "LOG=%TEMP%\AutoCine_ReferenceReview_latest.log"
 if not exist "diagnostics" mkdir "diagnostics" >nul 2>&1
-set "RUNEXE=py"
-set "RUNARG=-3"
-rem START.bat also uses "py -3"; prefer exactly that environment.
-where py >nul 2>&1
-if errorlevel 1 (
-  if exist ".venv\Scripts\python.exe" (
-    set "RUNEXE=.venv\Scripts\python.exe"
-    set "RUNARG="
-  ) else if exist "venv\Scripts\python.exe" (
-    set "RUNEXE=venv\Scripts\python.exe"
-    set "RUNARG="
-  ) else (
-    set "RUNEXE=python"
-    set "RUNARG="
+set "RUNEXE="
+set "RUNARG="
+rem Interpreter selection must verify PIL/imageio. The Windows py launcher
+rem can point to a different Python from one installed by setup-python.
+if exist ".venv\Scripts\python.exe" (
+  ".venv\Scripts\python.exe" -c "import PIL, imageio_ffmpeg" >nul 2>&1
+  if not errorlevel 1 set "RUNEXE=.venv\Scripts\python.exe"
+)
+if not defined RUNEXE (
+  if exist "venv\Scripts\python.exe" (
+    "venv\Scripts\python.exe" -c "import PIL, imageio_ffmpeg" >nul 2>&1
+    if not errorlevel 1 set "RUNEXE=venv\Scripts\python.exe"
   )
 )
+if not defined RUNEXE (
+  where python >nul 2>&1
+  if not errorlevel 1 (
+    python -c "import PIL, imageio_ffmpeg" >nul 2>&1
+    if not errorlevel 1 set "RUNEXE=python"
+  )
+)
+if not defined RUNEXE (
+  where py >nul 2>&1
+  if not errorlevel 1 (
+    py -3 -c "import PIL, imageio_ffmpeg" >nul 2>&1
+    if not errorlevel 1 (
+      set "RUNEXE=py"
+      set "RUNARG=-3"
+    )
+  )
+)
+if not defined RUNEXE goto PY_MISSING
 if "%SOURCE%"=="" goto PICK_SOURCE
 if /I "%~x1"==".zip" goto ZIP_INPUT
 if not exist "%SOURCE%" goto MISSING
@@ -53,6 +69,12 @@ if exist "%LOG%" (
 )
 if not "%EXITCODE%"=="0" goto FAILED
 echo [AutoCine] COMPLETE. The contact sheet ZIP is in the output folder.
+goto DONE
+:PY_MISSING
+echo [ERROR] Python with Pillow and imageio-ffmpeg was not found.
+echo [ERROR] Run: py -3 -m pip install pillow imageio-ffmpeg
+echo [ERROR] Then retry the MP4 or folder drop.
+set "RESULT=4"
 goto DONE
 :ZIP_INPUT
 echo [ERROR] Do not drop a ZIP archive. Extract it first, then drop an MP4 or folder.
