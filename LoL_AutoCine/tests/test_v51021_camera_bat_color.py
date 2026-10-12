@@ -12,8 +12,10 @@ def test_single_mp4_can_be_dropped_on_reference_bat(tmp_path):
     video.write_bytes(b"not-a-real-mp4")
     assert find_reference_videos(video)==[video]
     assert find_reference_videos(tmp_path)==[video]
+    invalid=tmp_path/"notes.txt"
+    invalid.write_text("not a video",encoding="utf-8")
     with pytest.raises(ValueError):
-        find_reference_videos(tmp_path/"notes.txt")
+        find_reference_videos(invalid)
 
 
 def test_cam_modes_are_isolated_and_blue7_is_protected():
