@@ -11,3 +11,5 @@ QA_Supportへ読み方と指定6診断の末尾各最大1MBを元バイトのま
 検証: Linux/Xvfb全719成功（失敗/skip/除外なし、60.969秒）。関連初回63成功/1失敗で.log除外を検出し修正、追加チェック含む65成功。実workerでTk snapshot/二重押し、cache/partial/stop、1MB tail原本不変/ZIP内ログと最終JSON一致、FPS height/manual、単体・nested Gitでignored不正UTFファイルを監査しないこと、旧GPU/UI/音声/ZIP回帰を確認。完全ZIP CRC/ソース一致/差分apply/個人ファイル除外/旧refsと配布物保持を検証。Windows/NVIDIA/LoL画角と日本語BAT実行は未確認、過去native終了原因は未確定。
 
 前回v5.10.21を比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、別フォルダSTART_GPU.bat。実機手順docs/WINDOWS_TEST_v51022_JA.md。
+
+GitHubから別checkout/bundle復元で全508ソース/115refs/ZIP・bundle hashes一致。復元先代表210成功17.16秒、失敗/skip/除外なし、GC有効・強制GCなし。再setupで508ソース/115refs/3個人設定相当のバイト保持/status clean。これは同一クラウド内の別フォルダ検証で新しいcloud task/Windows/Publish検証とは別。環境install_script/start_skillをrevision40へ保存してreadback確認、他の既知設定保持、Publishは未実行。次回環境へ反映する場合だけ環境設定で確認・保存後Publish。
