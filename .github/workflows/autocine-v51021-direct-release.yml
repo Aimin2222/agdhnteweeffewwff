@@ -53,8 +53,10 @@ jobs:
           python-version: '3.11'
       - name: Install GUI and FFmpeg prerequisites
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y xvfb ffmpeg
+          if ! command -v xvfb-run >/dev/null || ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y xvfb ffmpeg
+          fi
           python -m pip install -r LoL_AutoCine/requirements.txt pytest
       - name: Check syntax
         run: python -m compileall -q LoL_AutoCine
