@@ -1,10 +1,10 @@
 {
-  "source_head": "beb18e06463bdc02bf43993a3bd60f95c4173121",
-  "source_branch": "integration/v5.10.16",
-  "source_files": 440,
-  "python_files": 153,
-  "bundle_file": "LoL_AutoCine_v5.10.16_Motion_CameraQA_GPUFull_all_branches.bundle",
-  "bundle_sha256": "2d582ccea4a977c77f8b698e6590e8542a486f14eeddcfcacbd0c3df2c7abe50",
+  "source_head": "9b7eeee604db4dd910a7111fe6c24e7e0e1c5326",
+  "source_branch": "integration/v5.10.17",
+  "source_files": 450,
+  "python_files": 157,
+  "bundle_file": "LoL_AutoCine_v5.10.17_CameraEvidence_BadgeQA_GPUFull_all_branches.bundle",
+  "bundle_sha256": "63818698cae15ccfb72759807ba3bea6b6b8f1030f7d72609686c22be091666f",
   "branches": [
     "archive/received-portraitfix-v51015 31a88fd34c07601aa0136acbf68102c8751e2e9c",
     "archive/received-scanfix-v51015 cb0f0e9d92ed01787838c14c967e89d9a12d6a08",
@@ -15,12 +15,14 @@
     "archive/received-ui-v51014 8d20286f9760255bd1c2d9081a3414bac2821658",
     "archive/received-ui-v51015 a70a83c38751fd7e16c4943e46589b2e6bbe509f",
     "archive/received-ui-v51016 dc1c1833b9bb6105dba18160ca4fda2201b2958e",
+    "archive/received-ui-v51017 bfd0752e61ebba2c762864569968fabc874e3449",
     "archive/received-ui-v5108 be2a9c6cbd51de576e75dd18da3fa40aa0b86cd4",
     "archive/received-ui-v5109 8c5cb07ed85a3b5463feb1b8ddfe13ba4e5b8314",
     "baseline/v5.8.5 96b928a7385537317e73bad5235a28984fe94716",
     "codex/initial-audit 5673592f1acad1387564440a1ec9b6b9e8f00f5a",
     "feature/capture-startup-v5103 f6cb59082069e938fa994978bca47db918ee1b10",
     "feature/capture-targetfix-v5103 8f4fa6900afec88ae7f56a385dac9efe72a1f9cb",
+    "feature/gpu-camera-evidence-v51017 aa69a71faf7dd2639c7898f4d5ebea5e6d695b91",
     "feature/gpu-camera-v51015 d13ac8ed2aa603992f05945fcbcc7ffb77202a89",
     "feature/gpu-capture60-v5103 954f55ca4ba804ce0187779856f7b7310ce78b47",
     "feature/gpu-engine efcbbd17bd143055a437ced4341727c35c828728",
@@ -36,6 +38,7 @@
     "feature/gpu-shared-v5104 4462635e6887e3cf38bf687b120eebe4be415d45",
     "feature/gpu-shared-v5105 efcbbd17bd143055a437ced4341727c35c828728",
     "feature/gpu-test-launch-v5107 eefbfd65cd94b42319ebf98df3dcdbc40220aa7f",
+    "feature/ui-camera-evidence-v51017 db0dbf66025a2066fe1c3d361995a4611f515276",
     "feature/ui-champion-pair-v599 ca36178065e210defd2f79288a2488937d253c90",
     "feature/ui-circle-v5103 284e875a4d6f3ace6f80b6cf8ab2fa65aefd1a50",
     "feature/ui-dispatch-hangfix-v5103 8f194936faafd942641a91d2279461d14d8efb8a",
@@ -74,6 +77,7 @@
     "integration/v5.10.15-portraitfix 068c26b34125b940571cc481619f372531f2224b",
     "integration/v5.10.15-scanfix e62be60d41fefd41dfc01568211c75bb3fd86ff6",
     "integration/v5.10.16 beb18e06463bdc02bf43993a3bd60f95c4173121",
+    "integration/v5.10.17 9b7eeee604db4dd910a7111fe6c24e7e0e1c5326",
     "integration/v5.10.3 9dc795ded438d0ce4510e9d99fd699ec9155230f",
     "integration/v5.10.3-capture60 2a7a538540cbce9c13aae49da4a156cfd7ff4671",
     "integration/v5.10.3-capturefix 86a1165658082daaff902649dd56eb7a4895ed09",
@@ -99,7 +103,7 @@
     "stable/v5.8.5 96b928a7385537317e73bad5235a28984fe94716"
   ],
   "artifacts": {
-    "LoL_AutoCine_v5.10.16_Motion_CameraQA_GPUFull_Windows_Full.zip": "3fd294736b4546fbdb99f4bcdeece1f48b72698c3b5392a25b8b060e229ebf85",
-    "LoL_AutoCine_v5.10.16_Motion_CameraQA_GPUFull_Codex_MergeChanges.zip": "185ca00d579f5b86de4d42e261d0214a0d408c7cba8d9c7081f2aea76a247af8"
+    "LoL_AutoCine_v5.10.17_CameraEvidence_BadgeQA_GPUFull_Windows_Full.zip": "31a33b592d786a8d32886f28bf7dbbaedb34270740d2752cc3f4ba91e69542a5",
+    "LoL_AutoCine_v5.10.17_CameraEvidence_BadgeQA_GPUFull_Codex_MergeChanges.zip": "ff555fcacab5bdc1ada4c0a49a7a218189391bf7380382106b0e12f5887ee3b4"
   }
 }

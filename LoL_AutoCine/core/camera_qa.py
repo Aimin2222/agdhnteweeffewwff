@@ -14,6 +14,10 @@ from pathlib import Path
 
 from .jobs import run_auto_edit
 from .scanner import filter_scanned_events
+from .kill_icons import MOTION_STYLES, make_badge, normalize
+from .gpu_badge_qa import render_badge_motion
+from .montage_fx import get_duration
+from .gpu_binary import ffmpeg_exe
 
 QA_MODES = (
     ("third", "通常三人称"),
@@ -62,6 +66,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         "expected_clips": len(plan),
         "outputs": [],
         "montage_tests": [],
+        "badge_motion_tests": [],
         "limitations": "Framing must be judged visually on Windows. Audio/codec need playback or ffprobe.",
     }
     def flush():
@@ -86,14 +91,23 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         clip_template.post = min(3.0, max(1.0, float(template.post)))
         current = {"number": index, "side": side, "mode": mode, "label": label,
                    "player": player.label(), "event_time": float(scene.time), "outputs": [],
-                   "failed": []}
+                   "failed": [], "camera_diagnostics": []}
+        def capture_camera_log(message):
+            if str(message).startswith("CAMERA_QA_POSE "):
+                try:
+                    evidence = json.loads(str(message).split(" ", 1)[1])
+                    if isinstance(evidence, dict):
+                        current["camera_diagnostics"].append(evidence)
+                except (ValueError, IndexError, TypeError):
+                    pass
+            log(message)
         log(f"8本テスト [{index}/8]: {side} / {label} / {player.label()} / {scene.time:.1f}s")
         if progress:
             progress(index-1, 8, round(100*(index-1)/8,1), f"{side} {label} を録画中")
         try:
             result = run_auto_edit(
                 api, source, player, [scene], clip_template, folder / f"{index:02d}_{side}_{mode}",
-                False, progress=None, stop=stop, log=log, audio_factory=audio_factory)
+                False, progress=None, stop=stop, log=capture_camera_log, audio_factory=audio_factory)
             current["outputs"] = [str(p) for p in result.outputs]
             current["failed"] = [[int(i), str(msg)] for i,msg in result.failed]
             if not result.outputs and not result.failed:
@@ -130,6 +144,39 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
                 outcome["failed"] = [f"{type(exc).__name__}: {exc}"]
                 log(f"つなぎ演出テスト {style}: {exc}")
             manifest["montage_tests"].append(outcome)
+            flush()
+    # Reuse the recorded clip, including its LoL audio, for motion QA.
+    # Only the test badge is added: do not apply the clip's color/DOF twice.
+    if ready and not (stop is not None and stop.is_set()):
+        theme = normalize(template.kill_icon_style)
+        if theme == "off":
+            theme = "cinema"
+        badge = folder / "badge_motion_qa_image.png"
+        try:
+            duration = min(3.0, get_duration(ready[0], ffmpeg=str(ffmpeg_exe())))
+            if duration <= 0:
+                raise ValueError("録画素材の長さを取得できません")
+            make_badge(badge, theme)
+            for motion, label in MOTION_STYLES.items():
+                if stop is not None and stop.is_set():
+                    break
+                dest = folder / f"badge_motion_{motion}.mp4"
+                entry = {"motion": motion, "label": label, "outputs": [], "failed": []}
+                try:
+                    entry["render"] = render_badge_motion(
+                        ready[0], dest, badge, theme, motion, duration,
+                        encoder_policy=template.encoder_policy, log=log)
+                    if not dest.is_file() or not dest.stat().st_size:
+                        raise RuntimeError("テスト動画が生成されませんでした")
+                    entry["outputs"] = [str(dest)]
+                except Exception as exc:
+                    entry["failed"].append(f"{type(exc).__name__}: {exc}")
+                    log(f"キルフレーム登場 {label} のテスト失敗: {exc}")
+                manifest["badge_motion_tests"].append(entry)
+                flush()
+        except Exception as exc:
+            manifest["badge_motion_tests"].append({"motion": "setup", "outputs": [],
+                                                    "failed": [str(exc)]})
             flush()
     manifest["completed_clips"] = sum(bool(row["outputs"]) for row in manifest["outputs"])
     manifest["canceled"] = bool(stop is not None and stop.is_set())

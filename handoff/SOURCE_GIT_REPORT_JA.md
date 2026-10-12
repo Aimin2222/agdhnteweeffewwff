@@ -1,45 +1,35 @@
-# v5.10.16-test 保存状況
+# v5.10.17-test 保存状況
 
-ソース /workspace/LoL_AutoCine、integration/v5.10.16、HEAD beb18e06463bdc02bf43993a3bd60f95c4173121、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51016-motion-cameraqa-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時ソース/取得用status --shortは空。mainへマージしない。未保存の変更はなし（最終verification参照）。
+ソース /workspace/LoL_AutoCine、integration/v5.10.17、HEAD 9b7eeee604db4dd910a7111fe6c24e7e0e1c5326、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51017-camera-evidence-badgeqa-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時ソース/取得用status --shortは空。未保存なし、mainへマージしない。
 
 ## git log -3 --oneline（ソース）
 ```text
-beb18e0 Document v5.10.16 integration ownership Windows tests and reproducible delivery
-1ef8bff Merge GPU motion and camera QA regression coverage
-e1d4ce7 Verify resident badge motion recording reuse cancellation and camera cache lifecycle
+9b7eeee Document v5.10.17 camera evidence GPU QA ownership and Windows delivery
+47aaab6 Integrate v5.10.17 numeric camera evidence and GPU motion QA
+aa69a71 Add numeric camera evidence and GPU-backed six-motion QA with audio and encoder policy preserved
 ```
 ## git remote -v（取得用）
 ```text
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
-## 前回ScanFixからの実変更
+## 前回v5.10.16からの実変更
 ```text
 M	VERSION.txt
-M	core/camera.py
-A	core/camera_qa.py
-M	core/effects.py
-M	core/gpu_full.py
-M	core/kill_icons.py
-A	docs/CODEX_INTEGRATION_v51016_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_v5.10.16.json
-A	docs/WINDOWS_TEST_v51016_JA.md
-M	legacy_app.py
-A	patches/history/v5.10.16/RECEIVED_CODE.patch
-A	patches/history/v5.10.16/RECEIVED_README_JA.txt
-M	tests/test_gpu_champion_pair_v599.py
-M	tests/test_gpu_highlight_v598.py
-M	tests/test_gpu_killbadges_v599.py
-M	tests/test_gpu_montage_v597.py
-A	tests/test_gpu_motion_camera_qa.py
-M	tests/test_gpu_shared_camera_contract.py
-M	tests/test_v51012_allscan_quality_camera.py
-M	tests/test_v51015_ui_restructure.py
-A	tests/test_v51016_motion_dof_and_camera_qa.py
-M	tests/test_v5105_killfeed_glow_side_help.py
+M	core/camera_qa.py
+A	core/gpu_badge_qa.py
+M	core/jobs.py
+A	docs/CODEX_INTEGRATION_v51017_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.17.json
+A	docs/RECEIVED_RED_CAMERA_EVIDENCE_v51017_JA.md
+A	docs/WINDOWS_TEST_v51017_JA.md
+A	patches/history/v5.10.17/RECEIVED_CODE.patch
+A	patches/history/v5.10.17/RECEIVED_README_JA.txt
+A	tests/test_gpu_badge_qa_v51017.py
+M	tests/test_gpu_motion_camera_qa.py
+A	tests/test_v51017_badge_camera_evidence.py
 M	tools/check_parallel_integration.py
-A	tools/package_v51016.py
-M	ui/check_indicator.py
+A	tools/package_v51017.py
 ```
 ## 元v5.8.5からの実変更
 ```text
@@ -117,6 +107,7 @@ A	core/capture_process.py
 A	core/capture_worker.py
 M	core/effects.py
 A	core/focus_fx.py
+A	core/gpu_badge_qa.py
 A	core/gpu_binary.py
 A	core/gpu_bloom.py
 A	core/gpu_full.py
@@ -169,6 +160,7 @@ A	docs/CODEX_INTEGRATION_v51013_JA.md
 A	docs/CODEX_INTEGRATION_v51014_JA.md
 A	docs/CODEX_INTEGRATION_v51015_JA.md
 A	docs/CODEX_INTEGRATION_v51016_JA.md
+A	docs/CODEX_INTEGRATION_v51017_JA.md
 A	docs/CODEX_INTEGRATION_v5104_JA.md
 A	docs/CODEX_INTEGRATION_v5105_JA.md
 A	docs/CODEX_INTEGRATION_v5106_JA.md
@@ -202,6 +194,7 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.10.13.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.14.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.15.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.16.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.17.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.4.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.5.json
@@ -222,6 +215,7 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.9.9_JA.md
 A	docs/DESIGN_SCENESTUDIO_JA.md
 A	docs/DIAGNOSTIC_FINDINGS_v5.9.4_JA.md
 A	docs/HANDOFF_MASTER_2026-10-09_JA.md
+A	docs/RECEIVED_RED_CAMERA_EVIDENCE_v51017_JA.md
 A	docs/RECEIVED_TEST_RESULTS_v5.10.15_JA.md
 A	docs/REQUIREMENTS_SCENESTUDIO_JA.md
 A	docs/SPEC_v5.10.14_JA.md
@@ -233,6 +227,7 @@ A	docs/WINDOWS_TEST_v51013_JA.md
 A	docs/WINDOWS_TEST_v51014_JA.md
 A	docs/WINDOWS_TEST_v51015_JA.md
 A	docs/WINDOWS_TEST_v51016_JA.md
+A	docs/WINDOWS_TEST_v51017_JA.md
 A	docs/WINDOWS_TEST_v5105_JA.md
 A	docs/WINDOWS_TEST_v5106_JA.md
 A	docs/WINDOWS_TEST_v5107_JA.md
@@ -291,12 +286,15 @@ A	patches/history/v5.10.15_ScanFix/RECEIVED_NOTES_JA.md
 A	patches/history/v5.10.15_ScanFix/v51015_scanfix_reviewed_code.patch
 A	patches/history/v5.10.16/RECEIVED_CODE.patch
 A	patches/history/v5.10.16/RECEIVED_README_JA.txt
+A	patches/history/v5.10.17/RECEIVED_CODE.patch
+A	patches/history/v5.10.17/RECEIVED_README_JA.txt
 A	patches/history/v5.10.8_from_codex_v5.10.7.patch
 A	patches/history/v51011_from_v51010.patch
 A	patches/history/v51013_reviewed_code.patch
 A	patches/history/v5106_from_codex_v5105.patch
 A	patches/v594_to_v595.patch
 A	tests/test_editor_ui_contract.py
+A	tests/test_gpu_badge_qa_v51017.py
 A	tests/test_gpu_capture60_v5103.py
 A	tests/test_gpu_capture_isolation.py
 A	tests/test_gpu_champion_pair_v599.py
@@ -340,6 +338,7 @@ A	tests/test_v51015_portrait_player_compat.py
 A	tests/test_v51015_scanfix_workflow.py
 A	tests/test_v51015_ui_restructure.py
 A	tests/test_v51016_motion_dof_and_camera_qa.py
+A	tests/test_v51017_badge_camera_evidence.py
 A	tests/test_v5101_scroll_check_warmup.py
 A	tests/test_v5102_circle_focus_preset.py
 A	tests/test_v5103_nonblocking_dispatch.py
@@ -369,6 +368,7 @@ A	tools/package_v51015.py
 A	tools/package_v51015_portraitfix.py
 A	tools/package_v51015_scanfix.py
 A	tools/package_v51016.py
+A	tools/package_v51017.py
 A	tools/package_v5103.py
 A	tools/package_v5103_capture60.py
 A	tools/package_v5103_capturefix.py
@@ -401,4 +401,4 @@ A	ui/studio_localization.py
 A	ui/template_gallery.py
 ```
 
-全440ソース/Python153・全91ブランチをbundleへ保存。旧87先端・37PNG・GPU/音声/録画の保護20パス保持。旧配布物148件を保持。個人設定/録画/診断は追加・削除しない。
+全450ソース/Python157・全95ブランチbundle。旧91先端・37PNG・前回UIとGPUエンジン/音声/録画保護24パスを保持。旧配布物157件をバイト保持。core/jobs.pyはQAログ追加だけ、カメラAPI書込の増加なしをテスト。個人設定/録画/診断は追加・削除しない。

@@ -1,11 +1,9 @@
-キル表示の6登場モーションとDOF radio/スクロール/表示名を受領v5.10.16から統合。CPU式をOpenCL合成にも共有しGPUエフェクトを維持。Template末尾の既定instantで旧設定を保持。三人称の非pitch急反転ガードは校正リセット後も前回成功値を保持し、リプレイ変更では消去。
+ユーザー開始CameraQAのRED4/BLUE4出力へ数値証拠を追加。既存rig/planからpitch軸/符号/補角・基準回転/位置/offset・開始時想定offset/rotationを記録しresults.jsonへ格納。QA専用ログでReplay API書込みを増やさず、カメラ式・TargetLock・UIを保持する。画角や水平線の良否を自動判定したとは扱わない。
 
-ユーザー開始QAはRED4/BLUE4を既存LoL専用音声/60fpsで順次録画し、その2本を10切替に再利用する。選択encoder_policyを渡しfallbackをresults.jsonへ明記。Tk snapshot/worker/入力finally解放を保持。中止は次ケースを止め、実行中切替FFmpegは現在の1本が完了してから停止する。
+8本/10切替に加え、録画済み映像から6登場モーションMP4を生成。再録画せずmin(3秒,素材長)/60fps/元音声copy。受領のCPU overlay/libx264固定を既存GPUFullStage・選択encoder_policy・診断・安全CPUfallbackへ接続。色/DOFを二重適用せず、実FX経路と実encoder/fallbackを別に記録する。中止は現在の1本終了後に残り停止。
 
-受領指定GitHub基準0e8e8f6への適用を独立検証し、現在のCodex ScanFixへ機能単位で統合。GPUファイルを旧版で上書きせず、前回ScanFix・PortraitFix・非同期ミラー・全旧alias・37PNGを保持。GPU/UI/統合/受領を分岐し共有8blobを固定レビュー。
+受領指定v15GitHub基準へのapply --check/適用を別checkoutで確認。受領v16との差分だけ現行Codex v16へ統合し、古いGPU/カメラ/UIファイルを上書きしない。添付の実機/Actions記録は受領側資料として区別して保存。
 
-検証: Linux/Xvfb全604成功、失敗/skip/除外なし。6モーションのCPUとOpenCLカーネル実出力は60fps/位置一致。OpenCLは検証用CPU PoCLであり、NVIDIA性能・Windows/LoLは未検証。旧ScanFix全件で原因未確定のネイティブ終了2回があり、今回は再発なし。GPU/音声/録画20保護パス・37PNG・旧87refを保持、全91refsをbundle保存。完全ZIPと差分適用のソース一致、個人ファイル除外を確認。
+検証: Linux/Xvfb全614成功66.45秒（失敗/skip/除外なし）、GPU障害/timeout/CPU比較・音声/60fps/encoder retry診断、QAログのAPI書込不変。6モーションのCPU PoCL OpenCL実出力は各60フレーム/元音声packet一致。物理GPU/Windows/LoL速度と画角は未検証。前回のLinux native終了は原因未確定、今回は全件で再発なし。旧UI/GPUエンジン/録画/音声/37PNG/旧91refを保持し全95refs bundle保存。完全ZIPと差分適用の全ソース一致、個人ファイル除外を確認。
 
-前回ScanFixを比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、またはCode→Download ZIPで取得して別フォルダでSTART_GPU.bat。実機手順はdocs/WINDOWS_TEST_v51016_JA.md。環境PublishはWindows取得に不要。
-
-GitHub復元で全440ソース/91refs/配布物hash一致、再setupで3個人ファイル相当を保持。復元先代表テストは通常実行と記録のみ診断でIllegal instruction/132が2回発生、原因未確定。直前のメインスレッドGC回収を1回加える診断条件では95成功（12.45秒）。標準条件での復元先代表全件完走は未確認。全604成功と区別し、Windowsの修正効果やLinuxテスト安定化を主張しない。
+前回v5.10.16を比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、またはCode→Download ZIPで取得して別フォルダでSTART_GPU.bat。実機手順はdocs/WINDOWS_TEST_v51017_JA.md。

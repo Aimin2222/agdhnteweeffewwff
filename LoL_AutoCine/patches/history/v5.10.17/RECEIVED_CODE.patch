@@ -1,0 +1,243 @@
+diff --git a/core/camera_qa.py b/core/camera_qa.py
+index 3bfb282..cd45fd2 100644
+--- a/core/camera_qa.py
++++ b/core/camera_qa.py
+@@ -11,6 +11,10 @@ from dataclasses import replace
+ from datetime import datetime
+ import json
+ from pathlib import Path
++import subprocess
++
++from .gpu_binary import ffmpeg_exe
++from .kill_icons import MOTION_STYLES, make_badge, with_badges
+ 
+ from .jobs import run_auto_edit
+ from .scanner import filter_scanned_events
+@@ -57,11 +61,12 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
+     folder.mkdir(parents=True, exist_ok=True)
+     manifest = {
+-        "version": "5.10.15",
++        "version": "5.10.17-test",
+         "kind": "live_replay_camera_test",
+         "expected_clips": len(plan),
+         "outputs": [],
+         "montage_tests": [],
++        "badge_motion_tests": [],
+         "limitations": "Framing must be judged visually on Windows. Audio/codec need playback or ffprobe.",
+     }
+     def flush():
+@@ -86,14 +91,22 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+         clip_template.post = min(3.0, max(1.0, float(template.post)))
+         current = {"number": index, "side": side, "mode": mode, "label": label,
+                    "player": player.label(), "event_time": float(scene.time), "outputs": [],
+-                   "failed": []}
++                   "failed": [], "camera_diagnostics": []}
++        def capture_camera_log(message):
++            # Numeric camera setup data from the normal production path.
++            if str(message).startswith("CAMERA_QA_POSE "):
++                try:
++                    current["camera_diagnostics"].append(json.loads(str(message).split(" ", 1)[1]))
++                except (ValueError, IndexError, TypeError):
++                    pass
++            log(message)
+         log(f"8本テスト [{index}/8]: {side} / {label} / {player.label()} / {scene.time:.1f}s")
+         if progress:
+             progress(index-1, 8, round(100*(index-1)/8,1), f"{side} {label} を録画中")
+         try:
+             result = run_auto_edit(
+                 api, source, player, [scene], clip_template, folder / f"{index:02d}_{side}_{mode}",
+-                False, progress=None, stop=stop, log=log, audio_factory=audio_factory)
++                False, progress=None, stop=stop, log=capture_camera_log, audio_factory=audio_factory)
+             current["outputs"] = [str(p) for p in result.outputs]
+             current["failed"] = [[int(i), str(msg)] for i,msg in result.failed]
+             if not result.outputs and not result.failed:
+@@ -129,6 +142,49 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+                 log(f"つなぎ演出テスト {style}: {exc}")
+             manifest["montage_tests"].append(outcome)
+             flush()
++    # The eight camera QA clips intentionally disable kill badges so camera
++    # geometry is unobstructed. Render six *separate* badge-motion clips from
++    # an already-recorded MP4; otherwise the user cannot check entrance FX.
++    if ready and not (stop is not None and stop.is_set()):
++        from .kill_icons import STYLES
++        theme = template.kill_icon_style if template.kill_icon_style in STYLES and template.kill_icon_style != "off" else "cinema"
++        badge = folder / "badge_motion_qa_image.png"
++        try:
++            make_badge(badge, theme)
++            for motion, label in MOTION_STYLES.items():
++                if stop is not None and stop.is_set():
++                    break
++                dest = folder / f"badge_motion_{motion}.mp4"
++                entry = {"motion": motion, "label": label, "outputs": [], "failed": []}
++                try:
++                    # FFmpeg filter used by production, not a Python mock;
++                    # no additional game capture or sound recording.
++                    duration = 3.0
++                    graph = with_badges("[0:v]format=yuv420p[vout]", 1,
++                                        [(badge, 0.45)], duration=duration,
++                                        position="right-top", scale=1.0,
++                                        seconds=2.1, style=theme, motion=motion)
++                    cmd = [str(ffmpeg_exe()), "-hide_banner", "-loglevel", "error", "-y",
++                           "-i", str(ready[0]),
++                           "-loop", "1", "-framerate", "60", "-i", str(badge),
++                           "-filter_complex", graph,
++                           "-map", "[vout]", "-map", "0:a?",
++                           "-c:v", "libx264", "-preset", "veryfast", "-crf", "22",
++                           "-pix_fmt", "yuv420p", "-c:a", "copy",
++                           "-t", str(duration), str(dest)]
++                    subprocess.run(cmd, check=True, capture_output=True, timeout=180)
++                    if not dest.is_file() or dest.stat().st_size == 0:
++                        raise RuntimeError("テスト動画が生成されませんでした")
++                    entry["outputs"] = [str(dest)]
++                except Exception as exc:
++                    entry["failed"].append(f"{type(exc).__name__}: {exc}")
++                    log(f"キルフレーム登場 {label} のテスト失敗: {exc}")
++                manifest["badge_motion_tests"].append(entry)
++                flush()
++        except Exception as exc:
++            manifest["badge_motion_tests"].append({"motion": "setup", "outputs": [],
++                                                    "failed": [str(exc)]})
++            flush()
+     manifest["completed_clips"] = sum(bool(row["outputs"]) for row in manifest["outputs"])
+     manifest["canceled"] = bool(stop is not None and stop.is_set())
+     flush()
+diff --git a/core/jobs.py b/core/jobs.py
+index 05de0f1..ebf4bf6 100644
+--- a/core/jobs.py
++++ b/core/jobs.py
+@@ -11,6 +11,7 @@
+ from __future__ import annotations
+ import re
+ import time
++import json
+ from dataclasses import dataclass, field
+ from pathlib import Path
+ from typing import Callable, Optional
+@@ -222,6 +223,29 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
+                        side_yaw=((profile['yaw'] - 8.0 if tpl.style == 'third' and side_choice == 'auto' and str(getattr(player, 'team', '')).upper() in ('CHAOS', 'RED') else profile['yaw']) if live_third else 0.0),
+                        team=getattr(player, 'team', 'ORDER'),
+                       sel_name=player.selection_name or player.champion)
++    # QA-only readout: compare RED/BLUE rotations and positions numerically.
++    # No extra Replay API writes; normal production clips are unchanged.
++    if str(getattr(tpl, "name", "")).startswith("CameraQA "):
++        try:
++            log("CAMERA_QA_POSE " + json.dumps({
++                "side": str(getattr(player, "team", "?")),
++                "style": str(tpl.style),
++                "time": float(start),
++                "camera_mode": str(rig.mode),
++                "third_person_enabled": bool(rig.third),
++                "pitch_axis": str(rig.pitch_axis),
++                "pitch_sign": float(rig.pitch_sign),
++                "pitch_complement": bool(rig.pitch_complement),
++                "baseline_rotation": rig.rot,
++                "baseline_player_position": rig.P,
++                "baseline_horizontal_direction": rig.h,
++                "baseline_offset": rig.v,
++                "side_heading_degrees": float(plan.side_yaw),
++                "initial_camera_offset": plan.offset_at(start),
++                "initial_camera_rotation": plan.rotation_at(start),
++            }, ensure_ascii=False, default=str))
++        except Exception as diagnostic_error:
++            log(f"カメラQA数値ログ取得失敗（録画は継続）: {diagnostic_error}")
+     if rig.mode == "top" and tpl.style in ("cinema", "follow"):
+         plan.style = "cinema_top" if tpl.style == "cinema" else "top"   # 実際に使えるモードに合わせる
+     if plan.style in ("third", "third_cinema", "lolnam_cinema"):
+diff --git a/tests/test_v51017_badge_camera_evidence.py b/tests/test_v51017_badge_camera_evidence.py
+new file mode 100644
+index 0000000..e3013ca
+--- /dev/null
++++ b/tests/test_v51017_badge_camera_evidence.py
+@@ -0,0 +1,91 @@
++# -*- coding: utf-8 -*-
++"""Development-only QA must export badge-motion variants and numeric camera evidence."""
++from pathlib import Path
++from types import SimpleNamespace
++import json
++
++from core.effects import Template
++from core.players import Player
++from core import camera_qa
++
++def _p(slot,name,team):
++    return Player(slot,name,name+"#JP",name,"TestChamp",team)
++
++def test_eight_camera_and_six_badge_motions_have_distinct_outputs(monkeypatch,tmp_path):
++    blue=_p(0,"Blue","ORDER")
++    red=_p(5,"Red","CHAOS")
++    events=[dict(event_id=1,time=100.0,killer="Blue",victim="Red",assisters=[]),
++            dict(event_id=2,time=120.0,killer="Red",victim="Blue",assisters=[])]
++    calls=[]
++    def fake_run(api,source,player,scenes,tpl,outdir,montage,**kwargs):
++        outdir.mkdir(parents=True,exist_ok=True)
++        p=outdir/"clip.mp4"
++        p.write_bytes(b"fake-mp4")
++        calls.append(tpl.style)
++        kwargs["log"]("CAMERA_QA_POSE "+json.dumps({"side":player.team,"pitch_axis":"x"}))
++        return SimpleNamespace(outputs=[p],failed=[])
++    monkeypatch.setattr(camera_qa,"run_auto_edit",fake_run)
++    from core import montage_fx
++    def fake_montage(inputs,dest,style,logger=None):
++        dest.write_bytes(b"fake-montage")
++        return style
++    monkeypatch.setattr(montage_fx,"render_montage",fake_montage)
++    def fake_badge(path,style):
++        path.write_bytes(b"fake-badge")
++        return path
++    monkeypatch.setattr(camera_qa,"make_badge",fake_badge)
++    def fake_subprocess(command,**kwargs):
++        Path(command[-1]).write_bytes(b"fake-render")
++        return SimpleNamespace(returncode=0)
++    monkeypatch.setattr(camera_qa.subprocess,"run",fake_subprocess)
++    report=camera_qa.run_camera_record_test(
++        object(),object(),[blue,red],events,None,Template(),
++        tmp_path, log=lambda _:None)
++    manifest=json.loads(report.read_text(encoding="utf-8"))
++    assert manifest["completed_clips"]==8
++    assert len(manifest["montage_tests"])==10
++    assert len(manifest["badge_motion_tests"])==6
++    assert not [row for row in manifest["badge_motion_tests"] if row["failed"]]
++    assert len(set(Path(row["outputs"][0]).name for row in manifest["badge_motion_tests"]))==6
++    assert all(row["camera_diagnostics"] for row in manifest["outputs"])
++    assert calls==["third","third_cinema","fps","lolnam_cinema"]*2
++
++
++def test_badge_motion_qa_skips_when_no_recorded_video(tmp_path,monkeypatch):
++    blue=_p(0,"Blue","ORDER")
++    red=_p(5,"Red","CHAOS")
++    events=[dict(event_id=1,time=50.0,killer="Blue",victim="Red",assisters=[]),
++            dict(event_id=2,time=80.0,killer="Red",victim="Blue",assisters=[])]
++    monkeypatch.setattr(camera_qa,"run_auto_edit",lambda *a,**kw:SimpleNamespace(outputs=[],failed=[[1,"no capture"]]))
++    result=camera_qa.run_camera_record_test(object(),object(),[blue,red],events,None,Template(),tmp_path)
++    manifest=json.loads(result.read_text(encoding="utf-8"))
++    assert len(manifest["outputs"])==8 and manifest["completed_clips"]==0
++    assert manifest["badge_motion_tests"]==[]
++
++
++
++def test_badge_motion_graph_is_accepted_by_real_ffmpeg(tmp_path):
++    """A generated MP4, not just matching text, demonstrates real overlay support."""
++    import shutil
++    import subprocess
++    import pytest
++    from core.kill_icons import make_badge, with_badges
++    from core.gpu_binary import ffmpeg_exe
++    exe=str(ffmpeg_exe())
++    if not shutil.which(exe) and not Path(exe).is_file():
++        pytest.skip("FFmpeg is not installed")
++    raw=tmp_path/"base.mp4"
++    final=tmp_path/"qa_motion.mp4"
++    badge=make_badge(tmp_path/"badge.png","cinema")
++    subprocess.run([exe,"-y","-hide_banner","-loglevel","error",
++                    "-f","lavfi","-i","color=c=gray:s=640x360:r=30:d=2",
++                    "-c:v","libx264","-pix_fmt","yuv420p",str(raw)],
++                   check=True,capture_output=True,timeout=40)
++    graph=with_badges("[0:v]format=yuv420p[vout]",1,[(badge,.45)],
++                      duration=2,seconds=1.2,style="cinema",motion="slide_up")
++    subprocess.run([exe,"-y","-hide_banner","-loglevel","error","-i",str(raw),
++                    "-loop","1","-framerate","30","-i",str(badge),
++                    "-filter_complex",graph,"-map","[vout]","-c:v","libx264",
++                    "-preset","ultrafast","-pix_fmt","yuv420p","-t","2",str(final)],
++                   check=True,capture_output=True,timeout=60)
++    assert final.is_file() and final.stat().st_size>800
