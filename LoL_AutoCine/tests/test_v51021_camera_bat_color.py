@@ -20,7 +20,7 @@ def test_single_mp4_can_be_dropped_on_reference_bat(tmp_path):
 
 def test_cam_modes_are_isolated_and_blue7_is_protected():
     b7=shot_tuning("ORDER","third_cinema")
-    assert b7["distance"]==1.0 and b7["angles"]=={}
+    assert b7["distance"]==1.06 and b7["angles"]=={}  # user requested modest BLUE pullback
     assert shot_tuning("CHAOS","third_cinema")["angles"]=={}
     assert shot_tuning("CHAOS","third")["distance"]>1.0
     assert shot_tuning("CHAOS","lolnam_cinema")["angles"]
