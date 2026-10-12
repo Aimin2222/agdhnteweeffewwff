@@ -29,6 +29,7 @@ QA_MODES = (
     ("fps", "FPS"),
     ("lolnam_cinema", "Lolnam風シネマ"),
 )
+EXPERIMENTAL_QA_MODES = (("geo_aim", "座標追従カメラ（実験）"),)
 
 def plan_eight_cases(players, events, preferred=None, modes=None):
     """Return 8 ordered scenarios; empty event sets make testing impossible."""
@@ -51,7 +52,8 @@ def plan_eight_cases(players, events, preferred=None, modes=None):
         _, _, _, player, scenes = candidates[0]
         # A representative middle event avoids replay opening/closing edges.
         chosen = scenes[len(scenes)//2]
-        for mode, label in QA_MODES:
+        selected_modes = QA_MODES + (EXPERIMENTAL_QA_MODES if modes is not None and "geo_aim" in modes else ())
+        for mode, label in selected_modes:
             if modes is None or mode in modes:
                 result.append((side, player, chosen, mode, label))
     return result
