@@ -107,14 +107,55 @@ def create_sheets(input_folder, output_folder, *, ffmpeg=None, logger=print):
     return output/"ReferenceReview_contact_sheets.zip"
 
 
+def choose_video_or_folder():
+    """Interactive fallback when a BAT is double-clicked without an argument."""
+    import tkinter as tk
+    from tkinter import filedialog
+    window = tk.Tk()
+    window.withdraw()
+    window.attributes("-topmost", True)
+    try:
+        selected = filedialog.askopenfilename(
+            parent=window,
+            title="AutoCine：動画を1本選択（キャンセルでフォルダー選択）",
+            filetypes=[("動画", "*.mp4 *.mov *.mkv *.webm"),
+                       ("すべてのファイル", "*.*")])
+        if not selected:
+            selected = filedialog.askdirectory(
+                parent=window,
+                title="AutoCine：動画を含むフォルダーを選択")
+        return Path(selected) if selected else None
+    finally:
+        window.destroy()
+
+
+def output_for_source(source: Path) -> Path:
+    source = Path(source)
+    if source.is_dir():
+        return source / "_AutoCineReferenceReview"
+    return source.parent / ("_AutoCineReferenceReview_" + source.stem)
+
+
 def main():
-    parser=argparse.ArgumentParser(description="Create contact sheets for every reference MP4")
-    parser.add_argument("input_folder",type=Path,help="A folder of videos or one MP4/MOV/MKV/WEBM")
-    parser.add_argument("--output",type=Path,default=Path("ReferenceReview"))
+    parser=argparse.ArgumentParser(description="Create contact sheets for reference MP4s")
+    parser.add_argument("input_folder", nargs="?", type=Path,
+                        help="A video file or directory. Omit to open a Windows picker.")
+    parser.add_argument("--output", type=Path, default=None)
     args=parser.parse_args()
-    out=create_sheets(args.input_folder,args.output)
-    print("Contact-sheet ZIP:",out)
+    source=args.input_folder
+    if source is None:
+        source=choose_video_or_folder()
+    if source is None:
+        print("[AutoCine] No video selected; exiting without changes.")
+        return 0
+    output=args.output or output_for_source(source)
+    videos=find_reference_videos(source)
+    if not videos:
+        raise ValueError("選択フォルダー内にMP4/MOV/MKV/WEBMがありません。")
+    out=create_sheets(source,output)
+    print("[AutoCine] Contact-sheet ZIP:",out)
+    return 0
 
 
 if __name__=="__main__":
-    main()
+    raise SystemExit(main())
