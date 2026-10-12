@@ -214,7 +214,17 @@ class ScrollFrame(ttk.Frame):
         # Tk ttk popup listboxes live in separate transient windows. Their wheel
         # event bubbles to bind_all even though the pointer is over the menu.
         # Never scroll the underlying panel while ANY combobox is expanded.
-        if getattr(self.winfo_toplevel(), "_autocine_combobox_popup_open", lambda: False)():
+        top = self.winfo_toplevel()
+        gallery = getattr(top, "_autocine_active_gallery", None)
+        if gallery is not None:
+            try:
+                if gallery.winfo_exists():
+                    # Gallery is a separate Toplevel; do not scroll main panels
+                    # regardless of where the mouse cursor happens to be.
+                    return
+            except tk.TclError:
+                pass
+        if getattr(top, "_autocine_combobox_popup_open", lambda: False)():
             return "break"
         if not self._pointer_inside(e):
             return
