@@ -226,7 +226,8 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     if config is None or config.get("include_visual_comparison", True):
         try:
             manifest["visual_qa"] = make_qa_contact_sheets(
-                folder,manifest["outputs"],manifest["montage_tests"],log=log)
+                folder,manifest["outputs"],manifest["montage_tests"],log=log,
+                transition_inputs=join_sources)
         except Exception as visual_error:
             manifest["visual_qa_error"] = str(visual_error)
             log("比較画像生成失敗（録画・ZIP作成は継続）: " + str(visual_error))
