@@ -10,3 +10,5 @@
 6. 通常1シーン/全検出/チェック2シーンで1080p60fps・カラー・LoL音声のみ/同期・録画後ミラー復帰。TEST_GPU_RENDERも実行。QA中止は現在の1本後に残り停止。
 
 この会話へQA直接ZIPとAutoCine_Diagnostics.zip。特にRED/BLUE review_all.mp4、RED/BLUE_camera_3frames.jpg、transition_3frames.jpg、JSON、良い/悪いカメラ番号を共有。個人ログ/録画はGitHubへ無断公開しない。カメラ補正の実機成功とNVIDIA速度はクラウドで保証しない。
+
+比較表の3時点はクリップの時間割合で採取する参考サンプルで、実キル瞬間の自動特定ではありません。

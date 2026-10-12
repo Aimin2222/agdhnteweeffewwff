@@ -4,7 +4,7 @@
     "errors": "0",
     "failures": "0",
     "skipped": "0",
-    "time": "52.598"
+    "time": "52.575"
   },
   "command": "with-xvfb.sh .venv/bin/python debug-v51019-tests.py -> pytest.main tests -v (faulthandler/GC logging only, no exclusions)",
   "previous_scanfix_native_exit_history": "Two native exits 139, cause unconfirmed; current full run completed without recurrence. No claim of permanent resolution.",
@@ -13,9 +13,9 @@
     "status": "ok",
     "refs": {
       "base": "96b928a7385537317e73bad5235a28984fe94716",
-      "gpu": "4aec5b1963c38610fc090540fff89f52802ddae7",
+      "gpu": "04f6db9f1e182e7c3caaad53dfaf544e5cd72ea4",
       "ui": "0581fc1739d75096f7809d4c730fd3e1e110c586",
-      "integration": "f12b79994efb260eff42a143007cb21cced86266"
+      "integration": "26c90ed8236c3341d05327c55000eb1b85666213"
     },
     "ui_changed": [
       "README_v5.10.0_JA.md",
@@ -300,19 +300,19 @@
   },
   "packaging": {
     "full_files": 473,
-    "diff_files": 27,
+    "diff_files": 28,
     "patched_source_files": 475,
     "all_source_bytes_match_after_patch": true,
     "untracked_private_files_excluded": true,
     "zip_integrity": true,
     "sha256": {
-      "LoL_AutoCine_v5.10.19_CameraUI_SpatialQA_GPUFull_Windows_Full.zip": "0428b054a444d74cc8dc32fea1e953f8ff212d324f5db4a29cf62412f44c332f",
-      "LoL_AutoCine_v5.10.19_CameraUI_SpatialQA_GPUFull_Codex_MergeChanges.zip": "d1a37bdb5cc6c933d1d9ce76efcff51a5da71042a4cb3905244f45ff5451d4b2"
+      "LoL_AutoCine_v5.10.19_CameraUI_SpatialQA_GPUFull_Windows_Full.zip": "f6aa6602726a0101338faa71dc5b090e903fbfc30fa0c2b8fd5aa9b687422ddc",
+      "LoL_AutoCine_v5.10.19_CameraUI_SpatialQA_GPUFull_Codex_MergeChanges.zip": "f452f06b6802f4a3371e305fcb59c71d25988a91dea06080432fa007202bde22"
     }
   },
   "preservation": {
     "baseline": "f8ee3c1d7c099a99fa2383b42af74255f47b5726",
-    "unchanged_existing_files": 448,
+    "unchanged_existing_files": 447,
     "changed_existing_files": [
       "VERSION.txt",
       "core/camera.py",
@@ -323,6 +323,7 @@
       "core/qa_visual.py",
       "legacy_app.py",
       "qa/test_plan.json",
+      "tests/test_gpu_capture_isolation.py",
       "tests/test_gpu_motion_camera_qa.py",
       "tests/test_gpu_releaseqa_v51018.py",
       "tests/test_v51018_release_qa.py",
@@ -464,5 +465,13 @@
   "pip_check_passed": true,
   "github_fresh_restore": null,
   "environment_config_saved": false,
-  "main_unchanged": "c2a79ac3e7816c74b7d7fb15a5a32a32dd8fa16b"
+  "main_unchanged": "c2a79ac3e7816c74b7d7fb15a5a32a32dd8fa16b",
+  "intermediate_restore_test": {
+    "passed": 143,
+    "failed": 1,
+    "reason": "capture error notification observed before terminal running=False state",
+    "resolution": "test waits for completed exit and verifies error/latest exception; recording implementation unchanged"
+  },
+  "bundle_windows_autocrlf_protected": true,
+  "initial_source_snapshot_preserved_in_commit": "8bed68326c880cc688bd5257862fd85122944668"
 }

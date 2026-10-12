@@ -9,3 +9,5 @@ QAはRED/BLUE別確認MP4と3時点画像、従来10演出/6キル登場に加�
 検証: Linux/Xvfb全653成功52.61秒（失敗/skip/除外なし）。6空間OpenCL kernelをCPU PoCLで実行し各95フレーム/60fps/両端素材一致と模様付き中間画像の差を検証。2side reels/3時点4カメラ/5比較画像/直接ZIP/CRCも実動画で確認。物理NVIDIA/Windows/LoL速度・カメラ構図は未確認。過去Linux native終了は原因未確定、今回は全件で再発なし。完全ZIPと差分適用のソース一致・個人ファイル除外を確認。
 
 前回v5.10.18を比較先とするDraft PR、mainへマージしません。完全ZIP→Download raw file、またはCode→Download ZIP。別フォルダでSTART_GPU.bat、実機手順はdocs/WINDOWS_TEST_v51019_JA.md。
+
+復元中の既存capture終了テストがerror通知とrunning=Falseの間を観測し143成功/1失敗。終了状態まで待つ条件へテストだけ修正し、error/latest例外検証は維持。録画実装を変えず全653を再検証して成功。初回配布snapshotはGit commit8bed683へ保存し、現在のZIP/bundleは修正後の版。bundleはバイナリ属性でWindows改行変換を防止。3時点は時間割合による参考サンプルで、実キル瞬間の自動特定ではありません。

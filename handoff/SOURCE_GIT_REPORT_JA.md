@@ -439,3 +439,10 @@ A	ui/template_gallery.py
 ```
 
 全475ソース/Python170・全103refs bundle。旧99先端・37PNG・GPUエンジン/音声/録画保護22パス保持。旧配布物175件バイト保持。カメラ補正は受領候補としてレビュー、実構図未確認。個人設定/録画/診断は追加・削除しない。
+
+最終source HEAD 26c90ed8236c3341d05327c55000eb1b85666213。capture終了テスト同期と説明追記を保存、録画実装は不変。未保存なし。
+```text
+26c90ed Clarify reference frame sampling and capture test synchronization evidence
+89ff598 Integrate capture-exit test synchronization without changing recording implementation
+04f6db9 Wait for completed capture-child exit before checking error propagation
+```

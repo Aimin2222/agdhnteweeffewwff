@@ -17,3 +17,7 @@ python tools/check_parallel_integration.py --gpu feature/gpu-cameraqa-v51019 --u
 ```
 
 ガードはコミット済み先端のみ、statusも確認。mainへマージしない。GPU Full全22FX/60fps時刻・LoL専用音声/WGC/Native Helper・37PNG/全旧aliasを保持。CPU静止画/音声/I/O/制御/近似ミラーは残る。NVENCとGPUエフェクトは別。検証用PoCLはCPU OpenCLであり物理GPU性能ではない。過去Linux native終了の原因は未確定、今回の成功だけで恒久修正と扱わない。結果はhandoff/VERIFICATION_v5.10.19.json。
+
+比較表の3時点はクリップの時間割合で採取する参考サンプルで、実キル瞬間の自動特定ではありません。
+
+復元先の既存capture終了テストで、error通知→native log取得→running=Falseの中間状態を観測する競合が1件発生。テストだけをrunning=Falseまで待つ条件へ修正し、error存在とlatest()が例外を伝播する検証を維持。録画/capture実装は変更せず、テスト除外/GC無効化もしない。
