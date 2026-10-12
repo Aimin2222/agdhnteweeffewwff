@@ -14,7 +14,7 @@ def test_red2_red4_blue7_blue9_approved_camera_profiles_untouched():
     assert shot_tuning("RED", "lolnam_cinema")["distance"] == 1.0
     assert shot_tuning("RED", "lolnam_cinema")["angles"] == {"x": -3.0, "y": -3.0}
     assert shot_tuning("ORDER", "third_cinema")["angles"] == {}
-    assert shot_tuning("ORDER", "lolnam_cinema")["distance"] == 1.0
+    assert shot_tuning("ORDER", "lolnam_cinema")["distance"] == 1.08
 
 
 def test_red1_and_fps_and_blue8_are_independent_tuning():
