@@ -237,6 +237,11 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
     plan._live_blue_geo_look = blue and tpl.style in ('third', 'third_cinema', 'lolnam_cinema')
     plan._live_blue_pulled_back = blue and tpl.style == 'third'
     plan._live_fps_recenter = tpl.style == 'fps'
+    if plan._live_fps_recenter and not blue:
+        # RED FPS #3: target-relative position must use the same ~192-degree
+        # RED side heading as cameraRotation; previously position used yaw=0
+        # while rotation aimed backwards at yaw=192, showing empty terrain.
+        plan.side_yaw = 192.0
     plan._live_red_normal_reframe = (not blue and tpl.style == 'third' and side_choice == 'auto')
     # QA-only readout: compare RED/BLUE rotations and positions numerically.
     # No extra Replay API writes; normal production clips are unchanged.
