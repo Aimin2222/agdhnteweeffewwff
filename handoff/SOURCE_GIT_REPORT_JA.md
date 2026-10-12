@@ -1,51 +1,44 @@
-# v5.10.19-test 保存状況
+# v5.10.20-test 保存状況
 
-ソース /workspace/LoL_AutoCine、integration/v5.10.19、HEAD f12b79994efb260eff42a143007cb21cced86266、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51019-camera-ui-qa-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時ソース/取得用status --shortは空。未保存なし、mainへマージしない。
+ソース /workspace/LoL_AutoCine、integration/v5.10.20、HEAD d76c0d78c82db9f0c278d83878113b5bc7757aee、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51020-camera-isolation-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。ソース/取得用の開始時status --shortは空。mainへマージしない。
 
 ## git log -3 --oneline（ソース）
 ```text
-f12b799 Document v5.10.19 camera candidate scope GPU spatial QA ownership and Windows verification
-85ad419 Integrate v5.10.19 shared template and easy color UI
-c854bc1 Integrate v5.10.19 camera candidates and GPU spatial QA
+d76c0d7 Document v5.10.20 integration, shared API review and Windows verification
+41267c9 Integrate reviewed v5.10.20 feature changes
+1adefdb Integrate reviewed v5.10.20 feature changes
 ```
 ## git remote -v（取得用）
 ```text
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
-## 前回v5.10.18からの実変更
+## 前回v5.10.19からの実変更
 ```text
+A	MAKE_REFERENCE_SHEETS.bat
 M	VERSION.txt
 M	core/camera.py
-M	core/camera_qa.py
-M	core/effects.py
-A	core/gpu_qa_transitions.py
 M	core/jobs.py
 M	core/qa_plan.py
-A	core/qa_reels.py
-A	core/qa_true_transitions.py
-M	core/qa_visual.py
-A	docs/CODEX_INTEGRATION_v51019_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_v5.10.19.json
-A	docs/RECEIVED_IMPLEMENTATION_v51019_JA.md
-A	docs/WINDOWS_TEST_v51019_JA.md
+A	docs/CODEX_INTEGRATION_v51020_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.20.json
+A	docs/RECEIVED_IMPLEMENTATION_v51020_JA.md
+A	docs/WINDOWS_TEST_v51020_JA.md
 M	legacy_app.py
-A	patches/history/v5.10.19/RECEIVED_CODE.patch
-A	patches/history/v5.10.19/RECEIVED_README_JA.txt
+A	patches/history/v5.10.20/RECEIVED_CODE.patch
+A	patches/history/v5.10.20/RECEIVED_README_JA.txt
 M	qa/test_plan.json
+A	tests/test_gpu_camera_isolation_v51020.py
 M	tests/test_gpu_motion_camera_qa.py
-M	tests/test_gpu_releaseqa_v51018.py
-A	tests/test_gpu_spatial_qa_v51019.py
-M	tests/test_v51018_release_qa.py
-A	tests/test_v51019_camera_ui_reliability.py
-M	tests/test_v5101_scroll_check_warmup.py
-M	tests/test_v595_workspace.py
+A	tests/test_v51020_camera_mode_isolation.py
 M	tools/check_parallel_integration.py
-A	tools/package_v51019.py
+A	tools/package_v51020.py
+A	tools/reference_video_review.py
 ```
 ## 元v5.8.5からの実変更
 ```text
 M	.gitignore
+A	MAKE_REFERENCE_SHEETS.bat
 M	README.md
 A	README_CODEX_v51014_JA.md
 A	README_CODEX_v51015_JA.md
@@ -182,6 +175,7 @@ A	docs/CODEX_INTEGRATION_v51016_JA.md
 A	docs/CODEX_INTEGRATION_v51017_JA.md
 A	docs/CODEX_INTEGRATION_v51018_JA.md
 A	docs/CODEX_INTEGRATION_v51019_JA.md
+A	docs/CODEX_INTEGRATION_v51020_JA.md
 A	docs/CODEX_INTEGRATION_v5104_JA.md
 A	docs/CODEX_INTEGRATION_v5105_JA.md
 A	docs/CODEX_INTEGRATION_v5106_JA.md
@@ -219,6 +213,7 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.10.17.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.18.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.19.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.20.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.4.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.5.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.6.json
@@ -239,6 +234,7 @@ A	docs/DESIGN_SCENESTUDIO_JA.md
 A	docs/DIAGNOSTIC_FINDINGS_v5.9.4_JA.md
 A	docs/HANDOFF_MASTER_2026-10-09_JA.md
 A	docs/RECEIVED_IMPLEMENTATION_v51019_JA.md
+A	docs/RECEIVED_IMPLEMENTATION_v51020_JA.md
 A	docs/RECEIVED_RED_CAMERA_EVIDENCE_v51017_JA.md
 A	docs/RECEIVED_TEST_RESULTS_v5.10.15_JA.md
 A	docs/REQUIREMENTS_SCENESTUDIO_JA.md
@@ -254,6 +250,7 @@ A	docs/WINDOWS_TEST_v51016_JA.md
 A	docs/WINDOWS_TEST_v51017_JA.md
 A	docs/WINDOWS_TEST_v51018_JA.md
 A	docs/WINDOWS_TEST_v51019_JA.md
+A	docs/WINDOWS_TEST_v51020_JA.md
 A	docs/WINDOWS_TEST_v5105_JA.md
 A	docs/WINDOWS_TEST_v5106_JA.md
 A	docs/WINDOWS_TEST_v5107_JA.md
@@ -318,6 +315,8 @@ A	patches/history/v5.10.18/RECEIVED_CODE.patch
 A	patches/history/v5.10.18/RECEIVED_README_JA.txt
 A	patches/history/v5.10.19/RECEIVED_CODE.patch
 A	patches/history/v5.10.19/RECEIVED_README_JA.txt
+A	patches/history/v5.10.20/RECEIVED_CODE.patch
+A	patches/history/v5.10.20/RECEIVED_README_JA.txt
 A	patches/history/v5.10.8_from_codex_v5.10.7.patch
 A	patches/history/v51011_from_v51010.patch
 A	patches/history/v51013_reviewed_code.patch
@@ -326,6 +325,7 @@ A	patches/v594_to_v595.patch
 A	qa/test_plan.json
 A	tests/test_editor_ui_contract.py
 A	tests/test_gpu_badge_qa_v51017.py
+A	tests/test_gpu_camera_isolation_v51020.py
 A	tests/test_gpu_capture60_v5103.py
 A	tests/test_gpu_capture_isolation.py
 A	tests/test_gpu_champion_pair_v599.py
@@ -375,6 +375,7 @@ A	tests/test_v51017_badge_camera_evidence.py
 A	tests/test_v51018_release_qa.py
 A	tests/test_v51019_camera_ui_reliability.py
 A	tests/test_v5101_scroll_check_warmup.py
+A	tests/test_v51020_camera_mode_isolation.py
 A	tests/test_v5102_circle_focus_preset.py
 A	tests/test_v5103_nonblocking_dispatch.py
 A	tests/test_v5104_notebook_livefx_camera.py
@@ -406,6 +407,7 @@ A	tools/package_v51016.py
 A	tools/package_v51017.py
 A	tools/package_v51018.py
 A	tools/package_v51019.py
+A	tools/package_v51020.py
 A	tools/package_v5103.py
 A	tools/package_v5103_capture60.py
 A	tools/package_v5103_capturefix.py
@@ -418,6 +420,7 @@ A	tools/package_v5105.py
 A	tools/package_v5106.py
 A	tools/package_v5107.py
 A	tools/package_v599.py
+A	tools/reference_video_review.py
 A	tools/setup_gpu_ffmpeg.py
 A	ui/__init__.py
 A	ui/check_indicator.py
@@ -438,11 +441,4 @@ A	ui/studio_localization.py
 A	ui/template_gallery.py
 ```
 
-全475ソース/Python170・全103refs bundle。旧99先端・37PNG・GPUエンジン/音声/録画保護22パス保持。旧配布物175件バイト保持。カメラ補正は受領候補としてレビュー、実構図未確認。個人設定/録画/診断は追加・削除しない。
-
-最終source HEAD 26c90ed8236c3341d05327c55000eb1b85666213。capture終了テスト同期と説明追記を保存、録画実装は不変。未保存なし。
-```text
-26c90ed Clarify reference frame sampling and capture test synchronization evidence
-89ff598 Integrate capture-exit test synchronization without changing recording implementation
-04f6db9 Wait for completed capture-child exit before checking error propagation
-```
+全486ソース/Python174・全107refs。旧103先端/37PNG/GPU・音声・録画保護22パス・旧配布物184件を保持。個人設定/録画/診断を追加・削除しない。

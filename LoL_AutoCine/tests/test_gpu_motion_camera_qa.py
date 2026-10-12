@@ -74,15 +74,15 @@ def test_stable_rotation_survives_recalibration_and_clears_on_replay_change():
     old_cal = dict(camera._TPS_CALIBRATION); old_rot = dict(camera._TPS_STABLE_ROTATIONS)
     try:
         camera.clear_tps_calibration()
-        key = ('PlayerA', 'third', 1)
+        key = ('PlayerA', 'ORDER', 'third_cinema')
         rotation = {'x': 17.0, 'y': 180.0, 'z': 0.0}
         camera._cache_success(key, (0, 0, 0), (1, 1, 1), rotation, (0, -1), 'x', 1, lambda _: None, 'ok')
         rotation['y'] = 0
         camera.clear_tps_calibration('PlayerA', preserve_rotation=True)
         assert not camera._TPS_CALIBRATION
-        assert camera._TPS_STABLE_ROTATIONS[('PlayerA', 'x')]['y'] == 180
+        assert camera._TPS_STABLE_ROTATIONS[(*key, 'x')]['y'] == 180
         guarded = camera.stabilize_non_pitch_rotation({'x': 20, 'y': 0, 'z': 0},
-                     camera._TPS_STABLE_ROTATIONS[('PlayerA', 'x')], 'x')
+                     camera._TPS_STABLE_ROTATIONS[(*key, 'x')], 'x')
         assert guarded == {'x': 20, 'y': 180.0, 'z': 0}
         camera.clear_tps_calibration()
         assert not camera._TPS_STABLE_ROTATIONS

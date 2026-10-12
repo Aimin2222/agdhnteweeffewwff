@@ -11,7 +11,7 @@ from pathlib import Path
 import subprocess
 
 
-GPU_FILES = {"core/qa_reels.py", "core/qa_true_transitions.py", "core/camera_geometry.py", "core/qa_plan.py", "core/qa_visual.py", "core/qa_package.py", "qa/test_plan.json", "tests/test_v51017_badge_camera_evidence.py", "core/camera_qa.py", "core/auto_qa.py", "RUN_AUTOTEST.bat", "core/effects.py", "core/gpu_pipeline.py", "core/recorder.py",
+GPU_FILES = {"tools/reference_video_review.py", "core/qa_reels.py", "core/qa_true_transitions.py", "core/camera_geometry.py", "core/qa_plan.py", "core/qa_visual.py", "core/qa_package.py", "qa/test_plan.json", "tests/test_v51017_badge_camera_evidence.py", "core/camera_qa.py", "core/auto_qa.py", "RUN_AUTOTEST.bat", "core/effects.py", "core/gpu_pipeline.py", "core/recorder.py",
              'tools/gpu_render_test.py','START_CPU_EFFECTS_COMPARE.bat','START_GPU_HYBRID.bat','TEST_GPU_RENDER.bat',
              "tools/setup_gpu_ffmpeg.py", "START_GPU.bat",
              "core/focus_fx.py", "core/preview.py",
@@ -20,7 +20,7 @@ GPU_FILES = {"core/qa_reels.py", "core/qa_true_transitions.py", "core/camera_geo
              "core/kill_icons.py", "tests/test_v5991_portrait_pairs.py", "tests/test_v51015_portrait_player_compat.py",
              "core/performance_diagnostics.py", "tests/test_v585_filters.py",
              "tests/test_v585_diagnostics.py", "tests/test_v31_regressions.py"}
-UI_FILES = {"tests/test_v51019_camera_ui_reliability.py", "tests/test_v51018_release_qa.py", "tests/test_v51016_motion_dof_and_camera_qa.py", "tests/test_v51015_scanfix_workflow.py", "tests/test_v51015_ui_restructure.py", "tests/test_v51015_async_ui.py", "tests/test_v51014_studio_nle.py", "tests/test_v51014_responsiveness.py", "tests/test_v51011_gallery_camera_qa.py", "tests/test_v51012_allscan_quality_camera.py", "tests/test_v51013_player_filter.py", "tests/test_v5108_premium_gallery.py", "tests/test_v51010_real_scene_material.py", "tests/test_v51010_gallery_responsiveness.py", "tests/test_v5107_mirror_controls.py", "tests/test_v5106_hover_help.py", "tests/test_v5105_preview_responsiveness.py", "tests/test_v5105_killfeed_glow_side_help.py", "tests/test_v5104_notebook_livefx_camera.py", "legacy_app.py", "tests/test_editor_ui_contract.py",
+UI_FILES = {"tests/test_v51020_camera_mode_isolation.py", "tests/test_v51019_camera_ui_reliability.py", "tests/test_v51018_release_qa.py", "tests/test_v51016_motion_dof_and_camera_qa.py", "tests/test_v51015_scanfix_workflow.py", "tests/test_v51015_ui_restructure.py", "tests/test_v51015_async_ui.py", "tests/test_v51014_studio_nle.py", "tests/test_v51014_responsiveness.py", "tests/test_v51011_gallery_camera_qa.py", "tests/test_v51012_allscan_quality_camera.py", "tests/test_v51013_player_filter.py", "tests/test_v5108_premium_gallery.py", "tests/test_v51010_real_scene_material.py", "tests/test_v51010_gallery_responsiveness.py", "tests/test_v5107_mirror_controls.py", "tests/test_v5106_hover_help.py", "tests/test_v5105_preview_responsiveness.py", "tests/test_v5105_killfeed_glow_side_help.py", "tests/test_v5104_notebook_livefx_camera.py", "legacy_app.py", "tests/test_editor_ui_contract.py",
             "tests/test_checked_dispatch.py", "tests/gui_smoke.py",
             "tests/test_scene_studio.py", "tests/test_scene_studio_gui.py",
             "tests/test_scene_sequence.py", "tests/test_scene_keyframes_v592.py",
@@ -60,6 +60,8 @@ INFRA_FILES = {
     'tools/package_v51017.py',
     'tools/package_v51018.py',
     'tools/package_v51019.py',
+    'tools/package_v51020.py',
+    'MAKE_REFERENCE_SHEETS.bat',
     'tools/package_v599.py',
 }
 
