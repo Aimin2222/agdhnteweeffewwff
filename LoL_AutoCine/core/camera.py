@@ -24,6 +24,7 @@ from typing import Callable, Optional
 from .players import Player
 from .replay_api import ReplayAPI, ReplayApiError
 from .camera_clock import SmoothReplayClock
+from .camera_tuning import target_center_rotation
 
 INTENSITY = {"natural": 0.6, "standard": 1.0, "strong": 1.4}
 INTENSITY_JP = {"natural": "自然め", "standard": "標準", "strong": "強め"}
@@ -516,10 +517,15 @@ class CameraPlan:
             if self.rig is None or self.rig.v is None:
                 return None
             if self.team in ("CHAOS", "RED"):
-                # RED FPS #3 kept the subject high and off-screen: it sent a
-                # fixed 42-degree downward pitch even when the target from
-                # the actual camera offset was only ~28 degrees below the
-                # horizon. Aim at that target-relative offset instead.
+                # RED FPS #3: static -192 yaw ignored the actual position
+                # (target direction in user QA is closer to -163 degrees).
+                # FPS position and facing must derive from the SAME vector.
+                # Avoid stale top-camera rotation and any Z-roll.
+                if getattr(self, "_live_red_target_center", False):
+                    try:
+                        return target_center_rotation(self.offset_at(t))
+                    except (TypeError, ValueError, OverflowError):
+                        return None
                 dx, dy, dz = self.offset_at(t)
                 horizontal = math.hypot(dx, dz)
                 if horizontal < 1.0:
@@ -560,12 +566,17 @@ class CameraPlan:
         if self.style in ("third", "third_cinema"):
             if self.rig is None or not self.rig.third or not self.rig.rot or not self.rig.pitch_axis:
                 return None
+            if (self.style == "third" and self.team in ("CHAOS", "RED")
+                    and getattr(self, "_live_red_target_center", False)):
+                # RED #1: relative camera offset already includes target rig,
+                # side orbit, keyframes and distance. Derive yaw + elevation
+                # from it, rather than using an unrelated fixed heading.
+                try:
+                    return target_center_rotation(self.third_pose_at(t)[0])
+                except (TypeError, ValueError, OverflowError):
+                    return None
             if self.style == "third" and getattr(self, "_camera_axis_safety", False):
-                # Windows QA #1 and #6 saw a spurious X pitch calibration.
-                # It drove yaw through Z=-184deg (roll/inversion) and used a
-                # camera-to-player baseline 7–8k units away. Calibration for
-                # good shots #2/#7/#9 uses X yaw, Y pitch, Z=0; use that
-                # engine-axis convention just for the broken normal preset.
+                # BLUE #6 and manual/older shots retain the legacy axis guard.
                 return {"x": -self._third_heading(t),
                         "y": max(18.0, min(58.0, self.third_pose_at(t)[1])),
                         "z": 0.0}
