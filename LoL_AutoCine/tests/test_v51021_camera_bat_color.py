@@ -22,7 +22,7 @@ def test_cam_modes_are_isolated_and_blue7_is_protected():
     b7=shot_tuning("ORDER","third_cinema")
     assert b7["distance"]==1.0 and b7["angles"]=={}
     assert shot_tuning("CHAOS","third_cinema")["angles"]=={}
-    assert shot_tuning("CHAOS","third")["distance"]<1.0
+    assert shot_tuning("CHAOS","third")["distance"]>1.0
     assert shot_tuning("CHAOS","lolnam_cinema")["angles"]
     assert shot_tuning("ORDER","lolnam_cinema")["angles"]
     assert shot_tuning("ORDER","geo_aim")["angles"]
