@@ -17,7 +17,9 @@ def test_left_workflow_before_references_and_templates():
         names = [name for _widget, parent, name in app._mode_sidecards if parent is app.left_scroll.inner]
         assert names[0] == '1  リプレイ準備'
         assert '◉  検出シーン' in [name for _,parent,name in app._mode_sidecards if parent is app.right_scroll.inner]
-        assert names.index('▣  テンプレート') > 0
+        assert '▣  テンプレート' not in names  # moved into both editors
+        assert app._nav_template_card.winfo_parent()==str(app._mode_easy_section)
+        assert app.advanced_tpl_combo.winfo_parent()
     finally:
         root.destroy()
 
