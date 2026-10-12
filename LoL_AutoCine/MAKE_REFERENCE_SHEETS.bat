@@ -13,15 +13,16 @@ set "LOG=%TEMP%\AutoCine_ReferenceReview_latest.log"
 if not exist "diagnostics" mkdir "diagnostics" >nul 2>&1
 set "RUNEXE=py"
 set "RUNARG=-3"
-if exist ".venv\Scripts\python.exe" (
-  set "RUNEXE=.venv\Scripts\python.exe"
-  set "RUNARG="
-) else if exist "venv\Scripts\python.exe" (
-  set "RUNEXE=venv\Scripts\python.exe"
-  set "RUNARG="
-) else (
-  where py >nul 2>&1
-  if errorlevel 1 (
+rem START.bat also uses "py -3"; prefer exactly that environment.
+where py >nul 2>&1
+if errorlevel 1 (
+  if exist ".venv\Scripts\python.exe" (
+    set "RUNEXE=.venv\Scripts\python.exe"
+    set "RUNARG="
+  ) else if exist "venv\Scripts\python.exe" (
+    set "RUNEXE=venv\Scripts\python.exe"
+    set "RUNARG="
+  ) else (
     set "RUNEXE=python"
     set "RUNARG="
   )
