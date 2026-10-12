@@ -21,3 +21,5 @@ git status --short
 ```
 
 全99refsはorigin/*で復元。originはローカルbundle。設定/録画/プロジェクトを保管。担当ガードはdocs/CODEX_INTEGRATION_v51018_JA.md。
+
+GitHub復元で463ソース/99refs/配布物hash一致。代表126テスト成功12.66秒（強制GCなし・GC有効）。再setupでも463ソース/99refs/3個人設定相当ファイルを保持/status clean。実URLのデータ専用QA計画も取得・検証成功。同じ実行環境の別フォルダ検証でPublish/新タスク/Windows実機とは区別します。

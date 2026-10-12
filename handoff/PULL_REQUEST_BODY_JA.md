@@ -9,3 +9,5 @@ QA結果を500MB以下の直接ZIPに保存。ZIP入れ子なし、大きなMP4�
 検証: Linux/Xvfb全635成功82.14秒（失敗/skip/除外なし）、分割再結合/元データ保持/再出力/最終JSON一致、データplan拒否/通信fallback、geometry offset整合、短い動画の実フレーム比較/直接ZIP/CRC。Windows/LoL/物理NVIDIA速度とgeo画角は未確認。前回Linux native終了の原因は未確定、今回全件で再発なし。完全ZIPと差分適用の全ソース一致・個人ファイル除外を確認。
 
 前回v5.10.17を比較先とするDraft PR、mainへマージしません。完全ZIP→Download raw file、またはCode→Download ZIP。別フォルダでSTART_GPU.bat、実機手順はdocs/WINDOWS_TEST_v51018_JA.md。
+
+GitHub復元で463ソース/99refs/配布物hash一致。代表126テスト成功12.66秒（強制GCなし・GC有効）。再setupでも463ソース/99refs/3個人設定相当ファイルを保持/status clean。実URLのデータ専用QA計画も取得・検証成功。同じ実行環境の別フォルダ検証でPublish/新タスク/Windows実機とは区別します。
