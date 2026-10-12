@@ -998,6 +998,7 @@ class App:
                         variable=self.var_auto_director, command=self._update_auto_director_controls)
         self._director_toggle.pack(anchor="w", pady=(6, 1))
         self._auto_director_panel = ttk.Frame(easy, style="Card.TFrame")
+        self.var_auto_director.trace_add("write", lambda *_: self._update_auto_director_controls())
         ttk.Label(self._auto_director_panel, text="自動カメラ演出の強さ（0～150%）",
                   style="Card.TLabel").pack(anchor="w")
         director_row = ttk.Frame(self._auto_director_panel, style="Card.TFrame")
