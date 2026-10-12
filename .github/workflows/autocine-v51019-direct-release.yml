@@ -1,0 +1,96 @@
+name: AutoCine v5.10.19 Direct ZIP Release and Smart Camera QA
+on:
+  push:
+    branches:
+      - autocine/v5.10.19-smart-camera-qa-directzip
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: autocine-v51019-test-release
+  cancel-in-progress: true
+
+jobs:
+  test-and-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install GUI and FFmpeg prerequisites
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb ffmpeg
+          python -m pip install -r LoL_AutoCine/requirements.txt pytest
+      - name: Check syntax
+        run: python -m compileall -q LoL_AutoCine
+      - name: Regression tests
+        working-directory: LoL_AutoCine
+        run: |
+          xvfb-run -a python -m pytest -q tests --disable-warnings
+      - name: Build and verify Windows and Codex ZIPs
+        run: |
+          python - <<'PY'
+          import hashlib, pathlib, subprocess, zipfile, tempfile
+          base="0e8e8f65362fd10a3ab9509c3fcbb4580b72691d"
+          root=pathlib.Path("LoL_AutoCine")
+          out=pathlib.Path("builds/v5.10.19")
+          out.mkdir(parents=True,exist_ok=True)
+          full=out/"LoL_AutoCine_v5.10.19_Windows_Test_Full.zip"
+          with zipfile.ZipFile(full,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=6) as z:
+              for p in sorted(root.rglob("*")):
+                  if not p.is_file() or p.suffix in (".pyc",".pyo") or any(
+                          part in {".pytest_cache","__pycache__","diagnostics",".git","output"}
+                          for part in p.parts):
+                      continue
+                  z.write(p,p.as_posix())
+          patch=out/"v5.10.19_from_Codex_5.10.15.patch"
+          patch.write_bytes(subprocess.check_output(
+              ["git","diff","--binary",base,"HEAD","--","LoL_AutoCine"]))
+          if not patch.read_bytes():
+              raise RuntimeError("Empty diff")
+          with tempfile.TemporaryDirectory(prefix="autocine-base-") as td:
+              work=pathlib.Path(td)/"base"
+              subprocess.run(["git","worktree","add","--detach",str(work),base],check=True)
+              try:
+                  subprocess.run(["git","-C",str(work),"apply","--check",str(patch.resolve())],check=True)
+              finally:
+                  subprocess.run(["git","worktree","remove","--force",str(work)],check=True)
+          readme=out/"CODEX_INTEGRATION_README_JA.txt"
+          readme.write_text(
+              "基準: Codex v5.10.15 branch sha "+base+"\n"
+              "mainやCodex統合ブランチは変更していません。\n"
+              "パッチを適用する前に git apply --check を実行してください。\n"
+              "異なるCodexバージョンにはGPU/音声/録画を上書きせず個別レビューしてください。\n"
+              "Windows用フル版はテスト用です。Codex統合版の置換に使わないでください。\n",
+              encoding="utf-8")
+          diff=out/"LoL_AutoCine_v5.10.19_Codex_MergeChanges.zip"
+          with zipfile.ZipFile(diff,"w",zipfile.ZIP_DEFLATED) as z:
+              z.write(patch,patch.name)
+              z.write(readme,readme.name)
+              z.write(root/"tests"/"test_v51019_camera_ui_reliability.py",
+                      "tests/test_v51019_camera_ui_reliability.py")
+          for p in [full,diff]:
+              with zipfile.ZipFile(p) as z:
+                  bad=z.testzip()
+                  if bad: raise RuntimeError("Bad ZIP CRC "+str(bad))
+              print("VERIFIED",p,p.stat().st_size,hashlib.sha256(p.read_bytes()).hexdigest())
+          PY
+      - name: Publish two ZIPs directly to GitHub Releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="autocine-v5.10.19-test-$(git rev-parse --short=10 HEAD)"
+          gh release create "$tag" \
+            builds/v5.10.19/LoL_AutoCine_v5.10.19_Windows_Test_Full.zip \
+            builds/v5.10.19/LoL_AutoCine_v5.10.19_Codex_MergeChanges.zip \
+            --target "$GITHUB_SHA" --prerelease \
+            --title "LoL AutoCine v5.10.19 Test ($GITHUB_SHA)" \
+            --notes "Windowsテスト用フル版とCodex統合用差分を直接配布。二重ZIPではありません。実機カメラの構図は未保証。"
+          gh release view "$tag" --json assets,url
