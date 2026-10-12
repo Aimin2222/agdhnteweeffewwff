@@ -36,15 +36,17 @@ def plan_eight_cases(players, events, preferred=None, modes=None):
         for p in players:
             if getattr(p, "team", None) != team:
                 continue
-            scenes = filter_scanned_events(events, p, "both")
+            # A kill is a better QA target than an assist: the selected
+            # champion must actually be present at the important moment.
+            kills = filter_scanned_events(events, p, "kill")
+            scenes = kills or filter_scanned_events(events, p, "both")
             if scenes:
-                # Prefer the currently selected player if that side has one.
                 preference = 1 if p is preferred or getattr(p, "slot", None) == getattr(preferred, "slot", None) else 0
-                candidates.append((preference, len(scenes), p, scenes))
+                candidates.append((bool(kills), len(kills), preference, p, scenes))
         if not candidates:
             raise ValueError(f"{side}側に録画できるキル/アシストが見つかりません。全体スキャンを確認してください。")
-        candidates.sort(key=lambda x: (x[0], x[1]), reverse=True)
-        _, _, player, scenes = candidates[0]
+        candidates.sort(key=lambda x: (x[0], x[1], x[2]), reverse=True)
+        _, _, _, player, scenes = candidates[0]
         # A representative middle event avoids replay opening/closing edges.
         chosen = scenes[len(scenes)//2]
         for mode, label in QA_MODES:
