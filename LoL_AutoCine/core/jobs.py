@@ -224,6 +224,12 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                        team=getattr(player, 'team', 'ORDER'),
                       sel_name=player.selection_name or player.champion)
     plan._camera_axis_safety = tpl.style in ('third', 'geo_aim')
+    # v5.10.21: every approved camera has isolated, bounded composition
+    # adjustments. Never change the shared target-lock or Replay API protocol.
+    from .camera_tuning import shot_tuning
+    shot = shot_tuning(getattr(player, "team", "ORDER"), tpl.style)
+    plan._live_dist_factor = shot["distance"]
+    plan._live_angle_bias = shot["angles"]
     # Side+mode-specific opt-in. BLUE geo_aim #10 is the visual reference;
     # do not alter its existing pose or any RED third_cinema #2 framing.
     # All modes still use the same replay/capture/audio engine.
@@ -252,6 +258,8 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                 "side_heading_degrees": float(plan.side_yaw),
                 "initial_camera_offset": plan.offset_at(start),
                 "initial_camera_rotation": plan.rotation_at(start),
+                "shot_tuning": shot,
+                "fps_target_relative": bool(tpl.style == "fps" and getattr(plan, "_live_fps_recenter", False)),
             }, ensure_ascii=False, default=str))
         except Exception as diagnostic_error:
             log(f"カメラQA数値ログ取得失敗（録画は継続）: {diagnostic_error}")
