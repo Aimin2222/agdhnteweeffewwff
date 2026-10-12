@@ -27,9 +27,14 @@ def sanitized_filename(name, limit=88):
 
 
 def find_reference_videos(directory):
+    """Accept a folder of clips OR one MP4 dropped directly onto the BAT."""
     directory=Path(directory)
+    if directory.is_file():
+        if directory.suffix.lower() not in VIDEO_SUFFIXES:
+            raise ValueError("動画ファイル（MP4/MOV/MKV/WEBM）か動画フォルダーを指定してください")
+        return [directory]
     if not directory.is_dir():
-        raise FileNotFoundError(f"Not a video folder: {directory}")
+        raise FileNotFoundError(f"Video file/folder not found: {directory}")
     return sorted(p for p in directory.rglob("*")
                   if p.is_file() and p.suffix.lower() in VIDEO_SUFFIXES)
 
@@ -43,11 +48,14 @@ def create_sheets(input_folder, output_folder, *, ffmpeg=None, logger=print):
     shots=output/"frames"
     shots.mkdir(exist_ok=True)
     videos=find_reference_videos(input_folder)
+    input_root=Path(input_folder)
+    if input_root.is_file():
+        input_root=input_root.parent
     report={"schema_version":1,"video_count":len(videos),"items":[],
             "notice":"Human/assistant visual review required; no AI tracking or upload."}
     for index,path in enumerate(videos,1):
         entry={"number":index,"original_name":path.name,
-               "relative_path":str(path.relative_to(input_folder)),
+               "relative_path":str(path.relative_to(input_root)),
                "size_bytes":path.stat().st_size,"samples":[],
                "contact_sheet":None,"errors":[]}
         try:
@@ -101,7 +109,7 @@ def create_sheets(input_folder, output_folder, *, ffmpeg=None, logger=print):
 
 def main():
     parser=argparse.ArgumentParser(description="Create contact sheets for every reference MP4")
-    parser.add_argument("input_folder",type=Path,help="Folder containing reference video clips")
+    parser.add_argument("input_folder",type=Path,help="A folder of videos or one MP4/MOV/MKV/WEBM")
     parser.add_argument("--output",type=Path,default=Path("ReferenceReview"))
     args=parser.parse_args()
     out=create_sheets(args.input_folder,args.output)
