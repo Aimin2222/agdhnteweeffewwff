@@ -239,6 +239,7 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
     plan._live_blue_pulled_back = blue and tpl.style == 'third'
     plan._live_fps_recenter = tpl.style == 'fps'
     if plan._live_fps_recenter and not blue:
+        plan._live_fps_canonical_rear = True
         # RED FPS #3: target-relative position must use the same ~192-degree
         # RED side heading as cameraRotation; previously position used yaw=0
         # while rotation aimed backwards at yaw=192, showing empty terrain.
