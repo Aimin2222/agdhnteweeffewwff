@@ -574,7 +574,7 @@ class CameraPlan:
             # Clamp the FINAL motion including kill cue. This prevents the
             # supplemental nudge bypassing the safe ±55° bound.
             motion = max(-55.0, min(55.0, motion))
-        return self.side_yaw + motion
+        return self.side_yaw + motion + (8.0 if getattr(self, "_live_red_normal_reframe", False) else 0.0)
 
     def _lolnam_orbit(self, t):
         if self.style != 'lolnam_cinema':
