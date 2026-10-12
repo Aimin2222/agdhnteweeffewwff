@@ -39,7 +39,7 @@ def test_red_fps_live_pitch_matches_relative_vector_not_fixed_42():
     rig=RigInfo(mode="fps",third=False,rot={"x":0.0,"y":56.0,"z":0.0},
                 v=(0,0,0),h=(-.49,-.87))
     plan=CameraPlan(style="fps",rig=rig,team="CHAOS",
-                    third_dist=950,third_elev=42,side_yaw=0)
+                    third_dist=950,third_elev=28,side_yaw=0)
     plan._live_fps_recenter=True
     plan._live_fps_side_heading=192.0
     plan._live_fps_back=1.6
