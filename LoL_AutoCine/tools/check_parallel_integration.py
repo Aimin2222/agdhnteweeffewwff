@@ -11,7 +11,7 @@ from pathlib import Path
 import subprocess
 
 
-GPU_FILES = {"core/camera_qa.py", "core/auto_qa.py", "RUN_AUTOTEST.bat", "core/effects.py", "core/gpu_pipeline.py", "core/recorder.py",
+GPU_FILES = {"tests/test_v51017_badge_camera_evidence.py", "core/camera_qa.py", "core/auto_qa.py", "RUN_AUTOTEST.bat", "core/effects.py", "core/gpu_pipeline.py", "core/recorder.py",
              'tools/gpu_render_test.py','START_CPU_EFFECTS_COMPARE.bat','START_GPU_HYBRID.bat','TEST_GPU_RENDER.bat',
              "tools/setup_gpu_ffmpeg.py", "START_GPU.bat",
              "core/focus_fx.py", "core/preview.py",
@@ -57,6 +57,7 @@ INFRA_FILES = {
     'tools/package_v51015_portraitfix.py',
     'tools/package_v51015_scanfix.py',
     'tools/package_v51016.py',
+    'tools/package_v51017.py',
     'tools/package_v599.py',
 }
 

@@ -20,6 +20,8 @@ def test_qa_records_once_reuses_clips_and_preserves_audio_encoder(tmp_path, monk
     stop = Event(); recorded = []; montages = []; audio = object()
     original = Template(fps=144, capture_fps=144, pre=9, post=0.2, encoder_policy='gpu')
     snapshot = original.to_dict()
+    monkeypatch.setattr(qa, 'get_duration', lambda *a, **k: 2.0)
+    monkeypatch.setattr(qa, 'render_badge_motion', lambda source, dest, *a, **k: (Path(dest).write_bytes(b'badge') and {'gpu_effects_confirmed': True}))
     monkeypatch.setattr(qa, 'plan_eight_cases', lambda *a: cases())
     def record(api, source, player, scenes, tpl, dest, merge, **kw):
         assert kw['audio_factory'] is audio and kw['stop'] is stop
@@ -48,6 +50,8 @@ def test_qa_records_once_reuses_clips_and_preserves_audio_encoder(tmp_path, monk
 
 
 def test_qa_reports_capture_failure_and_transition_fallback(tmp_path, monkeypatch):
+    monkeypatch.setattr(qa, 'get_duration', lambda *a, **k: 2.0)
+    monkeypatch.setattr(qa, 'render_badge_motion', lambda source, dest, *a, **k: (Path(dest).write_bytes(b'badge') and {'gpu_effects_confirmed': True}))
     monkeypatch.setattr(qa, 'plan_eight_cases', lambda *a: cases())
     count = 0
     def record(*args, **kw):
