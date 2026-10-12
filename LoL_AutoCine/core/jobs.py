@@ -231,6 +231,13 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
     plan._live_dist_factor = shot["distance"]
     plan._live_angle_bias = shot["angles"]
     plan._live_fps_back = shot["fps_back"]
+    # v5.10.24: only RED normal #1 and RED FPS #3 get geometric
+    # target-centering. Approved RED #2/#4/#5 and all BLUE modes are untouched.
+    plan._live_red_target_center = (
+        str(getattr(player, "team", "")).upper() in ("CHAOS", "RED")
+        and tpl.style in ("third", "fps")
+        and side_choice == "auto"
+    )
     # Side+mode-specific opt-in. BLUE geo_aim #10 is the visual reference;
     # do not alter its existing pose or any RED third_cinema #2 framing.
     # All modes still use the same replay/capture/audio engine.
@@ -265,6 +272,11 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                 "initial_camera_offset": plan.offset_at(start),
                 "initial_camera_rotation": plan.rotation_at(start),
                 "shot_tuning": shot,
+                "red_target_center_enabled": bool(getattr(plan, "_live_red_target_center", False)),
+                "target_center_rotation": (
+                    __import__("core.camera_tuning", fromlist=["target_center_rotation"])
+                        .target_center_rotation(plan.offset_at(start))
+                    if getattr(plan, "_live_red_target_center", False) else None),
                 "fps_target_relative": bool(tpl.style == "fps" and getattr(plan, "_live_fps_recenter", False)),
             }, ensure_ascii=False, default=str))
         except Exception as diagnostic_error:
