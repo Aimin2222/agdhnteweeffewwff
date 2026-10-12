@@ -19,3 +19,5 @@ git status --short
 ```
 
 全95refsはorigin/*として復元。originはローカルbundle。既存設定/録画/プロジェクトを保管。担当ガードはdocs/CODEX_INTEGRATION_v51017_JA.md。
+
+GitHub復元で450ソース/95refs/配布物hash一致。代表105テスト成功14.57秒（強制GCなし・GC有効）。再setupでも450ソース/95refs/3個人設定相当ファイルを保持/status clean。同じクラウド実行環境の別フォルダ検証で、Publish/新クラウドタスク/Windows実機確認とは区別します。

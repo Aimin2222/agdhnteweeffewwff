@@ -7,3 +7,5 @@
 検証: Linux/Xvfb全614成功66.45秒（失敗/skip/除外なし）、GPU障害/timeout/CPU比較・音声/60fps/encoder retry診断、QAログのAPI書込不変。6モーションのCPU PoCL OpenCL実出力は各60フレーム/元音声packet一致。物理GPU/Windows/LoL速度と画角は未検証。前回のLinux native終了は原因未確定、今回は全件で再発なし。旧UI/GPUエンジン/録画/音声/37PNG/旧91refを保持し全95refs bundle保存。完全ZIPと差分適用の全ソース一致、個人ファイル除外を確認。
 
 前回v5.10.16を比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、またはCode→Download ZIPで取得して別フォルダでSTART_GPU.bat。実機手順はdocs/WINDOWS_TEST_v51017_JA.md。
+
+GitHub復元で450ソース/95refs/配布物hash一致。代表105テスト成功14.57秒（強制GCなし・GC有効）。再setupでも450ソース/95refs/3個人設定相当ファイルを保持/status clean。同じクラウド実行環境の別フォルダ検証で、Publish/新クラウドタスク/Windows実機確認とは区別します。
