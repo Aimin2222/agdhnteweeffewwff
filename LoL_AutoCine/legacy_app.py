@@ -34,6 +34,7 @@ from core.reference_safe import make_remixes, save_template as save_reference_te
 from core.audio import PreferredGameAudio, SyntheticAudio               # noqa: E402
 from core.jobs import preview_clip, run_auto_edit                  # noqa: E402
 from core.camera_qa import run_camera_record_test                   # noqa: E402
+from core.qa_plan import load_qa_plan                                 # noqa: E402
 from core.preview import apply_camera_preview, apply_video_effect_preview, compose_compare, preview_title, render_exact_still   # noqa: E402
 from core.launcher import watch_replay                             # noqa: E402
 from core.players import Player, parse_players                     # noqa: E402
@@ -1598,7 +1599,7 @@ class App:
         ttk.Button(f, text="✓ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
         ttk.Separator(f).pack(fill="x",pady=(8,6))
-        ttk.Button(f, text="開発用：カメラ8本＋つなぎ演出10種類を自動テスト",
+        ttk.Button(f, text="開発用：指定テストを一括作成・500MB ZIPに保存",
                    command=self.on_dev_camera_qa).pack(fill="x",pady=(0,3))
         ttk.Label(f, text="全体スキャン後に1回だけ押してください。同じ録画素材を使って演出を比較します（開発中のみ）。",
                   style="CardMuted.TLabel",wraplength=300).pack(fill="x")
@@ -3820,10 +3821,12 @@ class App:
             src, own = self._ensure_source()
             factory = ((lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else
                        (lambda path: PreferredGameAudio(path))) if tpl.game_audio else None
+            qa_plan, plan_source = load_qa_plan(log=self.log)
             report = run_camera_record_test(self.api,src,players,events,preferred,
                         tpl,destination,stop=self.stop_ev,log=self.log,
                         audio_factory=factory,
-                        progress=lambda *values:self.q.put(("job",*values)))
+                        progress=lambda *values:self.q.put(("job",*values)),
+                        plan=qa_plan, plan_source=plan_source)
             self.log(f"開発用一括テストの結果: {report}")
         finally:
             if own and src is not None:
