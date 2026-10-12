@@ -1,0 +1,459 @@
+diff --git a/MAKE_REFERENCE_SHEETS.bat b/MAKE_REFERENCE_SHEETS.bat
+index ad15e22..da1af0a 100644
+--- a/MAKE_REFERENCE_SHEETS.bat
++++ b/MAKE_REFERENCE_SHEETS.bat
+@@ -44,7 +44,6 @@ if not defined RUNEXE (
+ )
+ if not defined RUNEXE goto PY_MISSING
+ if "%SOURCE%"=="" goto PICK_SOURCE
+-if /I "%~x1"==".zip" goto ZIP_INPUT
+ if not exist "%SOURCE%" goto MISSING
+ set "OUTPUT=%~dp1_AutoCineReferenceReview_%~n1"
+ pushd "%SOURCE%" >nul 2>&1
+@@ -69,6 +68,10 @@ if exist "%LOG%" (
+ )
+ if not "%EXITCODE%"=="0" goto FAILED
+ echo [AutoCine] COMPLETE. The contact sheet ZIP is in the output folder.
++if defined OUTPUT (
++  echo [AutoCine] REVIEW ZIP: "%OUTPUT%\ReferenceReview_contact_sheets.zip"
++  if not defined CI start "" explorer.exe "%OUTPUT%" >nul 2>&1
++)
+ goto DONE
+ :PY_MISSING
+ echo [ERROR] Python with Pillow and imageio-ffmpeg was not found.
+@@ -76,16 +79,14 @@ echo [ERROR] Run: py -3 -m pip install pillow imageio-ffmpeg
+ echo [ERROR] Then retry the MP4 or folder drop.
+ set "RESULT=4"
+ goto DONE
+-:ZIP_INPUT
+-echo [ERROR] Do not drop a ZIP archive. Extract it first, then drop an MP4 or folder.
+-set "RESULT=2"
+-goto DONE
+ :MISSING
+ echo [ERROR] Input path not found: "%SOURCE%"
+ set "RESULT=2"
+ goto DONE
+ :FAILED
+ echo [ERROR] Reference video processing failed. Exit code: %EXITCODE%
++echo [ERROR] If a ZIP failed, check that it contains valid MP4 videos.
++echo [ERROR] Do not rename corrupted media files as .zip or .mp4.
+ echo [ERROR] Please send diagnostics\reference_review_latest.log
+ echo [ERROR] Fallback copy: "%LOG%"
+ set "RESULT=3"
+diff --git a/core/camera.py b/core/camera.py
+index 0bfda54..5d6e3a8 100644
+--- a/core/camera.py
++++ b/core/camera.py
+@@ -24,6 +24,7 @@ from typing import Callable, Optional
+ from .players import Player
+ from .replay_api import ReplayAPI, ReplayApiError
+ from .camera_clock import SmoothReplayClock
++from .camera_tuning import target_center_rotation
+ 
+ INTENSITY = {"natural": 0.6, "standard": 1.0, "strong": 1.4}
+ INTENSITY_JP = {"natural": "自然め", "standard": "標準", "strong": "強め"}
+@@ -516,10 +517,15 @@ class CameraPlan:
+             if self.rig is None or self.rig.v is None:
+                 return None
+             if self.team in ("CHAOS", "RED"):
+-                # RED FPS #3 kept the subject high and off-screen: it sent a
+-                # fixed 42-degree downward pitch even when the target from
+-                # the actual camera offset was only ~28 degrees below the
+-                # horizon. Aim at that target-relative offset instead.
++                # RED FPS #3: static -192 yaw ignored the actual position
++                # (target direction in user QA is closer to -163 degrees).
++                # FPS position and facing must derive from the SAME vector.
++                # Avoid stale top-camera rotation and any Z-roll.
++                if getattr(self, "_live_red_target_center", False):
++                    try:
++                        return target_center_rotation(self.offset_at(t))
++                    except (TypeError, ValueError, OverflowError):
++                        return None
+                 dx, dy, dz = self.offset_at(t)
+                 horizontal = math.hypot(dx, dz)
+                 if horizontal < 1.0:
+@@ -560,12 +566,17 @@ class CameraPlan:
+         if self.style in ("third", "third_cinema"):
+             if self.rig is None or not self.rig.third or not self.rig.rot or not self.rig.pitch_axis:
+                 return None
++            if (self.style == "third" and self.team in ("CHAOS", "RED")
++                    and getattr(self, "_live_red_target_center", False)):
++                # RED #1: relative camera offset already includes target rig,
++                # side orbit, keyframes and distance. Derive yaw + elevation
++                # from it, rather than using an unrelated fixed heading.
++                try:
++                    return target_center_rotation(self.third_pose_at(t)[0])
++                except (TypeError, ValueError, OverflowError):
++                    return None
+             if self.style == "third" and getattr(self, "_camera_axis_safety", False):
+-                # Windows QA #1 and #6 saw a spurious X pitch calibration.
+-                # It drove yaw through Z=-184deg (roll/inversion) and used a
+-                # camera-to-player baseline 7–8k units away. Calibration for
+-                # good shots #2/#7/#9 uses X yaw, Y pitch, Z=0; use that
+-                # engine-axis convention just for the broken normal preset.
++                # BLUE #6 and manual/older shots retain the legacy axis guard.
+                 return {"x": -self._third_heading(t),
+                         "y": max(18.0, min(58.0, self.third_pose_at(t)[1])),
+                         "z": 0.0}
+diff --git a/core/camera_qa.py b/core/camera_qa.py
+index fcfa537..2346356 100644
+--- a/core/camera_qa.py
++++ b/core/camera_qa.py
+@@ -75,7 +75,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
+     folder.mkdir(parents=True, exist_ok=True)
+     manifest = {
+-        "version": "5.10.23-test",
++        "version": "5.10.24-test",
+         "kind": "live_replay_camera_test",
+         "expected_clips": len(scenarios),
+         "test_plan": config,
+diff --git a/core/camera_tuning.py b/core/camera_tuning.py
+index 8709696..a62e940 100644
+--- a/core/camera_tuning.py
++++ b/core/camera_tuning.py
+@@ -6,11 +6,42 @@ were accepted compositions; no new yaw/pitch adjustment is applied to them.
+ Angle signs must still be verified in real Windows LoL replay footage.
+ """
+ from __future__ import annotations
++import math
++
++
++def target_center_rotation(camera_offset: tuple) -> dict:
++    """RED Replay camera Euler convention: X=azimuth, Y=downward elevation.
++
++    camera_offset is camera_position - target_position in LoL world axes.
++    The stable BLUE geometric convention uses X=pitch/Y=yaw, but confirmed
++    RED #2 and #4 clips instead use X=yaw/Y=pitch. DO NOT share Euler axis
++    layout across teams or modes. Camera must point from offset towards 0.
++    """
++    dx, dy, dz = (float(v) for v in camera_offset)
++    if not all(math.isfinite(v) for v in (dx, dy, dz)):
++        raise ValueError("Non-finite camera offset")
++    horizontal = math.hypot(dx, dz)
++    if horizontal < 1.0:
++        raise ValueError("Camera offset has no stable horizontal heading")
++    # atan2 wraps the 180-degree boundary stably, with no additional roll.
++    return {
++        "x": math.degrees(math.atan2(-dx, -dz)),
++        "y": max(14.0, min(72.0, math.degrees(math.atan2(dy, horizontal)))),
++        "z": 0.0,
++    }
++
++
++def yaw_alignment_error(camera_offset: tuple, rotation: dict) -> float:
++    """Return absolute angular mismatch (degrees) in RED camera axes."""
++    aimed = target_center_rotation(camera_offset)["x"]
++    yaw = float(rotation["x"])
++    return abs((yaw - aimed + 180.0) % 360.0 - 180.0)
++
+ 
+ 
+ SHOT_TUNING = {
+     # Side, camera mode -> relative distance, Euler-axis screen adjustment.
+-    ("RED", "third"):       {"distance": 1.13, "angles": {"x": 4.0}},
++    ("RED", "third"):       {"distance": 1.13, "angles": {}},
+     ("RED", "third_cinema"):{"distance": .96, "angles": {}},
+     ("RED", "fps"):         {"distance": 1.0, "angles": {}, "fps_back": 1.60},
+     ("RED", "lolnam_cinema"):{"distance": 1.0, "angles": {"x": -3.0, "y": -3.0}},
+diff --git a/core/jobs.py b/core/jobs.py
+index 36f7057..76152e8 100644
+--- a/core/jobs.py
++++ b/core/jobs.py
+@@ -231,6 +231,13 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
+     plan._live_dist_factor = shot["distance"]
+     plan._live_angle_bias = shot["angles"]
+     plan._live_fps_back = shot["fps_back"]
++    # v5.10.24: only RED normal #1 and RED FPS #3 get geometric
++    # target-centering. Approved RED #2/#4/#5 and all BLUE modes are untouched.
++    plan._live_red_target_center = (
++        str(getattr(player, "team", "")).upper() in ("CHAOS", "RED")
++        and tpl.style in ("third", "fps")
++        and side_choice == "auto"
++    )
+     # Side+mode-specific opt-in. BLUE geo_aim #10 is the visual reference;
+     # do not alter its existing pose or any RED third_cinema #2 framing.
+     # All modes still use the same replay/capture/audio engine.
+@@ -265,6 +272,11 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
+                 "initial_camera_offset": plan.offset_at(start),
+                 "initial_camera_rotation": plan.rotation_at(start),
+                 "shot_tuning": shot,
++                "red_target_center_enabled": bool(getattr(plan, "_live_red_target_center", False)),
++                "target_center_rotation": (
++                    __import__("core.camera_tuning", fromlist=["target_center_rotation"])
++                        .target_center_rotation(plan.offset_at(start))
++                    if getattr(plan, "_live_red_target_center", False) else None),
+                 "fps_target_relative": bool(tpl.style == "fps" and getattr(plan, "_live_fps_recenter", False)),
+             }, ensure_ascii=False, default=str))
+         except Exception as diagnostic_error:
+diff --git a/core/qa_plan.py b/core/qa_plan.py
+index c8c8a4a..b836b85 100644
+--- a/core/qa_plan.py
++++ b/core/qa_plan.py
+@@ -6,7 +6,7 @@ from pathlib import Path
+ from urllib.request import Request, urlopen
+ 
+ REMOTE_PLAN = ("https://raw.githubusercontent.com/Aimin2222/agdhnteweeffewwff/"
+-               "refs/heads/autocine/v5.10.23-framing-reference-launcher/"
++               "refs/heads/autocine/v5.10.24-target-geometric-red-qa/"
+                "LoL_AutoCine/qa/test_plan.json")
+ LOCAL_PLAN = Path(__file__).resolve().parents[1] / "qa" / "test_plan.json"
+ ALLOWED_CAMERA = ("third", "third_cinema", "fps", "lolnam_cinema", "geo_aim")
+diff --git a/qa/test_plan.json b/qa/test_plan.json
+index cd66f1c..0384d70 100644
+--- a/qa/test_plan.json
++++ b/qa/test_plan.json
+@@ -1,6 +1,6 @@
+ {
+   "schema_version": 1,
+-  "plan_id": "2026-10-12-red1-recenter-red3-fps-vector-blue5-modes-further-back",
++  "plan_id": "2026-10-12-red1-and3-geometric-camera-aim-approved-modes-safe-videozip",
+   "title": "v5.10.22 毎回自動収集: カメラ10本・切替・登場FX・比較画像・診断",
+   "camera_modes": [
+     "third",
+@@ -25,12 +25,13 @@
+   "max_zip_mb": 500,
+   "include_visual_comparison": true,
+   "manual_review": [
+-    "RED #1: visually center Vi by moving camera orientation without Z roll",
+-    "RED #2/#4/#5: previously approved compositions are a no-change baseline",
+-    "RED #3: no extreme close-up; killer and victim visible across pre/kill/post",
+-    "BLUE #6/#7/#8/#9/#10: retreat camera and retain combat in-frame",
+-    "BAT: MP4 and folder work; double-click prompts; Japanese filenames; no ZIP required",
+-    "Always collect comparison JPG, direct MP4, diagnostics and all <=500MB ZIPs"
++    "RED #1: character visibly central at PRE/KILL/POST; no roll",
++    "RED #3: character visibly central at PRE/KILL/POST, no top-right offscreen",
++    "RED #2/#4/#5: exactly same approved look; do not modify engine logic",
++    "BLUE #6: PRE framing must not crop the selected champion; B #7/#8/#9/#10 keep approved composition",
++    "reference: MP4, 29 video folder or video ZIP accepted; file names and original mapped in report",
++    "QA: collect all RED/BLUE clips, per-side review reels, transitions, motion FX, screenshots, results and diagnostics",
++    "Final ZIP parts <=500MB; no nested archives"
+   ],
+   "note": "3 distinct legacy tests instead of 10 similar brightness pulses; 6 spatial motions remain QA only. Results go into 500 MB max direct ZIPs.",
+   "spatial_transition_previews": [
+diff --git a/tests/test_v51023_reference_framing.py b/tests/test_v51023_reference_framing.py
+index 276e464..8136a8e 100644
+--- a/tests/test_v51023_reference_framing.py
++++ b/tests/test_v51023_reference_framing.py
+@@ -19,7 +19,7 @@ def test_approved_red2_red4_red5_modes_are_unchanged():
+ 
+ def test_red1_has_no_roll_angle_and_aim_bias_is_independent():
+     red=shot_tuning("RED","third")
+-    assert red["angles"]=={"x":4.0}
++    assert red["angles"]=={} # RED1 geometric look-at replaces manual bias
+     assert "z" not in red["angles"]
+     assert shot_tuning("BLUE","third")["angles"]=={"x":3.0}
+ 
+@@ -46,7 +46,7 @@ def test_red_fps_live_pitch_matches_relative_vector_not_fixed_42():
+     rot=plan.rotation_at(0.0)
+     pos=plan.offset_at(0.0)
+     reference_pitch=math.degrees(math.atan2(pos[1],math.hypot(pos[0],pos[2])))
+-    assert rot["x"] == pytest.approx(-192.0)
++    assert rot["x"] == pytest.approx(-192.0)  # legacy plan without LIVE geometric-aim flag
+     assert rot["y"] == pytest.approx(reference_pitch+3.0)
+     assert rot["z"] == 0.0
+     assert rot["y"] < 42.0
+@@ -63,7 +63,7 @@ def test_reference_launcher_accepts_mp4_and_rejects_zip(tmp_path):
+     runner=(Path(__file__).resolve().parents[1]/"MAKE_REFERENCE_SHEETS.bat").read_text(encoding="ascii")
+     assert "where py" in runner
+     assert ":PICK_SOURCE" in runner
+-    assert 'if /I "%~x1"==".zip"' in runner
++    assert ":ZIP_INPUT" not in runner  # valid video ZIP now accepted
+     assert "reference_review_latest.log" in runner
+ 
+ 
+diff --git a/tests/test_v51024_red_center_zip_reference.py b/tests/test_v51024_red_center_zip_reference.py
+new file mode 100644
+index 0000000..8d762e1
+--- /dev/null
++++ b/tests/test_v51024_red_center_zip_reference.py
+@@ -0,0 +1,115 @@
++# -*- coding: utf-8 -*-
++"""Camera center from real world-relative geometry; reference ZIP smoke tests."""
++from __future__ import annotations
++import io
++import json
++import math
++import zipfile
++from pathlib import Path
++from types import SimpleNamespace
++
++import pytest
++from PIL import Image
++
++from core.camera import CameraPlan, RigInfo
++from core.camera_tuning import shot_tuning, target_center_rotation, yaw_alignment_error
++
++
++def make_plan(style, team="CHAOS"):
++    rig = RigInfo(mode="fps", third=True, h=(-.52, -.85416626),
++                  rot={"x":0.0,"y":42.0,"z":0.0},
++                  v=(5945.0, 1892.0, 3829.0),
++                  pitch_axis="x", pitch_sign=1.0)
++    plan = CameraPlan(style=style, rig=rig, team=team,
++                      kill_time=833.64056, third_elev=42.0, third_dist=1170.0,
++                      side_yaw=184.0)
++    plan._camera_axis_safety=True
++    plan._live_red_target_center=True
++    plan._live_red_normal_reframe=True
++    plan._live_dist_factor=1.13
++    plan._live_angle_bias={}
++    return plan
++
++
++def test_red1_rotation_aims_at_exact_camera_relative_position():
++    plan = make_plan("third")
++    for t in (830.64, 833.64, 836.64):
++        offset=plan.offset_at(t)
++        assert plan.rotation_at(t)==target_center_rotation(offset)
++        assert yaw_alignment_error(offset,plan.rotation_at(t)) < .000001
++        assert plan.rotation_at(t)["z"] == 0.0
++    assert shot_tuning("RED","third")["angles"]=={}
++
++
++def test_red3_geometric_target_center_has_no_static_heading_error():
++    rig=RigInfo(mode="fps",third=False,h=(-.4898255,-.8718205),
++                v=(-500.9,1892.2,-891.6),rot={"x":0,"y":56,"z":0})
++    plan=CameraPlan(style="fps", rig=rig, team="CHAOS",
++                    kill_time=833.64056, third_elev=28.0, third_dist=950)
++    plan._live_red_target_center=True
++    plan._live_fps_recenter=True
++    plan._live_fps_side_heading=192.0
++    plan._live_fps_back=1.6
++    for t in (830.64,833.64,836.64):
++        pos=plan.offset_at(t)
++        rot=plan.rotation_at(t)
++        assert rot==target_center_rotation(pos)
++        assert yaw_alignment_error(pos, rot) < 1e-6
++    assert abs(plan.rotation_at(833.64)["x"]+192.0) > 10.0
++
++
++def test_approved_red2_red4_red5_not_rewritten():
++    for mode in ("third_cinema","lolnam_cinema","geo_aim"):
++        assert not bool(shot_tuning("RED",mode).get("aim_target",False))
++    assert shot_tuning("RED","third_cinema")["angles"]=={}
++    assert shot_tuning("RED","lolnam_cinema")["angles"]=={"x":-3.0,"y":-3.0}
++    assert shot_tuning("RED","geo_aim")["angles"]=={"x":-4.0}
++
++
++def test_geometry_rejects_nonfinite_and_short_camera():
++    with pytest.raises(ValueError):
++        target_center_rotation((float("nan"),8,2))
++    with pytest.raises(ValueError):
++        target_center_rotation((0,1,0))
++    with pytest.raises(ValueError):
++        target_center_rotation((float("inf"),8,2))
++
++
++def test_reference_zip_extracts_videos_without_extracting_traversal(tmp_path,monkeypatch):
++    from tools import reference_video_review as rr
++    source=tmp_path/"日本語・動画.zip"
++    with zipfile.ZipFile(source,"w") as z:
++        z.writestr("../xmedia.mp4",b"not-real-video")
++        z.writestr("notes.txt",b"ignored")
++    out=tmp_path/"reference_out"
++    # Reference extractor is tested with fake media; no game replay needed.
++    monkeypatch.setattr("core.montage_fx.get_duration",lambda *_a,**_k:2.0)
++    monkeypatch.setattr("core.gpu_binary.ffmpeg_exe",lambda:"ffmpeg")
++    picture=Image.new("RGB",(480,270),"#64748b")
++    by=io.BytesIO()
++    picture.save(by,format="PNG")
++    monkeypatch.setattr(rr.subprocess,"run",lambda *_a,**_k:SimpleNamespace(
++        returncode=0,stdout=by.getvalue(),stderr=b""))
++    result=rr.create_sheets(source,out)
++    assert result.is_file()
++    assert not (tmp_path/"xmedia.mp4").exists()
++    with zipfile.ZipFile(result) as z:
++        assert "reference_archive_names.json" in z.namelist()
++        assert len([n for n in z.namelist() if n.endswith(".jpg")])==1
++    metadata=json.loads((out/"reference_archive_names.json").read_text(encoding="utf-8"))
++    assert metadata["items"][0]["archived_name"]=="../xmedia.mp4"
++
++
++def test_reference_zip_rejects_nonvideo_archive(tmp_path):
++    from tools import reference_video_review as rr
++    source=tmp_path/"empty_video.zip"
++    with zipfile.ZipFile(source,"w") as z:z.writestr("notes.txt","hello")
++    with pytest.raises(ValueError,match="MP4"):
++        rr.create_sheets(source,tmp_path/"out")
++
++
++def test_bat_accepts_video_zip_and_shows_exact_result(tmp_path):
++    bat=(Path(__file__).resolve().parents[1]/"MAKE_REFERENCE_SHEETS.bat").read_text(encoding="ascii")
++    assert 'goto ZIP_INPUT' not in bat
++    assert "REVIEW ZIP:" in bat
++    assert 'if not defined CI start "" explorer.exe' in bat
+diff --git a/tools/reference_video_review.py b/tools/reference_video_review.py
+index a437b47..fa505f8 100644
+--- a/tools/reference_video_review.py
++++ b/tools/reference_video_review.py
+@@ -13,6 +13,8 @@ from pathlib import Path
+ import re
+ import subprocess
+ import zipfile
++import tempfile
++import shutil
+ 
+ from PIL import Image, ImageDraw, ImageOps
+ 
+@@ -40,6 +42,42 @@ def find_reference_videos(directory):
+ 
+ 
+ def create_sheets(input_folder, output_folder, *, ffmpeg=None, logger=print):
++    # Accept a reference ZIP as well as direct MP4 files/folders. Extraction
++    # uses safe locally generated names: never trust archive member paths.
++    src = Path(input_folder)
++    if src.is_file() and src.suffix.lower() == ".zip":
++        if not zipfile.is_zipfile(src):
++            raise ValueError("このZIPは壊れているかZIP形式ではありません")
++        with tempfile.TemporaryDirectory(prefix="autocine_reference_") as td:
++            extracted = Path(td)
++            mappings = []
++            count = 0
++            total_size = 0
++            with zipfile.ZipFile(src) as archive:
++                for member in archive.infolist():
++                    if member.is_dir() or Path(member.filename).suffix.lower() not in VIDEO_SUFFIXES:
++                        continue
++                    count += 1
++                    total_size += member.file_size
++                    if count > 120 or member.file_size > 1_000_000_000 or total_size > 4_000_000_000:
++                        raise ValueError("動画数・解凍後容量が安全上限を超えました（120本・4GB以内）")
++                    filename = (f"{count:03d}_" +
++                                sanitized_filename(Path(member.filename).stem) +
++                                Path(member.filename).suffix.lower())
++                    target = extracted / filename
++                    with archive.open(member) as reader, target.open("wb") as writer:
++                        shutil.copyfileobj(reader, writer, length=1024 * 1024)
++                    mappings.append({"archived_name": member.filename, "extracted_name": filename})
++            if not mappings:
++                raise ValueError("ZIP内にMP4/MOV/MKV/WEBMがありません")
++            result = create_sheets(extracted, output_folder, ffmpeg=ffmpeg, logger=logger)
++            out = Path(output_folder)
++            mapping_path = out / "reference_archive_names.json"
++            mapping_path.write_text(json.dumps({"source_zip": src.name, "items": mappings},
++                                               ensure_ascii=False, indent=2), encoding="utf-8")
++            with zipfile.ZipFile(result, "a", compression=zipfile.ZIP_DEFLATED) as archive:
++                archive.write(mapping_path, "reference_archive_names.json")
++            return result
+     from core.gpu_binary import ffmpeg_exe
+     from core.montage_fx import get_duration
+     executable=str(ffmpeg or ffmpeg_exe())
+@@ -116,7 +154,7 @@ def choose_source():
+     try:
+         selected = filedialog.askopenfilename(
+             title="AutoCine - 参考動画のMP4を選択（キャンセルでフォルダーを選択）",
+-            filetypes=[("動画", "*.mp4 *.mov *.mkv *.webm"),
++            filetypes=[("動画・ZIP", "*.mp4 *.mov *.mkv *.webm *.zip"),
+                        ("すべてのファイル", "*.*")])
+         if not selected:
+             selected = filedialog.askdirectory(title="AutoCine - 動画フォルダーを選択")
+@@ -137,8 +175,6 @@ def main():
+     if source is None:
+         print("No reference video selected; nothing was changed.")
+         return
+-    if source.suffix.lower()==".zip":
+-        raise ValueError("ZIPは直接入力できません。展開してMP4か動画フォルダーを指定してください。")
+     # Default destination next to the selected source and never inside MP4.
+     dest = args.output
+     if dest is None:

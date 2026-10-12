@@ -45,7 +45,6 @@ if not defined RUNEXE (
 )
 if not defined RUNEXE goto PY_MISSING
 if "%SOURCE%"=="" goto PICK_SOURCE
-if /I "%~x1"==".zip" goto ZIP_INPUT
 if not exist "%SOURCE%" goto MISSING
 set "OUTPUT=%~dp1_AutoCineReferenceReview_%~n1"
 pushd "%SOURCE%" >nul 2>&1
@@ -60,8 +59,8 @@ echo [AutoCine] Log: "%LOG%"
 set "EXITCODE=%ERRORLEVEL%"
 goto CHECK_RESULT
 :PICK_SOURCE
-echo [AutoCine] No file dropped. Opening MP4/folder picker.
-"%RUNEXE%" %RUNARG% -m tools.reference_video_review > "%LOG%" 2>&1
+echo [AutoCine] No file dropped. Opening video/ZIP/folder picker.
+"%RUNEXE%" %RUNARG% -m tools.reference_video_review --open-output > "%LOG%" 2>&1
 set "EXITCODE=%ERRORLEVEL%"
 goto CHECK_RESULT
 :CHECK_RESULT
@@ -70,7 +69,11 @@ if exist "%LOG%" (
   copy /y "%LOG%" "diagnostics\reference_review_latest.log" >nul 2>&1
 )
 if not "%EXITCODE%"=="0" goto FAILED
-echo [AutoCine] COMPLETE. The contact sheet ZIP is in the output folder.
+echo [AutoCine] Finished. See the processing log above.
+if defined OUTPUT (
+  echo [AutoCine] REVIEW ZIP: "%OUTPUT%\ReferenceReview_contact_sheets.zip"
+  if not defined CI start "" explorer.exe "%OUTPUT%" >nul 2>&1
+)
 goto DONE
 :PY_MISSING
 >> "%LOG%" echo [ERROR] Python with Pillow and imageio-ffmpeg was not found.
@@ -79,11 +82,6 @@ echo [ERROR] Run: py -3 -m pip install pillow imageio-ffmpeg
 echo [ERROR] Then retry the MP4 or folder drop.
 set "RESULT=4"
 goto DONE
-:ZIP_INPUT
->> "%LOG%" echo [ERROR] Extract the ZIP first, then select a video or folder.
-echo [ERROR] Do not drop a ZIP archive. Extract it first, then drop an MP4 or folder.
-set "RESULT=2"
-goto DONE
 :MISSING
 >> "%LOG%" echo [ERROR] Input path not found: "%SOURCE%"
 echo [ERROR] Input path not found: "%SOURCE%"
@@ -91,6 +89,7 @@ set "RESULT=2"
 goto DONE
 :FAILED
 echo [ERROR] Reference video processing failed. Exit code: %EXITCODE%
+echo [ERROR] If a ZIP failed, check that it contains valid MP4 videos.
 echo [ERROR] Please send diagnostics\reference_review_latest.log
 echo [ERROR] Fallback copy: "%LOG%"
 set "RESULT=3"

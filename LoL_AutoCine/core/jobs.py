@@ -227,11 +227,19 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
     plan._camera_axis_safety = tpl.style in ('third', 'geo_aim')
     # v5.10.21: every approved camera has isolated, bounded composition
     # adjustments. Never change the shared target-lock or Replay API protocol.
-    from .camera_tuning import shot_tuning
+    from .camera_tuning import shot_tuning, target_center_rotation
     shot = shot_tuning(getattr(player, "team", "ORDER"), tpl.style)
     plan._live_dist_factor = shot["distance"]
     plan._live_fps_back = shot["fps_back"]
     plan._live_angle_bias = ({} if tpl.style == "fps" and side_choice != "auto" else shot["angles"])
+    plan._live_red_target_center = (
+        str(getattr(player, "team", "")).upper() in ("CHAOS", "RED")
+        and tpl.style in ("third", "fps") and side_choice == "auto"
+    )
+    # Explicit manual third headings retain the previous small correction.
+    if (str(getattr(player, "team", "")).upper() in ("CHAOS", "RED")
+            and tpl.style == "third" and side_choice != "auto"):
+        plan._live_angle_bias = {"x": 4.0}
     # Side+mode-specific opt-in. BLUE geo_aim #10 is the visual reference;
     # do not alter its existing pose or any RED third_cinema #2 framing.
     # All modes still use the same replay/capture/audio engine.
@@ -267,6 +275,9 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                 "initial_camera_rotation": plan.rotation_at(start),
                 "shot_tuning": shot,
                 "applied_angle_bias": dict(plan._live_angle_bias),
+                "red_target_center_enabled": bool(plan._live_red_target_center),
+                "target_center_rotation": (target_center_rotation(plan.offset_at(start))
+                                           if plan._live_red_target_center else None),
                 "fps_target_relative": bool(tpl.style == "fps" and getattr(plan, "_live_fps_recenter", False)),
             }, ensure_ascii=False, default=str))
         except Exception as diagnostic_error:
