@@ -1,10 +1,16 @@
 @echo off
+rem ASCII-only launcher to avoid mojibake in Windows cmd.exe.
 chcp 65001 >nul
+setlocal
 cd /d "%~dp0"
-set PYTHONUTF8=1
+set "PYTHONUTF8=1"
+set "PYTHONIOENCODING=utf-8"
 py -3 -m core.auto_qa
-if errorlevel 1 (
-  echo.
-  echo 自動診断で失敗が見つかりました。diagnostics\selftest_latest.json を確認してください。
+set "STATUS=%ERRORLEVEL%"
+if not "%STATUS%"=="0" (
+  echo [ERROR] Automatic diagnostics reported a failure.
+  echo [ERROR] See diagnostics\selftest_latest.json
 )
-pause
+echo.
+if not defined CI pause
+endlocal & exit /b %STATUS%

@@ -58,7 +58,7 @@ def test_live_flags_are_limited_to_their_side_and_mode(monkeypatch, team, style)
     assert plan._live_red_normal_reframe == (team=='CHAOS' and style=='third')
     rotation=plan.rotation_at(10)
     assert all(math.isfinite(v) for v in rotation.values())
-    assert rotation['z']==0
+    assert rotation['z']==(3.0 if team=='CHAOS' and style=='third' else 0.0)
 
 
 def test_empty_reference_folder_produces_valid_report(tmp_path):

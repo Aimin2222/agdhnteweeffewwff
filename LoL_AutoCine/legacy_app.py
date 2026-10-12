@@ -1652,9 +1652,9 @@ class App:
         ttk.Label(f, text="試合全体スキャン後、BLUE/REDの代表キルとモンタージュ演出をまとめて書き出す一時機能です。完成版では削除予定。", style="CardMuted.TLabel", wraplength=290).pack(fill="x")
         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
         ttk.Separator(f).pack(fill="x",pady=(8,6))
-        ttk.Button(f, text="開発用：指定テストを一括作成・500MB ZIPに保存",
+        ttk.Button(f, text="開発用：1回で接続→全体スキャン→動画・画像→500MB ZIP",
                    command=self.on_dev_camera_qa).pack(fill="x",pady=(0,3))
-        ttk.Label(f, text="全体スキャン後に1回だけ押してください。同じ録画素材を使って演出を比較します（開発中のみ）。",
+        ttk.Label(f, text="最初に1回押すだけ。スキャン済みなら結果を再利用。RED/BLUEカメラ、演出、画像と診断を自動収集（開発中のみ）。",
                   style="CardMuted.TLabel",wraplength=300).pack(fill="x")
 
         f = card(right, "☁  出力状況")
@@ -3995,16 +3995,50 @@ class App:
                     pass
 
     def on_dev_camera_qa(self):
-        """User-initiated, disposable test suite. Capture Tk values on UI thread."""
+        """One click: connect -> full-match scan -> camera/FX QA -> review ZIPs.
+
+        All Tk reads are snapshotted on the UI thread. The same worker owns
+        the whole sequence so a second click cannot start another capture.
+        Existing complete scan is reused; no player lock is required.
+        """
         if self.busy:
             messagebox.showinfo(APP, "別の作業が終わってから開始してください。")
             return
+        try:
+            template = self.current_template()
+        except Exception as exc:
+            self.log(f"開発テストの設定を確認してください: {exc}")
+            messagebox.showerror(APP, str(exc))
+            return
+        destination = Path(self.out_root)
+        self.log("開発テスト: 接続・全体スキャン・撮影・比較画像・500MB分割ZIPをまとめて開始します。")
+        self._run_bg(self._run_one_click_camera_qa, template, destination)
+
+    def _run_one_click_camera_qa(self, template, destination):
+        """Single worker; never touch a Tk variable outside the UI thread."""
+        if self.stop_ev.is_set():
+            return
         cache = self._match_scan_cache
         if cache is None or not cache.complete:
-            messagebox.showinfo(APP, "先に右側の「スキャン」を完了してください。")
+            self.q.put(("job", 0, 0, 0, "リプレイへ接続・10人を確認中"))
+            if not self.players:
+                self._connect()
+            if self.stop_ev.is_set():
+                return
+            if not self.players:
+                raise RuntimeError("LoLリプレイに接続できませんでした。リプレイ再生とReplay APIを確認してください。")
+            self.q.put(("job", 0, 0, 0, "試合全体を初回スキャン中"))
+            self._scan("キル")
+            cache = self._match_scan_cache
+        if self.stop_ev.is_set():
             return
-        self._run_bg(self._record_camera_qa, self.current_template(),
-                     list(self.players), list(cache.events), self.locked, Path(self.out_root))
+        if cache is None or not cache.complete:
+            raise RuntimeError("試合全体のスキャンが完了しませんでした。テスト動画は作成しません。")
+        if not self.players or not cache.events:
+            raise RuntimeError("カメラテストに必要なプレイヤー・イベント情報が不足しています。")
+        self.log(f"開発テスト: スキャン完了。{len(self.players)}人、{len(cache.events)}イベントで撮影します。")
+        self._record_camera_qa(template, list(self.players), list(cache.events),
+                               self.locked, destination)
 
     def _record_camera_qa(self, tpl, players, events, preferred, destination):
         """Worker: records 8 representative clips, then post-processes 10 variants."""

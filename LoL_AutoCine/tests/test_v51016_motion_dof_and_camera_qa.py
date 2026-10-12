@@ -71,16 +71,18 @@ def test_scan_button_starts_background_before_player_connected():
     finally:
         root.destroy()
 
-def test_dev_camera_qa_requires_completed_whole_match_scan(monkeypatch):
+def test_dev_camera_qa_starts_single_worker_even_without_scan(monkeypatch):
     import legacy_app
     root=tk.Tk()
     try:
         app=legacy_app.App(root)
-        shown=[]
-        monkeypatch.setattr(legacy_app.messagebox,'showinfo',lambda *args,**kw:shown.append(args))
         app._match_scan_cache=None
+        queued=[]
+        monkeypatch.setattr(app, '_run_bg', lambda fn,*args: queued.append((fn,args)))
         app.on_dev_camera_qa()
-        assert shown
+        assert len(queued) == 1
+        assert queued[0][0] == app._run_one_click_camera_qa
+        assert len(queued[0][1]) == 2
     finally:
         root.destroy()
 

@@ -230,7 +230,8 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
     from .camera_tuning import shot_tuning
     shot = shot_tuning(getattr(player, "team", "ORDER"), tpl.style)
     plan._live_dist_factor = shot["distance"]
-    plan._live_angle_bias = shot["angles"]
+    plan._live_fps_back = shot["fps_back"]
+    plan._live_angle_bias = ({} if tpl.style == "fps" and side_choice != "auto" else shot["angles"])
     # Side+mode-specific opt-in. BLUE geo_aim #10 is the visual reference;
     # do not alter its existing pose or any RED third_cinema #2 framing.
     # All modes still use the same replay/capture/audio engine.
@@ -265,6 +266,7 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                 "initial_camera_offset": plan.offset_at(start),
                 "initial_camera_rotation": plan.rotation_at(start),
                 "shot_tuning": shot,
+                "applied_angle_bias": dict(plan._live_angle_bias),
                 "fps_target_relative": bool(tpl.style == "fps" and getattr(plan, "_live_fps_recenter", False)),
             }, ensure_ascii=False, default=str))
         except Exception as diagnostic_error:

@@ -1,25 +1,27 @@
-# v5.10.21-test CameraDirector / GPUFull
+# v5.10.22-test OneClick / UTF8 / QA / GPUFull
 
-完全版 **handoff/LoL_AutoCine_v5.10.21_CameraDirector_GPUFull_Windows_Full.zip** をGitHubで開き **Download raw file**。または **codex/lol-autocine-v51021-camera-director-handoff** の **Code → Download ZIP**。旧版と別フォルダへ展開してLoL_AutoCine/START_GPU.bat。Windowsへの取得にmainマージ/環境Publishは不要。
+完全版 **handoff/LoL_AutoCine_v5.10.22_OneClick_UTF8_QA_GPUFull_Windows_Full.zip** をGitHubで開き **Download raw file**。または **codex/lol-autocine-v51022-oneclick-utf8-qa-handoff** の **Code → Download ZIP**。旧版と別フォルダへ展開してLoL_AutoCine/START_GPU.bat。Windows取得にmainマージ/環境Publishは不要。
 
-受領のチーム/モード別小補正、FPS対象相対位置、RED192度を統合。手動0/180度とFPS高さをCodexで保持、NaN角度を拒否。校正とstable rotationのモード分離も保持。RED2/BLUE7の追加角度はゼロ、BLUE7距離は不変、RED2距離0.96。実構図改善はWindows未確認。
+開発QAはUI snapshotから1ワーカーで接続→全体scan→撮影→画像・演出→直接ZIP。complete cache再利用、二重押し/partial/失敗/停止を処理。既存通常出力と開発bundleも保持。MAKE_REFERENCE_SHEETS/RUN_AUTOTESTをASCII、Python UTF8環境/終了コードを保持。auditは単体/配布内Git双方でtracked sourceだけ確認し個人未追跡ファイルを読まない。
 
-色微調整/ディレクターを変数traceで直下展開。強さ0〜1.5をUIで検証し、Template末尾の任意値へsnapshotしてCameraPlanの接近量と明示Orbitゼロへ接続。旧位置引数/JSON/None/scene replaceを保持。0%でもスタイル固有FOV/スロー/ローアングル/keyframeは残る。MAKE_REFERENCE_SHEETS.batは単体動画/フォルダ、入力別出力先、TEMPログ/pause。6時点JPEG/JSON/ZIPはローカルだけ、元動画不変・外部送信なし。空フォルダも有効ZIP。
+QA_Supportに読み方と指定6ログ末尾各最大1MBを元バイトでコピー。元ログ不変、symlink除外、書込失敗で録画を無効化しない。中止でsupport/ZIPは開始しない。既知名かつ1MB以下のQA_SupportログだけZIPへ含める。1MBstream/500MB上限/元動画・JSON・旧ZIP/再出力別名/最終JSON一致を保持。時間割合3時点で実キル/主役のAI判定ではない。外部送信なし。
 
-GPU全22FX/60fps時刻/LoL専用音声/NVENC/選択policy/CPU fallback診断/500MB直接ZIP/1MBstream/ミラー応答/capture終了テスト同期を保持。Linux/Xvfb全696成功、失敗/skip/除外なし、58.339秒。実GPU/Windows/LoL画角・BAT実行・性能は未確認。過去Linux native139/132は原因未確定、成功を恒久修正とは扱わない。
+RED1距離1.13/Z+3度、RED3 FPS back1.60/X-4/Y+4、RED5 geo距離1.12/X-4、BLUE8 FPS back1.22は受領試験値。RED2/4/BLUE7/9の数値を保持。FPS高さは倍率と別、手動0/180は自動angle biasを外して保持。キャッシュ分離/TargetLock/ディレクターgain/旧APIとTemplate任意Noneを保持。実構図・傾き改善はWindows未確認。
 
-完全ZIP494ファイル、差分適用後496ソース一致、全111refs bundle（binary属性でWindows改行変換を防止）。差分基準は前回Codex v5.10.20-test。実機手順はLoL_AutoCine/docs/WINDOWS_TEST_v51021_JA.md。
+GPU全22FX/60fps/LoL専用音声/録画/NVENC/選択policy/診断/CPUfallback/ミラー応答を保持、描画本体はbyte不変。Linux/Xvfb全719成功、失敗/skip/除外なし、60.969秒。関連初回63成功/1失敗は.logがZIPから除外されたため修正、追加チェック含む65成功。その後全件で確認。Windows/LoL画角・日本語パス/BAT実行・NVIDIA速度は未確認。過去native139/132は原因未確定、成功を恒久修正とは扱わない。
+
+完全ZIP506ファイル、差分適用後508ソース一致、全115refs bundle（binary属性でWindows改行変換を防止）。差分基準は前回Codex v5.10.21-test。実機手順LoL_AutoCine/docs/WINDOWS_TEST_v51022_JA.md。
 
 ## ローカルGit復元
 ```sh
-git clone --single-branch --branch codex/lol-autocine-v51021-camera-director-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v51021_Handoff
-git clone --branch integration/v5.10.21 LoL_AutoCine_v51021_Handoff/handoff/LoL_AutoCine_v5.10.21_CameraDirector_GPUFull_all_branches.bundle LoL_AutoCine_v51021_Dev
-cd LoL_AutoCine_v51021_Dev
-git branch feature/gpu-cameraqa-v51021 origin/feature/gpu-cameraqa-v51021
-git branch feature/ui-cameraqa-v51021 origin/feature/ui-cameraqa-v51021
+git clone --single-branch --branch codex/lol-autocine-v51022-oneclick-utf8-qa-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v51022_Handoff
+git clone --branch integration/v5.10.22 LoL_AutoCine_v51022_Handoff/handoff/LoL_AutoCine_v5.10.22_OneClick_UTF8_QA_GPUFull_all_branches.bundle LoL_AutoCine_v51022_Dev
+cd LoL_AutoCine_v51022_Dev
+git branch feature/gpu-cameraqa-v51022 origin/feature/gpu-cameraqa-v51022
+git branch feature/ui-cameraqa-v51022 origin/feature/ui-cameraqa-v51022
 git status --short
 ```
 
-全refsはorigin/*へ復元。originはローカルbundle。設定/録画/プロジェクトを保管。担当ガードはdocs/CODEX_INTEGRATION_v51021_JA.md。
+全refsはorigin/*へ復元、originはローカルbundle。設定/録画/プロジェクトを保管。担当ガードはdocs/CODEX_INTEGRATION_v51022_JA.md。
 
-GitHubから別checkout/bundle復元で全496ソース/111refs/ZIP・bundle hashes一致。復元先代表187成功14.93秒、失敗/skip/除外なし、GC有効・強制GCなし。再setupで496ソース/111refs/3個人設定相当のバイト保持/status clean。これは同一クラウド内の別フォルダ検証で新しいcloud task/Windows/Publish検証とは別。環境install_script/start_skillをrevision39へ保存してreadback確認、他の既知設定保持、Publishは未実行。次回環境へ反映する場合だけ環境設定で確認・保存後Publish。
+GitHubから別checkout/bundle復元で全508ソース/115refs/ZIP・bundle hashes一致。復元先代表210成功17.16秒、失敗/skip/除外なし、GC有効・強制GCなし。再setupで508ソース/115refs/3個人設定相当のバイト保持/status clean。これは同一クラウド内の別フォルダ検証で新しいcloud task/Windows/Publish検証とは別。環境install_script/start_skillをrevision40へ保存してreadback確認、他の既知設定保持、Publishは未実行。次回環境へ反映する場合だけ環境設定で確認・保存後Publish。
