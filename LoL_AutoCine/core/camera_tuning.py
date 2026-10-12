@@ -46,7 +46,7 @@ SHOT_TUNING = {
     ("RED", "fps"):         {"distance": 1.0, "angles": {}, "fps_back": 1.60},
     ("RED", "lolnam_cinema"):{"distance": 1.0, "angles": {"x": -3.0, "y": -3.0}},
     ("RED", "geo_aim"):     {"distance": 1.12, "angles": {"x": -4.0}},
-    ("BLUE", "third"):      {"distance": 1.10, "angles": {"x": 3.0}},
+    ("BLUE", "third"):      {"distance": 1.10, "angles": {"x": -2.0}},  # #6: shift subject lower in frame, no orbit/distance changes
     ("BLUE", "third_cinema"):{"distance": 1.08, "angles": {}},   # modest backward only
     ("BLUE", "fps"):        {"distance": 1.0, "angles": {}, "fps_back": 1.38},
     ("BLUE", "lolnam_cinema"):{"distance": 1.08, "angles": {"x": 2.5}},
