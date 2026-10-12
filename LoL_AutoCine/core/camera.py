@@ -458,6 +458,18 @@ class CameraPlan:
             # calibrated follow cameras, while retaining the FPS label/controls.
             pose = self.third_pose_at(t)[0]
             back = max(1.0, min(1.65, float(getattr(self, "_live_fps_back", 1.0))))
+            if self.team in ("CHAOS", "RED") and getattr(self, "_live_fps_canonical_rear", False):
+                # RED #3: old source heading+separate 192-degree rotation
+                # could orbit the wrong side of the player, leaving the kill
+                # in the upper-right corner. Match the camera-side direction
+                # of the approved RED geometric shot (#5), but leave a wider
+                # distance. X horizontal yaw, Y elevation, Z roll=0.
+                horizontal = math.hypot(pose[0], pose[2]) * back * 1.10
+                elevation = math.radians(42.0)
+                heading = math.radians(float(getattr(self, "_live_fps_side_heading", 192.0)))
+                return (horizontal * math.sin(heading),
+                        horizontal * math.tan(elevation),
+                        -horizontal * math.cos(heading))
             pose = tuple(float(v) * back for v in pose)
             heading = float(getattr(self, "_live_fps_side_heading", 0.0))
             if heading:
