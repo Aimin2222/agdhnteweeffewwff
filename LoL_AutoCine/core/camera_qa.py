@@ -201,4 +201,14 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     manifest["completed_clips"] = sum(bool(row["outputs"]) for row in manifest["outputs"])
     manifest["canceled"] = bool(stop is not None and stop.is_set())
     flush()
+    # Export results directly as <=500MB ZIPs, while leaving loose MP4s intact.
+    try:
+        max_mb = config["max_zip_mb"] if config else 500
+        archives = split_test_results(folder, max_bytes=max_mb * 1_000_000, log=log)
+        manifest["qa_archives"] = [str(item) for item in archives]
+        log(f"テスト結果をZIP {len(archives)} 個に分割（各最大{max_mb}MB）")
+    except Exception as exc:
+        manifest["qa_packaging_error"] = f"{type(exc).__name__}: {exc}"
+        log("テストZIP化に失敗。元MP4とJSONは保持されます: " + str(exc))
+    flush()
     return folder / "results.json"
