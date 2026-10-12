@@ -1754,8 +1754,10 @@ class App:
         log_sb.pack(side="right", fill="y")
         self._mode_sidecards.append((log_card, right, "log"))
 
-        # Initialize all template-backed controls.
+        # Initialize template camera/FX controls, but do not silently apply a
+        # creative color grade before the user chooses one.
         self.apply_template(self.var_tpl.get())
+        self.var_grade.set(GRADE_JP["default"])
         self._apply_edit_mode(log=False)
 
         # A compact log window is available from the settings/diagnostics button.
