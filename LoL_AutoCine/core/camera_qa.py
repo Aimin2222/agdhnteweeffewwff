@@ -258,6 +258,37 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     manifest["completed_clips"] = sum(bool(row["outputs"]) for row in manifest["outputs"])
     manifest["canceled"] = bool(stop is not None and stop.is_set())
     flush()
+    # Always include an upload-ready, human-readable report and bounded
+    # diagnostics, together with the MP4s and image contact sheets. Copying
+    # diagnostics is best-effort and never invalidates a successful render.
+    support_dir = folder / "QA_Support"
+    support_dir.mkdir(parents=True, exist_ok=True)
+    notes = (
+        "# AutoCine 一括テスト結果\\n\\n"
+        "このフォルダーを個別に開かず、作成されたpart ZIPをすべてアップロードしてください。\\n"
+        "results.json：撮影・切替・キルフレーム・計画ID・失敗の一覧。\\n"
+        "RED_camera_3frames.jpg / BLUE_camera_3frames.jpg：キル前・瞬間・後の比較。\\n"
+        "RED/BLUE各フォルダーの*_camera_review_all.mp4：カメラごとの連続比較。\\n"
+        "Transitions：場面切替の比較動画。 KillFrames：登場動作。\\n"
+        "QA_Support：最新の診断ログ断片。\\n"
+        "映像内の対象の位置が適切かはWindows実機で目視確認が必要です。\\n"
+    ).replace("\\n", "\n")
+    (support_dir / "READ_ME_FIRST_JA.md").write_text(notes, encoding="utf-8")
+    origin = Path(__file__).resolve().parents[1] / "diagnostics"
+    for filename in ("runtime.log", "crash.log", "last_error.txt", "audio.log",
+                     "capture.log", "selftest_latest.json"):
+        source = origin / filename
+        if not source.is_file():
+            continue
+        try:
+            # Prevent a multi-GB lifetime log from inflating every QA archive.
+            with source.open("rb") as handle:
+                handle.seek(max(0, source.stat().st_size - 1_000_000))
+                content = handle.read()
+            (support_dir / filename).write_text(
+                content.decode("utf-8", errors="replace"), encoding="utf-8")
+        except OSError as exc:
+            log("診断ログの追加をスキップ: " + str(exc))
     # Export results directly as <=500MB ZIPs, while leaving loose MP4s intact.
     try:
         max_mb = config["max_zip_mb"] if config else 500
