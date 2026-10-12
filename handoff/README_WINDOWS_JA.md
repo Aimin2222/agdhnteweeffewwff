@@ -20,3 +20,5 @@ git branch feature/ui-cameraqa-v51024 origin/feature/ui-cameraqa-v51024
 git status --short
 ```
 全refsはorigin/*へ復元、originはローカルbundle。handoff/*.bundle binary属性を保持。設定/録画/プロジェクトは保管。共有ガードはdocs/CODEX_INTEGRATION_v51024_JA.md。
+
+GitHubから別checkout/bundle復元で全527ソース/123refs/ZIP・bundle hashes一致。復元先代表267成功22.65秒、失敗/skip/除外なし、GC有効・強制GCなし。再setupで527ソース/123refs/3個人設定相当のバイト保持/status clean。これは同一クラウド内の別フォルダ検証で新しいcloud task/Windows/Publish検証とは別。環境install_script/start_skillをrevision42へ保存してreadback確認、他の既知設定保持、Publishは未実行。次回環境へ反映する場合だけ環境設定で確認・保存後Publish。

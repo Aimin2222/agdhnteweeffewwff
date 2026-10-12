@@ -7,3 +7,5 @@ RED通常third/FPS自動カメラが相対位置と固定yawで異なる向き�
 Linux/Xvfb全776成功（失敗/skip/除外なし、71.310秒）、関連89成功。実日本語名60fps動画ZIPから2動画各6時点・原名mapping・原本不変、ZIP上限/CRC cleanup、actual setup scope、v23保護12ケース・3時点、picker Explorer/CIを検証。全GPU/UI/音声/QA/encoding回帰成功。完全ZIP CRC/差分apply/個人ファイル除外/旧refsと配布物hash保持も確認。Windows/LoL/BAT/日本語CMD・Explorer/NVIDIA速度は未確認、過去native原因未確定。
 
 前回v5.10.23を比較先とするDraft PR。mainへマージしない。完全ZIPのDownload raw fileで取得、別フォルダSTART_GPU.bat、docs/WINDOWS_TEST_v51024_JA.md。
+
+GitHubから別checkout/bundle復元で全527ソース/123refs/ZIP・bundle hashes一致。復元先代表267成功22.65秒、失敗/skip/除外なし、GC有効・強制GCなし。再setupで527ソース/123refs/3個人設定相当のバイト保持/status clean。これは同一クラウド内の別フォルダ検証で新しいcloud task/Windows/Publish検証とは別。環境install_script/start_skillをrevision42へ保存してreadback確認、他の既知設定保持、Publishは未実行。次回環境へ反映する場合だけ環境設定で確認・保存後Publish。
