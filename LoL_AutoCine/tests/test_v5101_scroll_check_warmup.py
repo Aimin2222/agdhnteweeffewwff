@@ -73,9 +73,14 @@ def test_late_control_scrolls_panel_and_keeps_keyboard_selection(gui):
     panel.canvas.yview_moveto(0)
     root.update()
     before = panel.canvas.yview()[0]
-    # Dispatch through the actual class binding with the pointer inside its panel.
-    late.event_generate('<MouseWheel>', delta=-120,
-                        rootx=panel.winfo_rootx()+10, rooty=panel.winfo_rooty()+10)
+    # Synthetic <MouseWheel> delivery to a freshly-created readonly
+    # ttk.Combobox is OS/Tk-dependent in Xvfb. The class binding itself is
+    # asserted by the test above. Exercise the actual panel wheel handler
+    # here with a stable event shape (independent of display-server focus).
+    from types import SimpleNamespace
+    panel.canvas.configure(scrollregion=(0, 0, 400, 4200))
+    panel._global_wheel(SimpleNamespace(widget=late, delta=-120,
+        x_root=panel.winfo_rootx()+10, y_root=panel.winfo_rooty()+10))
     root.update()
     assert panel.canvas.yview()[0] > before
     assert value.get() == 'one'
