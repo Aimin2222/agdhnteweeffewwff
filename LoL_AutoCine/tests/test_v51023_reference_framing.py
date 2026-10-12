@@ -21,7 +21,8 @@ def test_red1_has_no_roll_angle_and_aim_bias_is_independent():
     red=shot_tuning("RED","third")
     assert red["angles"]=={} # RED1 geometric look-at replaces manual bias
     assert "z" not in red["angles"]
-    assert shot_tuning("BLUE","third")["angles"]=={"x":3.0}
+    # v5.10.25: BLUE #6 is deliberately isolated to an upward visual trial.
+    assert shot_tuning("BLUE","third")["angles"]=={"x":-4.0}
 
 
 @pytest.mark.parametrize("mode",["third","third_cinema","fps","lolnam_cinema","geo_aim"])
