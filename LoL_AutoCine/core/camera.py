@@ -447,6 +447,17 @@ class CameraPlan:
     def rotation_at(self, t: float) -> Optional[dict]:
         """確定版Orbitの三人称視線。カメラ位置の公転と同じ基準。"""
         if self.style == "geo_aim":
+            # RED test 5 inverted the horizon: this mode incorrectly assumed
+            # Euler X=pitch and Y=yaw even when the actual calibrated
+            # third-person rig used Y=pitch. Use the demonstrated working
+            # RED cinematic pitch/yaw convention as a SAFE comparison probe.
+            if str(self.team).upper() in ("CHAOS", "RED"):
+                if self.rig is None or not self.rig.third:
+                    return None
+                elevation = self.third_pose_at(t)[1]
+                return {"x": -self._third_heading(t),
+                        "y": max(10.0, min(80.0, 90.0-elevation)),
+                        "z": 0.0}
             # Experimental geometry-first targeting. We explicitly aim
             # from the camera's relative 3-D offset back at the selected
             # champion, rather than rotating stale top-camera Euler angles.
@@ -852,6 +863,25 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
                 sign = cached_sign
                 pitch_complement = bool(cached.get('pitch_complement', False))
 
+    # v5.10.19: a pitch-axis x result on the normal 3rd-person preset was
+    # correlated with inverted RED (1) and empty BLUE (6) in the Windows QA.
+    # Side-specific good shots (2/4 RED, 7/9 BLUE) use pitch y instead.
+    # Do not overwrite the good cinematic/FPS/Lolnam paths.
+    if style == "third" and isinstance(rot, dict) and axis == "x":
+        team_is_red = str(getattr(p, "team", "")).upper() in ("CHAOS", "RED")
+        try:
+            can_use_y = math.isfinite(float(rot.get("y")))
+        except (TypeError, ValueError, OverflowError):
+            can_use_y = False
+        if can_use_y:
+            axis = "y"
+            sign = 1.0
+            pitch_complement = team_is_red
+            rot = dict(rot)
+            rot["x"] = 0.0
+            rot["z"] = 0.0
+            log("カメラ診断: 通常3人称に正常なシネマカメラの上下軸Yを採用（検証用）")
+
     # 座標が一時的に欠けた場合も、成功済みキャリブレーションの水平方向を使う。
     h = current_h
     if h is None and cached and cached.get("h"):
@@ -877,6 +907,15 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
     if h is None:
         hl = math.hypot(v[0], v[2])
         h = (v[0] / hl, v[2] / hl) if hl > 50 else (0.0, -1.0)
+    if style == "third":
+        hl = math.hypot(v[0], v[2])
+        if hl > 3800.0:
+            # A seek can return a cameraPosition from the PREVIOUS shot even
+            # though the player position is already from the next shot.
+            # Compare with known-good cinematic direction instead of aiming
+            # with the bogus 7-8k world-unit displacement.
+            h = tuple(cached["h"]) if cached and cached.get("h") else (-0.5, -0.8660254037844386)
+            log(f"カメラ診断: 追従基準の位置差 {hl:.0f} が異常。安全な基準方向に変更")
 
     # 三人称は「現在軸」または「保存軸」のどちらかがあれば維持する。
     third = style in THIRD_STYLES and bool(axis)
