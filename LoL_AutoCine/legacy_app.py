@@ -558,6 +558,7 @@ class App:
         self.var_pre = tk.DoubleVar(value=4.0)
         self.var_post = tk.DoubleVar(value=3.0)
         self.var_auto_director = tk.BooleanVar(value=False)  # preserve old one-click default
+        self.var_auto_director_strength = tk.DoubleVar(value=1.0)
         self.var_smart_highlight_style = tk.StringVar(value=SMART_STYLES['auto'])
         self.var_smart_highlight_enabled = tk.BooleanVar(value=False)
         self.var_kill_icon_style = tk.StringVar(value=KILL_ICON_STYLES['off'])
@@ -954,6 +955,7 @@ class App:
                         command=self._update_easy_color_controls)
         self._easy_color_toggle.pack(anchor="w", pady=(2, 2))
         self._easy_color_panel = ttk.Frame(easy, style="Card.TFrame")
+        self.var_easy_color_custom.trace_add("write", lambda *_: self._update_easy_color_controls())
 
         ttk.Label(easy, text="① リプレイを開く → ② 対象プレイヤーを選ぶ → ③ ボタン1つでキル/アシストを検出して動画を作成", style="CardMuted.TLabel", wraplength=900).pack(anchor="w", pady=(4, 7))
         ttk.Button(easy, text="★ 自動作成（標準）", style="Accent.TButton", command=self.on_one_click).pack(fill="x", ipady=4)
@@ -992,9 +994,20 @@ class App:
         ttk.Button(easy, text="▣ 仕上がりを大きな比較画面で見る", command=self._open_easy_preset_comparison).pack(fill="x", pady=(4,5))
         self.lbl_easy_preset = ttk.Label(easy, textvariable=self.var_tpl, style="CardMuted.TLabel")
         self.lbl_easy_preset.pack(anchor="w", pady=(0, 3))
-        ttk.Checkbutton(easy, text="自動ディレクター：キル数に合わせてカメラ演出を自動調整（任意）",
-                        variable=self.var_auto_director).pack(anchor="w", pady=(6, 1))
-        ttk.Label(easy, text="ON：キル数・シーンに合わせOrbitとドリーを調整。OFF：選んだカメラ設定を優先。",
+        self._director_toggle = ttk.Checkbutton(easy, text="自動ディレクター：キル数に合わせてカメラ演出を自動調整（任意）",
+                        variable=self.var_auto_director, command=self._update_auto_director_controls)
+        self._director_toggle.pack(anchor="w", pady=(6, 1))
+        self._auto_director_panel = ttk.Frame(easy, style="Card.TFrame")
+        ttk.Label(self._auto_director_panel, text="自動カメラ演出の強さ（0～150%）",
+                  style="Card.TLabel").pack(anchor="w")
+        director_row = ttk.Frame(self._auto_director_panel, style="Card.TFrame")
+        director_row.pack(fill="x", pady=(2, 4))
+        ttk.Scale(director_row, from_=0, to=1.5, variable=self.var_auto_director_strength).pack(
+            side="left", fill="x", expand=True, padx=5)
+        ttk.Entry(director_row, textvariable=self.var_auto_director_strength, width=8).pack(side="right")
+        ttk.Label(self._auto_director_panel, text="キル数に応じた回り込み・接近量の倍率です。録画開始前に適用します。",
+                  style="CardMuted.TLabel", wraplength=550).pack(anchor="w")
+        ttk.Label(easy, text="ON：キル数・シーンに合わせてカメラの回り込みと接近を調整。OFF：選んだカメラ設定を優先。",
                   style="CardMuted.TLabel").pack(anchor="w")
         hud_easy = ttk.Frame(easy, style="Card.TFrame")
         hud_easy.pack(fill="x", pady=(12, 2))
@@ -2150,6 +2163,17 @@ class App:
         widget.bind('<Leave>',hide,add='+')
         widget.bind('<ButtonPress>',hide,add='+')
         widget.bind('<Destroy>',lambda event:hide() if event.widget is widget else None,add='+')
+
+    def _update_auto_director_controls(self):
+        panel = getattr(self, "_auto_director_panel", None)
+        if panel is None:
+            return
+        if self.var_auto_director.get():
+            if not panel.winfo_manager():
+                panel.pack(after=self._director_toggle, fill="x", pady=(3, 7))
+        else:
+            if panel.winfo_manager():
+                panel.pack_forget()
 
     def _update_easy_color_controls(self):
         panel = getattr(self, "_easy_color_panel", None)
@@ -3960,7 +3984,8 @@ class App:
             profile, arc, dolly = "cinematic", 14.0, 5.0
         else:
             profile, arc, dolly = "auto", 10.0, 3.0
-        self._set_camera_motion(profile, arc, dolly)
+        strength = max(0.0, min(1.5, float(self.var_auto_director_strength.get())))
+        self._set_camera_motion(profile, arc * strength, dolly * strength)
 
     def on_one_click(self, smart: bool = False) -> None:
         if self.busy or not self._need_lock():
