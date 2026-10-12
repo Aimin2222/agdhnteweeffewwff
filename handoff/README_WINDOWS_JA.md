@@ -25,3 +25,5 @@ git status --short
 全103refsはorigin/*で復元。originはローカルbundle。設定/録画/プロジェクトを保管。担当ガードはdocs/CODEX_INTEGRATION_v51019_JA.md。
 
 復元中の既存capture終了テストがerror通知とrunning=Falseの間を観測し143成功/1失敗。終了状態まで待つ条件へテストだけ修正し、error/latest例外検証は維持。録画実装を変えず全653を再検証して成功。初回配布snapshotはGit commit8bed683へ保存し、現在のZIP/bundleは修正後の版。bundleはバイナリ属性でWindows改行変換を防止。3時点は時間割合による参考サンプルで、実キル瞬間の自動特定ではありません。
+
+最終GitHub復元で475ソース/103refs/配布物hash一致。修正版代表144テスト成功12.25秒（強制GCなし・GC有効）。再setupでも475ソース/103refs/3個人設定相当ファイルを保持/status clean。データ専用QA計画の実URL取得・検証も成功。同じ実行環境の別フォルダ検証でPublish/新タスク/Windows実機とは区別します。
