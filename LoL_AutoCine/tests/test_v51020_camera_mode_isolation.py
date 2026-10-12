@@ -96,7 +96,10 @@ def test_simple_color_toggle_expands_adjacent_to_checkbox():
         root.update_idletasks()
         panel=app._easy_color_panel
         assert panel.winfo_manager()=="pack"
-        assert str(panel.pack_info()["after"])==str(app._easy_color_toggle)
+        # Tk's pack_info() discards the original 'after' option. Verify
+        # the actual on-screen ordering instead.
+        siblings=panel.master.pack_slaves()
+        assert siblings.index(panel)==siblings.index(app._easy_color_toggle)+1
         app.var_easy_color_custom.set(False)
         app._update_easy_color_controls()
         assert not panel.winfo_manager()
