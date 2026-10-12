@@ -1,0 +1,569 @@
+diff --git a/MAKE_REFERENCE_SHEETS.bat b/MAKE_REFERENCE_SHEETS.bat
+index d1822d9..61562c1 100644
+--- a/MAKE_REFERENCE_SHEETS.bat
++++ b/MAKE_REFERENCE_SHEETS.bat
+@@ -1,16 +1,17 @@
+ @echo off
++rem This batch file is deliberately 7-bit ASCII to avoid CP932/UTF-8 cmd.exe parsing corruption.
+ chcp 65001 >nul
+ setlocal DisableDelayedExpansion
++set "PYTHONUTF8=1"
++set "PYTHONIOENCODING=utf-8"
+ set "RESULT=0"
+ cd /d "%~dp0"
+-title AutoCine Reference Video Review
++title AutoCine - Reference Video Review
+ set "SOURCE=%~1"
+ set "LOG=%TEMP%\AutoCine_ReferenceReview_latest.log"
+ if "%SOURCE%"=="" goto USAGE
+ if not exist "%SOURCE%" goto MISSING
+ set "OUTPUT=%~dp1_AutoCineReferenceReview_%~n1"
+-rem Windows runner does not reliably resolve folder\NUL with IF EXIST.
+-rem Use PUSHD (directory only) and preserve the old folder output layout.
+ pushd "%SOURCE%" >nul 2>&1
+ if errorlevel 1 goto SOURCE_READY
+ popd
+@@ -19,35 +20,30 @@ set "OUTPUT=%SOURCE%\_AutoCineReferenceReview"
+ set "RUNPY=python"
+ if exist ".venv\Scripts\python.exe" set "RUNPY=.venv\Scripts\python.exe"
+ if exist "venv\Scripts\python.exe" set "RUNPY=venv\Scripts\python.exe"
+-echo [AutoCine] 参照動画の解析を開始します。
+-echo [AutoCine] 入力: "%SOURCE%"
+-echo [AutoCine] 出力: "%OUTPUT%"
+-echo [AutoCine] 詳細ログ: "%LOG%"
++echo [AutoCine] Starting reference video review.
++echo [AutoCine] Input: "%SOURCE%"
++echo [AutoCine] Output: "%OUTPUT%"
++echo [AutoCine] Log: "%LOG%"
+ "%RUNPY%" -m tools.reference_video_review "%SOURCE%" --output "%OUTPUT%" > "%LOG%" 2>&1
+ set "EXITCODE=%ERRORLEVEL%"
+-type "%LOG%"
++if exist "%LOG%" type "%LOG%"
+ if not "%EXITCODE%"=="0" goto FAILED
+-echo.
+-echo [AutoCine] 完了:
+-echo "%OUTPUT%\ReferenceReview_contact_sheets.zip"
++echo [AutoCine] COMPLETE: "%OUTPUT%\ReferenceReview_contact_sheets.zip"
+ goto DONE
+ :USAGE
+-echo [使い方] MP4などの動画ファイル、または動画を含むフォルダーを、このBATの上にドラッグしてください。
+-echo [注意] ZIPを渡す場合は、先に展開してから動画かフォルダーを指定してください。
++echo [USAGE] Drag a video file (MP4/MOV/MKV/WEBM) or a folder onto this BAT.
++echo [USAGE] Unzip archives before dropping videos or folders.
+ set "RESULT=1"
+ goto DONE
+ :MISSING
+-echo [ERROR] 指定されたファイル／フォルダーが見つかりません。
+-echo "%SOURCE%"
++echo [ERROR] Input path does not exist: "%SOURCE%"
+ set "RESULT=2"
+ goto DONE
+ :FAILED
+-set "RESULT=3"
+-echo.
+-echo [ERROR] 参照動画の処理中にエラーが発生しました。終了コード: %EXITCODE%
+-echo [ERROR] 次のログファイルをそのまま送ってください:
++echo [ERROR] Reference-video review failed. Exit code: %EXITCODE%
++echo [ERROR] Please attach this log file:
+ echo "%LOG%"
+-echo [ERROR] Python／ffmpeg／Pillowや入力形式を確認してください。
++set "RESULT=3"
+ :DONE
+ echo.
+ if not defined CI pause
+diff --git a/RUN_AUTOTEST.bat b/RUN_AUTOTEST.bat
+index 3ad2ec8..5a88e61 100644
+--- a/RUN_AUTOTEST.bat
++++ b/RUN_AUTOTEST.bat
+@@ -1,10 +1,16 @@
+ @echo off
++rem ASCII-only launcher to avoid mojibake in Windows cmd.exe.
+ chcp 65001 >nul
++setlocal
+ cd /d "%~dp0"
+-set PYTHONUTF8=1
++set "PYTHONUTF8=1"
++set "PYTHONIOENCODING=utf-8"
+ py -3 -m core.auto_qa
+-if errorlevel 1 (
+-  echo.
+-  echo 自動診断で失敗が見つかりました。diagnostics\selftest_latest.json を確認してください。
++set "STATUS=%ERRORLEVEL%"
++if not "%STATUS%"=="0" (
++  echo [ERROR] Automatic diagnostics reported a failure.
++  echo [ERROR] See diagnostics\selftest_latest.json
+ )
+-pause
++echo.
++if not defined CI pause
++endlocal & exit /b %STATUS%
+diff --git a/core/camera.py b/core/camera.py
+index c2b2247..2adbd1b 100644
+--- a/core/camera.py
++++ b/core/camera.py
+@@ -365,7 +365,7 @@ class CameraPlan:
+             # カメラがキャラの周囲を公転する動き。Yは高さとして固定する。
+             extra_yaw, zoom, _ = self.keyframe_values(t)
+             dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
+-            dist *= max(0.87, min(1.15, float(getattr(self, "_live_dist_factor", 1.0))))
++            dist *= max(0.87, min(1.30, float(getattr(self, "_live_dist_factor", 1.0))))
+             # BLUE #6 is cropped at the top. Allow breathing room only in
+             # normal third, not in approved geo_aim or RED cinema presets.
+             if (self.style == "third" and self.team not in ("CHAOS", "RED")
+@@ -422,7 +422,7 @@ class CameraPlan:
+ 
+         extra_yaw, zoom, _ = self.keyframe_values(t)
+         dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
+-        dist *= max(0.87, min(1.15, float(getattr(self, "_live_dist_factor", 1.0))))
++        dist *= max(0.87, min(1.30, float(getattr(self, "_live_dist_factor", 1.0))))
+         elev = max(12.0, min(58.0, elev))
+         if self.smart_composition:
+             dist = max(dist, self.third_dist * 0.88)
+@@ -457,6 +457,8 @@ class CameraPlan:
+             # camera offset around the locked player, exactly like the
+             # calibrated follow cameras, while retaining the FPS label/controls.
+             pose = self.third_pose_at(t)[0]
++            back = max(1.0, min(1.65, float(getattr(self, "_live_fps_back", 1.0))))
++            pose = tuple(float(v) * back for v in pose)
+             heading = float(getattr(self, "_live_fps_side_heading", 0.0))
+             if heading:
+                 radians = math.radians(heading)
+diff --git a/core/camera_qa.py b/core/camera_qa.py
+index 42e36aa..2651d60 100644
+--- a/core/camera_qa.py
++++ b/core/camera_qa.py
+@@ -75,7 +75,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
+     folder.mkdir(parents=True, exist_ok=True)
+     manifest = {
+-        "version": "5.10.21-test",
++        "version": "5.10.22-test",
+         "kind": "live_replay_camera_test",
+         "expected_clips": len(scenarios),
+         "test_plan": config,
+@@ -258,6 +258,37 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+     manifest["completed_clips"] = sum(bool(row["outputs"]) for row in manifest["outputs"])
+     manifest["canceled"] = bool(stop is not None and stop.is_set())
+     flush()
++    # Always include an upload-ready, human-readable report and bounded
++    # diagnostics, together with the MP4s and image contact sheets. Copying
++    # diagnostics is best-effort and never invalidates a successful render.
++    support_dir = folder / "QA_Support"
++    support_dir.mkdir(parents=True, exist_ok=True)
++    notes = (
++        "# AutoCine 一括テスト結果\\n\\n"
++        "このフォルダーを個別に開かず、作成されたpart ZIPをすべてアップロードしてください。\\n"
++        "results.json：撮影・切替・キルフレーム・計画ID・失敗の一覧。\\n"
++        "RED_camera_3frames.jpg / BLUE_camera_3frames.jpg：キル前・瞬間・後の比較。\\n"
++        "RED/BLUE各フォルダーの*_camera_review_all.mp4：カメラごとの連続比較。\\n"
++        "Transitions：場面切替の比較動画。 KillFrames：登場動作。\\n"
++        "QA_Support：最新の診断ログ断片。\\n"
++        "映像内の対象の位置が適切かはWindows実機で目視確認が必要です。\\n"
++    ).replace("\\n", "\n")
++    (support_dir / "READ_ME_FIRST_JA.md").write_text(notes, encoding="utf-8")
++    origin = Path(__file__).resolve().parents[1] / "diagnostics"
++    for filename in ("runtime.log", "crash.log", "last_error.txt", "audio.log",
++                     "capture.log", "selftest_latest.json"):
++        source = origin / filename
++        if not source.is_file():
++            continue
++        try:
++            # Prevent a multi-GB lifetime log from inflating every QA archive.
++            with source.open("rb") as handle:
++                handle.seek(max(0, source.stat().st_size - 1_000_000))
++                content = handle.read()
++            (support_dir / filename).write_text(
++                content.decode("utf-8", errors="replace"), encoding="utf-8")
++        except OSError as exc:
++            log("診断ログの追加をスキップ: " + str(exc))
+     # Export results directly as <=500MB ZIPs, while leaving loose MP4s intact.
+     try:
+         max_mb = config["max_zip_mb"] if config else 500
+diff --git a/core/camera_tuning.py b/core/camera_tuning.py
+index 4682722..d8b1f1c 100644
+--- a/core/camera_tuning.py
++++ b/core/camera_tuning.py
+@@ -10,14 +10,14 @@ from __future__ import annotations
+ 
+ SHOT_TUNING = {
+     # Side, camera mode -> relative distance, Euler-axis screen adjustment.
+-    ("RED", "third"):       {"distance": .94, "angles": {}},
++    ("RED", "third"):       {"distance": 1.13, "angles": {"z": 3.0}},
+     ("RED", "third_cinema"):{"distance": .96, "angles": {}},
+-    ("RED", "fps"):         {"distance": 1.0, "angles": {}},
++    ("RED", "fps"):         {"distance": 1.0, "angles": {"x": -4.0, "y": 4.0}, "fps_back": 1.60},
+     ("RED", "lolnam_cinema"):{"distance": 1.0, "angles": {"x": -3.0, "y": -3.0}},
+-    ("RED", "geo_aim"):     {"distance": 1.0, "angles": {"x": -3.0}},
++    ("RED", "geo_aim"):     {"distance": 1.12, "angles": {"x": -4.0}},
+     ("BLUE", "third"):      {"distance": 1.0, "angles": {"x": 3.0}},
+     ("BLUE", "third_cinema"):{"distance": 1.0, "angles": {}},   # protected #7
+-    ("BLUE", "fps"):        {"distance": 1.0, "angles": {}},
++    ("BLUE", "fps"):        {"distance": 1.0, "angles": {}, "fps_back": 1.22},
+     ("BLUE", "lolnam_cinema"):{"distance": 1.0, "angles": {"x": 2.5}},
+     ("BLUE", "geo_aim"):    {"distance": 1.0, "angles": {"x": 2.5}},
+ }
+@@ -27,9 +27,13 @@ def shot_tuning(team: str, style: str) -> dict:
+     side = "RED" if str(team).upper() in ("CHAOS", "RED") else "BLUE"
+     config = SHOT_TUNING.get((side, str(style)), {})
+     distance = float(config.get("distance", 1.0))
+-    if not .87 <= distance <= 1.15:
++    if not .87 <= distance <= 1.30:
+         raise ValueError("Invalid camera distance multiplier")
+     angles = dict(config.get("angles", {}))
+     if any(k not in ("x", "y", "z") or abs(float(v)) > 8.0 for k, v in angles.items()):
+         raise ValueError("Unsafe camera framing compensation")
+-    return {"side": side, "mode": str(style), "distance": distance, "angles": angles}
++    fps_back = float(config.get("fps_back", 1.0))
++    if not 1.0 <= fps_back <= 1.65:
++        raise ValueError("Unsafe FPS camera distance")
++    return {"side": side, "mode": str(style), "distance": distance,
++            "angles": angles, "fps_back": fps_back}
+diff --git a/core/jobs.py b/core/jobs.py
+index 715f241..36f7057 100644
+--- a/core/jobs.py
++++ b/core/jobs.py
+@@ -230,6 +230,7 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
+     shot = shot_tuning(getattr(player, "team", "ORDER"), tpl.style)
+     plan._live_dist_factor = shot["distance"]
+     plan._live_angle_bias = shot["angles"]
++    plan._live_fps_back = shot["fps_back"]
+     # Side+mode-specific opt-in. BLUE geo_aim #10 is the visual reference;
+     # do not alter its existing pose or any RED third_cinema #2 framing.
+     # All modes still use the same replay/capture/audio engine.
+diff --git a/core/qa_plan.py b/core/qa_plan.py
+index 82e6649..7dbe747 100644
+--- a/core/qa_plan.py
++++ b/core/qa_plan.py
+@@ -6,7 +6,7 @@ from pathlib import Path
+ from urllib.request import Request, urlopen
+ 
+ REMOTE_PLAN = ("https://raw.githubusercontent.com/Aimin2222/agdhnteweeffewwff/"
+-               "refs/heads/autocine/v5.10.21-camera-bat-color-qa/"
++               "refs/heads/autocine/v5.10.22-utf8-singleclick-camera-qa/"
+                "LoL_AutoCine/qa/test_plan.json")
+ LOCAL_PLAN = Path(__file__).resolve().parents[1] / "qa" / "test_plan.json"
+ ALLOWED_CAMERA = ("third", "third_cinema", "fps", "lolnam_cinema", "geo_aim")
+diff --git a/legacy_app.py b/legacy_app.py
+index 4b87aa4..922f05c 100644
+--- a/legacy_app.py
++++ b/legacy_app.py
+@@ -1648,9 +1648,9 @@ class App:
+         ttk.Button(f, text="✓ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
+         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
+         ttk.Separator(f).pack(fill="x",pady=(8,6))
+-        ttk.Button(f, text="開発用：指定テストを一括作成・500MB ZIPに保存",
++        ttk.Button(f, text="開発用：1回で接続→全体スキャン→動画・画像→500MB ZIP",
+                    command=self.on_dev_camera_qa).pack(fill="x",pady=(0,3))
+-        ttk.Label(f, text="全体スキャン後に1回だけ押してください。同じ録画素材を使って演出を比較します（開発中のみ）。",
++        ttk.Label(f, text="最初に1回押すだけ。既にスキャン済みなら結果を再利用します。RED/BLUEカメラ、場面切替、キルフレーム、診断情報を自動収集（開発中のみ）。",
+                   style="CardMuted.TLabel",wraplength=300).pack(fill="x")
+ 
+         f = card(right, "☁  出力状況")
+@@ -3887,16 +3887,43 @@ class App:
+                  + ("" if res.complete else " (途中で中断)"))
+ 
+     def on_dev_camera_qa(self):
+-        """User-initiated, disposable test suite. Capture Tk values on UI thread."""
++        """One click: connect -> full-match scan -> camera/FX QA -> review ZIPs.
++
++        All Tk reads are snapshotted on the UI thread. The same worker owns
++        the whole sequence so a second click cannot start another capture.
++        Existing complete scan is reused; no player lock is required.
++        """
+         if self.busy:
+             messagebox.showinfo(APP, "別の作業が終わってから開始してください。")
+             return
++        template = self.current_template()
++        destination = Path(self.out_root)
++        self.log("開発テスト: 接続・全体スキャン・撮影・比較画像・500MB分割ZIPをまとめて開始します。")
++        self._run_bg(self._run_one_click_camera_qa, template, destination)
++
++    def _run_one_click_camera_qa(self, template, destination):
++        """Single worker; never touch a Tk variable outside the UI thread."""
+         cache = self._match_scan_cache
+         if cache is None or not cache.complete:
+-            messagebox.showinfo(APP, "先に右側の「スキャン」を完了してください。")
++            self.q.put(("job", 0, 0, 0, "リプレイへ接続・10人を確認中"))
++            if not self.players:
++                self._connect()
++            if self.stop_ev.is_set():
++                return
++            if not self.players:
++                raise RuntimeError("LoLリプレイに接続できませんでした。リプレイ再生とReplay APIを確認してください。")
++            self.q.put(("job", 0, 0, 0, "試合全体を初回スキャン中"))
++            self._scan("キル")
++            cache = self._match_scan_cache
++        if self.stop_ev.is_set():
+             return
+-        self._run_bg(self._record_camera_qa, self.current_template(),
+-                     list(self.players), list(cache.events), self.locked, Path(self.out_root))
++        if cache is None or not cache.complete:
++            raise RuntimeError("試合全体のスキャンが完了しませんでした。テスト動画は作成しません。")
++        if not self.players or not cache.events:
++            raise RuntimeError("カメラテストに必要なプレイヤー・イベント情報が不足しています。")
++        self.log(f"開発テスト: スキャン完了。{len(self.players)}人、{len(cache.events)}イベントで撮影します。")
++        self._record_camera_qa(template, list(self.players), list(cache.events),
++                               self.locked, destination)
+ 
+     def _record_camera_qa(self, tpl, players, events, preferred, destination):
+         """Worker: records 8 representative clips, then post-processes 10 variants."""
+diff --git a/qa/test_plan.json b/qa/test_plan.json
+index a178969..1b12342 100644
+--- a/qa/test_plan.json
++++ b/qa/test_plan.json
+@@ -1,7 +1,7 @@
+ {
+   "schema_version": 1,
+-  "plan_id": "2026-10-12-red-blue-centered-fps-director-reference-bat",
+-  "title": "RED/BLUE構図・FX差分・フレーム動き自動検証",
++  "plan_id": "2026-10-12-red1-back-fps3-pullback-blue8-red2-4-protect-utf8-onclick",
++  "title": "v5.10.22 毎回自動収集: カメラ10本・切替・登場FX・比較画像・診断",
+   "camera_modes": [
+     "third",
+     "third_cinema",
+@@ -25,14 +25,16 @@
+   "max_zip_mb": 500,
+   "include_visual_comparison": true,
+   "manual_review": [
+-    "RED normal third: action in center, no inversion",
+-    "RED cinema: preserve previously approved framing",
+-    "RED FPS/Lolnam/geo: combat subject closer to center",
+-    "BLUE normal third: wider, no head crop",
+-    "BLUE cinema/Lolnam: visible combat, no obstructing rock or grass",
+-    "BLUE geo aim: preserve approved shot #10",
+-    "Easy mode color settings visible directly beneath toggle",
+-    "True wipe/slide/circle/pixelize motion: not all one white flash"
++    "RED #1: camera further out and character in central area",
++    "RED #2: do not change approved cinematic framing",
++    "RED #3: camera further out and no giant close-up",
++    "RED #4: protect approved Lolnam cinema",
++    "RED #5: move back and recenter",
++    "BLUE #6/7/9/10: preserve latest usable visuals",
++    "BLUE #8: move camera backward while preserving battle visibility",
++    "Full scan and capture after one click, including first connect",
++    "Japanese Windows CMD: no mojibake; reference MP4 name accepted",
++    "Comparison pictures, diagnostics and all final ZIP parts included"
+   ],
+   "note": "3 distinct legacy tests instead of 10 similar brightness pulses; 6 spatial motions remain QA only. Results go into 500 MB max direct ZIPs.",
+   "spatial_transition_previews": [
+diff --git a/tests/test_v51016_motion_dof_and_camera_qa.py b/tests/test_v51016_motion_dof_and_camera_qa.py
+index 65b0443..06d9e98 100644
+--- a/tests/test_v51016_motion_dof_and_camera_qa.py
++++ b/tests/test_v51016_motion_dof_and_camera_qa.py
+@@ -71,16 +71,18 @@ def test_scan_button_starts_background_before_player_connected():
+     finally:
+         root.destroy()
+ 
+-def test_dev_camera_qa_requires_completed_whole_match_scan(monkeypatch):
++def test_dev_camera_qa_starts_single_worker_even_without_scan(monkeypatch):
+     import legacy_app
+     root=tk.Tk()
+     try:
+         app=legacy_app.App(root)
+-        shown=[]
+-        monkeypatch.setattr(legacy_app.messagebox,'showinfo',lambda *args,**kw:shown.append(args))
+         app._match_scan_cache=None
++        queued=[]
++        monkeypatch.setattr(app, '_run_bg', lambda fn,*args: queued.append((fn,args)))
+         app.on_dev_camera_qa()
+-        assert shown
++        assert len(queued) == 1
++        assert queued[0][0] == app._run_one_click_camera_qa
++        assert len(queued[0][1]) == 2
+     finally:
+         root.destroy()
+ 
+diff --git a/tests/test_v51021_camera_bat_color.py b/tests/test_v51021_camera_bat_color.py
+index d0e42f1..57ca4d0 100644
+--- a/tests/test_v51021_camera_bat_color.py
++++ b/tests/test_v51021_camera_bat_color.py
+@@ -22,7 +22,7 @@ def test_cam_modes_are_isolated_and_blue7_is_protected():
+     b7=shot_tuning("ORDER","third_cinema")
+     assert b7["distance"]==1.0 and b7["angles"]=={}
+     assert shot_tuning("CHAOS","third_cinema")["angles"]=={}
+-    assert shot_tuning("CHAOS","third")["distance"]<1.0
++    assert shot_tuning("CHAOS","third")["distance"]>1.0
+     assert shot_tuning("CHAOS","lolnam_cinema")["angles"]
+     assert shot_tuning("ORDER","lolnam_cinema")["angles"]
+     assert shot_tuning("ORDER","geo_aim")["angles"]
+diff --git a/tests/test_v51022_oneclick_utf8_camera.py b/tests/test_v51022_oneclick_utf8_camera.py
+new file mode 100644
+index 0000000..f703e59
+--- /dev/null
++++ b/tests/test_v51022_oneclick_utf8_camera.py
+@@ -0,0 +1,105 @@
++# -*- coding: utf-8 -*-
++"""Windows/LoL QA entry and per-camera isolation regression tests."""
++from pathlib import Path
++from types import SimpleNamespace
++import pytest
++
++from core.camera_tuning import shot_tuning
++from tools.check_text_encoding import audit
++
++
++def test_red2_red4_blue7_blue9_approved_camera_profiles_untouched():
++    assert shot_tuning("RED", "third_cinema")["angles"] == {}
++    assert shot_tuning("RED", "third_cinema")["distance"] == .96
++    assert shot_tuning("RED", "lolnam_cinema")["distance"] == 1.0
++    assert shot_tuning("RED", "lolnam_cinema")["angles"] == {"x": -3.0, "y": -3.0}
++    assert shot_tuning("ORDER", "third_cinema")["angles"] == {}
++    assert shot_tuning("ORDER", "lolnam_cinema")["distance"] == 1.0
++
++
++def test_red1_and_fps_and_blue8_are_independent_tuning():
++    assert shot_tuning("CHAOS", "third")["distance"] > 1.0
++    assert shot_tuning("CHAOS", "fps")["fps_back"] > 1.4
++    assert shot_tuning("ORDER", "fps")["fps_back"] > 1.1
++    assert shot_tuning("CHAOS", "geo_aim")["distance"] > 1.0
++    assert shot_tuning("ORDER", "fps")["angles"] == {}
++    assert shot_tuning("ORDER", "geo_aim")["fps_back"] == 1.0
++
++
++def test_bat_sources_only_have_ascii():
++    root = Path(__file__).resolve().parents[1]
++    for p in root.glob("*.bat"):
++        assert p.read_bytes().isascii(), f"cmd.exe encoding risk: {p.name}"
++
++
++def test_encoding_audit_detects_invalid_utf8_and_legacy_batch(tmp_path):
++    script = tmp_path / "notes.txt"
++    script.write_bytes(b"valid ascii")
++    assert audit(tmp_path) == []
++    script.write_bytes(b"\x82\xa0")
++    assert any("UTF-8" in message for message in audit(tmp_path))
++    script.unlink()
++    bat = tmp_path / "RUN.bat"
++    bat.write_text("echo 日本語", encoding="utf-8")
++    assert any("ASCII-only" in message for message in audit(tmp_path))
++
++
++def test_one_click_qa_scans_from_unconnected_state(monkeypatch):
++    import tkinter as tk
++    from legacy_app import App
++    root = tk.Tk()
++    try:
++        app = App(root)
++        sequence = []
++        app.players = []
++        app._match_scan_cache = None
++        app.stop_ev.clear()
++        def fake_connect():
++            sequence.append("connect")
++            app.players = [SimpleNamespace(team="ORDER")]
++        def fake_scan(mode):
++            sequence.append("scan:" + mode)
++            app._match_scan_cache = SimpleNamespace(
++                complete=True, events=[SimpleNamespace(time=22.0)])
++        app._connect = fake_connect
++        app._scan = fake_scan
++        app._record_camera_qa = lambda *args: sequence.append("record")
++        app._run_one_click_camera_qa(object(), Path("/tmp/qa"))
++        assert sequence == ["connect", "scan:キル", "record"]
++    finally:
++        root.destroy()
++
++
++def test_one_click_qa_reuses_existing_full_scan(monkeypatch):
++    import tkinter as tk
++    from legacy_app import App
++    root = tk.Tk()
++    try:
++        app = App(root)
++        app.players = [SimpleNamespace(team="ORDER")]
++        app._match_scan_cache = SimpleNamespace(
++            complete=True, events=[SimpleNamespace(time=22.0)])
++        app._scan = lambda *a: pytest.fail("Do not rescan completed match")
++        calls = []
++        app._record_camera_qa = lambda *args: calls.append(args)
++        app._run_one_click_camera_qa(object(), Path("/tmp/qa"))
++        assert len(calls) == 1
++    finally:
++        root.destroy()
++
++
++def test_one_click_no_players_fails_without_capture():
++    import tkinter as tk
++    from legacy_app import App
++    root = tk.Tk()
++    try:
++        app=App(root)
++        app.players = []
++        app._match_scan_cache = None
++        app.stop_ev.clear()
++        app._connect = lambda: None
++        app._record_camera_qa = lambda *args: pytest.fail("Do not record")
++        with pytest.raises(RuntimeError, match="接続できません"):
++            app._run_one_click_camera_qa(object(), Path("/tmp/qa"))
++    finally:
++        root.destroy()
+diff --git a/tools/check_text_encoding.py b/tools/check_text_encoding.py
+new file mode 100644
+index 0000000..0d3390b
+--- /dev/null
++++ b/tools/check_text_encoding.py
+@@ -0,0 +1,64 @@
++# -*- coding: utf-8 -*-
++"""CI guard against common Windows Japanese mojibake regression.
++
++Inspect the tracked source text, not binary media. Do not blindly re-encode
++files and risk corrupting user data. Windows cmd launchers must be 7-bit ASCII
++so the active legacy OEM code page cannot misparse batch labels/commands.
++"""
++from __future__ import annotations
++
++from pathlib import Path
++import subprocess
++import sys
++
++TEXT_SUFFIXES = {
++    ".py", ".json", ".md", ".txt", ".yml", ".yaml", ".toml",
++    ".ini", ".cfg", ".bat", ".cmd", ".ps1", ".html", ".css", ".js",
++}
++SKIP_DIRS = {".git", ".venv", "venv", "__pycache__", "build", "dist", "diagnostics"}
++
++
++def audit(root: Path) -> list[str]:
++    root = Path(root)
++    try:
++        raw = subprocess.check_output(["git", "ls-files", "-z", "--", str(root)],
++                                      cwd=root.parent)
++        paths = [root.parent / Path(b.decode("utf-8", "surrogateescape"))
++                 for b in raw.split(b"\0") if b]
++    except (OSError, subprocess.CalledProcessError):
++        paths = list(root.rglob("*"))
++    problems = []
++    for path in paths:
++        if not path.is_file() or path.suffix.lower() not in TEXT_SUFFIXES:
++            continue
++        if any(part in SKIP_DIRS for part in path.parts):
++            continue
++        if path.stat().st_size > 5_000_000:
++            continue
++        payload = path.read_bytes()
++        try:
++            body = payload.decode("utf-8-sig")
++        except UnicodeDecodeError as exc:
++            problems.append(f"{path}: source file is not UTF-8: {exc}")
++            continue
++        if "\ufffd" in body:
++            problems.append(f"{path}: contains Unicode replacement character")
++        if path.suffix.lower() in {".bat", ".cmd"} and any(byte > 0x7f for byte in payload):
++            problems.append(f"{path}: Windows cmd script must be ASCII-only")
++    return problems
++
++
++def main() -> int:
++    base = Path(__file__).resolve().parents[1]
++    issues = audit(base)
++    for issue in issues:
++        print("[ENCODING ERROR]", issue)
++    if issues:
++        print(f"[ENCODING] {len(issues)} problem(s)")
++        return 1
++    print("[ENCODING] All tracked AutoCine source files UTF-8; BAT/CMD ASCII")
++    return 0
++
++
++if __name__ == "__main__":
++    sys.exit(main())

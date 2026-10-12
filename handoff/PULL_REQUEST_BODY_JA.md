@@ -1,11 +1,13 @@
-FPSカメラで古いTop座標から空撮りになる可能性に対応し、対象相対poseへ変更。REDの位置と向きへ同じ192度を適用し、手動0/180度と高さ入力も保持。受領のチーム/モード別小補正を有限値・距離0.87〜1.15・角度±8度で制限。校正/stable rotationのチーム・モード分離とTargetLock/旧CameraPlan APIを保持。実構図改善はWindows未確認。
+開発QAを未接続/未スキャンから1回で開始できるようにし、UI snapshot→1ワーカーで接続・全体scan・QA撮影・演出/画像・直接ZIPを連続実行。complete cache再利用、二重押し抑制、partial/失敗/停止時は録画しない。既存通常出力/開発bundle/ミラー応答を保持。
 
-自動ディレクター強さと色パネルをチェック直下に展開。0%で既定Orbitが再生成される問題を補正し、UI snapshotをTemplate末尾の任意auto_director_strength（既定None）から実カメラへ接続。0/50/100%の接近量とOrbitを検証、旧位置引数/JSON/scene replace保持、不正値は開始前エラー。スタイル固有FOV/スロー/ローアングルは残る。参照BATは単体動画/フォルダ・入力別出力先・TEMPログ/pause。空入力ZIPと元動画保持のCodex補正も残す。
+2 BATをASCII化しPython UTF8環境と失敗終了コードを保持。tracked UTF8 auditを追加し、受領root.parent基準をGit root基準へ補正して単体/配布内Git双方で個人ファイルを読まず検査。
 
-受領指定v15基準へ独立apply --check/適用し、受領v20との差分12パスを現行Codex v20へ選択統合。旧GPU22FX/60fps/LoL専用音声/録画/NVENC/diagnostics/fallback/500MBstream ZIP/37PNG/107refs/過去配布物保持、全111refs bundleと共有8blobレビュー。GPU描画本体は変更せず任意のカメラ値だけTemplateへ追加。添付の実機/Release記述は受領側資料として区別。自動動画アップロードなし。
+QA_Supportへ読み方と指定6診断の末尾各最大1MBを元バイトのままコピー。source不変/symlink除外/失敗で成功録画を無効化しない/中止時追加しない。既存ZIPが.logを除外したため、QA_Support直下の既知名・1MB以下だけ許可。1MBstream/500MB/元動画・JSON・旧ZIP/別名再出力/最終JSON一致/直接ZIPを保持。時間割合サンプルを実キル時刻自動認識と表示しない。外部送信なし。
 
-検証: Linux/Xvfb全696成功（失敗/skip/除外なし、58.339秒）。実カメラ計算とUIワーカーsnapshot、不正強さ/角度、FPS手動向き/高さ、単体実60fps動画の6時点シートと元動画不変、旧GPU/UI/音声/ZIP回帰を確認。ZIP CRC/ソース一致/差分apply/個人ファイル除外/旧refsと配布物保持を検証。Windows/NVIDIA/LoL画角とBAT実行は未確認、過去native終了原因は未確定。
+受領RED1/3/5・BLUE8の引き構図と限定角度は試験候補。RED2/4/BLUE7/9を保持。FPS高さと手動0/180、有限値/倍率制限、キャッシュ分離/TargetLock/ディレクターgain/APIを維持。実構図とZ角の見え方はWindows未確認。
 
-前回v5.10.20を比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、別フォルダでSTART_GPU.bat。実機手順docs/WINDOWS_TEST_v51021_JA.md。
+受領指定v15基準へ独立apply --check/適用し、受領v21の15パス差分だけ現行Codex v21へレビュー統合。旧GPU全22FX/60fps/LoL専用音声/録画/NVENC/診断/fallback/37PNG/111refs/202旧配布物を保持、全115refs bundleと共有8blobレビュー。エフェクト/録画/音声の本体はbyte不変。添付の実機/CI612件/Release記述は受領側資料として区別。
 
-GitHubから別checkout/bundle復元で全496ソース/111refs/ZIP・bundle hashes一致。復元先代表187成功14.93秒、失敗/skip/除外なし、GC有効・強制GCなし。再setupで496ソース/111refs/3個人設定相当のバイト保持/status clean。これは同一クラウド内の別フォルダ検証で新しいcloud task/Windows/Publish検証とは別。環境install_script/start_skillをrevision39へ保存してreadback確認、他の既知設定保持、Publishは未実行。次回環境へ反映する場合だけ環境設定で確認・保存後Publish。
+検証: Linux/Xvfb全719成功（失敗/skip/除外なし、60.969秒）。関連初回63成功/1失敗で.log除外を検出し修正、追加チェック含む65成功。実workerでTk snapshot/二重押し、cache/partial/stop、1MB tail原本不変/ZIP内ログと最終JSON一致、FPS height/manual、単体・nested Gitでignored不正UTFファイルを監査しないこと、旧GPU/UI/音声/ZIP回帰を確認。完全ZIP CRC/ソース一致/差分apply/個人ファイル除外/旧refsと配布物保持を検証。Windows/NVIDIA/LoL画角と日本語BAT実行は未確認、過去native終了原因は未確定。
+
+前回v5.10.21を比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、別フォルダSTART_GPU.bat。実機手順docs/WINDOWS_TEST_v51022_JA.md。

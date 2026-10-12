@@ -1,46 +1,48 @@
-# v5.10.21-test 保存状況
+# v5.10.22-test 保存状況
 
-ソース /workspace/LoL_AutoCine、integration/v5.10.21、HEAD dadb48884538158ae21351a618e278e3c64c06bc、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51021-camera-director-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時source/取得用status --shortは空。mainへマージしない。
+ソース /workspace/LoL_AutoCine、integration/v5.10.22、HEAD a9e72ff4acc6081c0f80d16f4d306ffba1c7525a、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51022-oneclick-utf8-qa-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時source/取得用status --shortは空。mainへマージしない。
 
 ## git log -3 --oneline（ソース）
 ```text
-dadb488 Document v5.10.21 shot tuning, director snapshot contract and Windows tests
-9b9764f Integrate FPS height regression and tuning provenance
-fe55091 Preserve FPS height control in target-relative framing and label supplied tuning
+a9e72ff Document v5.10.22 one-click QA, diagnostic inclusion and tracked encoding contract
+60d2275 Integrate verified QA support log inclusion
+9951251 Include only bounded known QA support logs in streamed direct archives
 ```
 ## git remote -v（取得用）
 ```text
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
-## 前回v5.10.20からの実変更
+## 前回v5.10.21からの実変更
 ```text
 M	MAKE_REFERENCE_SHEETS.bat
+M	RUN_AUTOTEST.bat
 M	VERSION.txt
 M	core/camera.py
-A	core/camera_tuning.py
-M	core/effects.py
+M	core/camera_qa.py
+M	core/camera_tuning.py
 M	core/jobs.py
+M	core/qa_package.py
 M	core/qa_plan.py
-A	docs/CODEX_INTEGRATION_v51021_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_v5.10.21.json
-A	docs/RECEIVED_IMPLEMENTATION_v51021_JA.md
-A	docs/WINDOWS_TEST_v51021_JA.md
+A	core/qa_support.py
+A	docs/CODEX_INTEGRATION_v51022_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.22.json
+A	docs/RECEIVED_IMPLEMENTATION_v51022_JA.md
+A	docs/WINDOWS_TEST_v51022_JA.md
 M	legacy_app.py
-A	patches/history/v5.10.21/RECEIVED_CODE.patch
-A	patches/history/v5.10.21/RECEIVED_README_JA.txt
+A	patches/history/v5.10.22/RECEIVED_CODE.patch
+A	patches/history/v5.10.22/RECEIVED_README_JA.txt
 M	qa/test_plan.json
-A	tests/test_gpu_camera_director_v51021.py
-M	tests/test_gpu_champion_pair_v599.py
-M	tests/test_gpu_highlight_v598.py
-M	tests/test_gpu_killbadges_v599.py
-M	tests/test_gpu_montage_v597.py
-M	tests/test_gpu_shared_camera_contract.py
-A	tests/test_v51021_camera_bat_color.py
-M	tests/test_v5105_killfeed_glow_side_help.py
+A	tests/test_encoding_audit_v51022.py
+M	tests/test_gpu_camera_director_v51021.py
+M	tests/test_gpu_camera_isolation_v51020.py
+A	tests/test_gpu_qa_support_v51022.py
+M	tests/test_v51016_motion_dof_and_camera_qa.py
+M	tests/test_v51021_camera_bat_color.py
+A	tests/test_v51022_oneclick_utf8_camera.py
 M	tools/check_parallel_integration.py
-A	tools/package_v51021.py
-M	tools/reference_video_review.py
+A	tools/check_text_encoding.py
+A	tools/package_v51022.py
 ```
 ## 元v5.8.5からの実変更
 ```text
@@ -136,6 +138,7 @@ M	core/preview.py
 A	core/qa_package.py
 A	core/qa_plan.py
 A	core/qa_reels.py
+A	core/qa_support.py
 A	core/qa_true_transitions.py
 A	core/qa_visual.py
 M	core/recorder.py
@@ -185,6 +188,7 @@ A	docs/CODEX_INTEGRATION_v51018_JA.md
 A	docs/CODEX_INTEGRATION_v51019_JA.md
 A	docs/CODEX_INTEGRATION_v51020_JA.md
 A	docs/CODEX_INTEGRATION_v51021_JA.md
+A	docs/CODEX_INTEGRATION_v51022_JA.md
 A	docs/CODEX_INTEGRATION_v5104_JA.md
 A	docs/CODEX_INTEGRATION_v5105_JA.md
 A	docs/CODEX_INTEGRATION_v5106_JA.md
@@ -224,6 +228,7 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.10.19.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.1_JA.md
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.20.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.21.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.22.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.4.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.5.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.6.json
@@ -246,6 +251,7 @@ A	docs/HANDOFF_MASTER_2026-10-09_JA.md
 A	docs/RECEIVED_IMPLEMENTATION_v51019_JA.md
 A	docs/RECEIVED_IMPLEMENTATION_v51020_JA.md
 A	docs/RECEIVED_IMPLEMENTATION_v51021_JA.md
+A	docs/RECEIVED_IMPLEMENTATION_v51022_JA.md
 A	docs/RECEIVED_RED_CAMERA_EVIDENCE_v51017_JA.md
 A	docs/RECEIVED_TEST_RESULTS_v5.10.15_JA.md
 A	docs/REQUIREMENTS_SCENESTUDIO_JA.md
@@ -263,6 +269,7 @@ A	docs/WINDOWS_TEST_v51018_JA.md
 A	docs/WINDOWS_TEST_v51019_JA.md
 A	docs/WINDOWS_TEST_v51020_JA.md
 A	docs/WINDOWS_TEST_v51021_JA.md
+A	docs/WINDOWS_TEST_v51022_JA.md
 A	docs/WINDOWS_TEST_v5105_JA.md
 A	docs/WINDOWS_TEST_v5106_JA.md
 A	docs/WINDOWS_TEST_v5107_JA.md
@@ -331,6 +338,8 @@ A	patches/history/v5.10.20/RECEIVED_CODE.patch
 A	patches/history/v5.10.20/RECEIVED_README_JA.txt
 A	patches/history/v5.10.21/RECEIVED_CODE.patch
 A	patches/history/v5.10.21/RECEIVED_README_JA.txt
+A	patches/history/v5.10.22/RECEIVED_CODE.patch
+A	patches/history/v5.10.22/RECEIVED_README_JA.txt
 A	patches/history/v5.10.8_from_codex_v5.10.7.patch
 A	patches/history/v51011_from_v51010.patch
 A	patches/history/v51013_reviewed_code.patch
@@ -338,6 +347,7 @@ A	patches/history/v5106_from_codex_v5105.patch
 A	patches/v594_to_v595.patch
 A	qa/test_plan.json
 A	tests/test_editor_ui_contract.py
+A	tests/test_encoding_audit_v51022.py
 A	tests/test_gpu_badge_qa_v51017.py
 A	tests/test_gpu_camera_director_v51021.py
 A	tests/test_gpu_camera_isolation_v51020.py
@@ -357,6 +367,7 @@ A	tests/test_gpu_montage_v51014.py
 A	tests/test_gpu_montage_v597.py
 A	tests/test_gpu_motion_camera_qa.py
 A	tests/test_gpu_opencl_bloom.py
+A	tests/test_gpu_qa_support_v51022.py
 A	tests/test_gpu_releaseqa_v51018.py
 A	tests/test_gpu_replay_warmup_v5101.py
 A	tests/test_gpu_restore_mirror_v5106.py
@@ -392,6 +403,7 @@ A	tests/test_v51019_camera_ui_reliability.py
 A	tests/test_v5101_scroll_check_warmup.py
 A	tests/test_v51020_camera_mode_isolation.py
 A	tests/test_v51021_camera_bat_color.py
+A	tests/test_v51022_oneclick_utf8_camera.py
 A	tests/test_v5102_circle_focus_preset.py
 A	tests/test_v5103_nonblocking_dispatch.py
 A	tests/test_v5104_notebook_livefx_camera.py
@@ -410,6 +422,7 @@ A	tests/test_v598_highlight_director.py
 A	tests/test_v5991_portrait_pairs.py
 A	tests/test_v599_automontage_killbadges.py
 A	tools/check_parallel_integration.py
+A	tools/check_text_encoding.py
 A	tools/gpu_render_test.py
 A	tools/package_v5100.py
 A	tools/package_v5101.py
@@ -425,6 +438,7 @@ A	tools/package_v51018.py
 A	tools/package_v51019.py
 A	tools/package_v51020.py
 A	tools/package_v51021.py
+A	tools/package_v51022.py
 A	tools/package_v5103.py
 A	tools/package_v5103_capture60.py
 A	tools/package_v5103_capturefix.py
@@ -458,6 +472,4 @@ A	ui/studio_localization.py
 A	ui/template_gallery.py
 ```
 
-全496ソース/Python178・全111refs。旧107先端/37PNG/GPU・音声・録画保護22パス・旧配布物193件を保持。core/effects.pyは末尾の任意カメラ値だけ追加、GPU描画本体のバイト一致を確認。個人設定/録画/診断を追加・削除しない。
-
-sourceのstatus --shortは空、remoteなし。取得用の固定payload 7cc1109851ca837eedf7e51e6243a0fc1f5e3a21、Draft PR37（前回v20を比較先）。mainは未変更。全変更はコミット保存済み、個人データを除去していない。復元/repeat/全696件と復元代表187件/設定保存の証拠はVERIFICATION_v5.10.21.json。
+全508ソース/Python184・全115refs。旧111先端/37PNG/GPU・音声・録画保護22パス・旧配布物202件を保持。core/effects.py含む描画/音声/録画の本体はバイト不変。個人設定/録画/診断を追加・削除しない。

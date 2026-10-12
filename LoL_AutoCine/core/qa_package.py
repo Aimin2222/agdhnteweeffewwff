@@ -2,6 +2,7 @@
 from pathlib import Path
 import json
 import zipfile
+from .qa_support import LOG_NAMES, TAIL_LIMIT_BYTES
 
 DEFAULT_MAX_BYTES = 500_000_000
 SAFETY_BYTES = 25_000_000
@@ -25,11 +26,17 @@ def split_test_results(folder, *, max_bytes=DEFAULT_MAX_BYTES, log=lambda _m: No
     items = []; restoration = []
     extensions = {'.mp4', '.json', '.txt', '.md', '.csv', '.jpg', '.png'}
     for path in sorted(folder.rglob('*')):
-        if path.is_symlink() or not path.is_file() or path.suffix.lower() not in extensions:
+        if path.is_symlink() or not path.is_file():
             continue
         if not path.resolve().is_relative_to(folder):
             continue
-        name = path.relative_to(folder).as_posix(); size = path.stat().st_size
+        relative = path.relative_to(folder)
+        size = path.stat().st_size
+        support_log = (relative.parts == ('QA_Support', path.name)
+                       and path.name in LOG_NAMES and size <= TAIL_LIMIT_BYTES)
+        if path.suffix.lower() not in extensions and not support_log:
+            continue
+        name = relative.as_posix()
         if size + 4096 <= limit:
             # Leave headroom for archive names appended to final results.json.
             reserve = min(250_000, limit // 8) if name == 'results.json' else 0

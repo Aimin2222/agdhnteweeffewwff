@@ -397,7 +397,7 @@ class CameraPlan:
             # カメラがキャラの周囲を公転する動き。Yは高さとして固定する。
             extra_yaw, zoom, _ = self.keyframe_values(t)
             dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
-            dist *= max(0.87, min(1.15, float(getattr(self, "_live_dist_factor", 1.0))))
+            dist *= max(0.87, min(1.30, float(getattr(self, "_live_dist_factor", 1.0))))
             # BLUE #6 is cropped at the top. Allow breathing room only in
             # normal third, not in approved geo_aim or RED cinema presets.
             if (self.style == "third" and self.team not in ("CHAOS", "RED")
@@ -454,7 +454,7 @@ class CameraPlan:
 
         extra_yaw, zoom, _ = self.keyframe_values(t)
         dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
-        dist *= max(0.87, min(1.15, float(getattr(self, "_live_dist_factor", 1.0))))
+        dist *= max(0.87, min(1.30, float(getattr(self, "_live_dist_factor", 1.0))))
         elev = max(12.0, min(58.0, elev))
         if self.smart_composition:
             dist = max(dist, self.third_dist * 0.88)
@@ -489,7 +489,8 @@ class CameraPlan:
             # camera offset around the locked player, exactly like the
             # calibrated follow cameras, while retaining the FPS label/controls.
             x, y, z = self.third_pose_at(t)[0]
-            pose = (x, y + self.height, z)  # preserve the existing FPS height control
+            back = max(1.0, min(1.65, float(getattr(self, "_live_fps_back", 1.0))))
+            pose = (x * back, y * back + self.height, z * back)  # keep height independent of automatic pullback
             heading = float(getattr(self, "_live_fps_side_heading", 0.0))
             if heading:
                 radians = math.radians(heading)

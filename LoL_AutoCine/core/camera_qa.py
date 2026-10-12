@@ -20,6 +20,7 @@ from .montage_fx import get_duration
 from .gpu_binary import ffmpeg_exe
 from .qa_package import split_test_results
 from .qa_plan import validate_plan
+from .qa_support import collect_qa_support
 from .camera_geometry import inspect_rig
 from .qa_visual import make_qa_contact_sheets
 from .qa_reels import assemble_side_reels
@@ -243,6 +244,8 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     manifest["canceled"] = bool(stop is not None and stop.is_set())
     flush()
     if not manifest["canceled"]:
+        manifest["qa_support"] = collect_qa_support(folder, log=log)
+        flush()
         try:
             def update_archives(paths):
                 manifest["qa_archives"] = [str(p) for p in paths]

@@ -42,7 +42,7 @@ def test_red_fps_manual_heading_applies_to_position_and_rotation(monkeypatch,sid
     p,_=jobs._setup_clip(api,player,Template(style='fps',camera_side=side),10,[SimpleNamespace(time=11)],lambda _:None)
     assert p._live_fps_side_heading==heading
     assert p.rotation_at(10)['x']==-heading
-    original=p.third_pose_at(10)[0];offset=p.offset_at(10)
+    original=tuple(v*p._live_fps_back for v in p.third_pose_at(10)[0]);offset=p.offset_at(10)
     assert offset[0]==pytest.approx(original[0]*(1 if heading==0 else -1))
     assert offset[2]==pytest.approx(original[2]*(1 if heading==0 else -1))
     assert math.dist((0,0,0),offset)<2500
