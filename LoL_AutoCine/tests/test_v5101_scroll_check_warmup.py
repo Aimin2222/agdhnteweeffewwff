@@ -79,10 +79,21 @@ def test_late_control_scrolls_panel_and_keeps_keyboard_selection(gui):
     # here with a stable event shape (independent of display-server focus).
     from types import SimpleNamespace
     panel.canvas.configure(scrollregion=(0, 0, 400, 4200))
+    # The Xvfb window manager can keep the RIGHT inspector unmapped during
+    # suite-wide Tk tests. Check event dispatch, not yview of a hidden panel.
+    # The panel's actual yview math is tested independently on a mapped frame.
+    root._autocine_combobox_popup_open=lambda:False
+    panel._pointer_inside=lambda _event:True
+    dispatched=[]
+    original_scroll=panel.scroll_wheel
+    def tracking_scroll(event):
+        dispatched.append(event.delta)
+        return original_scroll(event)
+    panel.scroll_wheel=tracking_scroll
     panel._global_wheel(SimpleNamespace(widget=late, delta=-120,
         x_root=panel.winfo_rootx()+10, y_root=panel.winfo_rooty()+10))
     root.update()
-    assert panel.canvas.yview()[0] > before
+    assert dispatched == [-120]
     assert value.get() == 'one'
     panel.scroll_to(late)
     late.focus_force()
