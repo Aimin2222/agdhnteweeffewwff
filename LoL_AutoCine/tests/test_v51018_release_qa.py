@@ -91,3 +91,15 @@ def test_comparison_sheet_written_using_supplied_frame_samples(monkeypatch,tmp_p
     assert len(report["images"])==2
     assert all(Path(name).exists() for name in report["images"])
     assert report["transitions"][1]["similar_at_join"]
+
+def test_fresh_ui_starts_with_unmodified_lol_color():
+    import tkinter as tk
+    from legacy_app import App
+    from core.effects import GRADE_JP
+    root=tk.Tk()
+    try:
+        app=App(root)
+        assert app.var_grade.get() == GRADE_JP["default"]
+        assert app.current_template().grade == "default"
+    finally:
+        root.destroy()
