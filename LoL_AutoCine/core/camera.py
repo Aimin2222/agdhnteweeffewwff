@@ -456,7 +456,14 @@ class CameraPlan:
             # which on BLUE #8 can aim entirely at the map edge. Build a
             # camera offset around the locked player, exactly like the
             # calibrated follow cameras, while retaining the FPS label/controls.
-            return self.third_pose_at(t)[0]
+            pose = self.third_pose_at(t)[0]
+            heading = float(getattr(self, "_live_fps_side_heading", 0.0))
+            if heading:
+                radians = math.radians(heading)
+                c, si = math.cos(radians), math.sin(radians)
+                return (pose[0]*c - pose[2]*si, pose[1],
+                        pose[0]*si + pose[2]*c)
+            return pose
         if self.rig.v is None:
             return (0.0, self.height, 0.0)
         s = self.scale_at(t)
