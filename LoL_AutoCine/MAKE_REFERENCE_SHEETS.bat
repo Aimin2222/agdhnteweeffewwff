@@ -1,6 +1,7 @@
 @echo off
 chcp 65001 >nul
 setlocal DisableDelayedExpansion
+set "RESULT=0"
 cd /d "%~dp0"
 title AutoCine Reference Video Review
 set "SOURCE=%~1"
@@ -27,12 +28,15 @@ goto DONE
 :USAGE
 echo [使い方] MP4などの動画ファイル、または動画を含むフォルダーを、このBATの上にドラッグしてください。
 echo [注意] ZIPを渡す場合は、先に展開してから動画かフォルダーを指定してください。
+set "RESULT=1"
 goto DONE
 :MISSING
 echo [ERROR] 指定されたファイル／フォルダーが見つかりません。
 echo "%SOURCE%"
+set "RESULT=2"
 goto DONE
 :FAILED
+set "RESULT=3"
 echo.
 echo [ERROR] 参照動画の処理中にエラーが発生しました。終了コード: %EXITCODE%
 echo [ERROR] 次のログファイルをそのまま送ってください:
@@ -40,5 +44,5 @@ echo "%LOG%"
 echo [ERROR] Python／ffmpeg／Pillowや入力形式を確認してください。
 :DONE
 echo.
-pause
-endlocal
+if not defined CI pause
+endlocal & exit /b %RESULT%
