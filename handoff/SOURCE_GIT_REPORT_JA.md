@@ -442,3 +442,5 @@ A	ui/template_gallery.py
 ```
 
 全486ソース/Python174・全107refs。旧103先端/37PNG/GPU・音声・録画保護22パス・旧配布物184件を保持。個人設定/録画/診断を追加・削除しない。
+
+sourceのstatus --shortは空、remoteなし。取得用の固定payload a243371363c098a8e966d58d4bb7141c3c259fbf、Draft PR36（前回v19を比較先）。mainは未変更。全変更はコミット保存済み、個人データを除去していない。復元/repeat/全675件と復元代表166件/設定保存の証拠はVERIFICATION_v5.10.20.json。
