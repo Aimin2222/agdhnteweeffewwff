@@ -148,9 +148,9 @@ jobs:
               z.write(readme,readme.name)
               z.write(root/"tests"/"test_v51024_red_center_zip_reference.py",
                       "tests/test_v51024_red_center_zip_reference.py")
-          z.write(root/"tests"/"test_v51025_blue6_vertical_frame.py",
+              z.write(root/"tests"/"test_v51025_blue6_vertical_frame.py",
                       "tests/test_v51025_blue6_vertical_frame.py")
-          z.write(root/"docs"/"IMPLEMENTATION_AND_WINDOWS_TEST_v51025_JA.md",
+              z.write(root/"docs"/"IMPLEMENTATION_AND_WINDOWS_TEST_v51025_JA.md",
                       "docs/IMPLEMENTATION_AND_WINDOWS_TEST_v51025_JA.md")
           for p in [full,diff]:
               with zipfile.ZipFile(p) as z:
