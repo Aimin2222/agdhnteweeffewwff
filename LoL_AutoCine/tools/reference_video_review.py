@@ -107,12 +107,44 @@ def create_sheets(input_folder, output_folder, *, ffmpeg=None, logger=print):
     return output/"ReferenceReview_contact_sheets.zip"
 
 
+def choose_source():
+    """When BAT is double-clicked, choose an MP4 or a video folder."""
+    import tkinter as tk
+    from tkinter import filedialog, messagebox
+    root = tk.Tk()
+    root.withdraw()
+    try:
+        selected = filedialog.askopenfilename(
+            title="AutoCine - 参考動画のMP4を選択（キャンセルでフォルダーを選択）",
+            filetypes=[("動画", "*.mp4 *.mov *.mkv *.webm"),
+                       ("すべてのファイル", "*.*")])
+        if not selected:
+            selected = filedialog.askdirectory(title="AutoCine - 動画フォルダーを選択")
+        if not selected:
+            return None
+        return Path(selected)
+    finally:
+        root.destroy()
+
+
 def main():
     parser=argparse.ArgumentParser(description="Create contact sheets for every reference MP4")
-    parser.add_argument("input_folder",type=Path,help="A folder of videos or one MP4/MOV/MKV/WEBM")
-    parser.add_argument("--output",type=Path,default=Path("ReferenceReview"))
+    parser.add_argument("input_folder",nargs="?",type=Path,
+                        help="A video file or a folder. Omit to open a picker.")
+    parser.add_argument("--output",type=Path,default=None)
     args=parser.parse_args()
-    out=create_sheets(args.input_folder,args.output)
+    source=args.input_folder if args.input_folder is not None else choose_source()
+    if source is None:
+        print("No reference video selected; nothing was changed.")
+        return
+    if source.suffix.lower()==".zip":
+        raise ValueError("ZIPは直接入力できません。展開してMP4か動画フォルダーを指定してください。")
+    # Default destination next to the selected source and never inside MP4.
+    dest = args.output
+    if dest is None:
+        dest = (source/"_AutoCineReferenceReview" if source.is_dir()
+                else source.parent / ("_AutoCineReferenceReview_"+sanitized_filename(source.stem)))
+    out=create_sheets(source,dest)
     print("Contact-sheet ZIP:",out)
 
 
