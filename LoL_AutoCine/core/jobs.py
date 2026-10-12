@@ -204,7 +204,7 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
         raise ReplayApiError(f'リプレイのシーク位置が確定しません ({actual:.2f}s / 目標 {start:.2f}s)')
     side_choice = getattr(tpl, 'camera_side', 'auto')
     profile = live_side_profile(getattr(player, 'team', 'ORDER'), side_choice)
-    live_third = tpl.style in ('third', 'third_cinema', 'lolnam_cinema')
+    live_third = tpl.style in ('third', 'third_cinema', 'lolnam_cinema', 'geo_aim')
     elev = max(float(getattr(tpl, 'third_elev', 28.0)), profile['elevation']) if live_third else float(getattr(tpl, 'third_elev', 28.0))
     dist = max(float(getattr(tpl, 'third_dist', 950.0)), profile['distance']) if live_third else float(getattr(tpl, 'third_dist', 950.0))
     rig = attach_to_player(api, player, tpl.style, dist_scale=tpl.dist_scale, height=tpl.cam_height,
