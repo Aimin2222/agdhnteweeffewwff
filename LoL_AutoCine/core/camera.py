@@ -249,6 +249,7 @@ class CameraPlan:
     smart_impact: float = 0.0         # optional kill-time speed envelope
     side_yaw: float = 0.0            # v5.10.5: side-aware orbit bias; calibrated rig unchanged
     team: str = "ORDER"             # appended: preserve old positional arguments
+    camera_axis_safety: bool = False  # opt-in for actual v5.10.19 capture, legacy direct plans unchanged
 
     @staticmethod
     def _keyframe_channel(frames, left_idx: int, key: str, local_t: float) -> float:
@@ -460,7 +461,7 @@ class CameraPlan:
             horizontal = math.hypot(x, z)
             if horizontal < 1.0:
                 return None
-            if self.team in ("CHAOS", "RED"):
+            if self.camera_axis_safety and self.team in ("CHAOS", "RED"):
                 # Windows QA #5 used Y=200deg and showed the sky. RED's good
                 # third_cinema and Lolnam shots both use X=heading, Y=elevation,
                 # Z=0 instead. The previous geographic formula swapped them.
@@ -474,7 +475,7 @@ class CameraPlan:
         if self.style in ("third", "third_cinema"):
             if self.rig is None or not self.rig.third or not self.rig.rot or not self.rig.pitch_axis:
                 return None
-            if self.style == "third":
+            if self.style == "third" and self.camera_axis_safety:
                 # Windows QA #1 and #6 saw a spurious X pitch calibration.
                 # It drove yaw through Z=-184deg (roll/inversion) and used a
                 # camera-to-player baseline 7–8k units away. Calibration for
