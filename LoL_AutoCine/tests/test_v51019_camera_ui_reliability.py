@@ -21,7 +21,8 @@ def _rig(*, pitch_axis="x"):
     ("CHAOS",184.0,-184.0),("ORDER",-12.0,12.0)])
 def test_normal_third_uses_horizontal_x_pitch_y_and_never_roll(side,yaw,expected_x):
     plan=CameraPlan(style="third",rig=_rig(),third_elev=42,third_dist=1170,
-                    side_yaw=yaw,team=side,camera_axis_safety=True)
+                    side_yaw=yaw,team=side)
+    plan._camera_axis_safety=True
     rot=plan.rotation_at(2.0)
     assert rot["x"]==pytest.approx(expected_x)
     assert rot["y"]==pytest.approx(42.0)
@@ -30,7 +31,8 @@ def test_normal_third_uses_horizontal_x_pitch_y_and_never_roll(side,yaw,expected
 
 def test_red_geo_aim_uses_calibrated_pitch_axis_not_yaw_in_y_slot():
     plan=CameraPlan(style="geo_aim",rig=_rig(pitch_axis="y"),
-                    third_elev=42,third_dist=1170,side_yaw=192,team="CHAOS",camera_axis_safety=True)
+                    third_elev=42,third_dist=1170,side_yaw=192,team="CHAOS")
+    plan._camera_axis_safety=True
     rot=plan.rotation_at(1.0)
     assert rot["x"]==pytest.approx(-192.0)
     assert rot["y"]==pytest.approx(42.0)
