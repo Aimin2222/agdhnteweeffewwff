@@ -21,3 +21,5 @@ git status --short
 ```
 
 全refsはorigin/*へ復元。originはローカルbundle。設定/録画/プロジェクトを保管。担当ガードはdocs/CODEX_INTEGRATION_v51021_JA.md。
+
+GitHubから別checkout/bundle復元で全496ソース/111refs/ZIP・bundle hashes一致。復元先代表187成功14.93秒、失敗/skip/除外なし、GC有効・強制GCなし。再setupで496ソース/111refs/3個人設定相当のバイト保持/status clean。これは同一クラウド内の別フォルダ検証で新しいcloud task/Windows/Publish検証とは別。環境install_script/start_skillをrevision39へ保存してreadback確認、他の既知設定保持、Publishは未実行。次回環境へ反映する場合だけ環境設定で確認・保存後Publish。

@@ -7,3 +7,5 @@ FPSカメラで古いTop座標から空撮りになる可能性に対応し、�
 検証: Linux/Xvfb全696成功（失敗/skip/除外なし、58.339秒）。実カメラ計算とUIワーカーsnapshot、不正強さ/角度、FPS手動向き/高さ、単体実60fps動画の6時点シートと元動画不変、旧GPU/UI/音声/ZIP回帰を確認。ZIP CRC/ソース一致/差分apply/個人ファイル除外/旧refsと配布物保持を検証。Windows/NVIDIA/LoL画角とBAT実行は未確認、過去native終了原因は未確定。
 
 前回v5.10.20を比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、別フォルダでSTART_GPU.bat。実機手順docs/WINDOWS_TEST_v51021_JA.md。
+
+GitHubから別checkout/bundle復元で全496ソース/111refs/ZIP・bundle hashes一致。復元先代表187成功14.93秒、失敗/skip/除外なし、GC有効・強制GCなし。再setupで496ソース/111refs/3個人設定相当のバイト保持/status clean。これは同一クラウド内の別フォルダ検証で新しいcloud task/Windows/Publish検証とは別。環境install_script/start_skillをrevision39へ保存してreadback確認、他の既知設定保持、Publishは未実行。次回環境へ反映する場合だけ環境設定で確認・保存後Publish。

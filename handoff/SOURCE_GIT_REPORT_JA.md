@@ -459,3 +459,5 @@ A	ui/template_gallery.py
 ```
 
 全496ソース/Python178・全111refs。旧107先端/37PNG/GPU・音声・録画保護22パス・旧配布物193件を保持。core/effects.pyは末尾の任意カメラ値だけ追加、GPU描画本体のバイト一致を確認。個人設定/録画/診断を追加・削除しない。
+
+sourceのstatus --shortは空、remoteなし。取得用の固定payload 7cc1109851ca837eedf7e51e6243a0fc1f5e3a21、Draft PR37（前回v20を比較先）。mainは未変更。全変更はコミット保存済み、個人データを除去していない。復元/repeat/全696件と復元代表187件/設定保存の証拠はVERIFICATION_v5.10.21.json。
