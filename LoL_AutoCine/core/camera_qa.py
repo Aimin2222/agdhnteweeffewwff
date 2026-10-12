@@ -23,6 +23,7 @@ from .qa_plan import validate_plan
 from .camera_geometry import inspect_rig
 from .qa_visual import make_qa_contact_sheets
 from .qa_reels import assemble_side_reels
+from .qa_true_transitions import TRANSITION_PREVIEWS, render_true_transition
 
 QA_MODES = (
     ("third", "通常三人称"),
@@ -82,6 +83,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         "qa_archives": [],
         "outputs": [],
         "montage_tests": [],
+        "spatial_transition_tests": [],
         "side_review_reels": {},
         "badge_motion_tests": [],
         "limitations": "Framing must be judged visually on Windows. Audio/codec need playback or ffprobe.",
@@ -175,6 +177,25 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
                 outcome["failed"] = [f"{type(exc).__name__}: {exc}"]
                 log(f"つなぎ演出テスト {style}: {exc}")
             manifest["montage_tests"].append(outcome)
+            flush()
+    # True spatial transitions are QA-only examples, visually different from
+    # the legacy ten brightness-based montage styles. Reuse saved MP4s.
+    if len(join_sources) >= 2 and not (stop is not None and stop.is_set()):
+        requested = (config or {}).get("spatial_transition_previews", list(TRANSITION_PREVIEWS))
+        preview_dir = folder / "Transitions" / "SpatialPreviews"
+        for style in requested:
+            if stop is not None and stop.is_set():
+                break
+            row = {"style":style,"label":TRANSITION_PREVIEWS[style],
+                   "outputs":[],"failed":[],"qa_only":True,"no_audio":True}
+            try:
+                dest = preview_dir / f"spatial_{style}.mp4"
+                render_true_transition(join_sources[0],join_sources[1],dest,style,log=log)
+                row["outputs"]=[str(dest)]
+            except Exception as exc:
+                row["failed"].append(f"{type(exc).__name__}: {exc}")
+                log(f"空間切替 {style} の比較動画を作成できません: {exc}")
+            manifest["spatial_transition_tests"].append(row)
             flush()
     # The eight camera QA clips intentionally disable kill badges so camera
     # geometry is unobstructed. Render six *separate* badge-motion clips from
