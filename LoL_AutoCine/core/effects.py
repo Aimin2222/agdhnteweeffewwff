@@ -202,6 +202,8 @@ class Template:
     kill_stack_gap: int = 4  # v5.10.8: additional pixels between simultaneous kills
     kill_icon_motion: str = "instant"  # badge entrance, legacy behavior by default
 
+    auto_director_strength: float | None = None  # appended; None preserves legacy camera motion
+
     def __post_init__(self) -> None:
         from .kill_icons import normalize_motion
         self.kill_icon_motion = normalize_motion(self.kill_icon_motion)
