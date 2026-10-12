@@ -1311,12 +1311,12 @@ class App:
         for key, label in (("grade_strength","色の強さ"), ("contrast","明暗の差"),
                            ("temperature","暖色・寒色"), ("vibrance","色の鮮やかさ"),
                            ("vignette","四隅の暗さ")):
-            line = ttk.Frame(self._easy_color_panel,style="Card.TFrame")
-            line.pack(fill="x", pady=2)
-            ttk.Label(line,text=label,width=13,style="Card.TLabel").pack(side="left")
+            color_row = ttk.Frame(self._easy_color_panel,style="Card.TFrame")
+            color_row.pack(fill="x", pady=2)
+            ttk.Label(color_row,text=label,width=13,style="Card.TLabel").pack(side="left")
             lo,hi = self._slider_range(key)
-            ttk.Scale(line, from_=lo, to=hi,variable=self.sl[key]).pack(side="left",fill="x",expand=True,padx=4)
-            ttk.Entry(line,textvariable=self.sl[key],width=8,justify="right").pack(side="right")
+            ttk.Scale(color_row, from_=lo, to=hi,variable=self.sl[key]).pack(side="left",fill="x",expand=True,padx=4)
+            ttk.Entry(color_row,textvariable=self.sl[key],width=8,justify="right").pack(side="right")
         self._update_easy_color_panel()
         self.var_fog=tk.BooleanVar(value=False)
         ttk.Checkbutton(color,text="FOG補正",variable=self.var_fog).pack(anchor="w",pady=(6,2))
