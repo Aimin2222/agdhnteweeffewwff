@@ -1,0 +1,492 @@
+diff --git a/MAKE_REFERENCE_SHEETS.bat b/MAKE_REFERENCE_SHEETS.bat
+index 0def556..d1822d9 100644
+--- a/MAKE_REFERENCE_SHEETS.bat
++++ b/MAKE_REFERENCE_SHEETS.bat
+@@ -1,31 +1,54 @@
+-@echo off
+-chcp 65001 >nul
+-setlocal
+-cd /d "%~dp0"
+-if "%~1"=="" (
+-  echo.
+-  echo [AutoCine] xMedia / LoL MP4 フォルダーをこのBATへドラッグしてください。
+-  echo フォルダー内の全MP4から6時点の比較画像をまとめて作成します。
+-  echo.
+-  pause
+-  exit /b 1
+-)
+-set "SOURCE=%~1"
+-if not exist "%SOURCE%\" (
+-  echo [ERROR] 指定されたフォルダーがありません: %SOURCE%
+-  pause
+-  exit /b 2
+-)
+-set "RUNPY=python"
+-if exist ".venv\Scripts\python.exe" set "RUNPY=.venv\Scripts\python.exe"
+-if exist "venv\Scripts\python.exe" set "RUNPY=venv\Scripts\python.exe"
+-echo [AutoCine] 参照動画の比較シートを作成中...
+-"%RUNPY%" -m tools.reference_video_review "%SOURCE%" --output "%SOURCE%\_AutoCineReferenceReview"
+-if errorlevel 1 (
+-  echo [ERROR] 処理失敗。先にAutoCineの依存ライブラリをインストールしてください。
+-  pause
+-  exit /b 3
+-)
+-echo 完了: %SOURCE%\_AutoCineReferenceReview\ReferenceReview_contact_sheets.zip
+-pause
+-endlocal
++@echo off
++chcp 65001 >nul
++setlocal DisableDelayedExpansion
++set "RESULT=0"
++cd /d "%~dp0"
++title AutoCine Reference Video Review
++set "SOURCE=%~1"
++set "LOG=%TEMP%\AutoCine_ReferenceReview_latest.log"
++if "%SOURCE%"=="" goto USAGE
++if not exist "%SOURCE%" goto MISSING
++set "OUTPUT=%~dp1_AutoCineReferenceReview_%~n1"
++rem Windows runner does not reliably resolve folder\NUL with IF EXIST.
++rem Use PUSHD (directory only) and preserve the old folder output layout.
++pushd "%SOURCE%" >nul 2>&1
++if errorlevel 1 goto SOURCE_READY
++popd
++set "OUTPUT=%SOURCE%\_AutoCineReferenceReview"
++:SOURCE_READY
++set "RUNPY=python"
++if exist ".venv\Scripts\python.exe" set "RUNPY=.venv\Scripts\python.exe"
++if exist "venv\Scripts\python.exe" set "RUNPY=venv\Scripts\python.exe"
++echo [AutoCine] 参照動画の解析を開始します。
++echo [AutoCine] 入力: "%SOURCE%"
++echo [AutoCine] 出力: "%OUTPUT%"
++echo [AutoCine] 詳細ログ: "%LOG%"
++"%RUNPY%" -m tools.reference_video_review "%SOURCE%" --output "%OUTPUT%" > "%LOG%" 2>&1
++set "EXITCODE=%ERRORLEVEL%"
++type "%LOG%"
++if not "%EXITCODE%"=="0" goto FAILED
++echo.
++echo [AutoCine] 完了:
++echo "%OUTPUT%\ReferenceReview_contact_sheets.zip"
++goto DONE
++:USAGE
++echo [使い方] MP4などの動画ファイル、または動画を含むフォルダーを、このBATの上にドラッグしてください。
++echo [注意] ZIPを渡す場合は、先に展開してから動画かフォルダーを指定してください。
++set "RESULT=1"
++goto DONE
++:MISSING
++echo [ERROR] 指定されたファイル／フォルダーが見つかりません。
++echo "%SOURCE%"
++set "RESULT=2"
++goto DONE
++:FAILED
++set "RESULT=3"
++echo.
++echo [ERROR] 参照動画の処理中にエラーが発生しました。終了コード: %EXITCODE%
++echo [ERROR] 次のログファイルをそのまま送ってください:
++echo "%LOG%"
++echo [ERROR] Python／ffmpeg／Pillowや入力形式を確認してください。
++:DONE
++echo.
++if not defined CI pause
++endlocal & exit /b %RESULT%
+diff --git a/core/camera.py b/core/camera.py
+index f676ea8..c2b2247 100644
+--- a/core/camera.py
++++ b/core/camera.py
+@@ -365,6 +365,7 @@ class CameraPlan:
+             # カメラがキャラの周囲を公転する動き。Yは高さとして固定する。
+             extra_yaw, zoom, _ = self.keyframe_values(t)
+             dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
++            dist *= max(0.87, min(1.15, float(getattr(self, "_live_dist_factor", 1.0))))
+             # BLUE #6 is cropped at the top. Allow breathing room only in
+             # normal third, not in approved geo_aim or RED cinema presets.
+             if (self.style == "third" and self.team not in ("CHAOS", "RED")
+@@ -421,6 +422,7 @@ class CameraPlan:
+ 
+         extra_yaw, zoom, _ = self.keyframe_values(t)
+         dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
++        dist *= max(0.87, min(1.15, float(getattr(self, "_live_dist_factor", 1.0))))
+         elev = max(12.0, min(58.0, elev))
+         if self.smart_composition:
+             dist = max(dist, self.third_dist * 0.88)
+@@ -449,6 +451,19 @@ class CameraPlan:
+             return (0.0, self.height, 0.0)
+         if self.rig.third:
+             return self.third_pose_at(t)[0]
++        if self.style == "fps" and getattr(self, "_live_fps_recenter", False):
++            # The original FPS camera reused the absolute top-camera delta,
++            # which on BLUE #8 can aim entirely at the map edge. Build a
++            # camera offset around the locked player, exactly like the
++            # calibrated follow cameras, while retaining the FPS label/controls.
++            pose = self.third_pose_at(t)[0]
++            heading = float(getattr(self, "_live_fps_side_heading", 0.0))
++            if heading:
++                radians = math.radians(heading)
++                c, si = math.cos(radians), math.sin(radians)
++                return (pose[0]*c - pose[2]*si, pose[1],
++                        pose[0]*si + pose[2]*c)
++            return pose
+         if self.rig.v is None:
+             return (0.0, self.height, 0.0)
+         s = self.scale_at(t)
+@@ -480,6 +495,20 @@ class CameraPlan:
+                 "z": 0.0}
+ 
+     def rotation_at(self, t: float) -> Optional[dict]:
++        """Optional side+mode-only composition corrections on a stable base."""
++        rot = self._raw_rotation_at(t)
++        if rot is None:
++            return None
++        adjustment = getattr(self, "_live_angle_bias", {})
++        if not adjustment:
++            return rot
++        corrected = dict(rot)
++        for axis in ("x", "y", "z"):
++            if axis in adjustment:
++                corrected[axis] = float(corrected.get(axis, 0.0)) + float(adjustment[axis])
++        return corrected
++
++    def _raw_rotation_at(self, t: float) -> Optional[dict]:
+         """確定版Orbitの三人称視線。カメラ位置の公転と同じ基準。"""
+         if self.style == "fps" and getattr(self, "_live_fps_recenter", False):
+             if self.rig is None or self.rig.v is None:
+diff --git a/core/camera_qa.py b/core/camera_qa.py
+index 41da362..42e36aa 100644
+--- a/core/camera_qa.py
++++ b/core/camera_qa.py
+@@ -75,7 +75,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
+     folder.mkdir(parents=True, exist_ok=True)
+     manifest = {
+-        "version": "5.10.19-test",
++        "version": "5.10.21-test",
+         "kind": "live_replay_camera_test",
+         "expected_clips": len(scenarios),
+         "test_plan": config,
+diff --git a/core/camera_tuning.py b/core/camera_tuning.py
+new file mode 100644
+index 0000000..4682722
+--- /dev/null
++++ b/core/camera_tuning.py
+@@ -0,0 +1,35 @@
++# -*- coding: utf-8 -*-
++"""Conservative shot-specific framing: never share fixes across camera modes.
++
++v5.10.21 Windows visual review: BLUE third_cinema #7 and RED third_cinema #2
++were accepted compositions; no new yaw/pitch adjustment is applied to them.
++Angle signs must still be verified in real Windows LoL replay footage.
++"""
++from __future__ import annotations
++
++
++SHOT_TUNING = {
++    # Side, camera mode -> relative distance, Euler-axis screen adjustment.
++    ("RED", "third"):       {"distance": .94, "angles": {}},
++    ("RED", "third_cinema"):{"distance": .96, "angles": {}},
++    ("RED", "fps"):         {"distance": 1.0, "angles": {}},
++    ("RED", "lolnam_cinema"):{"distance": 1.0, "angles": {"x": -3.0, "y": -3.0}},
++    ("RED", "geo_aim"):     {"distance": 1.0, "angles": {"x": -3.0}},
++    ("BLUE", "third"):      {"distance": 1.0, "angles": {"x": 3.0}},
++    ("BLUE", "third_cinema"):{"distance": 1.0, "angles": {}},   # protected #7
++    ("BLUE", "fps"):        {"distance": 1.0, "angles": {}},
++    ("BLUE", "lolnam_cinema"):{"distance": 1.0, "angles": {"x": 2.5}},
++    ("BLUE", "geo_aim"):    {"distance": 1.0, "angles": {"x": 2.5}},
++}
++
++
++def shot_tuning(team: str, style: str) -> dict:
++    side = "RED" if str(team).upper() in ("CHAOS", "RED") else "BLUE"
++    config = SHOT_TUNING.get((side, str(style)), {})
++    distance = float(config.get("distance", 1.0))
++    if not .87 <= distance <= 1.15:
++        raise ValueError("Invalid camera distance multiplier")
++    angles = dict(config.get("angles", {}))
++    if any(k not in ("x", "y", "z") or abs(float(v)) > 8.0 for k, v in angles.items()):
++        raise ValueError("Unsafe camera framing compensation")
++    return {"side": side, "mode": str(style), "distance": distance, "angles": angles}
+diff --git a/core/jobs.py b/core/jobs.py
+index 53e1eb0..715f241 100644
+--- a/core/jobs.py
++++ b/core/jobs.py
+@@ -224,6 +224,12 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
+                        team=getattr(player, 'team', 'ORDER'),
+                       sel_name=player.selection_name or player.champion)
+     plan._camera_axis_safety = tpl.style in ('third', 'geo_aim')
++    # v5.10.21: every approved camera has isolated, bounded composition
++    # adjustments. Never change the shared target-lock or Replay API protocol.
++    from .camera_tuning import shot_tuning
++    shot = shot_tuning(getattr(player, "team", "ORDER"), tpl.style)
++    plan._live_dist_factor = shot["distance"]
++    plan._live_angle_bias = shot["angles"]
+     # Side+mode-specific opt-in. BLUE geo_aim #10 is the visual reference;
+     # do not alter its existing pose or any RED third_cinema #2 framing.
+     # All modes still use the same replay/capture/audio engine.
+@@ -231,6 +237,11 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
+     plan._live_blue_geo_look = blue and tpl.style in ('third', 'third_cinema', 'lolnam_cinema')
+     plan._live_blue_pulled_back = blue and tpl.style == 'third'
+     plan._live_fps_recenter = tpl.style == 'fps'
++    if plan._live_fps_recenter and not blue:
++        # RED FPS #3: target-relative position must use the same ~192-degree
++        # RED side heading as cameraRotation; previously position used yaw=0
++        # while rotation aimed backwards at yaw=192, showing empty terrain.
++        plan._live_fps_side_heading = 192.0
+     plan._live_red_normal_reframe = (not blue and tpl.style == 'third' and side_choice == 'auto')
+     # QA-only readout: compare RED/BLUE rotations and positions numerically.
+     # No extra Replay API writes; normal production clips are unchanged.
+@@ -252,6 +263,8 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
+                 "side_heading_degrees": float(plan.side_yaw),
+                 "initial_camera_offset": plan.offset_at(start),
+                 "initial_camera_rotation": plan.rotation_at(start),
++                "shot_tuning": shot,
++                "fps_target_relative": bool(tpl.style == "fps" and getattr(plan, "_live_fps_recenter", False)),
+             }, ensure_ascii=False, default=str))
+         except Exception as diagnostic_error:
+             log(f"カメラQA数値ログ取得失敗（録画は継続）: {diagnostic_error}")
+diff --git a/core/qa_plan.py b/core/qa_plan.py
+index 384cd9b..82e6649 100644
+--- a/core/qa_plan.py
++++ b/core/qa_plan.py
+@@ -6,7 +6,7 @@ from pathlib import Path
+ from urllib.request import Request, urlopen
+ 
+ REMOTE_PLAN = ("https://raw.githubusercontent.com/Aimin2222/agdhnteweeffewwff/"
+-               "refs/heads/autocine/v5.10.20-camera-mode-isolation/"
++               "refs/heads/autocine/v5.10.21-camera-bat-color-qa/"
+                "LoL_AutoCine/qa/test_plan.json")
+ LOCAL_PLAN = Path(__file__).resolve().parents[1] / "qa" / "test_plan.json"
+ ALLOWED_CAMERA = ("third", "third_cinema", "fps", "lolnam_cinema", "geo_aim")
+diff --git a/legacy_app.py b/legacy_app.py
+index a5fcdbd..4b87aa4 100644
+--- a/legacy_app.py
++++ b/legacy_app.py
+@@ -558,6 +558,7 @@ class App:
+         self.var_pre = tk.DoubleVar(value=4.0)
+         self.var_post = tk.DoubleVar(value=3.0)
+         self.var_auto_director = tk.BooleanVar(value=False)  # preserve old one-click default
++        self.var_auto_director_strength = tk.DoubleVar(value=1.0)
+         self.var_smart_highlight_style = tk.StringVar(value=SMART_STYLES['auto'])
+         self.var_smart_highlight_enabled = tk.BooleanVar(value=False)
+         self.var_kill_icon_style = tk.StringVar(value=KILL_ICON_STYLES['off'])
+@@ -954,6 +955,7 @@ class App:
+                         command=self._update_easy_color_controls)
+         self._easy_color_toggle.pack(anchor="w", pady=(2, 2))
+         self._easy_color_panel = ttk.Frame(easy, style="Card.TFrame")
++        self.var_easy_color_custom.trace_add("write", lambda *_: self._update_easy_color_controls())
+ 
+         ttk.Label(easy, text="① リプレイを開く → ② 対象プレイヤーを選ぶ → ③ ボタン1つでキル/アシストを検出して動画を作成", style="CardMuted.TLabel", wraplength=900).pack(anchor="w", pady=(4, 7))
+         ttk.Button(easy, text="★ 自動作成（標準）", style="Accent.TButton", command=self.on_one_click).pack(fill="x", ipady=4)
+@@ -992,9 +994,21 @@ class App:
+         ttk.Button(easy, text="▣ 仕上がりを大きな比較画面で見る", command=self._open_easy_preset_comparison).pack(fill="x", pady=(4,5))
+         self.lbl_easy_preset = ttk.Label(easy, textvariable=self.var_tpl, style="CardMuted.TLabel")
+         self.lbl_easy_preset.pack(anchor="w", pady=(0, 3))
+-        ttk.Checkbutton(easy, text="自動ディレクター：キル数に合わせてカメラ演出を自動調整（任意）",
+-                        variable=self.var_auto_director).pack(anchor="w", pady=(6, 1))
+-        ttk.Label(easy, text="ON：キル数・シーンに合わせOrbitとドリーを調整。OFF：選んだカメラ設定を優先。",
++        self._director_toggle = ttk.Checkbutton(easy, text="自動ディレクター：キル数に合わせてカメラ演出を自動調整（任意）",
++                        variable=self.var_auto_director, command=self._update_auto_director_controls)
++        self._director_toggle.pack(anchor="w", pady=(6, 1))
++        self._auto_director_panel = ttk.Frame(easy, style="Card.TFrame")
++        self.var_auto_director.trace_add("write", lambda *_: self._update_auto_director_controls())
++        ttk.Label(self._auto_director_panel, text="自動カメラ演出の強さ（0～150%）",
++                  style="Card.TLabel").pack(anchor="w")
++        director_row = ttk.Frame(self._auto_director_panel, style="Card.TFrame")
++        director_row.pack(fill="x", pady=(2, 4))
++        ttk.Scale(director_row, from_=0, to=1.5, variable=self.var_auto_director_strength).pack(
++            side="left", fill="x", expand=True, padx=5)
++        ttk.Entry(director_row, textvariable=self.var_auto_director_strength, width=8).pack(side="right")
++        ttk.Label(self._auto_director_panel, text="キル数に応じた回り込み・接近量の倍率です。録画開始前に適用します。",
++                  style="CardMuted.TLabel", wraplength=550).pack(anchor="w")
++        ttk.Label(easy, text="ON：キル数・シーンに合わせてカメラの回り込みと接近を調整。OFF：選んだカメラ設定を優先。",
+                   style="CardMuted.TLabel").pack(anchor="w")
+         hud_easy = ttk.Frame(easy, style="Card.TFrame")
+         hud_easy.pack(fill="x", pady=(12, 2))
+@@ -2151,6 +2165,17 @@ class App:
+         widget.bind('<ButtonPress>',hide,add='+')
+         widget.bind('<Destroy>',lambda event:hide() if event.widget is widget else None,add='+')
+ 
++    def _update_auto_director_controls(self):
++        panel = getattr(self, "_auto_director_panel", None)
++        if panel is None:
++            return
++        if self.var_auto_director.get():
++            if not panel.winfo_manager():
++                panel.pack(after=self._director_toggle, fill="x", pady=(3, 7))
++        else:
++            if panel.winfo_manager():
++                panel.pack_forget()
++
+     def _update_easy_color_controls(self):
+         panel = getattr(self, "_easy_color_panel", None)
+         if panel is None:
+@@ -3960,7 +3985,8 @@ class App:
+             profile, arc, dolly = "cinematic", 14.0, 5.0
+         else:
+             profile, arc, dolly = "auto", 10.0, 3.0
+-        self._set_camera_motion(profile, arc, dolly)
++        strength = max(0.0, min(1.5, float(self.var_auto_director_strength.get())))
++        self._set_camera_motion(profile, arc * strength, dolly * strength)
+ 
+     def on_one_click(self, smart: bool = False) -> None:
+         if self.busy or not self._need_lock():
+diff --git a/qa/test_plan.json b/qa/test_plan.json
+index 37b8c5d..a178969 100644
+--- a/qa/test_plan.json
++++ b/qa/test_plan.json
+@@ -1,6 +1,6 @@
+ {
+   "schema_version": 1,
+-  "plan_id": "2026-10-12-camera-mode-isolation-recenter-no-duplicate-flashes",
++  "plan_id": "2026-10-12-red-blue-centered-fps-director-reference-bat",
+   "title": "RED/BLUE構図・FX差分・フレーム動き自動検証",
+   "camera_modes": [
+     "third",
+diff --git a/tests/test_v51021_camera_bat_color.py b/tests/test_v51021_camera_bat_color.py
+new file mode 100644
+index 0000000..d0e42f1
+--- /dev/null
++++ b/tests/test_v51021_camera_bat_color.py
+@@ -0,0 +1,100 @@
++# -*- coding: utf-8 -*-
++"""Safety and UI regressions for v5.10.21."""
++from pathlib import Path
++import pytest
++from core.camera import CameraPlan, RigInfo
++from core.camera_tuning import shot_tuning
++from tools.reference_video_review import find_reference_videos
++
++
++def test_single_mp4_can_be_dropped_on_reference_bat(tmp_path):
++    video=tmp_path/"reference video (Jhin).mp4"
++    video.write_bytes(b"not-a-real-mp4")
++    assert find_reference_videos(video)==[video]
++    assert find_reference_videos(tmp_path)==[video]
++    invalid=tmp_path/"notes.txt"
++    invalid.write_text("not a video",encoding="utf-8")
++    with pytest.raises(ValueError):
++        find_reference_videos(invalid)
++
++
++def test_cam_modes_are_isolated_and_blue7_is_protected():
++    b7=shot_tuning("ORDER","third_cinema")
++    assert b7["distance"]==1.0 and b7["angles"]=={}
++    assert shot_tuning("CHAOS","third_cinema")["angles"]=={}
++    assert shot_tuning("CHAOS","third")["distance"]<1.0
++    assert shot_tuning("CHAOS","lolnam_cinema")["angles"]
++    assert shot_tuning("ORDER","lolnam_cinema")["angles"]
++    assert shot_tuning("ORDER","geo_aim")["angles"]
++
++
++def test_fps_live_recenter_uses_target_relative_offset_not_distant_stale_camera():
++    rig=RigInfo(mode="fps", third=False, h=(-.5,-.8660254),
++                v=(7500.,1800.,-9000.),rot={"x":0,"y":56,"z":0})
++    plan=CameraPlan(style="fps",rig=rig,team="ORDER",third_dist=950,third_elev=42)
++    plan._live_fps_recenter=True
++    assert plan.offset_at(2.0)==plan.third_pose_at(2.0)[0]
++    assert abs(plan.offset_at(2.0)[0])<2500
++    assert abs(plan.offset_at(2.0)[2])<2500
++
++
++def test_mode_bias_changes_only_enabled_live_plan():
++    rig=RigInfo(mode="fps",third=True,h=(-.5,-.866),v=(-475,1800,-823),
++                rot={"x":0,"y":42,"z":0},pitch_axis="y",pitch_sign=1)
++    plan=CameraPlan(style="geo_aim",rig=rig,team="ORDER",third_dist=950,third_elev=42)
++    before=plan.rotation_at(0.0)
++    plan._live_angle_bias={"x":2.5}
++    after=plan.rotation_at(0.0)
++    assert after["x"]==pytest.approx(before["x"]+2.5)
++    assert after["y"]==before["y"]
++    untouched=CameraPlan(style="geo_aim",rig=rig,team="ORDER",third_dist=950,third_elev=42)
++    assert untouched.rotation_at(0.0)==before
++
++
++def test_easy_color_and_director_panels_follow_checkbox_live():
++    import tkinter as tk
++    from legacy_app import App
++    root=tk.Tk()
++    try:
++        app=App(root)
++        root.update_idletasks()
++        assert not app._easy_color_panel.winfo_manager()
++        assert not app._auto_director_panel.winfo_manager()
++        app.var_easy_color_custom.set(True)
++        app.var_auto_director.set(True)
++        root.update_idletasks()
++        assert app._easy_color_panel.winfo_manager()
++        assert app._auto_director_panel.winfo_manager()
++        assert len(app._easy_color_panel.winfo_children())==4
++        app.var_easy_color_custom.set(False)
++        app.var_auto_director.set(False)
++        root.update_idletasks()
++        assert not app._easy_color_panel.winfo_manager()
++        assert not app._auto_director_panel.winfo_manager()
++    finally:
++        root.destroy()
++
++
++def test_director_strength_controls_real_automatic_arc_and_dolly():
++    import tkinter as tk
++    from legacy_app import App
++    root=tk.Tk()
++    try:
++        app=App(root)
++        app.kills=[]
++        received=[]
++        app._set_camera_motion=lambda profile,arc,dolly:received.append((profile,arc,dolly))
++        app.var_auto_director_strength.set(.5)
++        app._apply_auto_director()
++        assert received[-1][1]==pytest.approx(5.0)
++        assert received[-1][2]==pytest.approx(1.5)
++    finally:
++        root.destroy()
++
++
++def test_bat_usage_mentions_video_and_persistent_log():
++    bat=(Path(__file__).resolve().parents[1]/"MAKE_REFERENCE_SHEETS.bat").read_text(encoding="utf-8")
++    assert "%~1" in bat
++    assert "AutoCine_ReferenceReview_latest.log" in bat
++    assert "tools.reference_video_review" in bat
++    assert "pause" in bat.lower()
+diff --git a/tools/reference_video_review.py b/tools/reference_video_review.py
+index 721a163..05e6cdc 100644
+--- a/tools/reference_video_review.py
++++ b/tools/reference_video_review.py
+@@ -27,9 +27,14 @@ def sanitized_filename(name, limit=88):
+ 
+ 
+ def find_reference_videos(directory):
++    """Accept a folder of clips OR one MP4 dropped directly onto the BAT."""
+     directory=Path(directory)
++    if directory.is_file():
++        if directory.suffix.lower() not in VIDEO_SUFFIXES:
++            raise ValueError("動画ファイル（MP4/MOV/MKV/WEBM）か動画フォルダーを指定してください")
++        return [directory]
+     if not directory.is_dir():
+-        raise FileNotFoundError(f"Not a video folder: {directory}")
++        raise FileNotFoundError(f"Video file/folder not found: {directory}")
+     return sorted(p for p in directory.rglob("*")
+                   if p.is_file() and p.suffix.lower() in VIDEO_SUFFIXES)
+ 
+@@ -43,11 +48,14 @@ def create_sheets(input_folder, output_folder, *, ffmpeg=None, logger=print):
+     shots=output/"frames"
+     shots.mkdir(exist_ok=True)
+     videos=find_reference_videos(input_folder)
++    input_root=Path(input_folder)
++    if input_root.is_file():
++        input_root=input_root.parent
+     report={"schema_version":1,"video_count":len(videos),"items":[],
+             "notice":"Human/assistant visual review required; no AI tracking or upload."}
+     for index,path in enumerate(videos,1):
+         entry={"number":index,"original_name":path.name,
+-               "relative_path":str(path.relative_to(input_folder)),
++               "relative_path":str(path.relative_to(input_root)),
+                "size_bytes":path.stat().st_size,"samples":[],
+                "contact_sheet":None,"errors":[]}
+         try:
+@@ -101,7 +109,7 @@ def create_sheets(input_folder, output_folder, *, ffmpeg=None, logger=print):
+ 
+ def main():
+     parser=argparse.ArgumentParser(description="Create contact sheets for every reference MP4")
+-    parser.add_argument("input_folder",type=Path,help="Folder containing reference video clips")
++    parser.add_argument("input_folder",type=Path,help="A folder of videos or one MP4/MOV/MKV/WEBM")
+     parser.add_argument("--output",type=Path,default=Path("ReferenceReview"))
+     args=parser.parse_args()
+     out=create_sheets(args.input_folder,args.output)

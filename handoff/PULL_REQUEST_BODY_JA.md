@@ -1,11 +1,9 @@
-カメラ切替で別モードの校正値と安定回転が混ざる可能性に対応し、両キャッシュをselection/team/styleで分離。同モードの再校正とリプレイ変更時のresetは保持。受領のBLUE通常third/シネマ/Lolnam・FPS・auto RED通常third補正をライブsetupに限定し、REDシネマ/BLUE geoの式とCameraPlan API/TargetLockを保持。画角改善はWindows未確認。
+FPSカメラで古いTop座標から空撮りになる可能性に対応し、対象相対poseへ変更。REDの位置と向きへ同じ192度を適用し、手動0/180度と高さ入力も保持。受領のチーム/モード別小補正を有限値・距離0.87〜1.15・角度±8度で制限。校正/stable rotationのチーム・モード分離とTargetLock/旧CameraPlan APIを保持。実構図改善はWindows未確認。
 
-かんたん色微調整をチェック直下に表示、OFFでも共有値保持。付属QA比較はcut/flash/darkの3種と6 GPU空間切替/6キル登場、全10種の通常編集機能は保持。任意の参照動画6時点シートをローカルZIPへ出力、空フォルダ処理を補正。元動画不変・自動アップロードなし。
+自動ディレクター強さと色パネルをチェック直下に展開。0%で既定Orbitが再生成される問題を補正し、UI snapshotをTemplate末尾の任意auto_director_strength（既定None）から実カメラへ接続。0/50/100%の接近量とOrbitを検証、旧位置引数/JSON/scene replace保持、不正値は開始前エラー。スタイル固有FOV/スロー/ローアングルは残る。参照BATは単体動画/フォルダ・入力別出力先・TEMPログ/pause。空入力ZIPと元動画保持のCodex補正も残す。
 
-受領指定のv15基準へ独立apply --check/適用し、受領v19との差分10パスを現行Codex v19へ選択統合。旧GPU全22FX/60fps/LoL専用音声/録画/NVENC policy/診断/CPU fallback/1MBstream 500MB直接ZIP/37PNG/103refs/過去配布物を保持。担当別ブランチと共有8blobレビュー、全107refs bundleを保存。添付の実機・Release記述は受領側資料として区別。
+受領指定v15基準へ独立apply --check/適用し、受領v20との差分12パスを現行Codex v20へ選択統合。旧GPU22FX/60fps/LoL専用音声/録画/NVENC/diagnostics/fallback/500MBstream ZIP/37PNG/107refs/過去配布物保持、全111refs bundleと共有8blobレビュー。GPU描画本体は変更せず任意のカメラ値だけTemplateへ追加。添付の実機/Release記述は受領側資料として区別。自動動画アップロードなし。
 
-検証: Linux/Xvfb全675成功（失敗/skip/除外なし、54.082秒）。実Replay API型fakeで別チーム/別モードのstable rotation混入を防ぎ、同モード180度安定化とresetを確認。実60fps MP4から6時点シート/空フォルダZIP/元動画不変を確認。既存GPU/UI/音声/ZIP回帰も成功。全ZIP CRC/ソース一致/差分apply/個人ファイル除外/全旧refsと配布物保持を検証。Windows/NVIDIA/LoL実機画角と速度は未確認、過去native終了原因は未確定。
+検証: Linux/Xvfb全696成功（失敗/skip/除外なし、58.339秒）。実カメラ計算とUIワーカーsnapshot、不正強さ/角度、FPS手動向き/高さ、単体実60fps動画の6時点シートと元動画不変、旧GPU/UI/音声/ZIP回帰を確認。ZIP CRC/ソース一致/差分apply/個人ファイル除外/旧refsと配布物保持を検証。Windows/NVIDIA/LoL画角とBAT実行は未確認、過去native終了原因は未確定。
 
-前回v5.10.19を比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、別フォルダでSTART_GPU.bat。実機手順docs/WINDOWS_TEST_v51020_JA.md。
-
-GitHubから別checkout/bundle復元で全486ソース/107refs/ZIP・bundle hashes一致。復元先代表166成功13.00秒、失敗/skip/除外なし、GC有効・強制GCなし。再setupで486ソース/107refs/3個人設定相当のバイト保持/status clean。これは同一クラウド内の別フォルダ検証で新しいcloud task/Windows/Publish検証とは別。環境install_script/start_skillをrevision38へ保存してreadback確認、他の既知設定保持、Publishは未実行。次回環境へ反映する場合だけ環境設定で確認・保存後Publish。
+前回v5.10.20を比較先とするDraft PR。mainへマージしません。完全ZIP→Download raw file、別フォルダでSTART_GPU.bat。実機手順docs/WINDOWS_TEST_v51021_JA.md。

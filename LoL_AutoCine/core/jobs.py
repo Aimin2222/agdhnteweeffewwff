@@ -223,7 +223,14 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                        side_yaw=((profile['yaw'] - 8.0 if tpl.style == 'third' and side_choice == 'auto' and str(getattr(player, 'team', '')).upper() in ('CHAOS', 'RED') else profile['yaw']) if live_third else 0.0),
                        team=getattr(player, 'team', 'ORDER'),
                       sel_name=player.selection_name or player.champion)
+    plan._auto_director_strength = getattr(tpl, "auto_director_strength", None)
     plan._camera_axis_safety = tpl.style in ('third', 'geo_aim')
+    # v5.10.21: every approved camera has isolated, bounded composition
+    # adjustments. Never change the shared target-lock or Replay API protocol.
+    from .camera_tuning import shot_tuning
+    shot = shot_tuning(getattr(player, "team", "ORDER"), tpl.style)
+    plan._live_dist_factor = shot["distance"]
+    plan._live_angle_bias = shot["angles"]
     # Side+mode-specific opt-in. BLUE geo_aim #10 is the visual reference;
     # do not alter its existing pose or any RED third_cinema #2 framing.
     # All modes still use the same replay/capture/audio engine.
@@ -231,6 +238,11 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
     plan._live_blue_geo_look = blue and tpl.style in ('third', 'third_cinema', 'lolnam_cinema')
     plan._live_blue_pulled_back = blue and tpl.style == 'third'
     plan._live_fps_recenter = tpl.style == 'fps'
+    if plan._live_fps_recenter and (not blue or side_choice != 'auto'):
+        # RED FPS #3: target-relative position must use the same ~192-degree
+        # RED side heading as cameraRotation; previously position used yaw=0
+        # while rotation aimed backwards at yaw=192, showing empty terrain.
+        plan._live_fps_side_heading = profile["yaw"]
     plan._live_red_normal_reframe = (not blue and tpl.style == 'third' and side_choice == 'auto')
     # QA-only readout: compare RED/BLUE rotations and positions numerically.
     # No extra Replay API writes; normal production clips are unchanged.
@@ -252,6 +264,8 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                 "side_heading_degrees": float(plan.side_yaw),
                 "initial_camera_offset": plan.offset_at(start),
                 "initial_camera_rotation": plan.rotation_at(start),
+                "shot_tuning": shot,
+                "fps_target_relative": bool(tpl.style == "fps" and getattr(plan, "_live_fps_recenter", False)),
             }, ensure_ascii=False, default=str))
         except Exception as diagnostic_error:
             log(f"カメラQA数値ログ取得失敗（録画は継続）: {diagnostic_error}")
