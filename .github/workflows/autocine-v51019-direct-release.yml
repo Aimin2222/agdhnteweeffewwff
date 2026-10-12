@@ -33,7 +33,7 @@ jobs:
       - name: Regression tests
         working-directory: LoL_AutoCine
         run: |
-          xvfb-run -a python -m pytest -q tests --disable-warnings
+          xvfb-run -a python -m pytest -q tests --disable-warnings -x
       - name: Build and verify Windows and Codex ZIPs
         run: |
           python - <<'PY'
