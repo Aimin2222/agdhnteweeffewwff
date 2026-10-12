@@ -48,6 +48,26 @@ def _delta(a, b):
     return round(sum(abs(x-y) for x,y in zip(data_a,data_b)) / max(1,len(data_a)), 2)
 
 
+def flat_upper_background_ratio(image):
+    """Heuristic only: fraction of the TOP 55% with nearly uniform color.
+
+    Out-of-map/sky LoL footage often has a giant flat green background and
+    very little gameplay. This is NOT a champion detector and cannot prove
+    that combat is in view. We deliberately sample from the actual MP4.
+    """
+    image = image.convert("RGB").resize((48, 32))
+    # Quantize with coarse RGB buckets to tolerate small video compression noise.
+    counts = {}
+    for y in range(0, 18):
+        for x in range(48):
+            r, g, b = image.getpixel((x, y))
+            if max(r, g, b) < 18 or min(r, g, b) > 242:
+                continue
+            key = (r // 16, g // 16, b // 16)
+            counts[key] = counts.get(key, 0) + 1
+    return round(max(counts.values(), default=0) / (48 * 18), 3)
+
+
 def make_qa_contact_sheets(folder, camera_entries, transition_entries, *,
                            log=lambda _m: None, transition_inputs=None):
     """Review 3 real points per camera and 3 frames around each transition.
@@ -83,6 +103,17 @@ def make_qa_contact_sheets(folder, camera_entries, transition_entries, *,
                 "suspected_black_or_flat":luminance<9 or contrast<6,
                 "sample_seconds": [round(t,2) for t in times],
                 "frame_motion": [_delta(frames[j],frames[j+1]) for j in (0,1)]})
+            flat_ratios = [flat_upper_background_ratio(frame) for frame in frames]
+            record = result["camera"][-1]
+            record["flat_upper_background_ratio"] = flat_ratios
+            record["suspected_sky_or_empty_frame"] = (
+                sum(ratio > 0.50 for ratio in flat_ratios) >= 2
+            )
+            # User still needs to inspect the character/kill framing manually.
+            record["framing_needs_human_review"] = (
+                record["suspected_black_or_flat"]
+                or record["suspected_sky_or_empty_frame"]
+            )
             camera_tiles.append((f'{case.get("number")} {side} {mode}',img))
             if side in side_tiles:
                 for when, fr in zip(("PRE","KILL","POST"),frames):
