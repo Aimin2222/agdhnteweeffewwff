@@ -1,0 +1,471 @@
+diff --git a/MAKE_REFERENCE_SHEETS.bat b/MAKE_REFERENCE_SHEETS.bat
+new file mode 100644
+index 0000000..0def556
+--- /dev/null
++++ b/MAKE_REFERENCE_SHEETS.bat
+@@ -0,0 +1,31 @@
++@echo off
++chcp 65001 >nul
++setlocal
++cd /d "%~dp0"
++if "%~1"=="" (
++  echo.
++  echo [AutoCine] xMedia / LoL MP4 フォルダーをこのBATへドラッグしてください。
++  echo フォルダー内の全MP4から6時点の比較画像をまとめて作成します。
++  echo.
++  pause
++  exit /b 1
++)
++set "SOURCE=%~1"
++if not exist "%SOURCE%\" (
++  echo [ERROR] 指定されたフォルダーがありません: %SOURCE%
++  pause
++  exit /b 2
++)
++set "RUNPY=python"
++if exist ".venv\Scripts\python.exe" set "RUNPY=.venv\Scripts\python.exe"
++if exist "venv\Scripts\python.exe" set "RUNPY=venv\Scripts\python.exe"
++echo [AutoCine] 参照動画の比較シートを作成中...
++"%RUNPY%" -m tools.reference_video_review "%SOURCE%" --output "%SOURCE%\_AutoCineReferenceReview"
++if errorlevel 1 (
++  echo [ERROR] 処理失敗。先にAutoCineの依存ライブラリをインストールしてください。
++  pause
++  exit /b 3
++)
++echo 完了: %SOURCE%\_AutoCineReferenceReview\ReferenceReview_contact_sheets.zip
++pause
++endlocal
+diff --git a/core/camera.py b/core/camera.py
+index 76643d3..f676ea8 100644
+--- a/core/camera.py
++++ b/core/camera.py
+@@ -365,6 +365,11 @@ class CameraPlan:
+             # カメラがキャラの周囲を公転する動き。Yは高さとして固定する。
+             extra_yaw, zoom, _ = self.keyframe_values(t)
+             dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
++            # BLUE #6 is cropped at the top. Allow breathing room only in
++            # normal third, not in approved geo_aim or RED cinema presets.
++            if (self.style == "third" and self.team not in ("CHAOS", "RED")
++                    and getattr(self, "_live_blue_pulled_back", False)):
++                dist *= 1.26
+             if self.smart_composition:
+                 # Conservatively raise/back out of terrain; image-space player
+                 # recognition cannot be guaranteed by Replay API coordinates.
+@@ -449,10 +454,50 @@ class CameraPlan:
+         s = self.scale_at(t)
+         if self.style == 'fps' and str(self.team).upper() in ('CHAOS', 'RED'):
+             s *= .76  # received RED-only FPS composition adjustment
++        if self.style == "fps" and getattr(self, "_live_fps_recenter", False):
++            # BLUE #8 observed a 2,900-unit rear offset with no player in
++            # frame. Pull this single style toward the locked target, then
++            # point at the target in rotation_at(). RED #3 remains wider.
++            s *= (0.54 if self.team not in ("CHAOS", "RED") else 0.89)
+         return (self.rig.v[0] * s, self.rig.v[1] * s + self.height, self.rig.v[2] * s)
+ 
++    def _live_geo_look(self, t: float) -> Optional[dict]:
++        """BLUE #10 verified camera convention: geometric look-at.
++
++        The third_cinema and Lolnam styles still differ in position, FOV,
++        orbit curve and zoom. Only the screen-facing rotation is shared in
++        their BLUE opt-in rescue path, instead of trusting an unstable Replay
++        pitch calibration from the last camera preset.
++        """
++        if self.rig is None or not self.rig.third:
++            return None
++        x, y, z = self.third_pose_at(t)[0]
++        horizontal = math.hypot(x, z)
++        if horizontal < 1.0:
++            return None
++        return {"x": math.degrees(math.atan2(y, horizontal)),
++                "y": math.degrees(math.atan2(-x, -z)) % 360.0,
++                "z": 0.0}
++
+     def rotation_at(self, t: float) -> Optional[dict]:
+         """確定版Orbitの三人称視線。カメラ位置の公転と同じ基準。"""
++        if self.style == "fps" and getattr(self, "_live_fps_recenter", False):
++            if self.rig is None or self.rig.v is None:
++                return None
++            if self.team in ("CHAOS", "RED"):
++                return {"x": -float(self.side_yaw or 192.0),
++                        "y": 42.0, "z": 0.0}
++            x, y, z = self.offset_at(t)
++            horizontal = math.hypot(x, z)
++            if horizontal < 1.0:
++                return None
++            return {"x": math.degrees(math.atan2(y, horizontal)),
++                    "y": math.degrees(math.atan2(-x, -z)) % 360.0,
++                    "z": 0.0}
++        if (self.style in ("third", "third_cinema", "lolnam_cinema")
++                and self.team not in ("CHAOS", "RED")
++                and getattr(self, "_live_blue_geo_look", False)):
++            return self._live_geo_look(t)
+         if self.style == "geo_aim":
+             if self.rig is None or not self.rig.third:
+                 return None
+@@ -529,7 +574,7 @@ class CameraPlan:
+             # Clamp the FINAL motion including kill cue. This prevents the
+             # supplemental nudge bypassing the safe ±55° bound.
+             motion = max(-55.0, min(55.0, motion))
+-        return self.side_yaw + motion
++        return self.side_yaw + motion + (8.0 if getattr(self, "_live_red_normal_reframe", False) else 0.0)
+ 
+     def _lolnam_orbit(self, t):
+         if self.style != 'lolnam_cinema':
+@@ -802,7 +847,11 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float =
+     現在値で軸を取れない場合は、同じ対象の直近の成功キャリブレーションを使う。
+     """
+     sel = p.selection_name or p.champion
+-    cache_key = (sel, 'third_common') if style in THIRD_STYLES else (sel, style)
++    # The old 'third_common' key let #6 BLUE normal third (calibrated
++    # from a stale 7,800-unit top camera) poison #7/#9's rotation and
++    # stabilization. Keep calibrated axes and last-good direction per
++    # player *and* camera preset. Never reuse another mode's stale rig.
++    cache_key = (sel, str(p.team).upper(), style)
+     cached = _TPS_CALIBRATION.get(cache_key)
+ 
+     api.set_render(selectionName=sel, cameraMode="top", cameraAttached=True,
+diff --git a/core/jobs.py b/core/jobs.py
+index f1de737..53e1eb0 100644
+--- a/core/jobs.py
++++ b/core/jobs.py
+@@ -224,6 +224,14 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
+                        team=getattr(player, 'team', 'ORDER'),
+                       sel_name=player.selection_name or player.champion)
+     plan._camera_axis_safety = tpl.style in ('third', 'geo_aim')
++    # Side+mode-specific opt-in. BLUE geo_aim #10 is the visual reference;
++    # do not alter its existing pose or any RED third_cinema #2 framing.
++    # All modes still use the same replay/capture/audio engine.
++    blue = str(getattr(player, 'team', '')).upper() in ('ORDER', 'BLUE')
++    plan._live_blue_geo_look = blue and tpl.style in ('third', 'third_cinema', 'lolnam_cinema')
++    plan._live_blue_pulled_back = blue and tpl.style == 'third'
++    plan._live_fps_recenter = tpl.style == 'fps'
++    plan._live_red_normal_reframe = (not blue and tpl.style == 'third' and side_choice == 'auto')
+     # QA-only readout: compare RED/BLUE rotations and positions numerically.
+     # No extra Replay API writes; normal production clips are unchanged.
+     if str(getattr(tpl, "name", "")).startswith("CameraQA "):
+diff --git a/core/qa_plan.py b/core/qa_plan.py
+index f51588e..384cd9b 100644
+--- a/core/qa_plan.py
++++ b/core/qa_plan.py
+@@ -6,7 +6,7 @@ from pathlib import Path
+ from urllib.request import Request, urlopen
+ 
+ REMOTE_PLAN = ("https://raw.githubusercontent.com/Aimin2222/agdhnteweeffewwff/"
+-               "refs/heads/autocine/v5.10.19-camera-framing-ui-review/"
++               "refs/heads/autocine/v5.10.20-camera-mode-isolation/"
+                "LoL_AutoCine/qa/test_plan.json")
+ LOCAL_PLAN = Path(__file__).resolve().parents[1] / "qa" / "test_plan.json"
+ ALLOWED_CAMERA = ("third", "third_cinema", "fps", "lolnam_cinema", "geo_aim")
+diff --git a/legacy_app.py b/legacy_app.py
+index 7549c68..a5fcdbd 100644
+--- a/legacy_app.py
++++ b/legacy_app.py
+@@ -949,9 +949,10 @@ class App:
+         ttk.Label(eh, text="★ かんたん作成", style="Section.TLabel").pack(side="left")
+         ttk.Label(eh, text="難しい設定は後から変更できます", style="CardMuted.TLabel").pack(side="right")
+         self.var_easy_color_custom = tk.BooleanVar(value=False)
+-        ttk.Checkbutton(easy, text="色だけ細かく調整する（ONで設定を表示）",
++        self._easy_color_toggle = ttk.Checkbutton(easy, text="色だけ細かく調整する（ONで設定を表示）",
+                         variable=self.var_easy_color_custom,
+-                        command=self._update_easy_color_controls).pack(anchor="w", pady=(2, 2))
++                        command=self._update_easy_color_controls)
++        self._easy_color_toggle.pack(anchor="w", pady=(2, 2))
+         self._easy_color_panel = ttk.Frame(easy, style="Card.TFrame")
+ 
+         ttk.Label(easy, text="① リプレイを開く → ② 対象プレイヤーを選ぶ → ③ ボタン1つでキル/アシストを検出して動画を作成", style="CardMuted.TLabel", wraplength=900).pack(anchor="w", pady=(4, 7))
+@@ -2156,7 +2157,12 @@ class App:
+             return
+         show = bool(self.var_easy_color_custom.get())
+         if show and not panel.winfo_manager():
+-            panel.pack(fill="x", pady=(3, 8))
++            # pack() without "after" previously added this panel at the VERY
++            # BOTTOM of the long easy editor. The user clicked ON and saw
++            # nothing. Keep it immediately below the triggering checkbox.
++            panel.pack(after=self._easy_color_toggle, fill="x", pady=(3, 8))
++            self.root.after_idle(lambda: self.center_edit_scroll.scroll_to(panel)
++                                 if panel.winfo_exists() and panel.winfo_manager() else None)
+         elif not show and panel.winfo_manager():
+             panel.pack_forget()
+ 
+diff --git a/qa/test_plan.json b/qa/test_plan.json
+index 22dda2e..37b8c5d 100644
+--- a/qa/test_plan.json
++++ b/qa/test_plan.json
+@@ -1,6 +1,6 @@
+ {
+   "schema_version": 1,
+-  "plan_id": "2026-10-12-red-blue-recenter-xfade-color-ui-review",
++  "plan_id": "2026-10-12-camera-mode-isolation-recenter-no-duplicate-flashes",
+   "title": "RED/BLUE構図・FX差分・フレーム動き自動検証",
+   "camera_modes": [
+     "third",
+@@ -12,14 +12,7 @@
+   "montage_styles": [
+     "cut",
+     "flash",
+-    "dark",
+-    "white",
+-    "soft",
+-    "gold",
+-    "cool",
+-    "pulse",
+-    "cinema",
+-    "shadow"
++    "dark"
+   ],
+   "badge_motions": [
+     "instant",
+@@ -32,13 +25,16 @@
+   "max_zip_mb": 500,
+   "include_visual_comparison": true,
+   "manual_review": [
+-    "RED third fallback",
+-    "RED camera pitch axis Y",
+-    "BLUE distant rig reference",
+-    "kill action in frame",
+-    "transition style visually distinct"
++    "RED normal third: action in center, no inversion",
++    "RED cinema: preserve previously approved framing",
++    "RED FPS/Lolnam/geo: combat subject closer to center",
++    "BLUE normal third: wider, no head crop",
++    "BLUE cinema/Lolnam: visible combat, no obstructing rock or grass",
++    "BLUE geo aim: preserve approved shot #10",
++    "Easy mode color settings visible directly beneath toggle",
++    "True wipe/slide/circle/pixelize motion: not all one white flash"
+   ],
+-  "note": "This is a data-only plan. It can be updated on the selected QA branch without changing executable application code.",
++  "note": "3 distinct legacy tests instead of 10 similar brightness pulses; 6 spatial motions remain QA only. Results go into 500 MB max direct ZIPs.",
+   "spatial_transition_previews": [
+     "fade",
+     "wipeleft",
+diff --git a/tests/test_v51020_camera_mode_isolation.py b/tests/test_v51020_camera_mode_isolation.py
+new file mode 100644
+index 0000000..4638f3e
+--- /dev/null
++++ b/tests/test_v51020_camera_mode_isolation.py
+@@ -0,0 +1,107 @@
++# -*- coding: utf-8 -*-
++"""Mode-specific Windows visual QA fixes must not change approved camera modes."""
++from dataclasses import fields
++from pathlib import Path
++import inspect
++import math
++import pytest
++
++from core.camera import CameraPlan, RigInfo, attach_to_player
++from core.qa_plan import load_qa_plan,validate_plan
++
++
++def good_rig(h=(-0.21,-0.978)):
++    return RigInfo(mode="fps",third=True,h=h,
++                   rot={"x":0.0,"y":53.0,"z":0.0},
++                   pitch_axis="y",pitch_sign=1.0,pitch_complement=True)
++
++
++def test_camera_dataclass_abi_preserved_and_cache_isolated_by_mode():
++    assert fields(CameraPlan)[-1].name=="team"
++    src=inspect.getsource(attach_to_player)
++    assert 'cache_key = (sel, str(p.team).upper(), style)' in src
++    assert 'third_common' not in src.split("cache_key =",1)[1].split("cached =",1)[0]
++
++
++def test_blue_cinema_uses_approved_geo_aim_rotation_only_when_live_opt_in():
++    rig=good_rig()
++    cinema=CameraPlan(style="third_cinema",rig=rig,team="ORDER",
++                      third_dist=1060,third_elev=37,side_yaw=-12,kill_time=30)
++    reference=CameraPlan(style="geo_aim",rig=rig,team="ORDER",
++                         third_dist=1060,third_elev=37,side_yaw=-12,kill_time=30)
++    normal=cinema.rotation_at(30)
++    cinema._live_blue_geo_look=True
++    # Actual frame orientation now uses the same geometric convention as
++    # visually good BLUE geo #10, but camera position/zoom remain independent.
++    live=cinema.rotation_at(30)
++    assert live["z"]==0
++    assert math.isfinite(live["x"]) and math.isfinite(live["y"])
++    assert live!=normal
++    assert reference.rotation_at(30)["z"]==0
++
++
++def test_blue_normal_third_pull_back_is_opt_in():
++    plan=CameraPlan(style="third",rig=good_rig(),team="ORDER",
++                    third_dist=1060,third_elev=37,side_yaw=-12)
++    before=plan.offset_at(0.0)
++    plan._live_blue_pulled_back=True
++    after=plan.offset_at(0.0)
++    assert math.dist((0,0,0),after)>math.dist((0,0,0),before)*1.19
++
++
++def test_approved_blue_geo_aim_unchanged_by_new_flags():
++    p=CameraPlan(style="geo_aim",rig=good_rig(),team="ORDER",
++                 third_dist=1060,third_elev=37,side_yaw=-12)
++    result=p.rotation_at(20)
++    p._live_blue_geo_look=True
++    p._live_blue_pulled_back=True
++    p._live_fps_recenter=True
++    assert p.rotation_at(20)==result
++
++
++def test_approved_red_cinema_unchanged_by_blue_opt_in():
++    p=CameraPlan(style="third_cinema",rig=good_rig(),team="CHAOS",
++                 third_dist=1170,third_elev=42,side_yaw=192,kill_time=20)
++    result=p.rotation_at(20)
++    p._live_blue_geo_look=True
++    assert p.rotation_at(20)==result
++
++
++def test_fps_live_recenter_has_orientation_but_old_direct_plan_is_compatible():
++    rig=RigInfo(mode="fps",third=False,v=(-700.,1900.,-2800.))
++    p=CameraPlan(style="fps",rig=rig,team="ORDER")
++    assert p.rotation_at(1) is None
++    before=p.offset_at(1)
++    p._live_fps_recenter=True
++    assert p.rotation_at(1) is not None
++    assert math.dist((0,0,0),p.offset_at(1)) < math.dist((0,0,0),before)
++
++
++def test_curated_qa_has_one_flash_and_real_spatial_distinctions():
++    plan,source=load_qa_plan(allow_remote=False)
++    assert set(plan["montage_styles"])=={"cut","flash","dark"}
++    assert len(plan["spatial_transition_previews"])==6
++    assert "wipeleft" in plan["spatial_transition_previews"]
++    assert "slideright" in plan["spatial_transition_previews"]
++
++
++def test_simple_color_toggle_expands_adjacent_to_checkbox():
++    import tkinter as tk
++    from legacy_app import App
++    root=tk.Tk()
++    try:
++        app=App(root)
++        app.var_easy_color_custom.set(True)
++        app._update_easy_color_controls()
++        root.update_idletasks()
++        panel=app._easy_color_panel
++        assert panel.winfo_manager()=="pack"
++        # Tk's pack_info() discards the original 'after' option. Verify
++        # the actual on-screen ordering instead.
++        siblings=panel.master.pack_slaves()
++        assert siblings.index(panel)==siblings.index(app._easy_color_toggle)+1
++        app.var_easy_color_custom.set(False)
++        app._update_easy_color_controls()
++        assert not panel.winfo_manager()
++    finally:
++        root.destroy()
+diff --git a/tools/reference_video_review.py b/tools/reference_video_review.py
+new file mode 100644
+index 0000000..721a163
+--- /dev/null
++++ b/tools/reference_video_review.py
+@@ -0,0 +1,112 @@
++# -*- coding: utf-8 -*-
++"""Local batch-reference review for xMedia and unviewable clip uploads.
++
++Video bytes stay on Windows. This helper writes only small JPEG contact
++sheets and JSON; never executes code from videos, downloads from the web,
++or uploads anything to GitHub. It does not perform AI character detection.
++"""
++from __future__ import annotations
++import argparse
++from io import BytesIO
++import json
++from pathlib import Path
++import re
++import subprocess
++import zipfile
++
++from PIL import Image, ImageDraw, ImageOps
++
++
++VIDEO_SUFFIXES = {".mp4", ".mov", ".mkv", ".webm"}
++SAMPLE_FRACTIONS = (0.06, 0.22, 0.38, 0.54, 0.70, 0.88)
++
++
++def sanitized_filename(name, limit=88):
++    safe = re.sub(r'[^a-zA-Z0-9_.-]+', '_', name).strip('._')
++    return (safe or 'reference')[:limit]
++
++
++def find_reference_videos(directory):
++    directory=Path(directory)
++    if not directory.is_dir():
++        raise FileNotFoundError(f"Not a video folder: {directory}")
++    return sorted(p for p in directory.rglob("*")
++                  if p.is_file() and p.suffix.lower() in VIDEO_SUFFIXES)
++
++
++def create_sheets(input_folder, output_folder, *, ffmpeg=None, logger=print):
++    from core.gpu_binary import ffmpeg_exe
++    from core.montage_fx import get_duration
++    executable=str(ffmpeg or ffmpeg_exe())
++    output=Path(output_folder)
++    output.mkdir(parents=True,exist_ok=True)
++    shots=output/"frames"
++    shots.mkdir(exist_ok=True)
++    videos=find_reference_videos(input_folder)
++    report={"schema_version":1,"video_count":len(videos),"items":[],
++            "notice":"Human/assistant visual review required; no AI tracking or upload."}
++    for index,path in enumerate(videos,1):
++        entry={"number":index,"original_name":path.name,
++               "relative_path":str(path.relative_to(input_folder)),
++               "size_bytes":path.stat().st_size,"samples":[],
++               "contact_sheet":None,"errors":[]}
++        try:
++            length=float(get_duration(path,ffmpeg=executable))
++            if not (0.2<=length<7200):
++                raise ValueError("Unsupported duration")
++            entry["duration_seconds"]=round(length,3)
++            tiles=[]
++            for sample,ratio in enumerate(SAMPLE_FRACTIONS,1):
++                second=max(0.0,min(length-.06,length*ratio))
++                command=[executable,"-nostdin","-hide_banner","-loglevel","error",
++                         "-ss",f"{second:.3f}","-i",str(path),
++                         "-frames:v","1","-vf","scale=480:270",
++                         "-f","image2pipe","-vcodec","png","-"]
++                result=subprocess.run(command,capture_output=True,timeout=40)
++                if result.returncode!=0 or not result.stdout:
++                    entry["errors"].append(f"frame {sample}: "+str(result.stderr[-200:]))
++                    continue
++                with Image.open(BytesIO(result.stdout)) as raw:
++                    img=raw.convert("RGB").copy()
++                tiles.append((img,second))
++                entry["samples"].append(round(second,2))
++            if tiles:
++                # Three columns, two rows, all frames labeled by actual time.
++                w,h,band=480,270,24
++                sheet=Image.new("RGB",(w*3,(h+band)*2),"#e6ebf2")
++                draw=ImageDraw.Draw(sheet)
++                for n,(img,second) in enumerate(tiles):
++                    x=(n%3)*w
++                    y=(n//3)*(h+band)
++                    sheet.paste(img,(x,y+band))
++                    draw.text((x+8,y+5),f"Frame {n+1} | {second:.2f} s",fill="#182338")
++                filename=f"{index:03d}_{sanitized_filename(path.stem)}.jpg"
++                destination=shots/filename
++                sheet.save(destination,quality=86,optimize=True)
++                entry["contact_sheet"]=str(destination.relative_to(output))
++                logger(f"[{index}/{len(videos)}] {path.name} -> {filename}")
++        except (OSError,ValueError,subprocess.SubprocessError) as exc:
++            entry["errors"].append(f"{type(exc).__name__}: {exc}")
++            logger(f"[{index}/{len(videos)}] Could not inspect {path.name}: {exc}")
++        report["items"].append(entry)
++        (output/"reference_review.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
++    with zipfile.ZipFile(output/"ReferenceReview_contact_sheets.zip","w",compression=zipfile.ZIP_DEFLATED) as z:
++        z.write(output/"reference_review.json","reference_review.json")
++        for entry in report["items"]:
++            if entry["contact_sheet"]:
++                p=output/entry["contact_sheet"]
++                z.write(p,entry["contact_sheet"])
++    return output/"ReferenceReview_contact_sheets.zip"
++
++
++def main():
++    parser=argparse.ArgumentParser(description="Create contact sheets for every reference MP4")
++    parser.add_argument("input_folder",type=Path,help="Folder containing reference video clips")
++    parser.add_argument("--output",type=Path,default=Path("ReferenceReview"))
++    args=parser.parse_args()
++    out=create_sheets(args.input_folder,args.output)
++    print("Contact-sheet ZIP:",out)
++
++
++if __name__=="__main__":
++    main()

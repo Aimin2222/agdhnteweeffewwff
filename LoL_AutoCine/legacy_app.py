@@ -949,9 +949,10 @@ class App:
         ttk.Label(eh, text="★ かんたん作成", style="Section.TLabel").pack(side="left")
         ttk.Label(eh, text="難しい設定は後から変更できます", style="CardMuted.TLabel").pack(side="right")
         self.var_easy_color_custom = tk.BooleanVar(value=False)
-        ttk.Checkbutton(easy, text="色だけ細かく調整する（ONで設定を表示）",
+        self._easy_color_toggle = ttk.Checkbutton(easy, text="色だけ細かく調整する（ONで設定を表示）",
                         variable=self.var_easy_color_custom,
-                        command=self._update_easy_color_controls).pack(anchor="w", pady=(2, 2))
+                        command=self._update_easy_color_controls)
+        self._easy_color_toggle.pack(anchor="w", pady=(2, 2))
         self._easy_color_panel = ttk.Frame(easy, style="Card.TFrame")
 
         ttk.Label(easy, text="① リプレイを開く → ② 対象プレイヤーを選ぶ → ③ ボタン1つでキル/アシストを検出して動画を作成", style="CardMuted.TLabel", wraplength=900).pack(anchor="w", pady=(4, 7))
@@ -2161,7 +2162,12 @@ class App:
             return
         show = bool(self.var_easy_color_custom.get())
         if show and not panel.winfo_manager():
-            panel.pack(fill="x", pady=(3, 8))
+            # pack() without "after" previously added this panel at the VERY
+            # BOTTOM of the long easy editor. The user clicked ON and saw
+            # nothing. Keep it immediately below the triggering checkbox.
+            panel.pack(after=self._easy_color_toggle, fill="x", pady=(3, 8))
+            self.root.after_idle(lambda: self.center_edit_scroll.scroll_to(panel)
+                                 if panel.winfo_exists() and panel.winfo_manager() else None)
         elif not show and panel.winfo_manager():
             panel.pack_forget()
 

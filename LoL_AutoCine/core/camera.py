@@ -388,6 +388,11 @@ class CameraPlan:
             # カメラがキャラの周囲を公転する動き。Yは高さとして固定する。
             extra_yaw, zoom, _ = self.keyframe_values(t)
             dist *= max(0.7, min(1.3, 1.0 - zoom / 100.0))
+            # BLUE #6 is cropped at the top. Allow breathing room only in
+            # normal third, not in approved geo_aim or RED cinema presets.
+            if (self.style == "third" and self.team not in ("CHAOS", "RED")
+                    and getattr(self, "_live_blue_pulled_back", False)):
+                dist *= 1.26
             if self.smart_composition:
                 # Conservatively raise/back out of terrain; image-space player
                 # recognition cannot be guaranteed by Replay API coordinates.
@@ -472,10 +477,50 @@ class CameraPlan:
         s = self.scale_at(t)
         if self.style == 'fps' and str(self.team).upper() in ('CHAOS', 'RED'):
             s *= .76  # received RED-only FPS composition adjustment
+        if self.style == "fps" and getattr(self, "_live_fps_recenter", False):
+            # BLUE #8 observed a 2,900-unit rear offset with no player in
+            # frame. Pull this single style toward the locked target, then
+            # point at the target in rotation_at(). RED #3 remains wider.
+            s *= (0.54 if self.team not in ("CHAOS", "RED") else 0.89)
         return (self.rig.v[0] * s, self.rig.v[1] * s + self.height, self.rig.v[2] * s)
+
+    def _live_geo_look(self, t: float) -> Optional[dict]:
+        """BLUE #10 verified camera convention: geometric look-at.
+
+        The third_cinema and Lolnam styles still differ in position, FOV,
+        orbit curve and zoom. Only the screen-facing rotation is shared in
+        their BLUE opt-in rescue path, instead of trusting an unstable Replay
+        pitch calibration from the last camera preset.
+        """
+        if self.rig is None or not self.rig.third:
+            return None
+        x, y, z = self.third_pose_at(t)[0]
+        horizontal = math.hypot(x, z)
+        if horizontal < 1.0:
+            return None
+        return {"x": math.degrees(math.atan2(y, horizontal)),
+                "y": math.degrees(math.atan2(-x, -z)) % 360.0,
+                "z": 0.0}
 
     def rotation_at(self, t: float) -> Optional[dict]:
         """確定版Orbitの三人称視線。カメラ位置の公転と同じ基準。"""
+        if self.style == "fps" and getattr(self, "_live_fps_recenter", False):
+            if self.rig is None or self.rig.v is None:
+                return None
+            if self.team in ("CHAOS", "RED"):
+                return {"x": -float(self.side_yaw or 192.0),
+                        "y": 42.0, "z": 0.0}
+            x, y, z = self.offset_at(t)
+            horizontal = math.hypot(x, z)
+            if horizontal < 1.0:
+                return None
+            return {"x": math.degrees(math.atan2(y, horizontal)),
+                    "y": math.degrees(math.atan2(-x, -z)) % 360.0,
+                    "z": 0.0}
+        if (self.style in ("third", "third_cinema", "lolnam_cinema")
+                and self.team not in ("CHAOS", "RED")
+                and getattr(self, "_live_blue_geo_look", False)):
+            return self._live_geo_look(t)
         if self.style == "geo_aim":
             if self.rig is None or not self.rig.third:
                 return None
@@ -552,7 +597,7 @@ class CameraPlan:
             # Clamp the FINAL motion including kill cue. This prevents the
             # supplemental nudge bypassing the safe ±55° bound.
             motion = max(-55.0, min(55.0, motion))
-        return self.side_yaw + motion
+        return self.side_yaw + motion + (8.0 if getattr(self, "_live_red_normal_reframe", False) else 0.0)
 
     def _lolnam_orbit(self, t):
         if self.style != 'lolnam_cinema':
@@ -825,7 +870,11 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
     現在値で軸を取れない場合は、同じ対象の直近の成功キャリブレーションを使う。
     """
     sel = p.selection_name or p.champion
-    cache_key = (sel, 'third_common') if style in THIRD_STYLES else (sel, style)
+    # The old 'third_common' key let #6 BLUE normal third (calibrated
+    # from a stale 7,800-unit top camera) poison #7/#9's rotation and
+    # stabilization. Keep calibrated axes and last-good direction per
+    # player *and* camera preset. Never reuse another mode's stale rig.
+    cache_key = (sel, str(p.team).upper(), style)
     cached = _TPS_CALIBRATION.get(cache_key)
 
     api.set_render(selectionName=sel, cameraMode="top", cameraAttached=True,
@@ -968,7 +1017,7 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
             axis, sign, pitch_complement = "y", 1.0, False
             rot_use = {"x": 0.0, "y": max(18.0, min(58.0, float(third_elev))), "z": 0.0}
         else:
-            stable = _TPS_STABLE_ROTATIONS.get((sel, axis)) or (cached.get('rot') if cached else None)
+            stable = _TPS_STABLE_ROTATIONS.get((*cache_key, axis)) or (cached.get('rot') if cached else None)
             rot_use = stabilize_non_pitch_rotation(rot_use, stable, axis, log=log)
     else:
         if style in THIRD_STYLES:
@@ -1032,7 +1081,7 @@ def _cache_success(cache_key, P, v, rot, h, axis, sign, log, note,
                    pitch_complement=False) -> RigInfo:
     """成功した三人称リグを次の seek/録画でも再利用できる形で保存する。"""
     if axis and isinstance(rot, dict):
-        _TPS_STABLE_ROTATIONS[(cache_key[0], axis)] = dict(rot)
+        _TPS_STABLE_ROTATIONS[(*cache_key, axis)] = dict(rot)
     _TPS_CALIBRATION[cache_key] = {
         "P": tuple(P) if P is not None else None,
         "v": tuple(v) if v is not None else None,
