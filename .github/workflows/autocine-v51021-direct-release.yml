@@ -13,7 +13,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  windows-reference-smoke:
+    runs-on: windows-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install minimum reference media deps
+        run: python -m pip install pillow imageio-ffmpeg numpy psutil
+      - name: Generate real 2s MP4
+        shell: pwsh
+        working-directory: LoL_AutoCine
+        run: |
+          New-Item -ItemType Directory -Force -Path ci_test_media | Out-Null
+          python -c "import imageio_ffmpeg, subprocess; subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), '-hide_banner','-loglevel','error','-y','-f','lavfi','-i','color=c=blue:s=640x360:r=30:d=2','-c:v','mpeg4','ci_test_media/ci_demo.mp4'],check=True)"
+      - name: Test drag-and-drop MP4 and folder on actual Windows
+        shell: cmd
+        working-directory: LoL_AutoCine
+        run: |
+          call MAKE_REFERENCE_SHEETS.bat "%CD%\\ci_test_media\\ci_demo.mp4"
+          if errorlevel 1 exit /b 1
+          if not exist "%CD%\\ci_test_media\\_AutoCineReferenceReview_ci_demo\\ReferenceReview_contact_sheets.zip" exit /b 2
+          call MAKE_REFERENCE_SHEETS.bat "%CD%\\ci_test_media"
+          if errorlevel 1 exit /b 3
+          if not exist "%CD%\\ci_test_media\\_AutoCineReferenceReview\\ReferenceReview_contact_sheets.zip" exit /b 4
+
   test-and-package:
+    needs: windows-reference-smoke
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
