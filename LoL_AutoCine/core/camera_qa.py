@@ -73,7 +73,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
     folder.mkdir(parents=True, exist_ok=True)
     manifest = {
-        "version": "5.10.17-test",
+        "version": "5.10.19-test",
         "kind": "live_replay_camera_test",
         "expected_clips": len(scenarios),
         "test_plan": config,
@@ -82,6 +82,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         "outputs": [],
         "montage_tests": [],
         "badge_motion_tests": [],
+        "team_review_videos": [],
         "limitations": "Framing must be judged visually on Windows. Audio/codec need playback or ffprobe.",
     }
     def flush():
@@ -122,7 +123,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
             progress(index-1, len(scenarios), round(100*(index-1)/len(scenarios),1), f"{side} {label} を録画中")
         try:
             result = run_auto_edit(
-                api, source, player, [scene], clip_template, folder / f"{index:02d}_{side}_{mode}",
+                api, source, player, [scene], clip_template, folder / side / f"{index:02d}_{mode}",
                 False, progress=None, stop=stop, log=capture_camera_log, audio_factory=audio_factory)
             current["outputs"] = [str(p) for p in result.outputs]
             current["failed"] = [[int(i), str(msg)] for i,msg in result.failed]
@@ -139,18 +140,48 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     # capture/audio session on identical footage. Keep the outputs separate.
     generated = [Path(p) for row in manifest["outputs"] for p in row["outputs"]]
     ready = [p for p in generated if p.is_file()]
+    # Make exactly one contiguous review video per side. No need to open
+    # ten separate MP4 files just to compare RED and BLUE framing.
+    if ready and not (stop is not None and stop.is_set()):
+        from .montage_fx import render_montage
+        for side in ("RED","BLUE"):
+            side_clips = [Path(p) for row in manifest["outputs"] if row["side"] == side
+                          for p in row["outputs"] if Path(p).is_file()]
+            if not side_clips:
+                continue
+            dest = folder / side / f"{side}_all_cameras_review.mp4"
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            review = {"side":side, "source_count":len(side_clips), "outputs":[], "failed":[]}
+            try:
+                render_montage(side_clips, dest, style="cut", logger=log)
+                if dest.is_file():
+                    review["outputs"] = [str(dest)]
+                else:
+                    review["failed"] = ["combined video missing"]
+            except Exception as exc:
+                review["failed"] = [f"{type(exc).__name__}: {exc}"]
+                log(f"{side} カメラまとめ動画に失敗: {exc}")
+            manifest["team_review_videos"].append(review)
+            flush()
     if len(ready) >= 2 and not (stop is not None and stop.is_set()):
+        # Use a RED shot and a BLUE shot that actually show the fight in QA
+        # as judged by the user's previous feedback, rather than the first
+        # two camera tests (which contain inverted/upside-down examples).
+        candidates = [Path(row["outputs"][0]) for row in manifest["outputs"]
+                      if row["outputs"] and row["mode"] in ("third_cinema","lolnam_cinema")]
+        pair = candidates[:2] if len(candidates)>=2 else ready[:2]
         from .montage_fx import MONTAGE_LABELS, render_montage
         for style in MONTAGE_LABELS:
             if config is not None and style not in config['montage_styles']:
                 continue
             if stop is not None and stop.is_set():
                 break
-            dest = folder / f"transition_{style}.mp4"
+            dest = folder / "Transitions" / f"transition_{style}.mp4"
+            dest.parent.mkdir(parents=True, exist_ok=True)
             outcome = {"style": style, "label": MONTAGE_LABELS[style],
                        "outputs": [], "failed": []}
             try:
-                applied = render_montage(ready[:2], dest, style=style, logger=log)
+                applied = render_montage(pair, dest, style=style, logger=log)
                 outcome["applied_style"] = applied
                 if dest.is_file():
                     outcome["outputs"] = [str(dest)]
@@ -167,7 +198,8 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     if ready and not (stop is not None and stop.is_set()):
         from .kill_icons import STYLES
         theme = template.kill_icon_style if template.kill_icon_style in STYLES and template.kill_icon_style != "off" else "cinema"
-        badge = folder / "badge_motion_qa_image.png"
+        badge = folder / "KillFrames" / "badge_motion_qa_image.png"
+        badge.parent.mkdir(parents=True, exist_ok=True)
         try:
             make_badge(badge, theme)
             for motion, label in MOTION_STYLES.items():
@@ -175,7 +207,8 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
                     continue
                 if stop is not None and stop.is_set():
                     break
-                dest = folder / f"badge_motion_{motion}.mp4"
+                dest = folder / "KillFrames" / f"badge_motion_{motion}.mp4"
+                dest.parent.mkdir(parents=True, exist_ok=True)
                 entry = {"motion": motion, "label": label, "outputs": [], "failed": []}
                 try:
                     # FFmpeg filter used by production, not a Python mock;
