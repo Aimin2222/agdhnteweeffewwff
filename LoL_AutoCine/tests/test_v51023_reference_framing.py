@@ -19,7 +19,7 @@ def test_approved_red2_red4_red5_modes_are_unchanged():
 
 def test_red1_has_no_roll_angle_and_aim_bias_is_independent():
     red=shot_tuning("RED","third")
-    assert red["angles"]=={"x":4.0}
+    assert red["angles"]=={} # RED1 geometric look-at replaces manual bias
     assert "z" not in red["angles"]
     assert shot_tuning("BLUE","third")["angles"]=={"x":3.0}
 
@@ -46,7 +46,7 @@ def test_red_fps_live_pitch_matches_relative_vector_not_fixed_42():
     rot=plan.rotation_at(0.0)
     pos=plan.offset_at(0.0)
     reference_pitch=math.degrees(math.atan2(pos[1],math.hypot(pos[0],pos[2])))
-    assert rot["x"] == pytest.approx(-192.0)
+    assert rot["x"] == pytest.approx(-192.0)  # legacy plan without LIVE geometric-aim flag
     assert rot["y"] == pytest.approx(reference_pitch+3.0)
     assert rot["z"] == 0.0
     assert rot["y"] < 42.0
@@ -63,7 +63,7 @@ def test_reference_launcher_accepts_mp4_and_rejects_zip(tmp_path):
     runner=(Path(__file__).resolve().parents[1]/"MAKE_REFERENCE_SHEETS.bat").read_text(encoding="ascii")
     assert "where py" in runner
     assert ":PICK_SOURCE" in runner
-    assert 'if /I "%~x1"==".zip"' in runner
+    assert ":ZIP_INPUT" not in runner  # valid video ZIP now accepted
     assert "reference_review_latest.log" in runner
 
 

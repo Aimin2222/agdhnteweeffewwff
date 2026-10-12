@@ -13,11 +13,17 @@ from pathlib import Path
 import re
 import subprocess
 import zipfile
+import tempfile
+import os
 
 from PIL import Image, ImageDraw, ImageOps
 
 
 VIDEO_SUFFIXES = {".mp4", ".mov", ".mkv", ".webm"}
+ZIP_MAX_VIDEOS = 120
+ZIP_MAX_VIDEO_BYTES = 1_000_000_000
+ZIP_MAX_TOTAL_BYTES = 4_000_000_000
+ZIP_COPY_BYTES = 1024 * 1024
 SAMPLE_FRACTIONS = (0.06, 0.22, 0.38, 0.54, 0.70, 0.88)
 
 
@@ -40,6 +46,54 @@ def find_reference_videos(directory):
 
 
 def create_sheets(input_folder, output_folder, *, ffmpeg=None, logger=print):
+    # Accept a reference ZIP as well as direct MP4 files/folders. Extraction
+    # uses safe locally generated names: never trust archive member paths.
+    src = Path(input_folder)
+    if src.is_file() and src.suffix.lower() == ".zip":
+        if not zipfile.is_zipfile(src):
+            raise ValueError("このZIPは壊れているかZIP形式ではありません")
+        with tempfile.TemporaryDirectory(prefix="autocine_reference_") as td:
+            extracted = Path(td)
+            mappings = []
+            try:
+                with zipfile.ZipFile(src) as archive:
+                    members = [m for m in archive.infolist() if not m.is_dir()
+                               and Path(m.filename).suffix.lower() in VIDEO_SUFFIXES]
+                    if not members:
+                        raise ValueError("ZIP内にMP4/MOV/MKV/WEBMがありません")
+                    if (len(members) > ZIP_MAX_VIDEOS
+                            or any(m.file_size > ZIP_MAX_VIDEO_BYTES for m in members)
+                            or sum(m.file_size for m in members) > ZIP_MAX_TOTAL_BYTES):
+                        raise ValueError("動画数・解凍後容量が安全上限を超えました（120本・各1GB・合計4GB以内）")
+                    total_copied = 0
+                    for count, member in enumerate(members, 1):
+                        # Flatten names even when an archive contains ../ or
+                        # Windows drive/UNC paths; never extract member paths.
+                        filename = (f"{count:03d}_" +
+                                    sanitized_filename(Path(member.filename).stem) +
+                                    Path(member.filename).suffix.lower())
+                        target = extracted / filename
+                        copied = 0
+                        with archive.open(member) as reader, target.open("wb") as writer:
+                            while chunk := reader.read(ZIP_COPY_BYTES):
+                                copied += len(chunk)
+                                total_copied += len(chunk)
+                                if (copied > ZIP_MAX_VIDEO_BYTES
+                                        or total_copied > ZIP_MAX_TOTAL_BYTES):
+                                    raise ValueError("動画の解凍後容量が安全上限を超えました")
+                                writer.write(chunk)
+                        mappings.append({"archived_name": member.filename,
+                                         "extracted_name": filename})
+            except (zipfile.BadZipFile, RuntimeError, NotImplementedError) as exc:
+                raise ValueError("ZIPを読み込めません（破損・暗号化・非対応圧縮を確認）") from exc
+            result = create_sheets(extracted, output_folder, ffmpeg=ffmpeg, logger=logger)
+            out = Path(output_folder)
+            mapping_path = out / "reference_archive_names.json"
+            mapping_path.write_text(json.dumps({"source_zip": src.name, "items": mappings},
+                                               ensure_ascii=False, indent=2), encoding="utf-8")
+            with zipfile.ZipFile(result, "a", compression=zipfile.ZIP_DEFLATED) as archive:
+                archive.write(mapping_path, "reference_archive_names.json")
+            return result
     from core.gpu_binary import ffmpeg_exe
     from core.montage_fx import get_duration
     executable=str(ffmpeg or ffmpeg_exe())
@@ -118,8 +172,8 @@ def choose_source():
     root.withdraw()
     try:
         selected = filedialog.askopenfilename(
-            parent=root, title="AutoCine - 参考動画のMP4を選択（キャンセルでフォルダーを選択）",
-            filetypes=[("動画", "*.mp4 *.mov *.mkv *.webm"),
+            parent=root, title="AutoCine - 参考動画の動画またはZIPを選択（キャンセルでフォルダーを選択）",
+            filetypes=[("動画・ZIP", "*.mp4 *.mov *.mkv *.webm *.zip"),
                        ("すべてのファイル", "*.*")])
         if not selected:
             selected = filedialog.askdirectory(parent=root, title="AutoCine - 動画フォルダーを選択")
@@ -135,20 +189,25 @@ def main():
     parser.add_argument("input_folder",nargs="?",type=Path,
                         help="A video file or a folder. Omit to open a picker.")
     parser.add_argument("--output",type=Path,default=None)
+    parser.add_argument("--open-output",action="store_true",help="Open output folder on Windows after success")
     args=parser.parse_args()
     source=args.input_folder if args.input_folder is not None else choose_source()
     if source is None:
         print("No reference video selected; nothing was changed.")
         return
-    if source.suffix.lower()==".zip":
-        raise ValueError("ZIPは直接入力できません。展開してMP4か動画フォルダーを指定してください。")
     # Default destination next to the selected source and never inside MP4.
     dest = args.output
     if dest is None:
         dest = (source/"_AutoCineReferenceReview" if source.is_dir()
                 else source.parent / ("_AutoCineReferenceReview_"+source.stem))
     out=create_sheets(source,dest)
-    print("Contact-sheet ZIP:",out)
+    print("Contact-sheet ZIP:",out.resolve())
+    print("[AutoCine] REVIEW ZIP:",out.resolve())
+    if args.open_output and os.name == "nt" and not os.environ.get("CI"):
+        try:
+            subprocess.Popen(["explorer.exe",str(out.resolve().parent)])
+        except OSError as exc:
+            print("Could not open the output folder:",exc)
 
 
 if __name__=="__main__":

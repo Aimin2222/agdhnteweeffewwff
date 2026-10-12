@@ -24,6 +24,7 @@ from typing import Callable, Optional
 from .players import Player
 from .replay_api import ReplayAPI, ReplayApiError
 from .camera_clock import SmoothReplayClock
+from .camera_tuning import target_center_rotation
 
 INTENSITY = {"natural": 0.6, "standard": 1.0, "strong": 1.4}
 INTENSITY_JP = {"natural": "自然め", "standard": "標準", "strong": "強め"}
@@ -548,6 +549,11 @@ class CameraPlan:
             if self.rig is None or self.rig.v is None:
                 return None
             if self.team in ("CHAOS", "RED"):
+                if getattr(self, "_live_red_target_center", False):
+                    try:
+                        return target_center_rotation(self.offset_at(t))
+                    except (TypeError, ValueError, OverflowError):
+                        return None
                 # Use the actual target-relative position, including independent
                 # height and pullback, while preserving manual 0/180 headings.
                 dx, dy, dz = self.offset_at(t)
@@ -589,6 +595,13 @@ class CameraPlan:
         if self.style in ("third", "third_cinema"):
             if self.rig is None or not self.rig.third or not self.rig.rot or not self.rig.pitch_axis:
                 return None
+            if (self.style == "third" and self.team in ("CHAOS", "RED")
+                    and getattr(self, "_live_red_target_center", False)):
+                # RED auto only: position and facing use the same vector.
+                try:
+                    return target_center_rotation(self.third_pose_at(t)[0])
+                except (TypeError, ValueError, OverflowError):
+                    return None
             if self.style == "third" and getattr(self, "_camera_axis_safety", False):
                 # Windows QA #1 and #6 saw a spurious X pitch calibration.
                 # It drove yaw through Z=-184deg (roll/inversion) and used a
