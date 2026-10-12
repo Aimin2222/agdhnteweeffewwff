@@ -230,6 +230,7 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
     shot = shot_tuning(getattr(player, "team", "ORDER"), tpl.style)
     plan._live_dist_factor = shot["distance"]
     plan._live_angle_bias = shot["angles"]
+    plan._live_fps_back = shot["fps_back"]
     # Side+mode-specific opt-in. BLUE geo_aim #10 is the visual reference;
     # do not alter its existing pose or any RED third_cinema #2 framing.
     # All modes still use the same replay/capture/audio engine.
