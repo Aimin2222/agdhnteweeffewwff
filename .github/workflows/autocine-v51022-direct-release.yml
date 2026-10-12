@@ -1,0 +1,153 @@
+name: AutoCine v5.10.22 Direct ZIP Release and Smart Camera QA
+on:
+  push:
+    branches:
+      - autocine/v5.10.22-utf8-singleclick-camera-qa
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: autocine-v51022-test-release
+  cancel-in-progress: true
+
+jobs:
+  windows-reference-smoke:
+    runs-on: windows-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install minimum reference media deps
+        run: python -m pip install pillow imageio-ffmpeg numpy psutil
+      - name: Generate real 2s MP4
+        shell: pwsh
+        working-directory: LoL_AutoCine
+        run: |
+          New-Item -ItemType Directory -Force -Path ci_test_media | Out-Null
+          python -c "import imageio_ffmpeg, subprocess; subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), '-hide_banner','-loglevel','error','-y','-f','lavfi','-i','color=c=blue:s=640x360:r=30:d=2','-c:v','mpeg4','ci_test_media/ci_demo.mp4'],check=True)"
+      - name: Test drag-and-drop MP4 and folder on actual Windows
+        shell: cmd
+        working-directory: LoL_AutoCine
+        run: |
+          call MAKE_REFERENCE_SHEETS.bat "%CD%\ci_test_media\ci_demo.mp4"
+          if errorlevel 1 exit /b 1
+          if not exist "%CD%\ci_test_media\_AutoCineReferenceReview_ci_demo\ReferenceReview_contact_sheets.zip" exit /b 2
+          call MAKE_REFERENCE_SHEETS.bat "%CD%\ci_test_media"
+          if errorlevel 1 exit /b 3
+          if not exist "%CD%\ci_test_media\_AutoCineReferenceReview\ReferenceReview_contact_sheets.zip" exit /b 4
+
+
+      - name: Japanese filename and folder BAT smoke test
+        shell: pwsh
+        working-directory: LoL_AutoCine
+        run: |
+          $env:CI = "1"
+          python -c "from pathlib import Path; import shutil; d=Path('ci_test_media')/'日本語 動画'; d.mkdir(parents=True,exist_ok=True); shutil.copyfile('ci_test_media/ci_demo.mp4', d/'カメラ比較.mp4')"
+          cmd /c 'call MAKE_REFERENCE_SHEETS.bat "ci_test_media\日本語 動画\カメラ比較.mp4"'
+          if ($LASTEXITCODE -ne 0) { throw "Japanese path failed" }
+          if (!(Test-Path 'ci_test_media\日本語 動画\_AutoCineReferenceReview_カメラ比較\ReferenceReview_contact_sheets.zip')) { throw "Japanese MP4 output missing" }
+
+  test-and-package:
+    needs: windows-reference-smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install GUI and FFmpeg prerequisites
+        run: |
+          if ! command -v xvfb-run >/dev/null || ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y xvfb ffmpeg
+          fi
+          python -m pip install -r LoL_AutoCine/requirements.txt pytest
+      - name: Check syntax
+        run: python -m compileall -q LoL_AutoCine
+      - name: Audit every tracked source text file encoding
+        run: python LoL_AutoCine/tools/check_text_encoding.py
+      - name: Regression tests
+        working-directory: LoL_AutoCine
+        run: |
+          python - <<'PY'
+          # Isolate Tk/FFmpeg/Xvfb processes so destroyed Tk root callbacks
+          # cannot accumulate for 600 tests and segfault the GUI runner.
+          from pathlib import Path
+          import subprocess,sys
+          files=sorted(Path('tests').rglob('test_*.py'))
+          assert files, "No test files found"
+          chunk=12
+          for n in range(0,len(files),chunk):
+              batch=files[n:n+chunk]
+              print(f"=== Batch {n//chunk+1}: {len(batch)} test files ===",flush=True)
+              cmd=["xvfb-run","-a",sys.executable,"-m","pytest","-q",
+                   "--disable-warnings","-x",*[str(p) for p in batch]]
+              subprocess.run(cmd,check=True)
+          PY
+      - name: Build and verify Windows and Codex ZIPs
+        run: |
+          python - <<'PY'
+          import hashlib, pathlib, subprocess, zipfile, tempfile
+          base="0e8e8f65362fd10a3ab9509c3fcbb4580b72691d"
+          root=pathlib.Path("LoL_AutoCine")
+          out=pathlib.Path("builds/v5.10.22")
+          out.mkdir(parents=True,exist_ok=True)
+          full=out/"LoL_AutoCine_v5.10.22_Windows_Test_Full.zip"
+          with zipfile.ZipFile(full,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=6) as z:
+              for p in sorted(root.rglob("*")):
+                  if not p.is_file() or p.suffix in (".pyc",".pyo") or any(
+                          part in {".pytest_cache","__pycache__","diagnostics",".git","output"}
+                          for part in p.parts):
+                      continue
+                  z.write(p,p.as_posix())
+          patch=out/"v5.10.22_from_Codex_5.10.15.patch"
+          patch.write_bytes(subprocess.check_output(
+              ["git","diff","--binary",base,"HEAD","--","LoL_AutoCine"]))
+          if not patch.read_bytes():
+              raise RuntimeError("Empty diff")
+          with tempfile.TemporaryDirectory(prefix="autocine-base-") as td:
+              work=pathlib.Path(td)/"base"
+              subprocess.run(["git","worktree","add","--detach",str(work),base],check=True)
+              try:
+                  subprocess.run(["git","-C",str(work),"apply","--check",str(patch.resolve())],check=True)
+              finally:
+                  subprocess.run(["git","worktree","remove","--force",str(work)],check=True)
+          readme=out/"CODEX_INTEGRATION_README_JA.txt"
+          readme.write_text(
+              "基準: Codex v5.10.15 branch sha "+base+"\n"
+              "mainやCodex統合ブランチは変更していません。\n"
+              "パッチを適用する前に git apply --check を実行してください。\n"
+              "異なるCodexバージョンにはGPU/音声/録画を上書きせず個別レビューしてください。\n"
+              "Windows用フル版はテスト用です。Codex統合版の置換に使わないでください。\n",
+              encoding="utf-8")
+          diff=out/"LoL_AutoCine_v5.10.22_Codex_MergeChanges.zip"
+          with zipfile.ZipFile(diff,"w",zipfile.ZIP_DEFLATED) as z:
+              z.write(patch,patch.name)
+              z.write(readme,readme.name)
+              z.write(root/"tests"/"test_v51022_oneclick_utf8_camera.py",
+                      "tests/test_v51022_oneclick_utf8_camera.py")
+          for p in [full,diff]:
+              with zipfile.ZipFile(p) as z:
+                  bad=z.testzip()
+                  if bad: raise RuntimeError("Bad ZIP CRC "+str(bad))
+              print("VERIFIED",p,p.stat().st_size,hashlib.sha256(p.read_bytes()).hexdigest())
+          PY
+      - name: Publish two ZIPs directly to GitHub Releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="autocine-v5.10.22-test-$(git rev-parse --short=10 HEAD)"
+          gh release create "$tag" \
+            builds/v5.10.22/LoL_AutoCine_v5.10.22_Windows_Test_Full.zip \
+            builds/v5.10.22/LoL_AutoCine_v5.10.22_Codex_MergeChanges.zip \
+            --target "$GITHUB_SHA" --prerelease \
+            --title "LoL AutoCine v5.10.22 Test ($GITHUB_SHA)" \
+            --notes "Windowsテスト用フル版とCodex統合用差分を直接配布。二重ZIPではありません。実機カメラの構図は未保証。"
+          gh release view "$tag" --json assets,url
