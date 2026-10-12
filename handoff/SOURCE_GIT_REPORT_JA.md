@@ -1,40 +1,37 @@
-# v5.10.24-test 保存状況
+# v5.10.25-test 保存状況
 
-ソース /workspace/LoL_AutoCine、integration/v5.10.24、HEAD eebfebda8a385895df805825bc56d84c7db4f762、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51024-target-center-zip-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。status --shortは開始時空。mainへマージしない。
+ソース /workspace/LoL_AutoCine、integration/v5.10.25、HEAD 74942417d9fc64ee2923032942f02fdb1f7a81b7、remoteなし。取得用 /workspace/agdhnteweeffewwff、codex/lol-autocine-v51025-blue6-reference-handoff、origin https://github.com/Aimin2222/agdhnteweeffewwff.git。開始時status --shortは空。mainへマージしない。
 
 ## git log -3 --oneline（ソース）
 ```text
-eebfebd Document v5.10.24 scoped aim, ZIP workflow and Windows regression checks
-097431f Integrate bounded ZIP and protected camera regression checks
-aaba727 Bound reference ZIP extraction and verify v23 protected camera geometry and real frames
+7494241 Validate v5.10.25 packaging against its actual camera tuning change
+d5df167 Document v5.10.25 BLUE6-only tilt, passive reference catalog and Windows tests
+569afa3 Integrate complete keyframe regression data
 ```
 ## git remote -v（取得用）
 ```text
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (fetch)
 origin	https://github.com/Aimin2222/agdhnteweeffewwff.git (push)
 ```
-## 前回v5.10.23からの実変更
+## 前回v5.10.24からの実変更
 ```text
-M	MAKE_REFERENCE_SHEETS.bat
 M	VERSION.txt
-M	core/camera.py
 M	core/camera_tuning.py
-M	core/jobs.py
 M	core/qa_plan.py
-A	docs/CODEX_INTEGRATION_v51024_JA.md
-A	docs/CODEX_SHARED_API_REVIEW_v5.10.24.json
-A	docs/RECEIVED_HANDOFF_2026-10-11_JA.md
-A	docs/RECEIVED_IMPLEMENTATION_v51024_JA.md
-A	docs/WINDOWS_TEST_v51024_JA.md
-A	patches/history/v5.10.24/RECEIVED_CODE.patch
-A	patches/history/v5.10.24/RECEIVED_README_JA.txt
+A	docs/CODEX_INTEGRATION_v51025_JA.md
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.25.json
+A	docs/RECEIVED_IMPLEMENTATION_v51025_JA.md
+A	docs/WINDOWS_TEST_v51025_JA.md
+A	patches/history/v5.10.25/RECEIVED_CODE.patch
+A	patches/history/v5.10.25/RECEIVED_README_JA.txt
 M	qa/test_plan.json
-A	tests/test_gpu_target_center_zip_v51024.py
+A	qa/xmedia_reference_notes_v51025.json
+A	tests/test_gpu_blue6_scope_v51025.py
+M	tests/test_gpu_target_center_zip_v51024.py
 M	tests/test_v51023_reference_framing.py
-A	tests/test_v51024_red_center_zip_reference.py
+A	tests/test_v51025_blue6_and_reference_notes.py
 M	tools/check_parallel_integration.py
-A	tools/package_v51024.py
-M	tools/reference_video_review.py
+A	tools/package_v51025.py
 ```
 ## 元v5.8.5からの実変更
 ```text
@@ -183,6 +180,7 @@ A	docs/CODEX_INTEGRATION_v51021_JA.md
 A	docs/CODEX_INTEGRATION_v51022_JA.md
 A	docs/CODEX_INTEGRATION_v51023_JA.md
 A	docs/CODEX_INTEGRATION_v51024_JA.md
+A	docs/CODEX_INTEGRATION_v51025_JA.md
 A	docs/CODEX_INTEGRATION_v5104_JA.md
 A	docs/CODEX_INTEGRATION_v5105_JA.md
 A	docs/CODEX_INTEGRATION_v5106_JA.md
@@ -225,6 +223,7 @@ A	docs/CODEX_SHARED_API_REVIEW_v5.10.21.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.22.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.23.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.24.json
+A	docs/CODEX_SHARED_API_REVIEW_v5.10.25.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.4.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.5.json
 A	docs/CODEX_SHARED_API_REVIEW_v5.10.6.json
@@ -251,6 +250,7 @@ A	docs/RECEIVED_IMPLEMENTATION_v51021_JA.md
 A	docs/RECEIVED_IMPLEMENTATION_v51022_JA.md
 A	docs/RECEIVED_IMPLEMENTATION_v51023_JA.md
 A	docs/RECEIVED_IMPLEMENTATION_v51024_JA.md
+A	docs/RECEIVED_IMPLEMENTATION_v51025_JA.md
 A	docs/RECEIVED_RED_CAMERA_EVIDENCE_v51017_JA.md
 A	docs/RECEIVED_TEST_RESULTS_v5.10.15_JA.md
 A	docs/REQUIREMENTS_SCENESTUDIO_JA.md
@@ -271,6 +271,7 @@ A	docs/WINDOWS_TEST_v51021_JA.md
 A	docs/WINDOWS_TEST_v51022_JA.md
 A	docs/WINDOWS_TEST_v51023_JA.md
 A	docs/WINDOWS_TEST_v51024_JA.md
+A	docs/WINDOWS_TEST_v51025_JA.md
 A	docs/WINDOWS_TEST_v5105_JA.md
 A	docs/WINDOWS_TEST_v5106_JA.md
 A	docs/WINDOWS_TEST_v5107_JA.md
@@ -345,15 +346,19 @@ A	patches/history/v5.10.23/RECEIVED_CODE.patch
 A	patches/history/v5.10.23/RECEIVED_README_JA.txt
 A	patches/history/v5.10.24/RECEIVED_CODE.patch
 A	patches/history/v5.10.24/RECEIVED_README_JA.txt
+A	patches/history/v5.10.25/RECEIVED_CODE.patch
+A	patches/history/v5.10.25/RECEIVED_README_JA.txt
 A	patches/history/v5.10.8_from_codex_v5.10.7.patch
 A	patches/history/v51011_from_v51010.patch
 A	patches/history/v51013_reviewed_code.patch
 A	patches/history/v5106_from_codex_v5105.patch
 A	patches/v594_to_v595.patch
 A	qa/test_plan.json
+A	qa/xmedia_reference_notes_v51025.json
 A	tests/test_editor_ui_contract.py
 A	tests/test_encoding_audit_v51022.py
 A	tests/test_gpu_badge_qa_v51017.py
+A	tests/test_gpu_blue6_scope_v51025.py
 A	tests/test_gpu_camera_director_v51021.py
 A	tests/test_gpu_camera_isolation_v51020.py
 A	tests/test_gpu_capture60_v5103.py
@@ -413,6 +418,7 @@ A	tests/test_v51021_camera_bat_color.py
 A	tests/test_v51022_oneclick_utf8_camera.py
 A	tests/test_v51023_reference_framing.py
 A	tests/test_v51024_red_center_zip_reference.py
+A	tests/test_v51025_blue6_and_reference_notes.py
 A	tests/test_v5102_circle_focus_preset.py
 A	tests/test_v5103_nonblocking_dispatch.py
 A	tests/test_v5104_notebook_livefx_camera.py
@@ -450,6 +456,7 @@ A	tools/package_v51021.py
 A	tools/package_v51022.py
 A	tools/package_v51023.py
 A	tools/package_v51024.py
+A	tools/package_v51025.py
 A	tools/package_v5103.py
 A	tools/package_v5103_capture60.py
 A	tools/package_v5103_capturefix.py
@@ -482,7 +489,4 @@ A	ui/smart_montage.py
 A	ui/studio_localization.py
 A	ui/template_gallery.py
 ```
-
-全527ソース/Python190・全123refs。旧119先端/37PNG/GPU・音声・録画保護22パス・旧配布物220件を保持。GPUeffects/音声/録画本体byte不変。個人設定/録画/診断を追加・削除しない。
-
-sourceのstatus --shortは空、remoteなし。取得用の固定payload ce515f0988446f7ea29b6c3100cba576647f78bb、Draft PR40（前回v23を比較先）。mainは未変更。全変更はコミット保存済み、個人データを除去していない。復元/repeat/全776件と復元代表267件/設定保存の証拠はVERIFICATION_v5.10.24.json。
+全537ソース/Python193・全127refs。旧123先端/37PNG/保護28パス/旧配布物229件保持。GPU・音声・録画・UI・camera/jobs本体byte不変。個人ファイルを追加・削除しない。
