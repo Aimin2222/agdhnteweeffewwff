@@ -220,10 +220,17 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                        smart_composition=bool(getattr(tpl, 'smart_composition', False)),
                        smart_impact=(float(getattr(tpl, 'highlight_pulse', 0.0))
                                      if getattr(tpl, 'smart_highlight_enabled', False) else 0.0), rig=rig,
-                       side_yaw=((profile['yaw'] - 8.0 if tpl.style == 'third' and side_choice == 'auto' and str(getattr(player, 'team', '')).upper() in ('CHAOS', 'RED') else profile['yaw']) if live_third else 0.0),
+                       side_yaw=(profile['yaw'] if live_third else 0.0),
                        team=getattr(player, 'team', 'ORDER'),
                       sel_name=player.selection_name or player.champion)
     plan._camera_axis_safety = tpl.style in ('third', 'geo_aim')
+    # Side+mode-specific opt-in. BLUE geo_aim #10 is the visual reference;
+    # do not alter its existing pose or any RED third_cinema #2 framing.
+    # All modes still use the same replay/capture/audio engine.
+    blue = str(getattr(player, 'team', '')).upper() in ('ORDER', 'BLUE')
+    plan._live_blue_geo_look = blue and tpl.style in ('third', 'third_cinema', 'lolnam_cinema')
+    plan._live_blue_pulled_back = blue and tpl.style == 'third'
+    plan._live_fps_recenter = tpl.style == 'fps'
     # QA-only readout: compare RED/BLUE rotations and positions numerically.
     # No extra Replay API writes; normal production clips are unchanged.
     if str(getattr(tpl, "name", "")).startswith("CameraQA "):
