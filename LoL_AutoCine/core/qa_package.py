@@ -28,7 +28,7 @@ def split_test_results(folder: Path, *, max_bytes: int = DEFAULT_MAX_BYTES,
     limit = max_bytes - min(SAFETY_BYTES, max_bytes // 12)
     chunk_bytes = min(CHUNK_BYTES, max(512_000, limit - 5_000_000))
     sources = sorted(p for p in folder.rglob("*") if p.is_file()
-                     and p.suffix.lower() in {".mp4", ".json", ".txt", ".md", ".csv"})
+                     and p.suffix.lower() in {".mp4", ".json", ".txt", ".md", ".csv", ".jpg", ".png"})
     if not sources:
         return []
     outputs = []
