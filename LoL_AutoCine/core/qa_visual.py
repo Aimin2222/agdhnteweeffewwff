@@ -53,20 +53,28 @@ def make_qa_contact_sheets(folder, camera_entries, transition_entries, *, log=la
         if not files:
             continue
         try:
-            img = frame_at(Path(files[0]), 2.0)
+            # 3 phases instead of a single potentially unrepresentative
+            # frame. Rotation jumps and temporary loss of the champion are
+            # often invisible in the old 2s-only QA contact sheet.
+            samples = []
+            for phase, moment in (("前", 1.0),("キル付近",3.0),("後",5.0)):
+                img = frame_at(Path(files[0]), moment)
+                samples.append((phase,img))
+                camera_tiles.append((f'{case.get("number")} {case.get("side")} {case.get("mode")} {phase}',img))
+            img = samples[1][1]
             gray = ImageStat.Stat(img.convert("L"))
             contrast = round(gray.stddev[0],2)
             luminance = round(gray.mean[0],2)
             case_report = {"number": case.get("number"),"side": case.get("side"),
                            "mode":case.get("mode"),"mean_brightness":luminance,
                            "texture_contrast":contrast,
+                           "sample_times_s":[1.0,3.0,5.0],
                            "suspected_black_or_flat":luminance<9 or contrast<6}
             result["camera"].append(case_report)
-            camera_tiles.append((f'{case.get("number")} {case.get("side")} {case.get("mode")}',img))
         except Exception as exc:
             log(f"カメラ比較画像取得失敗: {exc}")
     try:
-        path = _sheet(camera_tiles, folder/"camera_comparison.jpg")
+        path = _sheet(camera_tiles, folder/"camera_comparison.jpg",columns=3)
         if path: result["images"].append(path)
     except Exception as exc:
         log("カメラ比較表作成失敗: "+str(exc))
