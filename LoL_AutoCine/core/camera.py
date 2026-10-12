@@ -516,8 +516,18 @@ class CameraPlan:
             if self.rig is None or self.rig.v is None:
                 return None
             if self.team in ("CHAOS", "RED"):
-                return {"x": -float(self.side_yaw or 192.0),
-                        "y": 42.0, "z": 0.0}
+                # RED FPS #3 kept the subject high and off-screen: it sent a
+                # fixed 42-degree downward pitch even when the target from
+                # the actual camera offset was only ~28 degrees below the
+                # horizon. Aim at that target-relative offset instead.
+                dx, dy, dz = self.offset_at(t)
+                horizontal = math.hypot(dx, dz)
+                if horizontal < 1.0:
+                    return None
+                look_down = math.degrees(math.atan2(dy, horizontal))
+                return {"x": -float(getattr(self, "_live_fps_side_heading", 192.0)),
+                        "y": max(18.0, min(52.0, look_down + 3.0)),
+                        "z": 0.0}
             x, y, z = self.offset_at(t)
             horizontal = math.hypot(x, z)
             if horizontal < 1.0:
