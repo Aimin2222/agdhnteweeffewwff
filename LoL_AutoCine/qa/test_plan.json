@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "plan_id": "2026-10-13-blue6-subject-position-reference-qa",
+  "plan_id": "2026-10-13-v51026-retake-correct-version-blue-sky-sanity",
   "title": "v5.10.25 毎回自動収集: 10カメラ・切替・登場FX・画像・診断",
   "camera_modes": [
     "third",
@@ -25,12 +25,13 @@
   "max_zip_mb": 500,
   "include_visual_comparison": true,
   "manual_review": [
-    "BLUE 6 通常3人称: キル前・瞬間・後に主役と敵が上端へ切れないか（v5.10.24と比べる）",
-    "RED 1, RED 3: 既に中央寄せされたキル瞬間を維持、天地反転なし",
-    "RED 2/4/5: 今回一切パラメータを変更しない。過去の良い構図を維持",
-    "BLUE 7/8/9/10: 位置・視線とも変更なし、問題あれば実動画確認",
-    "xMedia参考動画は静止画と代表例の説明のみ確認済み。動きの正確な抽出は元MP4復旧後",
-    "各モードのPRE/KILL/POST、RED/BLUE集約MP4、Transition/Badge/診断JSONを収集、<=500MBの単層ZIPに分割"
+    "重要: results.jsonのversion/installed_versionがv5.10.26-testであることを確認。古い版なら別フォルダに展開・起動し直す",
+    "BLUE #6-10: PRE/KILL/POSTで空/マップ外の単色背景が出ないか。疑わしい場合、flat_upper_background_ratioを確認",
+    "RED #1/#3: v5.10.24で改善した中央寄せ維持・Zロール/反転なし",
+    "RED #2/#4/#5: 以前良かった構図は維持",
+    "BLUE #6: v5.10.25で試験のX-2.0設定のまま。別ブランチのX-4.0とは混同しない",
+    "BLUE #7/#8/#9/#10: 見切れた場合は映像とログを送る（v5.10.23の古いQAでは空が多い）",
+    "切替3種・空間6種の動画動作も比較、全part ZIPとresults.jsonと診断ログを収集"
   ],
   "note": "3 distinct legacy tests instead of 10 similar brightness pulses; 6 spatial motions remain QA only. Results go into 500 MB max direct ZIPs.",
   "spatial_transition_previews": [
