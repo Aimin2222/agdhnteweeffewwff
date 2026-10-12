@@ -118,7 +118,7 @@ class Template:
     name: str = "カスタム"
     style: str = "cinema"            # camera.STYLES
     intensity: str = "standard"      # natural / standard / strong
-    grade: str = "tealorange"
+    grade: str = "default"  # unset = preserve original LoL colors
     grade_strength: float = 0.8      # 0-1.4
     temperature: float = 0.0         # -1..1 (暖色+)
     contrast: float = 1.0            # 0.6..1.6 (追加)
