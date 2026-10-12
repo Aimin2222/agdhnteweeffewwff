@@ -113,7 +113,12 @@ def make_qa_contact_sheets(folder, camera_entries, transition_entries, *,
         name = case.get("style", "?")
         try:
             path=Path(files[0])
-            frames=[frame_at(path, max(.05,boundary+dt))
+            # Spatial xfade previews are intentionally shorter than the full
+            # montage. Their own midpoint is the true join; old previews use
+            # the first source clip's duration instead.
+            join = (get_duration(path,ffmpeg=str(ffmpeg_exe()))/2.0
+                    if name.startswith("spatial_") else boundary)
+            frames=[frame_at(path, max(.05,join+dt))
                     for dt in (-.16,0,.16)]
             triplets[name]=frames
             center_tiles.append((name,frames[1]))
@@ -131,9 +136,12 @@ def make_qa_contact_sheets(folder, camera_entries, transition_entries, *,
     reference=triplets.get("cut")
     if reference:
         for style,frames in triplets.items():
-            differences=[_delta(frames[i],reference[i]) for i in range(3)]
+            control=(triplets.get("spatial_fade") if style.startswith("spatial_") else reference) or reference
+            differences=[_delta(frames[i],control[i]) for i in range(3)]
             result["transitions"].append({
-                "style":style,"frame_differences_from_cut":differences,
+                "style":style,
+                "comparison_reference":("spatial_fade" if style.startswith("spatial_") else "cut"),
+                "frame_differences_from_cut":differences,
                 "mean_absolute_difference_from_cut":differences[1],
                 "similar_at_join":style!="cut" and max(differences)<5.0,
                 "peak_white_frame":max(ImageStat.Stat(img.convert("L")).mean[0] for img in frames)>247.0})
