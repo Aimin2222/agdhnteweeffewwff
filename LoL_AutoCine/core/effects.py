@@ -503,7 +503,7 @@ def color_filters(t: Template) -> list[str]:
 
 def build_graph(t: Template, duration: float, has_title: bool, still: bool = False,
                 pre_filters: str = "", effect_events: Optional[list[tuple[float,float]]] = None,
-                gpu_blur_stage=None) -> str:
+                gpu_blur_stage=None, output_format: str = "") -> str:
     """Legacy CPU/hybrid graph. Retained unchanged as the recovery renderer."""
     f = color_filters(t)
     f.extend(_build_video_effect_filters(t, duration, effect_events or [], still))
@@ -546,7 +546,9 @@ def build_graph(t: Template, duration: float, has_title: bool, still: bool = Fal
                 # The depth mask is a smooth image-space gradient. Compute it at
                 # 1/4 resolution then upscale; far fewer geq evaluations.
                 f"[dofmask]scale=480:270:flags=bilinear,format=gray,geq=lum='clip({mask_expr},0,255)',"
-                f"scale=1920:1080:flags=bilinear[dofm];"
+                # RGB stills need a color-format mask too: a gray maskedmerge
+                # input otherwise negotiates every input down to grayscale.
+                f"scale=1920:1080:flags=bilinear{',format=rgba' if still else ''}[dofm];"
                 f"[dofc][dofa][dofm]maskedmerge"
             )
     if gpu_blurs and 'dof' not in gpu_blurs and t.dof_enabled and t.dof_blur > .01:
@@ -580,7 +582,7 @@ def build_graph(t: Template, duration: float, has_title: bool, still: bool = Fal
             post += ["fade=t=in:st=0:d=0.18:color=white", f"fade=t=out:st={max(0.1, duration - 0.22):.2f}:d=0.22:color=white"]
         elif t.transition == "fade":
             post += ["fade=t=in:st=0:d=0.3", f"fade=t=out:st={max(0.1, duration - 0.35):.2f}:d=0.35"]
-    post.append("format=rgb24" if still else "format=yuv420p")
+    post.append("format=" + (output_format or ("rgb24" if still else "yuv420p")))
     pre = (pre_filters + ",") if pre_filters else ""
     head = "[0:v]" + pre + ",".join(f)
     if has_title:
