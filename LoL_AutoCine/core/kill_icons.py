@@ -55,7 +55,21 @@ STYLES = {
     "user_frame_16": "黒曜石・紫金の翼",
 }
 
+# A/B/C presets are always visible. D themes appear ONLY when their actual
+# concept-board PNG is installed, to avoid falsely claiming sample art is used.
+from core.kill_frame_abcd import ABCD, installed_theme_styles, render_abcd_badge, theme_intro_motion
+STYLES.update(ABCD)
+STYLES.update(installed_theme_styles())
+
 REVERSE_STYLES = {label: code for code, label in STYLES.items()}
+
+def register_original_board_styles():
+    """Refresh D-style options after importing the original images in the gallery."""
+    new=installed_theme_styles()
+    STYLES.update(new)
+    REVERSE_STYLES.update({label:code for code,label in new.items()})
+    return new
+
 REVERSE_STYLES["ハイヌーン風・金炎"] = "user_frame_15"
 REVERSE_STYLES["精霊の花祭り風・桜翼"] = "user_frame_13"
 REVERSE_STYLES["スターガーディアン風・光翼"] = "user_frame_11"
@@ -173,6 +187,9 @@ MARK_STYLES = {
     'none': '表示なし（アイコンのみ）',
     'royal': 'ロイヤルゴールド紋章（参考画像風）',
     'lolkill': 'LoL風・撃破エンブレム（オリジナル）',
+    'theme_melee': 'D：近接モチーフ（元画像）',
+    'theme_ranged': 'D：遠隔モチーフ（元画像）',
+    'theme_hybrid': 'D：ハイブリッドモチーフ（元画像）',
 }
 REVERSE_MARK_STYLES = {value: key for key, value in MARK_STYLES.items()}
 
@@ -344,6 +361,13 @@ def make_badge(path: Path, style: str, count: int = 1, *, killer_icon=None, vict
     path = Path(path)
     frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style = normalize_design(
         frame_color, glow_color, glow_enabled, glow_strength, border_width, mark_style)
+    if style in ABCD or style.startswith("d_"):
+        return render_abcd_badge(path, style, killer_icon=killer_icon,
+                                 victim_icon=victim_icon,
+                                 frame_color=frame_color, glow_color=glow_color,
+                                 glow_enabled=glow_enabled, glow_strength=glow_strength,
+                                 border_width=border_width, mark_style=mark_style,
+                                 sparkle_strength=sparkle_strength, hires=hires)
     if style in ASSET_STYLES:
         return _compose_asset_badge(path, style, killer_icon=killer_icon,
                                     victim_icon=victim_icon, glow_enabled=glow_enabled,
@@ -586,7 +610,7 @@ def make_event_badges(output: Path, style: str, kills, events, roster, *, icon_l
             continue
         f=Path(output).with_name(Path(output).stem+f".kill_pair_{len(entries)+1:02d}.png")
         make_badge(f,style,killer_icon=icon_a,victim_icon=icon_b,
-                   hires=(style in ASSET_STYLES),**design)
+                   hires=(style in ASSET_STYLES or style.startswith('d_')),**design)
         entries.append((f,float(event[0])))
     return entries
 
@@ -650,13 +674,13 @@ def with_badges(graph: str, badge_input: int, badges, *, duration: float,
         row=entry['row']
         step=int(round(116*scale + normalize_stack_gap(stack_gap)))
         y=(f"62+{step*row}" if position.endswith('top') else f"H-h-62-{step*row}")
-        x_move,y_move = badge_motion_xy(position,motion,start,x,y)
+        x_move,y_move = badge_motion_xy(position,theme_intro_motion(style,motion),start,x,y)
         extra=(f"+7*sin(35*(t-{t:.3f}))*exp(-11*abs(t-{t:.3f}))" if normalize(style)=="impact" else "")
         inlabel=f"pair_src_{n}"
         outlabel="vout" if n==len(planned)-1 else f"pair_src_{n+1}"
         # Premium PNG badges are rasterized at 2x to preserve glints/metallic
         # edges; downsample only inside FFmpeg while keeping the same on-screen size.
-        display_scale = scale * (0.5 if normalize(style) in ASSET_STYLES else 1.0)
+        display_scale = scale * (0.5 if (normalize(style) in ASSET_STYLES or normalize(style).startswith('d_')) else 1.0)
         parts.append(f"[{int(badge_input)+idx}:v]format=rgba,scale=w='trunc(iw*{display_scale:.3f}/2)*2':h='trunc(ih*{display_scale:.3f}/2)*2',colorchannelmixer=aa={opacity:.3f}[pair_img_{n}]")
         parts.append(f"[{inlabel}][pair_img_{n}]overlay=x='{x_move+extra}':y='{y_move}':format=auto:shortest=0:eof_action=repeat:enable='between(t,{start:.3f},{end:.3f})'[{outlabel}]")
     parts[-1]=parts[-1].replace('[vout]','[pair_finished]')
