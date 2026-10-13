@@ -201,5 +201,50 @@
     "all_4_archives_at_most_30000000_bytes": true,
     "crc_ok": true,
     "private_data_committed": false
+  },
+  "github_actions": {
+    "run_id": 38372750998,
+    "source_payload": "86443c9738f5a2279524536a34515b16fe7e7e31",
+    "conclusion": "success",
+    "test_counts": {
+      "linux": {
+        "tests": 853,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "windows": {
+        "tests": 79,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "single_qa_widget_smoke": true,
+    "zip_checks_passed": true
+  },
+  "restore_validation": {
+    "source_head": "1804a72d83e64bed5ec21803eda6b6954efbc2da",
+    "payload": "86443c9738f5a2279524536a34515b16fe7e7e31",
+    "source_files": 557,
+    "all_tracked_bytes_match": true,
+    "branches": 141,
+    "all_branch_tips_match": true,
+    "full_zip_bytes_match": true,
+    "artifact_hashes_match": true,
+    "private_markers": [
+      "settings.json",
+      "projects/camera-private.json",
+      "diagnostics/performance/camera-private.json"
+    ],
+    "validation_location": "Separate directory in same cloud, not a new cloud instance or Windows LoL device.",
+    "repeat_setup_private_markers_preserved": true,
+    "repeat_setup_tracked_changes": false,
+    "fresh_smoke_passed": 58,
+    "single_developer_button": true,
+    "environment_draft_revision": 46,
+    "environment_draft_readback_matches": true,
+    "other_config_fields_preserved": true,
+    "environment_published": false
   }
 }

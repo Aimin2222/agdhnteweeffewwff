@@ -515,3 +515,4 @@ A	ui/template_gallery.py
 3c74c8291b86479e2c9e5caa6b96cd49623de4699e473cba837399595ccce1a1  LoL_AutoCine_v5.10.27_CameraAxes_GPUFull_Codex_MergeChanges.zip
 30973b54b0c3ed4115fc3ae7ff59612633e1889148a4f65a33fc2d5d4b6370b8  LoL_AutoCine_v5.10.27_CameraAxes_GPUFull_all_branches.bundle
 
+CI: https://github.com/Aimin2222/agdhnteweeffewwff/actions/runs/38372750998 — Linux853件/Windows79件、失敗・エラー・skip0。Windows実widget開発ボタン1個。ZIP SHA/CRC正常。CI対象は固定payload86443c9738f5a2279524536a34515b16fe7e7e31。全ソース557/141refsの別フォルダー復元一致、復元58テストとTk成功、再セットアップ後も個人設定/プロジェクト/診断を保持。環境draft revision46保存/読戻し一致、Publishなし。Draft PR44未マージ。

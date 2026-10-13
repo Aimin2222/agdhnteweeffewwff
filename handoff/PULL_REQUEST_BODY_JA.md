@@ -7,3 +7,5 @@ BLUEのFPSで水平回転354度付近を俯角Yへ送り、RED third_cinemaで�
 実機受領164710全27動画をFFprobe計測・FFmpeg完全デコードし、カメラ10本の開始/イベント前後を抽出。Windows修正後の実構図は未確認。同一リプレイ・同じイベントでRED3/5保護とBLUE/RED2/4改善の再撮影が必要。共有Tk native crash原因とprogram_opencl不足は今回解決と扱わない。個人動画/座標ログ/診断ZIPをGitへ含めない。
 
 新しい比較用Draft PR。main/PR29/42/43へマージしない。Windows手順: LoL_AutoCine/docs/WINDOWS_TEST_v51027_JA.md。
+
+CI: https://github.com/Aimin2222/agdhnteweeffewwff/actions/runs/38372750998 — Linux853件/Windows79件、失敗・エラー・skip0。Windows実widget開発ボタン1個。ZIP SHA/CRC正常。CI対象は固定payload86443c9738f5a2279524536a34515b16fe7e7e31。全ソース557/141refsの別フォルダー復元一致、復元58テストとTk成功、再セットアップ後も個人設定/プロジェクト/診断を保持。環境draft revision46保存/読戻し一致、Publishなし。Draft PR44未マージ。
