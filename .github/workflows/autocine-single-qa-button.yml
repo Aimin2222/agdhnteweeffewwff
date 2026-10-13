@@ -23,14 +23,14 @@ jobs:
       - run: python -m pip install --pre -r LoL_AutoCine/requirements.txt pytest
       - name: All regression tests, native crash diagnostics enabled
         working-directory: LoL_AutoCine
-        run: >-
-          xvfb-run -a python -c "import legacy_app, faulthandler, pytest;
-          faulthandler.enable(); raise SystemExit(pytest.main(['tests', '-p', 'no:faulthandler', '-q', '--junitxml=qa30mb-linux.xml']))"
+        run: xvfb-run -a python ../handoff/run_linux_regressions.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: qa30mb-linux-results
-          path: LoL_AutoCine/qa30mb-linux.xml
+          path: |
+            LoL_AutoCine/qa30mb-linux.xml
+            LoL_AutoCine/qa30mb-linux-modules.json
   windows-smoke:
     runs-on: windows-latest
     timeout-minutes: 15
