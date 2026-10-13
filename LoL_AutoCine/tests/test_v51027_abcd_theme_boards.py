@@ -62,7 +62,7 @@ def test_board_missing_is_not_advertised(tmp_path,monkeypatch):
 def test_recognition_favors_dark_cosmic_over_cosmic():
     assert abcd.recognize_board("ダークコズミック_キルアイコン図録.png")=="dark_cosmic"
     assert abcd.recognize_board("コズミックキルアイコン設計図.png")=="cosmic"
-    assert abcd.recognize_board("サイオプス_キルアイコン設計図.png") is None
+    assert abcd.recognize_board("サイオプス_キルアイコン設計図.png")=="psyops"
 
 def test_intro_keeps_explicit_motion_and_legacy():
     assert abcd.theme_intro_motion("abc_a","instant")=="instant"
