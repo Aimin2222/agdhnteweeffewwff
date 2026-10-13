@@ -26,6 +26,7 @@ if ($LASTEXITCODE -ne 0 -or $activeBranch -ne $branch) {
     throw "Wrong branch: '$activeBranch'. Switch to '$branch' in GitHub Desktop before running."
 }
 Add-Type -AssemblyName System.IO.Compression
+Add-Type -AssemblyName System.IO.Compression.FileSystem
 New-Item -ItemType Directory -Path $target -Force | Out-Null
 $zipInfo = Get-Item -LiteralPath $archivePath
 $zipHash = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
