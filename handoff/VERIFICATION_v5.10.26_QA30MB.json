@@ -1,0 +1,169 @@
+{
+  "full_pytest": {
+    "tests": "811",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "time": "79.778"
+  },
+  "command": "with-xvfb.sh .venv/bin/python debug-v51026-tests.py -> pytest.main tests -v (faulthandler/GC logging only, no exclusions)",
+  "previous_scanfix_native_exit_history": "Two native exits 139, cause unconfirmed; current full run completed without recurrence. No claim of permanent resolution.",
+  "windows_tested": false,
+  "guard": {
+    "status": "ok",
+    "refs": {
+      "base": "fec860c3db327fcbf2f22c2b03e1e133ffeb16e5",
+      "gpu": "299ef6246d8f2e273befe8db21678bc453c00176",
+      "ui": "7fd016d209fa3828eb976545f23cc5b1f7cbaa6f",
+      "integration": "c0d26f192b054dad8eb89fbd829dffe0e33a9d91"
+    },
+    "ui_changed": [
+      "tests/test_v51018_release_qa.py"
+    ],
+    "gpu_changed": [
+      "MAKE_CAMERAQA_UPLOAD.bat",
+      "core/camera_qa.py",
+      "core/qa_package.py",
+      "core/qa_plan.py",
+      "core/qa_upload.py",
+      "docs/APP_PACKAGING_PLAN_JA.md",
+      "docs/CAMERAQA_30MB_DEV_JA.md",
+      "qa/test_plan.json",
+      "tests/test_gpu_qa_upload_30mb.py",
+      "tools/check_parallel_integration.py",
+      "tools/make_cameraqa_upload.py",
+      "tools/package_v51026.py"
+    ],
+    "ui_changed_gpu_files": [],
+    "gpu_changed_ui_files": [],
+    "shared_files_requiring_review": [],
+    "both_changed_files": [],
+    "shared_files_reviewed": [],
+    "merge_conflicts": false,
+    "merge_details": "",
+    "integration_gpu_mismatches": [],
+    "integration_ui_mismatches": [],
+    "integration_shared_mismatches": [],
+    "scope": "committed branch tips only; inspect git status for uncommitted work"
+  },
+  "packaging": {
+    "full_files": 549,
+    "diff_files": 26,
+    "patched_source_files": 551,
+    "all_source_bytes_match_after_patch": true,
+    "untracked_private_files_excluded": true,
+    "zip_integrity": true,
+    "sha256": {
+      "LoL_AutoCine_v5.10.26_QA30MB_GPUFull_Windows_Full.zip": "fcb08bb77aaeeb685746997753ffc4fabe49a40b2b024c6ba144eea5dc475f91",
+      "LoL_AutoCine_v5.10.26_QA30MB_GPUFull_Codex_MergeChanges.zip": "73cbd2fcb17bd775ee44cd48ccc19e0cec7b90b7f5bdab0e8a6e6938fa446244"
+    }
+  },
+  "preservation": {
+    "gpu_effects_body_unchanged": true,
+    "baseline": "74942417d9fc64ee2923032942f02fdb1f7a81b7",
+    "unchanged_existing_files": 525,
+    "changed_existing_files": [
+      "VERSION.txt",
+      "core/camera.py",
+      "core/camera_qa.py",
+      "core/jobs.py",
+      "core/qa_package.py",
+      "core/qa_plan.py",
+      "core/qa_support.py",
+      "core/qa_visual.py",
+      "docs/APP_PACKAGING_PLAN_JA.md",
+      "qa/test_plan.json",
+      "tests/test_v51018_release_qa.py",
+      "tools/check_parallel_integration.py"
+    ],
+    "protected_unchanged": [
+      "core/camera_tuning.py",
+      "legacy_app.py",
+      "tools/reference_video_review.py",
+      "MAKE_REFERENCE_SHEETS.bat",
+      "core/audio.py",
+      "core/audio_worker.py",
+      "core/procloop.py",
+      "core/capture.py",
+      "core/capture_worker.py",
+      "core/capture_process.py",
+      "core/recorder.py",
+      "core/gpu_pipeline.py",
+      "core/gpu_bloom.py",
+      "core/montage_fx.py",
+      "core/camera_clock.py",
+      "core/replay_api.py",
+      "core/scanner.py",
+      "core/preview.py",
+      "core/gpu_full.py",
+      "core/gpu_badge_qa.py",
+      "core/kill_icons.py",
+      "core/performance_diagnostics.py",
+      "START_GPU.bat",
+      "TEST_GPU_RENDER.bat",
+      "tools/gpu_render_test.py",
+      "requirements.txt"
+    ],
+    "all_37_badge_png_unchanged": true,
+    "all_127_previous_branch_tips_preserved": true,
+    "current_branches": 134
+  },
+  "new_functional_validation": "Full tests exercise runtime code identity and mismatch/unknown, real video flat-background hints, single middle/KILL warning, observed event interpolation without effects, final ZIP identity/notes consistency, unchanged camera pose classes and all prior GPU/UI/audio/QA regressions, existing GPU/UI/audio/QA regressions, existing GPU graphs, UI, audio and archive regression tests. GPU spatial kernel unchanged from v19; no new physical GPU performance check.",
+  "old_handoff_files_retained": 238,
+  "compileall_passed": true,
+  "pip_check_passed": true,
+  "github_fresh_restore": null,
+  "environment_config_saved": false,
+  "main_unchanged": "c2a79ac3e7816c74b7d7fb15a5a32a32dd8fa16b",
+  "qa30mb_real_media": {
+    "media": {
+      "BLUE/09_lolnam_cinema/kill_001.mp4": {
+        "original_bytes": 25018129,
+        "upload_bytes": 2806948,
+        "duration_seconds": "6.950000",
+        "frames": "417",
+        "fps": "60/1",
+        "size": [
+          960,
+          540
+        ],
+        "full_decode_passed": true,
+        "audio_bytes_identical": true,
+        "encoder": "libx264"
+      },
+      "BLUE/BLUE_camera_review_all.mp4": {
+        "original_bytes": 250168905,
+        "upload_bytes": 18029878,
+        "duration_seconds": "69.692188",
+        "frames": "4170",
+        "fps": "2668800/44603",
+        "size": [
+          960,
+          540
+        ],
+        "full_decode_passed": true,
+        "audio_bytes_identical": true,
+        "encoder": "libx264"
+      }
+    },
+    "archives": [
+      {
+        "name": "qa30mb-actual-media_export02_part001.zip",
+        "bytes": 20838922,
+        "sha256": "9803c2e7e8be237b3ecec749346807671a1c25d947dbacb8cd62f72af2082d59"
+      }
+    ],
+    "originals_preserved": true,
+    "zip_crc_passed": true,
+    "archive_entries": [
+      "BLUE/09_lolnam_cinema/kill_001.mp4",
+      "BLUE/BLUE_camera_review_all.mp4",
+      "results.json"
+    ],
+    "windows_tested": false,
+    "physical_nvenc_tested": false
+  },
+  "scope": "Developer QA only: upload copies 960x540, passthrough timestamps/AAC; each archive <=30,000,000 bytes; ordinary capture/effects/audio unchanged.",
+  "targeted_tests": 44,
+  "native_test_exit": "One final Linux/Tk run exited 139 at 84%; isolated UI module passed 4 tests. Full rerun preserving standalone faulthandler (pytest faulthandler plugin disabled only for trace ownership) passed 811 with GC enabled, no test exclusions or assertion changes. Cause unconfirmed; not a permanent fix."
+}

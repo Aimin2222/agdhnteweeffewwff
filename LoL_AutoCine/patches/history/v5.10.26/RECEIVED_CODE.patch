@@ -1,0 +1,197 @@
+diff --git a/core/camera_qa.py b/core/camera_qa.py
+index 481892d..d6dbdb4 100644
+--- a/core/camera_qa.py
++++ b/core/camera_qa.py
+@@ -74,8 +74,19 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+                                 modes=config['camera_modes'] if config else None)
+     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
+     folder.mkdir(parents=True, exist_ok=True)
++    project_root = Path(__file__).resolve().parents[1]
++    installed_version = (project_root / "VERSION.txt").read_text(
++        encoding="utf-8").strip()
++    import hashlib
++    camera_fingerprint = hashlib.sha256(
++        (project_root / "core" / "camera.py").read_bytes() +
++        (project_root / "core" / "camera_tuning.py").read_bytes()
++    ).hexdigest()[:16]
+     manifest = {
+-        "version": "5.10.25-test",
++        "version": "5.10.26-test",
++        "installed_version": installed_version,
++        "camera_code_fingerprint": camera_fingerprint,
++        "version_mismatch": installed_version != "5.10.26-test",
+         "kind": "live_replay_camera_test",
+         "expected_clips": len(scenarios),
+         "test_plan": config,
+@@ -271,6 +282,9 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
+         "RED/BLUE各フォルダーの*_camera_review_all.mp4：カメラごとの連続比較。\\n"
+         "Transitions：場面切替の比較動画。 KillFrames：登場動作。\\n"
+         "QA_Support：最新の診断ログ断片。\\n"
++        f"実行版：{installed_version}（カメラコードID：{camera_fingerprint}）。\\n"
++        "古いresults.json（例：5.10.23-test）の映像と混同しないでください。\\n"
++        "flat_upper_background_ratioは空・マップ外の可能性を示す目安であり、キル検出ではありません。\\n"
+         "映像内の対象の位置が適切かはWindows実機で目視確認が必要です。\\n"
+     ).replace("\\n", "\n")
+     (support_dir / "READ_ME_FIRST_JA.md").write_text(notes, encoding="utf-8")
+diff --git a/core/qa_plan.py b/core/qa_plan.py
+index f93508b..f17c404 100644
+--- a/core/qa_plan.py
++++ b/core/qa_plan.py
+@@ -6,7 +6,7 @@ from pathlib import Path
+ from urllib.request import Request, urlopen
+ 
+ REMOTE_PLAN = ("https://raw.githubusercontent.com/Aimin2222/agdhnteweeffewwff/"
+-               "refs/heads/autocine/v5.10.25-blue6-framing-reference-handoff/"
++               "refs/heads/autocine/v5.10.26-stale-qa-sky-detection-releasefix/"
+                "LoL_AutoCine/qa/test_plan.json")
+ LOCAL_PLAN = Path(__file__).resolve().parents[1] / "qa" / "test_plan.json"
+ ALLOWED_CAMERA = ("third", "third_cinema", "fps", "lolnam_cinema", "geo_aim")
+diff --git a/core/qa_visual.py b/core/qa_visual.py
+index c6d59cd..184d355 100644
+--- a/core/qa_visual.py
++++ b/core/qa_visual.py
+@@ -48,6 +48,26 @@ def _delta(a, b):
+     return round(sum(abs(x-y) for x,y in zip(data_a,data_b)) / max(1,len(data_a)), 2)
+ 
+ 
++def flat_upper_background_ratio(image):
++    """Heuristic only: fraction of the TOP 55% with nearly uniform color.
++
++    Out-of-map/sky LoL footage often has a giant flat green background and
++    very little gameplay. This is NOT a champion detector and cannot prove
++    that combat is in view. We deliberately sample from the actual MP4.
++    """
++    image = image.convert("RGB").resize((48, 32))
++    # Quantize with coarse RGB buckets to tolerate small video compression noise.
++    counts = {}
++    for y in range(0, 18):
++        for x in range(48):
++            r, g, b = image.getpixel((x, y))
++            if max(r, g, b) < 18 or min(r, g, b) > 242:
++                continue
++            key = (r // 16, g // 16, b // 16)
++            counts[key] = counts.get(key, 0) + 1
++    return round(max(counts.values(), default=0) / (48 * 18), 3)
++
++
+ def make_qa_contact_sheets(folder, camera_entries, transition_entries, *,
+                            log=lambda _m: None, transition_inputs=None):
+     """Review 3 real points per camera and 3 frames around each transition.
+@@ -83,6 +103,17 @@ def make_qa_contact_sheets(folder, camera_entries, transition_entries, *,
+                 "suspected_black_or_flat":luminance<9 or contrast<6,
+                 "sample_seconds": [round(t,2) for t in times],
+                 "frame_motion": [_delta(frames[j],frames[j+1]) for j in (0,1)]})
++            flat_ratios = [flat_upper_background_ratio(frame) for frame in frames]
++            record = result["camera"][-1]
++            record["flat_upper_background_ratio"] = flat_ratios
++            record["suspected_sky_or_empty_frame"] = (
++                sum(ratio > 0.50 for ratio in flat_ratios) >= 2
++            )
++            # User still needs to inspect the character/kill framing manually.
++            record["framing_needs_human_review"] = (
++                record["suspected_black_or_flat"]
++                or record["suspected_sky_or_empty_frame"]
++            )
+             camera_tiles.append((f'{case.get("number")} {side} {mode}',img))
+             if side in side_tiles:
+                 for when, fr in zip(("PRE","KILL","POST"),frames):
+diff --git a/qa/test_plan.json b/qa/test_plan.json
+index 52efb5f..060d092 100644
+--- a/qa/test_plan.json
++++ b/qa/test_plan.json
+@@ -1,6 +1,6 @@
+ {
+   "schema_version": 1,
+-  "plan_id": "2026-10-13-blue6-subject-position-reference-qa",
++  "plan_id": "2026-10-13-v51026-retake-correct-version-blue-sky-sanity",
+   "title": "v5.10.25 毎回自動収集: 10カメラ・切替・登場FX・画像・診断",
+   "camera_modes": [
+     "third",
+@@ -25,12 +25,13 @@
+   "max_zip_mb": 500,
+   "include_visual_comparison": true,
+   "manual_review": [
+-    "BLUE 6 通常3人称: キル前・瞬間・後に主役と敵が上端へ切れないか（v5.10.24と比べる）",
+-    "RED 1, RED 3: 既に中央寄せされたキル瞬間を維持、天地反転なし",
+-    "RED 2/4/5: 今回一切パラメータを変更しない。過去の良い構図を維持",
+-    "BLUE 7/8/9/10: 位置・視線とも変更なし、問題あれば実動画確認",
+-    "xMedia参考動画は静止画と代表例の説明のみ確認済み。動きの正確な抽出は元MP4復旧後",
+-    "各モードのPRE/KILL/POST、RED/BLUE集約MP4、Transition/Badge/診断JSONを収集、<=500MBの単層ZIPに分割"
++    "重要: results.jsonのversion/installed_versionがv5.10.26-testであることを確認。古い版なら別フォルダに展開・起動し直す",
++    "BLUE #6-10: PRE/KILL/POSTで空/マップ外の単色背景が出ないか。疑わしい場合、flat_upper_background_ratioを確認",
++    "RED #1/#3: v5.10.24で改善した中央寄せ維持・Zロール/反転なし",
++    "RED #2/#4/#5: 以前良かった構図は維持",
++    "BLUE #6: v5.10.25で試験のX-2.0設定のまま。別ブランチのX-4.0とは混同しない",
++    "BLUE #7/#8/#9/#10: 見切れた場合は映像とログを送る（v5.10.23の古いQAでは空が多い）",
++    "切替3種・空間6種の動画動作も比較、全part ZIPとresults.jsonと診断ログを収集"
+   ],
+   "note": "3 distinct legacy tests instead of 10 similar brightness pulses; 6 spatial motions remain QA only. Results go into 500 MB max direct ZIPs.",
+   "spatial_transition_previews": [
+diff --git a/tests/test_v51026_video_framing_and_version.py b/tests/test_v51026_video_framing_and_version.py
+new file mode 100644
+index 0000000..55f5887
+--- /dev/null
++++ b/tests/test_v51026_video_framing_and_version.py
+@@ -0,0 +1,62 @@
++# -*- coding: utf-8 -*-
++"""v5.10.26: skyline rejection hints, artifact build identity, approved camera safety."""
++from pathlib import Path
++
++from PIL import Image
++
++from core.qa_visual import flat_upper_background_ratio
++from core.camera_tuning import shot_tuning
++
++
++def test_flat_green_out_of_map_frame_is_flagged_as_suspicious():
++    frame = Image.new("RGB", (320, 180), (84, 115, 95))
++    # Bottom 45% contains active map texture, but the top 55% is empty sky.
++    for y in range(107, 180):
++        for x in range(320):
++            frame.putpixel((x, y), ((x*13)%160+50, (y*3)%90+60, (x+y)%125+30))
++    assert flat_upper_background_ratio(frame) > .90
++
++
++def test_detailed_map_not_marked_flat_sky():
++    frame = Image.new("RGB", (320, 180))
++    for y in range(180):
++        for x in range(320):
++            frame.putpixel((x,y), ((x*17+y*7)%200+20,
++                                         (x*11+y*23)%200+20,
++                                         (x*29+y*3)%200+20))
++    assert flat_upper_background_ratio(frame) < .50  # below the actual sky warning threshold
++
++
++def test_dark_or_white_flash_does_not_count_as_green_sky():
++    assert flat_upper_background_ratio(Image.new("RGB",(320,180),(0,0,0)))==0
++    assert flat_upper_background_ratio(Image.new("RGB",(320,180),(255,255,255)))==0
++
++
++def test_camera_qa_embeds_version_and_code_fingerprint():
++    root = Path(__file__).resolve().parents[1]
++    version=(root/"VERSION.txt").read_text(encoding="utf-8").strip()
++    camera_qa=(root/"core"/"camera_qa.py").read_text(encoding="utf-8")
++    assert version=="5.10.26-test"
++    assert '"version": "5.10.26-test"' in camera_qa
++    assert '"installed_version": installed_version' in camera_qa
++    assert '"camera_code_fingerprint": camera_fingerprint' in camera_qa
++    assert '"version_mismatch": installed_version != "5.10.26-test"' in camera_qa
++
++
++def test_approved_camera_settings_not_changed_on_stale_visual_evidence():
++    red = {
++      "third":(1.13,{}), "third_cinema":(.96,{}),
++      "fps":(1.0,{}), "lolnam_cinema":(1.0,{"x":-3.0,"y":-3.0}),
++      "geo_aim":(1.12,{"x":-4.0}),
++    }
++    blue = {
++      "third":(1.10,{"x":-2.0}),
++      "third_cinema":(1.08,{}),"fps":(1.0,{}),
++      "lolnam_cinema":(1.08,{"x":2.5}),
++      "geo_aim":(1.08,{"x":2.5}),
++    }
++    for side,modes in (("RED",red),("BLUE",blue)):
++        for mode,(distance,angles) in modes.items():
++            cfg=shot_tuning(side,mode)
++            assert cfg["distance"]==distance
++            assert cfg["angles"]==angles

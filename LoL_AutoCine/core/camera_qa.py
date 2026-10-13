@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import replace
 from datetime import datetime
 import json
+import hashlib
 from pathlib import Path
 
 from .jobs import run_auto_edit
@@ -19,6 +20,7 @@ from .gpu_badge_qa import render_badge_motion
 from .montage_fx import get_duration
 from .gpu_binary import ffmpeg_exe
 from .qa_package import split_test_results
+from .qa_upload import prepare_upload_copies, MAX_ZIP_BYTES, EXCLUDE_DIRS, QAUploadCanceled
 from .qa_plan import validate_plan
 from .qa_support import collect_qa_support
 from .camera_geometry import inspect_rig
@@ -62,6 +64,34 @@ def plan_eight_cases(players, events, preferred=None, modes=None):
                 result.append((side, player, chosen, mode, label))
     return result
 
+QA_BUILD_VERSION = "5.10.26-test"
+
+
+def camera_build_identity(project_root=None):
+    """Read actual installed data without changing the user's files.
+
+    Keep the legacy dynamic version and report the QA implementation version
+    separately. An incomplete read must not invalidate already captured video.
+    """
+    root = Path(project_root) if project_root is not None else Path(__file__).resolve().parents[1]
+    result = {"installed_version": "unknown", "qa_build_version": QA_BUILD_VERSION,
+              "camera_code_fingerprint": None, "camera_code_sha256": None,
+              "identity_errors": []}
+    try:
+        result["installed_version"] = (root / "VERSION.txt").read_text(encoding="utf-8").strip() or "unknown"
+    except (OSError, UnicodeError) as exc:
+        result["identity_errors"].append(f"VERSION.txt: {type(exc).__name__}")
+    try:
+        digest = hashlib.sha256((root / "core/camera.py").read_bytes()
+                                + (root / "core/camera_tuning.py").read_bytes()).hexdigest()
+        result["camera_code_sha256"] = digest
+        result["camera_code_fingerprint"] = digest[:16]
+    except OSError as exc:
+        result["identity_errors"].append(f"camera sources: {type(exc).__name__}")
+    result["version_mismatch"] = result["installed_version"] != QA_BUILD_VERSION
+    return result
+
+
 def run_camera_record_test(api, source, players, events, preferred, template, destination,
                            *, stop=None, log=lambda _m: None, audio_factory=None, progress=None,
                            plan=None, plan_source="bundled"):
@@ -76,8 +106,12 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
                  if config else plan_eight_cases(players, events, preferred))
     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S_%f"))
     folder.mkdir(parents=True, exist_ok=False)
+    identity = camera_build_identity()
+    if identity["version_mismatch"] or identity["identity_errors"]:
+        log("カメラQA実行版を確認してください: " + json.dumps(identity, ensure_ascii=False))
     manifest = {
-        "version": (Path(__file__).resolve().parents[1] / "VERSION.txt").read_text(encoding="utf-8").strip(),
+        "version": identity["installed_version"],
+        **identity,
         "kind": "live_replay_camera_test",
         "expected_clips": len(scenarios),
         "test_plan": config,
@@ -113,7 +147,18 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         current = {"number": index, "side": side, "mode": mode, "label": label,
                    "player": player.label(), "event_time": float(scene.time), "outputs": [],
                    "failed": [], "camera_diagnostics": []}
+        current["baseline_reads"] = []
         def capture_camera_log(message):
+            if str(message).startswith(("CAMERA_QA_BASELINE ", "CAMERA_QA_TIMING ")):
+                try:
+                    evidence = json.loads(str(message).split(" ", 1)[1])
+                    if isinstance(evidence, dict):
+                        if str(message).startswith("CAMERA_QA_TIMING "):
+                            current["recording_timing"] = evidence
+                        elif len(current["baseline_reads"]) < 12:
+                            current["baseline_reads"].append(evidence)
+                except (ValueError, TypeError, IndexError):
+                    pass
             if str(message).startswith("CAMERA_QA_POSE "):
                 try:
                     evidence = json.loads(str(message).split(" ", 1)[1])
@@ -244,14 +289,22 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     manifest["canceled"] = bool(stop is not None and stop.is_set())
     flush()
     if not manifest["canceled"]:
-        manifest["qa_support"] = collect_qa_support(folder, log=log)
-        flush()
         try:
+            log("開発用QA: 送信用のみ540p・60fpsへ軽量化し、各ZIPを30MB以下にします。元映像は保持します。")
+            copies, manifest["qa_upload"] = prepare_upload_copies(
+                folder, encoder_policy=template.encoder_policy, stop=stop, log=log)
+            manifest["qa_support"] = collect_qa_support(folder, log=log, build_identity=identity)
+            flush()
             def update_archives(paths):
                 manifest["qa_archives"] = [str(p) for p in paths]
                 flush()
-            split_test_results(folder, max_bytes=(config["max_zip_mb"] if config else 500)*1_000_000,
-                               log=log, report_update=update_archives)
+            split_test_results(folder, max_bytes=min(MAX_ZIP_BYTES, (config["max_zip_mb"] if config else 30)*1_000_000),
+                               log=log, report_update=update_archives,
+                               source_overrides=copies, exclude_dirs=EXCLUDE_DIRS)
+        except QAUploadCanceled:
+            manifest["canceled"] = True
+            manifest["qa_archives"] = []
+            flush()
         except Exception as exc:
             manifest["qa_archives"] = []
             manifest["qa_packaging_error"] = f"{type(exc).__name__}: {exc}"

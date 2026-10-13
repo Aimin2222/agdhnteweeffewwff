@@ -25,6 +25,7 @@ from .players import Player
 from .replay_api import ReplayAPI, ReplayApiError
 from .camera_clock import SmoothReplayClock
 from .camera_tuning import target_center_rotation
+import json
 
 INTENSITY = {"natural": 0.6, "standard": 1.0, "strong": 1.4}
 INTENSITY_JP = {"natural": "自然め", "standard": "標準", "strong": "強め"}
@@ -946,11 +947,24 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
     time.sleep(settle)
     r_top = api.render()
     C, rot = _vec(r_top.get("cameraPosition")), r_top.get("cameraRotation")
+    def log_read(phase, payload, **extra):
+        # Observe existing reads only; do not alter approved camera poses.
+        log("CAMERA_QA_BASELINE " + json.dumps({
+            "phase": phase, "style": style, "team": str(p.team),
+            "requested_selection_name": sel,
+            "observed_selection_name": payload.get("selectionName"),
+            "observed_camera_mode": payload.get("cameraMode"),
+            "camera_position": payload.get("cameraPosition"),
+            "camera_rotation": payload.get("cameraRotation"),
+            "selection_offset": payload.get("selectionOffset"), **extra,
+        }, ensure_ascii=False, default=str))
+    log_read("top_baseline", r_top)
 
     api.set_render(selectionName=sel, cameraMode="fps", cameraAttached=True, selectionOffset=ZERO)
     time.sleep(settle)
     r_fps = api.render()
     P = _vec(r_fps.get("cameraPosition"))
+    log_read("attached_target_baseline", r_fps)
 
     # 現在のAPI値が正常なら、それを優先してキャリブレーションする。
     current_v = _sub(C, P) if C is not None and P is not None else None
@@ -1089,7 +1103,11 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
                    selectionOffset={"x": off[0], "y": off[1], "z": off[2]},
                    cameraRotation=rot_use, fieldOfView=base_fov)
     time.sleep(settle)
-    Q = _vec(api.render().get("cameraPosition"))
+    validation_render = api.render()
+    Q = _vec(validation_render.get("cameraPosition"))
+    log_read("position_validation", validation_render, target_position=P,
+             planned_selection_offset=off,
+             expected_camera_position=tuple(P[i]+off[i] for i in range(3)))
     if Q is None:
         info = _fallback_top(api, sel, base_fov, "カメラ位置を検証できないため俯瞰に切替")
         log("カメラ: " + info.note)

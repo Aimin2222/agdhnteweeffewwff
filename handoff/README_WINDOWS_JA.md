@@ -1,24 +1,16 @@
-# v5.10.25-test BLUE6 / Reference / GPUFull
+# v5.10.26-test QA30MB GPUFull（開発用）
 
-完全版 **handoff/LoL_AutoCine_v5.10.25_BLUE6_Reference_GPUFull_Windows_Full.zip** をGitHubで開き **Download raw file**。または **codex/lol-autocine-v51025-blue6-reference-handoff** の **Code → Download ZIP**。旧版と別フォルダLoL_AutoCine/START_GPU.bat。Windows取得にmainマージ/環境Publishは不要。
+完全版 **LoL_AutoCine_v5.10.26_QA30MB_GPUFull_Windows_Full.zip** をGitHubで開き **Download raw file**。旧版と別フォルダーへ展開、LoL_AutoCine/START_GPU.batで起動。旧QAフォルダーをMAKE_CAMERAQA_UPLOAD.batへドラッグすれば録画し直さず再梱包できる。
 
-映像動作はBLUE通常third X +3→-2（差-5度）のみ。距離1.10/offset/FOV/Orbit/keyframe・速度、RED全5と他BLUEは維持。実setupでORDER/BLUE・side auto/blue/red・keyframe/gain付きの旧+3版と3時点比較、位置/FOV/Y/Z不変でXだけ-5。中心/遮蔽・上端切れ改善はWindows未確認。RED1/3相対中心・手動0/180/FPS高さ・team/mode cacheとstable/TargetLock保持。
+全カメラの開発用QAでは元1080p録画をPCに保持し、送信用だけ960x540・60fps系の時刻保持へ軽量化。raw素材はZIPから除外し、各ZIPは30,000,000バイト以下。旧500MB計画でも上限を適用。音声AACはそのままコピー、連結素材の小さな時刻の隙間もフレーム追加なし。NVENC優先/CPU再試行と実経路を記録。圧縮失敗は元動画または番号順バイナリ部分へ保存して失わない。
 
-4参考映像の演出JSONは静止画と受領側説明の資料で通常template/QA/UIへ自動適用なし。29本をCodexで解析した結果ではない。noir全体低彩度と未実装の動的部分カラーmaskを区別。既定FX/vignette/barsは変更なし。
+既存QAフォルダーはMAKE_CAMERAQA_UPLOAD.batにドラッグして再録画なしで再梱包。旧ZIP・元動画・reportバックアップを保持。正式アプリ配布前には一時的QAボタン/アダプター/専用ツールを外す対象として明記。通常1080p/60fps/GPU22FX/LoL専用音声/カメラの構図式/UIを変更しない。今回のカメラ問題修正・画質合格は主張しない。
 
-GPU22FX/OpenCL/NVENC/60fps・LoL専用音声/録画/診断fallback/ミラー/oneclickQA/cache・partial/二重押し・stop/7指定ログ各1MB/1MBstream・500MB直接ZIP/最終JSON/参照ZIP・CRC/上限120本・各1GB・合計4GB/flatten・原名対応・temp cleanup・Unicode/cancel/Explorer保持。GPU/音声/録画/UI/camera/jobs本体byte不変。全785自動テスト成功、失敗/skip/除外なし、70.371秒。関連66成功1.25秒。初回と2回目は追加fixture形式不備で各60成功/6失敗、既存time/yaw/zoom/fovへfixtureのみ修正。Windows/LoL/BAT/NVIDIAは未確認、過去native139/132原因は未確定。
+既に保存されていたv26 QA観測/版identity/単独KILL相当review警告も保持。BLUE9/10の角度は推測変更なし。受領JSON・診断・BLUE9 MP4は解析済み、元part001〜003は32MiB転送制限で未デコード。今回の30MB版で再受領を可能にする。
 
-完全ZIP535、差分apply後537ソース一致、全127refs bundle・旧229配布物保持。実機手順LoL_AutoCine/docs/WINDOWS_TEST_v51025_JA.md。添付実機/CI/Release評価は受領側。
+Linux全811成功、失敗/skip/除外なし79.79秒。QA関連44成功4.35秒。実MP4 25,018,129→2,806,948バイト(417フレーム)、約70秒比較用動画250,168,905→18,029,878バイト(4170フレーム)、ZIP20,838,922バイト。全デコード/時間/音声バイト一致、元映像保持。物理NVENC/Windows LoL実機は未検証。Linux Tk native139が一度再発、単独4件/全811再実行成功、原因未解決として記録。
 
-## ローカルGit復元
-```sh
-git clone --single-branch --branch codex/lol-autocine-v51025-blue6-reference-handoff https://github.com/Aimin2222/agdhnteweeffewwff.git LoL_AutoCine_v51025_Handoff
-git clone --branch integration/v5.10.25 LoL_AutoCine_v51025_Handoff/handoff/LoL_AutoCine_v5.10.25_BLUE6_Reference_GPUFull_all_branches.bundle LoL_AutoCine_v51025_Dev
-cd LoL_AutoCine_v51025_Dev
-git branch feature/gpu-cameraqa-v51025 origin/feature/gpu-cameraqa-v51025
-git branch feature/ui-cameraqa-v51025 origin/feature/ui-cameraqa-v51025
-git status --short
-```
-全refsはorigin/*へ復元、originはローカルbundle。handoff/*.bundle binaryを保持。個人設定/録画は保管。
+完全版549ファイル、差分apply後全551ソースのbyte一致、全134refs bundle、旧238配布物保持。新ブランチのDraft PRのみ、mainとPR29へマージしない。
 
-GitHubから別checkout/bundle復元で全537ソース/127refs/ZIP・bundle hashes一致。復元先代表276成功21.57秒、失敗/skip/除外なし、GC有効・強制GCなし。再setupで537ソース/127refs/3個人設定相当のバイト保持/status clean。これは同一クラウド内の別フォルダ検証で新しいcloud task/Windows/Publish検証とは別。環境install_script/start_skillをrevision43へ保存してreadback確認、他の既知設定保持、Publishは未実行。次回環境へ反映する場合だけ環境設定で確認・保存後Publish。
+
+手順: LoL_AutoCine/docs/CAMERAQA_30MB_DEV_JA.md。30MB制限は実機QA送信ZIP向け。アプリのフル版ZIPは既存素材同梱のため約67MB、GitHubから取得できる。

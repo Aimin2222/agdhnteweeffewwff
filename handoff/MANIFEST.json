@@ -1,10 +1,10 @@
 {
-  "source_head": "74942417d9fc64ee2923032942f02fdb1f7a81b7",
-  "source_branch": "integration/v5.10.25",
-  "source_files": 537,
-  "python_files": 193,
-  "bundle_file": "LoL_AutoCine_v5.10.25_BLUE6_Reference_GPUFull_all_branches.bundle",
-  "bundle_sha256": "b35c60a564c83e982011852f40e98a327ba92d44547704068d1deff56580718a",
+  "source_head": "c0d26f192b054dad8eb89fbd829dffe0e33a9d91",
+  "source_branch": "integration/v5.10.26-qa30mb",
+  "source_files": 551,
+  "python_files": 199,
+  "bundle_file": "LoL_AutoCine_v5.10.26_QA30MB_GPUFull_all_branches.bundle",
+  "bundle_sha256": "38483fd0045013418d11ba961e60a9c21f63f07d194358a7eca0ecd5ba19dfc2",
   "branches": [
     "archive/received-portraitfix-v51015 31a88fd34c07601aa0136acbf68102c8751e2e9c",
     "archive/received-scanfix-v51015 cb0f0e9d92ed01787838c14c967e89d9a12d6a08",
@@ -24,6 +24,7 @@
     "archive/received-ui-v51023 ba0acbee22eaf6f7b1b1954760e94a8f45218ba0",
     "archive/received-ui-v51024 ad3d004d82d23347042c25786a3a2109820caa3b",
     "archive/received-ui-v51025 1416da60fe2661fe3f621f0ed62de55fdca52e2d",
+    "archive/received-ui-v51026 261a246db3ea45e9e1fc96c16a8ba1651d3d26cc",
     "archive/received-ui-v5108 be2a9c6cbd51de576e75dd18da3fa40aa0b86cd4",
     "archive/received-ui-v5109 8c5cb07ed85a3b5463feb1b8ddfe13ba4e5b8314",
     "baseline/v5.8.5 96b928a7385537317e73bad5235a28984fe94716",
@@ -39,6 +40,7 @@
     "feature/gpu-cameraqa-v51023 ca92acb330ca8865d54b8caa61c52124647415e8",
     "feature/gpu-cameraqa-v51024 aaba727c3946ecca19f5f008fa1f0b5cd5767c8f",
     "feature/gpu-cameraqa-v51025 42ebb41ccfac32d09a4bd23afb9f0b802df48147",
+    "feature/gpu-cameraqa-v51026 2eeb0270be90b76f604481086e318d406f73eed0",
     "feature/gpu-capture60-v5103 954f55ca4ba804ce0187779856f7b7310ce78b47",
     "feature/gpu-engine efcbbd17bd143055a437ced4341727c35c828728",
     "feature/gpu-export-optimization-v5103 f431de0dc493e0baf76466b87ab595320d3851f7",
@@ -47,6 +49,7 @@
     "feature/gpu-montage-v51014 9173a8971a0831fb48b5d89e97dc4b4efe97896b",
     "feature/gpu-motion-v51016 e1d4ce7aadbb0df8383b3ac9ba2bc5b45a60184c",
     "feature/gpu-portraitfix-v51015 8a6198d306d31c170f307e06d2008eefe0390521",
+    "feature/gpu-qa30mb 299ef6246d8f2e273befe8db21678bc453c00176",
     "feature/gpu-releaseqa-v51018 c2151247de4861ee32ddad18a1a3e863393e6230",
     "feature/gpu-scanfix-v51015 f36dc306243ca7c7fd2935fbb34860f72481134d",
     "feature/gpu-shared-v51012 9d3630c840274cf3947a419c34c5fb51a001db6d",
@@ -62,6 +65,7 @@
     "feature/ui-cameraqa-v51023 911d2688bdc7bb09a1d867612a30a2cb7e489639",
     "feature/ui-cameraqa-v51024 9700bca683bedf091c129628b9123192c1c8d9e4",
     "feature/ui-cameraqa-v51025 7115a6e0b4a5f9fcb993cde43abd930533e4c321",
+    "feature/ui-cameraqa-v51026 e1cde06b523167221bae5808118e7797ad73fd4b",
     "feature/ui-champion-pair-v599 ca36178065e210defd2f79288a2488937d253c90",
     "feature/ui-circle-v5103 284e875a4d6f3ace6f80b6cf8ab2fa65aefd1a50",
     "feature/ui-dispatch-hangfix-v5103 8f194936faafd942641a91d2279461d14d8efb8a",
@@ -80,6 +84,7 @@
     "feature/ui-notebook-livefx-v5104 d058ca98cccf89ec980064bf6d73893d808cfa5d",
     "feature/ui-player-filter-v51013 a8bda730ec48966a476894d12e35158a993c5c37",
     "feature/ui-preview-v594 08cba49de5a72a463db174e685e9a29c6f7217ce",
+    "feature/ui-qa30mb 7fd016d209fa3828eb976545f23cc5b1f7cbaa6f",
     "feature/ui-real-scenes-v51010 b704dbc6741b45a325b2a419c48b225872c30783",
     "feature/ui-releaseqa-v51018 c87433ef535b6d151e54bdf49fb192e750c65606",
     "feature/ui-responsive-v5105 754117d578ca3c5765e96d17a3efaf376c60eda2",
@@ -110,6 +115,8 @@
     "integration/v5.10.23 c048f3580bd2fe74954d7544b2737dc4f804511b",
     "integration/v5.10.24 eebfebda8a385895df805825bc56d84c7db4f762",
     "integration/v5.10.25 74942417d9fc64ee2923032942f02fdb1f7a81b7",
+    "integration/v5.10.26 fec860c3db327fcbf2f22c2b03e1e133ffeb16e5",
+    "integration/v5.10.26-qa30mb c0d26f192b054dad8eb89fbd829dffe0e33a9d91",
     "integration/v5.10.3 9dc795ded438d0ce4510e9d99fd699ec9155230f",
     "integration/v5.10.3-capture60 2a7a538540cbce9c13aae49da4a156cfd7ff4671",
     "integration/v5.10.3-capturefix 86a1165658082daaff902649dd56eb7a4895ed09",
@@ -135,7 +142,7 @@
     "stable/v5.8.5 96b928a7385537317e73bad5235a28984fe94716"
   ],
   "artifacts": {
-    "LoL_AutoCine_v5.10.25_BLUE6_Reference_GPUFull_Windows_Full.zip": "aa9d2c9c2ed2fa31ee86932de9ab1f6e3b9dd6aae550c7ee131e03ebfba9eadf",
-    "LoL_AutoCine_v5.10.25_BLUE6_Reference_GPUFull_Codex_MergeChanges.zip": "dfad8d72d46572c2080e21b3ee752d561586a3952bee468cfba3b0479e58f5ad"
+    "LoL_AutoCine_v5.10.26_QA30MB_GPUFull_Windows_Full.zip": "fcb08bb77aaeeb685746997753ffc4fabe49a40b2b024c6ba144eea5dc475f91",
+    "LoL_AutoCine_v5.10.26_QA30MB_GPUFull_Codex_MergeChanges.zip": "73cbd2fcb17bd775ee44cd48ccc19e0cec7b90b7f5bdab0e8a6e6938fa446244"
   }
 }

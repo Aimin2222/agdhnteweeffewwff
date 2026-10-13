@@ -56,6 +56,7 @@ class ClipTake:
     rig: Optional[RigInfo] = None
     cam_errors: int = 0
     effect_events: Optional[list] = None  # optional recording-time event coordinates
+    qa_event_times: Optional[list] = None  # QA-only observations; never enables video effects
 
 
 @dataclass
@@ -270,6 +271,9 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                 "baseline_player_position": rig.P,
                 "baseline_horizontal_direction": rig.h,
                 "baseline_offset": rig.v,
+                "rig_fell_back": bool(rig.fell_back),
+                "rig_note": str(rig.note),
+                "planned_fov_degrees": float(plan.fov_at(start)),
                 "side_heading_degrees": float(plan.side_yaw),
                 "initial_camera_offset": plan.offset_at(start),
                 "initial_camera_rotation": plan.rotation_at(start),
@@ -395,6 +399,14 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
                 or getattr(tpl, "smart_composition", False)):
             take.effect_events = []
             observe = _recording_event_observer(kills, start, rec.started_perf, take.effect_events)
+        if str(getattr(tpl, "name", "")).startswith("CameraQA "):
+            take.qa_event_times = []
+            qa_observe = _recording_event_observer(kills, start, rec.started_perf, take.qa_event_times)
+            prior_observe = observe
+            def observe(replay_time, wall_time):
+                qa_observe(replay_time, wall_time)
+                if prior_observe is not None:
+                    prior_observe(replay_time, wall_time)
         _play_until(api, end, start, tpl, rec, stop, observe=observe)
     finally:
         director.stop()
@@ -416,6 +428,13 @@ def record_one_clip(api: ReplayAPI, source: FrameSource, player: Player, tpl: Te
         restore_hud(api, saved_hud)
         restore_fx(api, fx_saved)
         restore_mirror_camera(api, player, plan.base_fov, log)
+        if take.qa_event_times is not None:
+            log("CAMERA_QA_TIMING " + json.dumps({
+                "replay_start": float(start), "event_replay_times": [float(k.time) for k in kills],
+                "event_video_seconds": [float(v[0]) for v in take.qa_event_times],
+                "recording_duration": float(take.duration),
+                "basis": "recording_wall_clock_interpolated_replay_observations",
+            }))
         take.cam_errors = director.errors
         log(f"カメラ動作診断: API送信 {director.api_calls}回 / 25ms超 {director.api_slow_calls}回 / "
             f"最大API待ち {director.max_api_latency_ms:.1f}ms / 最大時刻ずれ {director.max_clock_drift:.3f}s")
