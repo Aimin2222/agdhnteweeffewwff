@@ -91,6 +91,19 @@ def wait_for(predicate,timeout=3):
     pytest.fail('condition did not become true')
 
 
+def assert_shared_memory_gone(name):
+    # Windows deletes a mapping after the last OS handle is released. Probe
+    # without leaking a handle, allowing bounded child-process teardown time.
+    def gone():
+        try:
+            mapping = shared_memory.SharedMemory(name=name)
+        except FileNotFoundError:
+            return True
+        mapping.close()
+        return False
+    wait_for(gone)
+
+
 def test_shared_frame_owns_pixels_and_rejects_incomplete_or_invalid_frames():
     bridge=cp.SharedFrame(capacity=64*64*4)
     try:
@@ -123,7 +136,7 @@ def test_actual_process_delivers_bgra_without_importing_native_capture(worker,mo
         assert 'windows_capture' not in sys.modules
     finally:source.stop()
     assert session.process.poll() is not None and source.latest() is None
-    with pytest.raises(FileNotFoundError):shared_memory.SharedMemory(name=name)
+    assert_shared_memory_gone(name)
     source.stop()
 
 
@@ -137,7 +150,7 @@ def test_native_start_hang_has_bounded_timeout_and_same_source_can_retry(worker)
         assert time.monotonic()-start<.7
     finally:session.close()
     assert process.poll() is not None
-    with pytest.raises(FileNotFoundError):shared_memory.SharedMemory(name=name)
+    assert_shared_memory_gone(name)
     worker('frames')
     try:source.start();assert source.running
     finally:source.stop()

@@ -100,7 +100,7 @@ def test_full_gpu_retries_same_cpu_effects_titles_events_audio_and_cleans(tmp_pa
             assert cmd[cmd.index('-pix_fmt')+1]=='rgba' and '-hwaccel' in cmd
             assert '-loop' not in cmd # images are uploaded once, then repeated on GPU
             assert kw['pipeline_info']['full_gpu_pipeline'] and not kw['pipeline_info']['cpu_video_effects']
-            shader=Path(graph.split("source='")[1].split("'")[0]);paths.append(shader)
+            shader=Path(graph.split("source='")[1].split("'")[0].replace(r'\:', ':'));paths.append(shader)
             assert shader.exists() and kw['gpu_effects']>=set(tpl.video_effects)
             if failure=='timeout': raise subprocess.TimeoutExpired(cmd,600)
             if failure=='driver': return SimpleNamespace(returncode=1,stderr='driver failure')

@@ -27,7 +27,11 @@ if not exist "tools\bin\lol_audio_helper.exe" (
 
 echo [Audio] Native LoL audio helper is ready.
 echo [App] Starting LoL AutoCine...
-py -3 app.py
+if exist ".venv\Scripts\python.exe" (
+  ".venv\Scripts\python.exe" app.py
+) else (
+  py -3 app.py
+)
 set "RC=%ERRORLEVEL%"
 echo.
 echo LoL AutoCine exited with code %RC%.
