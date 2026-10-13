@@ -1,0 +1,46 @@
+{
+  "status": "ok",
+  "refs": {
+    "base": "fa13295637e7c1e97c60c74f332430de707a96ae",
+    "gpu": "5801700694a8901ed03f5c6bee602299dd2fdeec",
+    "ui": "a1cfed17cd1daca39c1a303d2202cdd18fd37dcd",
+    "integration": "1804a72d83e64bed5ec21803eda6b6954efbc2da"
+  },
+  "ui_changed": [
+    "tests/test_v51026_video_framing_and_version.py"
+  ],
+  "gpu_changed": [
+    "VERSION.txt",
+    "core/camera.py",
+    "core/camera_qa.py",
+    "core/camera_tuning.py",
+    "core/jobs.py",
+    "core/qa_plan.py",
+    "docs/CODEX_INTEGRATION_v51027_JA.md",
+    "docs/CODEX_SHARED_API_REVIEW_v5.10.27.json",
+    "docs/WINDOWS_TEST_v51027_JA.md",
+    "qa/test_plan.json",
+    "tests/red35_v51026_golden.json",
+    "tests/test_gpu_blue6_scope_v51025.py",
+    "tests/test_gpu_camera_axes_v51027.py",
+    "tests/test_gpu_camera_isolation_v51020.py",
+    "tests/test_gpu_event_visual_identity_v51026.py",
+    "tests/test_gpu_target_center_zip_v51024.py",
+    "tools/check_parallel_integration.py",
+    "tools/package_v51027.py"
+  ],
+  "ui_changed_gpu_files": [],
+  "gpu_changed_ui_files": [],
+  "shared_files_requiring_review": [],
+  "both_changed_files": [],
+  "shared_files_reviewed": [
+    "core/camera.py",
+    "core/jobs.py"
+  ],
+  "merge_conflicts": false,
+  "merge_details": "",
+  "integration_gpu_mismatches": [],
+  "integration_ui_mismatches": [],
+  "integration_shared_mismatches": [],
+  "scope": "committed branch tips only; inspect git status for uncommitted work"
+}

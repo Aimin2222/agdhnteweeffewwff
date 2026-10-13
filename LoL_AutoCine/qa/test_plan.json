@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "plan_id": "2026-10-13-v51026-dev-qa-30mb",
-  "title": "v5.10.26 開発用: 全10カメラ・切替・登場FX・画像・診断 / 30MB送信",
+  "plan_id": "2026-10-13-v51027-camera-axis-isolation",
+  "title": "v5.10.27 開発用: 独立10カメラ・姿勢確認・演出・診断 / 30MB送信",
   "camera_modes": [
     "third",
     "third_cinema",
@@ -25,13 +25,16 @@
   "max_zip_mb": 30,
   "include_visual_comparison": true,
   "manual_review": [
-    "重要: results.jsonのversion/installed_versionがv5.10.26-testであることを確認。古い版なら別フォルダに展開・起動し直す",
-    "BLUE #6-10: PRE/KILL/POSTで空/マップ外の単色背景が出ないか。疑わしい場合、flat_upper_background_ratioを確認",
-    "RED #1/#3: v5.10.24で改善した中央寄せ維持・Zロール/反転なし",
-    "RED #2/#4/#5: 以前良かった構図は維持",
-    "BLUE #6: v5.10.25で試験のX-2.0設定のまま。別ブランチのX-4.0とは混同しない",
-    "BLUE #7/#8/#9/#10: 見切れた場合は映像とログを送る（v5.10.23の古いQAでは空が多い）",
-    "切替3種・空間6種の動画動作も比較、全part ZIPとresults.jsonと診断ログを収集"
+    "results.jsonのversion/installed_version/qa_build_versionは5.10.27-test。camera_code_fingerprintも配布物と一致すること",
+    "同じリプレイ・同じイベントで旧版と比較。BLUE全5種: 被写体と敵がPRE/KILL/POSTと移動中に見えるか、空/地形裏/見切れを確認",
+    "RED #1: 自動サイドだけ距離を8%増加。近すぎの改善と戦闘の見やすさを比較",
+    "RED #2: 上下反転/Zロールなし。RED #4: 地形裏/空だけでなく戦闘を映すか",
+    "RED #3 FPSと#5 geo_aim: 良好だった位置/回転/FOV/追従の維持",
+    "BLUE #6: 旧X=-2度の軸取り違え補正はlive処理では適用しない。X=-4度は採用しない",
+    "initial_pose_checksでverified=true、基準の対象/モード/座標・フォールバック理由を確認。安全俯瞰は希望構図の合格ではない",
+    "RED→BLUE→RED切替と同じイベント再実行、各モードの独立性を確認",
+    "通常1080p/60fpsとLoL専用音声同期、GPU/NVENC経路、ミラー復元と停止を確認。送信用だけ960x540/60fps",
+    "空間6種を含む演出、全part ZIP(各30,000,000 bytes以下)・results・診断を収集。自動テストだけで構図合格にしない"
   ],
   "note": "Developer only: upload copies 960x540/60fps, original footage kept, direct ZIPs at most 30,000,000 bytes. Remove QA upload adapter/button for consumer release.",
   "spatial_transition_previews": [

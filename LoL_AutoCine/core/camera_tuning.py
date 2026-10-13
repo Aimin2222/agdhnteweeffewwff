@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
-"""Conservative shot-specific framing: never share fixes across camera modes.
+"""Independent framing policies and the measured Replay Euler contract.
 
-v5.10.21 Windows visual review: BLUE third_cinema #7 and RED third_cinema #2
-were accepted compositions; no new yaw/pitch adjustment is applied to them.
-Values are supplied by the UI-side handoff, not measured in Codex cloud.
-Angle signs must still be verified in real Windows LoL replay footage.
+Keep historic SHOT_TUNING values for compatibility. Current live policies
+follow the 2026-10-13 QA evaluation: RED FPS/geo_aim are protected; BLUE and
+RED third_cinema/lolnam use target-facing axes. Windows recheck is required.
 """
 from __future__ import annotations
 import math
 
 
 def target_center_rotation(camera_offset: tuple) -> dict:
-    """RED Replay camera Euler convention: X=azimuth, Y=downward elevation.
+    """Replay camera Euler convention: X=azimuth, Y=downward elevation.
 
     camera_offset is camera_position - target_position in LoL world axes.
-    The stable BLUE geometric convention uses X=pitch/Y=yaw, but the UI-side handoff reports
-    RED #2 and #4 clips instead use X=yaw/Y=pitch. DO NOT share Euler axis
-    layout across teams or modes. Camera must point from offset towards 0.
+    Windows QA shows the earlier BLUE X=pitch/Y=yaw assumption points at sky.
+    The API axis contract is shared; per-mode framing settings remain separate.
+    Camera must point from its actual offset towards the attached target.
     """
     dx, dy, dz = (float(v) for v in camera_offset)
     if not all(math.isfinite(v) for v in (dx, dy, dz)):
@@ -33,10 +32,35 @@ def target_center_rotation(camera_offset: tuple) -> dict:
 
 
 def yaw_alignment_error(camera_offset: tuple, rotation: dict) -> float:
-    """Return absolute angular mismatch (degrees) in RED camera axes."""
+    """Return absolute angular mismatch (degrees) in Replay camera axes."""
     aimed = target_center_rotation(camera_offset)["x"]
     yaw = float(rotation["x"])
     return abs((yaw - aimed + 180.0) % 360.0 - 180.0)
+
+
+# Independent immutable entries: changing one mode cannot mutate another.
+# True: use the measured Replay axis contract, including zero roll.
+# RED FPS/geo_aim keep their accepted position/rotation path exactly.
+LIVE_FRAMING_POLICIES = {
+    ("BLUE", "third"): (True, 1.0),
+    ("BLUE", "third_cinema"): (True, 1.0),
+    ("BLUE", "fps"): (True, 1.0),
+    ("BLUE", "lolnam_cinema"): (True, 1.0),
+    ("BLUE", "geo_aim"): (True, 1.0),
+    ("RED", "third"): (False, 1.08),  # modest 8% pullback, auto only
+    ("RED", "third_cinema"): (True, 1.0),
+    ("RED", "fps"): (False, 1.0),
+    ("RED", "lolnam_cinema"): (True, 1.0),
+    ("RED", "geo_aim"): (False, 1.0),
+}
+
+
+def live_framing_policy(team: str, style: str) -> dict:
+    side = "RED" if str(team).upper() in ("CHAOS", "RED") else "BLUE"
+    target_lock, distance = LIVE_FRAMING_POLICIES.get((side, style), (False, 1.0))
+    if type(target_lock) is not bool or not math.isfinite(distance) or not 1.0 <= distance <= 1.15:
+        raise ValueError("Invalid per-mode camera framing policy")
+    return {"target_lock": target_lock, "distance_extra": distance}
 
 
 

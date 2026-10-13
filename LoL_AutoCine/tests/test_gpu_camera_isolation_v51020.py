@@ -27,7 +27,9 @@ def test_other_mode_or_team_cannot_restore_its_rotation(monkeypatch, other_key):
             off=self.values.get('selectionOffset', {})
             pos=({'x':0., 'y':1900., 'z':-2500.} if self.values['cameraMode']=='top'
                  else {'x':off.get('x',0), 'y':off.get('y',0), 'z':off.get('z',0)})
-            return {'cameraPosition':pos, 'cameraRotation':{'x':0., 'y':37., 'z':0.}}
+            return {'cameraPosition':pos, 'cameraRotation':{'x':0., 'y':37., 'z':0.},
+                    'cameraMode':self.values['cameraMode'], 'cameraAttached':True,
+                    'selectionName':self.values['selectionName'], 'selectionOffset':off}
     player=Player(0,'Hero','Hero#JP','Hero','Hero','ORDER')
     save(other_key)
     camera.clear_tps_calibration('Hero', preserve_rotation=True)
@@ -37,7 +39,9 @@ def test_other_mode_or_team_cannot_restore_its_rotation(monkeypatch, other_key):
     save(own)
     camera.clear_tps_calibration('Hero', preserve_rotation=True)
     rig=camera.attach_to_player(API(), player, 'third_cinema', settle=0, third_elev=37)
-    assert rig.third and rig.rot['x']==180
+    # The corrected engine contract must not restore a stored backwards yaw.
+    # This own-mode cache remains separate, but aim is derived from its position.
+    assert rig.third and rig.rot['x']==0 and rig.rot['z']==0
     camera.clear_tps_calibration('Hero')
     assert not camera._TPS_CALIBRATION and not camera._TPS_STABLE_ROTATIONS
 

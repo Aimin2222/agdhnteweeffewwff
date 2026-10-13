@@ -64,7 +64,7 @@ def plan_eight_cases(players, events, preferred=None, modes=None):
                 result.append((side, player, chosen, mode, label))
     return result
 
-QA_BUILD_VERSION = "5.10.26-test"
+QA_BUILD_VERSION = "5.10.27-test"
 
 
 def camera_build_identity(project_root=None):
@@ -149,12 +149,16 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
                    "failed": [], "camera_diagnostics": []}
         current["baseline_reads"] = []
         def capture_camera_log(message):
-            if str(message).startswith(("CAMERA_QA_BASELINE ", "CAMERA_QA_TIMING ")):
+            if str(message).startswith(("CAMERA_QA_BASELINE ", "CAMERA_QA_TIMING ", "CAMERA_QA_INITIAL_POSE ")):
                 try:
                     evidence = json.loads(str(message).split(" ", 1)[1])
                     if isinstance(evidence, dict):
                         if str(message).startswith("CAMERA_QA_TIMING "):
                             current["recording_timing"] = evidence
+                        elif str(message).startswith("CAMERA_QA_INITIAL_POSE "):
+                            checks = current.setdefault("initial_pose_checks", [])
+                            if len(checks) < 3:
+                                checks.append(evidence)
                         elif len(current["baseline_reads"]) < 12:
                             current["baseline_reads"].append(evidence)
                 except (ValueError, TypeError, IndexError):

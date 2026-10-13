@@ -1,0 +1,82 @@
+name: AutoCine v5.10.27 camera axes and mode isolation
+on:
+  push:
+    branches: [codex/lol-autocine-v51027-camera-axes-handoff]
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  PYTHONUTF8: '1'
+  PYTHONIOENCODING: utf-8
+jobs:
+  linux-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: sudo apt-get update && sudo apt-get install -y xvfb xauth python3-tk ffmpeg
+      - run: python -m pip install --pre -r LoL_AutoCine/requirements.txt pytest
+      - name: All regression tests, native crash diagnostics enabled
+        working-directory: LoL_AutoCine
+        run: xvfb-run -a python ../handoff/run_linux_regressions.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: camera-v51027-linux-results
+          path: |
+            LoL_AutoCine/qa30mb-linux.xml
+            LoL_AutoCine/qa30mb-linux-modules.json
+  windows-smoke:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --pre -r LoL_AutoCine/requirements.txt pytest
+      - name: Real FFmpeg upload, cancel, NVENC retry and event-clock smoke
+        working-directory: LoL_AutoCine
+        run: python -m pytest tests/test_gpu_qa_upload_30mb.py tests/test_gpu_event_visual_identity_v51026.py tests/test_gpu_camera_axes_v51027.py tests/test_gpu_replay_warmup_v5101.py -q --junitxml=qa30mb-windows.xml
+      - name: Actual Windows UI has one developer QA button
+        working-directory: LoL_AutoCine
+        run: python ../handoff/smoke-single-qa-button.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: camera-v51027-windows-results
+          path: LoL_AutoCine/qa30mb-windows.xml
+  zip-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source ZIP CRC, artifact SHA256 and preserved Git bundle
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, zipfile
+          root = Path('handoff')
+          manifest = json.loads((root / 'MANIFEST.json').read_text())
+          for name, expected in manifest['artifacts'].items():
+              path = root / name
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
+              with zipfile.ZipFile(path) as z:
+                  assert z.namelist() and z.testzip() is None, name
+          bundle = root / manifest['bundle_file']
+          assert hashlib.sha256(bundle.read_bytes()).hexdigest() == manifest['bundle_sha256']
+          print('All ZIP CRC and artifact SHA256 checks passed')
+          PY
+          git bundle verify handoff/LoL_AutoCine_v5.10.26_SingleQAButton_GPUFull_all_branches.bundle
