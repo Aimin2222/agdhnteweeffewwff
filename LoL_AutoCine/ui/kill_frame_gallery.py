@@ -16,6 +16,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk, ImageDraw
 
 from core.kill_icons import STYLES, make_badge, ASSET_STYLES
+from core.kill_frame_abcd import ABCD, BY_CODE, _style_parts
 from ui.live_preview import LatestPreview
 
 
@@ -43,7 +44,7 @@ def render_badge(style, glow_strength=1., glow_enabled=True):
             ImageDraw.Draw(image).text((128,51),'NO FRAME',fill='white')
             return image
         make_badge(tmp,style,killer_icon=a,victim_icon=b,glow_strength=glow_strength,
-                   glow_enabled=glow_enabled,hires=style in ASSET_STYLES)
+                   glow_enabled=glow_enabled,hires=(style in ASSET_STYLES or style.startswith('d_')))
         with Image.open(tmp) as image:return image.convert('RGBA').copy()
 
 
@@ -104,11 +105,12 @@ class KillFrameGallery:
         heading=ttk.Frame(self.win,padding=10)
         heading.pack(fill="x")
         ttk.Label(heading,text="キルフレーム図鑑",font=("Meiryo UI",15,"bold")).pack(side="left")
+        ttk.Button(heading,text="＋ このチャットのデザイン画像を追加",command=self.import_original_boards).pack(side="left",padx=(10,0))
         ttk.Label(heading,text="試合の撮影は不要。選択後はかんたん編集・詳細編集の両方に反映。",
                   wraplength=460).pack(side="left",padx=(18,4))
         self.search=tk.StringVar()
         self.group=tk.StringVar(value="すべて")
-        self.groups=("すべて","追加素材","ゴールド・炎","ネオン・サイバー","スキンテーマ風","その他")
+        self.groups=("すべて","A/B/C","D｜スキンテーマ","D｜出身","追加素材","ゴールド・炎","ネオン・サイバー","スキンテーマ風","その他")
         ttk.Combobox(heading,textvariable=self.group,values=self.groups,state="readonly",width=17).pack(side="right",padx=(7,4))
         self.group.trace_add("write",self.filter_cards)
         ttk.Entry(heading,textvariable=self.search,width=22).pack(side="right")
@@ -215,7 +217,7 @@ class KillFrameGallery:
     def select(self,style,apply=False):
         if style not in STYLES:return
         self._chosen=style
-        self.title.configure(text=f"{STYLES[style]} — {'素材型・高画質' if style in ASSET_STYLES else '描画型'}")
+        self.title.configure(text=f"{STYLES[style]} — {'元コンセプト画像から抽出' if style.startswith('d_') else ('素材型・高画質' if style in ASSET_STYLES else '描画型')}")
         self._queue_preview()
         if apply:
             self.app.var_kill_icon_style.set(STYLES[style])
@@ -237,11 +239,21 @@ class KillFrameGallery:
         self._queue_preview()
 
     def _category(self, style):
+        if style in ABCD:return "A/B/C"
+        parts=_style_parts(style)
+        if parts:return "D｜出身" if parts[0].group=="出身" else "D｜スキンテーマ"
         if style.startswith("user_frame_"):return "追加素材"
         if any(x in style for x in ("gold","royal","inferno","noon","wing")):return "ゴールド・炎"
         if any(x in style for x in ("neon","cyber","project","crystal")):return "ネオン・サイバー"
         if any(x in style for x in ("kda","star","spirit","celestial")):return "スキンテーマ風"
         return "その他"
+
+    def import_original_boards(self):
+        """Import the actual generated images, not similarly named placeholder art."""
+        from ui.kill_frame_board_import import choose_and_import
+        if choose_and_import(self.win):
+            self.close()
+            open_gallery(self.app)
 
     def filter_cards(self,*_):
         token=self.search.get().strip().casefold()
