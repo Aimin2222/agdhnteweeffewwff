@@ -1647,14 +1647,11 @@ class App:
         ttk.Button(kb2, text="全解除", command=self.on_uncheck_all).pack(side="left", fill="x", expand=True, padx=(3,0))
         ttk.Button(f, text="▶ 選択シーンを作成", command=self.on_make_selected).pack(fill="x", pady=(5,0), ipady=3)
         ttk.Button(f, text="✓ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
-        ttk.Separator(f, orient="horizontal").pack(fill="x", pady=(8, 6))
-        ttk.Button(f, text="開発用：カメラ/演出テストを一括作成", command=self.on_dev_test_bundle).pack(fill="x", pady=(0,3))
-        ttk.Label(f, text="試合全体スキャン後、BLUE/REDの代表キルとモンタージュ演出をまとめて書き出す一時機能です。完成版では削除予定。", style="CardMuted.TLabel", wraplength=290).pack(fill="x")
         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
         ttk.Separator(f).pack(fill="x",pady=(8,6))
-        ttk.Button(f, text="開発用：1回で接続→全体スキャン→動画・画像→500MB ZIP",
+        ttk.Button(f, text="開発用：全カメラテスト・30MB ZIP",
                    command=self.on_dev_camera_qa).pack(fill="x",pady=(0,3))
-        ttk.Label(f, text="最初に1回押すだけ。スキャン済みなら結果を再利用。RED/BLUEカメラ、演出、画像と診断を自動収集（開発中のみ）。",
+        ttk.Label(f, text="1回で接続→全体スキャン→動画・画像・診断を自動作成。ZIPは各30MB以下。完成版では削除予定。",
                   style="CardMuted.TLabel",wraplength=300).pack(fill="x")
 
         f = card(right, "☁  出力状況")
@@ -4011,7 +4008,7 @@ class App:
             messagebox.showerror(APP, str(exc))
             return
         destination = Path(self.out_root)
-        self.log("開発テスト: 接続・全体スキャン・撮影・比較画像・500MB分割ZIPをまとめて開始します。")
+        self.log("開発テスト: 接続・全体スキャン・撮影・比較画像・各30MB以下の分割ZIPをまとめて開始します。")
         self._run_bg(self._run_one_click_camera_qa, template, destination)
 
     def _run_one_click_camera_qa(self, template, destination):
