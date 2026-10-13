@@ -9,6 +9,7 @@
 - 再生が進まない(同じ画面を録画し続ける)状態を検知して復旧 / 中止する
 """
 from __future__ import annotations
+from copy import deepcopy
 import re
 import time
 import json
@@ -23,7 +24,7 @@ from .capture import FrameSource, CaptureError, WGCWindowSource
 from .effects import Template, apply_effects, concat_clips
 from .hud import hide_hud, restore_hud
 from .render_fx import apply_fx, restore_fx
-from .players import Player
+from .players import Player, norm
 from .recorder import ClipRecorder
 from .replay_api import ReplayAPI, ReplayApiError
 from .scanner import group_clips
@@ -170,8 +171,10 @@ def _prepare_clip_capture(api, source, player, tpl, start, kills, stop, log):
     """Recover one stalled seek without recording old frames or shifting a clip."""
     _prime_live_replay_once(api, source, start, stop=stop, log=log)
     plan, rig = _setup_clip(api, player, tpl, start, kills, log)
+    pose_frame_baseline = source.frame_count if getattr(plan, "_prepare_pose_before_capture", False) else None
+    _apply_initial_camera_pose(api, plan, start, stop, log)
     try:
-        _await_capture_refresh(source, source.frame_count, stop=stop)
+        _await_capture_refresh(source, source.frame_count if pose_frame_baseline is None else pose_frame_baseline, stop=stop)
         return plan, rig
     except CaptureError as exc:
         if not isinstance(source, WGCWindowSource):
@@ -190,9 +193,58 @@ def _prepare_clip_capture(api, source, player, tpl, start, kills, stop, log):
     # A paused replay may deliver it DURING setup, then stop emitting frames.
     baseline = source.frame_count
     plan, rig = _setup_clip(api, player, tpl, start, kills, log)
+    if getattr(plan, "_prepare_pose_before_capture", False):
+        baseline = source.frame_count
+    _apply_initial_camera_pose(api, plan, start, stop, log)
     _await_capture_refresh(source, baseline, stop=stop)
     log('映像入力の復旧を確認、指定の開始時刻から録画します')
     return plan, rig
+
+
+def _apply_initial_camera_pose(api, plan, start, stop, log):
+    """Confirm repaired presets' final pose BEFORE recorder/audio clocks start.
+
+    Previously attach validated a provisional pose, but the first director
+    POST replaced it after capture started. The accepted RED #3/#5 path is
+    deliberately untouched. Invalid acknowledgements abort, never record an
+    unverified stale camera while reporting success.
+    """
+    if not getattr(plan, "_prepare_pose_before_capture", False) or plan.rig.mode != "fps":
+        return
+    offset = plan.offset_at(start)
+    rotation = plan.rotation_at(start)
+    if rotation is None:
+        raise ReplayApiError("録画前のカメラ視線を構成できません")
+    body = {"selectionName": plan.sel_name, "cameraMode": "fps", "cameraAttached": True,
+            "selectionOffset": dict(zip(("x", "y", "z"), offset)),
+            "cameraRotation": rotation, "fieldOfView": plan.fov_at(start)}
+    for attempt in range(3):
+        if stop is not None and stop.is_set():
+            raise StallError("録画前のカメラ確認を中止しました")
+        if attempt in (0, 2):
+            api.set_render(**body)
+        time.sleep(.08)
+        state = api.render()
+        try:
+            off = state["selectionOffset"]
+            rot = state["cameraRotation"]
+            valid = (state.get("cameraMode") == "fps"
+                     and state.get("cameraAttached") is True
+                     and norm(state.get("selectionName", "")) in plan._target_aliases
+                     and all(abs(float(off[k])-float(body["selectionOffset"][k])) <= 2.0 for k in ("x","y","z"))
+                     and all(abs((float(rot[k])-float(rotation[k])+180.0)%360.0-180.0) <= .5 for k in ("x","y","z"))
+                     and abs(float(state["fieldOfView"])-float(body["fieldOfView"])) <= .5)
+        except (KeyError, TypeError, ValueError, OverflowError):
+            valid = False
+        log("CAMERA_QA_INITIAL_POSE " + json.dumps({
+            "attempt": attempt+1, "verified": valid, "requested_offset": body["selectionOffset"],
+            "requested_rotation": rotation, "observed_offset": state.get("selectionOffset"),
+            "observed_rotation": state.get("cameraRotation"), "observed_mode": state.get("cameraMode"),
+            "selection_verified": norm(state.get("selectionName", "")) in plan._target_aliases,
+        }, ensure_ascii=False))
+        if valid:
+            return
+    raise ReplayApiError("録画前のカメラ姿勢が反映されません。元映像の取り違えを防ぐため中止します")
 
 
 def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kills: list,
@@ -204,7 +256,7 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
     if actual is not None and abs(float(actual) - float(start)) > 0.80:
         raise ReplayApiError(f'リプレイのシーク位置が確定しません ({actual:.2f}s / 目標 {start:.2f}s)')
     side_choice = getattr(tpl, 'camera_side', 'auto')
-    profile = live_side_profile(getattr(player, 'team', 'ORDER'), side_choice)
+    profile = live_side_profile(getattr(player, 'team', 'ORDER'), side_choice, style=tpl.style)
     live_third = tpl.style in ('third', 'third_cinema', 'lolnam_cinema', 'geo_aim')
     elev = max(float(getattr(tpl, 'third_elev', 28.0)), profile['elevation']) if live_third else float(getattr(tpl, 'third_elev', 28.0))
     dist = max(float(getattr(tpl, 'third_dist', 950.0)), profile['distance']) if live_third else float(getattr(tpl, 'third_dist', 950.0))
@@ -217,7 +269,7 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                        third_yaw=getattr(tpl, "third_yaw", 0.0),
                       motion_arc=getattr(tpl, "motion_arc", 0.0), motion_dolly=getattr(tpl, "motion_dolly", 0.0),
                       motion_profile=getattr(tpl, "motion_profile", "cinematic"),
-                      scene_keyframes=tuple(getattr(tpl, 'scene_keyframes', ()) or ()),
+                      scene_keyframes=tuple(deepcopy(getattr(tpl, 'scene_keyframes', ()) or ())),
                        smart_composition=bool(getattr(tpl, 'smart_composition', False)),
                        smart_impact=(float(getattr(tpl, 'highlight_pulse', 0.0))
                                      if getattr(tpl, 'smart_highlight_enabled', False) else 0.0), rig=rig,
@@ -225,11 +277,14 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                        team=getattr(player, 'team', 'ORDER'),
                       sel_name=player.selection_name or player.champion)
     plan._auto_director_strength = getattr(tpl, "auto_director_strength", None)
+    plan._target_aliases = frozenset(player.aliases() if hasattr(player, "aliases") else
+                                     {norm(player.selection_name), norm(player.champion)})
     plan._camera_axis_safety = tpl.style in ('third', 'geo_aim')
-    # v5.10.21: every approved camera has isolated, bounded composition
-    # adjustments. Never change the shared target-lock or Replay API protocol.
-    from .camera_tuning import shot_tuning, target_center_rotation
+    # Mode-specific composition and axis policy. The accepted RED3/5 retain
+    # their numeric behavior; repaired modes share only the measured API math.
+    from .camera_tuning import shot_tuning, target_center_rotation, live_framing_policy
     shot = shot_tuning(getattr(player, "team", "ORDER"), tpl.style)
+    framing = live_framing_policy(getattr(player, "team", "ORDER"), tpl.style)
     plan._live_dist_factor = shot["distance"]
     plan._live_fps_back = shot["fps_back"]
     plan._live_angle_bias = ({} if tpl.style == "fps" and side_choice != "auto" else shot["angles"])
@@ -241,21 +296,29 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
     if (str(getattr(player, "team", "")).upper() in ("CHAOS", "RED")
             and tpl.style == "third" and side_choice != "auto"):
         plan._live_angle_bias = {"x": 4.0}
-    # Side+mode-specific opt-in. BLUE geo_aim #10 is the visual reference;
-    # do not alter its existing pose or any RED third_cinema #2 framing.
-    # All modes still use the same replay/capture/audio engine.
+    # Keep older flags for direct callers. The measured engine target-lock
+    # policy below supersedes the rejected BLUE/RED2/RED4 rotation layouts.
     blue = str(getattr(player, 'team', '')).upper() in ('ORDER', 'BLUE')
     plan._live_blue_geo_look = blue and tpl.style in ('third', 'third_cinema', 'lolnam_cinema')
     plan._live_blue_pulled_back = blue and tpl.style == 'third'
     plan._live_fps_recenter = tpl.style == 'fps'
-    if plan._live_fps_recenter and (not blue or side_choice != 'auto'):
+    if plan._live_fps_recenter:
         # RED FPS #3: target-relative position must use the same ~192-degree
         # RED side heading as cameraRotation; previously position used yaw=0
         # while rotation aimed backwards at yaw=192, showing empty terrain.
         plan._live_fps_side_heading = profile["yaw"]
     plan._live_red_normal_reframe = (not blue and tpl.style == 'third' and side_choice == 'auto')
+    plan._live_engine_target_lock = framing["target_lock"]
+    if framing["target_lock"]:
+        # Old biases compensated a swapped axis; applying them to correct
+        # Replay axes would turn the lens away from the attached target again.
+        plan._live_angle_bias = {}
+    red_normal_pullback = not blue and tpl.style == 'third' and side_choice == 'auto'
+    if red_normal_pullback:
+        plan._live_dist_factor *= framing["distance_extra"]
+    plan._prepare_pose_before_capture = framing["target_lock"] or red_normal_pullback
     # QA-only readout: compare RED/BLUE rotations and positions numerically.
-    # No extra Replay API writes; normal production clips are unchanged.
+    # Logging itself adds no Replay API writes.
     if str(getattr(tpl, "name", "")).startswith("CameraQA "):
         try:
             log("CAMERA_QA_POSE " + json.dumps({
@@ -283,6 +346,9 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                 "target_center_rotation": (target_center_rotation(plan.offset_at(start))
                                            if plan._live_red_target_center else None),
                 "fps_target_relative": bool(tpl.style == "fps" and getattr(plan, "_live_fps_recenter", False)),
+                "engine_target_lock_enabled": bool(plan._live_engine_target_lock),
+                "framing_policy": framing,
+                "rotation_contract": ("X_yaw_Y_downward_pitch_Z_zero" if plan._live_engine_target_lock else "protected_legacy_mode"),
             }, ensure_ascii=False, default=str))
         except Exception as diagnostic_error:
             log(f"カメラQA数値ログ取得失敗（録画は継続）: {diagnostic_error}")

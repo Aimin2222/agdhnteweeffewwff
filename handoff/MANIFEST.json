@@ -1,10 +1,14 @@
 {
-  "source_head": "fa13295637e7c1e97c60c74f332430de707a96ae",
-  "source_branch": "integration/v5.10.26-qa-single-button",
-  "source_files": 551,
-  "python_files": 199,
-  "bundle_file": "LoL_AutoCine_v5.10.26_SingleQAButton_GPUFull_all_branches.bundle",
-  "bundle_sha256": "872b3bae70efdcdf31a9a41fc063dce41566b82262277b6baaa093da990be6f7",
+  "source_head": "1804a72d83e64bed5ec21803eda6b6954efbc2da",
+  "source_branch": "integration/v5.10.27",
+  "source_base": "fa13295637e7c1e97c60c74f332430de707a96ae",
+  "source_files": 557,
+  "python_files": 201,
+  "version": "5.10.27-test",
+  "camera_code_fingerprint": "d24f6d6fa573b4e2",
+  "camera_code_sha256": "d24f6d6fa573b4e2ed114fa91ef4d27785534245541698c5de1c81a219cf0f58",
+  "bundle_file": "LoL_AutoCine_v5.10.27_CameraAxes_GPUFull_all_branches.bundle",
+  "bundle_sha256": "30973b54b0c3ed4115fc3ae7ff59612633e1889148a4f65a33fc2d5d4b6370b8",
   "branches": [
     "archive/qa30mb-r1-gpu 299ef6246d8f2e273befe8db21678bc453c00176",
     "archive/qa30mb-r1-integration c0d26f192b054dad8eb89fbd829dffe0e33a9d91",
@@ -33,6 +37,7 @@
     "codex/initial-audit 5673592f1acad1387564440a1ec9b6b9e8f00f5a",
     "feature/capture-startup-v5103 f6cb59082069e938fa994978bca47db918ee1b10",
     "feature/capture-targetfix-v5103 8f4fa6900afec88ae7f56a385dac9efe72a1f9cb",
+    "feature/gpu-camera-axis-v51027 5801700694a8901ed03f5c6bee602299dd2fdeec",
     "feature/gpu-camera-evidence-v51017 aa69a71faf7dd2639c7898f4d5ebea5e6d695b91",
     "feature/gpu-camera-v51015 d13ac8ed2aa603992f05945fcbcc7ffb77202a89",
     "feature/gpu-cameraqa-v51019 04f6db9f1e182e7c3caaad53dfaf544e5cd72ea4",
@@ -59,6 +64,7 @@
     "feature/gpu-shared-v5104 4462635e6887e3cf38bf687b120eebe4be415d45",
     "feature/gpu-shared-v5105 efcbbd17bd143055a437ced4341727c35c828728",
     "feature/gpu-test-launch-v5107 eefbfd65cd94b42319ebf98df3dcdbc40220aa7f",
+    "feature/ui-camera-axis-v51027 a1cfed17cd1daca39c1a303d2202cdd18fd37dcd",
     "feature/ui-camera-evidence-v51017 db0dbf66025a2066fe1c3d361995a4611f515276",
     "feature/ui-cameraqa-single-button 82b11c156f7325e324f985f1469fb59315a59314",
     "feature/ui-cameraqa-v51019 0581fc1739d75096f7809d4c730fd3e1e110c586",
@@ -121,6 +127,7 @@
     "integration/v5.10.26 fec860c3db327fcbf2f22c2b03e1e133ffeb16e5",
     "integration/v5.10.26-qa-single-button fa13295637e7c1e97c60c74f332430de707a96ae",
     "integration/v5.10.26-qa30mb eeec581fe8b8505910a9408e911ef07b648ea02d",
+    "integration/v5.10.27 1804a72d83e64bed5ec21803eda6b6954efbc2da",
     "integration/v5.10.3 9dc795ded438d0ce4510e9d99fd699ec9155230f",
     "integration/v5.10.3-capture60 2a7a538540cbce9c13aae49da4a156cfd7ff4671",
     "integration/v5.10.3-capturefix 86a1165658082daaff902649dd56eb7a4895ed09",
@@ -146,7 +153,7 @@
     "stable/v5.8.5 96b928a7385537317e73bad5235a28984fe94716"
   ],
   "artifacts": {
-    "LoL_AutoCine_v5.10.26_SingleQAButton_GPUFull_Windows_Full.zip": "e9927a59c50bf4af1821d9a046ed541141056048a538e0ae79047d59103aa80b",
-    "LoL_AutoCine_v5.10.26_SingleQAButton_GPUFull_Codex_MergeChanges.zip": "a493d45e7ca57272516b1e8b7fb61273c081f5cedc0172bc463fe95c964f124c"
+    "LoL_AutoCine_v5.10.27_CameraAxes_GPUFull_Windows_Full.zip": "41ed002959ff6febf6bf7d688ba24d001ed0f5a123bbfdb529af0bae32bfd8a3",
+    "LoL_AutoCine_v5.10.27_CameraAxes_GPUFull_Codex_MergeChanges.zip": "3c74c8291b86479e2c9e5caa6b96cd49623de4699e473cba837399595ccce1a1"
   }
 }

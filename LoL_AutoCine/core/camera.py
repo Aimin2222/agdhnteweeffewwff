@@ -21,10 +21,10 @@ import time
 from dataclasses import dataclass
 from typing import Callable, Optional
 
-from .players import Player
+from .players import Player, norm
 from .replay_api import ReplayAPI, ReplayApiError
 from .camera_clock import SmoothReplayClock
-from .camera_tuning import target_center_rotation
+from .camera_tuning import target_center_rotation, live_framing_policy
 import json
 
 INTENSITY = {"natural": 0.6, "standard": 1.0, "strong": 1.4}
@@ -107,11 +107,27 @@ SIDE_THIRD_PROFILES = {
     'CHAOS': dict(yaw=192.0, elevation=42.0, distance=1170.0),
 }
 
+# Live five-mode profiles are independent, not aliases of a mutable side preset.
+LIVE_MODE_PROFILES = {
+    ("ORDER", "third"): (-12.0, 37.0, 1060.0),
+    ("ORDER", "third_cinema"): (-12.0, 37.0, 1060.0),
+    ("ORDER", "fps"): (0.0, 37.0, 1060.0),
+    ("ORDER", "lolnam_cinema"): (-12.0, 37.0, 1060.0),
+    ("ORDER", "geo_aim"): (-12.0, 37.0, 1060.0),
+    ("CHAOS", "third"): (192.0, 42.0, 1170.0),
+    ("CHAOS", "third_cinema"): (192.0, 42.0, 1170.0),
+    ("CHAOS", "fps"): (192.0, 42.0, 1170.0),
+    ("CHAOS", "lolnam_cinema"): (192.0, 42.0, 1170.0),
+    ("CHAOS", "geo_aim"): (192.0, 42.0, 1170.0),
+}
 
-def live_side_profile(team: str, choice: str = 'auto') -> dict:
+
+def live_side_profile(team: str, choice: str = 'auto', *, style: str | None = None) -> dict:
     """Calibrated per-side safe rear view, with manual heading overrides."""
     team = 'CHAOS' if str(team).upper() in ('CHAOS', 'RED') else 'ORDER'
-    profile = dict(SIDE_THIRD_PROFILES[team])
+    values = LIVE_MODE_PROFILES.get((team, style))
+    profile = (dict(zip(('yaw', 'elevation', 'distance'), values)) if values is not None
+               else dict(SIDE_THIRD_PROFILES[team]))
     if choice in ('blue', 'red'):
         profile['yaw'] = side_yaw_for(team, choice)
     return profile
@@ -513,12 +529,12 @@ class CameraPlan:
         return (self.rig.v[0] * s, self.rig.v[1] * s + self.height, self.rig.v[2] * s)
 
     def _live_geo_look(self, t: float) -> Optional[dict]:
-        """BLUE #10 verified camera convention: geometric look-at.
+        """Historical BLUE axis layout retained for legacy direct callers.
 
         The third_cinema and Lolnam styles still differ in position, FOV,
         orbit curve and zoom. Only the screen-facing rotation is shared in
-        their BLUE opt-in rescue path, instead of trusting an unstable Replay
-        pitch calibration from the last camera preset.
+        their old BLUE opt-in path. Live jobs now use _live_engine_target_lock
+        and bypass this swapped layout, based on the Windows QA evidence.
         """
         if self.rig is None or not self.rig.third:
             return None
@@ -546,6 +562,11 @@ class CameraPlan:
 
     def _raw_rotation_at(self, t: float) -> Optional[dict]:
         """確定版Orbitの三人称視線。カメラ位置の公転と同じ基準。"""
+        if (getattr(self, "_live_engine_target_lock", False)
+                and self.rig is not None and self.rig.mode == "fps"):
+            # Derived from the SAME position used for capture, not a preset
+            # heading interpreted as pitch or a cached Z axis interpreted as yaw.
+            return target_center_rotation(self.offset_at(t))
         if self.style == "fps" and getattr(self, "_live_fps_recenter", False):
             if self.rig is None or self.rig.v is None:
                 return None
@@ -873,6 +894,17 @@ class CameraDirector:
                     body = limit_camera_post(
                         body, self._last_render_body, interval,
                         slow_api=self._recent_render_ms >= 45.0)
+                    if getattr(plan, "_live_engine_target_lock", False) and "selectionOffset" in body:
+                        # The last limiter/smoother may have moved the camera.
+                        # Aim from the actual SENT offset, not from its future
+                        # unsmoothed position. Offset smoothing keeps motion smooth.
+                        position = body["selectionOffset"]
+                        aimed = target_center_rotation(tuple(position[k] for k in ("x", "y", "z")))
+                        if self._last_render_body and self._last_render_body.get("cameraRotation"):
+                            previous_yaw = float(self._last_render_body["cameraRotation"]["x"])
+                            aimed["x"] = previous_yaw + (aimed["x"] - previous_yaw + 180.0) % 360.0 - 180.0
+                        body["cameraRotation"] = aimed
+                        self._smooth_rot = dict(aimed)
                     api_t0 = time.perf_counter()
                     self.api.set_render(**body)
                     api_ms = (time.perf_counter() - api_t0) * 1000.0
@@ -938,6 +970,7 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
     # player *and* camera preset. Never reuse another mode's stale rig.
     cache_key = (sel, str(p.team).upper(), style)
     cached = _TPS_CALIBRATION.get(cache_key)
+    repair_axes = live_framing_policy(p.team, style)["target_lock"]
 
     api.set_render(selectionName=sel, cameraMode="top", cameraAttached=True,
                    fieldOfView=base_fov, selectionOffset=ZERO)
@@ -966,6 +999,51 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
     P = _vec(r_fps.get("cameraPosition"))
     log_read("attached_target_baseline", r_fps)
 
+    if repair_axes:
+        aliases = (p.aliases() if hasattr(p, "aliases") else
+                   {norm(getattr(p, k, "")) for k in ("name", "riot_id", "summoner", "champion", "selection_name")})
+        def coherent_pair(top, attached):
+            c, point = _vec(top.get("cameraPosition")), _vec(attached.get("cameraPosition"))
+            if c is None or point is None or not all(math.isfinite(v) for v in (*c, *point)):
+                return False
+            if top.get("cameraMode") != "top" or attached.get("cameraMode") != "fps":
+                return False
+            if top.get("cameraAttached") is not True or attached.get("cameraAttached") is not True:
+                return False
+            top_name, attached_name = top.get("selectionName"), attached.get("selectionName")
+            # The API may return a summoner name for a champion-name request.
+            # Compare the two observed selections, not two different aliases.
+            if not top_name or not attached_name or norm(top_name) != norm(attached_name) or norm(top_name) not in aliases:
+                return False
+            for snapshot in (top, attached):
+                offset = _vec(snapshot.get("selectionOffset"))
+                if offset is None or not all(math.isfinite(v) for v in offset) or _len(offset) > 1.0:
+                    return False
+            delta = _sub(c, point)
+            return 50.0 < math.hypot(delta[0], delta[2]) <= 4500.0 and delta[1] >= MIN_CLEARANCE
+
+        # Re-read a matched top/attached pair while paused. Never infer the
+        # orbit from another player's previous camera or reuse an old world P.
+        for attempt in range(2):
+            if coherent_pair(r_top, r_fps):
+                break
+            log("カメラ: 基準座標の対象/モード/距離が不一致。同じ対象のtop/fpsを再取得します")
+            api.set_render(selectionName=sel, cameraMode="top", cameraAttached=True,
+                           fieldOfView=base_fov, selectionOffset=ZERO)
+            time.sleep(settle)
+            r_top = api.render()
+            log_read("reacquired_top_baseline", r_top, attempt=attempt+1)
+            api.set_render(selectionName=sel, cameraMode="fps", cameraAttached=True, selectionOffset=ZERO)
+            time.sleep(settle)
+            r_fps = api.render()
+            log_read("reacquired_attached_baseline", r_fps, attempt=attempt+1)
+        if not coherent_pair(r_top, r_fps):
+            info = _fallback_top(api, sel, base_fov, "同じ対象の基準座標を確認できず、安全な俯瞰へ切替")
+            log("カメラ: " + info.note)
+            return info
+        C, P = _vec(r_top.get("cameraPosition")), _vec(r_fps.get("cameraPosition"))
+        rot = r_top.get("cameraRotation")
+
     # 現在のAPI値が正常なら、それを優先してキャリブレーションする。
     current_v = _sub(C, P) if C is not None and P is not None else None
     current_h = None
@@ -986,6 +1064,11 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
                 sign = 1.0 if float(rot[axis]) >= 0 else -1.0
             except Exception:
                 axis = None
+    if repair_axes:
+        # The measured engine contract is X=yaw, Y=pitch, Z=roll on BOTH
+        # teams. Comparing a stale offset's elevation to Euler values mistook
+        # yaw X=0 for pitch and later sent side yaw through roll Z=-192.
+        axis, sign, pitch_complement = "y", 1.0, False
 
     # Seek can return an old/unsettled render transform. One read-only retry
     # often returns the rotation after camera mode has actually updated.
@@ -1004,7 +1087,7 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
 
     # ここが重要: 現在の cameraRotation だけで軸を決められなくても、
     # 過去に成功した三人称リグがあれば、それを録画時にも再利用する。
-    if style in THIRD_STYLES and cached:
+    if style in THIRD_STYLES and cached and not repair_axes:
         cached_axis = cached.get("axis", "")
         cached_sign = float(cached.get("sign", -1.0))
         if not axis and cached_axis:
@@ -1087,7 +1170,9 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
             rot_use = {"x": 0.0, "y": 0.0, "z": 0.0}
         rot_use[axis] = sign * (90.0 - third_elev if pitch_complement else third_elev)
         forced_axes = style == "third" or (style == "geo_aim" and str(p.team).upper() in ("CHAOS", "RED"))
-        if forced_axes:
+        if repair_axes:
+            rot_use = target_center_rotation(off)
+        elif forced_axes:
             # Keep the safe Y pitch convention consistent with the cached rig.
             axis, sign, pitch_complement = "y", 1.0, False
             rot_use = {"x": 0.0, "y": max(18.0, min(58.0, float(third_elev))), "z": 0.0}

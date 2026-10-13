@@ -11,7 +11,7 @@ from pathlib import Path
 import subprocess
 
 
-GPU_FILES = {"tools/make_cameraqa_upload.py", "MAKE_CAMERAQA_UPLOAD.bat", "core/qa_upload.py", "core/qa_support.py", "core/camera_tuning.py", "tools/reference_video_review.py", "core/qa_reels.py", "core/qa_true_transitions.py", "core/camera_geometry.py", "core/qa_plan.py", "core/qa_visual.py", "core/qa_package.py", "qa/test_plan.json", "qa/xmedia_reference_notes_v51025.json", "tests/test_v51017_badge_camera_evidence.py", "core/camera_qa.py", "core/auto_qa.py", "RUN_AUTOTEST.bat", "core/effects.py", "core/gpu_pipeline.py", "core/recorder.py",
+GPU_FILES = {"tests/red35_v51026_golden.json", "tools/make_cameraqa_upload.py", "MAKE_CAMERAQA_UPLOAD.bat", "core/qa_upload.py", "core/qa_support.py", "core/camera_tuning.py", "tools/reference_video_review.py", "core/qa_reels.py", "core/qa_true_transitions.py", "core/camera_geometry.py", "core/qa_plan.py", "core/qa_visual.py", "core/qa_package.py", "qa/test_plan.json", "qa/xmedia_reference_notes_v51025.json", "tests/test_v51017_badge_camera_evidence.py", "core/camera_qa.py", "core/auto_qa.py", "RUN_AUTOTEST.bat", "core/effects.py", "core/gpu_pipeline.py", "core/recorder.py",
              'tools/gpu_render_test.py','START_CPU_EFFECTS_COMPARE.bat','START_GPU_HYBRID.bat','TEST_GPU_RENDER.bat',
              "tools/setup_gpu_ffmpeg.py", "START_GPU.bat",
              "core/focus_fx.py", "core/preview.py",
@@ -67,6 +67,7 @@ INFRA_FILES = {
     'tools/package_v51024.py',
     'tools/package_v51025.py',
     'tools/package_v51026.py',
+    'tools/package_v51027.py',
     'tools/check_text_encoding.py',
     'tests/test_encoding_audit_v51022.py',
     'MAKE_REFERENCE_SHEETS.bat',
