@@ -153,6 +153,7 @@ class KillFrameGallery:
         self.preview=ttk.Label(right,text="読み込み中…")
         self.preview.pack(fill="x",pady=(6,8))
         ttk.Button(right,text="▣ さらに拡大して確認",command=self.zoom_preview).pack(fill="x",pady=(0,8))
+        ttk.Button(right,text="✂ Dの元画像から切り出す位置を調整",command=self.edit_source_crop).pack(fill="x",pady=(0,8))
         ttk.Label(right,text="青／赤は見本の肖像です。実際の書き出しでは試合のチャンピオンアイコンになります。",
                   wraplength=410).pack(anchor="w")
         self.strength=tk.DoubleVar(value=float(app.var_kill_glow_strength.get()))
@@ -225,6 +226,17 @@ class KillFrameGallery:
             self.app.var_kill_glow_enabled.set(bool(self.glow_enabled.get()))
             self.app._save_settings()
             self.app.log("キルフレーム図鑑から適用: "+STYLES[style])
+
+    def edit_source_crop(self):
+        from ui.kill_frame_crop_editor import open_crop_editor
+        parts=_style_parts(self._chosen)
+        if parts is None:
+            from tkinter import messagebox
+            messagebox.showinfo("元画像の位置調整","Dのテーマを選んでください。",parent=self.win)
+            return
+        open_crop_editor(self.win,parts[0].code)
+        # New files can be viewed again after saving by choosing the style.
+        self._queue_preview()
 
     def zoom_preview(self):
         if self._zoom_window is not None and self._zoom_window.winfo_exists():
