@@ -1,0 +1,1599 @@
+{
+  "schema_version": 1,
+  "status": "prototype_not_approved",
+  "source_base_commit": "ae73309d9066f5389cb443fd999dbe10239ad524",
+  "generated_or_inpainted": false,
+  "rgb_policy": "Every output RGB pixel equals the source crop, including hidden pixels; only alpha changes.",
+  "game_background": "qa/lol_background.png",
+  "assets": [
+    {
+      "theme": "winter_festival",
+      "source_file": "image.png",
+      "source_sha256": "498e18ee6d2dafa3a0ee5c4a5beadef5727af3e001a5d714773ef1ece5dc5217",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/winter_festival/frame_weak.png",
+      "sha256": "3579bc05d42d2d2afc552f0dc8e4e55ca21212fa66960a60d5e4321b21e9967e",
+      "mask_file": "themes/winter_festival/frame_weak.alpha.png",
+      "mask_sha256": "65f73a7031e8e4910412661d39643628b8dac4e99accc8c99cbac933bd66b89f",
+      "crop_box": [
+        43,
+        234,
+        511,
+        383
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            55,
+            260,
+            173,
+            376
+          ]
+        },
+        {
+          "ellipse": [
+            387,
+            259,
+            501,
+            373
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            41,
+            245,
+            187,
+            390
+          ]
+        },
+        {
+          "ellipse": [
+            375,
+            244,
+            513,
+            386
+          ]
+        },
+        {
+          "polygon": [
+            [
+              177,
+              280
+            ],
+            [
+              203,
+              256
+            ],
+            [
+              267,
+              248
+            ],
+            [
+              284,
+              234
+            ],
+            [
+              300,
+              248
+            ],
+            [
+              357,
+              264
+            ],
+            [
+              383,
+              296
+            ],
+            [
+              370,
+              344
+            ],
+            [
+              340,
+              383
+            ],
+            [
+              231,
+              383
+            ],
+            [
+              180,
+              345
+            ]
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            15.656781616201032,
+            33.552630796884706,
+            62.76002783104988
+          ],
+          [
+            5.777083998862945,
+            2.3641840369762557,
+            1.1416849371304203
+          ],
+          [
+            4.769462550940088,
+            16.057616685266225,
+            22.415051681770297
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 46407,
+        "partial": 9642,
+        "opaque": 13683
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Ice glow and pale motif edges need white/black background review; face-overlapping decoration and row-divider junctions cannot be reconstructed."
+      ],
+      "measured_sprite_center_in_board": [
+        277.0,
+        308.5
+      ],
+      "sprite_anchor": [
+        234.0,
+        74.5
+      ]
+    },
+    {
+      "theme": "winter_festival",
+      "source_file": "image.png",
+      "source_sha256": "498e18ee6d2dafa3a0ee5c4a5beadef5727af3e001a5d714773ef1ece5dc5217",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/winter_festival/frame_strong.png",
+      "sha256": "8da548b6556b9678cd45fc4b8c7d503793a30f45b531a3b45bd97a5179648711",
+      "mask_file": "themes/winter_festival/frame_strong.alpha.png",
+      "mask_sha256": "f29b24bae2ebc0215d275968a79047a31818d2eed96fbd16651e038886b6a995",
+      "crop_box": [
+        745,
+        227,
+        1270,
+        388
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            768,
+            262,
+            881,
+            372
+          ]
+        },
+        {
+          "ellipse": [
+            1148,
+            262,
+            1261,
+            373
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            748,
+            247,
+            897,
+            390
+          ]
+        },
+        {
+          "ellipse": [
+            1134,
+            245,
+            1278,
+            390
+          ]
+        },
+        {
+          "polygon": [
+            [
+              872,
+              291
+            ],
+            [
+              939,
+              267
+            ],
+            [
+              983,
+              247
+            ],
+            [
+              1018,
+              227
+            ],
+            [
+              1051,
+              247
+            ],
+            [
+              1133,
+              284
+            ],
+            [
+              1147,
+              333
+            ],
+            [
+              1115,
+              369
+            ],
+            [
+              1070,
+              381
+            ],
+            [
+              1018,
+              386
+            ],
+            [
+              965,
+              380
+            ],
+            [
+              915,
+              371
+            ],
+            [
+              875,
+              339
+            ]
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            66.84755236945648,
+            28.186405441035642,
+            38.430327452720945
+          ],
+          [
+            -2.324447502473876,
+            4.608870830371708,
+            7.368788245282168
+          ],
+          [
+            -16.667681171883988,
+            7.066521027935869,
+            11.742378450083612
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 42656,
+        "partial": 12724,
+        "opaque": 29145
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Ice glow and pale motif edges need white/black background review; face-overlapping decoration and row-divider junctions cannot be reconstructed."
+      ],
+      "measured_sprite_center_in_board": [
+        1007.5,
+        307.5
+      ],
+      "sprite_anchor": [
+        262.5,
+        80.5
+      ]
+    },
+    {
+      "theme": "winter_festival",
+      "source_file": "image.png",
+      "source_sha256": "498e18ee6d2dafa3a0ee5c4a5beadef5727af3e001a5d714773ef1ece5dc5217",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/winter_festival/center_melee.png",
+      "sha256": "e3ad1414a184b181bc0b197a1d5653b880e07152f235fb7c87e3e5ccc0d73da5",
+      "mask_file": "themes/winter_festival/center_melee.alpha.png",
+      "mask_sha256": "132490441e9bc02a0d72d1a293036959c0efd6d131ffde6ee20155d4856c4e51",
+      "crop_box": [
+        34,
+        858,
+        179,
+        978
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            242.72667711147375,
+            242.0668708269405,
+            240.75701478379654
+          ],
+          [
+            0.4649786259106213,
+            -0.9048608325235382,
+            -3.450302462898556
+          ],
+          [
+            1.2853748823273836,
+            0.315736158989523,
+            -2.0989736011897673
+          ]
+        ],
+        "distance_thresholds": [
+          10.0,
+          58.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 7903,
+        "partial": 2995,
+        "opaque": 6502
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Ice glow and pale motif edges need white/black background review; face-overlapping decoration and row-divider junctions cannot be reconstructed."
+      ],
+      "measured_sprite_center_in_board": [
+        106.5,
+        918.0
+      ],
+      "sprite_anchor": [
+        72.5,
+        60.0
+      ]
+    },
+    {
+      "theme": "winter_festival",
+      "source_file": "image.png",
+      "source_sha256": "498e18ee6d2dafa3a0ee5c4a5beadef5727af3e001a5d714773ef1ece5dc5217",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/winter_festival/center_ranged.png",
+      "sha256": "0fa3e7911e2fe38834237ef438e7890dca036d5168f6de21f21fedee0b1e1e40",
+      "mask_file": "themes/winter_festival/center_ranged.alpha.png",
+      "mask_sha256": "35b28691a5de40918b6007986c53e6a39fb7bd7243cf7e010ec2c8f4a37b92b5",
+      "crop_box": [
+        521,
+        858,
+        648,
+        977
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            245.11576671533672,
+            243.1668097838594,
+            239.37274041202284
+          ],
+          [
+            0.07716530640260996,
+            -1.246037094734513,
+            -3.2958165079829493
+          ],
+          [
+            -1.1796913053961442,
+            -0.9236343831424804,
+            -1.2359754236939977
+          ]
+        ],
+        "distance_thresholds": [
+          10.0,
+          58.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 7189,
+        "partial": 3694,
+        "opaque": 4230
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Ice glow and pale motif edges need white/black background review; face-overlapping decoration and row-divider junctions cannot be reconstructed."
+      ],
+      "measured_sprite_center_in_board": [
+        584.5,
+        917.5
+      ],
+      "sprite_anchor": [
+        63.5,
+        59.5
+      ]
+    },
+    {
+      "theme": "winter_festival",
+      "source_file": "image.png",
+      "source_sha256": "498e18ee6d2dafa3a0ee5c4a5beadef5727af3e001a5d714773ef1ece5dc5217",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/winter_festival/center_hybrid.png",
+      "sha256": "ea842ab18d03b36886a0d92da2585962a93a208ba43b7a3961e3c0b76278ab08",
+      "mask_file": "themes/winter_festival/center_hybrid.alpha.png",
+      "mask_sha256": "dfe1f5efa7bd8a368698edd4f0437107dfd0c68101f443abe3e4c4c3c4991d01",
+      "crop_box": [
+        966,
+        852,
+        1100,
+        977
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [
+        {
+          "rectangle": [
+            966,
+            852,
+            1100,
+            862
+          ]
+        }
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            244.95535065205192,
+            242.67903725589383,
+            238.1407080074625
+          ],
+          [
+            -0.3116048529051242,
+            -1.1865962647014123,
+            -2.3326169812462023
+          ],
+          [
+            -0.25112797444574936,
+            0.09934678516357395,
+            0.11982219943383954
+          ]
+        ],
+        "distance_thresholds": [
+          10.0,
+          58.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 8588,
+        "partial": 2019,
+        "opaque": 6143
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Ice glow and pale motif edges need white/black background review; face-overlapping decoration and row-divider junctions cannot be reconstructed."
+      ],
+      "measured_sprite_center_in_board": [
+        1033.0,
+        914.5
+      ],
+      "sprite_anchor": [
+        67.0,
+        62.5
+      ]
+    },
+    {
+      "theme": "project",
+      "source_file": "image-gen-1(8).png",
+      "source_sha256": "aa50fa648e0ffc3859d290881d8867f010918f0d4e8311c25228eeaa6d8d03d0",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/project/frame_weak.png",
+      "sha256": "07ec547081cc0818fdb354b64ecc1b211c4a3d27019e9b65d5f2de1038478f35",
+      "mask_file": "themes/project/frame_weak.alpha.png",
+      "mask_sha256": "1c79a2c3f5a442c02d27b7fc3de75d56238141d9b63610d4d98586d287ba69af",
+      "crop_box": [
+        59,
+        320,
+        463,
+        425
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            69,
+            330,
+            164,
+            415
+          ]
+        },
+        {
+          "rectangle": [
+            359,
+            330,
+            452,
+            415
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            1.0366019602570449,
+            6.827979509478569,
+            13.321104941985888
+          ],
+          [
+            4.155824138053446,
+            -1.3949524802155808,
+            -2.852495472437515
+          ],
+          [
+            -0.07520807344417116,
+            -0.8127740893012938,
+            -1.3001530773353753
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 28401,
+        "partial": 6204,
+        "opaque": 7815
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Dark metal and neon falloff are blended into black source background; white comparison shows matte/fringe and fine fragments that require manual-mask review."
+      ],
+      "measured_sprite_center_in_board": [
+        261.0,
+        372.5
+      ],
+      "sprite_anchor": [
+        202.0,
+        52.5
+      ]
+    },
+    {
+      "theme": "project",
+      "source_file": "image-gen-1(8).png",
+      "source_sha256": "aa50fa648e0ffc3859d290881d8867f010918f0d4e8311c25228eeaa6d8d03d0",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/project/frame_strong.png",
+      "sha256": "858dcd68448dbd32663e2d5842f6f0a631f578eb50645b44fedc54ba1367e2fb",
+      "mask_file": "themes/project/frame_strong.alpha.png",
+      "mask_sha256": "b7a509d0d90fac70ea71920b139bcbb8b102a1347dd3a50f84b549add53fa4cd",
+      "crop_box": [
+        754,
+        319,
+        1241,
+        425
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            780,
+            330,
+            871,
+            415
+          ]
+        },
+        {
+          "rectangle": [
+            1133,
+            330,
+            1219,
+            415
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            8.25375736756912,
+            4.748464519255629,
+            10.580913314586187
+          ],
+          [
+            -1.5233702552268364,
+            2.244902087754818,
+            1.3088872149298185
+          ],
+          [
+            -0.7658927495744311,
+            -0.9310904742704379,
+            -2.4581215933440697
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 32161,
+        "partial": 8061,
+        "opaque": 11400
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Dark metal and neon falloff are blended into black source background; white comparison shows matte/fringe and fine fragments that require manual-mask review."
+      ],
+      "measured_sprite_center_in_board": [
+        997.5,
+        372.0
+      ],
+      "sprite_anchor": [
+        243.5,
+        53.0
+      ]
+    },
+    {
+      "theme": "project",
+      "source_file": "image-gen-1(8).png",
+      "source_sha256": "aa50fa648e0ffc3859d290881d8867f010918f0d4e8311c25228eeaa6d8d03d0",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/project/center_melee.png",
+      "sha256": "02d79b9a3744118d7e77da5af98df81151ff8021c1a46c5d318f0115dae8dc71",
+      "mask_file": "themes/project/center_melee.alpha.png",
+      "mask_sha256": "dd67b5bb3b5dce89f6e4fe5cc35f808536b617342e65ef887050339bc41f1c0c",
+      "crop_box": [
+        128,
+        782,
+        299,
+        922
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            9.710745719248989,
+            17.154100208987803,
+            32.639700311328184
+          ],
+          [
+            1.1437291644468384,
+            0.8942058825786874,
+            -0.2939543638579182
+          ],
+          [
+            -7.29553300939887,
+            -5.210054052934131,
+            -7.808573485640043
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 8387,
+        "partial": 6025,
+        "opaque": 9528
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Dark metal and neon falloff are blended into black source background; white comparison shows matte/fringe and fine fragments that require manual-mask review."
+      ],
+      "measured_sprite_center_in_board": [
+        213.5,
+        852.0
+      ],
+      "sprite_anchor": [
+        85.5,
+        70.0
+      ]
+    },
+    {
+      "theme": "project",
+      "source_file": "image-gen-1(8).png",
+      "source_sha256": "aa50fa648e0ffc3859d290881d8867f010918f0d4e8311c25228eeaa6d8d03d0",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/project/center_ranged.png",
+      "sha256": "592565fb7e725289cc06b404770e00d39898202ee90798d284f25c9be118afcc",
+      "mask_file": "themes/project/center_ranged.alpha.png",
+      "mask_sha256": "83bbdb5f52bafbb2a82debf80900a2d4cc1d7469fc3f1c0e60d51463d5c5718e",
+      "crop_box": [
+        593,
+        776,
+        743,
+        919
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            5.470833687833749,
+            19.016094891605867,
+            31.088272638688526
+          ],
+          [
+            -0.9749961486538335,
+            0.16166562139129048,
+            -0.34630689890024463
+          ],
+          [
+            -1.8073720079585136,
+            -1.9982224663096475,
+            -1.0713047970192313
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 8525,
+        "partial": 5443,
+        "opaque": 7482
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Dark metal and neon falloff are blended into black source background; white comparison shows matte/fringe and fine fragments that require manual-mask review."
+      ],
+      "measured_sprite_center_in_board": [
+        668.0,
+        847.5
+      ],
+      "sprite_anchor": [
+        75.0,
+        71.5
+      ]
+    },
+    {
+      "theme": "project",
+      "source_file": "image-gen-1(8).png",
+      "source_sha256": "aa50fa648e0ffc3859d290881d8867f010918f0d4e8311c25228eeaa6d8d03d0",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/project/center_hybrid.png",
+      "sha256": "aab08c02cf4fc80793dc01d9591fb3be2346d2c21811233b358430bbe79c773c",
+      "mask_file": "themes/project/center_hybrid.alpha.png",
+      "mask_sha256": "8c7a359e760e24c2ab0961492dd75df4cb1c1339a81483b62bf70174c34ab6b8",
+      "crop_box": [
+        1016,
+        777,
+        1230,
+        920
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            4.669477341621801,
+            14.397069291079077,
+            23.35920308525854
+          ],
+          [
+            -0.39879492699143704,
+            -2.44593095989226,
+            -4.347333421495013
+          ],
+          [
+            -2.8037855049850164,
+            0.23338890611926155,
+            2.1828582613872216
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 15668,
+        "partial": 5710,
+        "opaque": 9224
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Dark metal and neon falloff are blended into black source background; white comparison shows matte/fringe and fine fragments that require manual-mask review."
+      ],
+      "measured_sprite_center_in_board": [
+        1123.0,
+        848.5
+      ],
+      "sprite_anchor": [
+        107.0,
+        71.5
+      ]
+    },
+    {
+      "theme": "elderwood",
+      "source_file": "image-gen-1(10).png",
+      "source_sha256": "2d7eb0637b624f32e2573745f1d29e63fd1484a225a00047e4ba40455a4bd86c",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/elderwood/frame_weak.png",
+      "sha256": "682f734dd9094eded6e02c55d6954052e7f0343021ac6876d31e818031844e68",
+      "mask_file": "themes/elderwood/frame_weak.alpha.png",
+      "mask_sha256": "e5f4662486f7393f4cb787efad7568144c874bba94dbde600c072707c93c4527",
+      "crop_box": [
+        41,
+        265,
+        513,
+        402
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            54,
+            280,
+            167,
+            390
+          ]
+        },
+        {
+          "ellipse": [
+            377,
+            279,
+            491,
+            390
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            40,
+            265,
+            183,
+            405
+          ]
+        },
+        {
+          "ellipse": [
+            364,
+            265,
+            511,
+            405
+          ]
+        },
+        {
+          "polygon": [
+            [
+              179,
+              303
+            ],
+            [
+              212,
+              278
+            ],
+            [
+              255,
+              265
+            ],
+            [
+              307,
+              265
+            ],
+            [
+              352,
+              282
+            ],
+            [
+              370,
+              318
+            ],
+            [
+              351,
+              371
+            ],
+            [
+              302,
+              402
+            ],
+            [
+              225,
+              399
+            ],
+            [
+              181,
+              366
+            ]
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            11.78554945851351,
+            31.88111182416316,
+            28.684904917225513
+          ],
+          [
+            1.7094908964958684,
+            -0.4638526095141306,
+            0.5189680794065425
+          ],
+          [
+            0.267933126524073,
+            7.712959047154362,
+            6.799460891887356
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 39318,
+        "partial": 10094,
+        "opaque": 15252
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Leaf/flower fine edges and pale parchment motif matte require review; upper/lower ring sections and branches overlap board dividers or portraits."
+      ],
+      "measured_sprite_center_in_board": [
+        277.0,
+        333.5
+      ],
+      "sprite_anchor": [
+        236.0,
+        68.5
+      ]
+    },
+    {
+      "theme": "elderwood",
+      "source_file": "image-gen-1(10).png",
+      "source_sha256": "2d7eb0637b624f32e2573745f1d29e63fd1484a225a00047e4ba40455a4bd86c",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/elderwood/frame_strong.png",
+      "sha256": "eef3c1b4425f2f29ee0ae71a86a50bba55232bd527b1f6068fb23c8fc92af792",
+      "mask_file": "themes/elderwood/frame_strong.alpha.png",
+      "mask_sha256": "262655527fae236958a764a2200cbcb249b7b3dfc87478ebd5d423ee5415540b",
+      "crop_box": [
+        744,
+        248,
+        1268,
+        407
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            773,
+            282,
+            883,
+            393
+          ]
+        },
+        {
+          "ellipse": [
+            1139,
+            284,
+            1255,
+            396
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            747,
+            267,
+            896,
+            410
+          ]
+        },
+        {
+          "ellipse": [
+            1124,
+            270,
+            1272,
+            414
+          ]
+        },
+        {
+          "polygon": [
+            [
+              876,
+              303
+            ],
+            [
+              900,
+              281
+            ],
+            [
+              944,
+              272
+            ],
+            [
+              973,
+              248
+            ],
+            [
+              986,
+              259
+            ],
+            [
+              1028,
+              264
+            ],
+            [
+              1041,
+              250
+            ],
+            [
+              1077,
+              266
+            ],
+            [
+              1128,
+              290
+            ],
+            [
+              1136,
+              338
+            ],
+            [
+              1128,
+              381
+            ],
+            [
+              1085,
+              400
+            ],
+            [
+              1020,
+              405
+            ],
+            [
+              946,
+              397
+            ],
+            [
+              893,
+              383
+            ],
+            [
+              875,
+              350
+            ]
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            46.656889957141395,
+            27.93565949698488,
+            17.62729063605631
+          ],
+          [
+            5.539413823583025,
+            1.0498789224567189,
+            5.578164411060961
+          ],
+          [
+            -9.442890071919441,
+            3.566407987876,
+            3.486457311315696
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 43373,
+        "partial": 14756,
+        "opaque": 25187
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Leaf/flower fine edges and pale parchment motif matte require review; upper/lower ring sections and branches overlap board dividers or portraits."
+      ],
+      "measured_sprite_center_in_board": [
+        1006.0,
+        327.5
+      ],
+      "sprite_anchor": [
+        262.0,
+        79.5
+      ]
+    },
+    {
+      "theme": "elderwood",
+      "source_file": "image-gen-1(10).png",
+      "source_sha256": "2d7eb0637b624f32e2573745f1d29e63fd1484a225a00047e4ba40455a4bd86c",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/elderwood/center_melee.png",
+      "sha256": "274a93584e86a9c8d61d2c53aab191a89bd88af02b169b5fe5b8aaaf69cfe1dc",
+      "mask_file": "themes/elderwood/center_melee.alpha.png",
+      "mask_sha256": "66d29ded2b38faec25fb516f28d9955d627ef3710d9bdaa6f2801e38cedc9449",
+      "crop_box": [
+        37,
+        851,
+        182,
+        980
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [
+        {
+          "rectangle": [
+            37,
+            851,
+            182,
+            856
+          ]
+        },
+        {
+          "rectangle": [
+            165,
+            851,
+            182,
+            871
+          ]
+        },
+        {
+          "rectangle": [
+            37,
+            976,
+            182,
+            980
+          ]
+        }
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            245.4488503742083,
+            242.57982289591442,
+            231.69361412993734
+          ],
+          [
+            1.4407295321340572,
+            0.7116281072587133,
+            2.340777846084621
+          ],
+          [
+            -1.1032376581576298,
+            -1.5440074079271888,
+            -3.146533181259483
+          ]
+        ],
+        "distance_thresholds": [
+          10.0,
+          58.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 7475,
+        "partial": 2472,
+        "opaque": 8758
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Leaf/flower fine edges and pale parchment motif matte require review; upper/lower ring sections and branches overlap board dividers or portraits."
+      ],
+      "measured_sprite_center_in_board": [
+        109.5,
+        915.5
+      ],
+      "sprite_anchor": [
+        72.5,
+        64.5
+      ]
+    },
+    {
+      "theme": "elderwood",
+      "source_file": "image-gen-1(10).png",
+      "source_sha256": "2d7eb0637b624f32e2573745f1d29e63fd1484a225a00047e4ba40455a4bd86c",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/elderwood/center_ranged.png",
+      "sha256": "0e3dca9ccea32ff1820abe63d9e1045adcb720d613fc0e38a623e2d5863554ac",
+      "mask_file": "themes/elderwood/center_ranged.alpha.png",
+      "mask_sha256": "2fbe4851c2154131d57b98aa5241b11fb07dd3dcc2fbef55fdb42de3b599120c",
+      "crop_box": [
+        521,
+        850,
+        651,
+        979
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [
+        {
+          "rectangle": [
+            521,
+            850,
+            651,
+            859
+          ]
+        },
+        {
+          "rectangle": [
+            521,
+            977,
+            651,
+            979
+          ]
+        }
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            247.294102323386,
+            243.72775067807564,
+            235.36129528442052
+          ],
+          [
+            0.11620452909536243,
+            -0.11767112999189996,
+            -0.14275416513341682
+          ],
+          [
+            -1.1952638709300178,
+            -1.3177658296758974,
+            -1.7554473804589075
+          ]
+        ],
+        "distance_thresholds": [
+          10.0,
+          58.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 7470,
+        "partial": 2992,
+        "opaque": 6308
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Leaf/flower fine edges and pale parchment motif matte require review; upper/lower ring sections and branches overlap board dividers or portraits."
+      ],
+      "measured_sprite_center_in_board": [
+        586.0,
+        914.5
+      ],
+      "sprite_anchor": [
+        65.0,
+        64.5
+      ]
+    },
+    {
+      "theme": "elderwood",
+      "source_file": "image-gen-1(10).png",
+      "source_sha256": "2d7eb0637b624f32e2573745f1d29e63fd1484a225a00047e4ba40455a4bd86c",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/elderwood/center_hybrid.png",
+      "sha256": "644d52ca0af4233b7bb07ed0bd98712e8fd54d75177a20bcb1474e9a96f4dde2",
+      "mask_file": "themes/elderwood/center_hybrid.alpha.png",
+      "mask_sha256": "3213af5a91c1285c8dc1ca15f40c5dffb806001954e1a494c4b41c905cdc485a",
+      "crop_box": [
+        965,
+        850,
+        1099,
+        979
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [
+        {
+          "rectangle": [
+            965,
+            850,
+            1099,
+            859
+          ]
+        },
+        {
+          "rectangle": [
+            965,
+            977,
+            1099,
+            979
+          ]
+        }
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            247.41184980994248,
+            242.53776258067433,
+            231.64971010487332
+          ],
+          [
+            -1.357298680924661,
+            -2.28606187959104,
+            -5.393659823533921
+          ],
+          [
+            -0.3387938092421692,
+            -0.7293692343052443,
+            -1.831001398793414
+          ]
+        ],
+        "distance_thresholds": [
+          10.0,
+          58.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false
+      },
+      "alpha_counts": {
+        "zero": 7025,
+        "partial": 1838,
+        "opaque": 8423
+      },
+      "status": "needs_manual_mask",
+      "visual_review_notes": [
+        "Leaf/flower fine edges and pale parchment motif matte require review; upper/lower ring sections and branches overlap board dividers or portraits."
+      ],
+      "measured_sprite_center_in_board": [
+        1032.0,
+        914.5
+      ],
+      "sprite_anchor": [
+        67.0,
+        64.5
+      ]
+    }
+  ],
+  "limitations": [
+    "Flattened RGB cannot uniquely identify underlying alpha, recover decorations occluded by portraits, or unmatte glows without changing RGB.",
+    "White/light background motifs and dark metal require human mask review; automated alpha integrity is not visual approval."
+  ],
+  "source_import_sha_verified_count": 89,
+  "source_catalog_audit": [
+    {
+      "theme": "project",
+      "source_file_in_catalog": "project_キルアイコンデザインコンセプト.png",
+      "file_exists": false
+    },
+    {
+      "theme": "star_guardian",
+      "source_file_in_catalog": "スターガーディアン_キルアイコン設計案.png",
+      "file_exists": false
+    },
+    {
+      "theme": "kda",
+      "source_file_in_catalog": "k_daキルアイコン_デザインコンセプトボード.png",
+      "file_exists": false
+    },
+    {
+      "theme": "heartsteel",
+      "source_file_in_catalog": "ハートスティール_キルアイコン設計図.png",
+      "file_exists": false
+    },
+    {
+      "theme": "spirit_blossom",
+      "source_file_in_catalog": "スピリットブロッサム_キルアイコン図録.png",
+      "file_exists": false
+    },
+    {
+      "theme": "dark_star",
+      "source_file_in_catalog": "ダークスター_キルアイコン設計案.png",
+      "file_exists": false
+    },
+    {
+      "theme": "high_noon",
+      "source_file_in_catalog": "灼熱の西部キルアイコン設計図.png",
+      "file_exists": false
+    },
+    {
+      "theme": "blood_moon",
+      "source_file_in_catalog": "血月キルアイコンデザイン案.png",
+      "file_exists": false
+    },
+    {
+      "theme": "warring_kingdoms",
+      "source_file_in_catalog": "覇王のキルアイコン設計図.png",
+      "file_exists": false
+    },
+    {
+      "theme": "pool_party",
+      "source_file_in_catalog": "プールパーティー_キルアイコン図鑑.png",
+      "file_exists": false
+    },
+    {
+      "theme": "elderwood",
+      "source_file_in_catalog": "エルダウッド_キルアイコンデザイン案.png",
+      "file_exists": false
+    },
+    {
+      "theme": "cosmic",
+      "source_file_in_catalog": "コズミックキルアイコン設計図.png",
+      "file_exists": false
+    },
+    {
+      "theme": "dark_cosmic",
+      "source_file_in_catalog": "ダークコズミック_キルアイコン図録.png",
+      "file_exists": false
+    },
+    {
+      "theme": "dawnbringer",
+      "source_file_in_catalog": "ドーンブリンガー_キルアイコン設計図.png",
+      "file_exists": false
+    },
+    {
+      "theme": "nightbringer",
+      "source_file_in_catalog": "ナイトブリンガー_キルアイコン概念図.png",
+      "file_exists": false
+    },
+    {
+      "theme": "infernal",
+      "source_file_in_catalog": "インフェルナル炎獄キルアイコン設計図.png",
+      "file_exists": false
+    },
+    {
+      "theme": "arcade",
+      "source_file_in_catalog": "ネオンアーケード_キルアイコンデザイン_концепト.png",
+      "file_exists": false
+    },
+    {
+      "theme": "bewitching",
+      "source_file_in_catalog": "ビウィッチング_キルアイコン設計図.png",
+      "file_exists": false
+    },
+    {
+      "theme": "porcelain",
+      "source_file_in_catalog": "磁器の華やかキルアイコン図鑑.png",
+      "file_exists": false
+    },
+    {
+      "theme": "psyops",
+      "source_file_in_catalog": "サイオプス_キルアイコン設計図.png",
+      "file_exists": false
+    },
+    {
+      "theme": "steel_valkyries",
+      "source_file_in_catalog": "スティールヴァルキリーズ_デザイン図鑑.png",
+      "file_exists": false
+    },
+    {
+      "theme": "broken_covenant",
+      "source_file_in_catalog": "崩れた聖約_ゴシックuiデザインボード.png",
+      "file_exists": false
+    },
+    {
+      "theme": "faerie_court",
+      "source_file_in_catalog": "フェアリーコート幻想デザイン図鑑.png",
+      "file_exists": false
+    },
+    {
+      "theme": "space_groove",
+      "source_file_in_catalog": "スペースグルーヴ_キルアイコンデザインボード.png",
+      "file_exists": false
+    },
+    {
+      "theme": "ocean_song",
+      "source_file_in_catalog": "オーシャンソング_夏祭りデザイン図鑑.png",
+      "file_exists": false
+    },
+    {
+      "theme": "mecha_kingdoms",
+      "source_file_in_catalog": "機巧帝国メカキングダムズ図録.png",
+      "file_exists": false
+    },
+    {
+      "theme": "dragonmancer",
+      "source_file_in_catalog": "龍脈煌めくドラゴンマンサー設定画集.png",
+      "file_exists": false
+    },
+    {
+      "theme": "shan_hai_scrolls",
+      "source_file_in_catalog": "山海絵巻_神獣と金墨の紋章帖.png",
+      "file_exists": false
+    },
+    {
+      "theme": "mecha",
+      "source_file_in_catalog": "メカキルアイコン_デザインコンセプト.png",
+      "file_exists": false
+    },
+    {
+      "theme": "battlecast",
+      "source_file_in_catalog": "バトルキャスト_機械戦場コンセプトボード.png",
+      "file_exists": false
+    }
+  ],
+  "winter_festival_in_current_catalog": false,
+  "source_catalog_unchanged": true,
+  "source_game_background_note": "An actual HUD-free LoL replay frame supplied by the user in this conversation; reused only for the explicitly requested gameplay comparison. No usernames or diagnostic logs are included."
+}
