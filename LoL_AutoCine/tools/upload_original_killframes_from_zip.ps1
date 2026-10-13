@@ -18,12 +18,22 @@ $archivePath = (Resolve-Path -LiteralPath $ZipPath).ProviderPath
 if (-not (Test-Path -LiteralPath (Join-Path $repo ".git"))) {
     throw "Git repository not found at $repo. Clone the repository using GitHub Desktop first."
 }
-if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-    throw "git.exe not found. Install Git for Windows or use GitHub Desktop to commit after importing the images."
+$gitAvailable = [bool](Get-Command git -ErrorAction SilentlyContinue)
+if ($gitAvailable) {
+    $activeBranch = (& git -C $repo branch --show-current | Out-String).Trim()
+    if ($LASTEXITCODE -ne 0) { throw "git branch query failed." }
+} else {
+    # GitHub Desktop includes Git internally but may not put git.exe on PATH.
+    $headFile = Join-Path $repo ".git\HEAD"
+    if (-not (Test-Path -LiteralPath $headFile)) { throw "Cannot identify active branch." }
+    $headText = (Get-Content -LiteralPath $headFile -Raw).Trim()
+    $activeBranch = $headText -replace '^ref: refs/heads/', ''
 }
-$activeBranch = (& git -C $repo branch --show-current | Out-String).Trim()
-if ($LASTEXITCODE -ne 0 -or $activeBranch -ne $branch) {
+if ($activeBranch -ne $branch) {
     throw "Wrong branch: '$activeBranch'. Switch to '$branch' in GitHub Desktop before running."
+}
+if ($Push -and -not $gitAvailable) {
+    throw "-Push needs Git for Windows on PATH. Run without -Push, then use GitHub Desktop's Commit and Push."
 }
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
