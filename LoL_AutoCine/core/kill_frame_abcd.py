@@ -68,7 +68,7 @@ THEMES = (
     _t("arcade","アーケード","スキン",["arcade"],(100,231,255),"pop"),
     _t("bewitching","ビウィッチング","スキン",["bewitching"],(249,134,216),"slide_up"),
     _t("porcelain","磁器","スキン",["porcelain"],(131,185,255),"pop"),
-    _t("psyops","PsyOps","スキン",["psyops"],(183,104,251),"slide_left"),
+    _t("psyops","PsyOps","スキン",["psyops","サイオプス"],(183,104,251),"slide_left"),
     _t("steel_valkyries","スティールヴァルキリーズ","スキン",["steelvalkyries"],(130,205,252),"slide_up"),
     _t("broken_covenant","ブロークンコヴェナント","スキン",["brokencovenant"],(236,100,110),"slide_down"),
     _t("faerie_court","フェアリーコート","スキン",["faeriecourt"],(238,152,212),"pop"),
