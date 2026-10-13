@@ -11,13 +11,15 @@ READ_BYTES = 1024 * 1024
 
 
 def split_test_results(folder, *, max_bytes=DEFAULT_MAX_BYTES, log=lambda _m: None,
-                       report_update=None):
+                       report_update=None, source_overrides=None, exclude_dirs=()):
     """Plan archives before updating results.json, so every ZIP has final data.
 
     Oversized inputs are streamed into numbered parts with a restoration note.
     Repeat exports use new names, and original videos/reports remain on disk.
     """
     folder = Path(folder).resolve()
+    overrides = source_overrides or {}
+    excluded = set(exclude_dirs)
     max_bytes = int(max_bytes)
     if not 1_000_000 < max_bytes <= DEFAULT_MAX_BYTES:
         raise ValueError('max_bytes must be greater than 1MB and at most 500MB')
@@ -31,6 +33,13 @@ def split_test_results(folder, *, max_bytes=DEFAULT_MAX_BYTES, log=lambda _m: No
         if not path.resolve().is_relative_to(folder):
             continue
         relative = path.relative_to(folder)
+        if any(part in excluded for part in relative.parts[:-1]):
+            continue
+        # Keep the original archive name; only opt-in QA uploads use a copy.
+        source = Path(overrides.get(relative.as_posix(), path))
+        if source.is_symlink() or not source.is_file() or not source.resolve().is_relative_to(folder):
+            raise ValueError('QA upload copy must be a regular file inside the QA folder')
+        path = source
         size = path.stat().st_size
         support_log = (relative.parts == ('QA_Support', path.name)
                        and path.name in LOG_NAMES and size <= TAIL_LIMIT_BYTES)

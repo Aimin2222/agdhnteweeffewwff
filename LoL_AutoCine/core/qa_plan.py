@@ -6,7 +6,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 REMOTE_PLAN = ("https://raw.githubusercontent.com/Aimin2222/agdhnteweeffewwff/"
-               "refs/heads/codex/lol-autocine-v51025-blue6-reference-handoff/"
+               "refs/heads/codex/lol-autocine-v51026-qa30mb-handoff/"
                "LoL_AutoCine/qa/test_plan.json")
 LOCAL_PLAN = Path(__file__).resolve().parents[1] / "qa" / "test_plan.json"
 ALLOWED_CAMERA = ("third", "third_cinema", "fps", "lolnam_cinema", "geo_aim")
@@ -28,11 +28,11 @@ def validate_plan(value):
             raise ValueError("Unknown QA test: " + key)
         return list(dict.fromkeys(raw))
     try:
-        size = int(value.get("max_zip_mb", 500))
+        size = int(value.get("max_zip_mb", 30))
     except (TypeError, ValueError) as e:
         raise ValueError("Invalid ZIP size") from e
-    if size < 100 or size > 500:
-        raise ValueError("QA ZIP cap must be 100–500 MB")
+    if size < 30 or size > 500:
+        raise ValueError("QA ZIP cap must be 30–500 MB (CameraQA enforces 30 MB)")
     visual = value.get("include_visual_comparison", True)
     if type(visual) is not bool:
         raise ValueError("Invalid visual comparison flag")

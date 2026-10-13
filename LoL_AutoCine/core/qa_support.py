@@ -7,7 +7,7 @@ LOG_NAMES = ('runtime.log', 'crash.log', 'last_error.txt', 'audio.log',
              'capture.log', 'selftest_latest.json', 'reference_review_latest.log')
 
 
-def collect_qa_support(folder, *, diagnostics=None, log=lambda _m: None):
+def collect_qa_support(folder, *, diagnostics=None, log=lambda _m: None, build_identity=None):
     origin = Path(diagnostics) if diagnostics is not None else DIAGNOSTICS
     target = Path(folder) / 'QA_Support'
     report = {'files': [], 'errors': [], 'truncated': [], 'tail_limit_bytes': TAIL_LIMIT_BYTES}
@@ -26,6 +26,15 @@ def collect_qa_support(folder, *, diagnostics=None, log=lambda _m: None):
             'QA_Support：各最大1MBの診断末尾（元のバイトを保持）。途中からのJSONは完全なJSONではありません。\n'
             '画面内の主役や構図はWindows実機で目視確認が必要です。\n'
         )
+        if build_identity is not None:
+            notes += (
+                f"\n実行版: {build_identity.get('installed_version', 'unknown')}\n"
+                f"QA実装版: {build_identity.get('qa_build_version', 'unknown')}\n"
+                f"カメラコードID: {build_identity.get('camera_code_fingerprint')}\n"
+                f"版不一致: {build_identity.get('version_mismatch')}\n"
+                '古いresults.jsonの映像と混同しないでください。\n'
+                'flat_upper_background_ratioは時間割合3時点の空/単色領域の目安で、キル検出ではありません。\n'
+            )
         (target/'READ_ME_FIRST_JA.md').write_text(notes, encoding='utf-8')
         report['files'].append('QA_Support/READ_ME_FIRST_JA.md')
     except OSError as exc:

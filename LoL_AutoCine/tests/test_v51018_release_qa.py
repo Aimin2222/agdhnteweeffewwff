@@ -23,7 +23,7 @@ def test_latest_qa_plan_is_allowlisted_and_geometric_camera_is_opt_in():
     plan, source=load_qa_plan(allow_remote=False)
     assert source=="bundled"
     assert "geo_aim" in plan["camera_modes"]
-    assert plan["max_zip_mb"]==500
+    assert plan["max_zip_mb"]==30
     with pytest.raises(ValueError):
         validate_plan(dict(plan, camera_modes=["execute_shell_command"]))
     with pytest.raises(ValueError):
