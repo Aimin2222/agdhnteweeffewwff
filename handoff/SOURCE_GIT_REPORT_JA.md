@@ -38,3 +38,5 @@ A	tools/make_cameraqa_upload.py
 A	tools/package_v51026.py
 ```
 個人録画/設定/診断の追加コミットなし。sourceの最終statusは空、未保存の作業変更なし。main/PR29をマージしない。
+
+現行r2 source HEAD eeec581fe8b8505910a9408e911ef07b648ea02d、refs 136、Windows検査の文字コード/バイト比較だけ修正。初版artifact/元refs先端をarchive/qa30mb-r1-*にも保持。

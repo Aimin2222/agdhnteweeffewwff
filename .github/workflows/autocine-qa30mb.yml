@@ -5,6 +5,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+env:
+  PYTHONUTF8: '1'
+  PYTHONIOENCODING: utf-8
 jobs:
   linux-regression:
     runs-on: ubuntu-latest
@@ -73,4 +76,4 @@ jobs:
           assert hashlib.sha256(bundle.read_bytes()).hexdigest() == manifest['bundle_sha256']
           print('All ZIP CRC and artifact SHA256 checks passed')
           PY
-          git bundle verify handoff/LoL_AutoCine_v5.10.26_QA30MB_GPUFull_all_branches.bundle
+          git bundle verify handoff/LoL_AutoCine_v5.10.26_QA30MB_GPUFull_r2_all_branches.bundle

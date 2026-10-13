@@ -9,3 +9,5 @@ Linux全811成功、失敗/skip/除外なし79.79秒。QA関連44成功4.35秒�
 完全版549ファイル、差分apply後全551ソースのbyte一致、全134refs bundle、旧238配布物保持。新ブランチのDraft PRのみ、mainとPR29へマージしない。
 
 手順: LoL_AutoCine/docs/CAMERAQA_30MB_DEV_JA.md。Windows実機で全partの容量、540p映像/元時刻/音声、通常1080p60、LoL音とGPU、stopを確認。
+
+Windowsスモークの説明書UTF-8/改行の検査を修正したr2。録画/エフェクト/送信圧縮の処理は初版と同一。source eeec581fe8b8505910a9408e911ef07b648ea02d、全136refs、初版のZIP/bundleも保持。

@@ -88,14 +88,14 @@ def test_report_identity_notes_and_final_zip_are_consistent(monkeypatch,tmp_path
     monkeypatch.setattr(camera_qa,'plan_eight_cases',lambda *a:[])
     monkeypatch.setattr(camera_qa,'assemble_side_reels',lambda *a,**kw:{})
     report=camera_qa.run_camera_record_test(None,None,[],[],None,Template(),tmp_path)
-    data=json.loads(report.read_text())
+    data=json.loads(report.read_text(encoding="utf-8"))
     assert data['version']==data['installed_version']=='5.10.26-test'
     assert not data['version_mismatch']
-    notes=(report.parent/'QA_Support/READ_ME_FIRST_JA.md').read_text()
+    notes=(report.parent/'QA_Support/READ_ME_FIRST_JA.md').read_text(encoding="utf-8")
     assert data['camera_code_fingerprint'] in notes and '時間割合' in notes
     with ZipFile(data['qa_archives'][0]) as z:
         assert z.testzip() is None and z.read('results.json')==report.read_bytes()
-        assert z.read('QA_Support/READ_ME_FIRST_JA.md').decode()==notes
+        assert z.read('QA_Support/READ_ME_FIRST_JA.md')==(report.parent/'QA_Support/READ_ME_FIRST_JA.md').read_bytes()
 
 
 def test_real_mp4_frames_generate_advisory_metadata_without_mutation(tmp_path):

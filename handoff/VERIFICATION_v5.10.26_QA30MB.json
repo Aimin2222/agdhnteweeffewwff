@@ -13,9 +13,9 @@
     "status": "ok",
     "refs": {
       "base": "fec860c3db327fcbf2f22c2b03e1e133ffeb16e5",
-      "gpu": "299ef6246d8f2e273befe8db21678bc453c00176",
+      "gpu": "b5ad827c00fc31c93861894407002a6247c4a02a",
       "ui": "7fd016d209fa3828eb976545f23cc5b1f7cbaa6f",
-      "integration": "c0d26f192b054dad8eb89fbd829dffe0e33a9d91"
+      "integration": "eeec581fe8b8505910a9408e911ef07b648ea02d"
     },
     "ui_changed": [
       "tests/test_v51018_release_qa.py"
@@ -29,6 +29,7 @@
       "docs/APP_PACKAGING_PLAN_JA.md",
       "docs/CAMERAQA_30MB_DEV_JA.md",
       "qa/test_plan.json",
+      "tests/test_gpu_event_visual_identity_v51026.py",
       "tests/test_gpu_qa_upload_30mb.py",
       "tools/check_parallel_integration.py",
       "tools/make_cameraqa_upload.py",
@@ -54,8 +55,8 @@
     "untracked_private_files_excluded": true,
     "zip_integrity": true,
     "sha256": {
-      "LoL_AutoCine_v5.10.26_QA30MB_GPUFull_Windows_Full.zip": "fcb08bb77aaeeb685746997753ffc4fabe49a40b2b024c6ba144eea5dc475f91",
-      "LoL_AutoCine_v5.10.26_QA30MB_GPUFull_Codex_MergeChanges.zip": "73cbd2fcb17bd775ee44cd48ccc19e0cec7b90b7f5bdab0e8a6e6938fa446244"
+      "LoL_AutoCine_v5.10.26_QA30MB_GPUFull_Windows_Full.zip": "8e707d1aaf3e0c41edb0502e0f6d3e883d85373504c15f150c3425321be418f4",
+      "LoL_AutoCine_v5.10.26_QA30MB_GPUFull_Codex_MergeChanges.zip": "5a1007703d32ac6953ab9aafe59a27b52a7777993b3740329a231c4ff6f4e807"
     }
   },
   "preservation": {
@@ -109,7 +110,7 @@
     "current_branches": 134
   },
   "new_functional_validation": "Full tests exercise runtime code identity and mismatch/unknown, real video flat-background hints, single middle/KILL warning, observed event interpolation without effects, final ZIP identity/notes consistency, unchanged camera pose classes and all prior GPU/UI/audio/QA regressions, existing GPU/UI/audio/QA regressions, existing GPU graphs, UI, audio and archive regression tests. GPU spatial kernel unchanged from v19; no new physical GPU performance check.",
-  "old_handoff_files_retained": 238,
+  "old_handoff_files_retained": 243,
   "compileall_passed": true,
   "pip_check_passed": true,
   "github_fresh_restore": null,
@@ -165,5 +166,8 @@
   },
   "scope": "Developer QA only: upload copies 960x540, passthrough timestamps/AAC; each archive <=30,000,000 bytes; ordinary capture/effects/audio unchanged.",
   "targeted_tests": 44,
-  "native_test_exit": "One final Linux/Tk run exited 139 at 84%; isolated UI module passed 4 tests. Full rerun preserving standalone faulthandler (pytest faulthandler plugin disabled only for trace ownership) passed 811 with GC enabled, no test exclusions or assertion changes. Cause unconfirmed; not a permanent fix."
+  "native_test_exit": "One final Linux/Tk run exited 139 at 84%; isolated UI module passed 4 tests. Full rerun preserving standalone faulthandler (pytest faulthandler plugin disabled only for trace ownership) passed 811 with GC enabled, no test exclusions or assertion changes. Cause unconfirmed; not a permanent fix.",
+  "source_head": "eeec581fe8b8505910a9408e911ef07b648ea02d",
+  "windows_fixture_fix": "First GitHub Windows smoke 20 passed/1 failed: test read Japanese notes using cp1252. Tests now explicitly read UTF-8 and compare archive note bytes exactly across CRLF/LF; production logic unchanged.",
+  "r1_artifacts_preserved": true
 }

@@ -59,7 +59,7 @@ def test_cameraqa_caps_old_remote_plan_and_keeps_settings(tmp_path, monkeypatch,
     original = Template(fps=144, capture_fps=144); snapshot = original.to_dict()
     report = camera_qa.run_camera_record_test(None, None, [], [], None, original, tmp_path,
                                             plan={'schema_version': 1, 'max_zip_mb': cap})
-    data = json.loads(report.read_text())
+    data = json.loads(report.read_text(encoding="utf-8"))
     assert observed == [30_000_000] and original.to_dict() == snapshot
     assert data['qa_upload']['profile'] == 'dev-30mb-540p60'
     assert qa_plan.validate_plan({'schema_version': 1})['max_zip_mb'] == 30

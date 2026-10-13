@@ -1,6 +1,6 @@
 # v5.10.26-test QA30MB GPUFull（開発用）
 
-完全版 **LoL_AutoCine_v5.10.26_QA30MB_GPUFull_Windows_Full.zip** をGitHubで開き **Download raw file**。旧版と別フォルダーへ展開、LoL_AutoCine/START_GPU.batで起動。旧QAフォルダーをMAKE_CAMERAQA_UPLOAD.batへドラッグすれば録画し直さず再梱包できる。
+完全版 **LoL_AutoCine_v5.10.26_QA30MB_GPUFull_r2_Windows_Full.zip** をGitHubで開き **Download raw file**。旧版と別フォルダーへ展開、LoL_AutoCine/START_GPU.batで起動。旧QAフォルダーをMAKE_CAMERAQA_UPLOAD.batへドラッグすれば録画し直さず再梱包できる。
 
 全カメラの開発用QAでは元1080p録画をPCに保持し、送信用だけ960x540・60fps系の時刻保持へ軽量化。raw素材はZIPから除外し、各ZIPは30,000,000バイト以下。旧500MB計画でも上限を適用。音声AACはそのままコピー、連結素材の小さな時刻の隙間もフレーム追加なし。NVENC優先/CPU再試行と実経路を記録。圧縮失敗は元動画または番号順バイナリ部分へ保存して失わない。
 
@@ -14,3 +14,5 @@ Linux全811成功、失敗/skip/除外なし79.79秒。QA関連44成功4.35秒�
 
 
 手順: LoL_AutoCine/docs/CAMERAQA_30MB_DEV_JA.md。30MB制限は実機QA送信ZIP向け。アプリのフル版ZIPは既存素材同梱のため約67MB、GitHubから取得できる。
+
+Windowsスモークの説明書UTF-8/改行の検査を修正したr2。録画/エフェクト/送信圧縮の処理は初版と同一。source eeec581fe8b8505910a9408e911ef07b648ea02d、全136refs、初版のZIP/bundleも保持。
