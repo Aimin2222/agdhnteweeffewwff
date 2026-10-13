@@ -1,0 +1,55 @@
+{
+  "source_head": "fa13295637e7c1e97c60c74f332430de707a96ae",
+  "changed_files": [
+    "docs/CAMERAQA_30MB_DEV_JA.md",
+    "legacy_app.py"
+  ],
+  "source_files": 551,
+  "full_zip_files": 549,
+  "all_patch_bytes_match": true,
+  "zip_crc_ok": true,
+  "protected_methods_ast_unchanged": true,
+  "camera_audio_gpu_files_unchanged": true,
+  "tk_widget_smoke": {
+    "developer_buttons": 1,
+    "callback": "on_dev_camera_qa",
+    "ordinary_exports_present": true
+  },
+  "local_pytest": {
+    "passed": 30,
+    "failed": 0,
+    "seconds": 8.27
+  },
+  "guard": {
+    "status": "ok",
+    "refs": {
+      "base": "eeec581fe8b8505910a9408e911ef07b648ea02d",
+      "gpu": "eeec581fe8b8505910a9408e911ef07b648ea02d",
+      "ui": "82b11c156f7325e324f985f1469fb59315a59314",
+      "integration": "fa13295637e7c1e97c60c74f332430de707a96ae"
+    },
+    "ui_changed": [
+      "docs/CAMERAQA_30MB_DEV_JA.md",
+      "legacy_app.py"
+    ],
+    "gpu_changed": [],
+    "ui_changed_gpu_files": [],
+    "gpu_changed_ui_files": [],
+    "shared_files_requiring_review": [],
+    "both_changed_files": [],
+    "shared_files_reviewed": [],
+    "merge_conflicts": false,
+    "merge_details": "",
+    "integration_gpu_mismatches": [],
+    "integration_ui_mismatches": [],
+    "integration_shared_mismatches": [],
+    "scope": "committed branch tips only; inspect git status for uncommitted work"
+  },
+  "previous_artifacts_preserved": 249,
+  "sha256": {
+    "LoL_AutoCine_v5.10.26_SingleQAButton_GPUFull_Windows_Full.zip": "e9927a59c50bf4af1821d9a046ed541141056048a538e0ae79047d59103aa80b",
+    "LoL_AutoCine_v5.10.26_SingleQAButton_GPUFull_Codex_MergeChanges.zip": "a493d45e7ca57272516b1e8b7fb61273c081f5cedc0172bc463fe95c964f124c"
+  },
+  "windows_physical_device_tested": false,
+  "prior_linux_tk_native_exit_cause_unresolved": true
+}
