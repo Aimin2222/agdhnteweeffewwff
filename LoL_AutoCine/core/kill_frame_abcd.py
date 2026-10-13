@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 import math
 import re
-import shutil
+import json
 import unicodedata
 
 @dataclass(frozen=True)
@@ -154,7 +154,50 @@ def _clip_xy(im, centre, size):
     return im.crop((round((x-w/2)*im.width),round((y-h/2)*im.height),
                     round((x+w/2)*im.width),round((y+h/2)*im.height)))
 
-def _cut_board_motif(board, strong, kind):
+DEFAULT_REGIONS = {
+    "weak":(.233,.31,.125,.13),
+    "strong":(.707,.31,.125,.13),
+    "melee":(.165,.875,.11,.14),
+    "ranged":(.500,.875,.11,.14),
+    "hybrid":(.835,.875,.11,.14),
+}
+
+def load_board_regions(theme_code):
+    """Per-board user-adjustable crop centres and dimensions, normalized 0..1."""
+    result=dict(DEFAULT_REGIONS)
+    source=boards_dir() / (theme_code + ".json")
+    if source.is_file():
+        try:
+            values=json.loads(source.read_text(encoding="utf-8"))
+            for name,rect in values.items():
+                if name in result and isinstance(rect,list) and len(rect)==4:
+                    x,y,w,h=[float(v) for v in rect]
+                    if all(math.isfinite(v) for v in (x,y,w,h)) and (
+                        .05<=x<=.95 and .05<=y<=.95 and .02<=w<=.35 and .02<=h<=.35
+                    ):
+                        result[name]=(x,y,w,h)
+        except (ValueError,TypeError,OSError):
+            pass
+    return result
+
+def save_board_regions(theme_code, settings):
+    if theme_code not in BY_CODE:
+        raise ValueError("テーマIDが不明です")
+    clean={}
+    for name,rect in settings.items():
+        if name not in DEFAULT_REGIONS or len(rect)!=4:
+            raise ValueError("切り出し領域が不正です")
+        x,y,w,h=(float(v) for v in rect)
+        if not (all(math.isfinite(v) for v in (x,y,w,h)) and
+                .05<=x<=.95 and .05<=y<=.95 and .02<=w<=.35 and .02<=h<=.35):
+            raise ValueError("画像範囲の指定が不正です")
+        clean[name]=[x,y,w,h]
+    dst=boards_dir()/(theme_code+".json")
+    dst.parent.mkdir(parents=True,exist_ok=True)
+    dst.write_text(json.dumps(clean,ensure_ascii=False,indent=2),encoding="utf-8")
+    return dst
+
+def _cut_board_motif(board, strong, kind, theme_code):
     """Extract decoration pixels from original concept board. Faces/captions excluded.
 
     The default areas match the real 2-column concept-sheet layout used in
@@ -162,11 +205,9 @@ def _cut_board_motif(board, strong, kind):
     Image processing only removes uniform surrounding panel color.
     """
     from PIL import Image,ImageChops,ImageEnhance,ImageFilter
-    if kind in MARKS:
-        cx={"melee":.165,"ranged":.50,"hybrid":.835}[kind]
-        part=_clip_xy(board,(cx,.875),(.11,.14))
-    else:
-        part=_clip_xy(board,(.707 if strong else .233,.31),(.125,.13))
+    regions=load_board_regions(theme_code)
+    cx,cy,w,h=regions[kind if kind in MARKS else ("strong" if strong else "weak")]
+    part=_clip_xy(board,(cx,cy),(w,h))
     part=part.convert("RGBA")
     if part.getbbox() is None:
         raise ValueError("コンセプトボードの中央装飾が空です")
@@ -260,7 +301,7 @@ def render_abcd_badge(path, style, *, killer_icon=None,victim_icon=None,
     else:
         # The ornament is a crop of the original board, NOT a redrawn motif.
         kind={"theme_melee":"melee","theme_ranged":"ranged","theme_hybrid":"hybrid"}.get(mark_style)
-        ornament=_cut_board_motif(board,level=="strong",kind)
+        ornament=_cut_board_motif(board,level=="strong",kind,theme.code)
         # Some concept boards are designed for very large centre features;
         # resize only (do not paint over faces or static example text).
         _paste_fit(canvas,ornament,r((153,13,78,90)))
