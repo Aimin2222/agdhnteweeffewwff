@@ -1,0 +1,465 @@
+{
+  "source_index": 83,
+  "source_file": "ゲームUIキルアイコン四案比較シート.png",
+  "source_sha256": "bb37217ab7f0257bf8b630de68f5910f4f9c6faf6668d1e4b17251408c18c79a",
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "rgb_modified": false,
+  "generated_or_inpainted": false,
+  "status": "unapproved_candidates",
+  "assets": [
+    {
+      "id": "a_simple_main",
+      "theme": "a_simple",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        48,
+        98,
+        467,
+        270
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            82,
+            132,
+            186,
+            236
+          ]
+        },
+        {
+          "ellipse": [
+            329,
+            132,
+            433,
+            236
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            48,
+            98,
+            431,
+            100
+          ]
+        },
+        {
+          "rectangle": [
+            125,
+            100,
+            446,
+            102
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "四案の比較資料。背景の残りと輪郭を要確認。"
+      ],
+      "local_border_luma": 28.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            22.909596981910905,
+            29.40386555263193,
+            32.92847405317863
+          ],
+          [
+            -0.20563278374489968,
+            -4.780601489529764,
+            -0.07283589429466614
+          ],
+          [
+            -13.653389598950756,
+            -4.064482177187167,
+            0.7820363125652476
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 12944,
+        "background_median_luma": 26.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 13,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s083/a_simple_main.png",
+      "mask_file": "all_sources/s083/a_simple_main.alpha.png",
+      "sha256": "75656402fe851ef17354c9fa9726230a03ded4722ca1441e6308be27caf4a35a",
+      "mask_sha256": "76b3f3d4d665587a27419161d43919eb8b6f64983cfdaf722282ef2c69ef1e0b",
+      "quality_metrics": {
+        "edge_pixels_above_32": 2,
+        "visible_pixels": 15241,
+        "opaque_pixels": 7301
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "b_prestige_main",
+      "theme": "b_prestige",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        816,
+        98,
+        1235,
+        270
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            850,
+            132,
+            954,
+            236
+          ]
+        },
+        {
+          "ellipse": [
+            1097,
+            132,
+            1201,
+            236
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            816,
+            98,
+            1234,
+            100
+          ]
+        },
+        {
+          "rectangle": [
+            816,
+            100,
+            1234,
+            102
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "四案の比較資料。背景の残りと輪郭を要確認。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 27.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            29.861673493899023,
+            29.496586797687545,
+            25.079667497699624
+          ],
+          [
+            -5.963086784716985,
+            -8.541901831121637,
+            1.2816665704031904
+          ],
+          [
+            -15.141676000071783,
+            -2.4008772247360177,
+            3.0011536959764116
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 12944,
+        "background_median_luma": 26.333333333333332,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 22,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s083/b_prestige_main.png",
+      "mask_file": "all_sources/s083/b_prestige_main.alpha.png",
+      "sha256": "d617f5a5a79852cfca7a2b3d5768475c177107de4158b651af0b5da1a101cac4",
+      "mask_sha256": "847fc489dfb76427a52b426890be0fd62078210249d8c48c7ab5ab7faf348dba",
+      "quality_metrics": {
+        "edge_pixels_above_32": 56,
+        "visible_pixels": 21838,
+        "opaque_pixels": 9542
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "c_cinema_main",
+      "theme": "c_cinema",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        48,
+        588,
+        467,
+        760
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            82,
+            622,
+            186,
+            726
+          ]
+        },
+        {
+          "ellipse": [
+            329,
+            622,
+            433,
+            726
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "四案の比較資料。背景の残りと輪郭を要確認。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 28.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            25.281547955711456,
+            18.424526894389178,
+            48.553871766735675
+          ],
+          [
+            12.562698679567623,
+            4.726054627235304,
+            0.3098620280510751
+          ],
+          [
+            -24.00762747200622,
+            -2.92276803730145,
+            -29.82093449370023
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 12944,
+        "background_median_luma": 31.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 16,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s083/c_cinema_main.png",
+      "mask_file": "all_sources/s083/c_cinema_main.alpha.png",
+      "sha256": "afb2b2c54f5aaf83fb44d5212c3fb2ed0dc01d2eaf38a95383ee94033350c257",
+      "mask_sha256": "d45ae00dc1ab7d1bc38575769fc57f9bfe95268634e64bf85cf3a87d6cdcd9fc",
+      "quality_metrics": {
+        "edge_pixels_above_32": 504,
+        "visible_pixels": 36966,
+        "opaque_pixels": 22848
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "d_ornate_main",
+      "theme": "d_ornate",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        816,
+        588,
+        1235,
+        760
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            850,
+            622,
+            954,
+            726
+          ]
+        },
+        {
+          "ellipse": [
+            1097,
+            622,
+            1201,
+            726
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            899,
+            729,
+            1234,
+            731
+          ]
+        },
+        {
+          "rectangle": [
+            816,
+            731,
+            1234,
+            733
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "四案の比較資料。背景の残りと輪郭を要確認。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 21.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            21.096189439368867,
+            23.055587711602332,
+            29.51997299028807
+          ],
+          [
+            5.490767050279719,
+            0.4867474595069594,
+            3.4971923008033836
+          ],
+          [
+            -17.664825057388764,
+            -5.022701273598948,
+            -9.672758770637943
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 12944,
+        "background_median_luma": 24.333333333333332,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 10,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s083/d_ornate_main.png",
+      "mask_file": "all_sources/s083/d_ornate_main.alpha.png",
+      "sha256": "5f163493794e1b7fc5d7589a559da70494bbd3e0b4d7ea93e31a3eeed38b1cea",
+      "mask_sha256": "4a389caf538d0c317399b32f377c0b172c77e14ced01d706626f303d5f652186",
+      "quality_metrics": {
+        "edge_pixels_above_32": 345,
+        "visible_pixels": 31071,
+        "opaque_pixels": 20694
+      },
+      "status": "needs_mask_or_source_review"
+    }
+  ],
+  "quality_notes": [
+    "背景と装飾の境界・肖像穴・細い線を人が比較画像で確認する必要がある。"
+  ],
+  "excluded_content": [
+    "アニメーションの入退場/拡大図/操作UIは同じ基本案の説明資料。別デザインとして数えない。"
+  ],
+  "unsupported": [
+    {
+      "components": [
+        "weak",
+        "strong",
+        "melee",
+        "ranged",
+        "hybrid"
+      ],
+      "reason": "A/B/C/Dの基本1案。5部品セットは表示されていない。"
+    }
+  ],
+  "review_pages": [
+    "all_sources/s083/review_01.jpg"
+  ],
+  "combinations": {
+    "count": 0,
+    "files": [],
+    "anchor": "illustrative frame crop center; no runtime integration"
+  },
+  "verification": [
+    {
+      "id": "a_simple_main",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16754,
+      "transparent_pixels": 56827,
+      "partial_pixels": 8159,
+      "visible_pixels": 15241
+    },
+    {
+      "id": "b_prestige_main",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16754,
+      "transparent_pixels": 50230,
+      "partial_pixels": 12747,
+      "visible_pixels": 21838
+    },
+    {
+      "id": "c_cinema_main",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16754,
+      "transparent_pixels": 35102,
+      "partial_pixels": 15432,
+      "visible_pixels": 36966
+    },
+    {
+      "id": "d_ornate_main",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16754,
+      "transparent_pixels": 40997,
+      "partial_pixels": 11265,
+      "visible_pixels": 31071
+    }
+  ]
+}

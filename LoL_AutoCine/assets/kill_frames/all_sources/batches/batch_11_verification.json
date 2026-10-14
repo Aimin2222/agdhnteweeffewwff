@@ -1,0 +1,86 @@
+{
+  "batch": 11,
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "all_numeric_checks_passed": true,
+  "human_approval": false,
+  "decoded_sources_at_once": 1,
+  "sources": [
+    {
+      "source_index": 81,
+      "assets": 7,
+      "new_assets": 7,
+      "combinations": 0,
+      "checks_passed": true,
+      "manifest": "all_sources/s081/manifest.json"
+    },
+    {
+      "source_index": 82,
+      "assets": 15,
+      "new_assets": 0,
+      "combinations": 54,
+      "checks_passed": true,
+      "manifest": "all_sources/s082/manifest.json"
+    },
+    {
+      "source_index": 83,
+      "assets": 4,
+      "new_assets": 4,
+      "combinations": 0,
+      "checks_passed": true,
+      "manifest": "all_sources/s083/manifest.json"
+    },
+    {
+      "source_index": 84,
+      "assets": 20,
+      "new_assets": 20,
+      "combinations": 0,
+      "checks_passed": true,
+      "manifest": "all_sources/s084/manifest.json"
+    },
+    {
+      "source_index": 85,
+      "assets": 30,
+      "new_assets": 30,
+      "combinations": 0,
+      "checks_passed": true,
+      "manifest": "all_sources/s085/manifest.json"
+    },
+    {
+      "source_index": 86,
+      "assets": 50,
+      "new_assets": 50,
+      "combinations": 60,
+      "checks_passed": true,
+      "manifest": "all_sources/s086/manifest.json"
+    },
+    {
+      "source_index": 87,
+      "assets": 50,
+      "new_assets": 50,
+      "combinations": 60,
+      "checks_passed": true,
+      "manifest": "all_sources/s087/manifest.json"
+    },
+    {
+      "source_index": 88,
+      "assets": 50,
+      "new_assets": 50,
+      "combinations": 60,
+      "checks_passed": true,
+      "manifest": "all_sources/s088/manifest.json"
+    }
+  ],
+  "black_white_contacts": [
+    "all_sources/batches/batch_11_contact_01.jpg",
+    "all_sources/batches/batch_11_contact_02.jpg",
+    "all_sources/batches/batch_11_contact_03.jpg",
+    "all_sources/batches/batch_11_contact_04.jpg",
+    "all_sources/batches/batch_11_contact_05.jpg",
+    "all_sources/batches/batch_11_contact_06.jpg"
+  ],
+  "pytest": {
+    "passed": 11,
+    "failed": 0,
+    "scope": "selected source RGB/SHA/masks/holes/reviews + exact89 inventory/protected37/core/UI/three themes + 31 catalog correspondence"
+  }
+}

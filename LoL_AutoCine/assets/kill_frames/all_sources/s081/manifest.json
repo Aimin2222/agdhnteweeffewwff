@@ -1,0 +1,596 @@
+{
+  "source_index": 81,
+  "source_file": "image-gen-9.png",
+  "source_sha256": "d3317d28a9e09d78f80c237bc5ca1a89deb39148edbcc87aa84ad1ccc0c19e3f",
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "rgb_modified": false,
+  "generated_or_inpainted": false,
+  "status": "unapproved_candidates",
+  "assets": [
+    {
+      "id": "main",
+      "theme": "d_blood_moon",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        54,
+        126,
+        1005,
+        473
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            207,
+            198,
+            363,
+            354
+          ]
+        },
+        {
+          "ellipse": [
+            717,
+            198,
+            873,
+            354
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "背景のぼかし・発光・暗色装飾の境界は要比較確認。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 26.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            24.117617598749703,
+            10.327367847203623,
+            13.792440703674393
+          ],
+          [
+            5.651466932687557,
+            -1.6876591999070218,
+            -0.17793822202815313
+          ],
+          [
+            -4.105809499440956,
+            0.1619607705014543,
+            -2.1079655442508627
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 61756,
+        "background_median_luma": 22.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 83,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s081/main.png",
+      "mask_file": "all_sources/s081/main.alpha.png",
+      "sha256": "7330842ece3c1241e41d995070e8e59ff367d529c74e6118e62944125191eefc",
+      "mask_sha256": "77ff35823d3557e678156e6a986289d199ba0e07209149b768da6cc479beb1fd",
+      "quality_metrics": {
+        "edge_pixels_above_32": 761,
+        "visible_pixels": 188776,
+        "opaque_pixels": 106842
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_01",
+      "theme": "d_blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        991,
+        987,
+        1055,
+        1031
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の色/効果見本。役割未指定・拡大不可。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 14.17,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            6.686490032253187,
+            9.02214293306277,
+            15.329308485349742
+          ],
+          [
+            -6.433980290621267,
+            -1.326586685127308,
+            2.2920221566952073
+          ],
+          [
+            0.26252158155890726,
+            1.182703130647745,
+            -1.2635128949444792
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 612,
+        "background_median_luma": 18.833333333333336,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s081/palette_reference_01.png",
+      "mask_file": "all_sources/s081/palette_reference_01.alpha.png",
+      "sha256": "10434c949a571e3bd465457f3290d185f14aa2b78344d7d4e809b00d79933192",
+      "mask_sha256": "2f67d4346213e9a4be2a6c5e9765b47ff4406a2265f4b7a6da110778d9c9c7fd",
+      "quality_metrics": {
+        "edge_pixels_above_32": 104,
+        "visible_pixels": 1693,
+        "opaque_pixels": 1019
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_02",
+      "theme": "d_blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1063,
+        987,
+        1127,
+        1031
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の色/効果見本。役割未指定・拡大不可。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 11.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            5.7962219654466125,
+            12.08319198074368,
+            20.95627528253044
+          ],
+          [
+            1.9094914136085581,
+            -3.9964369203185974,
+            -12.471174509582788
+          ],
+          [
+            -4.8051788946531175,
+            -2.4605766710404624,
+            -3.0838440718318623
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 612,
+        "background_median_luma": 14.333333333333334,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 1,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s081/palette_reference_02.png",
+      "mask_file": "all_sources/s081/palette_reference_02.alpha.png",
+      "sha256": "35e02848fef1a368ddb018cdd80970433f0519c441c9927b78176fe298ad1df1",
+      "mask_sha256": "62f5452e99de168f9d55d80fbc6b29d15656b39eb1ebb6167170873c40f9b68f",
+      "quality_metrics": {
+        "edge_pixels_above_32": 85,
+        "visible_pixels": 1741,
+        "opaque_pixels": 919
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_03",
+      "theme": "d_blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1136,
+        987,
+        1200,
+        1031
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の色/効果見本。役割未指定・拡大不可。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 11.83,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            10.64584941694023,
+            9.269198475972805,
+            10.68658179730942
+          ],
+          [
+            -4.179257352576934,
+            0.7130758752860722,
+            3.2140720740415674
+          ],
+          [
+            -5.303469943443588,
+            -1.7352711653787,
+            -1.4286356603920551
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 612,
+        "background_median_luma": 18.833333333333336,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s081/palette_reference_03.png",
+      "mask_file": "all_sources/s081/palette_reference_03.alpha.png",
+      "sha256": "58850d61ee694e7059a5860013737027497eeefb14a41ed174d38a0da7080da0",
+      "mask_sha256": "b01698ab7d05d46cd205775c3c3acc910e210cbc46d62f1fde637c118bd31f6c",
+      "quality_metrics": {
+        "edge_pixels_above_32": 93,
+        "visible_pixels": 1825,
+        "opaque_pixels": 1116
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_04",
+      "theme": "d_blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1203,
+        987,
+        1267,
+        1031
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の色/効果見本。役割未指定・拡大不可。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 7.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            5.280100632832265,
+            5.428343547165749,
+            7.840223737935086
+          ],
+          [
+            -0.71915710463316,
+            3.843482265872184,
+            6.387286765556569
+          ],
+          [
+            -2.9073132389203624,
+            -1.154511286750072,
+            -2.1720047385935883
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 612,
+        "background_median_luma": 12.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s081/palette_reference_04.png",
+      "mask_file": "all_sources/s081/palette_reference_04.alpha.png",
+      "sha256": "c85166d4188178577dcca85af808285bb583094892acb309d28f751f8833f7d0",
+      "mask_sha256": "fc6bb276246e665c7a21d9060efe9d8c82a6de0ee0000b33bd0c749749cc16d5",
+      "quality_metrics": {
+        "edge_pixels_above_32": 79,
+        "visible_pixels": 1992,
+        "opaque_pixels": 1371
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_05",
+      "theme": "d_blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1278,
+        987,
+        1342,
+        1031
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の色/効果見本。役割未指定・拡大不可。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 9.83,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            27.17545308258174,
+            8.291951206110019,
+            42.00095117977739
+          ],
+          [
+            4.37899757534975,
+            -0.31927019530517686,
+            6.480494333441893
+          ],
+          [
+            -26.539099345984404,
+            -2.1202070019800328,
+            -31.968170865378767
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 612,
+        "background_median_luma": 25.5,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 1,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s081/palette_reference_05.png",
+      "mask_file": "all_sources/s081/palette_reference_05.alpha.png",
+      "sha256": "f383ea7b81a35b39857343f86d4ba211259bcfc4528831d4cca1dcdc0b5e3e9c",
+      "mask_sha256": "1ef0a2ba510d00e1b6314ae13c7b86e4bb20e20373cfa18055b755d92f8af604",
+      "quality_metrics": {
+        "edge_pixels_above_32": 79,
+        "visible_pixels": 2068,
+        "opaque_pixels": 1333
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_06",
+      "theme": "d_blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1348,
+        987,
+        1412,
+        1031
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の色/効果見本。役割未指定・拡大不可。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 7.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            1.2361871511706108,
+            8.913439649310813,
+            13.1906434109985
+          ],
+          [
+            0.8390880397402312,
+            2.673847195173782,
+            -5.651422165642158
+          ],
+          [
+            -0.40403593599825305,
+            -2.360053433765364,
+            0.14824453053676034
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 612,
+        "background_median_luma": 9.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s081/palette_reference_06.png",
+      "mask_file": "all_sources/s081/palette_reference_06.alpha.png",
+      "sha256": "50ffe7f02db2d8a6fe3d438bd87d67e79c11a63e2c1baf3e2f43c672bf002dcf",
+      "mask_sha256": "0f7f7982d10c16c272b69c86d32bc8c119e9de34aa41224c760298892f537fe6",
+      "quality_metrics": {
+        "edge_pixels_above_32": 77,
+        "visible_pixels": 1858,
+        "opaque_pixels": 1208
+      },
+      "status": "needs_mask_or_source_review"
+    }
+  ],
+  "quality_notes": [
+    "背景と装飾の境界・肖像穴・細い線を人が比較画像で確認する必要がある。"
+  ],
+  "excluded_content": [
+    "入場/退場の途中状態と拡大図は同じデザインの説明資料。全体デザイン・色/効果の別案は下記に切り出す。",
+    "UIチェックボックス、文字、x1、追加ロゴ、パネル罫線は対象外。"
+  ],
+  "unsupported": [
+    {
+      "components": [
+        "weak",
+        "strong",
+        "melee",
+        "ranged",
+        "hybrid"
+      ],
+      "reason": "明示された強弱/武器ロールの5部品セットは存在しない。観測したフレームを用途未指定で保存。"
+    }
+  ],
+  "review_pages": [
+    "all_sources/s081/review_01.jpg"
+  ],
+  "combinations": {
+    "count": 0,
+    "files": [],
+    "anchor": "illustrative frame crop center; no runtime integration"
+  },
+  "verification": [
+    {
+      "id": "main",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 37888,
+      "transparent_pixels": 141221,
+      "partial_pixels": 88058,
+      "visible_pixels": 188776
+    },
+    {
+      "id": "palette_reference_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 1123,
+      "partial_pixels": 745,
+      "visible_pixels": 1693
+    },
+    {
+      "id": "palette_reference_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 1075,
+      "partial_pixels": 885,
+      "visible_pixels": 1741
+    },
+    {
+      "id": "palette_reference_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 991,
+      "partial_pixels": 777,
+      "visible_pixels": 1825
+    },
+    {
+      "id": "palette_reference_04",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 824,
+      "partial_pixels": 684,
+      "visible_pixels": 1992
+    },
+    {
+      "id": "palette_reference_05",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 748,
+      "partial_pixels": 793,
+      "visible_pixels": 2068
+    },
+    {
+      "id": "palette_reference_06",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 958,
+      "partial_pixels": 732,
+      "visible_pixels": 1858
+    }
+  ]
+}
