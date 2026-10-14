@@ -1,0 +1,1220 @@
+{
+  "source_index": 89,
+  "source_file": "第4弾 キルアイコン装飾テンプレート集.png",
+  "source_sha256": "a486f97fd8f86daf698a70d312c4e8e31b1d9f6a32201697f61aceb827b8a5e0",
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "rgb_modified": false,
+  "generated_or_inpainted": false,
+  "status": "unapproved_candidates",
+  "assets": [
+    {
+      "id": "battle_academia_frame",
+      "theme": "battle_academia",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        260,
+        67,
+        719,
+        263
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            307,
+            114,
+            409,
+            216
+          ]
+        },
+        {
+          "ellipse": [
+            570,
+            114,
+            672,
+            216
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            260,
+            259,
+            718,
+            261
+          ]
+        },
+        {
+          "rectangle": [
+            260,
+            257,
+            718,
+            259
+          ]
+        },
+        {
+          "rectangle": [
+            260,
+            67,
+            718,
+            69
+          ]
+        },
+        {
+          "rectangle": [
+            260,
+            69,
+            718,
+            71
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 19.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            8.451920910750601,
+            17.171124375158467,
+            37.733847772138425
+          ],
+          [
+            3.3551922683467867,
+            0.3233502767147143,
+            4.864409897835722
+          ],
+          [
+            -1.833969225015038,
+            -3.6277017639267117,
+            -4.272047344261805
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 16094,
+        "background_median_luma": 33.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 13,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s089/battle_academia_frame.png",
+      "mask_file": "all_sources/s089/battle_academia_frame.alpha.png",
+      "sha256": "c92fdc5e44493da98376dd6ee06a50a4fdf110696bb5e3fb12e554f887eb6d38",
+      "mask_sha256": "c17ab21138ea96ef7e7e4478df0c25629e02acbcf04d2894f1b7f44402c887f8",
+      "quality_metrics": {
+        "edge_pixels_above_32": 243,
+        "visible_pixels": 51264,
+        "opaque_pixels": 29791
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "arcade_frame",
+      "theme": "arcade",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1028,
+        67,
+        1487,
+        263
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1075,
+            114,
+            1177,
+            216
+          ]
+        },
+        {
+          "ellipse": [
+            1338,
+            114,
+            1440,
+            216
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1028,
+            257,
+            1486,
+            259
+          ]
+        },
+        {
+          "rectangle": [
+            1028,
+            69,
+            1486,
+            71
+          ]
+        },
+        {
+          "rectangle": [
+            1028,
+            67,
+            1486,
+            69
+          ]
+        },
+        {
+          "rectangle": [
+            1028,
+            259,
+            1486,
+            261
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 6.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            1.2796966553418794,
+            3.621476137091142,
+            9.283671905594412
+          ],
+          [
+            2.79290827709868,
+            -1.9587867351188688,
+            -1.4462657119899989
+          ],
+          [
+            -0.43879622921176287,
+            3.32051107551618,
+            7.49663021678748
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 16094,
+        "background_median_luma": 18.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 12,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s089/arcade_frame.png",
+      "mask_file": "all_sources/s089/arcade_frame.alpha.png",
+      "sha256": "62b7098ed72e95605124b1d261bd9f20795c02d0fc9b3cfadcc0d7dee8ecbbc2",
+      "mask_sha256": "b7985a7bf1842d49ea9058adbc56ae45992fd18d79ad9db8c65f70a8cbd529b3",
+      "quality_metrics": {
+        "edge_pixels_above_32": 231,
+        "visible_pixels": 46637,
+        "opaque_pixels": 26813
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "odyssey_frame",
+      "theme": "odyssey",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        260,
+        257,
+        719,
+        453
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            307,
+            304,
+            409,
+            406
+          ]
+        },
+        {
+          "ellipse": [
+            570,
+            304,
+            672,
+            406
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            260,
+            451,
+            718,
+            453
+          ]
+        },
+        {
+          "rectangle": [
+            260,
+            449,
+            718,
+            451
+          ]
+        },
+        {
+          "rectangle": [
+            260,
+            257,
+            718,
+            259
+          ]
+        },
+        {
+          "rectangle": [
+            260,
+            259,
+            718,
+            261
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 9.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            3.865730201381444,
+            6.410785369044211,
+            19.730140062317833
+          ],
+          [
+            -0.4473822224192139,
+            0.5476418766782141,
+            -3.4212764119992825
+          ],
+          [
+            -1.7736586923076603,
+            1.861486240280227,
+            6.15983007514095
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 16094,
+        "background_median_luma": 18.333333333333332,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 17,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s089/odyssey_frame.png",
+      "mask_file": "all_sources/s089/odyssey_frame.alpha.png",
+      "sha256": "e818b40dd4eefd15014aaba003655a3de92c5c3703a2bf5f882737688447f985",
+      "mask_sha256": "ed74bdcd76cd48c1c7b7ff666a3c52ff0ccb4884f7348fe4422a9eb9e15f05c2",
+      "quality_metrics": {
+        "edge_pixels_above_32": 216,
+        "visible_pixels": 48606,
+        "opaque_pixels": 31100
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "pulsefire_frame",
+      "theme": "pulsefire",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1028,
+        257,
+        1487,
+        453
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1075,
+            304,
+            1177,
+            406
+          ]
+        },
+        {
+          "ellipse": [
+            1338,
+            304,
+            1440,
+            406
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1028,
+            259,
+            1486,
+            261
+          ]
+        },
+        {
+          "rectangle": [
+            1028,
+            257,
+            1486,
+            259
+          ]
+        },
+        {
+          "rectangle": [
+            1028,
+            451,
+            1486,
+            453
+          ]
+        },
+        {
+          "rectangle": [
+            1028,
+            449,
+            1486,
+            451
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 12.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            3.1806049443149855,
+            10.754781424036432,
+            21.307029401923497
+          ],
+          [
+            -0.9642221063925192,
+            -3.1449982802385428,
+            -4.828136494032764
+          ],
+          [
+            -1.1416108043612827,
+            2.4366106669761396,
+            3.818785407559575
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 16094,
+        "background_median_luma": 17.333333333333332,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 21,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s089/pulsefire_frame.png",
+      "mask_file": "all_sources/s089/pulsefire_frame.alpha.png",
+      "sha256": "6831ee46376d8b7cb4790bd79bdaa2cc57186c965ac7cf9d14814a046c452e12",
+      "mask_sha256": "c3c49fa864a0a8eb49da2e712ded63e08435f950af02e47b8e9c68570d0c1f0c",
+      "quality_metrics": {
+        "edge_pixels_above_32": 216,
+        "visible_pixels": 48497,
+        "opaque_pixels": 34078
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "infernal_frame",
+      "theme": "infernal",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        260,
+        447,
+        719,
+        643
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            307,
+            494,
+            409,
+            596
+          ]
+        },
+        {
+          "ellipse": [
+            570,
+            494,
+            672,
+            596
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            260,
+            451,
+            718,
+            453
+          ]
+        },
+        {
+          "rectangle": [
+            260,
+            449,
+            718,
+            451
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 13.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            10.355006521216884,
+            6.597701466728113,
+            16.06297030429407
+          ],
+          [
+            0.1939332625058432,
+            0.42551001759151064,
+            0.9213896595252602
+          ],
+          [
+            9.09599928592494,
+            -1.271296641503268,
+            -7.368522704972511
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 16094,
+        "background_median_luma": 20.333333333333332,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 15,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s089/infernal_frame.png",
+      "mask_file": "all_sources/s089/infernal_frame.alpha.png",
+      "sha256": "662c2a3293439c537e3cd9c0cae768cc4d232a6954e852c993a3850183d6a06b",
+      "mask_sha256": "1806d74143a22cc12791d6f2aed36705ed9614797a7d2330baeb9b514fd217e0",
+      "quality_metrics": {
+        "edge_pixels_above_32": 674,
+        "visible_pixels": 54306,
+        "opaque_pixels": 31525
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "frosted_frame",
+      "theme": "frosted",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1028,
+        447,
+        1487,
+        643
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1075,
+            494,
+            1177,
+            596
+          ]
+        },
+        {
+          "ellipse": [
+            1338,
+            494,
+            1440,
+            596
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1028,
+            451,
+            1486,
+            453
+          ]
+        },
+        {
+          "rectangle": [
+            1028,
+            639,
+            1486,
+            641
+          ]
+        },
+        {
+          "rectangle": [
+            1028,
+            641,
+            1486,
+            643
+          ]
+        },
+        {
+          "rectangle": [
+            1028,
+            449,
+            1486,
+            451
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 14.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            1.8288456175799728,
+            12.820880726546209,
+            28.447314399714717
+          ],
+          [
+            0.7879639550321127,
+            0.013136971996515867,
+            -1.6165189797792239
+          ],
+          [
+            -0.32886312441756765,
+            -1.2221110256817123,
+            -0.5469413634060687
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 16094,
+        "background_median_luma": 32.666666666666664,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 12,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s089/frosted_frame.png",
+      "mask_file": "all_sources/s089/frosted_frame.alpha.png",
+      "sha256": "fb39634bb5e84d8207092350a135e13d95f377eb70b3a7bd3305c2fe9c6111e7",
+      "mask_sha256": "6fd714205cebc24a5dfa985516fb43929effd06dab5f8fdf08db86f1e2d70342",
+      "quality_metrics": {
+        "edge_pixels_above_32": 294,
+        "visible_pixels": 54918,
+        "opaque_pixels": 39505
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "ruined_frame",
+      "theme": "ruined",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        260,
+        637,
+        719,
+        833
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            307,
+            684,
+            409,
+            786
+          ]
+        },
+        {
+          "ellipse": [
+            570,
+            684,
+            672,
+            786
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            379,
+            831,
+            718,
+            833
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 14.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            1.8149831499244613,
+            14.174350055795347,
+            18.36931153775515
+          ],
+          [
+            -0.5462623203313232,
+            -0.08744647420866691,
+            -0.13059107488226873
+          ],
+          [
+            0.3388406188645195,
+            6.739496137607713,
+            4.97022916140671
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 16094,
+        "background_median_luma": 17.666666666666668,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 64,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s089/ruined_frame.png",
+      "mask_file": "all_sources/s089/ruined_frame.alpha.png",
+      "sha256": "4ea1672f805bea3cafbc523f01c3322d2dd54ad11b63c9bdb7ce40ea5bd0d29b",
+      "mask_sha256": "9945461793caf0e70bd63d84d944387b764fd68ec7b0db311e2c75f59641984e",
+      "quality_metrics": {
+        "edge_pixels_above_32": 470,
+        "visible_pixels": 44898,
+        "opaque_pixels": 22830
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "dragon_emperor_frame",
+      "theme": "dragon_emperor",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1028,
+        637,
+        1487,
+        833
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1075,
+            684,
+            1177,
+            786
+          ]
+        },
+        {
+          "ellipse": [
+            1338,
+            684,
+            1440,
+            786
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1028,
+            639,
+            1486,
+            641
+          ]
+        },
+        {
+          "rectangle": [
+            1028,
+            641,
+            1486,
+            643
+          ]
+        },
+        {
+          "rectangle": [
+            1118,
+            831,
+            1486,
+            833
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 6.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            6.700243346049214,
+            8.623288601340827,
+            11.564844610172926
+          ],
+          [
+            -1.563278600022441,
+            -2.594210528396344,
+            -1.3582498223233719
+          ],
+          [
+            1.970262823809981,
+            -1.0948048454737218,
+            -6.665743835103969
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 16094,
+        "background_median_luma": 13.333333333333334,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 16,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s089/dragon_emperor_frame.png",
+      "mask_file": "all_sources/s089/dragon_emperor_frame.alpha.png",
+      "sha256": "71932216f6c338309e5076b8f71b0671872d0e249d3cd871312207408a8e842a",
+      "mask_sha256": "be2b720b1e9bb0c3f84fd3f1393095d1c8436cdaa7698088a068b72c658feae7",
+      "quality_metrics": {
+        "edge_pixels_above_32": 372,
+        "visible_pixels": 51875,
+        "opaque_pixels": 33660
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "mythic_frame",
+      "theme": "mythic",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        260,
+        827,
+        719,
+        1023
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            307,
+            874,
+            409,
+            976
+          ]
+        },
+        {
+          "ellipse": [
+            570,
+            874,
+            672,
+            976
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            260,
+            832,
+            718,
+            834
+          ]
+        },
+        {
+          "rectangle": [
+            260,
+            830,
+            718,
+            832
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 16.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            5.379662406445613,
+            17.054625083407974,
+            20.635935801804667
+          ],
+          [
+            -0.7064771677507622,
+            1.0062484031935717,
+            1.4575003595919993
+          ],
+          [
+            8.043176694621003,
+            1.1330197274771439,
+            6.532011045460964
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 16094,
+        "background_median_luma": 27.666666666666668,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 9,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s089/mythic_frame.png",
+      "mask_file": "all_sources/s089/mythic_frame.alpha.png",
+      "sha256": "dada9bbedfaca204047d8f65ec935f2d806ea1bff3bd23be0949a4bec1566d9c",
+      "mask_sha256": "acb9e522d58fd2aae1ff0650ced32d6d29d8b5773f9f391b6519aad3437d7d0d",
+      "quality_metrics": {
+        "edge_pixels_above_32": 311,
+        "visible_pixels": 59546,
+        "opaque_pixels": 45347
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "prestige_frame",
+      "theme": "prestige",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1028,
+        827,
+        1487,
+        1023
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1075,
+            874,
+            1177,
+            976
+          ]
+        },
+        {
+          "ellipse": [
+            1338,
+            874,
+            1440,
+            976
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1028,
+            830,
+            1486,
+            832
+          ]
+        },
+        {
+          "rectangle": [
+            1028,
+            832,
+            1486,
+            834
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 11.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            8.14219771368806,
+            7.445082271894301,
+            8.238589459471685
+          ],
+          [
+            -3.382478191892881,
+            -3.1802400926982193,
+            -3.583697442583619
+          ],
+          [
+            6.111976600206535,
+            5.861286769837932,
+            11.81783478543866
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 16094,
+        "background_median_luma": 20.333333333333332,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 18,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s089/prestige_frame.png",
+      "mask_file": "all_sources/s089/prestige_frame.alpha.png",
+      "sha256": "b0bab3255d39373436ca6bb50b93a56e27ec71ecb7901b56b8c489f10cb28017",
+      "mask_sha256": "0397cf7967bec4bba5e51581861d6f8981a7318a5ed09c950b895855ddebfd5a",
+      "quality_metrics": {
+        "edge_pixels_above_32": 309,
+        "visible_pixels": 56745,
+        "opaque_pixels": 39314
+      },
+      "status": "needs_mask_or_source_review"
+    }
+  ],
+  "quality_notes": [
+    "背景と装飾の境界・肖像穴・細い線を人が比較画像で確認する必要がある。"
+  ],
+  "excluded_content": [
+    "見出し・説明文字・罫線・背景絵は素材対象外。"
+  ],
+  "unsupported": [
+    {
+      "components": [
+        "weak",
+        "strong",
+        "melee",
+        "ranged",
+        "hybrid"
+      ],
+      "reason": "1テーマ1フレームのみ。強弱と役割は未指定。"
+    }
+  ],
+  "review_pages": [
+    "all_sources/s089/review_01.jpg",
+    "all_sources/s089/review_02.jpg"
+  ],
+  "combinations": {
+    "count": 0,
+    "files": [],
+    "anchor": "illustrative frame crop center; no runtime integration"
+  },
+  "verification": [
+    {
+      "id": "battle_academia_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16124,
+      "transparent_pixels": 38700,
+      "partial_pixels": 23257,
+      "visible_pixels": 51264
+    },
+    {
+      "id": "arcade_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16124,
+      "transparent_pixels": 43327,
+      "partial_pixels": 21642,
+      "visible_pixels": 46637
+    },
+    {
+      "id": "odyssey_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16124,
+      "transparent_pixels": 41358,
+      "partial_pixels": 19285,
+      "visible_pixels": 48606
+    },
+    {
+      "id": "pulsefire_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16124,
+      "transparent_pixels": 41467,
+      "partial_pixels": 15785,
+      "visible_pixels": 48497
+    },
+    {
+      "id": "infernal_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16124,
+      "transparent_pixels": 35658,
+      "partial_pixels": 24897,
+      "visible_pixels": 54306
+    },
+    {
+      "id": "frosted_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16124,
+      "transparent_pixels": 35046,
+      "partial_pixels": 16974,
+      "visible_pixels": 54918
+    },
+    {
+      "id": "ruined_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16124,
+      "transparent_pixels": 45066,
+      "partial_pixels": 23836,
+      "visible_pixels": 44898
+    },
+    {
+      "id": "dragon_emperor_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16124,
+      "transparent_pixels": 38089,
+      "partial_pixels": 19895,
+      "visible_pixels": 51875
+    },
+    {
+      "id": "mythic_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16124,
+      "transparent_pixels": 30418,
+      "partial_pixels": 15289,
+      "visible_pixels": 59546
+    },
+    {
+      "id": "prestige_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 16124,
+      "transparent_pixels": 33219,
+      "partial_pixels": 19499,
+      "visible_pixels": 56745
+    }
+  ]
+}
