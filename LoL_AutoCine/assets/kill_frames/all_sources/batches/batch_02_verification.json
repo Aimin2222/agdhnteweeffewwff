@@ -1,0 +1,78 @@
+{
+  "batch": 2,
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "all_numeric_checks_passed": true,
+  "human_approval": false,
+  "decoded_sources_at_once": 1,
+  "sources": [
+    {
+      "source_index": 9,
+      "assets": 6,
+      "new_assets": 6,
+      "combinations": 9,
+      "checks_passed": true,
+      "manifest": "all_sources/s009/manifest.json"
+    },
+    {
+      "source_index": 10,
+      "assets": 9,
+      "new_assets": 9,
+      "combinations": 18,
+      "checks_passed": true,
+      "manifest": "all_sources/s010/manifest.json"
+    },
+    {
+      "source_index": 11,
+      "assets": 9,
+      "new_assets": 9,
+      "combinations": 18,
+      "checks_passed": true,
+      "manifest": "all_sources/s011/manifest.json"
+    },
+    {
+      "source_index": 12,
+      "assets": 9,
+      "new_assets": 9,
+      "combinations": 18,
+      "checks_passed": true,
+      "manifest": "all_sources/s012/manifest.json"
+    },
+    {
+      "source_index": 13,
+      "assets": 18,
+      "new_assets": 13,
+      "combinations": 72,
+      "checks_passed": true,
+      "manifest": "all_sources/s013/manifest.json"
+    },
+    {
+      "source_index": 14,
+      "assets": 15,
+      "new_assets": 15,
+      "combinations": 54,
+      "checks_passed": true,
+      "manifest": "all_sources/s014/manifest.json"
+    },
+    {
+      "source_index": 15,
+      "assets": 9,
+      "new_assets": 9,
+      "combinations": 18,
+      "checks_passed": true,
+      "manifest": "all_sources/s015/manifest.json"
+    },
+    {
+      "source_index": 16,
+      "assets": 9,
+      "new_assets": 9,
+      "combinations": 18,
+      "checks_passed": true,
+      "manifest": "all_sources/s016/manifest.json"
+    }
+  ],
+  "pytest": {
+    "passed": 11,
+    "failed": 0,
+    "scope": "batch02 source RGB/masks/holes,89 inventory,protected37/core/UI/three themes,31 catalog mapping"
+  }
+}
