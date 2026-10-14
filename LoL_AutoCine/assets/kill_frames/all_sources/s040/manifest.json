@@ -1,0 +1,536 @@
+{
+  "source_index": 40,
+  "source_file": "image-gen-4(3).png",
+  "source_sha256": "b1eacdb24147c33fa34ed9f2cf4c919d749e770f0bfedd77ae84df17653a1991",
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "rgb_modified": false,
+  "generated_or_inpainted": false,
+  "status": "unapproved_candidates",
+  "assets": [
+    {
+      "id": "strong_01",
+      "theme": "blood_moon_ritual",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        131,
+        137,
+        929,
+        379
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            225,
+            176,
+            394,
+            337
+          ]
+        },
+        {
+          "rectangle": [
+            665,
+            176,
+            828,
+            337
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 23.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            12.597991126087074,
+            6.171981693807921,
+            6.219088357779596
+          ],
+          [
+            10.679178104477456,
+            11.866973429465409,
+            14.80325674571578
+          ],
+          [
+            4.900657099984376,
+            5.419998958471999,
+            4.875279497627579
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 36156,
+        "background_median_luma": 20.666666666666668,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 52,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s040/strong_01.png",
+      "mask_file": "all_sources/s040/strong_01.alpha.png",
+      "sha256": "1434e35880a1cce20c5b6a6808e927dd9859e51a7bb85e4f3942d039597ec12f",
+      "mask_sha256": "e66f93fc38894e31af3650d5d570f1c40ca9314c00624ff8347938cf6cff011b",
+      "quality_metrics": {
+        "edge_pixels_above_32": 103,
+        "visible_pixels": 78353,
+        "opaque_pixels": 35539
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "strong_02",
+      "theme": "blood_moon_ritual",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        125,
+        371,
+        932,
+        605
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            225,
+            409,
+            394,
+            570
+          ]
+        },
+        {
+          "rectangle": [
+            665,
+            409,
+            828,
+            570
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 25.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            20.863588217071644,
+            15.175050455392748,
+            16.087968242277007
+          ],
+          [
+            0.03378102094504842,
+            0.8860515009268979,
+            0.0036644268436931693
+          ],
+          [
+            2.4400848102742443,
+            2.0958779430803594,
+            2.4939886305998336
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 34714,
+        "background_median_luma": 22.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 53,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s040/strong_02.png",
+      "mask_file": "all_sources/s040/strong_02.alpha.png",
+      "sha256": "b8be4f0b8439880dab55c66505e978066d6b45b9d8bfa2963f23dfa7d73f5cd3",
+      "mask_sha256": "706ca7c0094303bf3991f40b004b8464750cb1ff3976f55b84c26af8a8c4d4cc",
+      "quality_metrics": {
+        "edge_pixels_above_32": 104,
+        "visible_pixels": 78359,
+        "opaque_pixels": 35185
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "strong_03",
+      "theme": "blood_moon_ritual",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        125,
+        606,
+        944,
+        865
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            225,
+            638,
+            394,
+            804
+          ]
+        },
+        {
+          "rectangle": [
+            665,
+            638,
+            828,
+            804
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 38.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            26.79145040983933,
+            16.138663117865754,
+            15.306902666233345
+          ],
+          [
+            2.847894131526326,
+            2.8497244216432343,
+            4.416027561175101
+          ],
+          [
+            -1.5986637303909803,
+            3.069622975182794,
+            5.864574056670006
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 38456,
+        "background_median_luma": 27.666666666666668,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 30,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s040/strong_03.png",
+      "mask_file": "all_sources/s040/strong_03.alpha.png",
+      "sha256": "f664a17885aad7f87dcf27dd489fd266541e2e747274534872b34abac165c6f3",
+      "mask_sha256": "1e2e7bc9eb06f6e661ba07717842eb3b756ff7dc877d26224ef6b4f443917cfb",
+      "quality_metrics": {
+        "edge_pixels_above_32": 347,
+        "visible_pixels": 86403,
+        "opaque_pixels": 38112
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "melee_01",
+      "theme": "blood_moon_ritual",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "melee",
+      "crop_box": [
+        411,
+        900,
+        565,
+        1048
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 12.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            13.74188821923983,
+            12.021342517647504,
+            12.492775798657153
+          ],
+          [
+            0.09967916985067593,
+            -0.02439868694745087,
+            0.42835451273989555
+          ],
+          [
+            -1.3156563245153727,
+            -0.21643053064290402,
+            0.23809776012538755
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4032,
+        "background_median_luma": 13.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s040/melee_01.png",
+      "mask_file": "all_sources/s040/melee_01.alpha.png",
+      "sha256": "33b11da179168e8861665e13120785d5fd9161772aedd51233a9a21d804cf3e0",
+      "mask_sha256": "18f8fd022b38e98532998764934b44286d01ef62d5f811f3b5d79b4584908b64",
+      "quality_metrics": {
+        "edge_pixels_above_32": 9,
+        "visible_pixels": 9447,
+        "opaque_pixels": 5380
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "ranged_01",
+      "theme": "blood_moon_ritual",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "ranged",
+      "crop_box": [
+        735,
+        902,
+        868,
+        1048
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 13.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            14.877996418188047,
+            12.395224950919907,
+            12.987415796341127
+          ],
+          [
+            -0.6826143634962292,
+            -0.06680961808201913,
+            0.027799438420417877
+          ],
+          [
+            -1.2250285927571747,
+            0.8821917220315869,
+            1.0283526859823036
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3446,
+        "background_median_luma": 13.666666666666666,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 12,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s040/ranged_01.png",
+      "mask_file": "all_sources/s040/ranged_01.alpha.png",
+      "sha256": "7249b94c0e4c7eecf52435e965afcc6c65df3c46d179b8c0fc287947a33b43d3",
+      "mask_sha256": "9c25e756c23a7bd3163b5845d775cfc1ef644ba0e715af9f150f27eb4d2dc887",
+      "quality_metrics": {
+        "edge_pixels_above_32": 18,
+        "visible_pixels": 7154,
+        "opaque_pixels": 3728
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "hybrid_01",
+      "theme": "blood_moon_ritual",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "hybrid",
+      "crop_box": [
+        1033,
+        906,
+        1194,
+        1058
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 15.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            20.34012748240594,
+            15.757581058358705,
+            17.082063837360426
+          ],
+          [
+            -7.466547260906856,
+            -5.239802064265945,
+            -5.765498078327354
+          ],
+          [
+            -3.413599609158812,
+            -0.37188660209093705,
+            -0.43816214825032107
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4462,
+        "background_median_luma": 15.666666666666666,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 10,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s040/hybrid_01.png",
+      "mask_file": "all_sources/s040/hybrid_01.alpha.png",
+      "sha256": "2b6fcfefef151453c94e03de263e03dfce2d6f76c46cea43a3d1307e308844f9",
+      "mask_sha256": "8409fe71f145a2927d16bc66cfd592a6594f9a7baa0ee113b3ef3cc43b5a9453",
+      "quality_metrics": {
+        "edge_pixels_above_32": 8,
+        "visible_pixels": 12190,
+        "opaque_pixels": 6839
+      },
+      "status": "needs_visual_review"
+    }
+  ],
+  "quality_notes": [
+    "背景と装飾の境界・肖像穴・細い線を人が比較画像で確認する必要がある。"
+  ],
+  "excluded_content": [
+    "右欄の装飾拡大図は同じ部品の説明。独立した追加フレームとして数えない。説明文・ロゴ・背景は対象外。"
+  ],
+  "unsupported": [
+    {
+      "intensity": "weak",
+      "reason": "元画像にこの強弱の独立した全フレームがない。"
+    }
+  ],
+  "review_pages": [
+    "all_sources/s040/review_01.jpg"
+  ],
+  "combinations": {
+    "count": 9,
+    "files": [
+      "all_sources/s040/combinations_01.jpg"
+    ],
+    "anchor": "illustrative frame crop center; no runtime integration"
+  },
+  "verification": [
+    {
+      "id": "strong_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 53452,
+      "transparent_pixels": 114763,
+      "partial_pixels": 44462,
+      "visible_pixels": 78353
+    },
+    {
+      "id": "strong_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 53452,
+      "transparent_pixels": 110479,
+      "partial_pixels": 44950,
+      "visible_pixels": 78359
+    },
+    {
+      "id": "strong_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 55112,
+      "transparent_pixels": 125718,
+      "partial_pixels": 50675,
+      "visible_pixels": 86403
+    },
+    {
+      "id": "melee_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 13345,
+      "partial_pixels": 4261,
+      "visible_pixels": 9447
+    },
+    {
+      "id": "ranged_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 12264,
+      "partial_pixels": 3552,
+      "visible_pixels": 7154
+    },
+    {
+      "id": "hybrid_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 12282,
+      "partial_pixels": 5746,
+      "visible_pixels": 12190
+    }
+  ]
+}

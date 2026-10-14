@@ -1,0 +1,82 @@
+{
+  "batch": 5,
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "all_numeric_checks_passed": true,
+  "human_approval": false,
+  "decoded_sources_at_once": 1,
+  "sources": [
+    {
+      "source_index": 33,
+      "assets": 6,
+      "new_assets": 6,
+      "combinations": 9,
+      "checks_passed": true,
+      "manifest": "all_sources/s033/manifest.json"
+    },
+    {
+      "source_index": 34,
+      "assets": 9,
+      "new_assets": 9,
+      "combinations": 18,
+      "checks_passed": true,
+      "manifest": "all_sources/s034/manifest.json"
+    },
+    {
+      "source_index": 35,
+      "assets": 9,
+      "new_assets": 9,
+      "combinations": 18,
+      "checks_passed": true,
+      "manifest": "all_sources/s035/manifest.json"
+    },
+    {
+      "source_index": 36,
+      "assets": 9,
+      "new_assets": 9,
+      "combinations": 18,
+      "checks_passed": true,
+      "manifest": "all_sources/s036/manifest.json"
+    },
+    {
+      "source_index": 37,
+      "assets": 15,
+      "new_assets": 15,
+      "combinations": 54,
+      "checks_passed": true,
+      "manifest": "all_sources/s037/manifest.json"
+    },
+    {
+      "source_index": 38,
+      "assets": 9,
+      "new_assets": 9,
+      "combinations": 18,
+      "checks_passed": true,
+      "manifest": "all_sources/s038/manifest.json"
+    },
+    {
+      "source_index": 39,
+      "assets": 8,
+      "new_assets": 8,
+      "combinations": 0,
+      "checks_passed": true,
+      "manifest": "all_sources/s039/manifest.json"
+    },
+    {
+      "source_index": 40,
+      "assets": 6,
+      "new_assets": 6,
+      "combinations": 9,
+      "checks_passed": true,
+      "manifest": "all_sources/s040/manifest.json"
+    }
+  ],
+  "black_white_contacts": [
+    "all_sources/batches/batch_05_contact_01.jpg",
+    "all_sources/batches/batch_05_contact_02.jpg"
+  ],
+  "pytest": {
+    "passed": 11,
+    "failed": 0,
+    "scope": "selected source RGB/SHA/masks/holes/reviews + exact89 inventory/protected37/core/UI/three themes + 31 catalog correspondence"
+  }
+}
