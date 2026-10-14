@@ -1,0 +1,37 @@
+name: ChatGPT Killframe Transparent Candidates 011-020
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/chatgpt-killframes-transparent-candidates.yml"
+permissions:
+  contents: write
+jobs:
+  candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout ChatGPT asset workspace
+        uses: actions/checkout@v4
+        with:
+          path: output
+      - name: Checkout untouched original source PNGs
+        uses: actions/checkout@v4
+        with:
+          ref: codex/killframes-all-89-candidates-20261014
+          path: original
+      - name: Install PNG / segmentation tools
+        run: python -m pip install --quiet "Pillow>=10,<13" "numpy>=1.26,<3" "opencv-python-headless>=4.9,<5"
+      - name: Extract original-pixel sprites with RGBA candidate alpha masks
+        run: python output/LoL_AutoCine/assets/kill_frames_chatgpt/build_transparent_candidates.py original/LoL_AutoCine/assets/kill_concepts
+      - name: Save candidates and QA proof images to separate ChatGPT path
+        working-directory: output
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add LoL_AutoCine/assets/kill_frames_chatgpt/batch_011_020/candidates
+          if ! git diff --cached --quiet; then
+            git commit -m "assets(chatgpt): preserve source pixels in transparent No.011-020 QA candidates"
+            git push
+          fi
