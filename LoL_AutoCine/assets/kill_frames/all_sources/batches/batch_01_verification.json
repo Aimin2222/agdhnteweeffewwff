@@ -1,0 +1,79 @@
+{
+  "batch": 1,
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "all_numeric_checks_passed": true,
+  "human_approval": false,
+  "decoded_sources_at_once": 1,
+  "sources": [
+    {
+      "source_index": 1,
+      "assets": 50,
+      "new_assets": 50,
+      "combinations": 60,
+      "checks_passed": true,
+      "manifest": "all_sources/s001/manifest.json"
+    },
+    {
+      "source_index": 2,
+      "assets": 20,
+      "new_assets": 20,
+      "combinations": 0,
+      "checks_passed": true,
+      "manifest": "all_sources/s002/manifest.json"
+    },
+    {
+      "source_index": 3,
+      "assets": 20,
+      "new_assets": 20,
+      "combinations": 0,
+      "checks_passed": true,
+      "manifest": "all_sources/s003/manifest.json"
+    },
+    {
+      "source_index": 4,
+      "assets": 40,
+      "new_assets": 40,
+      "combinations": 0,
+      "checks_passed": true,
+      "manifest": "all_sources/s004/manifest.json"
+    },
+    {
+      "source_index": 5,
+      "assets": 3,
+      "new_assets": 3,
+      "combinations": 0,
+      "checks_passed": true,
+      "manifest": "all_sources/s005/manifest.json"
+    },
+    {
+      "source_index": 6,
+      "assets": 15,
+      "new_assets": 10,
+      "combinations": 54,
+      "checks_passed": true,
+      "manifest": "all_sources/s006/manifest.json"
+    },
+    {
+      "source_index": 7,
+      "assets": 15,
+      "new_assets": 15,
+      "combinations": 54,
+      "checks_passed": true,
+      "manifest": "all_sources/s007/manifest.json"
+    },
+    {
+      "source_index": 8,
+      "assets": 1,
+      "new_assets": 1,
+      "combinations": 0,
+      "checks_passed": true,
+      "manifest": "all_sources/s008/manifest.json"
+    }
+  ],
+  "pytest": {
+    "passed": 58,
+    "failed": 0,
+    "scope": "all89 batch01 + existing three-theme/candidate/catalog tests",
+    "initial_environment_error": "3 existing tmp_path setup errors under sandbox temp; repeated in new workspace basetemp passed"
+  }
+}

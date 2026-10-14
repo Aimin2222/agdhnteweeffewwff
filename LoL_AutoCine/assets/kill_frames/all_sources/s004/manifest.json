@@ -1,0 +1,4732 @@
+{
+  "source_index": 4,
+  "source_file": "40テーマの対決アイコンギャラリー.png",
+  "source_sha256": "c4fbc55fa5ea430bfbf7fcedb4948dbe03c4313f8d32c30f7a5fd7bb2c16ac81",
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "rgb_modified": false,
+  "generated_or_inpainted": false,
+  "status": "unapproved_candidates",
+  "assets": [
+    {
+      "id": "demacia_frame",
+      "theme": "demacia",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        0,
+        124,
+        186,
+        216
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            19,
+            142,
+            75,
+            198
+          ]
+        },
+        {
+          "ellipse": [
+            112,
+            142,
+            168,
+            198
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            7,
+            130,
+            87,
+            210
+          ]
+        },
+        {
+          "ellipse": [
+            100,
+            130,
+            180,
+            210
+          ]
+        },
+        {
+          "ellipse": [
+            57,
+            127,
+            130,
+            213
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            38.078472450527954,
+            33.58867169769504,
+            47.308007710363995
+          ],
+          [
+            -1.994093099887317,
+            -0.794538229920839,
+            4.330127128049425
+          ],
+          [
+            -0.39238621939928997,
+            -6.608878074947594,
+            -17.82393133430034
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 1
+      },
+      "file": "all_sources/s004/demacia_frame.png",
+      "mask_file": "all_sources/s004/demacia_frame.alpha.png",
+      "sha256": "c60df3f0da9ef4904c550e4ab231a5611a34565a499f3825bb8545ddab2694d9",
+      "mask_sha256": "fa63ddc93ea8cfbbcb81c62d6d3df6c054948a6e3a0fd3416b2a20d846130f65",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "noxus_frame",
+      "theme": "noxus",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        187,
+        125,
+        367,
+        215
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            205,
+            143,
+            259,
+            197
+          ]
+        },
+        {
+          "ellipse": [
+            295,
+            143,
+            349,
+            197
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            193,
+            131,
+            271,
+            209
+          ]
+        },
+        {
+          "ellipse": [
+            283,
+            131,
+            361,
+            209
+          ]
+        },
+        {
+          "ellipse": [
+            241,
+            128,
+            313,
+            212
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            186,
+            125,
+            188,
+            214
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            21.01296745261745,
+            11.8453014463157,
+            22.066891718534887
+          ],
+          [
+            -4.22299111624524,
+            -2.3065937911328738,
+            -4.310380896068544
+          ],
+          [
+            5.698869266212135,
+            0.999294837138744,
+            -0.06005364097697097
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 12
+      },
+      "file": "all_sources/s004/noxus_frame.png",
+      "mask_file": "all_sources/s004/noxus_frame.alpha.png",
+      "sha256": "812ee8b2912f8e0526fca8ab59a45ceb869a397e3183667b951a6c4e0ae21dea",
+      "mask_sha256": "d72eac38182ab188f058b0a9479fcd7e445ef2d0c2dace186cfa52fc3129887b",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "ionia_frame",
+      "theme": "ionia",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        366,
+        126,
+        541,
+        214
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            384,
+            144,
+            436,
+            196
+          ]
+        },
+        {
+          "ellipse": [
+            472,
+            144,
+            524,
+            196
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            372,
+            132,
+            448,
+            208
+          ]
+        },
+        {
+          "ellipse": [
+            460,
+            132,
+            536,
+            208
+          ]
+        },
+        {
+          "ellipse": [
+            418,
+            129,
+            490,
+            211
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            18.017711353163005,
+            22.717546793242985,
+            31.842592894046934
+          ],
+          [
+            -3.5187295185960386,
+            4.982447849413303,
+            13.288469391176086
+          ],
+          [
+            16.016145202943296,
+            11.435427251930621,
+            18.899058401774287
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 2
+      },
+      "file": "all_sources/s004/ionia_frame.png",
+      "mask_file": "all_sources/s004/ionia_frame.alpha.png",
+      "sha256": "f39c6907f82b004859382341b6ecb43702a52f58b31b33b6e4012081daf1d84c",
+      "mask_sha256": "065c3d030e8924cf1d962e531841db06a10d5a9e1c8728ce13c327cd07b23d56",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "freljord_frame",
+      "theme": "freljord",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        540,
+        125,
+        720,
+        215
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            559,
+            143,
+            613,
+            197
+          ]
+        },
+        {
+          "ellipse": [
+            648,
+            143,
+            702,
+            197
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            547,
+            131,
+            625,
+            209
+          ]
+        },
+        {
+          "ellipse": [
+            636,
+            131,
+            714,
+            209
+          ]
+        },
+        {
+          "ellipse": [
+            595,
+            128,
+            666,
+            212
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            541,
+            129,
+            543,
+            214
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            23.259332934855717,
+            9.077124155818064,
+            22.756781824644985
+          ],
+          [
+            0.555698808620894,
+            15.739849927470395,
+            35.09039233875336
+          ],
+          [
+            -2.249840050124862,
+            40.320876802087774,
+            77.54069010501536
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 4
+      },
+      "file": "all_sources/s004/freljord_frame.png",
+      "mask_file": "all_sources/s004/freljord_frame.alpha.png",
+      "sha256": "3e70167b782d8d66d1ba4f4576313404208cb8b8219d7db1ef50750c4450c090",
+      "mask_sha256": "4b2224fb379d50e17ee344f63f65f13354aa16495bf3bf4413a03bfa1d3fc4a4",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "piltover_frame",
+      "theme": "piltover",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        718,
+        126,
+        892,
+        214
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            737,
+            144,
+            789,
+            196
+          ]
+        },
+        {
+          "ellipse": [
+            822,
+            144,
+            874,
+            196
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            725,
+            132,
+            801,
+            208
+          ]
+        },
+        {
+          "ellipse": [
+            810,
+            132,
+            886,
+            208
+          ]
+        },
+        {
+          "ellipse": [
+            771,
+            129,
+            840,
+            211
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            890,
+            126,
+            892,
+            213
+          ]
+        },
+        {
+          "rectangle": [
+            888,
+            126,
+            890,
+            213
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            31.200081237941326,
+            27.444346162279633,
+            37.47222579963746
+          ],
+          [
+            4.575009837617788,
+            3.2928855441419307,
+            2.2956336788553564
+          ],
+          [
+            -9.002477737734234,
+            -11.023667274049929,
+            -16.493244603666575
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 3
+      },
+      "file": "all_sources/s004/piltover_frame.png",
+      "mask_file": "all_sources/s004/piltover_frame.alpha.png",
+      "sha256": "c6e4def92f250cb0df714f0a153528bb80f65f875783ad1a54252804fc6d12ab",
+      "mask_sha256": "d0b7d95b5498050a4e54d64e094e396a1a7b1ed691d167e1e2cbeb1f1c0ad53b",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "zaun_frame",
+      "theme": "zaun",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        887,
+        129,
+        1043,
+        211
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            905,
+            147,
+            951,
+            193
+          ]
+        },
+        {
+          "ellipse": [
+            980,
+            147,
+            1026,
+            193
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            893,
+            135,
+            963,
+            205
+          ]
+        },
+        {
+          "ellipse": [
+            968,
+            135,
+            1038,
+            205
+          ]
+        },
+        {
+          "ellipse": [
+            933,
+            132,
+            998,
+            208
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1040,
+            129,
+            1042,
+            210
+          ]
+        },
+        {
+          "rectangle": [
+            888,
+            129,
+            890,
+            210
+          ]
+        },
+        {
+          "rectangle": [
+            890,
+            129,
+            892,
+            210
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            23.891520607197673,
+            23.534125366185677,
+            29.25243998189873
+          ],
+          [
+            -4.550533105902309,
+            -0.05300178561673308,
+            -0.7636727219314761
+          ],
+          [
+            3.0252980614019376,
+            3.9788225508046655,
+            -9.573384414723058
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 4
+      },
+      "file": "all_sources/s004/zaun_frame.png",
+      "mask_file": "all_sources/s004/zaun_frame.alpha.png",
+      "sha256": "a2e8d71090d6a9debb6751da32de89b36e927597ebef71af72fb0833ba165070",
+      "mask_sha256": "c365ac0e7e6ee35c76ac4d58d322c2c37e493375c58482b7dc143b0bf585fe43",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "bilgewater_frame",
+      "theme": "bilgewater",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1037,
+        128,
+        1201,
+        212
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1056,
+            146,
+            1104,
+            194
+          ]
+        },
+        {
+          "ellipse": [
+            1135,
+            146,
+            1183,
+            194
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            1044,
+            134,
+            1116,
+            206
+          ]
+        },
+        {
+          "ellipse": [
+            1123,
+            134,
+            1195,
+            206
+          ]
+        },
+        {
+          "ellipse": [
+            1086,
+            131,
+            1153,
+            209
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1040,
+            128,
+            1042,
+            211
+          ]
+        },
+        {
+          "rectangle": [
+            1199,
+            128,
+            1201,
+            211
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            15.372785518537935,
+            23.266886156376,
+            34.430025603471336
+          ],
+          [
+            2.9234842724373475,
+            6.663731631705638,
+            13.419139837298232
+          ],
+          [
+            -4.5085441284402155,
+            -3.5931187216681177,
+            -4.391697478662298
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 8
+      },
+      "file": "all_sources/s004/bilgewater_frame.png",
+      "mask_file": "all_sources/s004/bilgewater_frame.alpha.png",
+      "sha256": "07571c1f5a5cac24ac2c7999454bc66b3c4a39e5a24fdf72e3dd9ed1f43adea0",
+      "mask_sha256": "9b35ca4e81d77cbacce0350e43da030229309316a9de2a700323b68f7dca59ef",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "shurima_frame",
+      "theme": "shurima",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1196,
+        129,
+        1354,
+        211
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1214,
+            147,
+            1260,
+            193
+          ]
+        },
+        {
+          "ellipse": [
+            1291,
+            147,
+            1337,
+            193
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            1202,
+            135,
+            1272,
+            205
+          ]
+        },
+        {
+          "ellipse": [
+            1279,
+            135,
+            1349,
+            205
+          ]
+        },
+        {
+          "ellipse": [
+            1242,
+            132,
+            1309,
+            208
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1350,
+            129,
+            1353,
+            210
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            19.301266043943667,
+            14.994276666895436,
+            24.948123746321112
+          ],
+          [
+            20.494990786540903,
+            4.25654742712535,
+            4.446640595473325
+          ],
+          [
+            30.33316328305242,
+            14.07619522722548,
+            -6.089288472254519
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 1
+      },
+      "file": "all_sources/s004/shurima_frame.png",
+      "mask_file": "all_sources/s004/shurima_frame.alpha.png",
+      "sha256": "362641933cb44de87b1d4cce80bf26e58c04c0377c5d655dcc469c3ea0a29cc8",
+      "mask_sha256": "3d254f6a249c7aaa5ce049a3bfb337c12fda22d66759a33c928e1950a6779a3a",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "targon_partial",
+      "theme": "targon",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1354,
+        105,
+        1457,
+        236
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1357,
+            145,
+            1407,
+            195
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            41.15385183774471,
+            23.503299809087572,
+            69.46441387176795
+          ],
+          [
+            -3.3439830312521206,
+            -1.6981342556096326,
+            -1.243711448248348
+          ],
+          [
+            -15.891813236590556,
+            -9.551135137028613,
+            -6.932908240325293
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 18
+      },
+      "file": "all_sources/s004/targon_partial.png",
+      "mask_file": "all_sources/s004/targon_partial.alpha.png",
+      "sha256": "868097542a7655817ea7b298a71686fbc920ba8fe49770b655a026886857c153",
+      "mask_sha256": "d4cdf41b0947593ff19408fab4bb911c4665337cada3a259bbc23818c17eae20",
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "void_partial",
+      "theme": "void",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1460,
+        105,
+        1535,
+        236
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1463,
+            145,
+            1513,
+            195
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            26.378327230639524,
+            6.013077233857432,
+            52.38375759502865
+          ],
+          [
+            6.407931343583566,
+            1.3726443062688987,
+            22.102240430796904
+          ],
+          [
+            -6.912350193221819,
+            -2.024149948828856,
+            -6.137153815515756
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 8
+      },
+      "file": "all_sources/s004/void_partial.png",
+      "mask_file": "all_sources/s004/void_partial.alpha.png",
+      "sha256": "23f250f844cf1868ce7d77d5f767219a16438f2193102cb058fb16a86f44d826",
+      "mask_sha256": "fc419ad914b54fd329d5bb2774e4c47cbb91b6a4b2529a5167b5e81bbba2e31a",
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "project_frame",
+      "theme": "project",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        0,
+        369,
+        186,
+        461
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            19,
+            387,
+            75,
+            443
+          ]
+        },
+        {
+          "ellipse": [
+            112,
+            387,
+            168,
+            443
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            7,
+            375,
+            87,
+            455
+          ]
+        },
+        {
+          "ellipse": [
+            100,
+            375,
+            180,
+            455
+          ]
+        },
+        {
+          "ellipse": [
+            57,
+            372,
+            130,
+            458
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            45.26638536809363,
+            18.313427204084824,
+            45.636206169642705
+          ],
+          [
+            10.333089459561048,
+            -3.9737354728685137,
+            -0.8288128599153506
+          ],
+          [
+            -24.256478291697995,
+            -3.69401350442269,
+            -20.2254001249575
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 2
+      },
+      "file": "all_sources/s004/project_frame.png",
+      "mask_file": "all_sources/s004/project_frame.alpha.png",
+      "sha256": "e758b59b8f1cfde53383a6a4f83ba3ffa1bde1c87525a311d1ea62b78d74fab3",
+      "mask_sha256": "daa870d10ae4aa347b47c06c58d8495664c9d73d0bbc5b3faaccc58fd664fd49",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "star_guardian_frame",
+      "theme": "star_guardian",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        187,
+        370,
+        367,
+        460
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            205,
+            388,
+            259,
+            442
+          ]
+        },
+        {
+          "ellipse": [
+            295,
+            388,
+            349,
+            442
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            193,
+            376,
+            271,
+            454
+          ]
+        },
+        {
+          "ellipse": [
+            283,
+            376,
+            361,
+            454
+          ]
+        },
+        {
+          "ellipse": [
+            241,
+            373,
+            313,
+            457
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            186,
+            370,
+            188,
+            459
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            29.81508446571516,
+            9.760875519139246,
+            34.85901081216924
+          ],
+          [
+            5.427275538596938,
+            6.265566100841131,
+            28.62110042201099
+          ],
+          [
+            24.008350509731116,
+            18.779326531181155,
+            53.18494511143513
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 1
+      },
+      "file": "all_sources/s004/star_guardian_frame.png",
+      "mask_file": "all_sources/s004/star_guardian_frame.alpha.png",
+      "sha256": "51d8c5dc9b9d552823aa8b1bd394b1b7fb5910f1be4452d8eb5f40f3bd2a9098",
+      "mask_sha256": "0124942a2fb22f75a358b0283dc27ab340462dd5a87710ff0a85afd056650404",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "kda_frame",
+      "theme": "kda",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        366,
+        371,
+        541,
+        459
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            384,
+            389,
+            436,
+            441
+          ]
+        },
+        {
+          "ellipse": [
+            472,
+            389,
+            524,
+            441
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            372,
+            377,
+            448,
+            453
+          ]
+        },
+        {
+          "ellipse": [
+            460,
+            377,
+            536,
+            453
+          ]
+        },
+        {
+          "ellipse": [
+            418,
+            374,
+            490,
+            456
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            367,
+            371,
+            369,
+            458
+          ]
+        },
+        {
+          "rectangle": [
+            365,
+            371,
+            367,
+            458
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            49.05572796539335,
+            22.20395888365839,
+            104.69984386217736
+          ],
+          [
+            -10.457758091414256,
+            4.989709060250509,
+            14.484380556524195
+          ],
+          [
+            5.161031558264127,
+            1.6577222525554896,
+            -12.424187813999236
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 0
+      },
+      "file": "all_sources/s004/kda_frame.png",
+      "mask_file": "all_sources/s004/kda_frame.alpha.png",
+      "sha256": "be888106cf5aaa66fff598b4f8a5d772c2f884ded99163e1f6ec3685e565401c",
+      "mask_sha256": "aa52b38be03fbb4408bb2b3d65c513f6b1433fd451b8f8d88b3f9a39f1c45d8f",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "heartsteel_frame",
+      "theme": "heartsteel",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        540,
+        370,
+        720,
+        460
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            559,
+            388,
+            613,
+            442
+          ]
+        },
+        {
+          "ellipse": [
+            648,
+            388,
+            702,
+            442
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            547,
+            376,
+            625,
+            454
+          ]
+        },
+        {
+          "ellipse": [
+            636,
+            376,
+            714,
+            454
+          ]
+        },
+        {
+          "ellipse": [
+            595,
+            373,
+            666,
+            457
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            541,
+            370,
+            543,
+            459
+          ]
+        },
+        {
+          "rectangle": [
+            717,
+            370,
+            719,
+            459
+          ]
+        },
+        {
+          "rectangle": [
+            539,
+            370,
+            541,
+            459
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            28.21643490495595,
+            13.434206151387572,
+            46.19677409189816
+          ],
+          [
+            -7.565966776999303,
+            7.316371827406854,
+            10.011801430597117
+          ],
+          [
+            2.4178067673986234,
+            24.215691226350607,
+            37.93634696319686
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 2
+      },
+      "file": "all_sources/s004/heartsteel_frame.png",
+      "mask_file": "all_sources/s004/heartsteel_frame.alpha.png",
+      "sha256": "f2ab2557e242f8df94256f972759acea16470dfb63728957517515b514836496",
+      "mask_sha256": "99543ec6714d1a661edddd0af69506e0ce5204f3e627812f9773a60aa12f3cb0",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "spirit_blossom_frame",
+      "theme": "spirit_blossom",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        718,
+        371,
+        892,
+        459
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            737,
+            389,
+            789,
+            441
+          ]
+        },
+        {
+          "ellipse": [
+            822,
+            389,
+            874,
+            441
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            725,
+            377,
+            801,
+            453
+          ]
+        },
+        {
+          "ellipse": [
+            810,
+            377,
+            886,
+            453
+          ]
+        },
+        {
+          "ellipse": [
+            771,
+            374,
+            840,
+            456
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            888,
+            371,
+            890,
+            458
+          ]
+        },
+        {
+          "rectangle": [
+            890,
+            371,
+            892,
+            458
+          ]
+        },
+        {
+          "rectangle": [
+            719,
+            371,
+            721,
+            458
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            40.64631950473124,
+            25.517922994497372,
+            76.36024979105235
+          ],
+          [
+            -0.8562139159894446,
+            2.3805977994047556,
+            4.992029548578932
+          ],
+          [
+            -10.368384104758064,
+            -2.7052465457901134,
+            -18.919690468891588
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 1
+      },
+      "file": "all_sources/s004/spirit_blossom_frame.png",
+      "mask_file": "all_sources/s004/spirit_blossom_frame.alpha.png",
+      "sha256": "da0b2a53372c2bbd914728c8e72f0830bb0729839dcc9a6d0ac605ba25290088",
+      "mask_sha256": "929e8384871286c606a76cc8c1f3d67242650554cf358f8ce5f9259516ab97ca",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "dark_star_frame",
+      "theme": "dark_star",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        887,
+        374,
+        1043,
+        456
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            905,
+            392,
+            951,
+            438
+          ]
+        },
+        {
+          "ellipse": [
+            980,
+            392,
+            1026,
+            438
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            893,
+            380,
+            963,
+            450
+          ]
+        },
+        {
+          "ellipse": [
+            968,
+            380,
+            1038,
+            450
+          ]
+        },
+        {
+          "ellipse": [
+            933,
+            377,
+            998,
+            453
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            888,
+            374,
+            890,
+            455
+          ]
+        },
+        {
+          "rectangle": [
+            1038,
+            374,
+            1040,
+            455
+          ]
+        },
+        {
+          "rectangle": [
+            890,
+            374,
+            892,
+            455
+          ]
+        },
+        {
+          "rectangle": [
+            1040,
+            374,
+            1042,
+            455
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            18.25918483947283,
+            9.655913453802384,
+            45.40896791400767
+          ],
+          [
+            0.03571295430964394,
+            -2.443541681818251,
+            0.444918913417264
+          ],
+          [
+            5.843306311386279,
+            1.6264858820548591,
+            1.3814095058005116
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 3
+      },
+      "file": "all_sources/s004/dark_star_frame.png",
+      "mask_file": "all_sources/s004/dark_star_frame.alpha.png",
+      "sha256": "ca583a6bf781c8b1ebf3e27193721ca740ae76514535c39d4a381ceea856a3cb",
+      "mask_sha256": "176aea90bd44def291948c615f38113ff64ac14a351d7bd916d478b954745ada",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "high_noon_frame",
+      "theme": "high_noon",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1037,
+        373,
+        1201,
+        457
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1056,
+            391,
+            1104,
+            439
+          ]
+        },
+        {
+          "ellipse": [
+            1135,
+            391,
+            1183,
+            439
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            1044,
+            379,
+            1116,
+            451
+          ]
+        },
+        {
+          "ellipse": [
+            1123,
+            379,
+            1195,
+            451
+          ]
+        },
+        {
+          "ellipse": [
+            1086,
+            376,
+            1153,
+            454
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1040,
+            373,
+            1042,
+            456
+          ]
+        },
+        {
+          "rectangle": [
+            1038,
+            373,
+            1040,
+            456
+          ]
+        },
+        {
+          "rectangle": [
+            1199,
+            373,
+            1201,
+            456
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            29.949077378884976,
+            12.869170465560055,
+            21.93129901935919
+          ],
+          [
+            9.348357981739865,
+            -1.7387318962371987,
+            -6.483555337962557
+          ],
+          [
+            3.7444462698741745,
+            3.153736051772038,
+            -2.6739204670450087
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 11
+      },
+      "file": "all_sources/s004/high_noon_frame.png",
+      "mask_file": "all_sources/s004/high_noon_frame.alpha.png",
+      "sha256": "d8ce322dfe9d8d6f854a2bbb3db93fb6457a391ca47a37504ae513cc93ea0b55",
+      "mask_sha256": "e959a60e2ef159d0da704e8cbe33af99d740cb173378148c55b1f8e5a6173b53",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "blood_moon_frame",
+      "theme": "blood_moon",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1196,
+        374,
+        1354,
+        456
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1214,
+            392,
+            1260,
+            438
+          ]
+        },
+        {
+          "ellipse": [
+            1291,
+            392,
+            1337,
+            438
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            1202,
+            380,
+            1272,
+            450
+          ]
+        },
+        {
+          "ellipse": [
+            1279,
+            380,
+            1349,
+            450
+          ]
+        },
+        {
+          "ellipse": [
+            1242,
+            377,
+            1309,
+            453
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1200,
+            374,
+            1202,
+            455
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            28.915140219899822,
+            12.362392941731803,
+            20.418063620454213
+          ],
+          [
+            11.468669023642281,
+            -1.0366520968474393,
+            6.104969303274956
+          ],
+          [
+            -0.6261495938392638,
+            -1.599899391022292,
+            -1.4867337560322333
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 17
+      },
+      "file": "all_sources/s004/blood_moon_frame.png",
+      "mask_file": "all_sources/s004/blood_moon_frame.alpha.png",
+      "sha256": "a40d855458f71834db6df2517ae37a64510d93701d81bf63cf72ccec71eba021",
+      "mask_sha256": "e67c6ed438539e795afd340d9fdbfe1806610be3c8681085d6ba16ef83dd8dc2",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "warring_kingdoms_partial",
+      "theme": "warring_kingdoms",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1354,
+        350,
+        1457,
+        481
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1357,
+            390,
+            1407,
+            440
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            46.09938906730213,
+            40.771256935034266,
+            55.34800532937633
+          ],
+          [
+            3.6147730192842378,
+            9.398788507058857,
+            13.656515917565164
+          ],
+          [
+            -12.678120157216203,
+            -6.8059347041587595,
+            -7.174715563232194
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 8
+      },
+      "file": "all_sources/s004/warring_kingdoms_partial.png",
+      "mask_file": "all_sources/s004/warring_kingdoms_partial.alpha.png",
+      "sha256": "20d2cc7e6556efa7710aa2f578434e46990d5e19c5da63ee0b2be84def487a78",
+      "mask_sha256": "888f4d6db3d1a778286b1dd82bdace4ce14920442425e95c33283ccb209829f5",
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "pool_party_partial",
+      "theme": "pool_party",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1460,
+        350,
+        1535,
+        481
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1463,
+            390,
+            1513,
+            440
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            37.99169110501761,
+            105.48654766085276,
+            184.2970513558703
+          ],
+          [
+            -15.75470042561103,
+            -0.3990801516371931,
+            10.995219809615264
+          ],
+          [
+            -21.23512220053737,
+            -28.981776580213733,
+            -45.32519126816842
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 7
+      },
+      "file": "all_sources/s004/pool_party_partial.png",
+      "mask_file": "all_sources/s004/pool_party_partial.alpha.png",
+      "sha256": "e56f4b6cf5cb2a7a39246904a812eb43f2f8876fec17206d6268fff9e4bf65df",
+      "mask_sha256": "4ebc078430b069459227880dccf4fd9f68698f737a48eb7c9cd95378c9aaca43",
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "victorious_frame",
+      "theme": "victorious",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        0,
+        606,
+        186,
+        698
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            19,
+            624,
+            75,
+            680
+          ]
+        },
+        {
+          "ellipse": [
+            112,
+            624,
+            168,
+            680
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            7,
+            612,
+            87,
+            692
+          ]
+        },
+        {
+          "ellipse": [
+            100,
+            612,
+            180,
+            692
+          ]
+        },
+        {
+          "ellipse": [
+            57,
+            609,
+            130,
+            695
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            72.46939257944656,
+            58.898921696509234,
+            60.694934093804264
+          ],
+          [
+            3.005476225263873,
+            1.1664340767936885,
+            4.781376427701469
+          ],
+          [
+            -36.93653897618,
+            -34.081444628275605,
+            -19.57296697216032
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 0
+      },
+      "file": "all_sources/s004/victorious_frame.png",
+      "mask_file": "all_sources/s004/victorious_frame.alpha.png",
+      "sha256": "25501eb4984229bbc6e75b7480499390c8589558ed84d1f9582c8a63266f8ec8",
+      "mask_sha256": "e255fb78ec510b270266ea48b090a461f43d077779588b8b539a915e47774dce",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "pulsefire_frame",
+      "theme": "pulsefire",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        187,
+        607,
+        367,
+        697
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            205,
+            625,
+            259,
+            679
+          ]
+        },
+        {
+          "ellipse": [
+            295,
+            625,
+            349,
+            679
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            193,
+            613,
+            271,
+            691
+          ]
+        },
+        {
+          "ellipse": [
+            283,
+            613,
+            361,
+            691
+          ]
+        },
+        {
+          "ellipse": [
+            241,
+            610,
+            313,
+            694
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            186,
+            607,
+            188,
+            696
+          ]
+        },
+        {
+          "rectangle": [
+            365,
+            607,
+            367,
+            696
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            7.76594719745416,
+            30.266087208066953,
+            84.08930790311902
+          ],
+          [
+            -1.8504402376991314,
+            4.288620859548205,
+            6.969357974048045
+          ],
+          [
+            3.568358808818777,
+            -8.97532217245827,
+            -25.458798592735864
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 3
+      },
+      "file": "all_sources/s004/pulsefire_frame.png",
+      "mask_file": "all_sources/s004/pulsefire_frame.alpha.png",
+      "sha256": "7d6711d0ff510caee2b254e75ddb8c538f38c125e15e0a9f0c2a80c8ff27215a",
+      "mask_sha256": "c9e6b55ffa374db9645c9bf5c1be0796272d1280ccf0c92954a533214e2b7e08",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "odyssey_frame",
+      "theme": "odyssey",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        366,
+        608,
+        541,
+        696
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            384,
+            626,
+            436,
+            678
+          ]
+        },
+        {
+          "ellipse": [
+            472,
+            626,
+            524,
+            678
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            372,
+            614,
+            448,
+            690
+          ]
+        },
+        {
+          "ellipse": [
+            460,
+            614,
+            536,
+            690
+          ]
+        },
+        {
+          "ellipse": [
+            418,
+            611,
+            490,
+            693
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            365,
+            608,
+            367,
+            695
+          ]
+        },
+        {
+          "rectangle": [
+            367,
+            608,
+            369,
+            695
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            32.05229231197583,
+            34.09578655767428,
+            62.958433247432126
+          ],
+          [
+            -6.8965543949187,
+            -3.2735383732090746,
+            1.9827880331908059
+          ],
+          [
+            3.6541900688786386,
+            -8.060985613586235,
+            -25.22107564803024
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 4
+      },
+      "file": "all_sources/s004/odyssey_frame.png",
+      "mask_file": "all_sources/s004/odyssey_frame.alpha.png",
+      "sha256": "b2c7822d6d1dcd560903cea3858cd50f2e8c7060084b9bde9a27374c2987bcf7",
+      "mask_sha256": "be8640669cb217342af1e3f49bfcbc7df0b410972e99dd8a6112f216c4cc43e4",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "arcade_frame",
+      "theme": "arcade",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        540,
+        607,
+        720,
+        697
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            559,
+            625,
+            613,
+            679
+          ]
+        },
+        {
+          "ellipse": [
+            648,
+            625,
+            702,
+            679
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            547,
+            613,
+            625,
+            691
+          ]
+        },
+        {
+          "ellipse": [
+            636,
+            613,
+            714,
+            691
+          ]
+        },
+        {
+          "ellipse": [
+            595,
+            610,
+            666,
+            694
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            539,
+            607,
+            541,
+            696
+          ]
+        },
+        {
+          "rectangle": [
+            541,
+            607,
+            543,
+            696
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            48.73163232803255,
+            22.649177076596438,
+            92.99793762589799
+          ],
+          [
+            10.903755438334494,
+            0.40999300470264277,
+            18.01061177685461
+          ],
+          [
+            -22.41332900252187,
+            -8.3317074347568,
+            -56.017548495747846
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 6
+      },
+      "file": "all_sources/s004/arcade_frame.png",
+      "mask_file": "all_sources/s004/arcade_frame.alpha.png",
+      "sha256": "1579ea493b8f1f14e5fb80761a53e57e965e6b34b71eb7e04f730eb394394617",
+      "mask_sha256": "85e19ec5342385975b7477dbbd5c1146bdbba51d6ad1ad308951b254191ba36e",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "infernal_frame",
+      "theme": "infernal",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        718,
+        608,
+        892,
+        696
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            737,
+            626,
+            789,
+            678
+          ]
+        },
+        {
+          "ellipse": [
+            822,
+            626,
+            874,
+            678
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            725,
+            614,
+            801,
+            690
+          ]
+        },
+        {
+          "ellipse": [
+            810,
+            614,
+            886,
+            690
+          ]
+        },
+        {
+          "ellipse": [
+            771,
+            611,
+            840,
+            693
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            890,
+            608,
+            892,
+            695
+          ]
+        },
+        {
+          "rectangle": [
+            888,
+            608,
+            890,
+            695
+          ]
+        },
+        {
+          "rectangle": [
+            718,
+            608,
+            720,
+            687
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            55.326306642988264,
+            17.2009671658625,
+            18.947529890698103
+          ],
+          [
+            9.953333913685476,
+            -0.6875148578433707,
+            0.985301232026351
+          ],
+          [
+            -14.127869654043131,
+            -0.8788295088453344,
+            -0.4352058629294807
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 3
+      },
+      "file": "all_sources/s004/infernal_frame.png",
+      "mask_file": "all_sources/s004/infernal_frame.alpha.png",
+      "sha256": "dd530f6469229dc800c84d48ff25c84648483ffa0d844a8756e9ecde9b3ebb6e",
+      "mask_sha256": "7ce23b4f19b8cec084f69fd22150205d6df4135c1015f0e2cba464594c8b2c4b",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "empyrean_frame",
+      "theme": "empyrean",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        887,
+        611,
+        1043,
+        693
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            905,
+            629,
+            951,
+            675
+          ]
+        },
+        {
+          "ellipse": [
+            980,
+            629,
+            1026,
+            675
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            893,
+            617,
+            963,
+            687
+          ]
+        },
+        {
+          "ellipse": [
+            968,
+            617,
+            1038,
+            687
+          ]
+        },
+        {
+          "ellipse": [
+            933,
+            614,
+            998,
+            690
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            890,
+            611,
+            892,
+            692
+          ]
+        },
+        {
+          "rectangle": [
+            888,
+            611,
+            890,
+            692
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            16.686072419026527,
+            6.3431809391685405,
+            10.02526104046232
+          ],
+          [
+            13.774280414731997,
+            11.702532592429392,
+            34.890613804133835
+          ],
+          [
+            30.899946719258352,
+            12.728755158034904,
+            71.38464751232274
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 5
+      },
+      "file": "all_sources/s004/empyrean_frame.png",
+      "mask_file": "all_sources/s004/empyrean_frame.alpha.png",
+      "sha256": "466573cb646d7c5a58e6545d5c2641bc630f85d592c7d1fa3461e83bb11a7892",
+      "mask_sha256": "e603939858ae8ef401bf2b70053955503dec4079ce3f4961dc836f62284ad875",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "faerie_court_frame",
+      "theme": "faerie_court",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1037,
+        610,
+        1201,
+        694
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1056,
+            628,
+            1104,
+            676
+          ]
+        },
+        {
+          "ellipse": [
+            1135,
+            628,
+            1183,
+            676
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            1044,
+            616,
+            1116,
+            688
+          ]
+        },
+        {
+          "ellipse": [
+            1123,
+            616,
+            1195,
+            688
+          ]
+        },
+        {
+          "ellipse": [
+            1086,
+            613,
+            1153,
+            691
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1051,
+            610,
+            1053,
+            693
+          ]
+        },
+        {
+          "rectangle": [
+            1053,
+            610,
+            1055,
+            693
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            48.28245219634582,
+            29.028276284959695,
+            86.62310003199244
+          ],
+          [
+            0.9435696472291983,
+            16.037056483103353,
+            -1.1888989938785244
+          ],
+          [
+            -17.536446278264684,
+            -12.909763410734607,
+            -29.420312252649627
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 5
+      },
+      "file": "all_sources/s004/faerie_court_frame.png",
+      "mask_file": "all_sources/s004/faerie_court_frame.alpha.png",
+      "sha256": "a111d317872cf2d4c775083c71eb22fd683fb36f9a9240479cd7a74a4a3ebf83",
+      "mask_sha256": "2daae4ab3641529a69cc2a65b0d088268bf8674aeb352a226e84be5db1e6734c",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "winter_festival_frame",
+      "theme": "winter_festival",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1196,
+        611,
+        1354,
+        693
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1214,
+            629,
+            1260,
+            675
+          ]
+        },
+        {
+          "ellipse": [
+            1291,
+            629,
+            1337,
+            675
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            1202,
+            617,
+            1272,
+            687
+          ]
+        },
+        {
+          "ellipse": [
+            1279,
+            617,
+            1349,
+            687
+          ]
+        },
+        {
+          "ellipse": [
+            1242,
+            614,
+            1309,
+            690
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1350,
+            611,
+            1352,
+            692
+          ]
+        },
+        {
+          "rectangle": [
+            1202,
+            611,
+            1204,
+            692
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            29.28898547261644,
+            52.12859785188127,
+            95.75846960440651
+          ],
+          [
+            16.82894822834737,
+            21.70256845480526,
+            28.30080515031561
+          ],
+          [
+            1.8903394849853132,
+            -37.91534062012987,
+            -52.192339832258405
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 0
+      },
+      "file": "all_sources/s004/winter_festival_frame.png",
+      "mask_file": "all_sources/s004/winter_festival_frame.alpha.png",
+      "sha256": "79804f6b1c0add2ce4622c5bb56de7439e95da05d06eca22a8b4d2615abb93fc",
+      "mask_sha256": "16dd126f1e8b79ec8afdb48cd3fdff8b4661cf3399dc0bce91db89deb59dfa70",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "beast_kingdom_partial",
+      "theme": "beast_kingdom",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1354,
+        587,
+        1457,
+        718
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1357,
+            627,
+            1407,
+            677
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            110.55736909016927,
+            59.528898483704694,
+            27.145480220369766
+          ],
+          [
+            -5.07630912083453,
+            -6.832389553196837,
+            -1.8384125219109948
+          ],
+          [
+            -21.28822689433963,
+            -10.309561714215675,
+            5.605165579126702
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 6
+      },
+      "file": "all_sources/s004/beast_kingdom_partial.png",
+      "mask_file": "all_sources/s004/beast_kingdom_partial.alpha.png",
+      "sha256": "d0c22599d319939e576ba7aa36db6ed5f905b1ca76a72f50de43adf6908ef741",
+      "mask_sha256": "1f1e923b15f2b7a31a7a9479b8126146e2d3efbc2e42cbd4f1e0820c7a6b9ac5",
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "cafe_cuties_partial",
+      "theme": "cafe_cuties",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1460,
+        587,
+        1535,
+        718
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1463,
+            627,
+            1513,
+            677
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            115.2891882735224,
+            44.50179340231615,
+            58.35011958120982
+          ],
+          [
+            1.2943377462952328,
+            2.7870357381291164,
+            -2.300113297320543
+          ],
+          [
+            -3.850765911536495,
+            17.720082585409518,
+            29.647685679269344
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 5
+      },
+      "file": "all_sources/s004/cafe_cuties_partial.png",
+      "mask_file": "all_sources/s004/cafe_cuties_partial.alpha.png",
+      "sha256": "019db20d7895ea952c2236efc96bd22943bcf7bb3446f203d69f4e8b8b99cb1b",
+      "mask_sha256": "36913e675c11fef7ed67c17b46be7fb9e9fe51dc0f411b00a54170e962308cdd",
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "dragon_world_frame",
+      "theme": "dragon_world",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        0,
+        855,
+        186,
+        947
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            19,
+            873,
+            75,
+            929
+          ]
+        },
+        {
+          "ellipse": [
+            112,
+            873,
+            168,
+            929
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            7,
+            861,
+            87,
+            941
+          ]
+        },
+        {
+          "ellipse": [
+            100,
+            861,
+            180,
+            941
+          ]
+        },
+        {
+          "ellipse": [
+            57,
+            858,
+            130,
+            944
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            36.5742737410737,
+            15.732736695085022,
+            20.6111365307049
+          ],
+          [
+            10.126996598034424,
+            3.62962038795087,
+            0.4160489791125128
+          ],
+          [
+            -0.5966028467199589,
+            0.05245748089252711,
+            -0.7188226047002032
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 10
+      },
+      "file": "all_sources/s004/dragon_world_frame.png",
+      "mask_file": "all_sources/s004/dragon_world_frame.alpha.png",
+      "sha256": "23ad638b3329ad0d8cb2c39d7c3b5446c4179326768b9f3319f9a71347b758ca",
+      "mask_sha256": "43089fa575f3b6e050447febb13bf009f592ec016f8d1a60e854ad34b88e0ad9",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "dragon_will_frame",
+      "theme": "dragon_will",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        187,
+        856,
+        367,
+        946
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            205,
+            874,
+            259,
+            928
+          ]
+        },
+        {
+          "ellipse": [
+            295,
+            874,
+            349,
+            928
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            193,
+            862,
+            271,
+            940
+          ]
+        },
+        {
+          "ellipse": [
+            283,
+            862,
+            361,
+            940
+          ]
+        },
+        {
+          "ellipse": [
+            241,
+            859,
+            313,
+            943
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            186,
+            856,
+            188,
+            945
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            16.57194560167991,
+            18.735974998486384,
+            45.47846727667111
+          ],
+          [
+            1.2858935523722241,
+            3.7783111836776158,
+            12.836410076811521
+          ],
+          [
+            12.354956908524038,
+            18.19347084678177,
+            16.23726589680524
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 2
+      },
+      "file": "all_sources/s004/dragon_will_frame.png",
+      "mask_file": "all_sources/s004/dragon_will_frame.alpha.png",
+      "sha256": "84427672f79e60477b4bd82eb7e4a92441c5929e305e1f8037cedc68bc045e1e",
+      "mask_sha256": "0899f85ab8061949939613f0d6c74a67205326ba7602766960bf70befc9cffcc",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "moon_goddess_frame",
+      "theme": "moon_goddess",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        366,
+        857,
+        541,
+        945
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            384,
+            875,
+            436,
+            927
+          ]
+        },
+        {
+          "ellipse": [
+            472,
+            875,
+            524,
+            927
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            372,
+            863,
+            448,
+            939
+          ]
+        },
+        {
+          "ellipse": [
+            460,
+            863,
+            536,
+            939
+          ]
+        },
+        {
+          "ellipse": [
+            418,
+            860,
+            490,
+            942
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            365,
+            857,
+            367,
+            944
+          ]
+        },
+        {
+          "rectangle": [
+            367,
+            857,
+            369,
+            944
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            17.205173315516483,
+            18.27027967263939,
+            43.43416544510598
+          ],
+          [
+            -0.297031032784437,
+            0.16383558905200957,
+            10.082587907527376
+          ],
+          [
+            16.695142746085118,
+            14.033844027104752,
+            19.223600580717772
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 0
+      },
+      "file": "all_sources/s004/moon_goddess_frame.png",
+      "mask_file": "all_sources/s004/moon_goddess_frame.alpha.png",
+      "sha256": "34b22c71be7bf5021b252b48ff8acc41a55e8c6dbaf37fdedc5e8d753cbf2705",
+      "mask_sha256": "201e49b5a0e7e35037b5e8396578ff0c464e86c3692c13b874876f949caddf01",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "sun_crown_frame",
+      "theme": "sun_crown",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        540,
+        856,
+        720,
+        946
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            559,
+            874,
+            613,
+            928
+          ]
+        },
+        {
+          "ellipse": [
+            648,
+            874,
+            702,
+            928
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            547,
+            862,
+            625,
+            940
+          ]
+        },
+        {
+          "ellipse": [
+            636,
+            862,
+            714,
+            940
+          ]
+        },
+        {
+          "ellipse": [
+            595,
+            859,
+            666,
+            943
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            539,
+            856,
+            541,
+            945
+          ]
+        },
+        {
+          "rectangle": [
+            541,
+            856,
+            543,
+            945
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            76.54895953374276,
+            41.50253112573241,
+            28.74979584829429
+          ],
+          [
+            10.69637204127476,
+            0.13724616793969702,
+            -2.753074687855115
+          ],
+          [
+            -53.80719335111388,
+            -25.7723730284479,
+            -9.151170499604266
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 2
+      },
+      "file": "all_sources/s004/sun_crown_frame.png",
+      "mask_file": "all_sources/s004/sun_crown_frame.alpha.png",
+      "sha256": "b9b23b31b04a1b0543a37d8e6122f951c9c6fe9a03f84a323cde7271536ab508",
+      "mask_sha256": "02b627561385152da38cf05df769d13aeeec7703c5c94ce3b51f014f138e1e68",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "black_mist_frame",
+      "theme": "black_mist",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        718,
+        857,
+        892,
+        945
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            737,
+            875,
+            789,
+            927
+          ]
+        },
+        {
+          "ellipse": [
+            822,
+            875,
+            874,
+            927
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            725,
+            863,
+            801,
+            939
+          ]
+        },
+        {
+          "ellipse": [
+            810,
+            863,
+            886,
+            939
+          ]
+        },
+        {
+          "ellipse": [
+            771,
+            860,
+            840,
+            942
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            874,
+            857,
+            876,
+            944
+          ]
+        },
+        {
+          "rectangle": [
+            718,
+            857,
+            720,
+            944
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            7.674305875996033,
+            31.99674097682256,
+            44.018027693477
+          ],
+          [
+            6.162358531705671,
+            3.993577108441154,
+            19.30997049901029
+          ],
+          [
+            4.536790221216304,
+            6.961851642035504,
+            3.9394247809691887
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 1
+      },
+      "file": "all_sources/s004/black_mist_frame.png",
+      "mask_file": "all_sources/s004/black_mist_frame.alpha.png",
+      "sha256": "e64bdef9a83975291d78da417b7e4c7c4fa8e1c138c77fc0c04685a9f7788fd6",
+      "mask_sha256": "432b9729aead45069e8ef3db5eafc6ae9df3211de1dd956b58b62ec4d3412b05",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "desert_empire_frame",
+      "theme": "desert_empire",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        887,
+        860,
+        1043,
+        942
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            905,
+            878,
+            951,
+            924
+          ]
+        },
+        {
+          "ellipse": [
+            980,
+            878,
+            1026,
+            924
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            893,
+            866,
+            963,
+            936
+          ]
+        },
+        {
+          "ellipse": [
+            968,
+            866,
+            1038,
+            936
+          ]
+        },
+        {
+          "ellipse": [
+            933,
+            863,
+            998,
+            939
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1019,
+            860,
+            1021,
+            941
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            3.065482405446035,
+            3.6375463706465476,
+            30.034890860509737
+          ],
+          [
+            -2.035570908362274,
+            5.169058886561295,
+            22.51053652599952
+          ],
+          [
+            82.43491062278139,
+            44.39114037547464,
+            1.2219043445606452
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 1
+      },
+      "file": "all_sources/s004/desert_empire_frame.png",
+      "mask_file": "all_sources/s004/desert_empire_frame.alpha.png",
+      "sha256": "4f1942fdd141a3e8e9e542a16dad8a789ab0bedcc69c04815bff16cb15260b0f",
+      "mask_sha256": "e0f6236d994e9991711fc5bb969231f0e5f2cce04ccefbd319f85653666255df",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "spirit_flower_frame",
+      "theme": "spirit_flower",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1037,
+        859,
+        1201,
+        943
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1056,
+            877,
+            1104,
+            925
+          ]
+        },
+        {
+          "ellipse": [
+            1135,
+            877,
+            1183,
+            925
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            1044,
+            865,
+            1116,
+            937
+          ]
+        },
+        {
+          "ellipse": [
+            1123,
+            865,
+            1195,
+            937
+          ]
+        },
+        {
+          "ellipse": [
+            1086,
+            862,
+            1153,
+            940
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            18.705782835016638,
+            9.430590062973682,
+            22.840362088418917
+          ],
+          [
+            4.769557258809861,
+            4.585712671628876,
+            22.40010704427302
+          ],
+          [
+            29.797378979935317,
+            29.90269996312408,
+            53.29065213800193
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 1
+      },
+      "file": "all_sources/s004/spirit_flower_frame.png",
+      "mask_file": "all_sources/s004/spirit_flower_frame.alpha.png",
+      "sha256": "0c418f06b0ff8a894f88ad0f713ed9d5195b86efbd706621733d879a9d4e7814",
+      "mask_sha256": "26e9e00a9d4be2a3734ff49c956f708a48179dd7fb1dafa276d5ae27dcb07121",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "space_journey_frame",
+      "theme": "space_journey",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1196,
+        860,
+        1354,
+        942
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1214,
+            878,
+            1260,
+            924
+          ]
+        },
+        {
+          "ellipse": [
+            1291,
+            878,
+            1337,
+            924
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            1202,
+            866,
+            1272,
+            936
+          ]
+        },
+        {
+          "ellipse": [
+            1279,
+            866,
+            1349,
+            936
+          ]
+        },
+        {
+          "ellipse": [
+            1242,
+            863,
+            1309,
+            939
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            36.54178173933631,
+            37.13304264067204,
+            107.47018758499703
+          ],
+          [
+            -11.148103662942765,
+            -18.343152207678955,
+            -89.14287434575738
+          ],
+          [
+            5.949178220991933,
+            0.38627439917914685,
+            -2.8421126658930405
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 3
+      },
+      "file": "all_sources/s004/space_journey_frame.png",
+      "mask_file": "all_sources/s004/space_journey_frame.alpha.png",
+      "sha256": "1369e73d0f76cf33f6da191822597bfae2541a0f49d243e1d59579e7b2c419ba",
+      "mask_sha256": "3486e5c299ddf62c9b2e83205770e7132f627b537017b6bd2f346cf3b4c3f049",
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "mechanical_clock_partial",
+      "theme": "mechanical_clock",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1354,
+        836,
+        1457,
+        967
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1357,
+            876,
+            1407,
+            926
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            72.931338565638,
+            44.66728506338494,
+            27.00265810524197
+          ],
+          [
+            -44.8525939736841,
+            -13.700858959989397,
+            20.839274569414496
+          ],
+          [
+            -21.856231259672267,
+            -14.15688956909351,
+            -13.835238597604246
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 11
+      },
+      "file": "all_sources/s004/mechanical_clock_partial.png",
+      "mask_file": "all_sources/s004/mechanical_clock_partial.alpha.png",
+      "sha256": "72723e9fdfd76b825c3d6af318214f71bace33b3801439e10904938370ab01b2",
+      "mask_sha256": "cd802a644d2de0a14e7127c6d6599004017d9495b4ebef8c2e7980c41df4fc5e",
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "deep_sea_horror_partial",
+      "theme": "deep_sea_horror",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1460,
+        836,
+        1535,
+        967
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1463,
+            876,
+            1513,
+            926
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        19,
+        82
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            1.7820588560835098,
+            18.47873758836723,
+            88.70823603237822
+          ],
+          [
+            6.036507292716449,
+            12.818223815771795,
+            -6.33252902067486
+          ],
+          [
+            0.7831385096438686,
+            18.18115422308694,
+            -6.774015139953015
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          19,
+          82
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 4
+      },
+      "file": "all_sources/s004/deep_sea_horror_partial.png",
+      "mask_file": "all_sources/s004/deep_sea_horror_partial.alpha.png",
+      "sha256": "b3c0524d1aca7740d6ccf3e63a7797f6eb8048bc35e1aad567401e6c1b67a7ab",
+      "mask_sha256": "f154bf462db6cd6c66ffe39b5bbab36fab24074006dd00afc7adaa78f29bda78",
+      "status": "needs_mask_or_source_review"
+    }
+  ],
+  "quality_notes": [
+    "背景と装飾の境界・肖像穴・細い線を人が比較画像で確認する必要がある。"
+  ],
+  "excluded_content": [
+    "見出し・説明文字・罫線・背景絵は素材対象外。"
+  ],
+  "unsupported": [
+    {
+      "theme": "targon",
+      "reason": "元画像自体に切れた部分があり、描き足し禁止のため全形は未対応。"
+    },
+    {
+      "theme": "void",
+      "reason": "元画像自体に切れた部分があり、描き足し禁止のため全形は未対応。"
+    },
+    {
+      "theme": "warring_kingdoms",
+      "reason": "元画像自体に切れた部分があり、描き足し禁止のため全形は未対応。"
+    },
+    {
+      "theme": "pool_party",
+      "reason": "元画像自体に切れた部分があり、描き足し禁止のため全形は未対応。"
+    },
+    {
+      "theme": "beast_kingdom",
+      "reason": "元画像自体に切れた部分があり、描き足し禁止のため全形は未対応。"
+    },
+    {
+      "theme": "cafe_cuties",
+      "reason": "元画像自体に切れた部分があり、描き足し禁止のため全形は未対応。"
+    },
+    {
+      "theme": "mechanical_clock",
+      "reason": "元画像自体に切れた部分があり、描き足し禁止のため全形は未対応。"
+    },
+    {
+      "theme": "deep_sea_horror",
+      "reason": "元画像自体に切れた部分があり、描き足し禁止のため全形は未対応。"
+    },
+    {
+      "components": [
+        "weak",
+        "strong",
+        "melee",
+        "ranged",
+        "hybrid"
+      ],
+      "reason": "各テーマに1案のみ。強弱・3ロールは明示なし。"
+    }
+  ],
+  "review_pages": [
+    "all_sources/s004/review_01.jpg",
+    "all_sources/s004/review_02.jpg",
+    "all_sources/s004/review_03.jpg",
+    "all_sources/s004/review_04.jpg",
+    "all_sources/s004/review_05.jpg"
+  ],
+  "combinations": {
+    "count": 0,
+    "files": [],
+    "anchor": "illustrative frame crop center; no runtime integration"
+  },
+  "verification": [
+    {
+      "id": "demacia_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4794,
+      "transparent_pixels": 9785,
+      "partial_pixels": 2670,
+      "visible_pixels": 7327
+    },
+    {
+      "id": "noxus_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4460,
+      "transparent_pixels": 10793,
+      "partial_pixels": 2129,
+      "visible_pixels": 5407
+    },
+    {
+      "id": "ionia_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4140,
+      "transparent_pixels": 8950,
+      "partial_pixels": 2790,
+      "visible_pixels": 6450
+    },
+    {
+      "id": "freljord_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4460,
+      "transparent_pixels": 9197,
+      "partial_pixels": 2136,
+      "visible_pixels": 7003
+    },
+    {
+      "id": "piltover_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4140,
+      "transparent_pixels": 9454,
+      "partial_pixels": 2607,
+      "visible_pixels": 5858
+    },
+    {
+      "id": "zaun_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 3224,
+      "transparent_pixels": 7551,
+      "partial_pixels": 2419,
+      "visible_pixels": 5241
+    },
+    {
+      "id": "bilgewater_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 3528,
+      "transparent_pixels": 8442,
+      "partial_pixels": 2395,
+      "visible_pixels": 5334
+    },
+    {
+      "id": "shurima_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 3224,
+      "transparent_pixels": 7243,
+      "partial_pixels": 2620,
+      "visible_pixels": 5713
+    },
+    {
+      "id": "targon_partial",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 1910,
+      "transparent_pixels": 4122,
+      "partial_pixels": 4882,
+      "visible_pixels": 9371
+    },
+    {
+      "id": "void_partial",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 1910,
+      "transparent_pixels": 3769,
+      "partial_pixels": 3521,
+      "visible_pixels": 6056
+    },
+    {
+      "id": "project_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4794,
+      "transparent_pixels": 10258,
+      "partial_pixels": 2489,
+      "visible_pixels": 6854
+    },
+    {
+      "id": "star_guardian_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4460,
+      "transparent_pixels": 9033,
+      "partial_pixels": 1959,
+      "visible_pixels": 7167
+    },
+    {
+      "id": "kda_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4140,
+      "transparent_pixels": 8483,
+      "partial_pixels": 3150,
+      "visible_pixels": 6917
+    },
+    {
+      "id": "heartsteel_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4460,
+      "transparent_pixels": 9346,
+      "partial_pixels": 2413,
+      "visible_pixels": 6854
+    },
+    {
+      "id": "spirit_blossom_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4140,
+      "transparent_pixels": 8576,
+      "partial_pixels": 1956,
+      "visible_pixels": 6736
+    },
+    {
+      "id": "dark_star_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 3224,
+      "transparent_pixels": 7566,
+      "partial_pixels": 1927,
+      "visible_pixels": 5226
+    },
+    {
+      "id": "high_noon_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 3528,
+      "transparent_pixels": 8309,
+      "partial_pixels": 2516,
+      "visible_pixels": 5467
+    },
+    {
+      "id": "blood_moon_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 3224,
+      "transparent_pixels": 8040,
+      "partial_pixels": 2109,
+      "visible_pixels": 4916
+    },
+    {
+      "id": "warring_kingdoms_partial",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 1910,
+      "transparent_pixels": 3585,
+      "partial_pixels": 4507,
+      "visible_pixels": 9908
+    },
+    {
+      "id": "pool_party_partial",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 1910,
+      "transparent_pixels": 3406,
+      "partial_pixels": 2376,
+      "visible_pixels": 6419
+    },
+    {
+      "id": "victorious_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4794,
+      "transparent_pixels": 9742,
+      "partial_pixels": 2839,
+      "visible_pixels": 7370
+    },
+    {
+      "id": "pulsefire_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4460,
+      "transparent_pixels": 9120,
+      "partial_pixels": 2575,
+      "visible_pixels": 7080
+    },
+    {
+      "id": "odyssey_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4140,
+      "transparent_pixels": 8857,
+      "partial_pixels": 2612,
+      "visible_pixels": 6543
+    },
+    {
+      "id": "arcade_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4460,
+      "transparent_pixels": 10037,
+      "partial_pixels": 2794,
+      "visible_pixels": 6163
+    },
+    {
+      "id": "infernal_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4140,
+      "transparent_pixels": 9084,
+      "partial_pixels": 2319,
+      "visible_pixels": 6228
+    },
+    {
+      "id": "empyrean_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 3224,
+      "transparent_pixels": 7208,
+      "partial_pixels": 2096,
+      "visible_pixels": 5584
+    },
+    {
+      "id": "faerie_court_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 3528,
+      "transparent_pixels": 8075,
+      "partial_pixels": 2537,
+      "visible_pixels": 5701
+    },
+    {
+      "id": "winter_festival_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 3224,
+      "transparent_pixels": 6970,
+      "partial_pixels": 1357,
+      "visible_pixels": 5986
+    },
+    {
+      "id": "beast_kingdom_partial",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 1910,
+      "transparent_pixels": 3567,
+      "partial_pixels": 3780,
+      "visible_pixels": 9926
+    },
+    {
+      "id": "cafe_cuties_partial",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 1910,
+      "transparent_pixels": 3253,
+      "partial_pixels": 2747,
+      "visible_pixels": 6572
+    },
+    {
+      "id": "dragon_world_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4794,
+      "transparent_pixels": 10570,
+      "partial_pixels": 2950,
+      "visible_pixels": 6542
+    },
+    {
+      "id": "dragon_will_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4460,
+      "transparent_pixels": 9225,
+      "partial_pixels": 2454,
+      "visible_pixels": 6975
+    },
+    {
+      "id": "moon_goddess_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4140,
+      "transparent_pixels": 8842,
+      "partial_pixels": 2985,
+      "visible_pixels": 6558
+    },
+    {
+      "id": "sun_crown_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4460,
+      "transparent_pixels": 9603,
+      "partial_pixels": 2826,
+      "visible_pixels": 6597
+    },
+    {
+      "id": "black_mist_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 4140,
+      "transparent_pixels": 9060,
+      "partial_pixels": 2473,
+      "visible_pixels": 6252
+    },
+    {
+      "id": "desert_empire_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 3224,
+      "transparent_pixels": 7258,
+      "partial_pixels": 2348,
+      "visible_pixels": 5534
+    },
+    {
+      "id": "spirit_flower_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 3528,
+      "transparent_pixels": 7880,
+      "partial_pixels": 2317,
+      "visible_pixels": 5896
+    },
+    {
+      "id": "space_journey_frame",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 3224,
+      "transparent_pixels": 7585,
+      "partial_pixels": 2266,
+      "visible_pixels": 5371
+    },
+    {
+      "id": "mechanical_clock_partial",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 1910,
+      "transparent_pixels": 4301,
+      "partial_pixels": 4667,
+      "visible_pixels": 9192
+    },
+    {
+      "id": "deep_sea_horror_partial",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 1910,
+      "transparent_pixels": 3482,
+      "partial_pixels": 3643,
+      "visible_pixels": 6343
+    }
+  ]
+}
