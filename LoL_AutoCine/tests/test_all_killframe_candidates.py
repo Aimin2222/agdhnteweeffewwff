@@ -13,6 +13,7 @@ import pytest
 from PIL import Image
 
 from tools.build_all_killframe_candidates import verify_source
+from tools.build_all_killframe_candidates import candidate
 
 APP = Path(__file__).resolve().parents[1]
 ROOT = APP / 'assets/kill_frames'
@@ -83,3 +84,25 @@ def test_all_31_catalog_names_have_observed_source_mappings_without_runtime_chan
         assert row['old_catalog_source_file'] == THEMES[theme].source_file
         assert row['observed_source_indices']
     assert table['runtime_catalog_modified'] is False
+
+
+@pytest.mark.parametrize('background', [(37, 56, 81), (236, 243, 249)])
+def test_portraits_covering_most_of_a_board_do_not_become_background_samples(background):
+    # Dark hair fills 2/3 of this otherwise uniform plate. Fitting all crop
+    # pixels would incorrectly use the hair as the matte and retain the plate.
+    rgb = np.empty((100, 300, 3), dtype='uint8')
+    rgb[:] = background
+    rgb[4:96, 4:109] = (3, 7, 11)
+    rgb[4:96, 192:297] = (5, 9, 13)
+    rgb[25:75, 147:153] = (200, 151, 24)
+    config = {'crop_box': [0, 0, 300, 100], 'roi_regions': [],
+              'portrait_holes': [{'rectangle': [4, 4, 108, 95]}, {'rectangle': [192, 4, 296, 95]}],
+              'candidate_thresholds': [16, 78], 'min_component_pixels': 3,
+              'exclude_regions': [], 'candidate_exclusions': []}
+    result, model = candidate(Image.fromarray(rgb), config)
+    pixels = np.asarray(result)
+    assert np.array_equal(pixels[:, :, :3], rgb)
+    assert not pixels[0, :, 3].any()  # The actual plate background is transparent.
+    assert not pixels[10:90, 10:100, 3].any()  # Portrait interiors are transparent.
+    assert np.all(pixels[25:75, 147:153, 3] >= 240)  # Gold detail survives.
+    assert model['sample_pixels'] > 100

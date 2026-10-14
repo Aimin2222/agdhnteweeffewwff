@@ -15,9 +15,9 @@
       "role": "unspecified",
       "crop_box": [
         48,
-        98,
-        467,
-        270
+        97,
+        468,
+        272
       ],
       "portrait_holes": [
         {
@@ -43,17 +43,9 @@
         {
           "rectangle": [
             48,
-            98,
-            431,
-            100
-          ]
-        },
-        {
-          "rectangle": [
-            125,
-            100,
-            446,
-            102
+            97,
+            468,
+            117
           ]
         }
       ],
@@ -64,47 +56,49 @@
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "四案の比較資料。背景の残りと輪郭を要確認。"
+        "四案の比較資料。背景の残りと輪郭を要確認。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
       "local_border_luma": 28.0,
       "alpha_model": {
         "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            22.909596981910905,
-            29.40386555263193,
-            32.92847405317863
+            23.37216333037589,
+            29.398750005692662,
+            32.93705632547121
           ],
           [
-            -0.20563278374489968,
-            -4.780601489529764,
-            -0.07283589429466614
+            -0.38037780256507503,
+            -4.695604194751946,
+            -0.02118590432051015
           ],
           [
-            -13.653389598950756,
-            -4.064482177187167,
-            0.7820363125652476
+            -14.07763801215087,
+            -3.9761879734532304,
+            1.1323527445706836
           ]
         ],
         "sampling": "portrait pixels excluded; each component samples its own board background",
-        "sample_pixels": 12944,
+        "sample_pixels": 13398,
         "background_median_luma": 26.0,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
           78
         ],
-        "tiny_noise_pixels_removed": 13,
+        "tiny_noise_pixels_removed": 14,
         "rgb_modified": false
       },
       "file": "all_sources/s083/a_simple_main.png",
       "mask_file": "all_sources/s083/a_simple_main.alpha.png",
-      "sha256": "75656402fe851ef17354c9fa9726230a03ded4722ca1441e6308be27caf4a35a",
-      "mask_sha256": "76b3f3d4d665587a27419161d43919eb8b6f64983cfdaf722282ef2c69ef1e0b",
+      "sha256": "51f3edd9d97a4e44397fa14994eddb5dbacb05c1303eefa9b2721ec96e773318",
+      "mask_sha256": "e2c0a492edc5891bb1bbdf2e808433240733ed368e765802c97a0b73aa864bdb",
       "quality_metrics": {
-        "edge_pixels_above_32": 2,
-        "visible_pixels": 15241,
-        "opaque_pixels": 7301
+        "edge_pixels_above_32": 420,
+        "visible_pixels": 15682,
+        "opaque_pixels": 7715
       },
       "status": "needs_mask_or_source_review"
     },
@@ -115,10 +109,10 @@
       "intensity": "unspecified",
       "role": "unspecified",
       "crop_box": [
-        816,
-        98,
-        1235,
-        270
+        810,
+        97,
+        1248,
+        274
       ],
       "portrait_holes": [
         {
@@ -143,18 +137,10 @@
       "candidate_exclusions": [
         {
           "rectangle": [
-            816,
-            98,
-            1234,
-            100
-          ]
-        },
-        {
-          "rectangle": [
-            816,
-            100,
-            1234,
-            102
+            810,
+            97,
+            1248,
+            117
           ]
         }
       ],
@@ -173,40 +159,41 @@
         "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            29.861673493899023,
-            29.496586797687545,
-            25.079667497699624
+            31.261897577607026,
+            30.64658860698115,
+            25.4442780514495
           ],
           [
-            -5.963086784716985,
-            -8.541901831121637,
-            1.2816665704031904
+            -6.172756121033624,
+            -5.946028690024376,
+            5.824461859983065
           ],
           [
-            -15.141676000071783,
-            -2.4008772247360177,
-            3.0011536959764116
+            -16.254794878170856,
+            -3.9551077163599935,
+            1.6101553042496137
           ]
         ],
         "sampling": "portrait pixels excluded; each component samples its own board background",
-        "sample_pixels": 12944,
-        "background_median_luma": 26.333333333333332,
+        "sample_pixels": 13770,
+        "background_median_luma": 27.666666666666668,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
           78
         ],
-        "tiny_noise_pixels_removed": 22,
+        "tiny_noise_pixels_removed": 23,
         "rgb_modified": false
       },
       "file": "all_sources/s083/b_prestige_main.png",
       "mask_file": "all_sources/s083/b_prestige_main.alpha.png",
-      "sha256": "d617f5a5a79852cfca7a2b3d5768475c177107de4158b651af0b5da1a101cac4",
-      "mask_sha256": "847fc489dfb76427a52b426890be0fd62078210249d8c48c7ab5ab7faf348dba",
+      "sha256": "47e954bd0166b1fec644083d6db0de52a3f21d2a6ff991424779a7fb965dd1fb",
+      "mask_sha256": "b98ccb8a5b926279c8867c78497047d7b0459f27651e67023850fc6c2180ac1c",
       "quality_metrics": {
-        "edge_pixels_above_32": 56,
-        "visible_pixels": 21838,
-        "opaque_pixels": 9542
+        "edge_pixels_above_32": 211,
+        "visible_pixels": 22635,
+        "opaque_pixels": 10167
       },
       "status": "needs_mask_or_source_review"
     },
@@ -217,32 +204,41 @@
       "intensity": "unspecified",
       "role": "unspecified",
       "crop_box": [
-        48,
-        588,
-        467,
-        760
+        28,
+        550,
+        485,
+        728
       ],
       "portrait_holes": [
         {
           "ellipse": [
-            82,
-            622,
-            186,
-            726
+            100,
+            593,
+            190,
+            683
           ]
         },
         {
           "ellipse": [
-            329,
-            622,
-            433,
-            726
+            336,
+            593,
+            426,
+            683
           ]
         }
       ],
       "roi_regions": [],
       "exclude_regions": [],
-      "candidate_exclusions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            28,
+            550,
+            485,
+            558
+          ]
+        }
+      ],
       "background_kind": "dark",
       "candidate_thresholds": [
         16,
@@ -258,40 +254,41 @@
         "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            25.281547955711456,
-            18.424526894389178,
-            48.553871766735675
+            13.3307312699243,
+            24.754905289746088,
+            47.43829670758131
           ],
           [
-            12.562698679567623,
-            4.726054627235304,
-            0.3098620280510751
+            14.991619301200746,
+            -7.5929748825682255,
+            -20.27167823407551
           ],
           [
-            -24.00762747200622,
-            -2.92276803730145,
-            -29.82093449370023
+            -8.458919774377385,
+            2.38559383516788,
+            -4.600427058474388
           ]
         ],
         "sampling": "portrait pixels excluded; each component samples its own board background",
-        "sample_pixels": 12944,
-        "background_median_luma": 31.0,
+        "sample_pixels": 14440,
+        "background_median_luma": 27.666666666666668,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
           78
         ],
-        "tiny_noise_pixels_removed": 16,
+        "tiny_noise_pixels_removed": 10,
         "rgb_modified": false
       },
       "file": "all_sources/s083/c_cinema_main.png",
       "mask_file": "all_sources/s083/c_cinema_main.alpha.png",
-      "sha256": "afb2b2c54f5aaf83fb44d5212c3fb2ed0dc01d2eaf38a95383ee94033350c257",
-      "mask_sha256": "d45ae00dc1ab7d1bc38575769fc57f9bfe95268634e64bf85cf3a87d6cdcd9fc",
+      "sha256": "a59e66fee28d3f097f86867bde143afdd2676c696be4cfb51f13b8e6a8e80fbc",
+      "mask_sha256": "a0ce7382dd4f8f8eaf61cf3b89c64368e5b7f6de6e6d76b31f1f7de5c24858a4",
       "quality_metrics": {
-        "edge_pixels_above_32": 504,
-        "visible_pixels": 36966,
-        "opaque_pixels": 22848
+        "edge_pixels_above_32": 45,
+        "visible_pixels": 51391,
+        "opaque_pixels": 30717
       },
       "status": "needs_mask_or_source_review"
     },
@@ -302,26 +299,26 @@
       "intensity": "unspecified",
       "role": "unspecified",
       "crop_box": [
-        816,
-        588,
-        1235,
-        760
+        805,
+        551,
+        1254,
+        738
       ],
       "portrait_holes": [
         {
           "ellipse": [
-            850,
-            622,
-            954,
-            726
+            857,
+            595,
+            947,
+            685
           ]
         },
         {
           "ellipse": [
-            1097,
-            622,
-            1201,
-            726
+            1135,
+            595,
+            1225,
+            685
           ]
         }
       ],
@@ -330,18 +327,10 @@
       "candidate_exclusions": [
         {
           "rectangle": [
-            899,
-            729,
-            1234,
-            731
-          ]
-        },
-        {
-          "rectangle": [
-            816,
-            731,
-            1234,
-            733
+            805,
+            551,
+            1254,
+            558
           ]
         }
       ],
@@ -360,40 +349,867 @@
         "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            21.096189439368867,
-            23.055587711602332,
-            29.51997299028807
+            16.050134016668235,
+            17.636847573006527,
+            16.803064991353686
           ],
           [
-            5.490767050279719,
-            0.4867474595069594,
-            3.4971923008033836
+            -0.03512814324469282,
+            2.053433228554471,
+            5.3116583392555405
           ],
           [
-            -17.664825057388764,
-            -5.022701273598948,
-            -9.672758770637943
+            -5.692476511032761,
+            3.5980934816977825,
+            6.586787629119982
           ]
         ],
         "sampling": "portrait pixels excluded; each component samples its own board background",
-        "sample_pixels": 12944,
-        "background_median_luma": 24.333333333333332,
+        "sample_pixels": 15518,
+        "background_median_luma": 21.0,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
           78
         ],
-        "tiny_noise_pixels_removed": 10,
+        "tiny_noise_pixels_removed": 9,
         "rgb_modified": false
       },
       "file": "all_sources/s083/d_ornate_main.png",
       "mask_file": "all_sources/s083/d_ornate_main.alpha.png",
-      "sha256": "5f163493794e1b7fc5d7589a559da70494bbd3e0b4d7ea93e31a3eeed38b1cea",
-      "mask_sha256": "4a389caf538d0c317399b32f377c0b172c77e14ced01d706626f303d5f652186",
+      "sha256": "5d6bf80aa9a11dff3abe743c86575b95cc961a7dc2809ccd3dc1e242500c804f",
+      "mask_sha256": "a188b66d72867d52b40a23b6f56c3bf0aeb31ea599b3db1b2e216fb6433a579e",
       "quality_metrics": {
-        "edge_pixels_above_32": 345,
-        "visible_pixels": 31071,
-        "opaque_pixels": 20694
+        "edge_pixels_above_32": 44,
+        "visible_pixels": 43168,
+        "opaque_pixels": 28581
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_01",
+      "theme": "abcd_palette_reference",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        944,
+        949,
+        1020,
+        993
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            950,
+            965,
+            968,
+            983
+          ]
+        },
+        {
+          "ellipse": [
+            996,
+            965,
+            1014,
+            983
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            944,
+            949,
+            1020,
+            953
+          ]
+        },
+        {
+          "rectangle": [
+            944,
+            990,
+            1020,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            944,
+            949,
+            948,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            1016,
+            949,
+            1020,
+            993
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "A/B/C/D比較ボードに実在する7色の小型フレーム見本。ロール/強弱未指定。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 6.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            3.8695279250535197,
+            12.382877261006694,
+            17.98408264235095
+          ],
+          [
+            1.0480658940837273,
+            -0.22557426307874573,
+            0.7408160640862845
+          ],
+          [
+            -1.3879584054085612,
+            -0.9659319922338949,
+            0.2723625923038445
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 684,
+        "background_median_luma": 13.666666666666666,
+        "inset_matte_sample_rgb": [],
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s083/palette_reference_01.png",
+      "mask_file": "all_sources/s083/palette_reference_01.alpha.png",
+      "sha256": "dfa6cca509a0d729aeaabd5f5334402ea88daa0d26cdffb7ff53d9dad0da8224",
+      "mask_sha256": "e7ccec82aad18d04c9d0dacd10f4e024e2261628edc5e59b9021531cadef4f40",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 1684,
+        "opaque_pixels": 603
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_02",
+      "theme": "abcd_palette_reference",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1026,
+        949,
+        1102,
+        993
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1032,
+            965,
+            1050,
+            983
+          ]
+        },
+        {
+          "ellipse": [
+            1078,
+            965,
+            1096,
+            983
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1026,
+            949,
+            1102,
+            953
+          ]
+        },
+        {
+          "rectangle": [
+            1026,
+            990,
+            1102,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            1026,
+            949,
+            1030,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            1098,
+            949,
+            1102,
+            993
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "A/B/C/D比較ボードに実在する7色の小型フレーム見本。ロール/強弱未指定。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 6.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            6.209013342481739,
+            15.632215879517032,
+            21.83564883229858
+          ],
+          [
+            -1.270268457629491,
+            -2.0735288382425185,
+            -1.0771187694972642
+          ],
+          [
+            -2.3507588994416926,
+            -1.3876777760458172,
+            1.0463330585087365
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 684,
+        "background_median_luma": 16.333333333333332,
+        "inset_matte_sample_rgb": [],
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s083/palette_reference_02.png",
+      "mask_file": "all_sources/s083/palette_reference_02.alpha.png",
+      "sha256": "0ab7495c4b81a83e7383858e0a8643c184fbaa2fade414abd8fea8c48e114216",
+      "mask_sha256": "1ba63212cfc25f4ec2ba6de522fd9ad8e54042c0e965506ed4d43b118bae1977",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 1900,
+        "opaque_pixels": 677
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_03",
+      "theme": "abcd_palette_reference",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1108,
+        949,
+        1184,
+        993
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1114,
+            965,
+            1132,
+            983
+          ]
+        },
+        {
+          "ellipse": [
+            1160,
+            965,
+            1178,
+            983
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1108,
+            949,
+            1184,
+            953
+          ]
+        },
+        {
+          "rectangle": [
+            1108,
+            990,
+            1184,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            1108,
+            949,
+            1112,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            1180,
+            949,
+            1184,
+            993
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "A/B/C/D比較ボードに実在する7色の小型フレーム見本。ロール/強弱未指定。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 6.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            7.771921092824637,
+            13.472546821419737,
+            17.602627968218627
+          ],
+          [
+            2.928506942335669,
+            1.2826392840488146,
+            0.030056301492310644
+          ],
+          [
+            -2.1743856548446887,
+            -0.47227778565167866,
+            -1.2489293871627996
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 684,
+        "background_median_luma": 15.333333333333334,
+        "inset_matte_sample_rgb": [],
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s083/palette_reference_03.png",
+      "mask_file": "all_sources/s083/palette_reference_03.alpha.png",
+      "sha256": "11c5fe57b23be97cdd49ff30a7629b6545f5bb29aa75c8eeb90366f407103625",
+      "mask_sha256": "a3f5dbf1708c2ca84c8b6cbb2298b750e0f66ca52c3699d4fc50c08443571851",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 1968,
+        "opaque_pixels": 733
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_04",
+      "theme": "abcd_palette_reference",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1190,
+        949,
+        1266,
+        993
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1196,
+            965,
+            1214,
+            983
+          ]
+        },
+        {
+          "ellipse": [
+            1242,
+            965,
+            1260,
+            983
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1190,
+            949,
+            1266,
+            953
+          ]
+        },
+        {
+          "rectangle": [
+            1190,
+            990,
+            1266,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            1190,
+            949,
+            1194,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            1262,
+            949,
+            1266,
+            993
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "A/B/C/D比較ボードに実在する7色の小型フレーム見本。ロール/強弱未指定。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 6.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            9.15761207663829,
+            17.758331688911547,
+            17.88121595226934
+          ],
+          [
+            -2.821471320790903,
+            -2.3978469862776564,
+            -1.045190654820392
+          ],
+          [
+            -1.7923133236792557,
+            -3.931172398142403,
+            -4.174935804371065
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 684,
+        "background_median_luma": 15.0,
+        "inset_matte_sample_rgb": [],
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s083/palette_reference_04.png",
+      "mask_file": "all_sources/s083/palette_reference_04.alpha.png",
+      "sha256": "4092c0536a02e49982459ad9807b4aeeb30946fa28357b7db664837856198bca",
+      "mask_sha256": "23965a0fb4cc6d7ca8e772a8964a6b28d9a0a1653ab2d77932795b9bade733e3",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 1938,
+        "opaque_pixels": 924
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_05",
+      "theme": "abcd_palette_reference",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1272,
+        949,
+        1348,
+        993
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1278,
+            965,
+            1296,
+            983
+          ]
+        },
+        {
+          "ellipse": [
+            1324,
+            965,
+            1342,
+            983
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1272,
+            949,
+            1348,
+            953
+          ]
+        },
+        {
+          "rectangle": [
+            1272,
+            990,
+            1348,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            1272,
+            949,
+            1276,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            1344,
+            949,
+            1348,
+            993
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "A/B/C/D比較ボードに実在する7色の小型フレーム見本。ロール/強弱未指定。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 6.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            5.679223842213134,
+            13.864682234456167,
+            14.505010178576503
+          ],
+          [
+            -0.29928683316790616,
+            -2.9264954148049553,
+            4.346925000373474
+          ],
+          [
+            -1.1535024484430432,
+            -2.1879533481120195,
+            -0.007364140335612834
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 684,
+        "background_median_luma": 12.0,
+        "inset_matte_sample_rgb": [],
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s083/palette_reference_05.png",
+      "mask_file": "all_sources/s083/palette_reference_05.alpha.png",
+      "sha256": "a207c19d0087553fc6151093361eb29ab03cdad51bd7b76a2999ddcd2cb4c87b",
+      "mask_sha256": "5e0aadc2259f42f3b3445cbeb095821061cd48a5eb74a3d580dccc01c9cb604a",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 1870,
+        "opaque_pixels": 891
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_06",
+      "theme": "abcd_palette_reference",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1354,
+        949,
+        1430,
+        993
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1360,
+            965,
+            1378,
+            983
+          ]
+        },
+        {
+          "ellipse": [
+            1406,
+            965,
+            1424,
+            983
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1354,
+            949,
+            1430,
+            953
+          ]
+        },
+        {
+          "rectangle": [
+            1354,
+            990,
+            1430,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            1354,
+            949,
+            1358,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            1426,
+            949,
+            1430,
+            993
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "A/B/C/D比較ボードに実在する7色の小型フレーム見本。ロール/強弱未指定。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 6.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            4.275926064268269,
+            13.968382625495371,
+            17.6007526313789
+          ],
+          [
+            0.5835621110525404,
+            -1.6453948081089438,
+            -3.2278921721716554
+          ],
+          [
+            -2.1117703590739905,
+            -4.379094893479494,
+            -3.91478349021533
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 684,
+        "background_median_luma": 11.666666666666666,
+        "inset_matte_sample_rgb": [],
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s083/palette_reference_06.png",
+      "mask_file": "all_sources/s083/palette_reference_06.alpha.png",
+      "sha256": "ec8f284edb322d0d0d535e3fc81e6fcd37dffa9b97a8870ca2109d4fd66d2314",
+      "mask_sha256": "0a37a299728375bc06ebee4a88e6342b54a56613624d441a8506087ea0ffffc7",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 1746,
+        "opaque_pixels": 607
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_07",
+      "theme": "abcd_palette_reference",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1436,
+        949,
+        1512,
+        993
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1442,
+            965,
+            1460,
+            983
+          ]
+        },
+        {
+          "ellipse": [
+            1488,
+            965,
+            1506,
+            983
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            1436,
+            949,
+            1512,
+            953
+          ]
+        },
+        {
+          "rectangle": [
+            1436,
+            990,
+            1512,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            1436,
+            949,
+            1440,
+            993
+          ]
+        },
+        {
+          "rectangle": [
+            1508,
+            949,
+            1512,
+            993
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "A/B/C/D比較ボードに実在する7色の小型フレーム見本。ロール/強弱未指定。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 6.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            4.352622378393756,
+            13.48876042307823,
+            17.064178297775438
+          ],
+          [
+            1.9458484943484367,
+            -1.2918848732930295,
+            -2.7926807628872607
+          ],
+          [
+            -0.8279924314510603,
+            -3.4636981195278516,
+            -3.878813182197504
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 684,
+        "background_median_luma": 12.0,
+        "inset_matte_sample_rgb": [],
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s083/palette_reference_07.png",
+      "mask_file": "all_sources/s083/palette_reference_07.alpha.png",
+      "sha256": "8c82599cfdcbf7bd3de0e17531fd300528704cb8a5998054dc253828281609a0",
+      "mask_sha256": "16e0a0397ccb625dd06d863dd92c710b4e16e192490cef1e12b39ac95f27c413",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 1449,
+        "opaque_pixels": 619
       },
       "status": "needs_mask_or_source_review"
     }
@@ -402,7 +1218,8 @@
     "背景と装飾の境界・肖像穴・細い線を人が比較画像で確認する必要がある。"
   ],
   "excluded_content": [
-    "アニメーションの入退場/拡大図/操作UIは同じ基本案の説明資料。別デザインとして数えない。"
+    "アニメーションの入退場/拡大図/操作UIは同じ基本案の説明資料。別デザインとして数えない。",
+    "下部に実在する7色の比較見本はpalette_reference_01〜07に保存。操作用スライダーやチェック欄は素材へ含めない。"
   ],
   "unsupported": [
     {
@@ -417,7 +1234,8 @@
     }
   ],
   "review_pages": [
-    "all_sources/s083/review_01.jpg"
+    "all_sources/s083/review_01.jpg",
+    "all_sources/s083/review_02.jpg"
   ],
   "combinations": {
     "count": 0,
@@ -430,36 +1248,99 @@
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 16754,
-      "transparent_pixels": 56827,
-      "partial_pixels": 8159,
-      "visible_pixels": 15241
+      "transparent_pixels": 57818,
+      "partial_pixels": 8185,
+      "visible_pixels": 15682
     },
     {
       "id": "b_prestige_main",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 16754,
-      "transparent_pixels": 50230,
-      "partial_pixels": 12747,
-      "visible_pixels": 21838
+      "transparent_pixels": 54891,
+      "partial_pixels": 12920,
+      "visible_pixels": 22635
     },
     {
       "id": "c_cinema_main",
       "rgb_exact": true,
       "independent_mask_exact": true,
-      "portrait_hole_pixels_zero": 16754,
-      "transparent_pixels": 35102,
-      "partial_pixels": 15432,
-      "visible_pixels": 36966
+      "portrait_hole_pixels_zero": 12522,
+      "transparent_pixels": 29955,
+      "partial_pixels": 22497,
+      "visible_pixels": 51391
     },
     {
       "id": "d_ornate_main",
       "rgb_exact": true,
       "independent_mask_exact": true,
-      "portrait_hole_pixels_zero": 16754,
-      "transparent_pixels": 40997,
-      "partial_pixels": 11265,
-      "visible_pixels": 31071
+      "portrait_hole_pixels_zero": 12522,
+      "transparent_pixels": 40795,
+      "partial_pixels": 15655,
+      "visible_pixels": 43168
+    },
+    {
+      "id": "palette_reference_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 472,
+      "transparent_pixels": 1660,
+      "partial_pixels": 1128,
+      "visible_pixels": 1684
+    },
+    {
+      "id": "palette_reference_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 472,
+      "transparent_pixels": 1444,
+      "partial_pixels": 1268,
+      "visible_pixels": 1900
+    },
+    {
+      "id": "palette_reference_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 472,
+      "transparent_pixels": 1376,
+      "partial_pixels": 1295,
+      "visible_pixels": 1968
+    },
+    {
+      "id": "palette_reference_04",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 472,
+      "transparent_pixels": 1406,
+      "partial_pixels": 1159,
+      "visible_pixels": 1938
+    },
+    {
+      "id": "palette_reference_05",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 472,
+      "transparent_pixels": 1474,
+      "partial_pixels": 1056,
+      "visible_pixels": 1870
+    },
+    {
+      "id": "palette_reference_06",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 472,
+      "transparent_pixels": 1598,
+      "partial_pixels": 1183,
+      "visible_pixels": 1746
+    },
+    {
+      "id": "palette_reference_07",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 472,
+      "transparent_pixels": 1895,
+      "partial_pixels": 864,
+      "visible_pixels": 1449
     }
   ]
 }

@@ -149,6 +149,7 @@
         "sampling": "portrait pixels excluded; each component samples its own board background",
         "sample_pixels": 10068,
         "background_median_luma": 4.0,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
@@ -256,6 +257,7 @@
         "sampling": "portrait pixels excluded; each component samples its own board background",
         "sample_pixels": 10068,
         "background_median_luma": 10.0,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
@@ -417,6 +419,7 @@
         "sampling": "portrait pixels excluded; each component samples its own board background",
         "sample_pixels": 11829,
         "background_median_luma": 6.0,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
@@ -524,6 +527,7 @@
         "sampling": "portrait pixels excluded; each component samples its own board background",
         "sample_pixels": 11829,
         "background_median_luma": 5.666666666666667,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
@@ -628,6 +632,7 @@
         "sampling": "portrait pixels excluded; each component samples its own board background",
         "sample_pixels": 672,
         "background_median_luma": 7.666666666666667,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
@@ -695,6 +700,7 @@
         "sampling": "portrait pixels excluded; each component samples its own board background",
         "sample_pixels": 672,
         "background_median_luma": 9.666666666666666,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
@@ -762,6 +768,7 @@
         "sampling": "portrait pixels excluded; each component samples its own board background",
         "sample_pixels": 672,
         "background_median_luma": 10.333333333333334,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
@@ -875,6 +882,7 @@
         "sampling": "portrait pixels excluded; each component samples its own board background",
         "sample_pixels": 672,
         "background_median_luma": 7.0,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
@@ -942,6 +950,7 @@
         "sampling": "portrait pixels excluded; each component samples its own board background",
         "sample_pixels": 672,
         "background_median_luma": 14.333333333333334,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
@@ -1010,6 +1019,7 @@
         "sampling": "portrait pixels excluded; each component samples its own board background",
         "sample_pixels": 672,
         "background_median_luma": 10.333333333333334,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
@@ -1152,6 +1162,7 @@
         "sampling": "portrait pixels excluded; each component samples its own board background",
         "sample_pixels": 672,
         "background_median_luma": 7.333333333333333,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
@@ -1229,6 +1240,7 @@
         "sampling": "portrait pixels excluded; each component samples its own board background",
         "sample_pixels": 672,
         "background_median_luma": 14.333333333333334,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
@@ -1306,6 +1318,7 @@
         "sampling": "portrait pixels excluded; each component samples its own board background",
         "sample_pixels": 672,
         "background_median_luma": 11.666666666666666,
+        "inset_matte_sample_rgb": [],
         "light_matte": false,
         "candidate_thresholds": [
           16,
@@ -1324,6 +1337,91 @@
         "opaque_pixels": 1252
       },
       "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "ui_display_reference",
+      "theme": "project",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1265,
+        981,
+        1428,
+        1039
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1271,
+            989,
+            1311,
+            1029
+          ]
+        },
+        {
+          "ellipse": [
+            1379,
+            989,
+            1419,
+            1029
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "元画像のUI表示イメージ（仮）から切り出した小型の別構図。低解像度・輪郭・肖像穴は未承認。"
+      ],
+      "local_border_luma": 6.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            1.623620918854369,
+            12.497553106932715,
+            20.52697869191099
+          ],
+          [
+            0.1951707933157386,
+            -1.0040096692077687,
+            -1.7003058145834582
+          ],
+          [
+            -1.2010026189657674,
+            -3.3007963994852316,
+            -3.49587471409688
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1780,
+        "background_median_luma": 9.666666666666666,
+        "inset_matte_sample_rgb": [],
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 12,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s013/ui_display_reference.png",
+      "mask_file": "all_sources/s013/ui_display_reference.alpha.png",
+      "sha256": "c8e8a4d249dc6d7ae5894ac0e0b6e17b7d99a8a19bba9d7a9a39bda8dd368dc6",
+      "mask_sha256": "03cd79d8f524bf93b238ded9860544e6854ed6e283cc86f71aa3be59278537a9",
+      "quality_metrics": {
+        "edge_pixels_above_32": 2,
+        "visible_pixels": 3856,
+        "opaque_pixels": 2220
+      },
+      "status": "needs_mask_or_source_review"
     }
   ],
   "quality_notes": [
@@ -1331,7 +1429,8 @@
     "切り出し範囲・肖像穴はsource_regions.jpg、細線・フリンジは黒/白/ゲーム比較で最終承認する。"
   ],
   "excluded_content": [
-    "テーマ見出し、説明文、罫線、背景の人物イラスト、色見本は合成素材の対象外。"
+    "テーマ見出し、説明文、罫線、背景の人物イラスト、色見本は合成素材の対象外。",
+    "構造イメージのクローズ/展開/発光/完成図は主モチーフの説明。材質見本は面のテクスチャで、独立したフレーム/ロールモチーフではない。UI表示の全形はui_display_referenceへ保存。"
   ],
   "unsupported": [],
   "review_pages": [
@@ -1340,11 +1439,12 @@
     "all_sources/s013/review_03.jpg"
   ],
   "combinations": {
-    "count": 72,
+    "count": 84,
     "files": [
       "all_sources/s013/combinations_01.jpg",
       "all_sources/s013/combinations_02.jpg",
-      "all_sources/s013/combinations_03.jpg"
+      "all_sources/s013/combinations_03.jpg",
+      "all_sources/s013/combinations_04.jpg"
     ],
     "anchor": "illustrative frame crop center; no runtime integration"
   },
@@ -1510,6 +1610,15 @@
       "transparent_pixels": 1451,
       "partial_pixels": 749,
       "visible_pixels": 1949
+    },
+    {
+      "id": "ui_display_reference",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 2424,
+      "transparent_pixels": 5598,
+      "partial_pixels": 1764,
+      "visible_pixels": 3856
     }
   ]
 }

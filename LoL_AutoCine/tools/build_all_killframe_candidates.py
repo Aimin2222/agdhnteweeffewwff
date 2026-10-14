@@ -99,6 +99,15 @@ def candidate(source, config):
         selected = sample & (residual <= np.percentile(residual[sample], 50))
     background = (matrix @ coefficients).reshape(h, w, 3)
     distance = np.linalg.norm(rgb.astype(float) - background, axis=-1)
+    # Some boards put artwork on a dark inset inside a light paper panel.
+    # These optional matte samples are measured pixels from that same board,
+    # never synthesized colors or replacement artwork.
+    inset_samples = []
+    for x, y in config.get('matte_sample_points', []):
+        value = np.asarray(source.getpixel((x, y)), dtype=float)
+        if value.mean() < 135:
+            inset_samples.append(value.tolist())
+            distance = np.minimum(distance, np.linalg.norm(rgb.astype(float) - value, axis=-1))
     low, high = config['candidate_thresholds']
     t = np.clip((distance - low) / (high - low), 0, 1)
     alpha = t * t * (3 - 2 * t)
@@ -119,6 +128,7 @@ def candidate(source, config):
     return result, {'model': 'robust_border_or_outside_support_rgb_plane', 'coefficients': coefficients.tolist(),
                     'sampling': 'portrait pixels excluded; each component samples its own board background',
                     'sample_pixels': int(sample.sum()), 'background_median_luma': brightness,
+                    'inset_matte_sample_rgb': inset_samples,
                     'light_matte': light, 'candidate_thresholds': [low, high],
                     'tiny_noise_pixels_removed': removed, 'rgb_modified': False}
 
@@ -224,9 +234,14 @@ def combinations(items, target, game, icons):
         motifs = [e for e in entries if e[0]['component'] == 'center' and e[0]['role'] in ('melee', 'ranged', 'hybrid')]
         for frame, image in frames:
             for center, motif in motifs:
-                combined = demo(image, frame, icons)
+                # Keep the entire source-size motif, including long weapon
+                # tips. A larger motif must not be clipped to the frame crop.
+                width, height = max(image.width, motif.width) + 8, max(image.height, motif.height) + 8
+                combined = Image.new('RGBA', (width, height))
+                portrait_frame = demo(image, frame, icons)
+                combined.alpha_composite(portrait_frame, ((width - image.width) // 2, (height - image.height) // 2))
                 # UI integration/FX are outside scope: illustrative center placement.
-                combined.alpha_composite(motif, ((image.width - motif.width) // 2, (image.height - motif.height) // 2))
+                combined.alpha_composite(motif, ((width - motif.width) // 2, (height - motif.height) // 2))
                 tiles.append((frame['id'] + ' / ' + center['id'], combined))
                 count += 1
                 if len(tiles) == 24:
