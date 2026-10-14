@@ -26,16 +26,16 @@ SOURCE = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "LoL_AutoCine/assets
 # (center_x, center_y, width, height) in 960x720 preview coordinates.
 # Regions are isolated visual motifs, never the portrait pixels or heading/text.
 REGIONS = {
- "011": [("weak",253,232,104,82),("strong",682,232,130,100),("melee",128,616,110,96),("ranged",480,614,108,101),("hybrid",747,610,120,104)],
- "012": [("weak",255,288,155,102),("strong",705,288,190,110),("melee",142,638,132,122),("ranged",476,631,130,125),("hybrid",718,627,145,125)],
- "013": [("weak",173,250,115,99),("strong",675,250,135,105),("melee",169,551,165,111),("ranged",485,547,155,110),("hybrid",813,545,145,110)],
- "014": [("weak",200,220,122,95),("strong",685,220,130,106),("melee",92,610,114,100),("ranged",460,610,122,100),("hybrid",793,610,120,100)],
- "015": [("weak",252,220,130,106),("strong",693,217,165,122),("melee",163,622,135,119),("ranged",465,617,149,125),("hybrid",708,617,149,125)],
+ "011": [("weak",253,232,104,82),("strong",711,232,126,95),("melee",128,616,110,96),("ranged",410,630,104,82),("hybrid",694,630,113,82)],
+ "012": [("weak",255,288,155,102),("strong",705,288,190,110),("melee",142,638,132,122),("ranged",437,634,132,114),("hybrid",688,633,140,115)],
+ "013": [("weak",173,250,115,99),("strong",675,250,135,105),("melee",169,551,165,111),("ranged",431,550,137,110),("hybrid",759,546,142,110)],
+ "014": [("weak",200,220,122,95),("strong",685,220,130,106),("melee",75,610,111,98),("ranged",460,610,122,100),("hybrid",793,610,120,100)],
+ "015": [("weak",252,220,130,106),("strong",693,217,165,122),("melee",163,622,135,119),("ranged",424,620,142,116),("hybrid",708,617,149,125)],
  "016": [("weak",238,210,138,110),("strong",685,209,165,125),("melee",258,610,145,115),("ranged",489,610,150,115),("hybrid",713,610,160,116)],
  "017": [("weak",236,267,140,110),("strong",702,267,161,131),("melee",230,609,135,99),("ranged",574,609,135,100),("hybrid",858,609,130,100)],
  "018": [("weak",172,220,147,125),("strong",676,222,176,130),("melee",100,612,140,130),("ranged",479,612,150,122),("hybrid",754,612,146,128)],
  "019": [("weak",185,220,135,120),("strong",660,220,170,145),("melee",100,609,145,122),("ranged",466,609,149,122),("hybrid",758,609,146,123)],
- "020": [("hero",348,165,140,97),("variant_default",101,415,174,80),("variant_lunar",286,415,170,80),("variant_solar",478,415,165,80),("variant_flora",674,415,176,80),("variant_prestige",861,415,172,80)],
+ "020": [("hero",348,165,140,97),("variant_default",95,558,93,83),("variant_lunar",286,558,93,83),("variant_solar",476,558,93,83),("variant_flora",662,558,93,83),("variant_prestige",850,558,93,83)],
 }
 
 def crop_center(img, cx, cy, rw, rh):
@@ -51,13 +51,22 @@ def clean_alpha(src):
     rgb = np.asarray(src.convert("RGB")).copy()
     h,w,_ = rgb.shape
     # GrabCut: edge 9% background, middle 45% probable foreground.
-    ix,iy = max(2,int(w*.10)), max(2,int(h*.10))
+    ix,iy = max(2,int(w*.06)), max(2,int(h*.06))
     mask = np.full((h,w),cv2.GC_PR_BGD,np.uint8)
     mask[:iy,:] = cv2.GC_BGD
     mask[-iy:,:] = cv2.GC_BGD
     mask[:,:ix] = cv2.GC_BGD
     mask[:,-ix:] = cv2.GC_BGD
-    cv2.ellipse(mask,(w//2,h//2),(max(4,int(w*.28)),max(4,int(h*.28))),0,0,360,cv2.GC_PR_FGD,-1)
+    cv2.ellipse(mask,(w//2,h//2),(max(4,int(w*.42)),max(4,int(h*.33))),0,0,360,cv2.GC_PR_FGD,-1)
+    # Favor whole horizontal wings, without forcing their background pixels opaque.
+    hsv=cv2.cvtColor(rgb,cv2.COLOR_RGB2HSV)
+    x0,x1=int(w*.12),int(w*.88)
+    y0,y1=int(h*.12),int(h*.88)
+    bright_and_saturated=(hsv[:,:,1]>70)&(hsv[:,:,2]>95)
+    py,px=np.mgrid[0:h,0:w]
+    inside=((px-w/2)/(w*.45))**2+((py-h/2)/(h*.41))**2 < 1
+    foreground_hints=bright_and_saturated & inside & (mask!=cv2.GC_BGD)
+    mask[foreground_hints]=cv2.GC_PR_FGD
     cv2.ellipse(mask,(w//2,h//2),(max(2,int(w*.10)),max(2,int(h*.10))),0,0,360,cv2.GC_FGD,-1)
     bg = np.zeros((1,65),np.float64)
     fg = np.zeros((1,65),np.float64)
@@ -68,7 +77,9 @@ def clean_alpha(src):
     keep=np.zeros(n,bool)
     for i in range(1,n):
         cx,cy=centers[i]
-        if (abs(cx-w/2)<w*.32 and abs(cy-h/2)<h*.32 and stats[i,cv2.CC_STAT_AREA]>8):
+        area=stats[i,cv2.CC_STAT_AREA]
+        # Allow disconnected wings and glowing tips, not only the center blade.
+        if (abs(cx-w/2)<w*.46 and abs(cy-h/2)<h*.44 and area>=max(8,(w*h)//2200)):
             keep[i]=True
     if len(keep)>0: keep[0]=False
     alpha=(keep[labels]*255).astype(np.uint8)
