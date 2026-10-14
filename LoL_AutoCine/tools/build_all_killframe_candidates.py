@@ -9,6 +9,8 @@ import argparse
 import hashlib
 import json
 import sys
+from io import BytesIO
+import time
 
 import numpy as np
 from PIL import Image, ImageDraw
@@ -20,10 +22,10 @@ if TOOLS not in sys.path:
     sys.path.insert(0, TOOLS)
 
 try:
-    from build_killframe_candidates import candidate, font
+    from build_killframe_candidates import components, font
     from extract_killframe_original_alpha_pilot import checker, shape_mask
 except ImportError:
-    from tools.build_killframe_candidates import candidate, font
+    from tools.build_killframe_candidates import components, font
     from tools.extract_killframe_original_alpha_pilot import checker, shape_mask
 
 APP = Path(__file__).resolve().parents[1]
@@ -43,6 +45,82 @@ def read_json(path):
 def write_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+
+def save_image(image, path, **options):
+    """Encode fully before writing; use wb (not PIL's w+b) on OneDrive.
+
+    Only new candidate output paths are writable. Bounded retries handle
+    transient Windows sync errors, and verification subsequently rereads bytes.
+    """
+    path = Path(path)
+    if OUT.resolve() not in path.resolve().parents:
+        raise ValueError('Candidate writer cannot overwrite original or protected assets')
+    data = BytesIO()
+    image.save(data, format='PNG' if path.suffix.lower() == '.png' else 'JPEG', **options)
+    for attempt in range(5):
+        try:
+            path.write_bytes(data.getvalue())
+            return
+        except OSError:
+            if attempt == 4:
+                raise
+            time.sleep(.2 * (attempt + 1))
+
+
+def candidate(source, config):
+    """Fit the matte without using any portrait pixels as background samples.
+
+    The board cover's light/dark appearance is irrelevant: each selected part
+    has its own border/support samples. Artwork RGB is never unmatted/edited.
+    """
+    crop = source.crop(config['crop_box']).convert('RGB')
+    rgb = np.asarray(crop)
+    h, w = rgb.shape[:2]
+    yy, xx = np.mgrid[:h, :w]
+    design = np.stack([np.ones_like(xx), xx / max(w - 1, 1), yy / max(h - 1, 1)], -1).astype(float)
+    holes = shape_mask(crop.size, config['portrait_holes'], config['crop_box'])
+    support = shape_mask(crop.size, config['roi_regions'], config['crop_box']) if config['roi_regions'] else np.ones((h, w))
+    edge = (xx < max(3, w // 20)) | (xx >= w - max(3, w // 20)) | (yy < max(3, h // 20)) | (yy >= h - max(3, h // 20))
+    eligible = ((support < .05) | edge) & (holes < .01)
+    if eligible.sum() < 24:
+        eligible = holes < .01
+    values = rgb.reshape(-1, 3).astype(float)
+    matrix = design.reshape(-1, 3)
+    sample = eligible.ravel()
+    # A robust plane of border/page background, with portraits excluded.
+    brightness = float(np.median(values[sample].mean(-1)))
+    light = brightness > 155
+    luma = values.mean(-1)
+    selected = sample & (luma >= np.percentile(luma[sample], 35) if light else luma <= np.percentile(luma[sample], 65))
+    for _ in range(5):
+        coefficients = np.linalg.lstsq(matrix[selected], values[selected], rcond=None)[0]
+        residual = np.linalg.norm(values - matrix @ coefficients, axis=-1)
+        selected = sample & (residual <= np.percentile(residual[sample], 50))
+    background = (matrix @ coefficients).reshape(h, w, 3)
+    distance = np.linalg.norm(rgb.astype(float) - background, axis=-1)
+    low, high = config['candidate_thresholds']
+    t = np.clip((distance - low) / (high - low), 0, 1)
+    alpha = t * t * (3 - 2 * t)
+    if light:
+        alpha *= np.clip((255 - rgb.min(-1).astype(float) - 18) / 70, 0, 1)
+    alpha *= support * (1 - holes)
+    for key in ('exclude_regions', 'candidate_exclusions'):
+        if config.get(key):
+            alpha *= 1 - shape_mask(crop.size, config[key], config['crop_box'])
+    removed = 0
+    for group in components(alpha > .035):
+        if len(group) < config.get('min_component_pixels', 3):
+            for y, x in group:
+                alpha[y, x] = 0
+                removed += 1
+    alpha[alpha < 1 / 255] = 0
+    result = Image.fromarray(np.dstack([rgb, np.rint(alpha * 255).astype('uint8')]))
+    return result, {'model': 'robust_border_or_outside_support_rgb_plane', 'coefficients': coefficients.tolist(),
+                    'sampling': 'portrait pixels excluded; each component samples its own board background',
+                    'sample_pixels': int(sample.sum()), 'background_median_luma': brightness,
+                    'light_matte': light, 'candidate_thresholds': [low, high],
+                    'tiny_noise_pixels_removed': removed, 'rgb_modified': False}
 
 
 def verify_source(entry, manifest):
@@ -125,7 +203,7 @@ def review_pages(items, target, game, icons):
                 canvas.paste(bg.convert('RGB'), (col * cw, 42 + row * ch + 30))
                 draw.text((col * cw + 6, 42 + row * ch + 6), entry['id'], fill='white', font=font(11))
         path = target / f'review_{start // 8 + 1:02}.jpg'
-        canvas.save(path, quality=94, subsampling=0)
+        save_image(canvas, path, quality=94, subsampling=0)
         pages.append(path.relative_to(ROOT).as_posix())
     return pages
 
@@ -171,7 +249,7 @@ def save_combinations(tiles, target, game, number):
         canvas.paste(bg.convert('RGB'), (x, y + 26))
         draw.text((x + 4, y + 5), label, fill='white', font=font(10))
     path = target / f'combinations_{number:02}.jpg'
-    canvas.save(path, quality=94, subsampling=0)
+    save_image(canvas, path, quality=94, subsampling=0)
     return path.relative_to(ROOT).as_posix()
 
 
@@ -203,11 +281,18 @@ def build_source(entry):
                 a['alpha_model'] = model
                 sprite = target / (config['id'] + '.png')
                 mask = target / (config['id'] + '.alpha.png')
-                image.save(sprite)
-                image.getchannel('A').save(mask)
+                save_image(image, sprite)
+                save_image(image.getchannel('A'), mask)
                 a['file'], a['mask_file'] = sprite.relative_to(ROOT).as_posix(), mask.relative_to(ROOT).as_posix()
             a['sha256'], a['mask_sha256'] = sha(ROOT / a['file']), sha(ROOT / a['mask_file'])
-            a['status'] = 'needs_visual_review' if not config.get('quality_flags') else 'needs_mask_or_source_review'
+            alpha = np.asarray(image.getchannel('A'))
+            edge = np.concatenate([alpha[0], alpha[-1], alpha[1:-1, 0], alpha[1:-1, -1]])
+            a['quality_metrics'] = {'edge_pixels_above_32': int((edge > 32).sum()),
+                                    'visible_pixels': int((alpha > 0).sum()),
+                                    'opaque_pixels': int((alpha >= 240).sum())}
+            if not a.get('reused_unchanged') and (edge > 32).sum() >= 20:
+                a['quality_flags'] = list(a['quality_flags']) + ['切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。']
+            a['status'] = 'needs_visual_review' if not a.get('quality_flags') else 'needs_mask_or_source_review'
             manifest['assets'].append(a)
             items.append((a, image))
             draw.rectangle(config['crop_box'], outline='cyan', width=2)
@@ -216,7 +301,7 @@ def build_source(entry):
                 kind, box = next(iter(hole.items()))
                 getattr(draw, kind)(box, outline='red', width=2)
         overlay.thumbnail((1448, 1086))
-        overlay.save(target / 'source_regions.jpg', quality=94, subsampling=0)
+        save_image(overlay, target / 'source_regions.jpg', quality=94, subsampling=0)
     manifest['review_pages'] = review_pages(items, target, game, icons)
     manifest['combinations'] = combinations(items, target, game, icons)
     manifest['verification'] = verify_source(entry, manifest)
@@ -224,6 +309,38 @@ def build_source(entry):
     return {'source_index': entry['index'], 'assets': len(items), 'new_assets': sum(not a.get('reused_unchanged') for a in manifest['assets']),
             'combinations': manifest['combinations']['count'], 'checks_passed': True,
             'manifest': (target / 'manifest.json').relative_to(ROOT).as_posix()}
+
+
+def make_review_contacts(batch):
+    """All components in a batch, black/white contact pages for quick triage."""
+    sources = [s for s in read_json(OUT / 'source_inventory.json')['sources'] if s['batch'] == batch]
+    tiles, pages = [], []
+    for s in sources:
+        m = read_json(OUT / f's{s["index"]:03}/manifest.json')
+        for start, path in enumerate(m['review_pages']):
+            with Image.open(ROOT / path) as review:
+                for j, a in enumerate(m['assets'][start * 8:start * 8 + 8]):
+                    tile = review.crop((300, 72 + j * 160, 900, 200 + j * 160)).resize((400, 86), Image.Resampling.LANCZOS)
+                    tiles.append((f's{s["index"]:03} / {a["theme"]} / {a["id"]}', tile))
+                    if len(tiles) == 40:
+                        pages.append(save_contact_page(tiles, batch, len(pages) + 1))
+                        tiles.clear()
+    if tiles:
+        pages.append(save_contact_page(tiles, batch, len(pages) + 1))
+    return pages
+
+
+def save_contact_page(tiles, batch, page):
+    canvas = Image.new('RGB', (2000, 38 + ((len(tiles) + 4) // 5) * 120), '#252933')
+    draw = ImageDraw.Draw(canvas)
+    draw.text((10, 9), f'BATCH {batch:02} / EVERY COMPONENT / BLACK + WHITE / UNAPPROVED / SEE FULL REVIEW PAGES', fill='white', font=font(16))
+    for j, (label, tile) in enumerate(tiles):
+        x, y = j % 5 * 400, 38 + j // 5 * 120
+        draw.text((x + 5, y + 6), label, fill='white', font=font(11))
+        canvas.paste(tile, (x, y + 29))
+    path = OUT / 'batches' / f'batch_{batch:02}_contact_{page:02}.jpg'
+    save_image(canvas, path, quality=94, subsampling=0)
+    return path.relative_to(ROOT).as_posix()
 
 
 def main():
@@ -246,7 +363,8 @@ def main():
         print(json.dumps(result), flush=True)
     write_json(OUT / 'batches' / f'batch_{args.batch:02}_verification.json',
                {'batch': args.batch, 'base_commit': BASE, 'all_numeric_checks_passed': True,
-                'human_approval': False, 'decoded_sources_at_once': 1, 'sources': results})
+                'human_approval': False, 'decoded_sources_at_once': 1, 'sources': results,
+                'black_white_contacts': make_review_contacts(args.batch)})
     return 0
 
 

@@ -70,10 +70,16 @@
       "manifest": "all_sources/s008/manifest.json"
     }
   ],
+  "black_white_contacts": [
+    "all_sources/batches/batch_01_contact_01.jpg",
+    "all_sources/batches/batch_01_contact_02.jpg",
+    "all_sources/batches/batch_01_contact_03.jpg",
+    "all_sources/batches/batch_01_contact_04.jpg",
+    "all_sources/batches/batch_01_contact_05.jpg"
+  ],
   "pytest": {
-    "passed": 58,
+    "passed": 11,
     "failed": 0,
-    "scope": "all89 batch01 + existing three-theme/candidate/catalog tests",
-    "initial_environment_error": "3 existing tmp_path setup errors under sandbox temp; repeated in new workspace basetemp passed"
+    "scope": "selected source RGB/SHA/masks/holes/reviews + exact89 inventory/protected37/core/UI/three themes + 31 catalog correspondence"
   }
 }

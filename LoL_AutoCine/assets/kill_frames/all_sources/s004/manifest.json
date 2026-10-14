@@ -67,47 +67,51 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 25.5,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            38.078472450527954,
-            33.58867169769504,
-            47.308007710363995
+            41.35901191756403,
+            39.600683216008605,
+            41.080884099141585
           ],
           [
-            -1.994093099887317,
-            -0.794538229920839,
-            4.330127128049425
+            -10.615335928632488,
+            -5.567099400838618,
+            -0.4710189161091147
           ],
           [
-            -0.39238621939928997,
-            -6.608878074947594,
-            -17.82393133430034
+            2.2395159500400377,
+            -6.663949695009533,
+            -14.017462353950396
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4779,
+        "background_median_luma": 47.666666666666664,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 1
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/demacia_frame.png",
       "mask_file": "all_sources/s004/demacia_frame.alpha.png",
-      "sha256": "c60df3f0da9ef4904c550e4ab231a5611a34565a499f3825bb8545ddab2694d9",
-      "mask_sha256": "fa63ddc93ea8cfbbcb81c62d6d3df6c054948a6e3a0fd3416b2a20d846130f65",
+      "sha256": "ce11ae7b3f5bd67ebb5902723c40cb75ee976c455eb7fdd78860ce6e01f75f1a",
+      "mask_sha256": "9a84a5ab3771c14509739edade1553a25755970dda3be4b4d57fa696903c608d",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 7452,
+        "opaque_pixels": 4975
+      },
       "status": "needs_visual_review"
     },
     {
@@ -179,47 +183,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 15.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            21.01296745261745,
-            11.8453014463157,
-            22.066891718534887
+            30.299827558687735,
+            15.686085272315802,
+            19.588765894742487
           ],
           [
-            -4.22299111624524,
-            -2.3065937911328738,
-            -4.310380896068544
+            -13.841237686510095,
+            -5.734025100276671,
+            -5.694803765636349
           ],
           [
-            5.698869266212135,
-            0.999294837138744,
-            -0.06005364097697097
+            3.5143295722692063,
+            -1.4381587328764374,
+            -0.014536335316871707
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4541,
+        "background_median_luma": 30.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 12
+        "tiny_noise_pixels_removed": 16,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/noxus_frame.png",
       "mask_file": "all_sources/s004/noxus_frame.alpha.png",
-      "sha256": "812ee8b2912f8e0526fca8ab59a45ceb869a397e3183667b951a6c4e0ae21dea",
-      "mask_sha256": "d72eac38182ab188f058b0a9479fcd7e445ef2d0c2dace186cfa52fc3129887b",
+      "sha256": "2e3917aa01422c9223413ab10a9a2f59fe2b501de02988b877af4019d1e49b1f",
+      "mask_sha256": "7486a4ecadd88b4ac4a181eaa9da7816d297763530d2ecfe90aa50f849214d49",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 5960,
+        "opaque_pixels": 3506
+      },
       "status": "needs_visual_review"
     },
     {
@@ -282,47 +290,51 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 35.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            18.017711353163005,
-            22.717546793242985,
-            31.842592894046934
+            24.460335509677122,
+            35.91387899425952,
+            42.8994338790284
           ],
           [
-            -3.5187295185960386,
-            4.982447849413303,
-            13.288469391176086
+            -6.256648904669446,
+            -1.9471285369565865,
+            5.239978312463446
           ],
           [
-            16.016145202943296,
-            11.435427251930621,
-            18.899058401774287
+            7.691121626083925,
+            -2.1121704534123555,
+            4.980312179610849
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4259,
+        "background_median_luma": 49.666666666666664,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 2
+        "tiny_noise_pixels_removed": 3,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/ionia_frame.png",
       "mask_file": "all_sources/s004/ionia_frame.alpha.png",
-      "sha256": "f39c6907f82b004859382341b6ecb43702a52f58b31b33b6e4012081daf1d84c",
-      "mask_sha256": "065c3d030e8924cf1d962e531841db06a10d5a9e1c8728ce13c327cd07b23d56",
+      "sha256": "7f8ce3e644c46ea4ee27629148d83f7ae95e64e1796ec298dad8fda46f4f9b05",
+      "mask_sha256": "cb8f27616c9044d216f6cf012b18a159e95466219dd83c076bb44fb5fbf20b4b",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 6681,
+        "opaque_pixels": 3899
+      },
       "status": "needs_visual_review"
     },
     {
@@ -394,47 +406,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 51.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            23.259332934855717,
-            9.077124155818064,
-            22.756781824644985
+            14.197226454943067,
+            63.30795919584503,
+            122.04245412007512
           ],
           [
-            0.555698808620894,
-            15.739849927470395,
-            35.09039233875336
+            -0.5288152468064755,
+            1.034224302322416,
+            -0.07568287810857122
           ],
           [
-            -2.249840050124862,
-            40.320876802087774,
-            77.54069010501536
+            -4.378337193831388,
+            -13.01231654415668,
+            -16.49692248038243
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4586,
+        "background_median_luma": 86.5,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 4
+        "tiny_noise_pixels_removed": 1,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/freljord_frame.png",
       "mask_file": "all_sources/s004/freljord_frame.alpha.png",
-      "sha256": "3e70167b782d8d66d1ba4f4576313404208cb8b8219d7db1ef50750c4450c090",
-      "mask_sha256": "4b2224fb379d50e17ee344f63f65f13354aa16495bf3bf4413a03bfa1d3fc4a4",
+      "sha256": "8b175c7abae989985522c224baa142e8a73e887258355bd0182e903d606be0cf",
+      "mask_sha256": "e7f6604fa7cdf5dcf116d6d7e9205c5a21e0ae6e47fa77f603be2a3eb4cc3d45",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 7078,
+        "opaque_pixels": 5070
+      },
       "status": "needs_visual_review"
     },
     {
@@ -514,47 +530,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 39.17,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            31.200081237941326,
-            27.444346162279633,
-            37.47222579963746
+            40.97928987840996,
+            34.6130715083374,
+            34.033579963381705
           ],
           [
-            4.575009837617788,
-            3.2928855441419307,
-            2.2956336788553564
+            -0.7081762665563893,
+            0.04834893744617297,
+            -0.4718893589427058
           ],
           [
-            -9.002477737734234,
-            -11.023667274049929,
-            -16.493244603666575
+            -19.45930301627366,
+            -17.792698809316953,
+            -17.21712945594014
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4335,
+        "background_median_luma": 41.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 3
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/piltover_frame.png",
       "mask_file": "all_sources/s004/piltover_frame.alpha.png",
-      "sha256": "c6e4def92f250cb0df714f0a153528bb80f65f875783ad1a54252804fc6d12ab",
-      "mask_sha256": "d0b7d95b5498050a4e54d64e094e396a1a7b1ed691d167e1e2cbeb1f1c0ad53b",
+      "sha256": "c9531fe0f2b54521bc04624b72fe9dea007eb8edc7960d18b995bc8a579e7e0f",
+      "mask_sha256": "dd584cbfa3a872122047554ced9e1ce8eaaba2fb8e4291da8afb0fd752bdb8b7",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 6189,
+        "opaque_pixels": 3509
+      },
       "status": "needs_visual_review"
     },
     {
@@ -642,47 +662,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 30.0,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            23.891520607197673,
-            23.534125366185677,
-            29.25243998189873
+            27.775111153112746,
+            32.608170075959556,
+            22.185900908873844
           ],
           [
-            -4.550533105902309,
-            -0.05300178561673308,
-            -0.7636727219314761
+            -10.156466077611421,
+            -0.7406388812415914,
+            -6.390029871081836
           ],
           [
-            3.0252980614019376,
-            3.9788225508046655,
-            -9.573384414723058
+            -6.034456734677778,
+            -6.02790350867329,
+            -7.520730144766231
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3647,
+        "background_median_luma": 40.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 4
+        "tiny_noise_pixels_removed": 6,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/zaun_frame.png",
       "mask_file": "all_sources/s004/zaun_frame.alpha.png",
-      "sha256": "a2e8d71090d6a9debb6751da32de89b36e927597ebef71af72fb0833ba165070",
-      "mask_sha256": "c365ac0e7e6ee35c76ac4d58d322c2c37e493375c58482b7dc143b0bf585fe43",
+      "sha256": "2c6da3d5b6c463c60d8e7d610f95b36162e7f33d1a4e2c6cde231c6e1dba425f",
+      "mask_sha256": "108e1c46efe7afd145738449f4f15f1097b1fe181d296cd42c5894ec222e7782",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 5731,
+        "opaque_pixels": 3192
+      },
       "status": "needs_visual_review"
     },
     {
@@ -762,47 +786,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 20.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            15.372785518537935,
-            23.266886156376,
-            34.430025603471336
+            6.581769680995648,
+            30.146529167837297,
+            38.04383125175333
           ],
           [
-            2.9234842724373475,
-            6.663731631705638,
-            13.419139837298232
+            0.0983952330814355,
+            7.176452500067319,
+            13.768682914133484
           ],
           [
-            -4.5085441284402155,
-            -3.5931187216681177,
-            -4.391697478662298
+            -3.9940697028351133,
+            -9.093336765023833,
+            -9.641587398473067
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3997,
+        "background_median_luma": 46.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 8
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/bilgewater_frame.png",
       "mask_file": "all_sources/s004/bilgewater_frame.alpha.png",
-      "sha256": "07571c1f5a5cac24ac2c7999454bc66b3c4a39e5a24fdf72e3dd9ed1f43adea0",
-      "mask_sha256": "9b35ca4e81d77cbacce0350e43da030229309316a9de2a700323b68f7dca59ef",
+      "sha256": "2e9415b56c7a83e0eb2e1bc1ad6f15b27073cbc76331a8975133829b97fb8f25",
+      "mask_sha256": "0c4d04670a7b1e1fbc3dd3ac5a7ac5a53a7717089ff2e50b550d806f3d3dc57f",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 5774,
+        "opaque_pixels": 3290
+      },
       "status": "needs_visual_review"
     },
     {
@@ -874,47 +902,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 23.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            19.301266043943667,
-            14.994276666895436,
-            24.948123746321112
+            52.21592143685083,
+            28.64883850637107,
+            14.101703271630042
           ],
           [
-            20.494990786540903,
-            4.25654742712535,
-            4.446640595473325
+            18.544841333651096,
+            3.4308648153407244,
+            -2.0597641062527505
           ],
           [
-            30.33316328305242,
-            14.07619522722548,
-            -6.089288472254519
+            -3.9077913792860226,
+            -0.3165931850469357,
+            0.7587930523951498
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3675,
+        "background_median_luma": 50.666666666666664,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 1
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/shurima_frame.png",
       "mask_file": "all_sources/s004/shurima_frame.alpha.png",
-      "sha256": "362641933cb44de87b1d4cce80bf26e58c04c0377c5d655dcc469c3ea0a29cc8",
-      "mask_sha256": "3d254f6a249c7aaa5ce049a3bfb337c12fda22d66759a33c928e1950a6779a3a",
+      "sha256": "ad29bc70078bbec65ee4c8574b8d4f7769cca8f55baaf6f64a500e168c161558",
+      "mask_sha256": "2d271848110f4f9812e6e382003a7fa9a1c0eed47a869335ce63489afe711ce7",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 5856,
+        "opaque_pixels": 3244
+      },
       "status": "needs_visual_review"
     },
     {
@@ -944,49 +976,54 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 23.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            41.15385183774471,
-            23.503299809087572,
-            69.46441387176795
+            28.29794922642066,
+            18.48707195080757,
+            61.85499381822251
           ],
           [
-            -3.3439830312521206,
-            -1.6981342556096326,
-            -1.243711448248348
+            0.3752397885860397,
+            -1.746234360233653,
+            -4.9369203933468775
           ],
           [
-            -15.891813236590556,
-            -9.551135137028613,
-            -6.932908240325293
+            -10.948755990947994,
+            -5.983604292147649,
+            -15.325069944779472
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 2392,
+        "background_median_luma": 36.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 18
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/targon_partial.png",
       "mask_file": "all_sources/s004/targon_partial.alpha.png",
-      "sha256": "868097542a7655817ea7b298a71686fbc920ba8fe49770b655a026886857c153",
-      "mask_sha256": "d4cdf41b0947593ff19408fab4bb911c4665337cada3a259bbc23818c17eae20",
+      "sha256": "dc2ad0540fc01293bfe2009d9b2303a9c80ec913265a311b80802832d25e1a9a",
+      "mask_sha256": "197c2c78d0a641bbe16bb0b5d029d2aca1ea32378547afd5e3b6b6ff23d8b23e",
+      "quality_metrics": {
+        "edge_pixels_above_32": 227,
+        "visible_pixels": 9749,
+        "opaque_pixels": 5832
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -1016,49 +1053,54 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 15.17,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            26.378327230639524,
-            6.013077233857432,
-            52.38375759502865
+            27.08283773164774,
+            7.975856201929867,
+            46.54051517233685
           ],
           [
-            6.407931343583566,
-            1.3726443062688987,
-            22.102240430796904
+            2.8126464861104474,
+            -0.7793283331276268,
+            16.64640038019129
           ],
           [
-            -6.912350193221819,
-            -2.024149948828856,
-            -6.137153815515756
+            -9.606264231972611,
+            -2.7813821996041295,
+            -11.13239802168028
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1614,
+        "background_median_luma": 37.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 8
+        "tiny_noise_pixels_removed": 11,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/void_partial.png",
       "mask_file": "all_sources/s004/void_partial.alpha.png",
-      "sha256": "23f250f844cf1868ce7d77d5f767219a16438f2193102cb058fb16a86f44d826",
-      "mask_sha256": "fc419ad914b54fd329d5bb2774e4c47cbb91b6a4b2529a5167b5e81bbba2e31a",
+      "sha256": "1eac08fcd0af37baccc5ff8e38f58e0fdf005a976cc672596e920929b98eff62",
+      "mask_sha256": "b1f0b86d232b08a08bc50074a6c596ec067083424f02ec706f508a1d99d04b21",
+      "quality_metrics": {
+        "edge_pixels_above_32": 187,
+        "visible_pixels": 6500,
+        "opaque_pixels": 3090
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -1121,47 +1163,51 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 18.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            45.26638536809363,
-            18.313427204084824,
-            45.636206169642705
+            51.089993766808135,
+            20.79207643926305,
+            45.24494160007099
           ],
           [
-            10.333089459561048,
-            -3.9737354728685137,
-            -0.8288128599153506
+            10.442017459081379,
+            -3.2476140887523366,
+            -2.7340976477887935
           ],
           [
-            -24.256478291697995,
-            -3.69401350442269,
-            -20.2254001249575
+            -35.58608483112533,
+            -6.976922093204251,
+            -21.92250479066724
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4779,
+        "background_median_luma": 36.666666666666664,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 2
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/project_frame.png",
       "mask_file": "all_sources/s004/project_frame.alpha.png",
-      "sha256": "e758b59b8f1cfde53383a6a4f83ba3ffa1bde1c87525a311d1ea62b78d74fab3",
-      "mask_sha256": "daa870d10ae4aa347b47c06c58d8495664c9d73d0bbc5b3faaccc58fd664fd49",
+      "sha256": "d7f3a1f39c7f9102ee2791491fc0e1134842a9af0574d12227ad1f0424e8c593",
+      "mask_sha256": "834a4c636b47bcb1bf4a472008fbce981e8c84f0a520990ed0389a144de2d40f",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 7062,
+        "opaque_pixels": 4748
+      },
       "status": "needs_visual_review"
     },
     {
@@ -1233,47 +1279,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 49.5,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            29.81508446571516,
-            9.760875519139246,
-            34.85901081216924
+            78.86624139640958,
+            28.12873533053174,
+            124.465569717242
           ],
           [
-            5.427275538596938,
-            6.265566100841131,
-            28.62110042201099
+            -20.472511866756122,
+            -8.140436340835969,
+            -18.12409483241098
           ],
           [
-            24.008350509731116,
-            18.779326531181155,
-            53.18494511143513
+            -19.80130282513077,
+            6.6489438393599425,
+            -6.876314766004066
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4541,
+        "background_median_luma": 79.66666666666667,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 1
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/star_guardian_frame.png",
       "mask_file": "all_sources/s004/star_guardian_frame.alpha.png",
-      "sha256": "51d8c5dc9b9d552823aa8b1bd394b1b7fb5910f1be4452d8eb5f40f3bd2a9098",
-      "mask_sha256": "0124942a2fb22f75a358b0283dc27ab340462dd5a87710ff0a85afd056650404",
+      "sha256": "e8a35f9a7809fc3877700f7e35cd40e1f61dd44016319ab79c0dfcecfab5670d",
+      "mask_sha256": "2d43aaa9c262fbaf943789b0fc551a18f4ea8c77f1fd971a32a6f61e73fafe25",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 7357,
+        "opaque_pixels": 5705
+      },
       "status": "needs_visual_review"
     },
     {
@@ -1353,47 +1403,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 53.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            49.05572796539335,
-            22.20395888365839,
-            104.69984386217736
+            62.94144964426321,
+            27.080741762973418,
+            122.63583962894744
           ],
           [
-            -10.457758091414256,
-            4.989709060250509,
-            14.484380556524195
+            -15.551847638234625,
+            2.3965882710025177,
+            6.865861448444827
           ],
           [
-            5.161031558264127,
-            1.6577222525554896,
-            -12.424187813999236
+            -7.597348396193598,
+            -2.4445117915158603,
+            -21.03144572090942
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4259,
+        "background_median_luma": 74.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 0
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/kda_frame.png",
       "mask_file": "all_sources/s004/kda_frame.alpha.png",
-      "sha256": "be888106cf5aaa66fff598b4f8a5d772c2f884ded99163e1f6ec3685e565401c",
-      "mask_sha256": "aa52b38be03fbb4408bb2b3d65c513f6b1433fd451b8f8d88b3f9a39f1c45d8f",
+      "sha256": "42e85e54e3cd17801e43a4137a22aca1e6a2ab9962eae1e4f7ab3c6f4e058191",
+      "mask_sha256": "6474528576447460612c9e574e825e93362b110ab8be6c27c79661721518920b",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 7011,
+        "opaque_pixels": 4240
+      },
       "status": "needs_visual_review"
     },
     {
@@ -1481,47 +1535,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 53.17,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            28.21643490495595,
-            13.434206151387572,
-            46.19677409189816
+            30.53694587946598,
+            43.40686324728231,
+            99.32691210441554
           ],
           [
-            -7.565966776999303,
-            7.316371827406854,
-            10.011801430597117
+            -19.17228878090262,
+            9.115368748516367,
+            2.703679030589808
           ],
           [
-            2.4178067673986234,
-            24.215691226350607,
-            37.93634696319686
+            -8.53064355884812,
+            -4.234665803126137,
+            -13.805056198945941
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4586,
+        "background_median_luma": 68.33333333333333,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 2
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/heartsteel_frame.png",
       "mask_file": "all_sources/s004/heartsteel_frame.alpha.png",
-      "sha256": "f2ab2557e242f8df94256f972759acea16470dfb63728957517515b514836496",
-      "mask_sha256": "99543ec6714d1a661edddd0af69506e0ce5204f3e627812f9773a60aa12f3cb0",
+      "sha256": "39cddacb7f65072571fcb18dc99024b73342c1c8c73f752c37b8e20a20a4dcd3",
+      "mask_sha256": "c30158aff73efc0e78fc287a15056c60e236469426ad598f58199b364f3d57a8",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 7104,
+        "opaque_pixels": 4799
+      },
       "status": "needs_visual_review"
     },
     {
@@ -1609,47 +1667,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 44.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            40.64631950473124,
-            25.517922994497372,
-            76.36024979105235
+            50.862905780442745,
+            31.632533362243553,
+            103.48578424460615
           ],
           [
-            -0.8562139159894446,
-            2.3805977994047556,
-            4.992029548578932
+            -8.776959619349526,
+            -2.011730458110808,
+            -12.543957474364912
           ],
           [
-            -10.368384104758064,
-            -2.7052465457901134,
-            -18.919690468891588
+            -20.372969333132417,
+            -5.447037561426416,
+            -23.755956646156466
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4335,
+        "background_median_luma": 63.666666666666664,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 1
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/spirit_blossom_frame.png",
       "mask_file": "all_sources/s004/spirit_blossom_frame.alpha.png",
-      "sha256": "da0b2a53372c2bbd914728c8e72f0830bb0729839dcc9a6d0ac605ba25290088",
-      "mask_sha256": "929e8384871286c606a76cc8c1f3d67242650554cf358f8ce5f9259516ab97ca",
+      "sha256": "decabb024420d6bcabca3bb7b07cc4d74eae0512d81162f93fc81d0cbc5a053e",
+      "mask_sha256": "590f7c7c0452e7390eb3294af8f0e8ee7adf1c1dc1650f9782a8c0ed70d00cab",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 6857,
+        "opaque_pixels": 4962
+      },
       "status": "needs_visual_review"
     },
     {
@@ -1745,47 +1807,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 26.5,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            18.25918483947283,
-            9.655913453802384,
-            45.40896791400767
+            19.05240089210903,
+            9.761757306752468,
+            49.667942071655204
           ],
           [
-            0.03571295430964394,
-            -2.443541681818251,
-            0.444918913417264
+            -4.496444471782965,
+            -6.657949618593677,
+            -13.20201255612332
           ],
           [
-            5.843306311386279,
-            1.6264858820548591,
-            1.3814095058005116
+            -2.017097619434251,
+            -0.6215034189852311,
+            -7.154236041658946
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3647,
+        "background_median_luma": 38.666666666666664,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 3
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/dark_star_frame.png",
       "mask_file": "all_sources/s004/dark_star_frame.alpha.png",
-      "sha256": "ca583a6bf781c8b1ebf3e27193721ca740ae76514535c39d4a381ceea856a3cb",
-      "mask_sha256": "176aea90bd44def291948c615f38113ff64ac14a351d7bd916d478b954745ada",
+      "sha256": "bec9bf87f03390d9fdc2785c732ce5076961a31c1f29086b333898c2f90b6137",
+      "mask_sha256": "e0844289fa623ba312522cad79c30132380df8d8fa9eedf27c2fa8dec67567d4",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 5381,
+        "opaque_pixels": 3606
+      },
       "status": "needs_visual_review"
     },
     {
@@ -1873,47 +1939,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 16.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            29.949077378884976,
-            12.869170465560055,
-            21.93129901935919
+            70.85391453704725,
+            19.263051436443625,
+            16.353972659275016
           ],
           [
-            9.348357981739865,
-            -1.7387318962371987,
-            -6.483555337962557
+            -8.090768495704065,
+            -1.9984052710087443,
+            -6.138116782518645
           ],
           [
-            3.7444462698741745,
-            3.153736051772038,
-            -2.6739204670450087
+            -33.13429309285232,
+            -4.464368893484981,
+            0.012197240308298163
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3997,
+        "background_median_luma": 39.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 11
+        "tiny_noise_pixels_removed": 9,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/high_noon_frame.png",
       "mask_file": "all_sources/s004/high_noon_frame.alpha.png",
-      "sha256": "d8ce322dfe9d8d6f854a2bbb3db93fb6457a391ca47a37504ae513cc93ea0b55",
-      "mask_sha256": "e959a60e2ef159d0da704e8cbe33af99d740cb173378148c55b1f8e5a6173b53",
+      "sha256": "98814d3aef9a5ea83fc1894e9575eaacd4c79f62fb6aad7256bb6b121b496949",
+      "mask_sha256": "f1eaede796fb7f7dc5ed2ada1b1478da20bf491d24dadcea5a3eae839e24b50d",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 5724,
+        "opaque_pixels": 2976
+      },
       "status": "needs_visual_review"
     },
     {
@@ -1985,47 +2055,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 18.17,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            28.915140219899822,
-            12.362392941731803,
-            20.418063620454213
+            38.839890762384705,
+            11.442187870956793,
+            16.48432206986645
           ],
           [
-            11.468669023642281,
-            -1.0366520968474393,
-            6.104969303274956
+            12.756602330218115,
+            -0.8585387188840623,
+            4.577074481368501
           ],
           [
-            -0.6261495938392638,
-            -1.599899391022292,
-            -1.4867337560322333
+            -3.3532358994926206,
+            -1.9301790946479294,
+            -2.057680721112936
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3675,
+        "background_median_luma": 41.666666666666664,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 17
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/blood_moon_frame.png",
       "mask_file": "all_sources/s004/blood_moon_frame.alpha.png",
-      "sha256": "a40d855458f71834db6df2517ae37a64510d93701d81bf63cf72ccec71eba021",
-      "mask_sha256": "e67c6ed438539e795afd340d9fdbfe1806610be3c8681085d6ba16ef83dd8dc2",
+      "sha256": "557f38b2ea4ea309fb332933f4fc7f42b0b26c2902a47a180b0107351ac7dd3b",
+      "mask_sha256": "02d83656c9169202298e772f9bfe7a3be79601d44e3f3a84999dce231e2ed19b",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 5483,
+        "opaque_pixels": 2950
+      },
       "status": "needs_visual_review"
     },
     {
@@ -2055,49 +2129,54 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 31.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            46.09938906730213,
-            40.771256935034266,
-            55.34800532937633
+            30.3630875254521,
+            38.763134414359904,
+            55.521034969841146
           ],
           [
-            3.6147730192842378,
-            9.398788507058857,
-            13.656515917565164
+            3.9870326814773787,
+            7.187153592562886,
+            10.206647326076823
           ],
           [
-            -12.678120157216203,
-            -6.8059347041587595,
-            -7.174715563232194
+            -7.078872922980967,
+            -4.975998683310176,
+            -6.715132402820491
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 2392,
+        "background_median_luma": 47.333333333333336,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 8
+        "tiny_noise_pixels_removed": 15,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/warring_kingdoms_partial.png",
       "mask_file": "all_sources/s004/warring_kingdoms_partial.alpha.png",
-      "sha256": "20d2cc7e6556efa7710aa2f578434e46990d5e19c5da63ee0b2be84def487a78",
-      "mask_sha256": "888f4d6db3d1a778286b1dd82bdace4ce14920442425e95c33283ccb209829f5",
+      "sha256": "39dd850ff39c5e4d68b18d958b217b0d5c66d589827ae2ecbe6098590c04eb43",
+      "mask_sha256": "d447dd30f10d8d0fd059cdfbca717cccb10e2c16b309a9f245abe5e35db9c276",
+      "quality_metrics": {
+        "edge_pixels_above_32": 227,
+        "visible_pixels": 10235,
+        "opaque_pixels": 6287
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -2127,49 +2206,54 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 75.17,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            37.99169110501761,
-            105.48654766085276,
-            184.2970513558703
+            17.85748790105368,
+            85.43530263558436,
+            164.38227289476598
           ],
           [
-            -15.75470042561103,
-            -0.3990801516371931,
-            10.995219809615264
+            -1.522087857972835,
+            3.6700077589629645,
+            -1.6423220267432121
           ],
           [
-            -21.23512220053737,
-            -28.981776580213733,
-            -45.32519126816842
+            -11.311986385869913,
+            -11.28297946318754,
+            -26.13047065628563
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1614,
+        "background_median_luma": 87.33333333333333,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 7
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/pool_party_partial.png",
       "mask_file": "all_sources/s004/pool_party_partial.alpha.png",
-      "sha256": "e56f4b6cf5cb2a7a39246904a812eb43f2f8876fec17206d6268fff9e4bf65df",
-      "mask_sha256": "4ebc078430b069459227880dccf4fd9f68698f737a48eb7c9cd95378c9aaca43",
+      "sha256": "2bdc26f4276fee00ebf8fa125b5575667a7bdcb277675c0fce8f25add6958b39",
+      "mask_sha256": "d5f059a080018eddf146d7132996794abb043b31fbaa0174849e1c2e5c18ffda",
+      "quality_metrics": {
+        "edge_pixels_above_32": 168,
+        "visible_pixels": 6720,
+        "opaque_pixels": 4637
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -2232,47 +2316,51 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 30.5,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            72.46939257944656,
-            58.898921696509234,
-            60.694934093804264
+            95.12140630029951,
+            72.8814077042087,
+            57.7132212984294
           ],
           [
-            3.005476225263873,
-            1.1664340767936885,
-            4.781376427701469
+            -13.213536788586602,
+            -8.335258848562148,
+            -1.9075877082354964
           ],
           [
-            -36.93653897618,
-            -34.081444628275605,
-            -19.57296697216032
+            -39.3204483710319,
+            -32.70161766282841,
+            -24.788794551122145
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4779,
+        "background_median_luma": 79.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 0
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/victorious_frame.png",
       "mask_file": "all_sources/s004/victorious_frame.alpha.png",
-      "sha256": "25501eb4984229bbc6e75b7480499390c8589558ed84d1f9582c8a63266f8ec8",
-      "mask_sha256": "e255fb78ec510b270266ea48b090a461f43d077779588b8b539a915e47774dce",
+      "sha256": "ae8229520dd6444ba996eb8037817220384c41c88716a57ce6c6765e0ed10c74",
+      "mask_sha256": "2909409e985778562391aa33ed64a1520083c0edf5b57485aaac0d0cbbbf1472",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 7496,
+        "opaque_pixels": 4790
+      },
       "status": "needs_visual_review"
     },
     {
@@ -2352,47 +2440,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 25.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            7.76594719745416,
-            30.266087208066953,
-            84.08930790311902
+            1.7744963746561906,
+            32.234584842469445,
+            90.00305984976758
           ],
           [
-            -1.8504402376991314,
-            4.288620859548205,
-            6.969357974048045
+            -0.9637190905747167,
+            -2.7055449649085546,
+            -12.34476869671272
           ],
           [
-            3.568358808818777,
-            -8.97532217245827,
-            -25.458798592735864
+            0.26418210262023634,
+            -8.420391560774117,
+            -23.336357547515668
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4541,
+        "background_median_luma": 45.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 3
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/pulsefire_frame.png",
       "mask_file": "all_sources/s004/pulsefire_frame.alpha.png",
-      "sha256": "7d6711d0ff510caee2b254e75ddb8c538f38c125e15e0a9f0c2a80c8ff27215a",
-      "mask_sha256": "c9e6b55ffa374db9645c9bf5c1be0796272d1280ccf0c92954a533214e2b7e08",
+      "sha256": "ea2c2ebf66e27131638bf8abc98d7e56973cea62f402f23edb03d23ba2ab328b",
+      "mask_sha256": "5d16f825948aef6f64713c43d7b73f8cef07d2a4f0da2551ebf625d45f627d0d",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 7172,
+        "opaque_pixels": 4881
+      },
       "status": "needs_visual_review"
     },
     {
@@ -2472,47 +2564,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 32.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            32.05229231197583,
-            34.09578655767428,
-            62.958433247432126
+            21.20240070172605,
+            32.96059125297376,
+            65.08900788254472
           ],
           [
-            -6.8965543949187,
-            -3.2735383732090746,
-            1.9827880331908059
+            -7.71221485505992,
+            -9.524454724813184,
+            -13.6035143236811
           ],
           [
-            3.6541900688786386,
-            -8.060985613586235,
-            -25.22107564803024
+            7.300189784975295,
+            0.09360592304966708,
+            -9.5192273739178
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4259,
+        "background_median_luma": 47.333333333333336,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 4
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/odyssey_frame.png",
       "mask_file": "all_sources/s004/odyssey_frame.alpha.png",
-      "sha256": "b2c7822d6d1dcd560903cea3858cd50f2e8c7060084b9bde9a27374c2987bcf7",
-      "mask_sha256": "be8640669cb217342af1e3f49bfcbc7df0b410972e99dd8a6112f216c4cc43e4",
+      "sha256": "a345d5d3b45f68fc594be346abcba50b7aecf11146d8a06b26c4647b3de21358",
+      "mask_sha256": "f29ce278337ca871cf7770281564bc7e30f32e5780d0eb5c6d860513372b3a4b",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 6840,
+        "opaque_pixels": 4338
+      },
       "status": "needs_visual_review"
     },
     {
@@ -2592,47 +2688,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 38.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            48.73163232803255,
-            22.649177076596438,
-            92.99793762589799
+            46.927721202146124,
+            24.274287740218654,
+            91.99191295408454
           ],
           [
-            10.903755438334494,
-            0.40999300470264277,
-            18.01061177685461
+            3.966599702420788,
+            -4.029842421424792,
+            10.511271929144057
           ],
           [
-            -22.41332900252187,
-            -8.3317074347568,
-            -56.017548495747846
+            -14.028061460330122,
+            -6.763609934207252,
+            -40.08221368333583
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4586,
+        "background_median_luma": 60.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 6
+        "tiny_noise_pixels_removed": 5,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/arcade_frame.png",
       "mask_file": "all_sources/s004/arcade_frame.alpha.png",
-      "sha256": "1579ea493b8f1f14e5fb80761a53e57e965e6b34b71eb7e04f730eb394394617",
-      "mask_sha256": "85e19ec5342385975b7477dbbd5c1146bdbba51d6ad1ad308951b254191ba36e",
+      "sha256": "1c21082386b1dcd6dfe2cb0f000170ee177a06b1cc5f3c4815f626118ff0ed69",
+      "mask_sha256": "4184676a35fa8d4531566048ff34ea938d756bd6ce89e80a688b583c18f4391b",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 6517,
+        "opaque_pixels": 3598
+      },
       "status": "needs_visual_review"
     },
     {
@@ -2720,47 +2820,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 23.83,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            55.326306642988264,
-            17.2009671658625,
-            18.947529890698103
+            88.67480515452631,
+            17.405229228900698,
+            12.52059954749993
           ],
           [
-            9.953333913685476,
-            -0.6875148578433707,
-            0.985301232026351
+            -12.842712783400739,
+            -1.1109972718593544,
+            0.8921961581492548
           ],
           [
-            -14.127869654043131,
-            -0.8788295088453344,
-            -0.4352058629294807
+            -27.14756626675996,
+            -3.4607510698473414,
+            -3.5534382786371537
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4335,
+        "background_median_luma": 47.333333333333336,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 3
+        "tiny_noise_pixels_removed": 1,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/infernal_frame.png",
       "mask_file": "all_sources/s004/infernal_frame.alpha.png",
-      "sha256": "dd530f6469229dc800c84d48ff25c84648483ffa0d844a8756e9ecde9b3ebb6e",
-      "mask_sha256": "7ce23b4f19b8cec084f69fd22150205d6df4135c1015f0e2cba464594c8b2c4b",
+      "sha256": "c15d950bb54f1d56f3588eca268a85f4051c661dda3dc20655e473c0cc8a8086",
+      "mask_sha256": "7e597c46930271de276f56cb4c194104fae1e89d5bec21c61fd8f3ffc94f0f72",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 6426,
+        "opaque_pixels": 3967
+      },
       "status": "needs_visual_review"
     },
     {
@@ -2840,47 +2944,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 52.0,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            16.686072419026527,
-            6.3431809391685405,
-            10.02526104046232
+            67.68426994679153,
+            23.07945628735528,
+            136.63228369541562
           ],
           [
-            13.774280414731997,
-            11.702532592429392,
-            34.890613804133835
+            30.289764893912352,
+            15.840208154553105,
+            87.74339057804622
           ],
           [
-            30.899946719258352,
-            12.728755158034904,
-            71.38464751232274
+            -42.67761630652911,
+            -17.18253991098442,
+            -74.06447397089012
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3647,
+        "background_median_luma": 93.66666666666667,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 5
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/empyrean_frame.png",
       "mask_file": "all_sources/s004/empyrean_frame.alpha.png",
-      "sha256": "466573cb646d7c5a58e6545d5c2641bc630f85d592c7d1fa3461e83bb11a7892",
-      "mask_sha256": "e603939858ae8ef401bf2b70053955503dec4079ce3f4961dc836f62284ad875",
+      "sha256": "f13591afe894a89dbf2a00c7fbc3a2e35ff20588d23b203bc2e4333b46bd6d69",
+      "mask_sha256": "e7db91a34acc528bd0006bead07328585192ebfbdc8716734fe5f824ab8566c6",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 5954,
+        "opaque_pixels": 4559
+      },
       "status": "needs_visual_review"
     },
     {
@@ -2960,47 +3068,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 46.83,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            48.28245219634582,
-            29.028276284959695,
-            86.62310003199244
+            59.71513319404362,
+            25.268995970378587,
+            119.02596309454896
           ],
           [
-            0.9435696472291983,
-            16.037056483103353,
-            -1.1888989938785244
+            -4.281607133960467,
+            23.63382866801479,
+            -29.712863758463
           ],
           [
-            -17.536446278264684,
-            -12.909763410734607,
-            -29.420312252649627
+            -21.23110946439542,
+            -4.546830047782237,
+            -20.312685306143045
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3997,
+        "background_median_luma": 88.66666666666667,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 5
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/faerie_court_frame.png",
       "mask_file": "all_sources/s004/faerie_court_frame.alpha.png",
-      "sha256": "a111d317872cf2d4c775083c71eb22fd683fb36f9a9240479cd7a74a4a3ebf83",
-      "mask_sha256": "2daae4ab3641529a69cc2a65b0d088268bf8674aeb352a226e84be5db1e6734c",
+      "sha256": "763cb823dbdc8fcd44cd48b187cb7c293c78b451d5b01e36ae6b6f1fcd62fcd1",
+      "mask_sha256": "1a27bac90722ab806fe89ab66c7d4664a96b4f484911be12e6778c7ecd7eac31",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 6012,
+        "opaque_pixels": 3324
+      },
       "status": "needs_visual_review"
     },
     {
@@ -3080,47 +3192,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 42.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            29.28898547261644,
-            52.12859785188127,
-            95.75846960440651
+            37.07509074495694,
+            67.14082637486806,
+            119.30371495544017
           ],
           [
-            16.82894822834737,
-            21.70256845480526,
-            28.30080515031561
+            19.987312451806115,
+            41.065093475642406,
+            46.8467889331749
           ],
           [
-            1.8903394849853132,
-            -37.91534062012987,
-            -52.192339832258405
+            -20.996978531110564,
+            -41.95697477547103,
+            -67.46737197226389
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3675,
+        "background_median_luma": 112.66666666666667,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 0
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/winter_festival_frame.png",
       "mask_file": "all_sources/s004/winter_festival_frame.alpha.png",
-      "sha256": "79804f6b1c0add2ce4622c5bb56de7439e95da05d06eca22a8b4d2615abb93fc",
-      "mask_sha256": "16dd126f1e8b79ec8afdb48cd3fdff8b4661cf3399dc0bce91db89deb59dfa70",
+      "sha256": "479c6694825004a94327327b8e6a1395c9a1db6649529ea08212995ee99d5143",
+      "mask_sha256": "c08c78d5fe0803952ea3a8574602fe33e380b150925cfd96cc3eca20d8c057a1",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 6058,
+        "opaque_pixels": 4778
+      },
       "status": "needs_visual_review"
     },
     {
@@ -3150,49 +3266,54 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 32.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            110.55736909016927,
-            59.528898483704694,
-            27.145480220369766
+            89.71371994438954,
+            47.85906092273357,
+            16.707934282264176
           ],
           [
-            -5.07630912083453,
-            -6.832389553196837,
-            -1.8384125219109948
+            0.858480069215255,
+            0.19746535546288957,
+            2.1372480720231883
           ],
           [
-            -21.28822689433963,
-            -10.309561714215675,
-            5.605165579126702
+            -10.339775321634638,
+            -5.0425780329014405,
+            2.5352557842787733
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 2392,
+        "background_median_luma": 55.333333333333336,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 6
+        "tiny_noise_pixels_removed": 7,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/beast_kingdom_partial.png",
       "mask_file": "all_sources/s004/beast_kingdom_partial.alpha.png",
-      "sha256": "d0c22599d319939e576ba7aa36db6ed5f905b1ca76a72f50de43adf6908ef741",
-      "mask_sha256": "1f1e923b15f2b7a31a7a9479b8126146e2d3efbc2e42cbd4f1e0820c7a6b9ac5",
+      "sha256": "1be8430e28fe4250c464d656b46b215f81e1260ff857fbfcffcb77073dab5ee1",
+      "mask_sha256": "97abf97acffcf9f12415edead315daa679980dbb2c4ca5a6edf03d8e0398114e",
+      "quality_metrics": {
+        "edge_pixels_above_32": 209,
+        "visible_pixels": 10135,
+        "opaque_pixels": 6995
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -3222,49 +3343,54 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 46.83,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            115.2891882735224,
-            44.50179340231615,
-            58.35011958120982
+            82.42787322639086,
+            34.81195621238861,
+            44.72419795277124
           ],
           [
-            1.2943377462952328,
-            2.7870357381291164,
-            -2.300113297320543
+            -7.316140551011861,
+            -2.34297812989986,
+            -9.865266612466842
           ],
           [
-            -3.850765911536495,
-            17.720082585409518,
-            29.647685679269344
+            30.863165000399103,
+            29.97091267676511,
+            41.314430569099045
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1614,
+        "background_median_luma": 79.66666666666667,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 5
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/cafe_cuties_partial.png",
       "mask_file": "all_sources/s004/cafe_cuties_partial.alpha.png",
-      "sha256": "019db20d7895ea952c2236efc96bd22943bcf7bb3446f203d69f4e8b8b99cb1b",
-      "mask_sha256": "36913e675c11fef7ed67c17b46be7fb9e9fe51dc0f411b00a54170e962308cdd",
+      "sha256": "99fdd1eac20acc5c8307a73a1b83e750e05d155679132d11e7b2b8ec8fa15a14",
+      "mask_sha256": "602c76d3aa1e529e95259161e75c2784674d4f1658075b16cdab11c9f0887473",
+      "quality_metrics": {
+        "edge_pixels_above_32": 205,
+        "visible_pixels": 6784,
+        "opaque_pixels": 4573
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -3327,47 +3453,51 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 24.5,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            36.5742737410737,
-            15.732736695085022,
-            20.6111365307049
+            59.96483938515386,
+            20.811303400364974,
+            15.980398036528758
           ],
           [
-            10.126996598034424,
-            3.62962038795087,
-            0.4160489791125128
+            2.016936746377021,
+            4.797002679497405,
+            4.043369617946789
           ],
           [
-            -0.5966028467199589,
-            0.05245748089252711,
-            -0.7188226047002032
+            -11.939187908724447,
+            -1.3998750099015629,
+            0.8514982924241505
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4779,
+        "background_median_luma": 42.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 10
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/dragon_world_frame.png",
       "mask_file": "all_sources/s004/dragon_world_frame.alpha.png",
-      "sha256": "23ad638b3329ad0d8cb2c39d7c3b5446c4179326768b9f3319f9a71347b758ca",
-      "mask_sha256": "43089fa575f3b6e050447febb13bf009f592ec016f8d1a60e854ad34b88e0ad9",
+      "sha256": "7394466e7731f6b426a9df98157dc66550e6dfc5df44df56fb907a5b39adda3a",
+      "mask_sha256": "f31eb3da8550b5a8a87adba1f9eb480af508b5c4a04ba80ddc431c3a8e2ca369",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 7018,
+        "opaque_pixels": 3610
+      },
       "status": "needs_visual_review"
     },
     {
@@ -3439,47 +3569,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 26.0,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            16.57194560167991,
-            18.735974998486384,
-            45.47846727667111
+            4.989533840472881,
+            46.59732978387415,
+            110.41061428813337
           ],
           [
-            1.2858935523722241,
-            3.7783111836776158,
-            12.836410076811521
+            -1.8860741240565648,
+            -11.231885548362056,
+            -23.258650456836364
           ],
           [
-            12.354956908524038,
-            18.19347084678177,
-            16.23726589680524
+            14.651999730696595,
+            -1.3317442189502584,
+            -28.074245395219066
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4541,
+        "background_median_luma": 68.33333333333333,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 2
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/dragon_will_frame.png",
       "mask_file": "all_sources/s004/dragon_will_frame.alpha.png",
-      "sha256": "84427672f79e60477b4bd82eb7e4a92441c5929e305e1f8037cedc68bc045e1e",
-      "mask_sha256": "0899f85ab8061949939613f0d6c74a67205326ba7602766960bf70befc9cffcc",
+      "sha256": "107f1a4b96fe25d4ddb34abe229fa4b62d35c881106b916a4bd7be90e6017b19",
+      "mask_sha256": "8b69048447273d7a06e0bceb41a0a2510f8aaa64863ed9da9ae0fe6f2f45b2f4",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 7167,
+        "opaque_pixels": 4854
+      },
       "status": "needs_visual_review"
     },
     {
@@ -3559,47 +3693,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 37.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            17.205173315516483,
-            18.27027967263939,
-            43.43416544510598
+            16.436970824333937,
+            24.836178960061766,
+            56.967453650563144
           ],
           [
-            -0.297031032784437,
-            0.16383558905200957,
-            10.082587907527376
+            -4.655406928205094,
+            -6.428488535745478,
+            -6.642270541930198
           ],
           [
-            16.695142746085118,
-            14.033844027104752,
-            19.223600580717772
+            13.362209492907478,
+            7.160039506016713,
+            6.919582909361752
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4259,
+        "background_median_luma": 53.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 0
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/moon_goddess_frame.png",
       "mask_file": "all_sources/s004/moon_goddess_frame.alpha.png",
-      "sha256": "34b22c71be7bf5021b252b48ff8acc41a55e8c6dbaf37fdedc5e8d753cbf2705",
-      "mask_sha256": "201e49b5a0e7e35037b5e8396578ff0c464e86c3692c13b874876f949caddf01",
+      "sha256": "a3d170eb8c0822bd1271c6ad21f170197747b55d0bc656c01520dbbc0a29cb63",
+      "mask_sha256": "358b661a318bf001f10b81c9f7b46f58008f6dca44e8834cb5c9a850d41f5992",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 6719,
+        "opaque_pixels": 3890
+      },
       "status": "needs_visual_review"
     },
     {
@@ -3679,47 +3817,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 43.5,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            76.54895953374276,
-            41.50253112573241,
-            28.74979584829429
+            103.65877717040135,
+            52.287584583153794,
+            28.500803097763775
           ],
           [
-            10.69637204127476,
-            0.13724616793969702,
-            -2.753074687855115
+            0.2545283003529164,
+            -2.150920788331394,
+            -5.459185615489556
           ],
           [
-            -53.80719335111388,
-            -25.7723730284479,
-            -9.151170499604266
+            -57.65548786855976,
+            -27.56200697703537,
+            -16.44735908850916
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4586,
+        "background_median_luma": 66.66666666666667,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 2
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/sun_crown_frame.png",
       "mask_file": "all_sources/s004/sun_crown_frame.alpha.png",
-      "sha256": "b9b23b31b04a1b0543a37d8e6122f951c9c6fe9a03f84a323cde7271536ab508",
-      "mask_sha256": "02b627561385152da38cf05df769d13aeeec7703c5c94ce3b51f014f138e1e68",
+      "sha256": "6e83cb961d00652e345c32d58f1fe64bd98ef73d2d1b7ea451f8a17e5865b186",
+      "mask_sha256": "9c6d669d60ff19857a181139efd410a9fe31b02a9747459c8ee43d25b7436b72",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 6748,
+        "opaque_pixels": 3906
+      },
       "status": "needs_visual_review"
     },
     {
@@ -3799,47 +3941,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 49.17,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            7.674305875996033,
-            31.99674097682256,
-            44.018027693477
+            0.7694283198732823,
+            52.002041356392574,
+            62.81285594918881
           ],
           [
-            6.162358531705671,
-            3.993577108441154,
-            19.30997049901029
+            12.465369214803689,
+            -13.705894861708016,
+            1.8599579556376091
           ],
           [
-            4.536790221216304,
-            6.961851642035504,
-            3.9394247809691887
+            0.1965552491161695,
+            1.646337166406024,
+            -3.071712111800312
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4335,
+        "background_median_luma": 58.666666666666664,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 1
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/black_mist_frame.png",
       "mask_file": "all_sources/s004/black_mist_frame.alpha.png",
-      "sha256": "e64bdef9a83975291d78da417b7e4c7c4fa8e1c138c77fc0c04685a9f7788fd6",
-      "mask_sha256": "432b9729aead45069e8ef3db5eafc6ae9df3211de1dd956b58b62ec4d3412b05",
+      "sha256": "acae23ac48f066a9eda3295890050792755aba4d60e4333a1f455e5d4012f65a",
+      "mask_sha256": "8283a810463a4788ab134a0c755b4005f0d79177ff86dd252c65e8760301bddd",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 6284,
+        "opaque_pixels": 3862
+      },
       "status": "needs_visual_review"
     },
     {
@@ -3911,47 +4057,51 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 84.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            3.065482405446035,
-            3.6375463706465476,
-            30.034890860509737
+            128.25715175389507,
+            66.06814351918771,
+            15.241744936590946
           ],
           [
-            -2.035570908362274,
-            5.169058886561295,
-            22.51053652599952
+            -60.719874460686654,
+            -16.088495471424288,
+            59.96148186971701
           ],
           [
-            82.43491062278139,
-            44.39114037547464,
-            1.2219043445606452
+            -2.655073060443854,
+            -0.3536015517271007,
+            -5.403217894182362
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3647,
+        "background_median_luma": 76.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 1
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/desert_empire_frame.png",
       "mask_file": "all_sources/s004/desert_empire_frame.alpha.png",
-      "sha256": "4f1942fdd141a3e8e9e542a16dad8a789ab0bedcc69c04815bff16cb15260b0f",
-      "mask_sha256": "e0f6236d994e9991711fc5bb969231f0e5f2cce04ccefbd319f85653666255df",
+      "sha256": "c9ab876abca48a912fb5caaa1498433b44784d5c3e7197a9a512826acea785b9",
+      "mask_sha256": "14e21f1c7a5ffdc0a6ce0d13fe65de61f302e32c300b60ba69fd61e6c7ad0df8",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 5758,
+        "opaque_pixels": 3635
+      },
       "status": "needs_visual_review"
     },
     {
@@ -4014,47 +4164,51 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 70.5,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            18.705782835016638,
-            9.430590062973682,
-            22.840362088418917
+            82.75330836697974,
+            70.29664222585063,
+            132.1988121214857
           ],
           [
-            4.769557258809861,
-            4.585712671628876,
-            22.40010704427302
+            -27.618564502517298,
+            -28.329968476063147,
+            -34.33910931893342
           ],
           [
-            29.797378979935317,
-            29.90269996312408,
-            53.29065213800193
+            -16.952425959886703,
+            -8.689790816590717,
+            -15.830581605629774
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3997,
+        "background_median_luma": 83.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 1
+        "tiny_noise_pixels_removed": 3,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/spirit_flower_frame.png",
       "mask_file": "all_sources/s004/spirit_flower_frame.alpha.png",
-      "sha256": "0c418f06b0ff8a894f88ad0f713ed9d5195b86efbd706621733d879a9d4e7814",
-      "mask_sha256": "26e9e00a9d4be2a3734ff49c956f708a48179dd7fb1dafa276d5ae27dcb07121",
+      "sha256": "0ab18deec4b1c9713c3bece14583975dceabf4bae24185b4a1956bef0add510c",
+      "mask_sha256": "e8bcb0b2765811f71894fd81ac85515e55ce1bad2b22e2bf59779f66f6e285d3",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 5877,
+        "opaque_pixels": 3568
+      },
       "status": "needs_visual_review"
     },
     {
@@ -4117,47 +4271,51 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 66.0,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            36.54178173933631,
-            37.13304264067204,
-            107.47018758499703
+            38.211934809538036,
+            56.31393643657289,
+            150.036057211311
           ],
           [
-            -11.148103662942765,
-            -18.343152207678955,
-            -89.14287434575738
+            -6.621039114013038,
+            -28.452811942958945,
+            -117.61359526458618
           ],
           [
-            5.949178220991933,
-            0.38627439917914685,
-            -2.8421126658930405
+            -0.08253046320088142,
+            -16.47298563375649,
+            -34.55917051861966
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3675,
+        "background_median_luma": 65.33333333333333,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 3
+        "tiny_noise_pixels_removed": 5,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/space_journey_frame.png",
       "mask_file": "all_sources/s004/space_journey_frame.alpha.png",
-      "sha256": "1369e73d0f76cf33f6da191822597bfae2541a0f49d243e1d59579e7b2c419ba",
-      "mask_sha256": "3486e5c299ddf62c9b2e83205770e7132f627b537017b6bd2f346cf3b4c3f049",
+      "sha256": "0e3089873c28743b2c496b333196bca05c6bace10d9a0c37e20c3142007eea59",
+      "mask_sha256": "218db80497ecaf76470635e54849ea87c34d466fd476f44bd53978222ea6b1db",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 5658,
+        "opaque_pixels": 3214
+      },
       "status": "needs_visual_review"
     },
     {
@@ -4187,49 +4345,54 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 49.0,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            72.931338565638,
-            44.66728506338494,
-            27.00265810524197
+            73.74713411317289,
+            46.901145588136814,
+            27.740907988975305
           ],
           [
-            -44.8525939736841,
-            -13.700858959989397,
-            20.839274569414496
+            -40.37135878176896,
+            -10.155884322394591,
+            18.888313848315516
           ],
           [
-            -21.856231259672267,
-            -14.15688956909351,
-            -13.835238597604246
+            -29.32149412338925,
+            -17.26088383371639,
+            -11.379883199010736
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 2392,
+        "background_median_luma": 47.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 11
+        "tiny_noise_pixels_removed": 8,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/mechanical_clock_partial.png",
       "mask_file": "all_sources/s004/mechanical_clock_partial.alpha.png",
-      "sha256": "72723e9fdfd76b825c3d6af318214f71bace33b3801439e10904938370ab01b2",
-      "mask_sha256": "cd802a644d2de0a14e7127c6d6599004017d9495b4ebef8c2e7980c41df4fc5e",
+      "sha256": "24bc6c29a6a86c5c94a4fba2667383b9772a509f693f8527dce67ecb2c0bac4e",
+      "mask_sha256": "894d53e8004dd563bab4c91b488d685bf810494a9356fc91cb05e0a59b11a27b",
+      "quality_metrics": {
+        "edge_pixels_above_32": 290,
+        "visible_pixels": 9744,
+        "opaque_pixels": 4986
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -4259,49 +4422,54 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。"
+        "元画像の右端でデザインの一部が欠損。完全なキラー×被害者フレームは作れない。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 70.5,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            1.7820588560835098,
-            18.47873758836723,
-            88.70823603237822
+            9.716367806333906,
+            82.65917203430979,
+            152.2744769137374
           ],
           [
-            6.036507292716449,
-            12.818223815771795,
-            -6.33252902067486
+            1.0504062752683851,
+            -11.624054966111537,
+            -24.307637618051388
           ],
           [
-            0.7831385096438686,
-            18.18115422308694,
-            -6.774015139953015
+            -7.990276554044869,
+            -37.691095314300355,
+            -76.91447537136848
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1614,
+        "background_median_luma": 58.666666666666664,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 4
+        "tiny_noise_pixels_removed": 12,
+        "rgb_modified": false
       },
       "file": "all_sources/s004/deep_sea_horror_partial.png",
       "mask_file": "all_sources/s004/deep_sea_horror_partial.alpha.png",
-      "sha256": "b3c0524d1aca7740d6ccf3e63a7797f6eb8048bc35e1aad567401e6c1b67a7ab",
-      "mask_sha256": "f154bf462db6cd6c66ffe39b5bbab36fab24074006dd00afc7adaa78f29bda78",
+      "sha256": "65a10b01672309ae87567b6b293a0783fba7fff9c2985e1b1036f9ab12490394",
+      "mask_sha256": "a6c25567cf5cfb0f39d138d39c131a11cbbde42ebe0e8facbd298cda964d21df",
+      "quality_metrics": {
+        "edge_pixels_above_32": 184,
+        "visible_pixels": 6592,
+        "opaque_pixels": 2884
+      },
       "status": "needs_mask_or_source_review"
     }
   ],
@@ -4373,360 +4541,360 @@
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4794,
-      "transparent_pixels": 9785,
-      "partial_pixels": 2670,
-      "visible_pixels": 7327
+      "transparent_pixels": 9660,
+      "partial_pixels": 2648,
+      "visible_pixels": 7452
     },
     {
       "id": "noxus_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4460,
-      "transparent_pixels": 10793,
-      "partial_pixels": 2129,
-      "visible_pixels": 5407
+      "transparent_pixels": 10240,
+      "partial_pixels": 2627,
+      "visible_pixels": 5960
     },
     {
       "id": "ionia_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4140,
-      "transparent_pixels": 8950,
-      "partial_pixels": 2790,
-      "visible_pixels": 6450
+      "transparent_pixels": 8719,
+      "partial_pixels": 2951,
+      "visible_pixels": 6681
     },
     {
       "id": "freljord_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4460,
-      "transparent_pixels": 9197,
-      "partial_pixels": 2136,
-      "visible_pixels": 7003
+      "transparent_pixels": 9122,
+      "partial_pixels": 2217,
+      "visible_pixels": 7078
     },
     {
       "id": "piltover_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4140,
-      "transparent_pixels": 9454,
-      "partial_pixels": 2607,
-      "visible_pixels": 5858
+      "transparent_pixels": 9123,
+      "partial_pixels": 2846,
+      "visible_pixels": 6189
     },
     {
       "id": "zaun_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 3224,
-      "transparent_pixels": 7551,
-      "partial_pixels": 2419,
-      "visible_pixels": 5241
+      "transparent_pixels": 7061,
+      "partial_pixels": 2707,
+      "visible_pixels": 5731
     },
     {
       "id": "bilgewater_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 3528,
-      "transparent_pixels": 8442,
-      "partial_pixels": 2395,
-      "visible_pixels": 5334
+      "transparent_pixels": 8002,
+      "partial_pixels": 2664,
+      "visible_pixels": 5774
     },
     {
       "id": "shurima_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 3224,
-      "transparent_pixels": 7243,
-      "partial_pixels": 2620,
-      "visible_pixels": 5713
+      "transparent_pixels": 7100,
+      "partial_pixels": 2787,
+      "visible_pixels": 5856
     },
     {
       "id": "targon_partial",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 1910,
-      "transparent_pixels": 4122,
-      "partial_pixels": 4882,
-      "visible_pixels": 9371
+      "transparent_pixels": 3744,
+      "partial_pixels": 4338,
+      "visible_pixels": 9749
     },
     {
       "id": "void_partial",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 1910,
-      "transparent_pixels": 3769,
-      "partial_pixels": 3521,
-      "visible_pixels": 6056
+      "transparent_pixels": 3325,
+      "partial_pixels": 3621,
+      "visible_pixels": 6500
     },
     {
       "id": "project_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4794,
-      "transparent_pixels": 10258,
-      "partial_pixels": 2489,
-      "visible_pixels": 6854
+      "transparent_pixels": 10050,
+      "partial_pixels": 2550,
+      "visible_pixels": 7062
     },
     {
       "id": "star_guardian_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4460,
-      "transparent_pixels": 9033,
-      "partial_pixels": 1959,
-      "visible_pixels": 7167
+      "transparent_pixels": 8843,
+      "partial_pixels": 1856,
+      "visible_pixels": 7357
     },
     {
       "id": "kda_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4140,
-      "transparent_pixels": 8483,
-      "partial_pixels": 3150,
-      "visible_pixels": 6917
+      "transparent_pixels": 8389,
+      "partial_pixels": 3129,
+      "visible_pixels": 7011
     },
     {
       "id": "heartsteel_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4460,
-      "transparent_pixels": 9346,
-      "partial_pixels": 2413,
-      "visible_pixels": 6854
+      "transparent_pixels": 9096,
+      "partial_pixels": 2643,
+      "visible_pixels": 7104
     },
     {
       "id": "spirit_blossom_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4140,
-      "transparent_pixels": 8576,
-      "partial_pixels": 1956,
-      "visible_pixels": 6736
+      "transparent_pixels": 8455,
+      "partial_pixels": 2081,
+      "visible_pixels": 6857
     },
     {
       "id": "dark_star_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 3224,
-      "transparent_pixels": 7566,
-      "partial_pixels": 1927,
-      "visible_pixels": 5226
+      "transparent_pixels": 7411,
+      "partial_pixels": 1901,
+      "visible_pixels": 5381
     },
     {
       "id": "high_noon_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 3528,
-      "transparent_pixels": 8309,
-      "partial_pixels": 2516,
-      "visible_pixels": 5467
+      "transparent_pixels": 8052,
+      "partial_pixels": 2886,
+      "visible_pixels": 5724
     },
     {
       "id": "blood_moon_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 3224,
-      "transparent_pixels": 8040,
-      "partial_pixels": 2109,
-      "visible_pixels": 4916
+      "transparent_pixels": 7473,
+      "partial_pixels": 2679,
+      "visible_pixels": 5483
     },
     {
       "id": "warring_kingdoms_partial",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 1910,
-      "transparent_pixels": 3585,
-      "partial_pixels": 4507,
-      "visible_pixels": 9908
+      "transparent_pixels": 3258,
+      "partial_pixels": 4308,
+      "visible_pixels": 10235
     },
     {
       "id": "pool_party_partial",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 1910,
-      "transparent_pixels": 3406,
-      "partial_pixels": 2376,
-      "visible_pixels": 6419
+      "transparent_pixels": 3105,
+      "partial_pixels": 2319,
+      "visible_pixels": 6720
     },
     {
       "id": "victorious_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4794,
-      "transparent_pixels": 9742,
-      "partial_pixels": 2839,
-      "visible_pixels": 7370
+      "transparent_pixels": 9616,
+      "partial_pixels": 2962,
+      "visible_pixels": 7496
     },
     {
       "id": "pulsefire_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4460,
-      "transparent_pixels": 9120,
-      "partial_pixels": 2575,
-      "visible_pixels": 7080
+      "transparent_pixels": 9028,
+      "partial_pixels": 2506,
+      "visible_pixels": 7172
     },
     {
       "id": "odyssey_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4140,
-      "transparent_pixels": 8857,
-      "partial_pixels": 2612,
-      "visible_pixels": 6543
+      "transparent_pixels": 8560,
+      "partial_pixels": 2695,
+      "visible_pixels": 6840
     },
     {
       "id": "arcade_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4460,
-      "transparent_pixels": 10037,
-      "partial_pixels": 2794,
-      "visible_pixels": 6163
+      "transparent_pixels": 9683,
+      "partial_pixels": 3101,
+      "visible_pixels": 6517
     },
     {
       "id": "infernal_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4140,
-      "transparent_pixels": 9084,
-      "partial_pixels": 2319,
-      "visible_pixels": 6228
+      "transparent_pixels": 8886,
+      "partial_pixels": 2603,
+      "visible_pixels": 6426
     },
     {
       "id": "empyrean_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 3224,
-      "transparent_pixels": 7208,
-      "partial_pixels": 2096,
-      "visible_pixels": 5584
+      "transparent_pixels": 6838,
+      "partial_pixels": 1627,
+      "visible_pixels": 5954
     },
     {
       "id": "faerie_court_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 3528,
-      "transparent_pixels": 8075,
-      "partial_pixels": 2537,
-      "visible_pixels": 5701
+      "transparent_pixels": 7764,
+      "partial_pixels": 2879,
+      "visible_pixels": 6012
     },
     {
       "id": "winter_festival_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 3224,
-      "transparent_pixels": 6970,
-      "partial_pixels": 1357,
-      "visible_pixels": 5986
+      "transparent_pixels": 6898,
+      "partial_pixels": 1378,
+      "visible_pixels": 6058
     },
     {
       "id": "beast_kingdom_partial",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 1910,
-      "transparent_pixels": 3567,
-      "partial_pixels": 3780,
-      "visible_pixels": 9926
+      "transparent_pixels": 3358,
+      "partial_pixels": 3562,
+      "visible_pixels": 10135
     },
     {
       "id": "cafe_cuties_partial",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 1910,
-      "transparent_pixels": 3253,
-      "partial_pixels": 2747,
-      "visible_pixels": 6572
+      "transparent_pixels": 3041,
+      "partial_pixels": 2489,
+      "visible_pixels": 6784
     },
     {
       "id": "dragon_world_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4794,
-      "transparent_pixels": 10570,
-      "partial_pixels": 2950,
-      "visible_pixels": 6542
+      "transparent_pixels": 10094,
+      "partial_pixels": 3597,
+      "visible_pixels": 7018
     },
     {
       "id": "dragon_will_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4460,
-      "transparent_pixels": 9225,
-      "partial_pixels": 2454,
-      "visible_pixels": 6975
+      "transparent_pixels": 9033,
+      "partial_pixels": 2574,
+      "visible_pixels": 7167
     },
     {
       "id": "moon_goddess_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4140,
-      "transparent_pixels": 8842,
-      "partial_pixels": 2985,
-      "visible_pixels": 6558
+      "transparent_pixels": 8681,
+      "partial_pixels": 3001,
+      "visible_pixels": 6719
     },
     {
       "id": "sun_crown_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4460,
-      "transparent_pixels": 9603,
-      "partial_pixels": 2826,
-      "visible_pixels": 6597
+      "transparent_pixels": 9452,
+      "partial_pixels": 3055,
+      "visible_pixels": 6748
     },
     {
       "id": "black_mist_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 4140,
-      "transparent_pixels": 9060,
-      "partial_pixels": 2473,
-      "visible_pixels": 6252
+      "transparent_pixels": 9028,
+      "partial_pixels": 2568,
+      "visible_pixels": 6284
     },
     {
       "id": "desert_empire_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 3224,
-      "transparent_pixels": 7258,
-      "partial_pixels": 2348,
-      "visible_pixels": 5534
+      "transparent_pixels": 7034,
+      "partial_pixels": 2302,
+      "visible_pixels": 5758
     },
     {
       "id": "spirit_flower_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 3528,
-      "transparent_pixels": 7880,
-      "partial_pixels": 2317,
-      "visible_pixels": 5896
+      "transparent_pixels": 7899,
+      "partial_pixels": 2558,
+      "visible_pixels": 5877
     },
     {
       "id": "space_journey_frame",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 3224,
-      "transparent_pixels": 7585,
-      "partial_pixels": 2266,
-      "visible_pixels": 5371
+      "transparent_pixels": 7298,
+      "partial_pixels": 2656,
+      "visible_pixels": 5658
     },
     {
       "id": "mechanical_clock_partial",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 1910,
-      "transparent_pixels": 4301,
-      "partial_pixels": 4667,
-      "visible_pixels": 9192
+      "transparent_pixels": 3749,
+      "partial_pixels": 5096,
+      "visible_pixels": 9744
     },
     {
       "id": "deep_sea_horror_partial",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 1910,
-      "transparent_pixels": 3482,
-      "partial_pixels": 3643,
-      "visible_pixels": 6343
+      "transparent_pixels": 3233,
+      "partial_pixels": 4091,
+      "visible_pixels": 6592
     }
   ]
 }

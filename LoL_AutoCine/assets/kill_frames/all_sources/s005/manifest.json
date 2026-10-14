@@ -9,7 +9,7 @@
   "assets": [
     {
       "id": "frame_01",
-      "theme": "forest_spirit_reference",
+      "theme": "unlabeled_s005",
       "component": "frame",
       "intensity": "unspecified",
       "role": "unspecified",
@@ -42,54 +42,59 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "実ゲーム背景と金属の明度が近い。要マスク手直し。低解像度310x372。"
+        "実ゲーム背景と金属の明度が近い。要マスク手直し。低解像度310x372。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 128.0,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            113.62182457652523,
-            112.08299054585994,
-            85.87847214629424
+            111.24883798987469,
+            99.97066256922643,
+            69.61470518229501
           ],
           [
-            -30.02869650466897,
-            -27.11736398536408,
-            -16.385691123340063
+            -20.258080129519122,
+            -6.2304322710334965,
+            -0.35612860572311833
           ],
           [
-            -55.846342549870634,
-            -74.96095212286565,
-            -30.96765127609134
+            7.3586471129793285,
+            2.7762826978390787,
+            5.03398333124275
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3193,
+        "background_median_luma": 97.66666666666667,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 3
+        "tiny_noise_pixels_removed": 7,
+        "rgb_modified": false
       },
       "file": "all_sources/s005/frame_01.png",
       "mask_file": "all_sources/s005/frame_01.alpha.png",
-      "sha256": "772128e4f1c9e6ab7617c54a86b2ebbeaaa26922a5dede89f1f59fe7b75f0190",
-      "mask_sha256": "7193d7001314e6823dcb8121ca6982763aca7bdd220faf7fa89b4d98d933aa1f",
+      "sha256": "c9d624825341a3263cdea04a8eb61278048017bf9e62ebde5b7ce5c82e7f2fb8",
+      "mask_sha256": "b353c949b3a4d3e5e6fd3d465948e575ccb970f4eb9895981a62f3ef020c8432",
+      "quality_metrics": {
+        "edge_pixels_above_32": 252,
+        "visible_pixels": 5031,
+        "opaque_pixels": 3206
+      },
       "status": "needs_mask_or_source_review"
     },
     {
       "id": "frame_02",
-      "theme": "forest_spirit_reference",
+      "theme": "unlabeled_s005",
       "component": "frame",
       "intensity": "unspecified",
       "role": "unspecified",
@@ -122,54 +127,59 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "実ゲーム背景と金属の明度が近い。要マスク手直し。低解像度310x372。"
+        "実ゲーム背景と金属の明度が近い。要マスク手直し。低解像度310x372。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 121.5,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            48.98028546077756,
-            33.606856683750316,
-            58.41549592555666
+            114.89854740594599,
+            106.45277415751828,
+            80.33180308911238
           ],
           [
-            46.29289435847853,
-            28.051685494738678,
-            5.57665885868642
+            -21.976757249679437,
+            -18.18356610679366,
+            -16.137262023083963
           ],
           [
-            19.910311517132442,
-            45.60991380500333,
-            14.17013624779976
+            -8.523056534680306,
+            -3.492608398848045,
+            1.4888269026130612
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3193,
+        "background_median_luma": 99.33333333333333,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 5
+        "tiny_noise_pixels_removed": 7,
+        "rgb_modified": false
       },
       "file": "all_sources/s005/frame_02.png",
       "mask_file": "all_sources/s005/frame_02.alpha.png",
-      "sha256": "a16e7b94062a1190234b4d712f4ba6f04a34e584ff071df00745ee9c3a7ab749",
-      "mask_sha256": "db3c14c00a9fc8b21daa5e8aa8ab30e4e37724fe05a84947ad4d79dc68a9f961",
+      "sha256": "8a7840dd523d14a92175ac731a9fa129af9ebe71ef08d066c16abb862789f676",
+      "mask_sha256": "0a5e875b5b345685738e829cf3960d662c0a1cb05b81b4511bf3ab59b37cbf78",
+      "quality_metrics": {
+        "edge_pixels_above_32": 141,
+        "visible_pixels": 5275,
+        "opaque_pixels": 3072
+      },
       "status": "needs_mask_or_source_review"
     },
     {
       "id": "frame_03",
-      "theme": "forest_spirit_reference",
+      "theme": "unlabeled_s005",
       "component": "frame",
       "intensity": "unspecified",
       "role": "unspecified",
@@ -202,54 +212,60 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "実ゲーム背景と金属の明度が近い。要マスク手直し。低解像度310x372。"
+        "実ゲーム背景と金属の明度が近い。要マスク手直し。低解像度310x372。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 121.5,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            68.711818718706,
-            58.67742657252764,
-            60.86727981239235
+            94.10290538582116,
+            83.031382684871,
+            57.91772649222625
           ],
           [
-            11.101606331545712,
-            -5.059654738153686,
-            -17.922971060651623
+            3.220967137246639,
+            11.844366955784494,
+            15.30337158353445
           ],
           [
-            -31.48348940055548,
-            -22.278391621034395,
-            -25.808698141111684
+            -57.34888073016885,
+            -53.71729521269157,
+            -38.99014804141762
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 3193,
+        "background_median_luma": 87.33333333333333,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 12
+        "tiny_noise_pixels_removed": 9,
+        "rgb_modified": false
       },
       "file": "all_sources/s005/frame_03.png",
       "mask_file": "all_sources/s005/frame_03.alpha.png",
-      "sha256": "557616f6f00a1e84f54c22c896f9ad9659c2b03005877599e9c882ecc9d7df87",
-      "mask_sha256": "1dc23a0e55a86e397f98ab7d7bf8f6435373fba3bd82fc0491699f60303534ae",
+      "sha256": "7d0e6bec68d81bfeeadfc380d98cfe279cdadd50a17ecfc4fa7485c4f066446b",
+      "mask_sha256": "e08c2078d1b288950c0b84069cebaacf5d3bdfa15d679a61854f5fb6100e4dc6",
+      "quality_metrics": {
+        "edge_pixels_above_32": 256,
+        "visible_pixels": 7655,
+        "opaque_pixels": 3616
+      },
       "status": "needs_mask_or_source_review"
     }
   ],
   "quality_notes": [
-    "背景と装飾の境界・肖像穴・細い線を人が比較画像で確認する必要がある。"
+    "背景と装飾の境界・肖像穴・細い線を人が比較画像で確認する必要がある。",
+    "画像にテーマ名の表示がなく、正式名称は未確認。見た目からテーマ名を断定しない。"
   ],
   "excluded_content": [
     "見出し・説明文字・罫線・背景絵は素材対象外。"
@@ -280,27 +296,27 @@
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 7440,
-      "transparent_pixels": 9008,
-      "partial_pixels": 3521,
-      "visible_pixels": 8912
+      "transparent_pixels": 12889,
+      "partial_pixels": 1981,
+      "visible_pixels": 5031
     },
     {
       "id": "frame_02",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 7440,
-      "transparent_pixels": 9429,
-      "partial_pixels": 5233,
-      "visible_pixels": 8491
+      "transparent_pixels": 12645,
+      "partial_pixels": 2343,
+      "visible_pixels": 5275
     },
     {
       "id": "frame_03",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 7440,
-      "transparent_pixels": 9120,
-      "partial_pixels": 5461,
-      "visible_pixels": 8800
+      "transparent_pixels": 10265,
+      "partial_pixels": 4181,
+      "visible_pixels": 7655
     }
   ]
 }
