@@ -1,0 +1,1693 @@
+{
+  "schema_version": 2,
+  "status": "candidate_pending_visual_approval",
+  "source_base_commit": "ae73309d9066f5389cb443fd999dbe10239ad524",
+  "generated_or_inpainted": false,
+  "rgb_policy": "exact original crop RGB, alpha-only edits",
+  "assets": [
+    {
+      "theme": "winter_festival",
+      "source_file": "image.png",
+      "source_sha256": "498e18ee6d2dafa3a0ee5c4a5beadef5727af3e001a5d714773ef1ece5dc5217",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/winter_festival/frame_weak.png",
+      "sha256": "f1e1e50a6d70551e37a78fba4e22af64a45e77f1f829f4800856f409371640b2",
+      "mask_file": "themes/winter_festival/frame_weak.alpha.png",
+      "mask_sha256": "03ca16bda2699486c222e184dc6bcce095055bf7187efe409eea2b9ce2007d11",
+      "crop_box": [
+        43,
+        234,
+        511,
+        383
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            55,
+            260,
+            173,
+            376
+          ]
+        },
+        {
+          "ellipse": [
+            387,
+            259,
+            501,
+            373
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            41,
+            245,
+            187,
+            390
+          ]
+        },
+        {
+          "ellipse": [
+            375,
+            244,
+            513,
+            386
+          ]
+        },
+        {
+          "polygon": [
+            [
+              177,
+              280
+            ],
+            [
+              203,
+              256
+            ],
+            [
+              267,
+              248
+            ],
+            [
+              284,
+              234
+            ],
+            [
+              300,
+              248
+            ],
+            [
+              357,
+              264
+            ],
+            [
+              383,
+              296
+            ],
+            [
+              370,
+              344
+            ],
+            [
+              340,
+              383
+            ],
+            [
+              231,
+              383
+            ],
+            [
+              180,
+              345
+            ]
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            15.656781616200995,
+            33.5526307968847,
+            62.76002783104989
+          ],
+          [
+            5.777083998863038,
+            2.3641840369762974,
+            1.1416849371304458
+          ],
+          [
+            4.769462550940097,
+            16.05761668526624,
+            22.41505168177031
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          23,
+          95
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 16
+      },
+      "alpha_counts": {
+        "zero": 49536,
+        "partial": 7548,
+        "opaque": 12648
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        277.0,
+        308.5
+      ],
+      "sprite_anchor": [
+        234.0,
+        74.5
+      ],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            43,
+            234,
+            511,
+            247
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "winter_festival",
+      "source_file": "image.png",
+      "source_sha256": "498e18ee6d2dafa3a0ee5c4a5beadef5727af3e001a5d714773ef1ece5dc5217",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/winter_festival/frame_strong.png",
+      "sha256": "5fe6dda1bc2d67e4946c8134b7a544cf853b2dcbdc3fd6d74f29d6e01191fb5f",
+      "mask_file": "themes/winter_festival/frame_strong.alpha.png",
+      "mask_sha256": "e4faaaf00864c51b74088e9d429bb4eaab4d0ec2baea3ca0f989df25aabf0386",
+      "crop_box": [
+        745,
+        227,
+        1270,
+        388
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            768,
+            262,
+            881,
+            372
+          ]
+        },
+        {
+          "ellipse": [
+            1148,
+            262,
+            1261,
+            373
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            748,
+            247,
+            897,
+            390
+          ]
+        },
+        {
+          "ellipse": [
+            1134,
+            245,
+            1278,
+            390
+          ]
+        },
+        {
+          "polygon": [
+            [
+              872,
+              291
+            ],
+            [
+              939,
+              267
+            ],
+            [
+              983,
+              247
+            ],
+            [
+              1018,
+              227
+            ],
+            [
+              1051,
+              247
+            ],
+            [
+              1133,
+              284
+            ],
+            [
+              1147,
+              333
+            ],
+            [
+              1115,
+              369
+            ],
+            [
+              1070,
+              381
+            ],
+            [
+              1018,
+              386
+            ],
+            [
+              965,
+              380
+            ],
+            [
+              915,
+              371
+            ],
+            [
+              875,
+              339
+            ]
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            66.84755236945645,
+            28.186405441035642,
+            38.43032745272095
+          ],
+          [
+            -2.324447502473859,
+            4.608870830371677,
+            7.368788245282113
+          ],
+          [
+            -16.66768117188401,
+            7.066521027935874,
+            11.742378450083619
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          23,
+          95
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 12
+      },
+      "alpha_counts": {
+        "zero": 45140,
+        "partial": 12895,
+        "opaque": 26490
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        1007.5,
+        307.5
+      ],
+      "sprite_anchor": [
+        262.5,
+        80.5
+      ],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            745,
+            227,
+            1008,
+            242
+          ]
+        },
+        {
+          "rectangle": [
+            1029,
+            227,
+            1270,
+            242
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "winter_festival",
+      "source_file": "image.png",
+      "source_sha256": "498e18ee6d2dafa3a0ee5c4a5beadef5727af3e001a5d714773ef1ece5dc5217",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/winter_festival/center_melee.png",
+      "sha256": "48f3a3c60ee298f49c4865509b8b9c0885b4043cdbb2cc029694ba40a5fa2bd0",
+      "mask_file": "themes/winter_festival/center_melee.alpha.png",
+      "mask_sha256": "2befbaf78f3fcb057eb13b36cd79b1846d242951483b9d39cd55cdb2d7215ca1",
+      "crop_box": [
+        34,
+        858,
+        179,
+        978
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            242.7266771114737,
+            242.0668708269405,
+            240.75701478379648
+          ],
+          [
+            0.4649786259106319,
+            -0.9048608325235378,
+            -3.450302462898557
+          ],
+          [
+            1.2853748823274351,
+            0.31573615898955343,
+            -2.098973601189738
+          ]
+        ],
+        "distance_thresholds": [
+          10.0,
+          58.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          22,
+          95
+        ],
+        "paper_fringe_suppression": true,
+        "tiny_noise_pixels_removed": 1
+      },
+      "alpha_counts": {
+        "zero": 9195,
+        "partial": 3368,
+        "opaque": 4837
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        106.5,
+        918.0
+      ],
+      "sprite_anchor": [
+        72.5,
+        60.0
+      ],
+      "candidate_exclusions": []
+    },
+    {
+      "theme": "winter_festival",
+      "source_file": "image.png",
+      "source_sha256": "498e18ee6d2dafa3a0ee5c4a5beadef5727af3e001a5d714773ef1ece5dc5217",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/winter_festival/center_ranged.png",
+      "sha256": "82c7aa792eabe6a3851fc48253182beff164e1287c0b08da293c2db4f6b6eca4",
+      "mask_file": "themes/winter_festival/center_ranged.alpha.png",
+      "mask_sha256": "5feb40602c5acfce1f3d9605a94478e2780f81130f99af5a16cf1b4130db397b",
+      "crop_box": [
+        521,
+        858,
+        648,
+        977
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            245.11576671533666,
+            243.1668097838593,
+            239.37274041202272
+          ],
+          [
+            0.0771653064026735,
+            -1.2460370947344555,
+            -3.295816507982875
+          ],
+          [
+            -1.1796913053960978,
+            -0.923634383142449,
+            -1.2359754236939482
+          ]
+        ],
+        "distance_thresholds": [
+          10.0,
+          58.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          22,
+          95
+        ],
+        "paper_fringe_suppression": true,
+        "tiny_noise_pixels_removed": 5
+      },
+      "alpha_counts": {
+        "zero": 9098,
+        "partial": 3308,
+        "opaque": 2707
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        584.5,
+        917.5
+      ],
+      "sprite_anchor": [
+        63.5,
+        59.5
+      ],
+      "candidate_exclusions": []
+    },
+    {
+      "theme": "winter_festival",
+      "source_file": "image.png",
+      "source_sha256": "498e18ee6d2dafa3a0ee5c4a5beadef5727af3e001a5d714773ef1ece5dc5217",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/winter_festival/center_hybrid.png",
+      "sha256": "4982022c6abe6cd74372318329b561cadd3e685a96fadc78955bf408dce6cf8a",
+      "mask_file": "themes/winter_festival/center_hybrid.alpha.png",
+      "mask_sha256": "47ed6ec5b870b2312d90793916e19675dc13e9169683aecde2a52da80ad6f515",
+      "crop_box": [
+        966,
+        852,
+        1100,
+        977
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [
+        {
+          "rectangle": [
+            966,
+            852,
+            1100,
+            862
+          ]
+        }
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            244.955350652052,
+            242.67903725589386,
+            238.14070800746256
+          ],
+          [
+            -0.3116048529051251,
+            -1.1865962647014254,
+            -2.3326169812461695
+          ],
+          [
+            -0.2511279744457482,
+            0.09934678516356787,
+            0.11982219943387107
+          ]
+        ],
+        "distance_thresholds": [
+          10.0,
+          58.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          22,
+          95
+        ],
+        "paper_fringe_suppression": true,
+        "tiny_noise_pixels_removed": 2
+      },
+      "alpha_counts": {
+        "zero": 9596,
+        "partial": 2339,
+        "opaque": 4815
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        1033.0,
+        914.5
+      ],
+      "sprite_anchor": [
+        67.0,
+        62.5
+      ],
+      "candidate_exclusions": []
+    },
+    {
+      "theme": "project",
+      "source_file": "image-gen-1(8).png",
+      "source_sha256": "aa50fa648e0ffc3859d290881d8867f010918f0d4e8311c25228eeaa6d8d03d0",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/project/frame_weak.png",
+      "sha256": "d4b42f8073c94a9b34a6d835938045eea303727f275c8c83c2e24cdb8bc0dc26",
+      "mask_file": "themes/project/frame_weak.alpha.png",
+      "mask_sha256": "8b4937cb2fdcccd3bdcd6913d22f8642978fd07cc2c67d9f0d21e2b54e8922d4",
+      "crop_box": [
+        59,
+        320,
+        463,
+        425
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            69,
+            330,
+            164,
+            415
+          ]
+        },
+        {
+          "rectangle": [
+            359,
+            330,
+            452,
+            415
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            1.0366019602570598,
+            6.827979509478567,
+            13.321104941985887
+          ],
+          [
+            4.15582413805342,
+            -1.3949524802155733,
+            -2.852495472437503
+          ],
+          [
+            -0.0752080734441698,
+            -0.8127740893012916,
+            -1.3001530773353727
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          30,
+          105
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 10
+      },
+      "alpha_counts": {
+        "zero": 30869,
+        "partial": 5575,
+        "opaque": 5976
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        261.0,
+        372.5
+      ],
+      "sprite_anchor": [
+        202.0,
+        52.5
+      ],
+      "candidate_exclusions": []
+    },
+    {
+      "theme": "project",
+      "source_file": "image-gen-1(8).png",
+      "source_sha256": "aa50fa648e0ffc3859d290881d8867f010918f0d4e8311c25228eeaa6d8d03d0",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/project/frame_strong.png",
+      "sha256": "8ce36721b77d77fb24d72358334051f85690322323e3cd1310e2aac5eedd66f6",
+      "mask_file": "themes/project/frame_strong.alpha.png",
+      "mask_sha256": "1e7a6b6169dab5c1e34fd527cd6e65e9c9a5a479f88d12ac68052abf7bd184e8",
+      "crop_box": [
+        754,
+        319,
+        1241,
+        425
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            780,
+            330,
+            871,
+            415
+          ]
+        },
+        {
+          "rectangle": [
+            1133,
+            330,
+            1219,
+            415
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            8.253757367569118,
+            4.7484645192556325,
+            10.580913314586189
+          ],
+          [
+            -1.5233702552268327,
+            2.244902087754816,
+            1.3088872149298179
+          ],
+          [
+            -0.7658927495744318,
+            -0.9310904742704396,
+            -2.4581215933440714
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          30,
+          105
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 41
+      },
+      "alpha_counts": {
+        "zero": 36165,
+        "partial": 5912,
+        "opaque": 9545
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        997.5,
+        372.0
+      ],
+      "sprite_anchor": [
+        243.5,
+        53.0
+      ],
+      "candidate_exclusions": []
+    },
+    {
+      "theme": "project",
+      "source_file": "image-gen-1(8).png",
+      "source_sha256": "aa50fa648e0ffc3859d290881d8867f010918f0d4e8311c25228eeaa6d8d03d0",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/project/center_melee.png",
+      "sha256": "5cd7cbe9bc4825f9fcef9e418075cc717f829136dd3c200bc67690a4348d3538",
+      "mask_file": "themes/project/center_melee.alpha.png",
+      "mask_sha256": "3f2faafc8bcd8f6a471c72a76c11c1608491f91d242ddb5e929f4d807770f8af",
+      "crop_box": [
+        128,
+        782,
+        299,
+        922
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            9.710745719248983,
+            17.154100208987803,
+            32.639700311328184
+          ],
+          [
+            1.1437291644468428,
+            0.8942058825786896,
+            -0.2939543638579183
+          ],
+          [
+            -7.295533009398868,
+            -5.2100540529341295,
+            -7.8085734856400455
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          30,
+          105
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 10
+      },
+      "alpha_counts": {
+        "zero": 11026,
+        "partial": 5166,
+        "opaque": 7748
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        213.5,
+        852.0
+      ],
+      "sprite_anchor": [
+        85.5,
+        70.0
+      ],
+      "candidate_exclusions": []
+    },
+    {
+      "theme": "project",
+      "source_file": "image-gen-1(8).png",
+      "source_sha256": "aa50fa648e0ffc3859d290881d8867f010918f0d4e8311c25228eeaa6d8d03d0",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/project/center_ranged.png",
+      "sha256": "3412ce4ec3fbca8ace4aecb89a749f5db311e764ad216a127ce4f9df1bf1212d",
+      "mask_file": "themes/project/center_ranged.alpha.png",
+      "mask_sha256": "2e286fa8c97b9aca863fabaf387b65e89ca84ab855c800ed72377693b02db3d1",
+      "crop_box": [
+        593,
+        776,
+        743,
+        919
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            5.470833687833751,
+            19.016094891605878,
+            31.08827263868854
+          ],
+          [
+            -0.9749961486538337,
+            0.16166562139128482,
+            -0.3463068989002547
+          ],
+          [
+            -1.807372007958516,
+            -1.9982224663096533,
+            -1.0713047970192418
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          30,
+          105
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 25
+      },
+      "alpha_counts": {
+        "zero": 11022,
+        "partial": 4129,
+        "opaque": 6299
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        668.0,
+        847.5
+      ],
+      "sprite_anchor": [
+        75.0,
+        71.5
+      ],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            593,
+            894,
+            612,
+            919
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "project",
+      "source_file": "image-gen-1(8).png",
+      "source_sha256": "aa50fa648e0ffc3859d290881d8867f010918f0d4e8311c25228eeaa6d8d03d0",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/project/center_hybrid.png",
+      "sha256": "5d7d940a7e5f63b819109644582856abda86d6ef1975f13c6319e9c217aa21ae",
+      "mask_file": "themes/project/center_hybrid.alpha.png",
+      "mask_sha256": "6cd102242c3c77a183af33df10dd08878fd3a8c1c853fe347915fa216878207d",
+      "crop_box": [
+        1016,
+        777,
+        1230,
+        920
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            4.6694773416218,
+            14.397069291079086,
+            23.359203085258546
+          ],
+          [
+            -0.3987949269914397,
+            -2.4459309598922716,
+            -4.347333421495039
+          ],
+          [
+            -2.8037855049850124,
+            0.233388906119262,
+            2.1828582613872203
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          30,
+          105
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 14
+      },
+      "alpha_counts": {
+        "zero": 18878,
+        "partial": 3766,
+        "opaque": 7958
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        1123.0,
+        848.5
+      ],
+      "sprite_anchor": [
+        107.0,
+        71.5
+      ],
+      "candidate_exclusions": [
+        {
+          "polygon": [
+            [
+              1016,
+              777
+            ],
+            [
+              1040,
+              777
+            ],
+            [
+              1034,
+              816
+            ],
+            [
+              1016,
+              829
+            ]
+          ]
+        },
+        {
+          "rectangle": [
+            1016,
+            900,
+            1042,
+            920
+          ]
+        }
+      ]
+    },
+    {
+      "theme": "elderwood",
+      "source_file": "image-gen-1(10).png",
+      "source_sha256": "2d7eb0637b624f32e2573745f1d29e63fd1484a225a00047e4ba40455a4bd86c",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/elderwood/frame_weak.png",
+      "sha256": "c96060d582dbb1b4cd8d405d3f6f8202ab22ced5af5ee389e72520f89db85418",
+      "mask_file": "themes/elderwood/frame_weak.alpha.png",
+      "mask_sha256": "a63f3359027cb1b349a4324f1f9a03d0beaa7ae1dbf7ea1178adb81ff7deca41",
+      "crop_box": [
+        41,
+        265,
+        513,
+        402
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            54,
+            280,
+            167,
+            390
+          ]
+        },
+        {
+          "ellipse": [
+            377,
+            279,
+            491,
+            390
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            40,
+            265,
+            183,
+            405
+          ]
+        },
+        {
+          "ellipse": [
+            364,
+            265,
+            511,
+            405
+          ]
+        },
+        {
+          "polygon": [
+            [
+              179,
+              303
+            ],
+            [
+              212,
+              278
+            ],
+            [
+              255,
+              265
+            ],
+            [
+              307,
+              265
+            ],
+            [
+              352,
+              282
+            ],
+            [
+              370,
+              318
+            ],
+            [
+              351,
+              371
+            ],
+            [
+              302,
+              402
+            ],
+            [
+              225,
+              399
+            ],
+            [
+              181,
+              366
+            ]
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            11.78554945851351,
+            31.881111824163163,
+            28.684904917225513
+          ],
+          [
+            1.7094908964958706,
+            -0.4638526095141353,
+            0.5189680794065428
+          ],
+          [
+            0.26793312652407375,
+            7.7129590471543725,
+            6.799460891887367
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          23,
+          95
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 10
+      },
+      "alpha_counts": {
+        "zero": 42899,
+        "partial": 7968,
+        "opaque": 13797
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        277.0,
+        333.5
+      ],
+      "sprite_anchor": [
+        236.0,
+        68.5
+      ],
+      "candidate_exclusions": []
+    },
+    {
+      "theme": "elderwood",
+      "source_file": "image-gen-1(10).png",
+      "source_sha256": "2d7eb0637b624f32e2573745f1d29e63fd1484a225a00047e4ba40455a4bd86c",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/elderwood/frame_strong.png",
+      "sha256": "c83eebb85f8277cbcf01cadf0b45388c948cd435877270427768971ecd1429bb",
+      "mask_file": "themes/elderwood/frame_strong.alpha.png",
+      "mask_sha256": "cb3ef88d50612393c63113ee91a31b98b842a78658066fdfcb0af113d6990db1",
+      "crop_box": [
+        744,
+        248,
+        1268,
+        407
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            773,
+            282,
+            883,
+            393
+          ]
+        },
+        {
+          "ellipse": [
+            1139,
+            284,
+            1255,
+            396
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            747,
+            267,
+            896,
+            410
+          ]
+        },
+        {
+          "ellipse": [
+            1124,
+            270,
+            1272,
+            414
+          ]
+        },
+        {
+          "polygon": [
+            [
+              876,
+              303
+            ],
+            [
+              900,
+              281
+            ],
+            [
+              916,
+              269
+            ],
+            [
+              930,
+              270
+            ],
+            [
+              947,
+              281
+            ],
+            [
+              960,
+              290
+            ],
+            [
+              970,
+              283
+            ],
+            [
+              980,
+              264
+            ],
+            [
+              986,
+              253
+            ],
+            [
+              983,
+              277
+            ],
+            [
+              990,
+              292
+            ],
+            [
+              1002,
+              301
+            ],
+            [
+              1004,
+              267
+            ],
+            [
+              1017,
+              259
+            ],
+            [
+              1028,
+              248
+            ],
+            [
+              1035,
+              259
+            ],
+            [
+              1040,
+              271
+            ],
+            [
+              1040,
+              300
+            ],
+            [
+              1055,
+              292
+            ],
+            [
+              1053,
+              272
+            ],
+            [
+              1057,
+              257
+            ],
+            [
+              1062,
+              259
+            ],
+            [
+              1066,
+              278
+            ],
+            [
+              1080,
+              288
+            ],
+            [
+              1089,
+              269
+            ],
+            [
+              1096,
+              270
+            ],
+            [
+              1111,
+              283
+            ],
+            [
+              1128,
+              290
+            ],
+            [
+              1136,
+              338
+            ],
+            [
+              1128,
+              381
+            ],
+            [
+              1085,
+              400
+            ],
+            [
+              1020,
+              405
+            ],
+            [
+              946,
+              397
+            ],
+            [
+              893,
+              383
+            ],
+            [
+              875,
+              350
+            ]
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            46.656889957141395,
+            27.93565949698488,
+            17.627290636056305
+          ],
+          [
+            5.539413823583026,
+            1.0498789224567138,
+            5.578164411060964
+          ],
+          [
+            -9.442890071919436,
+            3.566407987875999,
+            3.4864573113156934
+          ]
+        ],
+        "distance_thresholds": [
+          13.0,
+          75.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          23,
+          95
+        ],
+        "paper_fringe_suppression": false,
+        "tiny_noise_pixels_removed": 27
+      },
+      "alpha_counts": {
+        "zero": 50177,
+        "partial": 10931,
+        "opaque": 22208
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        1006.0,
+        327.5
+      ],
+      "sprite_anchor": [
+        262.0,
+        79.5
+      ],
+      "candidate_exclusions": []
+    },
+    {
+      "theme": "elderwood",
+      "source_file": "image-gen-1(10).png",
+      "source_sha256": "2d7eb0637b624f32e2573745f1d29e63fd1484a225a00047e4ba40455a4bd86c",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/elderwood/center_melee.png",
+      "sha256": "5d0dff86f91673893b6998729a82bd3964e7b2917315135bc1050a52b55d1565",
+      "mask_file": "themes/elderwood/center_melee.alpha.png",
+      "mask_sha256": "91e0fe5dede0f27095b6db7f2891011613c6006ed6c381b49999cd59c15755e7",
+      "crop_box": [
+        37,
+        851,
+        182,
+        980
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [
+        {
+          "rectangle": [
+            37,
+            851,
+            182,
+            856
+          ]
+        },
+        {
+          "rectangle": [
+            165,
+            851,
+            182,
+            871
+          ]
+        },
+        {
+          "rectangle": [
+            37,
+            976,
+            182,
+            980
+          ]
+        }
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            245.44885037420838,
+            242.5798228959145,
+            231.69361412993743
+          ],
+          [
+            1.4407295321340452,
+            0.711628107258704,
+            2.340777846084585
+          ],
+          [
+            -1.1032376581576084,
+            -1.5440074079271509,
+            -3.1465331812594552
+          ]
+        ],
+        "distance_thresholds": [
+          10.0,
+          58.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          22,
+          95
+        ],
+        "paper_fringe_suppression": true,
+        "tiny_noise_pixels_removed": 1
+      },
+      "alpha_counts": {
+        "zero": 8558,
+        "partial": 2687,
+        "opaque": 7460
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        109.5,
+        915.5
+      ],
+      "sprite_anchor": [
+        72.5,
+        64.5
+      ],
+      "candidate_exclusions": []
+    },
+    {
+      "theme": "elderwood",
+      "source_file": "image-gen-1(10).png",
+      "source_sha256": "2d7eb0637b624f32e2573745f1d29e63fd1484a225a00047e4ba40455a4bd86c",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/elderwood/center_ranged.png",
+      "sha256": "74eb32441284b32259e1ab9f70dc640391514ad9d548a5921058648c6e5017f3",
+      "mask_file": "themes/elderwood/center_ranged.alpha.png",
+      "mask_sha256": "ffe6bb6385a42a540fb14545a7707d29a72dfe3d12028610844094a72bf1314d",
+      "crop_box": [
+        521,
+        850,
+        651,
+        979
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [
+        {
+          "rectangle": [
+            521,
+            850,
+            651,
+            859
+          ]
+        },
+        {
+          "rectangle": [
+            521,
+            977,
+            651,
+            979
+          ]
+        }
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            247.294102323386,
+            243.72775067807575,
+            235.36129528442055
+          ],
+          [
+            0.11620452909537604,
+            -0.11767112999195872,
+            -0.14275416513340633
+          ],
+          [
+            -1.195263870930002,
+            -1.3177658296759107,
+            -1.7554473804589006
+          ]
+        ],
+        "distance_thresholds": [
+          10.0,
+          58.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          22,
+          95
+        ],
+        "paper_fringe_suppression": true,
+        "tiny_noise_pixels_removed": 6
+      },
+      "alpha_counts": {
+        "zero": 8934,
+        "partial": 2877,
+        "opaque": 4959
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        586.0,
+        914.5
+      ],
+      "sprite_anchor": [
+        65.0,
+        64.5
+      ],
+      "candidate_exclusions": []
+    },
+    {
+      "theme": "elderwood",
+      "source_file": "image-gen-1(10).png",
+      "source_sha256": "2d7eb0637b624f32e2573745f1d29e63fd1484a225a00047e4ba40455a4bd86c",
+      "source_dimensions": [
+        1448,
+        1086
+      ],
+      "file": "themes/elderwood/center_hybrid.png",
+      "sha256": "2729fe176efaa9259f34311e29cbcb6fbfc664259d46ca7375b18928d7c9b5f1",
+      "mask_file": "themes/elderwood/center_hybrid.alpha.png",
+      "mask_sha256": "4d2b9f732449a17c3c2a1fdd7e3bb5ef886b0d13cf5def1351d7b682c6844094",
+      "crop_box": [
+        965,
+        850,
+        1099,
+        979
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [
+        {
+          "rectangle": [
+            965,
+            850,
+            1099,
+            859
+          ]
+        },
+        {
+          "rectangle": [
+            965,
+            977,
+            1099,
+            979
+          ]
+        }
+      ],
+      "alpha_model": {
+        "model": "robust_local_rgb_plane",
+        "coefficients": [
+          [
+            247.41184980994242,
+            242.53776258067424,
+            231.64971010487318
+          ],
+          [
+            -1.3572986809247571,
+            -2.286061879591115,
+            -5.393659823533993
+          ],
+          [
+            -0.33879380924227254,
+            -0.7293692343053089,
+            -1.8310013987934965
+          ]
+        ],
+        "distance_thresholds": [
+          10.0,
+          58.0
+        ],
+        "iterations": 5,
+        "rgb_modified": false,
+        "candidate_thresholds": [
+          22,
+          95
+        ],
+        "paper_fringe_suppression": true,
+        "tiny_noise_pixels_removed": 0
+      },
+      "alpha_counts": {
+        "zero": 7808,
+        "partial": 2213,
+        "opaque": 7265
+      },
+      "status": "candidate_pending_visual_approval",
+      "visual_review_notes": [
+        "Alpha-only candidate, human approval required; immutable flattened RGB may retain matte color."
+      ],
+      "measured_sprite_center_in_board": [
+        1032.0,
+        914.5
+      ],
+      "sprite_anchor": [
+        67.0,
+        64.5
+      ],
+      "candidate_exclusions": []
+    }
+  ],
+  "game_background": "qa/lol_background.png",
+  "portrait_preview": {
+    "killer": "Akali",
+    "victim": "Mordekaiser",
+    "sample_only": true,
+    "official_cache_version": "16.20.1"
+  },
+  "limitations": [
+    "No RGB unmatting, hidden-art reconstruction or visual approval by numeric tests."
+  ]
+}

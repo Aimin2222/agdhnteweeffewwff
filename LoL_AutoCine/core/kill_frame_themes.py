@@ -29,10 +29,43 @@ class Theme:
     motif_centers: tuple[tuple[float, float], ...] = (
         (0.165, 0.884), (0.50, 0.884), (0.832, 0.884)
     )
+    source_size: tuple[int, int] = (0, 0)
+    measured_regions: tuple[tuple[str, tuple[int, int, int, int]], ...] = ()
+
+# Only the three reviewed source boards have measured regions. Other catalog
+# entries remain unresolved; never guess their file mapping.
+MEASURED_THEME_DATA = {'winter_festival': {'motif_centers': ((0.07354972375690608, 0.8453038674033149),
+                                       (0.4036602209944751, 0.8448434622467772),
+                                       (0.7133977900552486, 0.8420810313075506)),
+                     'source_size': (1448, 1086),
+                     'measured_regions': (('frame_weak', (43, 234, 511, 383)),
+                                          ('frame_strong', (745, 227, 1270, 388)),
+                                          ('center_melee', (34, 858, 179, 978)),
+                                          ('center_ranged', (521, 858, 648, 977)),
+                                          ('center_hybrid', (966, 852, 1100, 977)))},
+ 'project': {'motif_centers': ((0.14744475138121546, 0.7845303867403315),
+                               (0.4613259668508287, 0.7803867403314917),
+                               (0.7755524861878453, 0.7813075506445673)),
+             'source_size': (1448, 1086),
+             'measured_regions': (('frame_weak', (59, 320, 463, 425)),
+                                  ('frame_strong', (754, 319, 1241, 425)),
+                                  ('center_melee', (128, 782, 299, 922)),
+                                  ('center_ranged', (593, 776, 743, 919)),
+                                  ('center_hybrid', (1016, 777, 1230, 920)))},
+ 'elderwood': {'motif_centers': ((0.07562154696132596, 0.8430018416206262),
+                                 (0.4046961325966851, 0.8420810313075506),
+                                 (0.712707182320442, 0.8420810313075506)),
+               'source_size': (1448, 1086),
+               'measured_regions': (('frame_weak', (41, 265, 513, 402)),
+                                    ('frame_strong', (744, 248, 1268, 407)),
+                                    ('center_melee', (37, 851, 182, 980)),
+                                    ('center_ranged', (521, 850, 651, 979)),
+                                    ('center_hybrid', (965, 850, 1099, 979)))}}
 
 THEMES = {
     theme.id: theme for theme in [
-        Theme("project", "PROJECT", "project_キルアイコンデザインコンセプト.png", "scan_glitch", "#28E1EF"),
+        Theme("winter_festival", "冬の祝祭", "image.png", "snow_reveal", "#8BDFFF", **MEASURED_THEME_DATA["winter_festival"]),
+        Theme("project", "PROJECT", "image-gen-1(8).png", "scan_glitch", "#28E1EF", **MEASURED_THEME_DATA["project"]),
         Theme("star_guardian", "スターガーディアン", "スターガーディアン_キルアイコン設計案.png", "starlight", "#FFC6F2"),
         Theme("kda", "K/DA", "k_daキルアイコン_デザインコンセプトボード.png", "stage_pulse", "#F777E2"),
         Theme("heartsteel", "ハートスティール", "ハートスティール_キルアイコン設計図.png", "sound_pulse", "#ED425F"),
@@ -42,7 +75,7 @@ THEMES = {
         Theme("blood_moon", "血月", "血月キルアイコンデザイン案.png", "blood_moon", "#E34352"),
         Theme("warring_kingdoms", "覇王", "覇王のキルアイコン設計図.png", "banner_slash", "#E4A24F"),
         Theme("pool_party", "プールパーティー", "プールパーティー_キルアイコン図鑑.png", "water_splash", "#5AD9F6"),
-        Theme("elderwood", "エルダウッド", "エルダウッド_キルアイコンデザイン案.png", "leaf_bloom", "#64D7A5"),
+        Theme("elderwood", "エルダウッド", "image-gen-1(10).png", "leaf_bloom", "#64D7A5", **MEASURED_THEME_DATA["elderwood"]),
         Theme("cosmic", "コズミック", "コズミックキルアイコン設計図.png", "star_orbit", "#8FACFE"),
         Theme("dark_cosmic", "ダークコズミック", "ダークコズミック_キルアイコン図録.png", "gravity_well", "#AF64F5"),
         Theme("dawnbringer", "ドーンブリンガー", "ドーンブリンガー_キルアイコン設計図.png", "light_wings", "#F4CE81"),

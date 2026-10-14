@@ -1,0 +1,906 @@
+{
+  "schema_version": 2,
+  "base_commit": "ae73309d9066f5389cb443fd999dbe10239ad524",
+  "method": "original_rgb_unchanged_alpha_only",
+  "themes": {
+    "winter_festival": {
+      "label": "冬の祝祭",
+      "source_file": "image.png",
+      "assets": {
+        "frame_weak": {
+          "crop_box": [
+            43,
+            234,
+            511,
+            383
+          ],
+          "background_kind": "dark",
+          "portrait_holes": [
+            {
+              "ellipse": [
+                55,
+                260,
+                173,
+                376
+              ]
+            },
+            {
+              "ellipse": [
+                387,
+                259,
+                501,
+                373
+              ]
+            }
+          ],
+          "roi_regions": [
+            {
+              "ellipse": [
+                41,
+                245,
+                187,
+                390
+              ]
+            },
+            {
+              "ellipse": [
+                375,
+                244,
+                513,
+                386
+              ]
+            },
+            {
+              "polygon": [
+                [
+                  177,
+                  280
+                ],
+                [
+                  203,
+                  256
+                ],
+                [
+                  267,
+                  248
+                ],
+                [
+                  284,
+                  234
+                ],
+                [
+                  300,
+                  248
+                ],
+                [
+                  357,
+                  264
+                ],
+                [
+                  383,
+                  296
+                ],
+                [
+                  370,
+                  344
+                ],
+                [
+                  340,
+                  383
+                ],
+                [
+                  231,
+                  383
+                ],
+                [
+                  180,
+                  345
+                ]
+              ]
+            }
+          ],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [],
+          "candidate_thresholds": [
+            23,
+            95
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": [
+            {
+              "rectangle": [
+                43,
+                234,
+                511,
+                247
+              ]
+            }
+          ]
+        },
+        "frame_strong": {
+          "crop_box": [
+            745,
+            227,
+            1270,
+            388
+          ],
+          "background_kind": "dark",
+          "portrait_holes": [
+            {
+              "ellipse": [
+                768,
+                262,
+                881,
+                372
+              ]
+            },
+            {
+              "ellipse": [
+                1148,
+                262,
+                1261,
+                373
+              ]
+            }
+          ],
+          "roi_regions": [
+            {
+              "ellipse": [
+                748,
+                247,
+                897,
+                390
+              ]
+            },
+            {
+              "ellipse": [
+                1134,
+                245,
+                1278,
+                390
+              ]
+            },
+            {
+              "polygon": [
+                [
+                  872,
+                  291
+                ],
+                [
+                  939,
+                  267
+                ],
+                [
+                  983,
+                  247
+                ],
+                [
+                  1018,
+                  227
+                ],
+                [
+                  1051,
+                  247
+                ],
+                [
+                  1133,
+                  284
+                ],
+                [
+                  1147,
+                  333
+                ],
+                [
+                  1115,
+                  369
+                ],
+                [
+                  1070,
+                  381
+                ],
+                [
+                  1018,
+                  386
+                ],
+                [
+                  965,
+                  380
+                ],
+                [
+                  915,
+                  371
+                ],
+                [
+                  875,
+                  339
+                ]
+              ]
+            }
+          ],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [],
+          "candidate_thresholds": [
+            23,
+            95
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": [
+            {
+              "rectangle": [
+                745,
+                227,
+                1008,
+                242
+              ]
+            },
+            {
+              "rectangle": [
+                1029,
+                227,
+                1270,
+                242
+              ]
+            }
+          ]
+        },
+        "center_melee": {
+          "crop_box": [
+            34,
+            858,
+            179,
+            978
+          ],
+          "background_kind": "light",
+          "portrait_holes": [],
+          "roi_regions": [],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [],
+          "candidate_thresholds": [
+            22,
+            95
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": []
+        },
+        "center_ranged": {
+          "crop_box": [
+            521,
+            858,
+            648,
+            977
+          ],
+          "background_kind": "light",
+          "portrait_holes": [],
+          "roi_regions": [],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [],
+          "candidate_thresholds": [
+            22,
+            95
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": []
+        },
+        "center_hybrid": {
+          "crop_box": [
+            966,
+            852,
+            1100,
+            977
+          ],
+          "background_kind": "light",
+          "portrait_holes": [],
+          "roi_regions": [],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [
+            {
+              "rectangle": [
+                966,
+                852,
+                1100,
+                862
+              ]
+            }
+          ],
+          "candidate_thresholds": [
+            22,
+            95
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": []
+        }
+      }
+    },
+    "project": {
+      "label": "PROJECT",
+      "source_file": "image-gen-1(8).png",
+      "assets": {
+        "frame_weak": {
+          "crop_box": [
+            59,
+            320,
+            463,
+            425
+          ],
+          "background_kind": "dark",
+          "portrait_holes": [
+            {
+              "rectangle": [
+                69,
+                330,
+                164,
+                415
+              ]
+            },
+            {
+              "rectangle": [
+                359,
+                330,
+                452,
+                415
+              ]
+            }
+          ],
+          "roi_regions": [],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [],
+          "candidate_thresholds": [
+            30,
+            105
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": []
+        },
+        "frame_strong": {
+          "crop_box": [
+            754,
+            319,
+            1241,
+            425
+          ],
+          "background_kind": "dark",
+          "portrait_holes": [
+            {
+              "rectangle": [
+                780,
+                330,
+                871,
+                415
+              ]
+            },
+            {
+              "rectangle": [
+                1133,
+                330,
+                1219,
+                415
+              ]
+            }
+          ],
+          "roi_regions": [],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [],
+          "candidate_thresholds": [
+            30,
+            105
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": []
+        },
+        "center_melee": {
+          "crop_box": [
+            128,
+            782,
+            299,
+            922
+          ],
+          "background_kind": "dark",
+          "portrait_holes": [],
+          "roi_regions": [],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [],
+          "candidate_thresholds": [
+            30,
+            105
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": []
+        },
+        "center_ranged": {
+          "crop_box": [
+            593,
+            776,
+            743,
+            919
+          ],
+          "background_kind": "dark",
+          "portrait_holes": [],
+          "roi_regions": [],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [],
+          "candidate_thresholds": [
+            30,
+            105
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": [
+            {
+              "rectangle": [
+                593,
+                894,
+                612,
+                919
+              ]
+            }
+          ]
+        },
+        "center_hybrid": {
+          "crop_box": [
+            1016,
+            777,
+            1230,
+            920
+          ],
+          "background_kind": "dark",
+          "portrait_holes": [],
+          "roi_regions": [],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [],
+          "candidate_thresholds": [
+            30,
+            105
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": [
+            {
+              "polygon": [
+                [
+                  1016,
+                  777
+                ],
+                [
+                  1040,
+                  777
+                ],
+                [
+                  1034,
+                  816
+                ],
+                [
+                  1016,
+                  829
+                ]
+              ]
+            },
+            {
+              "rectangle": [
+                1016,
+                900,
+                1042,
+                920
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "elderwood": {
+      "label": "エルダウッド",
+      "source_file": "image-gen-1(10).png",
+      "assets": {
+        "frame_weak": {
+          "crop_box": [
+            41,
+            265,
+            513,
+            402
+          ],
+          "background_kind": "dark",
+          "portrait_holes": [
+            {
+              "ellipse": [
+                54,
+                280,
+                167,
+                390
+              ]
+            },
+            {
+              "ellipse": [
+                377,
+                279,
+                491,
+                390
+              ]
+            }
+          ],
+          "roi_regions": [
+            {
+              "ellipse": [
+                40,
+                265,
+                183,
+                405
+              ]
+            },
+            {
+              "ellipse": [
+                364,
+                265,
+                511,
+                405
+              ]
+            },
+            {
+              "polygon": [
+                [
+                  179,
+                  303
+                ],
+                [
+                  212,
+                  278
+                ],
+                [
+                  255,
+                  265
+                ],
+                [
+                  307,
+                  265
+                ],
+                [
+                  352,
+                  282
+                ],
+                [
+                  370,
+                  318
+                ],
+                [
+                  351,
+                  371
+                ],
+                [
+                  302,
+                  402
+                ],
+                [
+                  225,
+                  399
+                ],
+                [
+                  181,
+                  366
+                ]
+              ]
+            }
+          ],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [],
+          "candidate_thresholds": [
+            23,
+            95
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": []
+        },
+        "frame_strong": {
+          "crop_box": [
+            744,
+            248,
+            1268,
+            407
+          ],
+          "background_kind": "dark",
+          "portrait_holes": [
+            {
+              "ellipse": [
+                773,
+                282,
+                883,
+                393
+              ]
+            },
+            {
+              "ellipse": [
+                1139,
+                284,
+                1255,
+                396
+              ]
+            }
+          ],
+          "roi_regions": [
+            {
+              "ellipse": [
+                747,
+                267,
+                896,
+                410
+              ]
+            },
+            {
+              "ellipse": [
+                1124,
+                270,
+                1272,
+                414
+              ]
+            },
+            {
+              "polygon": [
+                [
+                  876,
+                  303
+                ],
+                [
+                  900,
+                  281
+                ],
+                [
+                  916,
+                  269
+                ],
+                [
+                  930,
+                  270
+                ],
+                [
+                  947,
+                  281
+                ],
+                [
+                  960,
+                  290
+                ],
+                [
+                  970,
+                  283
+                ],
+                [
+                  980,
+                  264
+                ],
+                [
+                  986,
+                  253
+                ],
+                [
+                  983,
+                  277
+                ],
+                [
+                  990,
+                  292
+                ],
+                [
+                  1002,
+                  301
+                ],
+                [
+                  1004,
+                  267
+                ],
+                [
+                  1017,
+                  259
+                ],
+                [
+                  1028,
+                  248
+                ],
+                [
+                  1035,
+                  259
+                ],
+                [
+                  1040,
+                  271
+                ],
+                [
+                  1040,
+                  300
+                ],
+                [
+                  1055,
+                  292
+                ],
+                [
+                  1053,
+                  272
+                ],
+                [
+                  1057,
+                  257
+                ],
+                [
+                  1062,
+                  259
+                ],
+                [
+                  1066,
+                  278
+                ],
+                [
+                  1080,
+                  288
+                ],
+                [
+                  1089,
+                  269
+                ],
+                [
+                  1096,
+                  270
+                ],
+                [
+                  1111,
+                  283
+                ],
+                [
+                  1128,
+                  290
+                ],
+                [
+                  1136,
+                  338
+                ],
+                [
+                  1128,
+                  381
+                ],
+                [
+                  1085,
+                  400
+                ],
+                [
+                  1020,
+                  405
+                ],
+                [
+                  946,
+                  397
+                ],
+                [
+                  893,
+                  383
+                ],
+                [
+                  875,
+                  350
+                ]
+              ]
+            }
+          ],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [],
+          "candidate_thresholds": [
+            23,
+            95
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": []
+        },
+        "center_melee": {
+          "crop_box": [
+            37,
+            851,
+            182,
+            980
+          ],
+          "background_kind": "light",
+          "portrait_holes": [],
+          "roi_regions": [],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [
+            {
+              "rectangle": [
+                37,
+                851,
+                182,
+                856
+              ]
+            },
+            {
+              "rectangle": [
+                165,
+                851,
+                182,
+                871
+              ]
+            },
+            {
+              "rectangle": [
+                37,
+                976,
+                182,
+                980
+              ]
+            }
+          ],
+          "candidate_thresholds": [
+            22,
+            95
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": []
+        },
+        "center_ranged": {
+          "crop_box": [
+            521,
+            850,
+            651,
+            979
+          ],
+          "background_kind": "light",
+          "portrait_holes": [],
+          "roi_regions": [],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [
+            {
+              "rectangle": [
+                521,
+                850,
+                651,
+                859
+              ]
+            },
+            {
+              "rectangle": [
+                521,
+                977,
+                651,
+                979
+              ]
+            }
+          ],
+          "candidate_thresholds": [
+            22,
+            95
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": []
+        },
+        "center_hybrid": {
+          "crop_box": [
+            965,
+            850,
+            1099,
+            979
+          ],
+          "background_kind": "light",
+          "portrait_holes": [],
+          "roi_regions": [],
+          "status": "prototype_pending_visual_review",
+          "exclude_regions": [
+            {
+              "rectangle": [
+                965,
+                850,
+                1099,
+                859
+              ]
+            },
+            {
+              "rectangle": [
+                965,
+                977,
+                1099,
+                979
+              ]
+            }
+          ],
+          "candidate_thresholds": [
+            22,
+            95
+          ],
+          "min_component_pixels": 3,
+          "candidate_exclusions": []
+        }
+      }
+    }
+  },
+  "revision": "candidate_20261014_alpha_only",
+  "icon_version": "16.20.1"
+}
