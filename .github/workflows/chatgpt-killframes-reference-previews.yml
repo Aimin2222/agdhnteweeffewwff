@@ -1,0 +1,85 @@
+name: ChatGPT Killframe Reference Previews
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/chatgpt-killframes-reference-previews.yml"
+permissions:
+  contents: write
+jobs:
+  previews:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout ChatGPT workspace
+        uses: actions/checkout@v4
+        with:
+          path: output
+      - name: Checkout original images (read-only)
+        uses: actions/checkout@v4
+        with:
+          ref: codex/killframes-all-89-candidates-20261014
+          path: original
+      - name: Install Pillow
+        run: python -m pip install --quiet "Pillow>=10,<13"
+      - name: Produce previews without touching original PNGs
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          import io
+          import json
+          from pathlib import Path
+          from PIL import Image, ImageOps
+          manifest_file = Path("output/LoL_AutoCine/assets/kill_frames_chatgpt/manifest.json")
+          manifest = json.loads(manifest_file.read_text(encoding="utf-8-sig"))
+          base = Path("original/LoL_AutoCine/assets/kill_concepts")
+          dest = Path("output/LoL_AutoCine/assets/kill_frames_chatgpt/reference_previews")
+          dest.mkdir(parents=True, exist_ok=True)
+          inventory = []
+          for asset in manifest["items"]:
+              n, filename = asset["number"], asset["source"]
+              path = base / filename
+              info = {"number": n, "source": filename, "original_size_bytes": asset["source_bytes"]}
+              if not path.is_file():
+                  info["status"] = "missing_source"
+                  inventory.append(info)
+                  continue
+              actual_sha = hashlib.sha256(path.read_bytes()).hexdigest()
+              if actual_sha != asset["source_sha256"]:
+                  raise RuntimeError(f"SHA-256 mismatch for {n}: {filename}")
+              try:
+                  with Image.open(path) as pic:
+                      info["source_dimensions"] = [pic.width, pic.height]
+                      preview = ImageOps.exif_transpose(pic).convert("RGB")
+                      preview.thumbnail((960, 960), Image.Resampling.LANCZOS)
+                      buf = io.BytesIO()
+                      q = 92
+                      while True:
+                          buf.seek(0)
+                          buf.truncate()
+                          preview.save(buf, format="JPEG", quality=q, subsampling=0, optimize=True)
+                          if buf.tell() <= 400000 or q <= 60: break
+                          q -= 6
+                      preview_file = dest / (n + ".jpg")
+                      preview_file.write_bytes(buf.getvalue())
+                      info.update({"status":"preview_ready", "preview":preview_file.relative_to(Path("output")).as_posix(), "preview_bytes":len(buf.getvalue()), "preview_dimensions":[preview.width,preview.height]})
+              except Exception as e:
+                  info.update({"status":"preview_error","error":str(e)[:250]})
+              inventory.append(info)
+          (dest / "preview_inventory.json").write_text(json.dumps({"note":"JPEG thumbnails are for reference viewing only. Untouched original PNGs must be used for full quality final assets.","assets":inventory}, ensure_ascii=False, indent=2) + "\n",encoding="utf-8")
+          counts = {}
+          for item in inventory: counts[item["status"]] = counts.get(item["status"],0)+1
+          print(json.dumps(counts))
+          PY
+      - name: Save only small preview JPGs to ChatGPT branch
+        working-directory: output
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add LoL_AutoCine/assets/kill_frames_chatgpt/reference_previews
+          if ! git diff --cached --quiet; then
+            git commit -m "assets(chatgpt): add small read-only previews for 89 reference images"
+            git push
+          fi
