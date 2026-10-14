@@ -54,7 +54,12 @@
       "mask_file": "themes/project/frame_weak.alpha.png",
       "reused_unchanged": true,
       "sha256": "d4b42f8073c94a9b34a6d835938045eea303727f275c8c83c2e24cdb8bc0dc26",
-      "mask_sha256": "8b4937cb2fdcccd3bdcd6913d22f8642978fd07cc2c67d9f0d21e2b54e8922d4"
+      "mask_sha256": "8b4937cb2fdcccd3bdcd6913d22f8642978fd07cc2c67d9f0d21e2b54e8922d4",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 11551,
+        "opaque_pixels": 6438
+      }
     },
     {
       "id": "weak_02",
@@ -116,47 +121,51 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 6.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            2.3426758613988277,
-            4.77211579457116,
-            8.755861840445899
+            0.4503786722161825,
+            3.6900787052843946,
+            6.8618692758796085
           ],
           [
-            -0.002003619210453722,
-            -2.460685145721045,
-            -4.847693337769573
+            0.5109904761785242,
+            -2.2638770351126256,
+            -4.205321449542916
           ],
           [
-            -0.43086882091910794,
-            0.7009125206571278,
-            1.1707529368110814
+            -0.14064510449490497,
+            0.9174341037577545,
+            1.371987608198821
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 10068,
+        "background_median_luma": 4.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 10
+        "tiny_noise_pixels_removed": 16,
+        "rgb_modified": false
       },
       "file": "all_sources/s013/weak_02.png",
       "mask_file": "all_sources/s013/weak_02.alpha.png",
-      "sha256": "990081d4b164e6db14919ba696259f9a0a4dba4e73e4446c6137fad69413d4d3",
-      "mask_sha256": "967953d442ec3d4a2613e814e479f146eec3ecf37051518a1c6a71e7c7b73a6e",
+      "sha256": "3b7e8eefa7ee508f6268977161f9d266f4c5d936911443250e395d99c71d2f46",
+      "mask_sha256": "91edfca0556c5972f4e2cbdd006760cd3c01e20348540764b7a84f16e65f6b5d",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 15590,
+        "opaque_pixels": 8953
+      },
       "status": "needs_visual_review"
     },
     {
@@ -219,47 +228,51 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 10.83,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            0.8245311127997623,
-            5.33678821456255,
-            9.766203980349252
+            0.5017908678265129,
+            4.127421574420293,
+            7.172585647172042
           ],
           [
-            0.24563037235528018,
-            -3.8294097158710434,
-            -7.674965617581583
+            0.06519007165405427,
+            -2.0696406053523724,
+            -3.162624687104505
           ],
           [
-            0.5146119258706153,
-            9.08573953176515,
-            14.609513055729295
+            -0.12106015467110862,
+            10.170702584524124,
+            15.87494050543836
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 10068,
+        "background_median_luma": 10.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 24
+        "tiny_noise_pixels_removed": 35,
+        "rgb_modified": false
       },
       "file": "all_sources/s013/weak_03.png",
       "mask_file": "all_sources/s013/weak_03.alpha.png",
-      "sha256": "595a499ae5b3556f1cb51f7080bbece24ec733a14d7bdc941ff7d47d5bedea8f",
-      "mask_sha256": "5fae97936583481d897b32f3d6d4a9857cf14187cb46b1ddfb86c8d142d21ca7",
+      "sha256": "1785c2b37f38912f03bda5fcb265139027872c4027bfd87a71c2bd99f5aa76f1",
+      "mask_sha256": "bddf294c467a902414d1ea584469ea8fc6a0c05e0d3b4b0c36886f82d550f57f",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 14547,
+        "opaque_pixels": 9351
+      },
       "status": "needs_visual_review"
     },
     {
@@ -309,7 +322,12 @@
       "mask_file": "themes/project/frame_strong.alpha.png",
       "reused_unchanged": true,
       "sha256": "8ce36721b77d77fb24d72358334051f85690322323e3cd1310e2aac5eedd66f6",
-      "mask_sha256": "1e7a6b6169dab5c1e34fd527cd6e65e9c9a5a479f88d12ac68052abf7bd184e8"
+      "mask_sha256": "1e7a6b6169dab5c1e34fd527cd6e65e9c9a5a479f88d12ac68052abf7bd184e8",
+      "quality_metrics": {
+        "edge_pixels_above_32": 2,
+        "visible_pixels": 15457,
+        "opaque_pixels": 10059
+      }
     },
     {
       "id": "strong_02",
@@ -371,47 +389,51 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 2.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            10.726576579990786,
-            5.987104591861158,
-            11.809002918535993
+            1.6658325219322163,
+            1.7422887098444073,
+            3.51748497386777
           ],
           [
-            -1.8260632762856361,
-            -0.018024429167165734,
-            -2.014164562166746
+            0.12901748323750878,
+            0.581118343707218,
+            0.5788035342955802
           ],
           [
-            -0.47314298827587775,
-            -0.46580327100243346,
-            0.13160642996489424
+            0.1692218945045252,
+            0.07112490456611453,
+            0.45130619634907304
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 11829,
+        "background_median_luma": 6.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 7
+        "tiny_noise_pixels_removed": 19,
+        "rgb_modified": false
       },
       "file": "all_sources/s013/strong_02.png",
       "mask_file": "all_sources/s013/strong_02.alpha.png",
-      "sha256": "b529f0b7eb108cc6a64b9498a9c78dea4d60d5e91185a964fbf0b43251fbdf4d",
-      "mask_sha256": "772300b9babfe1d0f77e6b029bd4723826566df19ab3dd5fd2f69b8964d05d5b",
+      "sha256": "85b511542ef990384437614a0a33ecc35f2270e4004f30a50d682b345069ec30",
+      "mask_sha256": "29e12089c8e95fd36b1cc3b82f001624cf67d3fac7292e957488c58d5584c4aa",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 25489,
+        "opaque_pixels": 17271
+      },
       "status": "needs_visual_review"
     },
     {
@@ -474,47 +496,51 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [],
+      "local_border_luma": 4.0,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            6.832343406369057,
-            5.668757398095139,
-            11.87033314797599
+            0.9912056374526272,
+            1.9376073574006174,
+            3.815727557618065
           ],
           [
-            0.8622490412005561,
-            -0.677320568219165,
-            -2.1718299788787325
+            0.3830274502543465,
+            -0.1446227399357538,
+            -0.5362371467276841
           ],
           [
-            -2.904751809815358,
-            -0.8666882411056471,
-            -1.6361434933215984
+            2.7123854387338495,
+            2.1185316900023192,
+            4.2063443909063665
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 11829,
+        "background_median_luma": 5.666666666666667,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 19
+        "tiny_noise_pixels_removed": 15,
+        "rgb_modified": false
       },
       "file": "all_sources/s013/strong_03.png",
       "mask_file": "all_sources/s013/strong_03.alpha.png",
-      "sha256": "efad3feb5165952b8623d25846a045ed6b2e8d1d2d7a35062a13ec15b637f5cc",
-      "mask_sha256": "ad3b6b2e5fcba1a7bcf8c5869124346e817d75f66327557978e4a50c20553323",
+      "sha256": "052b2d90ba57facfafec5820bc91611320e16e19e3fa4f38e03d3f1595c54a41",
+      "mask_sha256": "52129389f77a8c691f924657fa0b751d730c718e20d10f654908630203a032bb",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 22281,
+        "opaque_pixels": 14338
+      },
       "status": "needs_visual_review"
     },
     {
@@ -547,7 +573,12 @@
       "mask_file": "themes/project/center_melee.alpha.png",
       "reused_unchanged": true,
       "sha256": "5cd7cbe9bc4825f9fcef9e418075cc717f829136dd3c200bc67690a4348d3538",
-      "mask_sha256": "3f2faafc8bcd8f6a471c72a76c11c1608491f91d242ddb5e929f4d807770f8af"
+      "mask_sha256": "3f2faafc8bcd8f6a471c72a76c11c1608491f91d242ddb5e929f4d807770f8af",
+      "quality_metrics": {
+        "edge_pixels_above_32": 11,
+        "visible_pixels": 12914,
+        "opaque_pixels": 8249
+      }
     },
     {
       "id": "melee_02",
@@ -567,49 +598,53 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
         "小型の参考図。拡大利用は非推奨。"
       ],
+      "local_border_luma": 6.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            2.281465006271075,
-            7.001150760275015,
-            11.692407926299845
+            2.440432846621917,
+            7.528105476330846,
+            12.003742420150076
           ],
           [
-            -0.2983050278863456,
-            -0.17618640494520543,
-            0.2691719596909059
+            -0.8036526582332982,
+            -1.8832673882325728,
+            -1.540971600883458
           ],
           [
-            -0.5310494759753297,
-            1.3870962279479504,
-            2.736680256797238
+            -0.5411481649377816,
+            1.086165406399945,
+            2.385874453329267
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 672,
+        "background_median_luma": 7.666666666666667,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 0
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
       },
       "file": "all_sources/s013/melee_02.png",
       "mask_file": "all_sources/s013/melee_02.alpha.png",
-      "sha256": "e8c316bd57d8bec4f5f77d9e45d5becb39daf8b4974749981732391545095d24",
-      "mask_sha256": "4a2bd0b1f1d678875b76988370487851f6c8738b4147d7a383febe8fc7fe99b9",
+      "sha256": "b385c1e34e4b5784d31f4d2c7d18e6c94c5200df3c293fc16cead5f2464b6a8b",
+      "mask_sha256": "b8c7fde2344b383ed16152f3a0dc75a850020400789ee3a1ec49961074f2b2e8",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 1329,
+        "opaque_pixels": 918
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -630,49 +665,53 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
         "小型の参考図。拡大利用は非推奨。"
       ],
+      "local_border_luma": 7.83,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            4.731149980258128,
-            8.992055328720072,
-            13.11279564099188
+            2.954690298734598,
+            8.720623141977184,
+            12.797562519215436
           ],
           [
-            0.13154500754526344,
-            2.026913278913254,
-            3.253201520332686
+            -0.5272248491135747,
+            0.13200300682850497,
+            0.8599405460755363
           ],
           [
-            -1.506737164466193,
-            0.38342652493809104,
-            2.290542480794202
+            -0.5289589292056043,
+            1.391916964759396,
+            3.5020232324632516
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 672,
+        "background_median_luma": 9.666666666666666,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 3
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
       },
       "file": "all_sources/s013/melee_03.png",
       "mask_file": "all_sources/s013/melee_03.alpha.png",
-      "sha256": "10830fb8e8299d210efab49cf1745b8447007684a10ddfde07e58198d5312c2b",
-      "mask_sha256": "7f0a3ae70520698f657046efe58f6699a4b3c55b18076b290b24ed5fc93f7bdd",
+      "sha256": "a6fc0c39cf499f99e9fe019273fb41cee63ed188d2cf19a5e77ebf4bc22521fc",
+      "mask_sha256": "947055c69356141287d7cad6feeabea85de4b3223a6f63a851ad4aa63e8fc80a",
+      "quality_metrics": {
+        "edge_pixels_above_32": 10,
+        "visible_pixels": 1668,
+        "opaque_pixels": 1092
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -693,49 +732,53 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
         "小型の参考図。拡大利用は非推奨。"
       ],
+      "local_border_luma": 9.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            5.695972579378758,
-            12.343025624368067,
-            20.451649223621335
+            3.517031472633551,
+            10.379054085193076,
+            15.85402803594141
           ],
           [
-            -2.297785668963368,
-            -1.5762230582067087,
-            -2.0171009281044276
+            -1.723173142095625,
+            -1.6501569176395994,
+            -1.2350168308874372
           ],
           [
-            -1.1290768312928834,
-            0.7845253609549817,
-            2.3004421053011836
+            -0.6260166663123861,
+            1.0706720541553865,
+            2.7994981610611345
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 672,
+        "background_median_luma": 10.333333333333334,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 0
+        "tiny_noise_pixels_removed": 1,
+        "rgb_modified": false
       },
       "file": "all_sources/s013/melee_04.png",
       "mask_file": "all_sources/s013/melee_04.alpha.png",
-      "sha256": "accd0dc56911da36f67632fcda9e3d002c8794f7ffc0c54a1f3f60fa4e89bbca",
-      "mask_sha256": "1d4b53bd395bf9154c20f9ae48a62ca626ebabdbbd75afbdd4129a2821ed223f",
+      "sha256": "1037d0b2c1fdc898766227dbadbd39cc36ae58a63acb5354bfdf13b89913d717",
+      "mask_sha256": "c769b712294e347abcb2d2ebab21cb46878202e239f6c7e088f0637335d137e9",
+      "quality_metrics": {
+        "edge_pixels_above_32": 5,
+        "visible_pixels": 1915,
+        "opaque_pixels": 1082
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -777,7 +820,12 @@
       "mask_file": "themes/project/center_ranged.alpha.png",
       "reused_unchanged": true,
       "sha256": "3412ce4ec3fbca8ace4aecb89a749f5db311e764ad216a127ce4f9df1bf1212d",
-      "mask_sha256": "2e286fa8c97b9aca863fabaf387b65e89ca84ab855c800ed72377693b02db3d1"
+      "mask_sha256": "2e286fa8c97b9aca863fabaf387b65e89ca84ab855c800ed72377693b02db3d1",
+      "quality_metrics": {
+        "edge_pixels_above_32": 18,
+        "visible_pixels": 10428,
+        "opaque_pixels": 6662
+      }
     },
     {
       "id": "ranged_02",
@@ -797,49 +845,53 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
         "小型の参考図。拡大利用は非推奨。"
       ],
+      "local_border_luma": 5.17,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            2.2589935337613576,
-            5.988279783927975,
-            9.262608399264412
+            1.9437160725604907,
+            6.4044325157983275,
+            9.57317827063732
           ],
           [
-            -0.6573974646885614,
-            -0.3370522628761855,
-            0.011455642239237562
+            -0.634099674056267,
+            0.3381373235506667,
+            1.3709453868860955
           ],
           [
-            0.6673784045377251,
-            1.057378331560715,
-            4.324473226680518
+            1.451551504370843,
+            -1.2620849776948324,
+            -0.914394830638233
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 672,
+        "background_median_luma": 7.0,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 4
+        "tiny_noise_pixels_removed": 9,
+        "rgb_modified": false
       },
       "file": "all_sources/s013/ranged_02.png",
       "mask_file": "all_sources/s013/ranged_02.alpha.png",
-      "sha256": "624a3a11f187e00000cfffa96fe12263ae53b626ff20f91422edc4d36cf196d4",
-      "mask_sha256": "908019212399749ddac6bf500e1a705f1d05301337e88a67a5b3697795650c21",
+      "sha256": "6eb17a57d33fe0ef429b3a9a0eabf64ba7deb53ceb091bf097fdaee5699ac2a0",
+      "mask_sha256": "9afd2e80f4d35d9097b4b936bf15c4250462b39d1ee5f04ef1dc10ba58daa73f",
+      "quality_metrics": {
+        "edge_pixels_above_32": 6,
+        "visible_pixels": 1521,
+        "opaque_pixels": 1040
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -860,49 +912,53 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
         "小型の参考図。拡大利用は非推奨。"
       ],
+      "local_border_luma": 8.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            2.089892037158507,
-            14.079545825991312,
-            24.517767757507542
+            0.9800628448163083,
+            9.103844235627509,
+            15.051908941342516
           ],
           [
-            0.47123024139459047,
-            0.9275075745079082,
-            1.862310659137247
+            0.2961932786760395,
+            0.9435715424882067,
+            0.7865279033367738
           ],
           [
-            0.5324232654366127,
-            7.03486867586065,
-            17.395370504268968
+            0.6820009325253777,
+            6.14697551917706,
+            12.511747073777606
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 672,
+        "background_median_luma": 14.333333333333334,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 5
+        "tiny_noise_pixels_removed": 3,
+        "rgb_modified": false
       },
       "file": "all_sources/s013/ranged_03.png",
       "mask_file": "all_sources/s013/ranged_03.alpha.png",
-      "sha256": "413d1d41b4e4a4af667e1d95e407097c0e7579298b9bd9b6c53bcfb05fc50d38",
-      "mask_sha256": "d2bfc9697c71757376e8441f0c7b710c0ae0a6b07211a46d22220b53791700d4",
+      "sha256": "efdc4666dc693a927545de1b511e103ee3f2b24b2ac2328d843ef2522cb58d3d",
+      "mask_sha256": "311c5e6fa2b1cf50be979780fb0242bf369d4b9604ac5b38f80d7ccca3cb86f6",
+      "quality_metrics": {
+        "edge_pixels_above_32": 6,
+        "visible_pixels": 2527,
+        "opaque_pixels": 1886
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -923,49 +979,54 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "小型の参考図。拡大利用は非推奨。"
+        "小型の参考図。拡大利用は非推奨。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 6.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            2.02355006781183,
-            10.52790163358328,
-            17.37761822777822
+            1.9756614500067964,
+            8.3637707240744,
+            13.541599818886015
           ],
           [
-            -0.6952288838239218,
-            -0.11862652562983733,
-            -1.0822790105105766
+            -0.7507227077156452,
+            -0.1096073540295226,
+            -0.4576613440064272
           ],
           [
-            -0.10321757935179815,
-            4.1122747535030415,
-            6.774484289287304
+            -0.5637147629024009,
+            3.0167331663927968,
+            5.037131983494344
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 672,
+        "background_median_luma": 10.333333333333334,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 3
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
       },
       "file": "all_sources/s013/ranged_04.png",
       "mask_file": "all_sources/s013/ranged_04.alpha.png",
-      "sha256": "ea89da7493d56b81328a07e8cb359ab1d23a7d1f80e6ea6673cb4568c96d952f",
-      "mask_sha256": "69a038a985398c9b39d0bfc4d42cb02a5659edcbcd18e0cff77d9609ef946835",
+      "sha256": "2c5a27b1c463352a1d89c0fc28b7d621aa8c6beb1840757eb2c0d31ba2cb1b3e",
+      "mask_sha256": "25a6d22744aa484cd27a82783cbc00f75c36e44ef72fe240fef4a146f497461e",
+      "quality_metrics": {
+        "edge_pixels_above_32": 54,
+        "visible_pixels": 2071,
+        "opaque_pixels": 1411
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -1027,7 +1088,12 @@
       "mask_file": "themes/project/center_hybrid.alpha.png",
       "reused_unchanged": true,
       "sha256": "5d7d940a7e5f63b819109644582856abda86d6ef1975f13c6319e9c217aa21ae",
-      "mask_sha256": "6cd102242c3c77a183af33df10dd08878fd3a8c1c853fe347915fa216878207d"
+      "mask_sha256": "6cd102242c3c77a183af33df10dd08878fd3a8c1c853fe347915fa216878207d",
+      "quality_metrics": {
+        "edge_pixels_above_32": 16,
+        "visible_pixels": 11724,
+        "opaque_pixels": 8301
+      }
     },
     {
       "id": "hybrid_02",
@@ -1056,49 +1122,53 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
         "小型の参考図。拡大利用は非推奨。"
       ],
+      "local_border_luma": 7.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            2.2983624907460896,
-            5.608068157489365,
-            7.8527166293975155
+            1.5271515107594684,
+            6.683902861210086,
+            9.342544962900622
           ],
           [
-            1.0718268081969604,
-            2.750098605637074,
-            4.671766125957855
+            1.320558374361781,
+            1.7689200584806448,
+            2.899989083474261
           ],
           [
-            0.7465327281887243,
-            0.5526619160651709,
-            1.783943900007543
+            0.9157507767677853,
+            1.0971925878606534,
+            2.14300303833837
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 672,
+        "background_median_luma": 7.333333333333333,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 6
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
       },
       "file": "all_sources/s013/hybrid_02.png",
       "mask_file": "all_sources/s013/hybrid_02.alpha.png",
-      "sha256": "7388c1310e4f7c3e3275536a4832dfb028440d45024962cdd217f45c549621aa",
-      "mask_sha256": "67b2dc301364783e8a3faf966ca4cc6281e66648e1f96eb2b6c914b09550c3f7",
+      "sha256": "959f6c1ef8bed194662bf7a757823ed100566706f2a5361ed732a3d432d9a558",
+      "mask_sha256": "bdfbe1ecc9ef003f40824e6dc00d6ac2d4d6eb8fba20cab018d63303b9d142d7",
+      "quality_metrics": {
+        "edge_pixels_above_32": 10,
+        "visible_pixels": 1511,
+        "opaque_pixels": 1058
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -1128,49 +1198,54 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "小型の参考図。拡大利用は非推奨。"
+        "小型の参考図。拡大利用は非推奨。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 9.5,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            9.155814913986397,
-            11.319191338897681,
-            19.815219451456283
+            5.566918119708595,
+            9.516611927058172,
+            16.239059752125485
           ],
           [
-            13.565750630298773,
-            -0.4750548764688223,
-            5.9970052393602185
+            5.82188749383303,
+            0.6397209728549564,
+            2.596202451393393
           ],
           [
-            -1.402708622331435,
-            -0.5242956515537321,
-            0.07213692681187744
+            -1.8675286535414979,
+            0.43159420059364284,
+            0.5951477713834463
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 672,
+        "background_median_luma": 14.333333333333334,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 0
+        "tiny_noise_pixels_removed": 1,
+        "rgb_modified": false
       },
       "file": "all_sources/s013/hybrid_03.png",
       "mask_file": "all_sources/s013/hybrid_03.alpha.png",
-      "sha256": "3113e4c9699ab0829274e41f7705cdbda5cae5e53589395a05dc30e7d15d118d",
-      "mask_sha256": "a9d7001327964c61dfbfc2b5bd2f93e447f39d8a0828cf5a421b568c7f10f985",
+      "sha256": "eba61d1c0955bea7599bba72a8529c569258e8dad07a88071b5c7ae9de648cee",
+      "mask_sha256": "bdfde7024f2dfab7a9d736c1fa3fa8667d5f294e6c152d702f3355cec5864010",
+      "quality_metrics": {
+        "edge_pixels_above_32": 48,
+        "visible_pixels": 2305,
+        "opaque_pixels": 1583
+      },
       "status": "needs_mask_or_source_review"
     },
     {
@@ -1200,49 +1275,54 @@
       ],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
       "quality_flags": [
-        "小型の参考図。拡大利用は非推奨。"
+        "小型の参考図。拡大利用は非推奨。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
       ],
+      "local_border_luma": 10.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            3.4456839160347124,
-            10.084557201793773,
-            17.305906649205273
+            4.080206624523003,
+            11.529999255343121,
+            18.031654758061105
           ],
           [
-            0.01664068979862042,
-            1.235797443234687,
-            3.026637181603234
+            -1.2060598133889557,
+            -2.0891202669466336,
+            -2.163405484036223
           ],
           [
-            0.03794418661047401,
-            -0.5419671189915457,
-            1.2203298782084544
+            -0.40318571441956785,
+            0.0998831057678764,
+            1.6705528960520695
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 672,
+        "background_median_luma": 11.666666666666666,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 3
+        "tiny_noise_pixels_removed": 3,
+        "rgb_modified": false
       },
       "file": "all_sources/s013/hybrid_04.png",
       "mask_file": "all_sources/s013/hybrid_04.alpha.png",
-      "sha256": "2e0f5f0e166bafd480b2264691dbcc19ad0401c48bd9ef1328f5d6b968a71cac",
-      "mask_sha256": "5d4c81ed09632dda79e4f9e1f32cf18fd835a184eb9c64a8f5ec3d9804761310",
+      "sha256": "e3b349765a432664f0668d31606c66cc3d89b62e2452218197216a81f3d5534f",
+      "mask_sha256": "08c2b0807542442d28f3c05bf0aaf7d495a4d6dc5927c345f56771c70d31c731",
+      "quality_metrics": {
+        "edge_pixels_above_32": 49,
+        "visible_pixels": 1949,
+        "opaque_pixels": 1252
+      },
       "status": "needs_mask_or_source_review"
     }
   ],
@@ -1283,18 +1363,18 @@
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 14792,
-      "transparent_pixels": 35357,
-      "partial_pixels": 6687,
-      "visible_pixels": 14541
+      "transparent_pixels": 34308,
+      "partial_pixels": 7329,
+      "visible_pixels": 15590
     },
     {
       "id": "weak_03",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 14792,
-      "transparent_pixels": 35911,
-      "partial_pixels": 5282,
-      "visible_pixels": 13987
+      "transparent_pixels": 35351,
+      "partial_pixels": 5628,
+      "visible_pixels": 14547
     },
     {
       "id": "strong_01",
@@ -1310,18 +1390,18 @@
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 14792,
-      "transparent_pixels": 35072,
-      "partial_pixels": 7037,
-      "visible_pixels": 22390
+      "transparent_pixels": 31973,
+      "partial_pixels": 8963,
+      "visible_pixels": 25489
     },
     {
       "id": "strong_03",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 14792,
-      "transparent_pixels": 37455,
-      "partial_pixels": 6778,
-      "visible_pixels": 20007
+      "transparent_pixels": 35181,
+      "partial_pixels": 8481,
+      "visible_pixels": 22281
     },
     {
       "id": "melee_01",
@@ -1337,27 +1417,27 @@
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 0,
-      "transparent_pixels": 2115,
-      "partial_pixels": 429,
-      "visible_pixels": 1285
+      "transparent_pixels": 2071,
+      "partial_pixels": 449,
+      "visible_pixels": 1329
     },
     {
       "id": "melee_03",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 0,
-      "transparent_pixels": 1869,
-      "partial_pixels": 498,
-      "visible_pixels": 1531
+      "transparent_pixels": 1732,
+      "partial_pixels": 615,
+      "visible_pixels": 1668
     },
     {
       "id": "melee_04",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 0,
-      "transparent_pixels": 1694,
-      "partial_pixels": 702,
-      "visible_pixels": 1706
+      "transparent_pixels": 1485,
+      "partial_pixels": 878,
+      "visible_pixels": 1915
     },
     {
       "id": "ranged_01",
@@ -1373,27 +1453,27 @@
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 0,
-      "transparent_pixels": 1951,
-      "partial_pixels": 479,
-      "visible_pixels": 1449
+      "transparent_pixels": 1879,
+      "partial_pixels": 522,
+      "visible_pixels": 1521
     },
     {
       "id": "ranged_03",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 0,
-      "transparent_pixels": 1088,
-      "partial_pixels": 634,
-      "visible_pixels": 2312
+      "transparent_pixels": 873,
+      "partial_pixels": 701,
+      "visible_pixels": 2527
     },
     {
       "id": "ranged_04",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 0,
-      "transparent_pixels": 1477,
-      "partial_pixels": 617,
-      "visible_pixels": 1923
+      "transparent_pixels": 1329,
+      "partial_pixels": 712,
+      "visible_pixels": 2071
     },
     {
       "id": "hybrid_01",
@@ -1409,27 +1489,27 @@
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 0,
-      "transparent_pixels": 1930,
-      "partial_pixels": 463,
-      "visible_pixels": 1470
+      "transparent_pixels": 1889,
+      "partial_pixels": 487,
+      "visible_pixels": 1511
     },
     {
       "id": "hybrid_03",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 0,
-      "transparent_pixels": 1312,
-      "partial_pixels": 644,
-      "visible_pixels": 2088
+      "transparent_pixels": 1095,
+      "partial_pixels": 773,
+      "visible_pixels": 2305
     },
     {
       "id": "hybrid_04",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 0,
-      "transparent_pixels": 1615,
-      "partial_pixels": 615,
-      "visible_pixels": 1785
+      "transparent_pixels": 1451,
+      "partial_pixels": 749,
+      "visible_pixels": 1949
     }
   ]
 }

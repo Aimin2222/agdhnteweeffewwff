@@ -14,101 +14,82 @@
       "intensity": "weak",
       "role": "unspecified",
       "crop_box": [
-        136,
-        169,
-        824,
-        387
+        120,
+        182,
+        867,
+        388
       ],
       "portrait_holes": [
         {
           "rectangle": [
-            171,
-            204,
-            327,
-            352
+            176,
+            211,
+            331,
+            356
           ]
         },
         {
           "rectangle": [
-            633,
-            204,
-            789,
-            352
+            644,
+            208,
+            805,
+            357
           ]
         }
       ],
-      "roi_regions": [
-        {
-          "rectangle": [
-            159,
-            192,
-            339,
-            364
-          ]
-        },
-        {
-          "rectangle": [
-            621,
-            192,
-            801,
-            364
-          ]
-        },
-        {
-          "ellipse": [
-            309,
-            172,
-            651,
-            384
-          ]
-        }
-      ],
+      "roi_regions": [],
       "exclude_regions": [],
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
-      "quality_flags": [],
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 43.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            29.868051921676393,
-            39.81933255577547,
-            35.19327764050897
+            31.16725181702658,
+            38.71605191767028,
+            36.190850125534865
           ],
           [
-            -3.6283182665138014,
-            -5.5246085409416334,
-            1.2609090077336926
+            -1.971138679184402,
+            0.9878261230207448,
+            2.3724378219327913
           ],
           [
-            22.290825969555193,
-            21.226860518584303,
-            13.889773586935407
+            8.8949949988105,
+            7.809039910316464,
+            3.030806726602318
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 28704,
+        "background_median_luma": 43.666666666666664,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 17
+        "tiny_noise_pixels_removed": 29,
+        "rgb_modified": false
       },
       "file": "all_sources/s009/weak_01.png",
       "mask_file": "all_sources/s009/weak_01.alpha.png",
-      "sha256": "1792feb605c0fef6e706183f2e7c7ee2dd592a7cf64bee198961b4f917c8d684",
-      "mask_sha256": "ae6568ddca1477673033f767e407f8d6b5cbf0817432438a64b3d69535a94d7c",
-      "status": "needs_visual_review"
+      "sha256": "1a89e5a83c726528de0df1e1133b0d4f8df0d563c6c2c24f02c4854fe4bab913",
+      "mask_sha256": "85bd92cc30e27a2860f7c0648c3de208977d4e830cd0908e6171b01e00677fa7",
+      "quality_metrics": {
+        "edge_pixels_above_32": 240,
+        "visible_pixels": 55114,
+        "opaque_pixels": 25624
+      },
+      "status": "needs_mask_or_source_review"
     },
     {
       "id": "weak_02",
@@ -117,101 +98,82 @@
       "intensity": "weak",
       "role": "unspecified",
       "crop_box": [
-        136,
-        401,
-        824,
-        619
+        120,
+        419,
+        867,
+        622
       ],
       "portrait_holes": [
         {
           "rectangle": [
-            171,
-            436,
-            327,
-            584
+            176,
+            449,
+            332,
+            595
           ]
         },
         {
           "rectangle": [
-            633,
-            436,
-            789,
-            584
+            644,
+            447,
+            805,
+            595
           ]
         }
       ],
-      "roi_regions": [
-        {
-          "rectangle": [
-            159,
-            424,
-            339,
-            596
-          ]
-        },
-        {
-          "rectangle": [
-            621,
-            424,
-            801,
-            596
-          ]
-        },
-        {
-          "ellipse": [
-            309,
-            404,
-            651,
-            616
-          ]
-        }
-      ],
+      "roi_regions": [],
       "exclude_regions": [],
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
-      "quality_flags": [],
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 48.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            49.57549539557452,
-            54.131411972962184,
-            40.34886576394535
+            45.53849214673463,
+            51.562491149254036,
+            39.308289607374284
           ],
           [
-            1.613510926117896,
-            1.210168162368027,
-            8.38480914238046
+            4.635016348375545,
+            6.046630230368722,
+            13.671237490470983
           ],
           [
-            4.374292737477214,
-            5.1758460443081535,
-            7.028413707599194
+            3.7265653518883433,
+            -0.10206296445090235,
+            -1.1069492438973239
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 28482,
+        "background_median_luma": 55.666666666666664,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 14
+        "tiny_noise_pixels_removed": 37,
+        "rgb_modified": false
       },
       "file": "all_sources/s009/weak_02.png",
       "mask_file": "all_sources/s009/weak_02.alpha.png",
-      "sha256": "8f09715f0c52d063bb7c68baff147635dae68c9cfc75f400d5c2cf2a1dc20f60",
-      "mask_sha256": "37c4e86878e4f36323b1b58ed7d13ae40a601313c5ab841c7f130dae03dfbdd6",
-      "status": "needs_visual_review"
+      "sha256": "bf059aaac1c442a45af8c350b495ada30ad4395e2c8c2269b3a362a3cba9d212",
+      "mask_sha256": "877a34011bb78b2dee2e1be639f5d795f3068af06b4c947807c9a10edbd47e76",
+      "quality_metrics": {
+        "edge_pixels_above_32": 249,
+        "visible_pixels": 56078,
+        "opaque_pixels": 27435
+      },
+      "status": "needs_mask_or_source_review"
     },
     {
       "id": "weak_03",
@@ -220,101 +182,82 @@
       "intensity": "weak",
       "role": "unspecified",
       "crop_box": [
-        136,
-        635,
-        824,
-        853
+        118,
+        653,
+        867,
+        852
       ],
       "portrait_holes": [
         {
           "rectangle": [
-            171,
-            670,
-            327,
-            818
+            176,
+            680,
+            332,
+            825
           ]
         },
         {
           "rectangle": [
-            633,
-            670,
-            789,
-            818
+            644,
+            681,
+            805,
+            827
           ]
         }
       ],
-      "roi_regions": [
-        {
-          "rectangle": [
-            159,
-            658,
-            339,
-            830
-          ]
-        },
-        {
-          "rectangle": [
-            621,
-            658,
-            801,
-            830
-          ]
-        },
-        {
-          "ellipse": [
-            309,
-            638,
-            651,
-            850
-          ]
-        }
-      ],
+      "roi_regions": [],
       "exclude_regions": [],
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
-      "quality_flags": [],
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 42.33,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            45.592019722560295,
-            47.44359948149761,
-            35.227675050189895
+            49.460502342886464,
+            48.82132560924583,
+            36.773880135348016
           ],
           [
-            11.791047438561153,
-            10.23918136470201,
-            17.706951275481803
+            -15.705073033077094,
+            -11.305327705869297,
+            0.8831726867139494
           ],
           [
-            -13.846316008042216,
-            -9.015335997081296,
-            -6.227775433263602
+            -2.2779352848252987,
+            0.5285694749912588,
+            0.006638089821358384
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 26876,
+        "background_median_luma": 45.666666666666664,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 19
+        "tiny_noise_pixels_removed": 24,
+        "rgb_modified": false
       },
       "file": "all_sources/s009/weak_03.png",
       "mask_file": "all_sources/s009/weak_03.alpha.png",
-      "sha256": "fd13b594c47b7c220232f96fc3de6f49b7dd75f285b261b48314a927dbb5deb5",
-      "mask_sha256": "fb0ac9696e3299069ca41cd4a1909addaebfc19588245c2f8a5fd16ef5223cb4",
-      "status": "needs_visual_review"
+      "sha256": "10115eab263ddd31f6fc8397739385e9ca9f085b4874b098fd848ca5498df7c6",
+      "mask_sha256": "046884047326d9729035e062ace26ef48797752e71e8f6a9a9e6dbfc85c46c31",
+      "quality_metrics": {
+        "edge_pixels_above_32": 306,
+        "visible_pixels": 59093,
+        "opaque_pixels": 26432
+      },
+      "status": "needs_mask_or_source_review"
     },
     {
       "id": "melee_01",
@@ -334,48 +277,54 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
-      "quality_flags": [],
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 29.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            30.621332100648377,
-            37.05579560591445,
-            30.49139909143857
+            28.128751501865224,
+            36.08314208043259,
+            31.324311481638617
           ],
           [
-            -9.64330948936542,
-            -8.962113687887896,
-            -3.083246884762169
+            -7.252013223813694,
+            -7.687848574573627,
+            -3.3855013261843507
           ],
           [
-            -2.607117659671088,
-            1.0522441219357752,
-            4.579475732885288
+            -2.3625087476972353,
+            0.7654160173960811,
+            3.8646623961349116
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 2576,
+        "background_median_luma": 31.333333333333332,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 6
+        "tiny_noise_pixels_removed": 7,
+        "rgb_modified": false
       },
       "file": "all_sources/s009/melee_01.png",
       "mask_file": "all_sources/s009/melee_01.alpha.png",
-      "sha256": "b3baa1d98efbdf0aba6b7ce6c2c3e48897d2ce4146ad222687c4b6f0ac6ce0dd",
-      "mask_sha256": "4f76f71c68ede4a08354102d760df47ff5003db19b6ea828806a95563ce7a517",
-      "status": "needs_visual_review"
+      "sha256": "e2d497dbd8597ec28d38ed3381cfa889a3506478587a680a83b35dd172e03832",
+      "mask_sha256": "e9a694e6fecc190ec96aa02cb983b4b53cd8672e21615bc01348cb1e8ee26d45",
+      "quality_metrics": {
+        "edge_pixels_above_32": 22,
+        "visible_pixels": 6241,
+        "opaque_pixels": 3538
+      },
+      "status": "needs_mask_or_source_review"
     },
     {
       "id": "ranged_01",
@@ -395,48 +344,54 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
-      "quality_flags": [],
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 28.0,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            33.68698986836982,
-            37.26925236126616,
-            38.311889599360086
+            29.552459746699522,
+            34.45914381813517,
+            34.987664806922844
           ],
           [
-            -1.7957909472594746,
-            0.20039631532052304,
-            -4.841041976356597
+            -2.867105057216275,
+            -0.8846287239953652,
+            -3.6568726381685326
           ],
           [
-            -9.44763961888738,
-            -5.459288409856876,
-            -3.7146465058309452
+            -5.837987637401234,
+            -3.00009744518466,
+            -0.9626357613433254
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 2576,
+        "background_median_luma": 31.333333333333332,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 1
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
       },
       "file": "all_sources/s009/ranged_01.png",
       "mask_file": "all_sources/s009/ranged_01.alpha.png",
-      "sha256": "099ac4dc3c24078cbe5a6536a35c69b063779b5b14ade5c96b629ba18c763412",
-      "mask_sha256": "bcea2a076ce6bb377d799b6204da66138911975be5d4744a4a115ce91d0a3791",
-      "status": "needs_visual_review"
+      "sha256": "7fa3beb727ad8531bb8e8de7f0b9388864518597fe9aaa283618a5676c5b54f1",
+      "mask_sha256": "128559a1230f38ffc860c0c882d99e663378ff8a88368ddfd977a27c6008699e",
+      "quality_metrics": {
+        "edge_pixels_above_32": 40,
+        "visible_pixels": 6710,
+        "opaque_pixels": 3276
+      },
+      "status": "needs_mask_or_source_review"
     },
     {
       "id": "hybrid_01",
@@ -456,48 +411,54 @@
       "candidate_exclusions": [],
       "background_kind": "dark",
       "candidate_thresholds": [
-        19,
-        82
+        16,
+        78
       ],
       "min_component_pixels": 3,
-      "quality_flags": [],
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 29.67,
       "alpha_model": {
-        "model": "robust_local_rgb_plane",
+        "model": "robust_border_or_outside_support_rgb_plane",
         "coefficients": [
           [
-            20.323935958725862,
-            30.027693989577777,
-            31.164475898368362
+            21.092276068281237,
+            31.106473573005925,
+            32.29691207078797
           ],
           [
-            4.9687395841061806,
-            3.2897312215909555,
-            -1.31992822807273
+            0.070693292598079,
+            -1.5176069273902402,
+            -3.4207108516866636
           ],
           [
-            1.693958443907559,
-            2.2061870814811693,
-            1.6983645808270411
+            2.42783591433827,
+            2.5268526414045676,
+            1.4515020228326159
           ]
         ],
-        "distance_thresholds": [
-          13.0,
-          75.0
-        ],
-        "iterations": 5,
-        "rgb_modified": false,
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 2576,
+        "background_median_luma": 29.666666666666668,
+        "light_matte": false,
         "candidate_thresholds": [
-          19,
-          82
+          16,
+          78
         ],
-        "paper_fringe_suppression": false,
-        "tiny_noise_pixels_removed": 8
+        "tiny_noise_pixels_removed": 10,
+        "rgb_modified": false
       },
       "file": "all_sources/s009/hybrid_01.png",
       "mask_file": "all_sources/s009/hybrid_01.alpha.png",
-      "sha256": "3e78db45625cf5d8096c6140a2dbb3a99014ca19a93fe3c750af3f6d1aeb15fe",
-      "mask_sha256": "3ca7e2ef90332e52ad4c1ae9974b87266a14add8c086ce40b5486002f30032e6",
-      "status": "needs_visual_review"
+      "sha256": "9f50744eaba194dadd9e6bdb2c67277eca27ed2383c962acd2fed4e9f3b61eda",
+      "mask_sha256": "83bb8651de2be97cf36ddf7807c5954ea6ece03fd19b49ecd452ac332e37696c",
+      "quality_metrics": {
+        "edge_pixels_above_32": 77,
+        "visible_pixels": 6952,
+        "opaque_pixels": 3505
+      },
+      "status": "needs_mask_or_source_review"
     }
   ],
   "quality_notes": [
@@ -527,55 +488,55 @@
       "id": "weak_01",
       "rgb_exact": true,
       "independent_mask_exact": true,
-      "portrait_hole_pixels_zero": 46176,
-      "transparent_pixels": 122410,
-      "partial_pixels": 12470,
-      "visible_pixels": 27574
+      "portrait_hole_pixels_zero": 46464,
+      "transparent_pixels": 98768,
+      "partial_pixels": 30877,
+      "visible_pixels": 55114
     },
     {
       "id": "weak_02",
       "rgb_exact": true,
       "independent_mask_exact": true,
-      "portrait_hole_pixels_zero": 46176,
-      "transparent_pixels": 120342,
-      "partial_pixels": 14758,
-      "visible_pixels": 29642
+      "portrait_hole_pixels_zero": 46604,
+      "transparent_pixels": 95563,
+      "partial_pixels": 30109,
+      "visible_pixels": 56078
     },
     {
       "id": "weak_03",
       "rgb_exact": true,
       "independent_mask_exact": true,
-      "portrait_hole_pixels_zero": 46176,
-      "transparent_pixels": 118842,
-      "partial_pixels": 16597,
-      "visible_pixels": 31142
+      "portrait_hole_pixels_zero": 46126,
+      "transparent_pixels": 89958,
+      "partial_pixels": 34276,
+      "visible_pixels": 59093
     },
     {
       "id": "melee_01",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 0,
-      "transparent_pixels": 9448,
-      "partial_pixels": 2189,
-      "visible_pixels": 5656
+      "transparent_pixels": 8863,
+      "partial_pixels": 2745,
+      "visible_pixels": 6241
     },
     {
       "id": "ranged_01",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 0,
-      "transparent_pixels": 9216,
-      "partial_pixels": 2796,
-      "visible_pixels": 5888
+      "transparent_pixels": 8394,
+      "partial_pixels": 3538,
+      "visible_pixels": 6710
     },
     {
       "id": "hybrid_01",
       "rgb_exact": true,
       "independent_mask_exact": true,
       "portrait_hole_pixels_zero": 0,
-      "transparent_pixels": 9008,
-      "partial_pixels": 2695,
-      "visible_pixels": 6096
+      "transparent_pixels": 8152,
+      "partial_pixels": 3505,
+      "visible_pixels": 6952
     }
   ]
 }
