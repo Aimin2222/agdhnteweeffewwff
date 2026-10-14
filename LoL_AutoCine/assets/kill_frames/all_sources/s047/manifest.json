@@ -1,0 +1,673 @@
+{
+  "source_index": 47,
+  "source_file": "image-gen-5(2).png",
+  "source_sha256": "2b897252e0f068274b83f44323cb1ee1844b0061acca585c7aff6444ef037547",
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "rgb_modified": false,
+  "generated_or_inpainted": false,
+  "status": "unapproved_candidates",
+  "assets": [
+    {
+      "id": "main",
+      "theme": "c1_slash_burst",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        20,
+        144,
+        1084,
+        398
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            223,
+            178,
+            381,
+            336
+          ]
+        },
+        {
+          "ellipse": [
+            727,
+            178,
+            885,
+            336
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "背景のぼかし・発光・暗色装飾の境界は要比較確認。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 14.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            2.4372880789842335,
+            18.24972053114331,
+            40.411796354909875
+          ],
+          [
+            11.91196036364041,
+            -4.702244160528345,
+            -14.887693490017249
+          ],
+          [
+            0.480145911488723,
+            2.515923261007396,
+            3.9607201189142334
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 49916,
+        "background_median_luma": 26.666666666666668,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 36,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s047/main.png",
+      "mask_file": "all_sources/s047/main.alpha.png",
+      "sha256": "7b34924850795b9a732894ad40df6748505ef0057a25a4987f8da3ab1085b86c",
+      "mask_sha256": "1996545d60ed9ce335683a7a2764d17c14371951ce7fb9a854ba6a5135912d27",
+      "quality_metrics": {
+        "edge_pixels_above_32": 608,
+        "visible_pixels": 190225,
+        "opaque_pixels": 121730
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_01",
+      "theme": "c1_slash_burst",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        902,
+        980,
+        968,
+        1020
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の色/効果見本。役割未指定・拡大不可。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 40.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            7.71350365807674,
+            17.50119368336295,
+            41.76980677112034
+          ],
+          [
+            8.76078947930431,
+            -8.70861495161459,
+            -24.030342515788366
+          ],
+          [
+            -2.253862439069028,
+            2.7224524353902577,
+            17.905984153365463
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 35.83333333333333,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 3,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s047/palette_reference_01.png",
+      "mask_file": "all_sources/s047/palette_reference_01.alpha.png",
+      "sha256": "6f9f4185546c5ab816564977fc0dacc61d8268365a8ecd5318611b456dd947cd",
+      "mask_sha256": "d02845f9e60e8ba4c9a4b41391adfd2d03849cf2c307230fc6b63b71426ccd95",
+      "quality_metrics": {
+        "edge_pixels_above_32": 90,
+        "visible_pixels": 1921,
+        "opaque_pixels": 1196
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_02",
+      "theme": "c1_slash_burst",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        977,
+        980,
+        1043,
+        1020
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の色/効果見本。役割未指定・拡大不可。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 26.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            0.20520857298877096,
+            15.525895189406741,
+            46.581549575592135
+          ],
+          [
+            5.004485736794267,
+            0.4723814043105106,
+            -28.084761858857416
+          ],
+          [
+            -2.1944238896878754,
+            -0.24498326280131388,
+            5.478702378900454
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 25.666666666666668,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s047/palette_reference_02.png",
+      "mask_file": "all_sources/s047/palette_reference_02.alpha.png",
+      "sha256": "160c6b443f4170e2ebe4f5264ceb23c174a7cee2eb256d91f74830bb286e1c0b",
+      "mask_sha256": "f4d459efb478ad8c947a0a63d7b323af1fd4b658da2c4f8a76defbde728982dd",
+      "quality_metrics": {
+        "edge_pixels_above_32": 75,
+        "visible_pixels": 1888,
+        "opaque_pixels": 1194
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_03",
+      "theme": "c1_slash_burst",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1050,
+        980,
+        1116,
+        1020
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の色/効果見本。役割未指定・拡大不可。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 34.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            58.03710017457329,
+            2.550303247382692,
+            5.137148589475475
+          ],
+          [
+            -50.31129451480489,
+            7.9507410981427356,
+            11.771610174792182
+          ],
+          [
+            14.953097958051373,
+            -0.2632807611584287,
+            1.47524839527944
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 28.666666666666668,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 1,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s047/palette_reference_03.png",
+      "mask_file": "all_sources/s047/palette_reference_03.alpha.png",
+      "sha256": "e2a5a2f31107b96891ea32b77dc4f339bd9754d8f37fab0007ad49a364e92dfb",
+      "mask_sha256": "8250282f326d6493d0ad05849fc4db7d4939b3015b0e115d6ad78f9c8340375b",
+      "quality_metrics": {
+        "edge_pixels_above_32": 78,
+        "visible_pixels": 2136,
+        "opaque_pixels": 1438
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_04",
+      "theme": "c1_slash_burst",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1126,
+        980,
+        1192,
+        1020
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の色/効果見本。役割未指定・拡大不可。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 33.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            39.06047424969256,
+            22.339140385604686,
+            5.259110529804218
+          ],
+          [
+            -10.465281960355199,
+            -1.9032560955832616,
+            -0.4593993535961467
+          ],
+          [
+            9.972252336850309,
+            2.604458539515851,
+            -1.2641996407710308
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 26.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s047/palette_reference_04.png",
+      "mask_file": "all_sources/s047/palette_reference_04.alpha.png",
+      "sha256": "0ab78777dc38eb0454f131a803a29b72981f0de5da0016459e0285b071f50d5f",
+      "mask_sha256": "598355877b50fb12685460f890fe91e5d47136484e0c9b8ff203e0648ac26af5",
+      "quality_metrics": {
+        "edge_pixels_above_32": 59,
+        "visible_pixels": 1834,
+        "opaque_pixels": 1040
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_05",
+      "theme": "c1_slash_burst",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1202,
+        980,
+        1268,
+        1020
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の色/効果見本。役割未指定・拡大不可。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 36.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            5.525386918131201,
+            10.032905385983423,
+            15.314619495343903
+          ],
+          [
+            7.442864416601035,
+            -7.93959265911834,
+            17.05446162933906
+          ],
+          [
+            7.846678798392409,
+            0.323747770546694,
+            8.44594433886173
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 23.833333333333336,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s047/palette_reference_05.png",
+      "mask_file": "all_sources/s047/palette_reference_05.alpha.png",
+      "sha256": "b0728adfb5eafd1200107b33393ecef55685efa110a153f5ca2ec3bf74409da3",
+      "mask_sha256": "cc8b1ea88fae48a2e098ddc6dacc11a2081213b8910a005a2390baceb10799a7",
+      "quality_metrics": {
+        "edge_pixels_above_32": 63,
+        "visible_pixels": 2010,
+        "opaque_pixels": 1185
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_06",
+      "theme": "c1_slash_burst",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1277,
+        980,
+        1343,
+        1020
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の色/効果見本。役割未指定・拡大不可。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 19.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            3.9943302746440272,
+            14.167037470459062,
+            21.789714979887208
+          ],
+          [
+            -3.2288445538896813,
+            21.016950711814566,
+            -13.626891896820865
+          ],
+          [
+            -1.589345143457743,
+            -3.4155079896373213,
+            -0.9439758505075897
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 16.333333333333332,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 3,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s047/palette_reference_06.png",
+      "mask_file": "all_sources/s047/palette_reference_06.alpha.png",
+      "sha256": "54501a34bba3a083a22852f5f7b2872ba40261b085a17b0783481203980d0f01",
+      "mask_sha256": "f8aafd9592e0e02d1669ae1fcfe21f0cfc525be8f95292d1348718e48b06ee92",
+      "quality_metrics": {
+        "edge_pixels_above_32": 32,
+        "visible_pixels": 1785,
+        "opaque_pixels": 995
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "palette_reference_07",
+      "theme": "c1_slash_burst",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1354,
+        980,
+        1420,
+        1020
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の色/効果見本。役割未指定・拡大不可。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 19.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            0.26448571202150306,
+            8.139065514270907,
+            12.026551720953885
+          ],
+          [
+            20.872644981949232,
+            11.176034344089816,
+            6.840748924672023
+          ],
+          [
+            2.228815121590049,
+            0.8096965950278721,
+            0.15164576385195794
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 18.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s047/palette_reference_07.png",
+      "mask_file": "all_sources/s047/palette_reference_07.alpha.png",
+      "sha256": "eaf779f7f089e9ab4329cfb60f9212d0216d48faa37597eb2381bba1fa6d6513",
+      "mask_sha256": "9060485d33fb08a719cf8e324d1ba24a0d7a32782e5523fac8982719d7c99ea6",
+      "quality_metrics": {
+        "edge_pixels_above_32": 42,
+        "visible_pixels": 1712,
+        "opaque_pixels": 1064
+      },
+      "status": "needs_mask_or_source_review"
+    }
+  ],
+  "quality_notes": [
+    "背景と装飾の境界・肖像穴・細い線を人が比較画像で確認する必要がある。"
+  ],
+  "excluded_content": [
+    "入場/退場の途中状態と拡大図は同じデザインの説明資料。全体デザイン・色/効果の別案は下記に切り出す。",
+    "UIチェックボックス、文字、x1、追加ロゴ、パネル罫線は対象外。"
+  ],
+  "unsupported": [
+    {
+      "components": [
+        "weak",
+        "strong",
+        "melee",
+        "ranged",
+        "hybrid"
+      ],
+      "reason": "明示された強弱/武器ロールの5部品セットは存在しない。観測したフレームを用途未指定で保存。"
+    }
+  ],
+  "review_pages": [
+    "all_sources/s047/review_01.jpg"
+  ],
+  "combinations": {
+    "count": 0,
+    "files": [],
+    "anchor": "illustrative frame crop center; no runtime integration"
+  },
+  "verification": [
+    {
+      "id": "main",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 38866,
+      "transparent_pixels": 80031,
+      "partial_pixels": 74147,
+      "visible_pixels": 190225
+    },
+    {
+      "id": "palette_reference_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 719,
+      "partial_pixels": 791,
+      "visible_pixels": 1921
+    },
+    {
+      "id": "palette_reference_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 752,
+      "partial_pixels": 761,
+      "visible_pixels": 1888
+    },
+    {
+      "id": "palette_reference_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 504,
+      "partial_pixels": 781,
+      "visible_pixels": 2136
+    },
+    {
+      "id": "palette_reference_04",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 806,
+      "partial_pixels": 851,
+      "visible_pixels": 1834
+    },
+    {
+      "id": "palette_reference_05",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 630,
+      "partial_pixels": 900,
+      "visible_pixels": 2010
+    },
+    {
+      "id": "palette_reference_06",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 855,
+      "partial_pixels": 843,
+      "visible_pixels": 1785
+    },
+    {
+      "id": "palette_reference_07",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 928,
+      "partial_pixels": 697,
+      "visible_pixels": 1712
+    }
+  ]
+}
