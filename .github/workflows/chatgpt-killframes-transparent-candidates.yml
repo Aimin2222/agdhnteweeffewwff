@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - ".github/workflows/chatgpt-killframes-transparent-candidates.yml"
+      - "LoL_AutoCine/assets/kill_frames_chatgpt/build_transparent_candidates.py"
 permissions:
   contents: write
 jobs:
