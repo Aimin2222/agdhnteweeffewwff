@@ -1,0 +1,83 @@
+{
+  "batch": 9,
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "all_numeric_checks_passed": true,
+  "human_approval": false,
+  "decoded_sources_at_once": 1,
+  "sources": [
+    {
+      "source_index": 65,
+      "assets": 21,
+      "new_assets": 21,
+      "combinations": 90,
+      "checks_passed": true,
+      "manifest": "all_sources/s065/manifest.json"
+    },
+    {
+      "source_index": 66,
+      "assets": 15,
+      "new_assets": 15,
+      "combinations": 54,
+      "checks_passed": true,
+      "manifest": "all_sources/s066/manifest.json"
+    },
+    {
+      "source_index": 67,
+      "assets": 15,
+      "new_assets": 15,
+      "combinations": 54,
+      "checks_passed": true,
+      "manifest": "all_sources/s067/manifest.json"
+    },
+    {
+      "source_index": 68,
+      "assets": 7,
+      "new_assets": 7,
+      "combinations": 0,
+      "checks_passed": true,
+      "manifest": "all_sources/s068/manifest.json"
+    },
+    {
+      "source_index": 69,
+      "assets": 9,
+      "new_assets": 9,
+      "combinations": 18,
+      "checks_passed": true,
+      "manifest": "all_sources/s069/manifest.json"
+    },
+    {
+      "source_index": 70,
+      "assets": 9,
+      "new_assets": 9,
+      "combinations": 18,
+      "checks_passed": true,
+      "manifest": "all_sources/s070/manifest.json"
+    },
+    {
+      "source_index": 71,
+      "assets": 18,
+      "new_assets": 18,
+      "combinations": 72,
+      "checks_passed": true,
+      "manifest": "all_sources/s071/manifest.json"
+    },
+    {
+      "source_index": 72,
+      "assets": 15,
+      "new_assets": 15,
+      "combinations": 54,
+      "checks_passed": true,
+      "manifest": "all_sources/s072/manifest.json"
+    }
+  ],
+  "black_white_contacts": [
+    "all_sources/batches/batch_09_contact_01.jpg",
+    "all_sources/batches/batch_09_contact_02.jpg",
+    "all_sources/batches/batch_09_contact_03.jpg"
+  ],
+  "pytest": {
+    "passed": 11,
+    "failed": 0,
+    "scope": "selected source RGB/SHA/masks/holes/reviews + exact89 inventory/protected37/core/UI/three themes + 31 catalog correspondence"
+  }
+}

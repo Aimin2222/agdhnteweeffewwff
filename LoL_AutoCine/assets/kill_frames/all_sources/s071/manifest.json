@@ -1,0 +1,1718 @@
+{
+  "source_index": 71,
+  "source_file": "image-gen-8(4).png",
+  "source_sha256": "2ad7bdc785753398a6fbe0888fae2ec03b5bb76c9541e9b5410ee1d769a3f98f",
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "rgb_modified": false,
+  "generated_or_inpainted": false,
+  "status": "unapproved_candidates",
+  "assets": [
+    {
+      "id": "weak_01",
+      "theme": "blood_moon",
+      "component": "frame",
+      "intensity": "weak",
+      "role": "unspecified",
+      "crop_box": [
+        35,
+        326,
+        481,
+        460
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            53,
+            344,
+            145,
+            442
+          ]
+        },
+        {
+          "rectangle": [
+            371,
+            344,
+            463,
+            442
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "rectangle": [
+            41,
+            332,
+            157,
+            454
+          ]
+        },
+        {
+          "rectangle": [
+            359,
+            332,
+            475,
+            454
+          ]
+        },
+        {
+          "ellipse": [
+            127,
+            329,
+            389,
+            457
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            47,
+            342,
+            49,
+            448
+          ]
+        },
+        {
+          "rectangle": [
+            45,
+            338,
+            47,
+            448
+          ]
+        },
+        {
+          "rectangle": [
+            472,
+            339,
+            474,
+            448
+          ]
+        },
+        {
+          "rectangle": [
+            470,
+            337,
+            472,
+            448
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 8.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            7.481896740964976,
+            6.501334137858279,
+            4.1668371685867625
+          ],
+          [
+            2.5560658141384867,
+            3.3646607827352764,
+            3.113459536856297
+          ],
+          [
+            -0.461739301855018,
+            -0.3639921052810835,
+            -0.3817748645752328
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 11609,
+        "background_median_luma": 8.333333333333334,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 11,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/weak_01.png",
+      "mask_file": "all_sources/s071/weak_01.alpha.png",
+      "sha256": "f6cbce144ac844322bdf983c0e514cc350674afb0d2b1f49b46a3173360f0f0d",
+      "mask_sha256": "104c0946aabef5b13b90819b59594e168d23583c568852f252ea0e071ab82127",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 12682,
+        "opaque_pixels": 8107
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "weak_02",
+      "theme": "blood_moon",
+      "component": "frame",
+      "intensity": "weak",
+      "role": "unspecified",
+      "crop_box": [
+        35,
+        467,
+        481,
+        601
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            53,
+            485,
+            145,
+            583
+          ]
+        },
+        {
+          "rectangle": [
+            371,
+            485,
+            463,
+            583
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "rectangle": [
+            41,
+            473,
+            157,
+            595
+          ]
+        },
+        {
+          "rectangle": [
+            359,
+            473,
+            475,
+            595
+          ]
+        },
+        {
+          "ellipse": [
+            127,
+            470,
+            389,
+            598
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            472,
+            478,
+            474,
+            589
+          ]
+        },
+        {
+          "rectangle": [
+            470,
+            478,
+            472,
+            589
+          ]
+        },
+        {
+          "rectangle": [
+            45,
+            478,
+            47,
+            589
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 9.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            7.562513424830251,
+            6.829378165246499,
+            4.4156576240306595
+          ],
+          [
+            1.9553361446578998,
+            2.329424357691893,
+            2.1229698690663965
+          ],
+          [
+            1.559546441124807,
+            1.570151671057661,
+            1.5396901075283607
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 11609,
+        "background_median_luma": 8.666666666666666,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 14,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/weak_02.png",
+      "mask_file": "all_sources/s071/weak_02.alpha.png",
+      "sha256": "fec158b31d63e68426183304e9d29b08ade6c60d92c5ddadd44db439b0b17e51",
+      "mask_sha256": "223a26854c3bc588e70f610d1506b8ba0df4fb69106e81f3404505cd80890bed",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 12965,
+        "opaque_pixels": 8034
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "weak_03",
+      "theme": "blood_moon",
+      "component": "frame",
+      "intensity": "weak",
+      "role": "unspecified",
+      "crop_box": [
+        35,
+        604,
+        481,
+        738
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            53,
+            622,
+            145,
+            720
+          ]
+        },
+        {
+          "rectangle": [
+            371,
+            622,
+            463,
+            720
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "rectangle": [
+            41,
+            610,
+            157,
+            732
+          ]
+        },
+        {
+          "rectangle": [
+            359,
+            610,
+            475,
+            732
+          ]
+        },
+        {
+          "ellipse": [
+            127,
+            607,
+            389,
+            735
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            47,
+            623,
+            49,
+            729
+          ]
+        },
+        {
+          "rectangle": [
+            45,
+            619,
+            47,
+            727
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 11.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            10.4808940020221,
+            9.836215702035622,
+            7.52049773750681
+          ],
+          [
+            0.6525496030790117,
+            1.0540938517138554,
+            0.9429249341183752
+          ],
+          [
+            0.6974216915540026,
+            0.31757098421211116,
+            0.2035406344645937
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 11609,
+        "background_median_luma": 10.333333333333334,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 12,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/weak_03.png",
+      "mask_file": "all_sources/s071/weak_03.alpha.png",
+      "sha256": "a1ec2a67200bb3e008cca9840e56ddd016638a71d676135e323d75160e38892d",
+      "mask_sha256": "598e18e597428c70d97ba57f0d448fc232f98c47f195246e8d04eb5928e06827",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 14196,
+        "opaque_pixels": 9344
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "strong_01",
+      "theme": "blood_moon",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        769,
+        326,
+        1244,
+        460
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            787,
+            344,
+            879,
+            442
+          ]
+        },
+        {
+          "rectangle": [
+            1134,
+            344,
+            1226,
+            442
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "rectangle": [
+            775,
+            332,
+            891,
+            454
+          ]
+        },
+        {
+          "rectangle": [
+            1122,
+            332,
+            1238,
+            454
+          ]
+        },
+        {
+          "ellipse": [
+            861,
+            329,
+            1152,
+            457
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 10.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            8.879811988234904,
+            7.706090345939173,
+            5.7733617021465715
+          ],
+          [
+            2.244688215175682,
+            3.026018698783689,
+            2.266043055160423
+          ],
+          [
+            1.142482632337967,
+            1.4341831645513792,
+            1.3575573026670058
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 12473,
+        "background_median_luma": 10.666666666666666,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 17,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/strong_01.png",
+      "mask_file": "all_sources/s071/strong_01.alpha.png",
+      "sha256": "65a1faeb485a1f1961bead1277af42db635128a18b4b205df41f8747b9ffc3b4",
+      "mask_sha256": "29c95277f900454baa07e8d3d40c344a258d1c011c6d82aa66547180b2eff2ca",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 21331,
+        "opaque_pixels": 13113
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "strong_02",
+      "theme": "blood_moon",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        769,
+        467,
+        1244,
+        601
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            787,
+            485,
+            879,
+            583
+          ]
+        },
+        {
+          "rectangle": [
+            1134,
+            485,
+            1226,
+            583
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "rectangle": [
+            775,
+            473,
+            891,
+            595
+          ]
+        },
+        {
+          "rectangle": [
+            1122,
+            473,
+            1238,
+            595
+          ]
+        },
+        {
+          "ellipse": [
+            861,
+            470,
+            1152,
+            598
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 10.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            8.562683716330083,
+            7.70280041962154,
+            5.602492508417438
+          ],
+          [
+            2.2320530051822236,
+            2.691479226612128,
+            2.276454863121905
+          ],
+          [
+            0.4830039405804627,
+            0.3381253837962548,
+            0.11796383694845347
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 12473,
+        "background_median_luma": 9.666666666666666,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 34,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/strong_02.png",
+      "mask_file": "all_sources/s071/strong_02.alpha.png",
+      "sha256": "201f48623fdc03e86f5ec5eae67ec5a6bf53b7ef9df3337f582b127fa77ce223",
+      "mask_sha256": "c77dfaa2f849fcc5cd177a53d996a52d69a8ef22d42d5b07738aa149a50f7b39",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 24810,
+        "opaque_pixels": 14828
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "strong_03",
+      "theme": "blood_moon",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        769,
+        604,
+        1244,
+        738
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            787,
+            622,
+            879,
+            720
+          ]
+        },
+        {
+          "rectangle": [
+            1134,
+            622,
+            1226,
+            720
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "rectangle": [
+            775,
+            610,
+            891,
+            732
+          ]
+        },
+        {
+          "rectangle": [
+            1122,
+            610,
+            1238,
+            732
+          ]
+        },
+        {
+          "ellipse": [
+            861,
+            607,
+            1152,
+            735
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 10.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            9.57103934890416,
+            8.373674649570235,
+            6.085949951106106
+          ],
+          [
+            2.410080967518616,
+            2.9478459994303456,
+            2.5758911332446996
+          ],
+          [
+            -0.838445918870115,
+            -0.4752770620113631,
+            -0.3280757038748381
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 12473,
+        "background_median_luma": 11.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 15,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/strong_03.png",
+      "mask_file": "all_sources/s071/strong_03.alpha.png",
+      "sha256": "82f214cc653cd745f392d5d24e16327627733d9d7d1513bf2ca2a2f51b2b1736",
+      "mask_sha256": "77584619be4f1093c58fe382fbc4f57cf75c3e97ffe868cfc7e088ebc88bc9cf",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 22446,
+        "opaque_pixels": 14688
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "melee_01",
+      "theme": "blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "melee",
+      "crop_box": [
+        33,
+        903,
+        137,
+        1008
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 9.5,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            11.00008689349644,
+            9.13177053974233,
+            6.937240288873982
+          ],
+          [
+            1.709691835756615,
+            1.4514063862219748,
+            1.3905745830689218
+          ],
+          [
+            -3.67287571162986,
+            -3.6763464971380713,
+            -3.4386082949807206
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1990,
+        "background_median_luma": 9.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 7,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/melee_01.png",
+      "mask_file": "all_sources/s071/melee_01.alpha.png",
+      "sha256": "60d5ce579cc05af7d29e077f9761992c7663f13a642477518dae0c602940a41b",
+      "mask_sha256": "eb4b0bc7cdaf698614fa907f34bc285676f8f4d674810626f946b2e9bdf8a83d",
+      "quality_metrics": {
+        "edge_pixels_above_32": 36,
+        "visible_pixels": 5923,
+        "opaque_pixels": 4067
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "melee_02",
+      "theme": "blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "melee",
+      "crop_box": [
+        152,
+        903,
+        256,
+        1008
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 9.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            6.4449355353766045,
+            5.821698431071089,
+            3.7537930528514982
+          ],
+          [
+            4.1088979217847,
+            3.6494424097850575,
+            3.1722396830413304
+          ],
+          [
+            1.736162339444959,
+            1.5868274959281545,
+            1.204659658780532
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1990,
+        "background_median_luma": 9.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/melee_02.png",
+      "mask_file": "all_sources/s071/melee_02.alpha.png",
+      "sha256": "9dfcf5c17d022021fb36136ac5964380b0d2ba20c357dd8e1e4e87aba7e8a26c",
+      "mask_sha256": "3b50a3c8d902d5b811869647acc620821fc40732f18d04f9e7484a57886f14e1",
+      "quality_metrics": {
+        "edge_pixels_above_32": 32,
+        "visible_pixels": 4137,
+        "opaque_pixels": 2873
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "melee_03",
+      "theme": "blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "melee",
+      "crop_box": [
+        271,
+        903,
+        375,
+        1008
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 9.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            10.205991581808819,
+            8.942294363339762,
+            6.521417824968914
+          ],
+          [
+            -0.6854361545807355,
+            0.40787494811169367,
+            0.5009707052155312
+          ],
+          [
+            0.21278700632504616,
+            -0.19932470402882538,
+            -0.07535809318227621
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1990,
+        "background_median_luma": 9.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 5,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/melee_03.png",
+      "mask_file": "all_sources/s071/melee_03.alpha.png",
+      "sha256": "05375d58684cf3634cc7ac461cc3e765f5b4cd0359fe6d22dc671f37a2eeddd8",
+      "mask_sha256": "7da7e6a72b35fc6a6ab62e28d729e45c1e96bd01ee7f1595f340898f48a276b5",
+      "quality_metrics": {
+        "edge_pixels_above_32": 22,
+        "visible_pixels": 3470,
+        "opaque_pixels": 2162
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "melee_04",
+      "theme": "blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "melee",
+      "crop_box": [
+        390,
+        903,
+        494,
+        1008
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 12.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            13.919336682929018,
+            12.115713353186203,
+            9.597669895314894
+          ],
+          [
+            1.0192724556452941,
+            2.3391219552568945,
+            2.2040537783701977
+          ],
+          [
+            -1.1672645132677584,
+            -2.02026583527302,
+            -1.9797604621951697
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1990,
+        "background_median_luma": 13.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 5,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/melee_04.png",
+      "mask_file": "all_sources/s071/melee_04.alpha.png",
+      "sha256": "9b1277b151e7300578b15614df4922d6dea527501dde03a9212ab8dd124420ef",
+      "mask_sha256": "46ab1f570865d56fdd6b9314a96019a0c4917fdf64af20749e6d8dd751e8420c",
+      "quality_metrics": {
+        "edge_pixels_above_32": 64,
+        "visible_pixels": 4233,
+        "opaque_pixels": 2670
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "ranged_01",
+      "theme": "blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "ranged",
+      "crop_box": [
+        508,
+        903,
+        612,
+        1008
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 12.17,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            17.08366308936802,
+            12.812692665569301,
+            10.527526659768606
+          ],
+          [
+            -4.533623546004449,
+            -1.153381812148124,
+            -1.347239144565863
+          ],
+          [
+            -2.3365039281549422,
+            -1.6297512354887989,
+            -1.6379332127235986
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1990,
+        "background_median_luma": 12.333333333333334,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 5,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/ranged_01.png",
+      "mask_file": "all_sources/s071/ranged_01.alpha.png",
+      "sha256": "ca5790cefdbacb4958136150ec69278bd9782868248b0e2f8660073e738e6b71",
+      "mask_sha256": "d274217b0ea2b6820c7a6ecfb6ae1f5a3d03b72af89d45f832e26fd631de2dae",
+      "quality_metrics": {
+        "edge_pixels_above_32": 71,
+        "visible_pixels": 3897,
+        "opaque_pixels": 2500
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "ranged_02",
+      "theme": "blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "ranged",
+      "crop_box": [
+        627,
+        903,
+        731,
+        1008
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 11.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            12.788194822749402,
+            11.92248645964796,
+            9.395563334997115
+          ],
+          [
+            -4.275214991255357,
+            -3.992341902734599,
+            -3.607386556800423
+          ],
+          [
+            0.3113452470215834,
+            0.2517072929248996,
+            0.14847224424781613
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1990,
+        "background_median_luma": 10.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/ranged_02.png",
+      "mask_file": "all_sources/s071/ranged_02.alpha.png",
+      "sha256": "4e54493dfdcc0716595f01463f5282f801888196189b668914ef1e7494ba70d8",
+      "mask_sha256": "cdb48ae09cff21d600b261e581677599cc8f4ac93ea413eca6d5785296fa33d4",
+      "quality_metrics": {
+        "edge_pixels_above_32": 107,
+        "visible_pixels": 5030,
+        "opaque_pixels": 2924
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "ranged_03",
+      "theme": "blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "ranged",
+      "crop_box": [
+        746,
+        903,
+        850,
+        1008
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 11.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            10.411585013731157,
+            9.682027042538484,
+            7.240742401598449
+          ],
+          [
+            4.852936228302243,
+            4.840256669954078,
+            4.949606664456933
+          ],
+          [
+            -0.9666690485217657,
+            -0.7637489713549561,
+            -0.8185747389294491
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1990,
+        "background_median_luma": 12.333333333333334,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 11,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/ranged_03.png",
+      "mask_file": "all_sources/s071/ranged_03.alpha.png",
+      "sha256": "89140c4040ca895c86d78a8f3d52ab6c3d81133498a8765b911270e121059ad8",
+      "mask_sha256": "eb76635db3439297516fe3f37225be4d39ec69c785dab9230ffc70711030da2d",
+      "quality_metrics": {
+        "edge_pixels_above_32": 88,
+        "visible_pixels": 3527,
+        "opaque_pixels": 2025
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "ranged_04",
+      "theme": "blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "ranged",
+      "crop_box": [
+        865,
+        903,
+        969,
+        1008
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 15.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            19.314407481522725,
+            17.30032400115144,
+            14.43214577163213
+          ],
+          [
+            -9.826395261067002,
+            -7.743426421706425,
+            -6.897349190796016
+          ],
+          [
+            2.98433201055742,
+            1.8301596033190348,
+            1.4850895790040788
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1990,
+        "background_median_luma": 15.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 9,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/ranged_04.png",
+      "mask_file": "all_sources/s071/ranged_04.alpha.png",
+      "sha256": "7c36fb99e1dfcdea613057ef0613904fb77b14ea3e855ea51b0c65d01c25a0b2",
+      "mask_sha256": "b3c38875f0fd2705a5b2838d441fe797c5bc64a229fb5c463f29ea5369e97364",
+      "quality_metrics": {
+        "edge_pixels_above_32": 83,
+        "visible_pixels": 4194,
+        "opaque_pixels": 2278
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "hybrid_01",
+      "theme": "blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "hybrid",
+      "crop_box": [
+        983,
+        903,
+        1087,
+        1008
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 9.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            9.7102806745359,
+            8.733857265437125,
+            6.362162739836838
+          ],
+          [
+            -0.33679033684969445,
+            0.5432906763553087,
+            0.39850690564263663
+          ],
+          [
+            0.2991877847747363,
+            -1.2351478209472064,
+            -1.2707783296064155
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1990,
+        "background_median_luma": 9.666666666666666,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 3,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/hybrid_01.png",
+      "mask_file": "all_sources/s071/hybrid_01.alpha.png",
+      "sha256": "524d92a209fc632e0a3bc9686f7c87cd9d94640e12d6e99045567639e3e189d7",
+      "mask_sha256": "3781ad9448e1796b5faff29cd13d83ac02c37f04fb4d3876f18c356f388d4029",
+      "quality_metrics": {
+        "edge_pixels_above_32": 128,
+        "visible_pixels": 6097,
+        "opaque_pixels": 4422
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "hybrid_02",
+      "theme": "blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "hybrid",
+      "crop_box": [
+        1102,
+        903,
+        1206,
+        1008
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 8.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            8.39748060654208,
+            7.879156924162545,
+            5.8198617313820975
+          ],
+          [
+            2.3521468548748565,
+            0.8947620458820476,
+            0.3030818848653105
+          ],
+          [
+            5.015509231178264,
+            -0.5777615643816232,
+            -0.00012914863014254485
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1990,
+        "background_median_luma": 11.666666666666666,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 3,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/hybrid_02.png",
+      "mask_file": "all_sources/s071/hybrid_02.alpha.png",
+      "sha256": "20b2623d168fd5f887fefa9e04c6ad204999a9b45f40809d10e7b220ce7e5bf8",
+      "mask_sha256": "e0e14fe1e1a532dd34fe40923821b811a7fff8aa2c7d290558de1063f80e6213",
+      "quality_metrics": {
+        "edge_pixels_above_32": 176,
+        "visible_pixels": 6081,
+        "opaque_pixels": 4469
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "hybrid_03",
+      "theme": "blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "hybrid",
+      "crop_box": [
+        1221,
+        903,
+        1325,
+        1008
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 13.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            16.086415607179017,
+            9.559099488967847,
+            7.10699941469252
+          ],
+          [
+            -2.5356537587767214,
+            2.971540531630275,
+            3.4201881989690444
+          ],
+          [
+            2.432994176000094,
+            -1.3249160538921718,
+            -1.2009451252887624
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1990,
+        "background_median_luma": 14.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 11,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/hybrid_03.png",
+      "mask_file": "all_sources/s071/hybrid_03.alpha.png",
+      "sha256": "1118b1bc3b2e0aae99b0ae6c0bd8fd4b3ff2064ff75d298788f2ec69a04edc2b",
+      "mask_sha256": "230c09c26ce2a50e82d7a57930c768d67fce02fc88181cdc471d03a7a4d7a947",
+      "quality_metrics": {
+        "edge_pixels_above_32": 142,
+        "visible_pixels": 4636,
+        "opaque_pixels": 2839
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "hybrid_04",
+      "theme": "blood_moon",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "hybrid",
+      "crop_box": [
+        1340,
+        903,
+        1444,
+        1008
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 11.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            12.32942175751971,
+            11.525818532490927,
+            8.887891331266342
+          ],
+          [
+            2.315801754701403,
+            -0.16976889283126603,
+            1.18691176005825
+          ],
+          [
+            -1.9051280413829508,
+            -0.11173581267537455,
+            0.06829336162342681
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 1990,
+        "background_median_luma": 12.666666666666666,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s071/hybrid_04.png",
+      "mask_file": "all_sources/s071/hybrid_04.alpha.png",
+      "sha256": "fd467e9ab49e0180f453e1e2a6520936106a0b15487e9c6f04fd2f2687915322",
+      "mask_sha256": "d3a19f5522d4159f47b52b58467136650754f4f58f58bba9599537c72a27f616",
+      "quality_metrics": {
+        "edge_pixels_above_32": 90,
+        "visible_pixels": 5064,
+        "opaque_pixels": 3590
+      },
+      "status": "needs_mask_or_source_review"
+    }
+  ],
+  "quality_notes": [
+    "RGBは元絵の画素を維持。半透明発光の下に混ざった背景色や肖像で隠れた装飾は復元しない。",
+    "切り出し範囲・肖像穴はsource_regions.jpg、細線・フリンジは黒/白/ゲーム比較で最終承認する。"
+  ],
+  "excluded_content": [
+    "テーマ見出し、説明文、罫線、背景の人物イラスト、色見本は合成素材の対象外。"
+  ],
+  "unsupported": [],
+  "review_pages": [
+    "all_sources/s071/review_01.jpg",
+    "all_sources/s071/review_02.jpg",
+    "all_sources/s071/review_03.jpg"
+  ],
+  "combinations": {
+    "count": 72,
+    "files": [
+      "all_sources/s071/combinations_01.jpg",
+      "all_sources/s071/combinations_02.jpg",
+      "all_sources/s071/combinations_03.jpg"
+    ],
+    "anchor": "illustrative frame crop center; no runtime integration"
+  },
+  "verification": [
+    {
+      "id": "weak_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 18032,
+      "transparent_pixels": 47082,
+      "partial_pixels": 4985,
+      "visible_pixels": 12682
+    },
+    {
+      "id": "weak_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 18032,
+      "transparent_pixels": 46799,
+      "partial_pixels": 5463,
+      "visible_pixels": 12965
+    },
+    {
+      "id": "weak_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 18032,
+      "transparent_pixels": 45568,
+      "partial_pixels": 5356,
+      "visible_pixels": 14196
+    },
+    {
+      "id": "strong_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 18032,
+      "transparent_pixels": 42319,
+      "partial_pixels": 9046,
+      "visible_pixels": 21331
+    },
+    {
+      "id": "strong_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 18032,
+      "transparent_pixels": 38840,
+      "partial_pixels": 10805,
+      "visible_pixels": 24810
+    },
+    {
+      "id": "strong_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 18032,
+      "transparent_pixels": 41204,
+      "partial_pixels": 8557,
+      "visible_pixels": 22446
+    },
+    {
+      "id": "melee_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 4997,
+      "partial_pixels": 2121,
+      "visible_pixels": 5923
+    },
+    {
+      "id": "melee_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 6783,
+      "partial_pixels": 1410,
+      "visible_pixels": 4137
+    },
+    {
+      "id": "melee_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 7450,
+      "partial_pixels": 1422,
+      "visible_pixels": 3470
+    },
+    {
+      "id": "melee_04",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 6687,
+      "partial_pixels": 1704,
+      "visible_pixels": 4233
+    },
+    {
+      "id": "ranged_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 7023,
+      "partial_pixels": 1532,
+      "visible_pixels": 3897
+    },
+    {
+      "id": "ranged_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 5890,
+      "partial_pixels": 2251,
+      "visible_pixels": 5030
+    },
+    {
+      "id": "ranged_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 7393,
+      "partial_pixels": 1624,
+      "visible_pixels": 3527
+    },
+    {
+      "id": "ranged_04",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 6726,
+      "partial_pixels": 2049,
+      "visible_pixels": 4194
+    },
+    {
+      "id": "hybrid_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 4823,
+      "partial_pixels": 1906,
+      "visible_pixels": 6097
+    },
+    {
+      "id": "hybrid_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 4839,
+      "partial_pixels": 1793,
+      "visible_pixels": 6081
+    },
+    {
+      "id": "hybrid_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 6284,
+      "partial_pixels": 1921,
+      "visible_pixels": 4636
+    },
+    {
+      "id": "hybrid_04",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 5856,
+      "partial_pixels": 1632,
+      "visible_pixels": 5064
+    }
+  ]
+}

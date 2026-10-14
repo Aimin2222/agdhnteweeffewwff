@@ -1,0 +1,1900 @@
+{
+  "source_index": 65,
+  "source_file": "image-gen-7(5).png",
+  "source_sha256": "1807084bfe64eca023b944f8c4cc7ce6e746bf79d9e9326392bc46f99fce7b75",
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "rgb_modified": false,
+  "generated_or_inpainted": false,
+  "status": "unapproved_candidates",
+  "assets": [
+    {
+      "id": "weak_01",
+      "theme": "arcana",
+      "component": "frame",
+      "intensity": "weak",
+      "role": "unspecified",
+      "crop_box": [
+        184,
+        254,
+        625,
+        374
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            202,
+            272,
+            286,
+            356
+          ]
+        },
+        {
+          "ellipse": [
+            523,
+            272,
+            607,
+            356
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            190,
+            260,
+            298,
+            368
+          ]
+        },
+        {
+          "ellipse": [
+            511,
+            260,
+            619,
+            368
+          ]
+        },
+        {
+          "ellipse": [
+            268,
+            257,
+            541,
+            371
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            266,
+            254,
+            624,
+            256
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 10.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            10.337987267090625,
+            10.13168438239308,
+            8.264992511602747
+          ],
+          [
+            1.001860064202127,
+            1.0200116628615152,
+            1.386926000248922
+          ],
+          [
+            4.058962953214381,
+            2.345126563158458,
+            2.505141899450025
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 14041,
+        "background_median_luma": 14.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 41,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/weak_01.png",
+      "mask_file": "all_sources/s065/weak_01.alpha.png",
+      "sha256": "cc3a666d2b390a22842548478a708a27a0fe40ae4642f9afb87c3082947b361e",
+      "mask_sha256": "87cf374fac70c8436618c140d9e88b92600d72416b12c7696ac0f4b221fca213",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 18410,
+        "opaque_pixels": 9868
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "weak_02",
+      "theme": "arcana",
+      "component": "frame",
+      "intensity": "weak",
+      "role": "unspecified",
+      "crop_box": [
+        184,
+        394,
+        625,
+        514
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            202,
+            412,
+            286,
+            496
+          ]
+        },
+        {
+          "ellipse": [
+            523,
+            412,
+            607,
+            496
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            190,
+            400,
+            298,
+            508
+          ]
+        },
+        {
+          "ellipse": [
+            511,
+            400,
+            619,
+            508
+          ]
+        },
+        {
+          "ellipse": [
+            268,
+            397,
+            541,
+            511
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [
+        {
+          "rectangle": [
+            184,
+            399,
+            624,
+            401
+          ]
+        },
+        {
+          "rectangle": [
+            184,
+            401,
+            624,
+            403
+          ]
+        }
+      ],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 10.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            7.838890035761808,
+            8.391608476688969,
+            6.833917522152505
+          ],
+          [
+            1.546217754694161,
+            1.289833719917067,
+            1.2482153328644463
+          ],
+          [
+            7.788055493487053,
+            3.4114362680280257,
+            4.137505739994278
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 14041,
+        "background_median_luma": 11.666666666666666,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 50,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/weak_02.png",
+      "mask_file": "all_sources/s065/weak_02.alpha.png",
+      "sha256": "fadb57792cc399caee21cda5e7c3b7381ad5fb1a8c019d8f501d9d0910a1e623",
+      "mask_sha256": "f70a561a31b06fcdcf14a5a7bfa0711fbeb29dae82a4d3ea41d6208748cdb5fd",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 16753,
+        "opaque_pixels": 9688
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "weak_03",
+      "theme": "arcana",
+      "component": "frame",
+      "intensity": "weak",
+      "role": "unspecified",
+      "crop_box": [
+        184,
+        537,
+        625,
+        657
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            202,
+            555,
+            286,
+            639
+          ]
+        },
+        {
+          "ellipse": [
+            523,
+            555,
+            607,
+            639
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            190,
+            543,
+            298,
+            651
+          ]
+        },
+        {
+          "ellipse": [
+            511,
+            543,
+            619,
+            651
+          ]
+        },
+        {
+          "ellipse": [
+            268,
+            540,
+            541,
+            654
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 10.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            7.9087950087529615,
+            8.58173220686393,
+            7.2245762951009596
+          ],
+          [
+            1.1780720754428247,
+            0.9566505506625198,
+            1.8002965792305115
+          ],
+          [
+            9.193791033149303,
+            4.463155314577411,
+            4.405413434278255
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 14041,
+        "background_median_luma": 12.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 39,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/weak_03.png",
+      "mask_file": "all_sources/s065/weak_03.alpha.png",
+      "sha256": "671b088549b68f5a6307bd1b9f8b8a967a96da834e9140669411a70efdf2396e",
+      "mask_sha256": "08da9b43f9d74656001407b4cd95901c425c98c89cb77e4c95a0e74a7d259edf",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 16253,
+        "opaque_pixels": 9396
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "strong_01",
+      "theme": "arcana",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        923,
+        254,
+        1397,
+        374
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            941,
+            272,
+            1025,
+            356
+          ]
+        },
+        {
+          "ellipse": [
+            1295,
+            272,
+            1379,
+            356
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            929,
+            260,
+            1037,
+            368
+          ]
+        },
+        {
+          "ellipse": [
+            1283,
+            260,
+            1391,
+            368
+          ]
+        },
+        {
+          "ellipse": [
+            1007,
+            257,
+            1313,
+            371
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 9.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            12.716507289002354,
+            12.451434012156241,
+            9.854649155922983
+          ],
+          [
+            -1.3240257077527433,
+            -1.7645838995477585,
+            -1.0243705721384067
+          ],
+          [
+            5.275590427354702,
+            -2.1562163662791023,
+            -1.954379047720639
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 15052,
+        "background_median_luma": 20.333333333333332,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 51,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/strong_01.png",
+      "mask_file": "all_sources/s065/strong_01.alpha.png",
+      "sha256": "ec9a52bd8ea8f45648149ec9831c98b967f04dcaac2da7b23eb7756da1419e6f",
+      "mask_sha256": "876d7ccac9d15faf06c11b7704f77ddb898d8562d3df84e8034c0722c6c5c439",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 23345,
+        "opaque_pixels": 15728
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "strong_02",
+      "theme": "arcana",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        923,
+        394,
+        1397,
+        514
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            941,
+            412,
+            1025,
+            496
+          ]
+        },
+        {
+          "ellipse": [
+            1295,
+            412,
+            1379,
+            496
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            929,
+            400,
+            1037,
+            508
+          ]
+        },
+        {
+          "ellipse": [
+            1283,
+            400,
+            1391,
+            508
+          ]
+        },
+        {
+          "ellipse": [
+            1007,
+            397,
+            1313,
+            511
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 9.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            8.328263609049936,
+            9.411138339993244,
+            8.262875159305437
+          ],
+          [
+            -0.3918881909157248,
+            -1.3372901765494714,
+            -1.9128646514094318
+          ],
+          [
+            10.761499657029566,
+            -0.790364675671574,
+            0.150421830367357
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 15052,
+        "background_median_luma": 15.666666666666666,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 30,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/strong_02.png",
+      "mask_file": "all_sources/s065/strong_02.alpha.png",
+      "sha256": "6db56e3d314703939bf35d5bfa767a073398dabbe4466876eab7c34598eee006",
+      "mask_sha256": "fbc5cc43d846a549941e39787f1deaf6d6909d281ab4567c02d42af7c2d1c06d",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 23547,
+        "opaque_pixels": 15310
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "strong_03",
+      "theme": "arcana",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        923,
+        537,
+        1397,
+        657
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            941,
+            555,
+            1025,
+            639
+          ]
+        },
+        {
+          "ellipse": [
+            1295,
+            555,
+            1379,
+            639
+          ]
+        }
+      ],
+      "roi_regions": [
+        {
+          "ellipse": [
+            929,
+            543,
+            1037,
+            651
+          ]
+        },
+        {
+          "ellipse": [
+            1283,
+            543,
+            1391,
+            651
+          ]
+        },
+        {
+          "ellipse": [
+            1007,
+            540,
+            1313,
+            654
+          ]
+        }
+      ],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 10.83,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            9.790182562886281,
+            9.681074240372586,
+            7.774007365908633
+          ],
+          [
+            -2.446213531932165,
+            -1.4777875819022424,
+            -0.6760741636498894
+          ],
+          [
+            13.012121062416055,
+            3.8984271328220355,
+            3.3601072785721926
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 15052,
+        "background_median_luma": 17.5,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 20,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/strong_03.png",
+      "mask_file": "all_sources/s065/strong_03.alpha.png",
+      "sha256": "fca427a7dd676fec7fbd3cde808f279c1c1fa41dcc3388716413fe902bac8738",
+      "mask_sha256": "67bab37bfe6c44168c021b64cadcfc11bc3111a4c33b93a45aa78ffb66de9fcb",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 25266,
+        "opaque_pixels": 18705
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "melee_01",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "melee",
+      "crop_box": [
+        181,
+        772,
+        448,
+        902
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 214.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            240.65814458268846,
+            224.86222357015407,
+            197.39670121089375
+          ],
+          [
+            0.13826573289874267,
+            1.7888717060265358,
+            5.7415726920395596
+          ],
+          [
+            -4.227415412020046,
+            -4.732893712746668,
+            -2.229683409563415
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 6272,
+        "background_median_luma": 218.66666666666666,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 48,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/melee_01.png",
+      "mask_file": "all_sources/s065/melee_01.alpha.png",
+      "sha256": "2113f84687739fd58e7982ec927657d2badc7ef980936700a6adc659fa35e8b4",
+      "mask_sha256": "c7c65f3d24e2c150400777c339a778ca9aec3f52f1bb5813890cff952c8d0ee1",
+      "quality_metrics": {
+        "edge_pixels_above_32": 32,
+        "visible_pixels": 15351,
+        "opaque_pixels": 11537
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "melee_02",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "melee",
+      "crop_box": [
+        149,
+        910,
+        205,
+        960
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の参考図。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 190.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            218.21500284891457,
+            195.81203317446452,
+            165.35428030925442
+          ],
+          [
+            -2.9701967749032034,
+            -3.5350470061845733,
+            -3.8524124537102784
+          ],
+          [
+            1.780314152395562,
+            2.9074052873624385,
+            2.7915238099926034
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 190.66666666666666,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 1,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/melee_02.png",
+      "mask_file": "all_sources/s065/melee_02.alpha.png",
+      "sha256": "08adda747162b896989dfbe3e50aae6aeb6c5e447f30be899e9d0ce632a80081",
+      "mask_sha256": "c6e258baee273b216662aaa54d58a068bcb64b2da5e87e03af1f2d49d7efd08a",
+      "quality_metrics": {
+        "edge_pixels_above_32": 6,
+        "visible_pixels": 806,
+        "opaque_pixels": 548
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "melee_03",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "melee",
+      "crop_box": [
+        227,
+        910,
+        283,
+        960
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の参考図。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 197.83,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            221.8929204903244,
+            199.3930409931874,
+            168.40221581078222
+          ],
+          [
+            1.1048208832572521,
+            1.5643778350447946,
+            0.061408244249596344
+          ],
+          [
+            0.13998117011033606,
+            1.0731256633100332,
+            1.367928621145206
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 196.0,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/melee_03.png",
+      "mask_file": "all_sources/s065/melee_03.alpha.png",
+      "sha256": "5d12e62dff89a94b45399cf4203dcea553318c817b2d90847ef7c1fd6fc686e3",
+      "mask_sha256": "6bf78135198a77fbb1ac5f9cca9455f5cce486b7d41654eee610effa7e7bcae1",
+      "quality_metrics": {
+        "edge_pixels_above_32": 3,
+        "visible_pixels": 906,
+        "opaque_pixels": 575
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "melee_04",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "melee",
+      "crop_box": [
+        309,
+        910,
+        365,
+        960
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の参考図。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 202.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            230.73671322542333,
+            212.49381950940864,
+            183.37925360738325
+          ],
+          [
+            -6.877570185351207,
+            -8.028199956727342,
+            -8.591128528931803
+          ],
+          [
+            -3.038282149749268,
+            -4.5452416353242295,
+            -6.560173834422646
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 201.66666666666666,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 1,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/melee_04.png",
+      "mask_file": "all_sources/s065/melee_04.alpha.png",
+      "sha256": "087b4461ed56d2fcfba6955cecf0b770b74a9a177f1dd754c8728d056a63f3ce",
+      "mask_sha256": "fca19bfffcda2871151bd6b5c7d2314d6081c571c8f318af3fa553f4cf88e08b",
+      "quality_metrics": {
+        "edge_pixels_above_32": 0,
+        "visible_pixels": 750,
+        "opaque_pixels": 575
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "melee_05",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "melee",
+      "crop_box": [
+        391,
+        910,
+        447,
+        960
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の参考図。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 194.83,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            219.82432088148528,
+            199.5221529090866,
+            169.6982854406027
+          ],
+          [
+            -6.409296152722918,
+            -9.349025297591353,
+            -10.635170745190123
+          ],
+          [
+            3.9432997102304275,
+            4.6691542211265995,
+            4.446199793722445
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 193.0,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/melee_05.png",
+      "mask_file": "all_sources/s065/melee_05.alpha.png",
+      "sha256": "4db5d05409e9b7f9b2548bac23d73075d693aa3a7c0e2680d4d19628b37f350f",
+      "mask_sha256": "d6e1182722649f679e21720bf27b4d8023c58cce424524757fcfaf8a90086578",
+      "quality_metrics": {
+        "edge_pixels_above_32": 2,
+        "visible_pixels": 929,
+        "opaque_pixels": 678
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "ranged_01",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "ranged",
+      "crop_box": [
+        665,
+        772,
+        931,
+        902
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 221.17,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            241.1565234650471,
+            226.4741285377429,
+            201.39458962137203
+          ],
+          [
+            -2.4265171682387012,
+            -4.885933805327701,
+            -7.295978678301628
+          ],
+          [
+            2.7425351693007145,
+            6.5598535657069785,
+            11.453364981107093
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 6260,
+        "background_median_luma": 222.66666666666666,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 48,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/ranged_01.png",
+      "mask_file": "all_sources/s065/ranged_01.alpha.png",
+      "sha256": "480e2219b1a4163f42d5cffd4711c48849619c8dc98a651fea4a3bdd7d670592",
+      "mask_sha256": "c2c34eca78320a8f9dc94ba7d050b64e4b12113e95e52a0034de5801d8390613",
+      "quality_metrics": {
+        "edge_pixels_above_32": 52,
+        "visible_pixels": 17054,
+        "opaque_pixels": 13790
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "ranged_02",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "ranged",
+      "crop_box": [
+        610,
+        910,
+        666,
+        960
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の参考図。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 197.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            217.0751063602593,
+            196.43141517918988,
+            167.80339738630082
+          ],
+          [
+            -3.6798259750753863,
+            -5.5305701613402665,
+            -6.318793692397791
+          ],
+          [
+            4.482155057218502,
+            6.110119277821561,
+            5.8054604471349744
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 192.66666666666666,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 7,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/ranged_02.png",
+      "mask_file": "all_sources/s065/ranged_02.alpha.png",
+      "sha256": "e08b39ac5b64f4f48db750e8c3a83435b12dd1995e09ec939c24ccbbf01bae1d",
+      "mask_sha256": "be722740106a9dc18dd0915a857433fbb1a697b6524fff7fbc57da073155386c",
+      "quality_metrics": {
+        "edge_pixels_above_32": 4,
+        "visible_pixels": 651,
+        "opaque_pixels": 417
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "ranged_03",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "ranged",
+      "crop_box": [
+        695,
+        910,
+        751,
+        960
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の参考図。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 198.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            220.6129319562825,
+            201.2595272392581,
+            172.3740279257696
+          ],
+          [
+            -0.9175457418903639,
+            -2.50304908590259,
+            -4.62892824450542
+          ],
+          [
+            0.9438601890613276,
+            0.6088229651388986,
+            0.08935928820141381
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 195.33333333333334,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 5,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/ranged_03.png",
+      "mask_file": "all_sources/s065/ranged_03.alpha.png",
+      "sha256": "4d64db8cb3e0c1cf44dafa5a2cd7df51ed6f581ec5127731f37f0f559ff1e6bd",
+      "mask_sha256": "06269f2a321e328639413847f2d99af1d34cc54184155e9d4cc0a844487fe9f8",
+      "quality_metrics": {
+        "edge_pixels_above_32": 1,
+        "visible_pixels": 726,
+        "opaque_pixels": 523
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "ranged_04",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "ranged",
+      "crop_box": [
+        783,
+        910,
+        839,
+        960
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の参考図。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 200.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            223.7353663800515,
+            204.42576963582346,
+            175.20187703896093
+          ],
+          [
+            0.4489562278321,
+            0.5458825050074487,
+            1.4890961810126042
+          ],
+          [
+            1.1073773382182337,
+            1.4578947504792665,
+            0.4328108324787937
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 201.33333333333334,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 5,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/ranged_04.png",
+      "mask_file": "all_sources/s065/ranged_04.alpha.png",
+      "sha256": "ca0dd6ace1f727d002c891a48103439c815adbc6741558aed4e05047f7af32c3",
+      "mask_sha256": "23491e0815c3f5a7758d5d883950e4cd713957d7a474b38733de1ea1684caf4c",
+      "quality_metrics": {
+        "edge_pixels_above_32": 4,
+        "visible_pixels": 545,
+        "opaque_pixels": 359
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "ranged_05",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "ranged",
+      "crop_box": [
+        866,
+        910,
+        922,
+        960
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の参考図。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 192.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            218.7463197532907,
+            196.0342904143308,
+            165.00279192136642
+          ],
+          [
+            -1.5791944573446104,
+            -0.39481868287270006,
+            0.9213512549657804
+          ],
+          [
+            -1.3715945473237368,
+            -1.1193055271534154,
+            -1.7538743928178333
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 191.0,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 8,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/ranged_05.png",
+      "mask_file": "all_sources/s065/ranged_05.alpha.png",
+      "sha256": "84f166e9128038fdcc13e903b725d8bc7236a9b374bf9f422e0119eceff296e7",
+      "mask_sha256": "3fa70ca0a45c9d9bfe062ec50493acdd4810595a0e0556f3c049dcdb211b2e20",
+      "quality_metrics": {
+        "edge_pixels_above_32": 11,
+        "visible_pixels": 969,
+        "opaque_pixels": 693
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "hybrid_01",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "hybrid",
+      "crop_box": [
+        1160,
+        772,
+        1425,
+        900
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 222.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            242.87754430497196,
+            229.12097893078706,
+            205.53262637725442
+          ],
+          [
+            -0.11250198622690716,
+            -0.31747211550878524,
+            -1.1797295905145284
+          ],
+          [
+            0.054723104311770174,
+            -0.24900294050264699,
+            0.7537533961602617
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 6196,
+        "background_median_luma": 224.0,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 51,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/hybrid_01.png",
+      "mask_file": "all_sources/s065/hybrid_01.alpha.png",
+      "sha256": "999e114b73c8feab6d0efd72de69cdab63dcc7c618740d670b88acb3054f8d5b",
+      "mask_sha256": "0656b72327b3a58365a401159d3c911c90f8974299615d44c20a7c65c9f097d4",
+      "quality_metrics": {
+        "edge_pixels_above_32": 45,
+        "visible_pixels": 18031,
+        "opaque_pixels": 15377
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "hybrid_02",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "hybrid",
+      "crop_box": [
+        1073,
+        910,
+        1129,
+        960
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の参考図。拡大利用は非推奨。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 216.83,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            243.6147182924828,
+            230.43655935220968,
+            208.38253235658033
+          ],
+          [
+            -24.000157540366253,
+            -34.51495623181616,
+            -45.433409987207156
+          ],
+          [
+            2.8108811962337334,
+            3.5115055539626816,
+            2.176712746787608
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 199.33333333333334,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/hybrid_02.png",
+      "mask_file": "all_sources/s065/hybrid_02.alpha.png",
+      "sha256": "9771860d2fb4850de150ef2ef944e45cb33d2715468584effe1f61701fc88bfb",
+      "mask_sha256": "cf18a5b7956e315b9c00c8f5889614aab7e772f5f350474e58e15f33554966eb",
+      "quality_metrics": {
+        "edge_pixels_above_32": 31,
+        "visible_pixels": 1043,
+        "opaque_pixels": 411
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "hybrid_03",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "hybrid",
+      "crop_box": [
+        1154,
+        910,
+        1210,
+        960
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の参考図。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 200.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            224.6520794581598,
+            203.34407392568656,
+            171.38788630312675
+          ],
+          [
+            -2.6758665745598567,
+            -3.1817398940012014,
+            -3.8718318513133054
+          ],
+          [
+            2.7764956195637973,
+            4.542951383816458,
+            6.234016278466436
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 198.66666666666666,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 3,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/hybrid_03.png",
+      "mask_file": "all_sources/s065/hybrid_03.alpha.png",
+      "sha256": "36099f0953542f473353b47cbabc4f045ef96bee9289fcf9f3ba2fc9b356e5ce",
+      "mask_sha256": "365ee0472fa2d93e5ad1be2f0d33e6dbe141c25d12213a39d78028427a6b640a",
+      "quality_metrics": {
+        "edge_pixels_above_32": 17,
+        "visible_pixels": 1052,
+        "opaque_pixels": 788
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "hybrid_04",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "hybrid",
+      "crop_box": [
+        1236,
+        910,
+        1292,
+        960
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の参考図。拡大利用は非推奨。"
+      ],
+      "local_border_luma": 193.17,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            222.65146335537585,
+            202.73153405173974,
+            173.83481680338906
+          ],
+          [
+            -7.193863307837273,
+            -8.79164408251236,
+            -10.442655474020011
+          ],
+          [
+            0.8957364234237359,
+            -0.3639651146395986,
+            -3.190613144023664
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 194.66666666666666,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 1,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/hybrid_04.png",
+      "mask_file": "all_sources/s065/hybrid_04.alpha.png",
+      "sha256": "55b6a8a5153d370d720026fe3e63cae759f8fca17054898647680249168b1f4c",
+      "mask_sha256": "1f80d516302acf16747de90d7fff36509d32f2df763f87146dc470d8b6e7362d",
+      "quality_metrics": {
+        "edge_pixels_above_32": 16,
+        "visible_pixels": 723,
+        "opaque_pixels": 440
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "hybrid_05",
+      "theme": "arcana",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "hybrid",
+      "crop_box": [
+        1328,
+        910,
+        1384,
+        960
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "light",
+      "candidate_thresholds": [
+        25,
+        95
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "小型の参考図。拡大利用は非推奨。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 188.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            216.89950013915433,
+            195.4091188271879,
+            165.5120370240974
+          ],
+          [
+            -2.7323335064741165,
+            -6.596765797926033,
+            -9.514022609466924
+          ],
+          [
+            0.5338300627608628,
+            -0.04542502170227625,
+            -0.053178143074428696
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 600,
+        "background_median_luma": 188.66666666666666,
+        "light_matte": true,
+        "candidate_thresholds": [
+          25,
+          95
+        ],
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s065/hybrid_05.png",
+      "mask_file": "all_sources/s065/hybrid_05.alpha.png",
+      "sha256": "1094cf8aa63d8c29b09e0fbbb539f567fe898639c31ae3af63fa07719f2f06ba",
+      "mask_sha256": "a644fa639e4380d08b81c977829d9324a9748ebc92c1fcffe527b075d717f610",
+      "quality_metrics": {
+        "edge_pixels_above_32": 25,
+        "visible_pixels": 971,
+        "opaque_pixels": 623
+      },
+      "status": "needs_mask_or_source_review"
+    }
+  ],
+  "quality_notes": [
+    "RGBは元絵の画素を維持。半透明発光の下に混ざった背景色や肖像で隠れた装飾は復元しない。",
+    "切り出し範囲・肖像穴はsource_regions.jpg、細線・フリンジは黒/白/ゲーム比較で最終承認する。"
+  ],
+  "excluded_content": [
+    "テーマ見出し、説明文、罫線、背景の人物イラスト、色見本は合成素材の対象外。"
+  ],
+  "unsupported": [],
+  "review_pages": [
+    "all_sources/s065/review_01.jpg",
+    "all_sources/s065/review_02.jpg",
+    "all_sources/s065/review_03.jpg"
+  ],
+  "combinations": {
+    "count": 90,
+    "files": [
+      "all_sources/s065/combinations_01.jpg",
+      "all_sources/s065/combinations_02.jpg",
+      "all_sources/s065/combinations_03.jpg",
+      "all_sources/s065/combinations_04.jpg"
+    ],
+    "anchor": "illustrative frame crop center; no runtime integration"
+  },
+  "verification": [
+    {
+      "id": "weak_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 10894,
+      "transparent_pixels": 34510,
+      "partial_pixels": 9104,
+      "visible_pixels": 18410
+    },
+    {
+      "id": "weak_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 10894,
+      "transparent_pixels": 36167,
+      "partial_pixels": 7633,
+      "visible_pixels": 16753
+    },
+    {
+      "id": "weak_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 10894,
+      "transparent_pixels": 36667,
+      "partial_pixels": 7363,
+      "visible_pixels": 16253
+    },
+    {
+      "id": "strong_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 10894,
+      "transparent_pixels": 33535,
+      "partial_pixels": 8246,
+      "visible_pixels": 23345
+    },
+    {
+      "id": "strong_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 10894,
+      "transparent_pixels": 33333,
+      "partial_pixels": 9054,
+      "visible_pixels": 23547
+    },
+    {
+      "id": "strong_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 10894,
+      "transparent_pixels": 31614,
+      "partial_pixels": 7293,
+      "visible_pixels": 25266
+    },
+    {
+      "id": "melee_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 19359,
+      "partial_pixels": 4119,
+      "visible_pixels": 15351
+    },
+    {
+      "id": "melee_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 1994,
+      "partial_pixels": 275,
+      "visible_pixels": 806
+    },
+    {
+      "id": "melee_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 1894,
+      "partial_pixels": 363,
+      "visible_pixels": 906
+    },
+    {
+      "id": "melee_04",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 2050,
+      "partial_pixels": 193,
+      "visible_pixels": 750
+    },
+    {
+      "id": "melee_05",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 1871,
+      "partial_pixels": 271,
+      "visible_pixels": 929
+    },
+    {
+      "id": "ranged_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 17526,
+      "partial_pixels": 3565,
+      "visible_pixels": 17054
+    },
+    {
+      "id": "ranged_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 2149,
+      "partial_pixels": 257,
+      "visible_pixels": 651
+    },
+    {
+      "id": "ranged_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 2074,
+      "partial_pixels": 216,
+      "visible_pixels": 726
+    },
+    {
+      "id": "ranged_04",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 2255,
+      "partial_pixels": 201,
+      "visible_pixels": 545
+    },
+    {
+      "id": "ranged_05",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 1831,
+      "partial_pixels": 303,
+      "visible_pixels": 969
+    },
+    {
+      "id": "hybrid_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 15889,
+      "partial_pixels": 2914,
+      "visible_pixels": 18031
+    },
+    {
+      "id": "hybrid_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 1757,
+      "partial_pixels": 649,
+      "visible_pixels": 1043
+    },
+    {
+      "id": "hybrid_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 1748,
+      "partial_pixels": 269,
+      "visible_pixels": 1052
+    },
+    {
+      "id": "hybrid_04",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 2077,
+      "partial_pixels": 299,
+      "visible_pixels": 723
+    },
+    {
+      "id": "hybrid_05",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 1829,
+      "partial_pixels": 370,
+      "visible_pixels": 971
+    }
+  ]
+}
