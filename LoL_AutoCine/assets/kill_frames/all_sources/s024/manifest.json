@@ -1,0 +1,540 @@
+{
+  "source_index": 24,
+  "source_file": "image-gen-2(4).png",
+  "source_sha256": "66e48192ecaaf7d5e3a76a4c958fe8b5ec6946c8cf72209593f91c7038323d27",
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "rgb_modified": false,
+  "generated_or_inpainted": false,
+  "status": "unapproved_candidates",
+  "assets": [
+    {
+      "id": "strong_01",
+      "theme": "forest_spirit",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        75,
+        130,
+        938,
+        370
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            169,
+            173,
+            337,
+            335
+          ]
+        },
+        {
+          "rectangle": [
+            675,
+            173,
+            841,
+            335
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 31.83,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            27.087920415126028,
+            28.617285060985754,
+            24.145285006924126
+          ],
+          [
+            3.7615123693366925,
+            3.5538990334708718,
+            9.029719788498644
+          ],
+          [
+            11.72567982445075,
+            10.866284868944735,
+            6.228331263885498
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 39288,
+        "background_median_luma": 37.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 18,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s024/strong_01.png",
+      "mask_file": "all_sources/s024/strong_01.alpha.png",
+      "sha256": "58fae3e72ab7bae0bca81893e5e35fd66192901e1ad8b158e807c0e8c6b76e26",
+      "mask_sha256": "424808983619b1fe424519b0bf80cf3217ccaa945c4b7af7a7a2b428939893fd",
+      "quality_metrics": {
+        "edge_pixels_above_32": 191,
+        "visible_pixels": 90282,
+        "opaque_pixels": 49765
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "strong_02",
+      "theme": "forest_spirit",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        65,
+        375,
+        939,
+        605
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            169,
+            407,
+            337,
+            570
+          ]
+        },
+        {
+          "rectangle": [
+            675,
+            407,
+            841,
+            570
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 44.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            49.04456344787706,
+            42.38534961233404,
+            37.32909207197024
+          ],
+          [
+            -1.2382849279080927,
+            6.342760102031447,
+            4.907739152823684
+          ],
+          [
+            -9.203741714892027,
+            -3.9242098820683853,
+            -3.9212825263347737
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 37116,
+        "background_median_luma": 45.333333333333336,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 24,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s024/strong_02.png",
+      "mask_file": "all_sources/s024/strong_02.alpha.png",
+      "sha256": "543ce885d11f68827bcf055426f4ef74076f3dd1908ca4b65015aad88dc8bb43",
+      "mask_sha256": "b9a6933a79a5946ceaa36b3225f38e6e8b53610305a754d78f51ae21aeec6755",
+      "quality_metrics": {
+        "edge_pixels_above_32": 200,
+        "visible_pixels": 92367,
+        "opaque_pixels": 51967
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "strong_03",
+      "theme": "forest_spirit",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        65,
+        612,
+        944,
+        859
+      ],
+      "portrait_holes": [
+        {
+          "rectangle": [
+            170,
+            646,
+            337,
+            805
+          ]
+        },
+        {
+          "rectangle": [
+            675,
+            646,
+            841,
+            805
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 37.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            47.77490715794131,
+            46.94803747078227,
+            38.118355853446886
+          ],
+          [
+            -13.07590645372889,
+            -10.083384567744647,
+            -3.8512442963923395
+          ],
+          [
+            -12.795149588587456,
+            -8.133096849462593,
+            -6.306699800815185
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 40274,
+        "background_median_luma": 39.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 37,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s024/strong_03.png",
+      "mask_file": "all_sources/s024/strong_03.alpha.png",
+      "sha256": "563d709048b1035b027f242686bc05a9466c431f3505608a17ea82df801df7cd",
+      "mask_sha256": "65732b072984e5b0c122930d943f306341bd8313713f207f27bb85e5e44dd0b4",
+      "quality_metrics": {
+        "edge_pixels_above_32": 213,
+        "visible_pixels": 102325,
+        "opaque_pixels": 55104
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "melee_01",
+      "theme": "forest_spirit",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "melee",
+      "crop_box": [
+        370,
+        918,
+        626,
+        1025
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 24.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            27.436388991094272,
+            29.313584206708533,
+            27.280366383336073
+          ],
+          [
+            -8.229866857241937,
+            -0.8783383035173851,
+            -2.075289196269165
+          ],
+          [
+            -1.590207119054356,
+            -0.9260967330445837,
+            -1.007445059400378
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 4888,
+        "background_median_luma": 27.333333333333332,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 14,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s024/melee_01.png",
+      "mask_file": "all_sources/s024/melee_01.alpha.png",
+      "sha256": "451a6108c1f49822f957dd7ce26489615ebf9f80001c03e1a051c9c87026ed02",
+      "mask_sha256": "177bf9d059a97cb14984c2b9258f8893930a9767e07885e9efee8ee13f02cc44",
+      "quality_metrics": {
+        "edge_pixels_above_32": 20,
+        "visible_pixels": 14178,
+        "opaque_pixels": 8755
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "ranged_01",
+      "theme": "forest_spirit",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "ranged",
+      "crop_box": [
+        697,
+        917,
+        995,
+        1025
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [],
+      "local_border_luma": 25.83,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            23.87359226094964,
+            29.663436960560393,
+            26.467779429206942
+          ],
+          [
+            9.24487896077617,
+            3.0310600896872257,
+            4.5533500245168215
+          ],
+          [
+            -5.565324877704664,
+            -2.567798835593857,
+            -1.906906343412115
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 5724,
+        "background_median_luma": 29.333333333333332,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s024/ranged_01.png",
+      "mask_file": "all_sources/s024/ranged_01.alpha.png",
+      "sha256": "2244f7e134153cd3841cd9c55c67c7df528e6d0a91deb55346ca43c4db4b5aee",
+      "mask_sha256": "01d2c61481541439a4549e676da5a42577be7b67b3a6a6d3f54c8216279ed9d2",
+      "quality_metrics": {
+        "edge_pixels_above_32": 5,
+        "visible_pixels": 15892,
+        "opaque_pixels": 6938
+      },
+      "status": "needs_visual_review"
+    },
+    {
+      "id": "hybrid_01",
+      "theme": "forest_spirit",
+      "component": "center",
+      "intensity": "unspecified",
+      "role": "hybrid",
+      "crop_box": [
+        1080,
+        906,
+        1342,
+        1025
+      ],
+      "portrait_holes": [],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 24.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            26.484277629847927,
+            29.107774411139523,
+            26.431382060603397
+          ],
+          [
+            -5.848135370570221,
+            -2.3268218852637723,
+            -1.52733406993156
+          ],
+          [
+            -0.03200594305158244,
+            -0.13861212376737608,
+            -0.15488125313665702
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 5454,
+        "background_median_luma": 27.666666666666668,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 9,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s024/hybrid_01.png",
+      "mask_file": "all_sources/s024/hybrid_01.alpha.png",
+      "sha256": "c07596144259c60f16dbe1a38aa6bb838da7dbcde50168c97a5d2ff369652d3f",
+      "mask_sha256": "0bb497ff97109b950a228daac3d20cef591ae3016a340a7a69be65ec597b34fa",
+      "quality_metrics": {
+        "edge_pixels_above_32": 47,
+        "visible_pixels": 17934,
+        "opaque_pixels": 9201
+      },
+      "status": "needs_mask_or_source_review"
+    }
+  ],
+  "quality_notes": [
+    "背景と装飾の境界・肖像穴・細い線を人が比較画像で確認する必要がある。"
+  ],
+  "excluded_content": [
+    "右欄の装飾拡大図は同じ部品の説明。独立した追加フレームとして数えない。説明文・ロゴ・背景は対象外。"
+  ],
+  "unsupported": [
+    {
+      "intensity": "weak",
+      "reason": "元画像にこの強弱の独立した全フレームがない。"
+    }
+  ],
+  "review_pages": [
+    "all_sources/s024/review_01.jpg"
+  ],
+  "combinations": {
+    "count": 9,
+    "files": [
+      "all_sources/s024/combinations_01.jpg"
+    ],
+    "anchor": "illustrative frame crop center; no runtime integration"
+  },
+  "verification": [
+    {
+      "id": "strong_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 54108,
+      "transparent_pixels": 116838,
+      "partial_pixels": 42640,
+      "visible_pixels": 90282
+    },
+    {
+      "id": "strong_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 54442,
+      "transparent_pixels": 108653,
+      "partial_pixels": 42580,
+      "visible_pixels": 92367
+    },
+    {
+      "id": "strong_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 52947,
+      "transparent_pixels": 114788,
+      "partial_pixels": 49199,
+      "visible_pixels": 102325
+    },
+    {
+      "id": "melee_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 13214,
+      "partial_pixels": 5637,
+      "visible_pixels": 14178
+    },
+    {
+      "id": "ranged_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 16292,
+      "partial_pixels": 9227,
+      "visible_pixels": 15892
+    },
+    {
+      "id": "hybrid_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 0,
+      "transparent_pixels": 13244,
+      "partial_pixels": 9057,
+      "visible_pixels": 17934
+    }
+  ]
+}

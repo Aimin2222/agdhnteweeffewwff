@@ -1,0 +1,609 @@
+{
+  "source_index": 20,
+  "source_file": "image-gen-10.png",
+  "source_sha256": "dc74f4260481c895d68ef1ebb45d5c356be656236fa08a4bb8ad18b882cd9864",
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "rgb_modified": false,
+  "generated_or_inpainted": false,
+  "status": "unapproved_candidates",
+  "assets": [
+    {
+      "id": "main",
+      "theme": "d4_vastaya",
+      "component": "frame",
+      "intensity": "strong",
+      "role": "unspecified",
+      "crop_box": [
+        24,
+        130,
+        974,
+        432
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            200,
+            206,
+            354,
+            360
+          ]
+        },
+        {
+          "ellipse": [
+            679,
+            206,
+            833,
+            360
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "背景のぼかし・発光・暗色装飾の境界は要比較確認。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 26.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            11.333444325548966,
+            28.589632755891543,
+            29.680771871896734
+          ],
+          [
+            8.162791425448818,
+            2.069432478233459,
+            3.7407450703034435
+          ],
+          [
+            1.6352302824542466,
+            4.390205932939375,
+            4.614950726002207
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 54068,
+        "background_median_luma": 33.333333333333336,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 30,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s020/main.png",
+      "mask_file": "all_sources/s020/main.alpha.png",
+      "sha256": "90e343996a4c1a82cf9d4084ae737b996b918605d61aa6306740b13730d56f03",
+      "mask_sha256": "9d307eb392eeb0cca8f2d482f1258324c4589b032ad42b9dfd84957dc8c646a4",
+      "quality_metrics": {
+        "edge_pixels_above_32": 655,
+        "visible_pixels": 201035,
+        "opaque_pixels": 113780
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "effect_01",
+      "theme": "d4_vastaya",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        24,
+        768,
+        297,
+        885
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            61,
+            795,
+            119,
+            853
+          ]
+        },
+        {
+          "ellipse": [
+            197,
+            793,
+            255,
+            851
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "効果比較の静止画。FX実装ではない。",
+        "低解像度の葉・羽根・肖像境界は未承認。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 9.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            4.917841513050422,
+            19.888001940410913,
+            19.977887480617895
+          ],
+          [
+            1.4765501854500231,
+            -0.7564315235509684,
+            1.005549114068234
+          ],
+          [
+            -1.517173138336035,
+            1.523465803494482,
+            0.07899913807792092
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 5512,
+        "background_median_luma": 24.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 0,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s020/effect_01.png",
+      "mask_file": "all_sources/s020/effect_01.alpha.png",
+      "sha256": "70c07d8e490f1f14e4f9e87e8d35feff8b0b8b0198ff6bb41cf6b9f79147aebd",
+      "mask_sha256": "9513f78c00fe2316e17a70459f5a6a94a85ae11333f693e612afb6c3d1f16743",
+      "quality_metrics": {
+        "edge_pixels_above_32": 258,
+        "visible_pixels": 22373,
+        "opaque_pixels": 14154
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "effect_02",
+      "theme": "d4_vastaya",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        307,
+        768,
+        580,
+        885
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            343,
+            791,
+            405,
+            853
+          ]
+        },
+        {
+          "ellipse": [
+            483,
+            795,
+            545,
+            857
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "効果比較の静止画。FX実装ではない。",
+        "低解像度の葉・羽根・肖像境界は未承認。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 14.0,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            11.436200665780694,
+            18.494695523140752,
+            34.095410538016466
+          ],
+          [
+            1.411935635445147,
+            1.0127402165317647,
+            6.406443698554581
+          ],
+          [
+            -1.3227419911557865,
+            0.6560785085585434,
+            5.223264893676442
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 5512,
+        "background_median_luma": 33.333333333333336,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 6,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s020/effect_02.png",
+      "mask_file": "all_sources/s020/effect_02.alpha.png",
+      "sha256": "741628424c9c2d2ccd57060346cc0d28e9c088229e33ad4e8b1cd0fb92e57140",
+      "mask_sha256": "24a41fccdaea99cbc51a8272310b2abfb22be008b2c6d56d414796be7e00c4e1",
+      "quality_metrics": {
+        "edge_pixels_above_32": 139,
+        "visible_pixels": 22837,
+        "opaque_pixels": 15981
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "effect_03",
+      "theme": "d4_vastaya",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        590,
+        768,
+        863,
+        885
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            629,
+            793,
+            687,
+            851
+          ]
+        },
+        {
+          "ellipse": [
+            759,
+            793,
+            817,
+            851
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "効果比較の静止画。FX実装ではない。",
+        "低解像度の葉・羽根・肖像境界は未承認。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 10.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            31.626108426476602,
+            17.98291790050846,
+            16.3212547434835
+          ],
+          [
+            -24.324980030561143,
+            -2.700652210750501,
+            3.1291111483289487
+          ],
+          [
+            7.871498882622037,
+            -1.396462617403901,
+            -1.6761637992285887
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 5512,
+        "background_median_luma": 26.0,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 4,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s020/effect_03.png",
+      "mask_file": "all_sources/s020/effect_03.alpha.png",
+      "sha256": "ea1b5997295683524ed6eb986ec28d9e27cafb72eeea442c0f8de000ee68d574",
+      "mask_sha256": "315fdd39279f91f7db82994b4542cf5349fdfd6c5e6b02c4f1a28d0019e9ac13",
+      "quality_metrics": {
+        "edge_pixels_above_32": 247,
+        "visible_pixels": 23242,
+        "opaque_pixels": 16609
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "effect_04",
+      "theme": "d4_vastaya",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        873,
+        768,
+        1146,
+        885
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            901,
+            795,
+            963,
+            857
+          ]
+        },
+        {
+          "ellipse": [
+            1036,
+            798,
+            1092,
+            854
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "効果比較の静止画。FX実装ではない。",
+        "低解像度の葉・羽根・肖像境界は未承認。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 15.33,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            27.80458650812723,
+            19.292696948933767,
+            27.221348883340394
+          ],
+          [
+            -6.231440139060239,
+            -0.7749587148131099,
+            -3.4410297554177176
+          ],
+          [
+            0.6235628631927579,
+            -2.0361582612607263,
+            -1.0144706078249073
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 5512,
+        "background_median_luma": 26.333333333333332,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 2,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s020/effect_04.png",
+      "mask_file": "all_sources/s020/effect_04.alpha.png",
+      "sha256": "c0ce563502050a1ef32f8e304941a4f2946e2c30a8fe7fa05ec2b51cc8ef665f",
+      "mask_sha256": "780fca3497a9dfa6a0959d18cb023303dceff044ebb371769873fb4344ab0db9",
+      "quality_metrics": {
+        "edge_pixels_above_32": 83,
+        "visible_pixels": 21500,
+        "opaque_pixels": 15119
+      },
+      "status": "needs_mask_or_source_review"
+    },
+    {
+      "id": "effect_05",
+      "theme": "d4_vastaya",
+      "component": "frame",
+      "intensity": "unspecified",
+      "role": "unspecified",
+      "crop_box": [
+        1156,
+        768,
+        1429,
+        885
+      ],
+      "portrait_holes": [
+        {
+          "ellipse": [
+            1187,
+            793,
+            1245,
+            851
+          ]
+        },
+        {
+          "ellipse": [
+            1315,
+            801,
+            1373,
+            859
+          ]
+        }
+      ],
+      "roi_regions": [],
+      "exclude_regions": [],
+      "candidate_exclusions": [],
+      "background_kind": "dark",
+      "candidate_thresholds": [
+        16,
+        78
+      ],
+      "min_component_pixels": 3,
+      "quality_flags": [
+        "効果比較の静止画。FX実装ではない。",
+        "低解像度の葉・羽根・肖像境界は未承認。",
+        "切り出し端に不透明な画素が接する。装飾の欠け/隣接部品/罫線をsource_regions.jpgで確認。"
+      ],
+      "local_border_luma": 14.67,
+      "alpha_model": {
+        "model": "robust_border_or_outside_support_rgb_plane",
+        "coefficients": [
+          [
+            28.198195272873473,
+            31.133413193019894,
+            30.976728909655254
+          ],
+          [
+            -5.210907592487867,
+            -4.6139046469553335,
+            -3.7133226657172904
+          ],
+          [
+            1.2373629921119997,
+            2.924445721743642,
+            1.2907972509645735
+          ]
+        ],
+        "sampling": "portrait pixels excluded; each component samples its own board background",
+        "sample_pixels": 5512,
+        "background_median_luma": 45.333333333333336,
+        "light_matte": false,
+        "candidate_thresholds": [
+          16,
+          78
+        ],
+        "tiny_noise_pixels_removed": 6,
+        "rgb_modified": false
+      },
+      "file": "all_sources/s020/effect_05.png",
+      "mask_file": "all_sources/s020/effect_05.alpha.png",
+      "sha256": "eba895677515744ee2213fd3a55c49c4e922eb071b039c78b8ab00a51134955c",
+      "mask_sha256": "30e7fb17b0ed9382b0ba8dd07af279c01988151bf73ed191cfee97e942dae7d9",
+      "quality_metrics": {
+        "edge_pixels_above_32": 229,
+        "visible_pixels": 24267,
+        "opaque_pixels": 18300
+      },
+      "status": "needs_mask_or_source_review"
+    }
+  ],
+  "quality_notes": [
+    "背景と装飾の境界・肖像穴・細い線を人が比較画像で確認する必要がある。"
+  ],
+  "excluded_content": [
+    "入場/退場の途中状態と拡大図は同じデザインの説明資料。全体デザイン・色/効果の別案は下記に切り出す。",
+    "UIチェックボックス、文字、x1、追加ロゴ、パネル罫線は対象外。"
+  ],
+  "unsupported": [
+    {
+      "components": [
+        "weak",
+        "strong",
+        "melee",
+        "ranged",
+        "hybrid"
+      ],
+      "reason": "明示された強弱/武器ロールの5部品セットは存在しない。観測したフレームを用途未指定で保存。"
+    }
+  ],
+  "review_pages": [
+    "all_sources/s020/review_01.jpg"
+  ],
+  "combinations": {
+    "count": 0,
+    "files": [],
+    "anchor": "illustrative frame crop center; no runtime integration"
+  },
+  "verification": [
+    {
+      "id": "main",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 36908,
+      "transparent_pixels": 85865,
+      "partial_pixels": 95738,
+      "visible_pixels": 201035
+    },
+    {
+      "id": "effect_01",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 5160,
+      "transparent_pixels": 9568,
+      "partial_pixels": 9038,
+      "visible_pixels": 22373
+    },
+    {
+      "id": "effect_02",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 5914,
+      "transparent_pixels": 9104,
+      "partial_pixels": 7757,
+      "visible_pixels": 22837
+    },
+    {
+      "id": "effect_03",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 5160,
+      "transparent_pixels": 8699,
+      "partial_pixels": 7433,
+      "visible_pixels": 23242
+    },
+    {
+      "id": "effect_04",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 5354,
+      "transparent_pixels": 10441,
+      "partial_pixels": 6977,
+      "visible_pixels": 21500
+    },
+    {
+      "id": "effect_05",
+      "rgb_exact": true,
+      "independent_mask_exact": true,
+      "portrait_hole_pixels_zero": 5160,
+      "transparent_pixels": 7674,
+      "partial_pixels": 6692,
+      "visible_pixels": 24267
+    }
+  ]
+}

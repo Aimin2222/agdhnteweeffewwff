@@ -1,0 +1,83 @@
+{
+  "batch": 3,
+  "base_commit": "22861a90c585c8b6b91263241d7437ccf956acc2",
+  "all_numeric_checks_passed": true,
+  "human_approval": false,
+  "decoded_sources_at_once": 1,
+  "sources": [
+    {
+      "source_index": 17,
+      "assets": 15,
+      "new_assets": 15,
+      "combinations": 54,
+      "checks_passed": true,
+      "manifest": "all_sources/s017/manifest.json"
+    },
+    {
+      "source_index": 18,
+      "assets": 15,
+      "new_assets": 15,
+      "combinations": 54,
+      "checks_passed": true,
+      "manifest": "all_sources/s018/manifest.json"
+    },
+    {
+      "source_index": 19,
+      "assets": 15,
+      "new_assets": 15,
+      "combinations": 54,
+      "checks_passed": true,
+      "manifest": "all_sources/s019/manifest.json"
+    },
+    {
+      "source_index": 20,
+      "assets": 6,
+      "new_assets": 6,
+      "combinations": 0,
+      "checks_passed": true,
+      "manifest": "all_sources/s020/manifest.json"
+    },
+    {
+      "source_index": 21,
+      "assets": 15,
+      "new_assets": 15,
+      "combinations": 54,
+      "checks_passed": true,
+      "manifest": "all_sources/s021/manifest.json"
+    },
+    {
+      "source_index": 22,
+      "assets": 15,
+      "new_assets": 15,
+      "combinations": 54,
+      "checks_passed": true,
+      "manifest": "all_sources/s022/manifest.json"
+    },
+    {
+      "source_index": 23,
+      "assets": 1,
+      "new_assets": 1,
+      "combinations": 0,
+      "checks_passed": true,
+      "manifest": "all_sources/s023/manifest.json"
+    },
+    {
+      "source_index": 24,
+      "assets": 6,
+      "new_assets": 6,
+      "combinations": 9,
+      "checks_passed": true,
+      "manifest": "all_sources/s024/manifest.json"
+    }
+  ],
+  "black_white_contacts": [
+    "all_sources/batches/batch_03_contact_01.jpg",
+    "all_sources/batches/batch_03_contact_02.jpg",
+    "all_sources/batches/batch_03_contact_03.jpg"
+  ],
+  "pytest": {
+    "passed": 11,
+    "failed": 0,
+    "scope": "selected source RGB/SHA/masks/holes/reviews + exact89 inventory/protected37/core/UI/three themes + 31 catalog correspondence"
+  }
+}
