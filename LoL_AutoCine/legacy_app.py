@@ -1678,10 +1678,31 @@ class App:
             self._refresh_keyframe_list()
 
     def on_keyframe_preview(self):
+        """Replay the CURRENT editor values, including unsaved keyframes, in LoL.
+
+        This button previously redrew only the graph; users rightly expected
+        a camera-motion preview. Capture all Tk values on the UI thread before
+        dispatching the Replay API work to the background worker.
+        """
         self.shot_motion_graph.redraw()
-        kill=self._current_scene()
-        if kill is not None:
-            self.log(f'キーフレーム曲線を更新: {len(self._edit_keyframes)}点 / 保存ボタンで確定')
+        kill = self._current_scene()
+        if kill is None:
+            self.log('動きのプレビュー: 検出シーンを選択してください。')
+            return
+        if not self._need_lock():
+            return
+        if self.busy:
+            self.log('動きのプレビュー: 別の処理を実行中です。')
+            return
+        try:
+            shot = self._scene_shot_from_ui()
+            tpl = apply_shot(self.current_template(), shot)
+        except (ValueError, TypeError, tk.TclError) as exc:
+            self.log(f'動きのプレビュー設定エラー: {exc}')
+            return
+        self.log(f'動きのプレビュー開始: {len(shot.keyframes)}キーフレーム / '
+                 f'シーン {kill.time:.1f}s / 未保存の編集値も反映')
+        self._run_bg(self._preview_play, tpl, kill)
 
     def _schedule_project_save(self):
         if self._project_autosave_token is not None:

@@ -34,7 +34,11 @@ class SmoothReplayClock:
         return False
 
     def advance(self, elapsed: float, requested_speed: float = 1.0) -> float:
-        dt = max(0.0, min(0.1, float(elapsed)))
+        # Local HTTPS camera writes can take 80–110 ms on actual machines.
+        # Capping every elapsed step at 100 ms/80 ms discards replay time and
+        # accumulates drift. Keep a safety cap for true system stalls, but
+        # account for ordinary slow API requests in full.
+        dt = max(0.0, min(0.25, float(elapsed)))
         speed = max(0.0, float(requested_speed))
         correction = max(-self.max_rate_correction,
                          min(self.max_rate_correction, self.drift * 0.45))

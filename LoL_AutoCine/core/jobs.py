@@ -226,6 +226,10 @@ def preview_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, en
         _play_until(api, end, start, tpl, None, stop)
     finally:
         director.stop()
+        log(f"プレビューカメラ診断: API送信 {director.api_calls}回 / "
+            f"25ms超 {director.api_slow_calls}回 / "
+            f"最大API待ち {director.max_api_latency_ms:.1f}ms / "
+            f"最大時刻ずれ {director.max_clock_drift:.3f}s")
         try:
             api.set_playback(paused=True, speed=1.0)
             api.set_render(fieldOfView=plan.base_fov, selectionOffset={"x": 0, "y": 0, "z": 0})

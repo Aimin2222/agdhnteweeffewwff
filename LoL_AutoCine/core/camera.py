@@ -469,7 +469,7 @@ class CameraDirector:
                     self._last_sync = time.perf_counter()
                 # Include HTTP latency rather than dropping it from the clock.
                 now = time.perf_counter()
-                real_dt = max(0.0, min(0.08, now - last_now))
+                real_dt = max(0.0, min(0.25, now - last_now))
                 last_now = now
                 t = clock.advance(real_dt, current_speed)
                 plan, rig = self.plan, self.plan.rig
