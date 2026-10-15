@@ -1,0 +1,94 @@
+{
+  "id": "A",
+  "renderer_version": "motion-v3.1",
+  "label": "シンプル",
+  "source_number": "083",
+  "texture": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/frame_based_review_v2/A/impact_rgba.png",
+  "texture_sha256": "b111dec8cde32354757fe481a9f92fb036a7083502a89e5eb2f9baed074e8f8f",
+  "frame": "LoL_AutoCine/assets/kill_frames_chatgpt/abcd_designs/review_v1/A/source_frame_rgba.png",
+  "frame_sha256": "51f3edd9d97a4e44397fa14994eddb5dbacb05c1303eefa9b2721ec96e773318",
+  "mode": "minimal",
+  "seed": 141076438871184,
+  "peak_texture_end_s": 0.35,
+  "particles": [],
+  "coordinate_contract": {
+    "canvas": [
+      512,
+      288
+    ],
+    "origin": [
+      256.0,
+      144.0
+    ],
+    "units": "reference pixels; scale uniformly by actual frame width / 480",
+    "frame_width_px": 480,
+    "effect_fit": [
+      410,
+      218
+    ]
+  },
+  "timeline": {
+    "start_s": -0.25,
+    "kill_s": 0,
+    "end_s": 2.35,
+    "fps": 30,
+    "frame_enter_s": 0.2,
+    "frame_exit_start_s": 1.3,
+    "frame_exit_end_s": 1.45,
+    "all_effects_zero_after_s": 1.8
+  },
+  "source_alpha_warnings": [],
+  "final_approved": false,
+  "preview_portrait_holes": [
+    {
+      "side": "left",
+      "area": 8837,
+      "bbox": [
+        34,
+        33,
+        105,
+        106
+      ]
+    },
+    {
+      "side": "right",
+      "area": 8621,
+      "bbox": [
+        281,
+        34,
+        105,
+        105
+      ]
+    }
+  ],
+  "qa": {
+    "mp4_frames": 78,
+    "fps": 30.0,
+    "duration_ms": 2600,
+    "webp_frames": 12,
+    "unique_effect_frames": 11,
+    "outer_edge_nonzero_samples": 0,
+    "portrait_holes_detected": 2,
+    "zero_before_and_after": true,
+    "deterministic_random_access": true,
+    "native_png_alpha_warning_retained": false,
+    "final_approved": false
+  },
+  "outputs": [
+    {
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/animation_review_v3/A/comparison.mp4",
+      "bytes": 51960,
+      "sha256": "25cce7a016cd6944c1bf55cb658a04b8343b9200e5055b0b4dd197dcc6257ef5"
+    },
+    {
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/animation_review_v3/A/effect_alpha.webp",
+      "bytes": 130780,
+      "sha256": "01e21f0cba8babaa15577d2b1e6a206343f91f2bb1ced4ac8d3fe2a0c22e2dc2"
+    },
+    {
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/animation_review_v3/A/poster.jpg",
+      "bytes": 82455,
+      "sha256": "3f47e93d0ff813399d481219427c7559456ab54fa41040bfdc43a5b81c56ad35"
+    }
+  ]
+}
