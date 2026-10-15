@@ -1,0 +1,39 @@
+{
+  "source_number": "008",
+  "source_file": "image-gen-1(3).png",
+  "source_sha256": "0dec2f4c44e91a63d05838d1ba9b7d59a5d49f0570551aedcacc3acbee33727b",
+  "generator": "built-in image_gen",
+  "assets": [
+    {
+      "file": "008_primary_generated_review_rgba.png",
+      "dimensions": [
+        2048,
+        768
+      ],
+      "mode": "RGBA",
+      "bytes": 1612393,
+      "sha256": "2c1d61993e5608b01afc415dae220daa9e94807d0edaf9fd36aef57774bdddbd",
+      "git_blob_sha1": "02a5dbec0f37647dde114d39d1d1baf02fde0e8d",
+      "transparent_pixels": 1007080,
+      "partial_alpha_pixels": 565784,
+      "opaque_pixels": 0,
+      "alpha_bbox": [
+        0,
+        21,
+        2016,
+        736
+      ],
+      "edge_nonzero_pixels": {
+        "top": 0,
+        "bottom": 0,
+        "left": 5,
+        "right": 0
+      },
+      "visual_review": "当該原本の主要フレーム1案のみを再構成した生成版。シート全行・全テーマの再生成ではない。原本RGB維持版は original_alpha/review_v1 の同番号と比較する。完全一致・最終品質は未承認。",
+      "status": "review_user_selection_pending",
+      "final_approved": false,
+      "prompt": "Use only No.008 original edit target. Reproduce ONE full horizontal kill frame: A1 simple main upper frame: two round metallic rings left BLUE right RED, silver sharp narrow X in middle, very thin silver-blue horizontal top/bottom connectors. NO panel backdrop. Original shape colors proportions and sparse detail. Left portrait opening alpha zero, right portrait opening alpha zero, all exterior alpha zero. Remove faces, letters, headings, diagrams and scenic background. Do not include other examples. Whole ornament inside generous transparent margins. High resolution RGBA, review candidate only."
+    }
+  ],
+  "final_approved": false
+}

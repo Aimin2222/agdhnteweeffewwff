@@ -1,0 +1,164 @@
+{
+  "id": "D_winter_festival",
+  "family": "D",
+  "theme": "winter_festival",
+  "label": "冬の祝祭",
+  "source_number": "082",
+  "source_file": "image.png",
+  "catalog_effect": "snow_reveal",
+  "catalog_color": "#8BDFFF",
+  "layers": {
+    "ornament": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/winter_festival/ornament_rgba.png",
+    "glow": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/winter_festival/glow_rgba.png",
+    "glow_offset": [
+      -24,
+      -24
+    ],
+    "particles": [
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/winter_festival/particle_00.png",
+        "source_local_bbox": [
+          438,
+          157,
+          489,
+          161
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/winter_festival/particle_01.png",
+        "source_local_bbox": [
+          172,
+          42,
+          190,
+          54
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/winter_festival/particle_02.png",
+        "source_local_bbox": [
+          63,
+          158,
+          102,
+          161
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/winter_festival/particle_03.png",
+        "source_local_bbox": [
+          14,
+          119,
+          19,
+          129
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/winter_festival/particle_04.png",
+        "source_local_bbox": [
+          515,
+          119,
+          519,
+          123
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/winter_festival/particle_05.png",
+        "source_local_bbox": [
+          475,
+          35,
+          479,
+          38
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/winter_festival/particle_06.png",
+        "source_local_bbox": [
+          462,
+          31,
+          464,
+          34
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/winter_festival/particle_07.png",
+        "source_local_bbox": [
+          117,
+          32,
+          121,
+          34
+        ],
+        "original_rgb_retained": true
+      }
+    ],
+    "particle_status": "extracted_components",
+    "native_dimensions": [
+      525,
+      161
+    ],
+    "source_record": "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/strong_01.png",
+    "status": "review_user_selection_pending",
+    "final_approved": false,
+    "glow_declared_portrait_holes_cleared": true
+  },
+  "frames": {
+    "weak": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/weak_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/weak_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/weak_03.png"
+    ],
+    "strong": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/strong_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/strong_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/strong_03.png"
+    ]
+  },
+  "roles": {
+    "melee": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/melee_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/melee_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/melee_03.png"
+    ],
+    "ranged": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/ranged_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/ranged_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/ranged_03.png"
+    ],
+    "hybrid": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/hybrid_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/hybrid_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/082/hybrid_03.png"
+    ]
+  },
+  "role_policy": "Only source-labelled roles. Empty role arrays mean not confirmed; do not invent a role.",
+  "timing_seconds": {
+    "pre_start": -0.12,
+    "enter": 0.28,
+    "hold": 1.2,
+    "exit": 0.22
+  },
+  "timing_evidence": "D family default from No.083; skin-specific numeric timing is a new proposal, not a recovered historical decision.",
+  "motion": "snowfall",
+  "rotation_degrees": 0,
+  "particle_count": 28,
+  "particle_velocity_px_s": [
+    35,
+    80
+  ],
+  "particle_lifetime_s": 0.5,
+  "glow_peak": 0.55,
+  "intensity_multiplier": {
+    "weak": 0.45,
+    "strong": 1.0
+  },
+  "status": "design_proposal_user_selection_pending",
+  "final_approved": false,
+  "timing_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/abcd_designs/review_v1/D_themes/winter_festival/timing_preview.webp",
+  "preview_scope": "Offline draft motion with source ornament, derived glow and source-fragment particles. Not GPU/game integration or final QA.",
+  "motion_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/abcd_designs/review_v1/D_themes/winter_festival/motion_preview.webp"
+}

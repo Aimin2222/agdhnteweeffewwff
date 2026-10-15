@@ -1,0 +1,164 @@
+{
+  "id": "D_bewitching",
+  "family": "D",
+  "theme": "bewitching",
+  "label": "ビウィッチング",
+  "source_number": "073",
+  "source_file": "image-gen-8(6).png",
+  "catalog_effect": "witch_sparks",
+  "catalog_color": "#EA92EC",
+  "layers": {
+    "ornament": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/bewitching/ornament_rgba.png",
+    "glow": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/bewitching/glow_rgba.png",
+    "glow_offset": [
+      -24,
+      -24
+    ],
+    "particles": [
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/bewitching/particle_00.png",
+        "source_local_bbox": [
+          134,
+          39,
+          141,
+          49
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/bewitching/particle_01.png",
+        "source_local_bbox": [
+          362,
+          48,
+          369,
+          56
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/bewitching/particle_02.png",
+        "source_local_bbox": [
+          459,
+          115,
+          472,
+          122
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/bewitching/particle_03.png",
+        "source_local_bbox": [
+          177,
+          13,
+          186,
+          20
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/bewitching/particle_04.png",
+        "source_local_bbox": [
+          173,
+          90,
+          180,
+          95
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/bewitching/particle_05.png",
+        "source_local_bbox": [
+          374,
+          42,
+          378,
+          47
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/bewitching/particle_06.png",
+        "source_local_bbox": [
+          386,
+          65,
+          388,
+          73
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/bewitching/particle_07.png",
+        "source_local_bbox": [
+          421,
+          118,
+          426,
+          123
+        ],
+        "original_rgb_retained": true
+      }
+    ],
+    "particle_status": "extracted_components",
+    "native_dimensions": [
+      510,
+      136
+    ],
+    "source_record": "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/strong_01.png",
+    "status": "review_user_selection_pending",
+    "final_approved": false,
+    "glow_declared_portrait_holes_cleared": true
+  },
+  "frames": {
+    "weak": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/weak_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/weak_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/weak_03.png"
+    ],
+    "strong": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/strong_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/strong_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/strong_03.png"
+    ]
+  },
+  "roles": {
+    "melee": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/melee_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/melee_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/melee_03.png"
+    ],
+    "ranged": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/ranged_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/ranged_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/ranged_03.png"
+    ],
+    "hybrid": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/hybrid_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/hybrid_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/073/hybrid_03.png"
+    ]
+  },
+  "role_policy": "Only source-labelled roles. Empty role arrays mean not confirmed; do not invent a role.",
+  "timing_seconds": {
+    "pre_start": -0.12,
+    "enter": 0.28,
+    "hold": 1.2,
+    "exit": 0.22
+  },
+  "timing_evidence": "D family default from No.083; skin-specific numeric timing is a new proposal, not a recovered historical decision.",
+  "motion": "witch_arc",
+  "rotation_degrees": 55,
+  "particle_count": 22,
+  "particle_velocity_px_s": [
+    50,
+    -40
+  ],
+  "particle_lifetime_s": 0.5,
+  "glow_peak": 0.55,
+  "intensity_multiplier": {
+    "weak": 0.45,
+    "strong": 1.0
+  },
+  "status": "design_proposal_user_selection_pending",
+  "final_approved": false,
+  "timing_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/abcd_designs/review_v1/D_themes/bewitching/timing_preview.webp",
+  "preview_scope": "Offline draft motion with source ornament, derived glow and source-fragment particles. Not GPU/game integration or final QA.",
+  "motion_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/abcd_designs/review_v1/D_themes/bewitching/motion_preview.webp"
+}

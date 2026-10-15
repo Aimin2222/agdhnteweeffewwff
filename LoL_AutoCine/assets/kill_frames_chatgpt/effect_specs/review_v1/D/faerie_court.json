@@ -1,0 +1,154 @@
+{
+  "id": "D_faerie_court",
+  "family": "D",
+  "theme": "faerie_court",
+  "label": "Faerie Court",
+  "source_number": "031",
+  "source_file": "image-gen-3(20261013-075602).png",
+  "catalog_effect": "butterfly_reveal",
+  "catalog_color": "#EC9AD9",
+  "layers": {
+    "ornament": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/faerie_court/ornament_rgba.png",
+    "glow": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/faerie_court/glow_rgba.png",
+    "glow_offset": [
+      -24,
+      -24
+    ],
+    "particles": [
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/faerie_court/particle_00.png",
+        "source_local_bbox": [
+          190,
+          118,
+          194,
+          121
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/faerie_court/particle_01.png",
+        "source_local_bbox": [
+          131,
+          49,
+          134,
+          53
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/faerie_court/particle_02.png",
+        "source_local_bbox": [
+          140,
+          24,
+          143,
+          27
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/faerie_court/particle_03.png",
+        "source_local_bbox": [
+          386,
+          103,
+          390,
+          107
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/faerie_court/particle_04.png",
+        "source_local_bbox": [
+          216,
+          9,
+          220,
+          12
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/faerie_court/particle_05.png",
+        "source_local_bbox": [
+          140,
+          30,
+          143,
+          32
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/D/faerie_court/particle_06.png",
+        "source_local_bbox": [
+          240,
+          8,
+          242,
+          11
+        ],
+        "original_rgb_retained": true
+      }
+    ],
+    "particle_status": "extracted_components",
+    "native_dimensions": [
+      507,
+      134
+    ],
+    "source_record": "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/strong_01.png",
+    "status": "review_user_selection_pending",
+    "final_approved": false,
+    "glow_declared_portrait_holes_cleared": true
+  },
+  "frames": {
+    "weak": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/weak_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/weak_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/weak_03.png"
+    ],
+    "strong": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/strong_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/strong_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/strong_03.png"
+    ]
+  },
+  "roles": {
+    "melee": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/melee_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/melee_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/melee_03.png"
+    ],
+    "ranged": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/ranged_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/ranged_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/ranged_03.png"
+    ],
+    "hybrid": [
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/hybrid_01.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/hybrid_02.png",
+      "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/031/hybrid_03.png"
+    ]
+  },
+  "role_policy": "Only source-labelled roles. Empty role arrays mean not confirmed; do not invent a role.",
+  "timing_seconds": {
+    "pre_start": -0.12,
+    "enter": 0.28,
+    "hold": 1.2,
+    "exit": 0.22
+  },
+  "timing_evidence": "D family default from No.083; skin-specific numeric timing is a new proposal, not a recovered historical decision.",
+  "motion": "butterfly_flap",
+  "rotation_degrees": 70,
+  "particle_count": 18,
+  "particle_velocity_px_s": [
+    40,
+    -20
+  ],
+  "particle_lifetime_s": 0.5,
+  "glow_peak": 0.55,
+  "intensity_multiplier": {
+    "weak": 0.45,
+    "strong": 1.0
+  },
+  "status": "design_proposal_user_selection_pending",
+  "final_approved": false,
+  "timing_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/abcd_designs/review_v1/D_themes/faerie_court/timing_preview.webp",
+  "preview_scope": "Offline draft motion with source ornament, derived glow and source-fragment particles. Not GPU/game integration or final QA.",
+  "motion_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/abcd_designs/review_v1/D_themes/faerie_court/motion_preview.webp"
+}

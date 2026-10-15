@@ -1,0 +1,123 @@
+{
+  "id": "D",
+  "label": "スキン・地域テーマ",
+  "family": "D",
+  "source_number": "083",
+  "source_file": "ゲームUIキルアイコン四案比較シート.png",
+  "source_record": "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/083/d_ornate_main.png",
+  "layers": {
+    "ornament": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/ABCD/D/ornament_rgba.png",
+    "glow": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/ABCD/D/glow_rgba.png",
+    "glow_offset": [
+      -24,
+      -24
+    ],
+    "particles": [
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/ABCD/D/particle_00.png",
+        "source_local_bbox": [
+          118,
+          147,
+          148,
+          166
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/ABCD/D/particle_01.png",
+        "source_local_bbox": [
+          148,
+          144,
+          167,
+          154
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/ABCD/D/particle_02.png",
+        "source_local_bbox": [
+          163,
+          101,
+          185,
+          123
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/ABCD/D/particle_03.png",
+        "source_local_bbox": [
+          278,
+          102,
+          293,
+          122
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/ABCD/D/particle_04.png",
+        "source_local_bbox": [
+          173,
+          56,
+          188,
+          71
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/ABCD/D/particle_05.png",
+        "source_local_bbox": [
+          273,
+          105,
+          283,
+          118
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/ABCD/D/particle_06.png",
+        "source_local_bbox": [
+          69,
+          154,
+          74,
+          160
+        ],
+        "original_rgb_retained": true
+      },
+      {
+        "file": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/review_v1/ABCD/D/particle_07.png",
+        "source_local_bbox": [
+          9,
+          79,
+          15,
+          83
+        ],
+        "original_rgb_retained": true
+      }
+    ],
+    "particle_status": "extracted_components",
+    "native_dimensions": [
+      449,
+      187
+    ],
+    "source_record": "LoL_AutoCine/assets/kill_frames_chatgpt/original_alpha/review_v1/083/d_ornate_main.png",
+    "status": "review_user_selection_pending",
+    "final_approved": false,
+    "glow_declared_portrait_holes_cleared": true
+  },
+  "confirmed_definition_source": "docs/KILLFRAME_ABCD_IMPLEMENTATION_HANDOFF_20261013_JA.md and original No.083",
+  "timing_seconds": {
+    "pre_start": -0.12,
+    "enter": 0.28,
+    "hold": 1.2,
+    "exit": 0.22
+  },
+  "timing_evidence": "enter/hold/exit read from No.083; A hold 0.9-1.4 allowed, 1.10 selected. Pre-start and detailed curves are NEW design proposals.",
+  "motion": "theme_reveal",
+  "glow_peak": 0.55,
+  "particle_count": 18,
+  "status": "design_proposal_user_selection_pending",
+  "final_approved": false,
+  "timing_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/abcd_designs/review_v1/D/timing_preview.webp",
+  "preview_scope": "Offline draft motion with source ornament, derived glow and source-fragment particles. Not GPU/game integration or final QA.",
+  "motion_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/abcd_designs/review_v1/D/motion_preview.webp"
+}
