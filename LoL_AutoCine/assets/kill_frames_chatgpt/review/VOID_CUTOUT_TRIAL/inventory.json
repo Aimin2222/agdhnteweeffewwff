@@ -1,0 +1,43 @@
+{
+  "source_number": "016",
+  "source_file": "image-gen-10(2).png",
+  "source_sha256": "991ae46d7c2c417298c6d19e13dc974ce5b9419ffe4e7342ce868d26ca852b16",
+  "generator": "built-in image_gen background-extraction edit",
+  "assets": [
+    {
+      "file": "016_bg_removal_trial_01_rgba.png",
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "bytes": 758283,
+      "sha256": "bbcb2ac1dd572a67602f4be17fe25527d19c14b468ab6eb16f37458f3c6877a2",
+      "git_blob_sha1": "0145944223cf6b79428449e90b7a68924bce1579",
+      "transparent_pixels": 1226268,
+      "partial_alpha_pixels": 346103,
+      "opaque_pixels": 157,
+      "alpha_bbox": [
+        41,
+        23,
+        2136,
+        724
+      ],
+      "center_portrait_alpha_samples": [
+        0,
+        0
+      ],
+      "edge_nonzero_pixels": {
+        "top": 0,
+        "bottom": 37,
+        "left": 0,
+        "right": 0
+      },
+      "status": "qa_failed_not_final",
+      "final_approved": false,
+      "prompt": "Use case: background-extraction. EDIT TARGET: the supplied original concept sheet No.016. Make a precise cutout ONLY of the LEFT panel TOP ROW complete horizontal kill frame (weak decoration, central vertical magenta slit). Remove all other rows and the rest of the sheet. This is background removal, NOT a redesign or illustration generation. Preserve the existing thin square left and right portrait borders, very fine horizontal purple energy branches, small central black oval and thin vertical magenta slit exactly as seen. Preserve original relative scale: portrait borders approximately 118px square, center ornament approximately 135px tall, widely spaced with very thin sparse connectors. Remove both portrait images entirely so the two square interiors are alpha zero. Remove the dark scenic background and all text to actual alpha zero. Keep delicate purple glow with partial transparency; do not replace it with opaque black or colored haze. Do not invent, thicken, embellish, symmetrize or enlarge the existing motif. Entire left border, center motif, right border fully visible with transparent padding. Output one horizontal RGBA PNG cutout, no checkerboard pixels, no comparison sheet.",
+      "visual_review": "Background-extraction edit trial via image_gen. Original pixel preservation NOT established. Central mass and connecting energy are thicker and proportions differ. No obvious portraits or lettering remain. RGBA statistics are not alpha acceptance."
+    }
+  ],
+  "final_approved": false
+}
