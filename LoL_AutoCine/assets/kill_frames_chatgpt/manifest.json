@@ -235,13 +235,16 @@
       "source": "image-gen-10(4).png",
       "source_sha256": "71eac1a56374a83df27976b7ea76e1bcf0b819294273c4a74de2fa1168118678",
       "source_bytes": 3313144,
-      "status": "transparent_candidate_saved_qa_failed",
+      "status": "review_assets_saved_not_fully_identical",
       "generated_png": null,
-      "visual_qa": "not_passed_incomplete_decorations",
-      "alpha_qa": "rgba_generated_but_visual_contamination_possible",
+      "visual_qa": "not_final_approved_see_inventory",
+      "alpha_qa": "measured_not_final_approved",
       "reference_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/reference_previews/018.jpg",
       "candidate_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/batch_011_020/candidates/018/",
-      "candidate_parts": 5
+      "candidate_parts": 5,
+      "review_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/review/PSYOPS/",
+      "review_png_count": 7,
+      "final_approved": false
     },
     {
       "number": "019",
@@ -961,7 +964,7 @@
     }
   ],
   "skipped_count": 0,
-  "current_batch": "No.017 review work in progress; final approval separate",
+  "current_batch": "No.018 review work in progress; final approval separate",
   "notes": "Full-resolution originals 011-020 accessible on GitHub Actions and SHA-256 checked. 51 native-resolution RGBA candidates saved separately from Codex, but visual QA found missing outlines/background fragments; none is approved as finished. Preview JPGs of all 89 originals also saved; originals untouched.",
   "candidate_counts": {
     "source_images": 10,
