@@ -251,56 +251,71 @@
       "source": "image-gen-10(5).png",
       "source_sha256": "05e0bbfbd8aa11e96a2221411407d6b2a204ff44733991af062d204e6bf79ef5",
       "source_bytes": 3577603,
-      "status": "transparent_candidate_saved_qa_failed",
+      "status": "review_assets_saved_not_fully_identical",
       "generated_png": null,
-      "visual_qa": "not_passed_incomplete_decorations",
-      "alpha_qa": "rgba_generated_but_visual_contamination_possible",
+      "visual_qa": "not_final_approved_see_inventory",
+      "alpha_qa": "measured_not_final_approved",
       "reference_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/reference_previews/019.jpg",
       "candidate_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/batch_011_020/candidates/019/",
-      "candidate_parts": 5
+      "candidate_parts": 5,
+      "review_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/review/BATTLECAST/",
+      "review_png_count": 7,
+      "final_approved": false
     },
     {
       "number": "020",
       "source": "image-gen-10.png",
       "source_sha256": "dc74f4260481c895d68ef1ebb45d5c356be656236fa08a4bb8ad18b882cd9864",
       "source_bytes": 2758469,
-      "status": "transparent_candidate_saved_qa_failed",
+      "status": "review_assets_saved_not_fully_identical",
       "generated_png": null,
-      "visual_qa": "not_passed_incomplete_decorations",
-      "alpha_qa": "rgba_generated_but_visual_contamination_possible",
+      "visual_qa": "not_final_approved_see_inventory",
+      "alpha_qa": "measured_not_final_approved",
       "reference_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/reference_previews/020.jpg",
       "candidate_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/batch_011_020/candidates/020/",
-      "candidate_parts": 6
+      "candidate_parts": 6,
+      "review_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/review/VASTAYA_D4/",
+      "review_png_count": 5,
+      "final_approved": false
     },
     {
       "number": "021",
       "source": "image-gen-2(10).png",
       "source_sha256": "955da026886566c817ad5f212db7bf767aa93a4433d6cc0aabf018d7b16f41bc",
       "source_bytes": 3366568,
-      "status": "pending",
+      "status": "review_assets_saved_not_fully_identical",
       "generated_png": null,
-      "visual_qa": "not_passed",
-      "alpha_qa": "not_passed"
+      "visual_qa": "not_final_approved_see_inventory",
+      "alpha_qa": "measured_not_final_approved",
+      "review_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/review/COSMIC/",
+      "review_png_count": 2,
+      "final_approved": false
     },
     {
       "number": "022",
       "source": "image-gen-2(20261013-075559).png",
       "source_sha256": "3ef635bf7efa8b1449cb5c069b5195f172ac0e1a399604b86368093a47f16f5b",
       "source_bytes": 3327713,
-      "status": "pending",
+      "status": "review_assets_saved_not_fully_identical",
       "generated_png": null,
-      "visual_qa": "not_passed",
-      "alpha_qa": "not_passed"
+      "visual_qa": "not_final_approved_see_inventory",
+      "alpha_qa": "measured_not_final_approved",
+      "review_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/review/BROKEN_COVENANT/",
+      "review_png_count": 2,
+      "final_approved": false
     },
     {
       "number": "023",
       "source": "image-gen-2(3).png",
       "source_sha256": "da8842a1e4922fd0ee257ed7161b545fb042247dff19e66a66849832ec4efbf8",
       "source_bytes": 2033648,
-      "status": "pending",
+      "status": "review_assets_saved_not_fully_identical",
       "generated_png": null,
-      "visual_qa": "not_passed",
-      "alpha_qa": "not_passed"
+      "visual_qa": "not_final_approved_see_inventory",
+      "alpha_qa": "measured_not_final_approved",
+      "review_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/review/GLASS_MINIMAL_A2/",
+      "review_png_count": 1,
+      "final_approved": false
     },
     {
       "number": "024",
@@ -964,7 +979,7 @@
     }
   ],
   "skipped_count": 0,
-  "current_batch": "No.018 review work in progress; final approval separate",
+  "current_batch": "No.023 review work in progress; final approval separate",
   "notes": "Full-resolution originals 011-020 accessible on GitHub Actions and SHA-256 checked. 51 native-resolution RGBA candidates saved separately from Codex, but visual QA found missing outlines/background fragments; none is approved as finished. Preview JPGs of all 89 originals also saved; originals untouched.",
   "candidate_counts": {
     "source_images": 10,

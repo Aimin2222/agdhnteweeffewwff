@@ -1,0 +1,39 @@
+{
+  "source_number": "023",
+  "source_file": "image-gen-2(3).png",
+  "source_sha256": "da8842a1e4922fd0ee257ed7161b545fb042247dff19e66a66849832ec4efbf8",
+  "generator": "built-in image_gen",
+  "assets": [
+    {
+      "file": "023_glass_minimal_review_rgba.png",
+      "dimensions": [
+        1851,
+        849
+      ],
+      "mode": "RGBA",
+      "bytes": 1523451,
+      "sha256": "f788ab95d12ee52311ea83b8ee963dc9e834c23a3f953c84376d05d2517a03de",
+      "git_blob_sha1": "d75d6654e66cd36cfeb6b5044b5ca96395dff7c8",
+      "transparent_pixels": 665237,
+      "partial_alpha_pixels": 906176,
+      "opaque_pixels": 86,
+      "alpha_bbox": [
+        0,
+        9,
+        1851,
+        849
+      ],
+      "edge_nonzero_pixels": {
+        "top": 0,
+        "bottom": 472,
+        "left": 274,
+        "right": 64
+      },
+      "visual_review": "原本の青赤ガラスカプセルと銀Xを再構成。アイコン穴の内縁に広い色残り、プレートの透過と輪郭が原本より厚い。最終透過検査不合格。",
+      "status": "review_not_final_approved",
+      "final_approved": false,
+      "prompt": "Reconstruct ONE SINGLE full horizontal kill frame from No.023 A-2 GLASS MINIMAL source, matching large upper-left example. Thin luminous clear GLASS rounded capsule plate linking two EMPTY circular portrait openings, left luminous BLUE rim and right luminous PINK RED rim. Small simple silver white beveled X in center. Preserve original minimal clean silhouette, relative proportions, curved glass highlights and delicate top-bottom horizontal lines. Remove all champion faces, words, background scenery, panels and other examples. Portrait interiors alpha=0, outside backdrop alpha=0; plate clear translucent glass only with restrained faint opacity and edge highlights, no opaque black-blue rectangle. Whole left curved edge and right curved edge inside ample transparent margin, high resolution crisp RGBA, one complete frame only."
+    }
+  ],
+  "final_approved": false
+}
