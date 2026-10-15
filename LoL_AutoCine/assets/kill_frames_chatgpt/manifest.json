@@ -202,13 +202,17 @@
       "source": "image-gen-10(2).png",
       "source_sha256": "991ae46d7c2c417298c6d19e13dc974ce5b9419ffe4e7342ce868d26ca852b16",
       "source_bytes": 2636398,
-      "status": "transparent_candidate_saved_qa_failed",
+      "status": "review_generation_saved_qa_failed",
       "generated_png": null,
-      "visual_qa": "not_passed_incomplete_decorations",
-      "alpha_qa": "rgba_generated_but_visual_contamination_possible",
+      "visual_qa": "failed_source_shape_proportions",
+      "alpha_qa": "failed_nonzero_bottom_edge",
       "reference_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/reference_previews/016.jpg",
       "candidate_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/batch_011_020/candidates/016/",
-      "candidate_parts": 5
+      "candidate_parts": 5,
+      "review_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/review/VOID/",
+      "review_png_count": 2,
+      "final_approved": false,
+      "qa_report": "LoL_AutoCine/assets/kill_frames_chatgpt/review/VOID/QA_REVIEW_JA.md"
     },
     {
       "number": "017",
@@ -954,7 +958,7 @@
     }
   ],
   "skipped_count": 0,
-  "current_batch": "No.016 VOId next; No.013-015 review-only GitHub PNGs stored",
+  "current_batch": "No.016 incomplete: two image_gen reconstructions failed source fidelity and edge-alpha checks; No.017 onward not started this session",
   "notes": "Full-resolution originals 011-020 accessible on GitHub Actions and SHA-256 checked. 51 native-resolution RGBA candidates saved separately from Codex, but visual QA found missing outlines/background fragments; none is approved as finished. Preview JPGs of all 89 originals also saved; originals untouched.",
   "candidate_counts": {
     "source_images": 10,
