@@ -75,7 +75,7 @@ def cropped_motif(kind,ornate):
     a=np.maximum.reduce([chroma,cool,green])
     a=np.where((mx>205)&(saturated<66)&(raw[:,:,0]>raw[:,:,2]*1.08),a*.12,a)
     a=np.clip((a-.075)*1.10,0,1)
-    h,w=selected.shape
+    h,w=a.shape
     yy,xx=np.mgrid[0:h,0:w]
     rx=.49 if ornate else .47
     alpha_edge=np.clip((1.23-((xx-w/2)/(w*rx))**2-((yy-h/2)/(h*.49))**2)*2.0,0,1)
