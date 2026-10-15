@@ -1,0 +1,69 @@
+{
+  "source_number": "025",
+  "source_file": "image-gen-2(5).png",
+  "source_sha256": "b16b5731504428a8454d88ce4efb7acfbc9a5037b4a48cc7a6aa28a063600c5c",
+  "generator": "built-in image_gen",
+  "assets": [
+    {
+      "file": "025_weak_rejected_rgba.png",
+      "dimensions": [
+        1994,
+        789
+      ],
+      "mode": "RGBA",
+      "bytes": 1147888,
+      "sha256": "da1c119fe9487e6daa63c89dc36f10fbdc994981ffda854c1a06ca288696c158",
+      "git_blob_sha1": "7185481486029d7f08cc1839f30a245dbca7e3a5",
+      "transparent_pixels": 1016142,
+      "partial_alpha_pixels": 556374,
+      "opaque_pixels": 750,
+      "alpha_bbox": [
+        0,
+        15,
+        1994,
+        789
+      ],
+      "edge_nonzero_pixels": {
+        "top": 0,
+        "bottom": 25,
+        "left": 32,
+        "right": 17
+      },
+      "visual_review": "不合格：弱装飾指定にもかかわらず棘と赤い垂れ幕が追加され強装飾化。赤い色残り。",
+      "status": "review_not_final_approved",
+      "final_approved": false,
+      "prompt": "ONE SINGLE full horizontal kill-frame matching ONLY No.025 original source NOXUS left first row WEAK: thin angular antique gold SQUARE portrait frames with clipped diagonal corners, small red central gem inside tall silver gold four-point spear insignia with red horizontal spark lines. Faithfully reproduce original forms, colors, proportions, spacing and ornament intensity. Two square portrait interiors EMPTY TRANSPARENT alpha ZERO. All outside background alpha ZERO, no backdrop panel or scenery. Remove faces characters words headings. Preserve complete left frame, central ornament and right frame, all ribbon and leaf tips inside generous transparent margin. High resolution sharp RGBA. Single full frame only no sheet, no new motifs."
+    },
+    {
+      "file": "025_strong_review_rgba.png",
+      "dimensions": [
+        2048,
+        768
+      ],
+      "mode": "RGBA",
+      "bytes": 2004787,
+      "sha256": "11f1d5c6f64eee21ab57fb3e755dfce5da5d6855353193a0d8b84d6e17d45a28",
+      "git_blob_sha1": "00b907cde6c29ac6c8af872add27810c1acbda65",
+      "transparent_pixels": 992562,
+      "partial_alpha_pixels": 580302,
+      "opaque_pixels": 0,
+      "alpha_bbox": [
+        0,
+        17,
+        2048,
+        768
+      ],
+      "edge_nonzero_pixels": {
+        "top": 0,
+        "bottom": 42,
+        "left": 27,
+        "right": 12
+      },
+      "visual_review": "強装飾の棘・赤い垂れ幕を再構成。背景と枠内部に茶赤の色が広く残り、透過品質不合格。",
+      "status": "review_not_final_approved",
+      "final_approved": false,
+      "prompt": "ONE SINGLE full horizontal kill-frame matching ONLY No.025 original source NOXUS right first row STRONG: jagged silver gold square portrait frames with thin red hanging banners, central red gem and tall spiked gothic silver gold spear symbol, restrained red light lines. Faithfully reproduce original forms, colors, proportions, spacing and ornament intensity. Two square portrait interiors EMPTY TRANSPARENT alpha ZERO. All outside background alpha ZERO, no backdrop panel or scenery. Remove faces characters words headings. Preserve complete left frame, central ornament and right frame, all ribbon and leaf tips inside generous transparent margin. High resolution sharp RGBA. Single full frame only no sheet, no new motifs."
+    }
+  ],
+  "final_approved": false
+}

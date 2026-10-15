@@ -1,0 +1,69 @@
+{
+  "source_number": "029",
+  "source_file": "image-gen-2(9).png",
+  "source_sha256": "88b489171280bce06ed24262b6f71ac80f350fc0e2e24c7e0bd3aa1102aba2b1",
+  "generator": "built-in image_gen",
+  "assets": [
+    {
+      "file": "029_weak_rejected_rgba.png",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "bytes": 1957709,
+      "sha256": "e2ee2369daf8968e5b0a0a25039933c2ee56e26e6e52d86178dec58035833e4f",
+      "git_blob_sha1": "44a0da1104cc843c102cef70e9594b0be3557529",
+      "transparent_pixels": 812604,
+      "partial_alpha_pixels": 759820,
+      "opaque_pixels": 104,
+      "alpha_bbox": [
+        0,
+        0,
+        2171,
+        724
+      ],
+      "edge_nonzero_pixels": {
+        "top": 10,
+        "bottom": 99,
+        "left": 16,
+        "right": 0
+      },
+      "visual_review": "不合格：弱装飾の霧X指定に対し鎖と灯篭の別バリエーションが混入。枠へ線が横断、原本の選択行と不一致。",
+      "status": "review_not_final_approved",
+      "final_approved": false,
+      "prompt": "ONE SINGLE full horizontal kill-frame matching ONLY No.029 original SHADOW ISLES weak TOP LEFT example: two thin ROUND portrait rings, left cold teal silver and right muted red gold, central crossed spectral turquoise mist blades with delicate curling wisps and tiny dark ruined tower behind center. Reconstruct exact source shape palette proportions and ornament intensity, no invented redesign. Two portrait holes EMPTY TRANSPARENT alpha ZERO. Outside ornament background alpha ZERO, no backdrop panel or rectangular glow. Remove all faces characters text headings scenery and unrelated examples. Whole left frame center motif right frame with all tips inside generous transparent margins. Crisp high resolution RGBA one complete frame only no contact sheet."
+    },
+    {
+      "file": "029_strong_review_rgba.png",
+      "dimensions": [
+        2048,
+        768
+      ],
+      "mode": "RGBA",
+      "bytes": 2828250,
+      "sha256": "5ff913e2f6934e02b40a578bab5c94b85d56070e162563982b4c9752f5973413",
+      "git_blob_sha1": "45a589924464b1d090b4004a764e583640355e1b",
+      "transparent_pixels": 665178,
+      "partial_alpha_pixels": 907686,
+      "opaque_pixels": 0,
+      "alpha_bbox": [
+        0,
+        5,
+        2047,
+        768
+      ],
+      "edge_nonzero_pixels": {
+        "top": 0,
+        "bottom": 101,
+        "left": 66,
+        "right": 0
+      },
+      "visual_review": "強装飾の廃墟・霊体・鎖を再構成。建築と霧が過大、背景とアイコン穴の暗色残りにより透過不合格。",
+      "status": "review_not_final_approved",
+      "final_approved": false,
+      "prompt": "ONE SINGLE full horizontal kill-frame matching ONLY No.029 original SHADOW ISLES strong MIDDLE LEFT example: two ornate ROUND dark metal teal portrait rings with chains, central bright crossed teal spectral blades, ruined gothic towers behind them and translucent ghostly wisps, no extra scenery beyond exact frame ornament. Reconstruct exact source shape palette proportions and ornament intensity, no invented redesign. Two portrait holes EMPTY TRANSPARENT alpha ZERO. Outside ornament background alpha ZERO, no backdrop panel or rectangular glow. Remove all faces characters text headings scenery and unrelated examples. Whole left frame center motif right frame with all tips inside generous transparent margins. Crisp high resolution RGBA one complete frame only no contact sheet."
+    }
+  ],
+  "final_approved": false
+}

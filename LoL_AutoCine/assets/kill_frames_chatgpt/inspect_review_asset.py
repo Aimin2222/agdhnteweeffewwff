@@ -34,6 +34,17 @@ for asset in job['assets']:
     qa.save(out/(target.stem+'_comparison.jpg'),quality=94)
 inventory['final_approved']=False
 inventory_path.write_text(json.dumps(inventory,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+report=out/'QA_REVIEW_JA.md'
+if not report.exists():
+    lines=[f"# No.{job['number']} {job['theme']} 原本準拠レビュー",'',
+           f"原本: `{item['source']}` / SHA-256: `{item['source_sha256']}`",'',
+           '**レビュー保存。最終合格ではない。** 内蔵image_genで対象原本のみを参照し再構成。PNGの生成バイトは改変していない。',
+           '出力の寸法・RGBA・透明/部分アルファ・端の非ゼロ画素・SHA-256・Git blob SHA・生成指示は inventory.json に記録。',
+           '比較画像は原本・白・黒・灰背景。原本参照にある顔や文字は比較用。ゲーム背景での最終検査とアイコン穴全画素の透明合格は未達。',
+           '原本・既存37バッジ・アプリコードに変更なし。完成数には加算しない。','']
+    for record in inventory['assets']:
+        lines.extend([f"- `{record['file']}`: {record['visual_review']}"])
+    report.write_text('\n'.join(lines)+'\n',encoding='utf-8')
 item.update(status='review_assets_saved_not_fully_identical',review_directory=out.relative_to(root.parent.parent.parent).as_posix()+'/',review_png_count=len(inventory['assets']),visual_qa='not_final_approved_see_inventory',alpha_qa='measured_not_final_approved',final_approved=False)
 manifest['current_batch']=f"No.{job['number']} review work in progress; final approval separate"
 manifest_path.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
