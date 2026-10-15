@@ -14,6 +14,7 @@ source=Path(job['source_root'])/item['source']
 assert hashlib.sha256(source.read_bytes()).hexdigest()==item['source_sha256']
 inventory_path=out/'inventory.json'
 inventory=json.loads(inventory_path.read_text(encoding='utf-8')) if inventory_path.exists() else dict(source_number=job['number'],source_file=item['source'],source_sha256=item['source_sha256'],generator='built-in image_gen',assets=[])
+assert inventory.get('source_number') == job['number'], 'Review directory belongs to another source'
 for asset in job['assets']:
     target=out/asset['filename']
     shutil.copyfile(asset['generated_path'],target)
@@ -45,6 +46,13 @@ if not report.exists():
     for record in inventory['assets']:
         lines.extend([f"- `{record['file']}`: {record['visual_review']}"])
     report.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+else:
+    existing = report.read_text(encoding='utf-8')
+    missing = [x for x in inventory['assets'] if x['file'] not in existing]
+    if missing:
+        extra = ['','## 追加レビュー（最終未合格）','']
+        extra += [f"- `{x['file']}`: {x['visual_review']}" for x in missing]
+        report.write_text(existing+'\n'.join(extra)+'\n',encoding='utf-8')
 item.update(status='review_assets_saved_not_fully_identical',review_directory=out.relative_to(root.parent.parent.parent).as_posix()+'/',review_png_count=len(inventory['assets']),visual_qa='not_final_approved_see_inventory',alpha_qa='measured_not_final_approved',final_approved=False)
 manifest['current_batch']=f"No.{job['number']} review work in progress; final approval separate"
 manifest_path.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

@@ -60,6 +60,36 @@
       },
       "status": "qa_failed_not_final",
       "visual_review": "See QA_REVIEW_JA.md"
+    },
+    {
+      "file": "016_strong_slit_review_rgba.png",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "bytes": 1465224,
+      "sha256": "d866828acfe65a0dcb7e1c34c786822b3812e76df001c640d9910d3479302645",
+      "git_blob_sha1": "5ae4564d3b46adc1ff37efa033aa7bb56932538a",
+      "transparent_pixels": 957952,
+      "partial_alpha_pixels": 614345,
+      "opaque_pixels": 231,
+      "alpha_bbox": [
+        31,
+        9,
+        2158,
+        708
+      ],
+      "edge_nonzero_pixels": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "visual_review": "強装飾の縦スリットと紫の枝を再構成。原本より中央が大きく、左右枠の棘が密。原本との形状比差と外縁の紫残り。",
+      "status": "review_not_final_approved",
+      "final_approved": false,
+      "prompt": "ONE SINGLE whole horizontal kill-frame, use ONLY original No.016: VOID original RIGHT TOP ROW STRONG full frame: TWO EMPTY SQUARE DARK PURPLE PORTRAIT BORDERS flanking central BLACK FACETED OVAL with bright thin VERTICAL MAGENTA SLIT, fine violet thorn branches and waves extending to frames. Match source right first row exact proportions, no huge diamond. Faithfully reconstruct exact source shapes palette relative sizes spacing and ornament intensity. Two complete portrait frames REQUIRED, with EMPTY TRANSPARENT holes alpha ZERO. External background alpha ZERO, no scenery, no broad tinted rectangle. Remove faces characters text panels and other examples. All frame edges and every ornament tip INSIDE ample transparent padding, no clipping. Crisp high resolution RGBA ONE FULL FRAME only, no contact sheet, no invented redesign."
     }
   ]
 }

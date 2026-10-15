@@ -1,0 +1,99 @@
+{
+  "source_number": "036",
+  "source_file": "image-gen-3(7).png",
+  "source_sha256": "4741daa5c0a347cd3e46a975e83a9c4744709b87024dca050a7f40a237295a89",
+  "generator": "built-in image_gen",
+  "assets": [
+    {
+      "file": "036_weak_review_rgba.png",
+      "dimensions": [
+        1932,
+        814
+      ],
+      "mode": "RGBA",
+      "bytes": 619739,
+      "sha256": "d0182f6f618303b1322100c37bf36bcad1f1035ab66111dc0d712d14c4170805",
+      "git_blob_sha1": "a75d5171c4edaae655e1356559c90326c67e5289",
+      "transparent_pixels": 1312119,
+      "partial_alpha_pixels": 260517,
+      "opaque_pixels": 12,
+      "alpha_bbox": [
+        0,
+        12,
+        1931,
+        773
+      ],
+      "edge_nonzero_pixels": {
+        "top": 0,
+        "bottom": 0,
+        "left": 6,
+        "right": 0
+      },
+      "visual_review": "弱装飾の渦と桜を再構成。中心が原本より大きく、薄い桃色水色部分と枠比率に差。黄赤白の色残り。",
+      "status": "review_not_final_approved",
+      "final_approved": false,
+      "prompt": "ONE SINGLE complete horizontal kill-frame using ONLY No.036 source IONIA second distinct source left first row weak: thin muted gold SQUARE portrait borders, delicate central circular gold pink and teal flowing spiral with sparse pink petals and thin horizontal connectors. Match exact original silhouette palette relative sizes arrangement and ornament intensity. Portrait openings alpha ZERO completely EMPTY TRANSPARENT. External background alpha ZERO, no backdrop or large colored haze. Remove ALL champion portraits, text, characters, panels, landscape. Preserve whole left border-center-right border and every ornament tip with generous transparent padding all edges. Sharp high resolution RGBA single frame only, no grid or multiple examples, no invented motifs."
+    },
+    {
+      "file": "036_strong_rejected_rgba.png",
+      "dimensions": [
+        1877,
+        838
+      ],
+      "mode": "RGBA",
+      "bytes": 1030477,
+      "sha256": "e3eabddd96f6513f4a585927d27c22a4e635ba4549e5f6fab955e2e55f327d2b",
+      "git_blob_sha1": "f952de7081f5805d6501718eff78e19e29e51f1b",
+      "transparent_pixels": 1166746,
+      "partial_alpha_pixels": 406081,
+      "opaque_pixels": 99,
+      "alpha_bbox": [
+        30,
+        21,
+        1846,
+        838
+      ],
+      "edge_nonzero_pixels": {
+        "top": 0,
+        "bottom": 11,
+        "left": 0,
+        "right": 0
+      },
+      "visual_review": "不合格：左右の肖像枠が両方省かれ中央装飾だけになった。完成フレームとして使わない。",
+      "status": "review_not_final_approved",
+      "final_approved": false,
+      "prompt": "ONE SINGLE complete horizontal kill-frame using ONLY No.036 source IONIA second distinct source right first row strong: thin muted gold SQUARE portrait borders, central gold circular spiral with pink pearl, branching pink petal and teal ribbon trails. Match exact original silhouette palette relative sizes arrangement and ornament intensity. Portrait openings alpha ZERO completely EMPTY TRANSPARENT. External background alpha ZERO, no backdrop or large colored haze. Remove ALL champion portraits, text, characters, panels, landscape. Preserve whole left border-center-right border and every ornament tip with generous transparent padding all edges. Sharp high resolution RGBA single frame only, no grid or multiple examples, no invented motifs."
+    },
+    {
+      "file": "036_strong_repair_review_rgba.png",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "bytes": 1280580,
+      "sha256": "7e6c160dd16530a5f3f761942b134827e30e81be20c04773aa8a0ecda16f4974",
+      "git_blob_sha1": "ab9cde8f9051e4e4f7c4de262dac138aa88ba1ad",
+      "transparent_pixels": 1054112,
+      "partial_alpha_pixels": 518402,
+      "opaque_pixels": 14,
+      "alpha_bbox": [
+        17,
+        0,
+        2158,
+        724
+      ],
+      "edge_nonzero_pixels": {
+        "top": 16,
+        "bottom": 401,
+        "left": 0,
+        "right": 0
+      },
+      "visual_review": "再生成で左右の角枠を含められた。中央渦と桜リボンが原本より太く密、枠比率・透過縁は近似。",
+      "status": "review_not_final_approved",
+      "final_approved": false,
+      "prompt": "ONE SINGLE whole horizontal kill-frame, use ONLY original No.036: IONIA original RIGHT TOP ROW STRONG full frame: MUST INCLUDE TWO EMPTY SQUARE GOLD PORTRAIT BORDERS on left and right, each 20 percent canvas width, center gold pink teal circular spiral with pink pearl and flowing petal ribbons. Keep whole left frame plus central motif plus right frame. Do NOT output center ornament alone. Faithfully reconstruct exact source shapes palette relative sizes spacing and ornament intensity. Two complete portrait frames REQUIRED, with EMPTY TRANSPARENT holes alpha ZERO. External background alpha ZERO, no scenery, no broad tinted rectangle. Remove faces characters text panels and other examples. All frame edges and every ornament tip INSIDE ample transparent padding, no clipping. Crisp high resolution RGBA ONE FULL FRAME only, no contact sheet, no invented redesign."
+    }
+  ],
+  "final_approved": false
+}

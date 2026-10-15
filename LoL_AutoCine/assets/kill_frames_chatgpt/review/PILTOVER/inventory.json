@@ -1,0 +1,69 @@
+{
+  "source_number": "049",
+  "source_file": "image-gen-5(4).png",
+  "source_sha256": "c330203d9b526312c0c1665ec3059ca12a61256b265c5ecae39710660e47acb3",
+  "generator": "built-in image_gen",
+  "assets": [
+    {
+      "file": "049_weak_review_rgba.png",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "bytes": 910719,
+      "sha256": "47d6ac0bc3a8ad6394e2b00168b434be496f3d43e779ba6aecf6abba54ce3dec",
+      "git_blob_sha1": "78f2218e3e5b739bbb4ba6d67f72f5971b802573",
+      "transparent_pixels": 1151661,
+      "partial_alpha_pixels": 420803,
+      "opaque_pixels": 64,
+      "alpha_bbox": [
+        12,
+        15,
+        2158,
+        708
+      ],
+      "edge_nonzero_pixels": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "visual_review": "原本の歯車と縦槍・青い光を再構成。中心・枠の形状と比率に差。青金の色残り。",
+      "status": "review_not_final_approved",
+      "final_approved": false,
+      "prompt": "ONE SINGLE complete horizontal kill-frame using ONLY No.049 original PILTOVER left first row weak: clipped-corner gold blue SQUARE portrait frames, small circular gold gear with slender vertical gold spear and blue core, fine cyan gold horizontal double rails. Faithful source form silhouette palette sizes arrangement and intensity, no invented motif. Portrait holes completely EMPTY TRANSPARENT alpha ZERO, external background alpha ZERO, no tinted fill or panel. Remove faces people words headings scenery other examples. Entire left frame center right frame with all tips and ample transparent margin on every edge. High resolution crisp RGBA one isolated frame only no grid."
+    },
+    {
+      "file": "049_strong_rejected_review_rgba.png",
+      "dimensions": [
+        2048,
+        768
+      ],
+      "mode": "RGBA",
+      "bytes": 2574390,
+      "sha256": "b2446d1952a891a6a8fa060f72ee8340f3889f0e1d002ef5b32210ffdc5d953d",
+      "git_blob_sha1": "474871780f677720086a6ef8413ad0f59b0f02eb",
+      "transparent_pixels": 728205,
+      "partial_alpha_pixels": 844659,
+      "opaque_pixels": 0,
+      "alpha_bbox": [
+        0,
+        0,
+        2034,
+        768
+      ],
+      "edge_nonzero_pixels": {
+        "top": 33,
+        "bottom": 113,
+        "left": 19,
+        "right": 0
+      },
+      "visual_review": "不合格：単独フレーム指定に対して2行の枠がつながって生成された。個別実装素材ではない。",
+      "status": "review_not_final_approved",
+      "final_approved": false,
+      "prompt": "ONE SINGLE complete horizontal kill-frame using ONLY No.049 original PILTOVER right first row strong: ornate gold blue clipped SQUARE portrait frames, central large gold gear and blue glass spear with blue crystal core and intricate gold cyan mechanical wing rails. Faithful source form silhouette palette sizes arrangement and intensity, no invented motif. Portrait holes completely EMPTY TRANSPARENT alpha ZERO, external background alpha ZERO, no tinted fill or panel. Remove faces people words headings scenery other examples. Entire left frame center right frame with all tips and ample transparent margin on every edge. High resolution crisp RGBA one isolated frame only no grid."
+    }
+  ],
+  "final_approved": false
+}
