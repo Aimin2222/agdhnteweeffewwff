@@ -16,6 +16,7 @@ def sample_motion(shot: Shot, samples=81, base_distance=950):
     plan=CameraPlan(style='lolnam_cinema',intensity=amp,kill_time=0,
                     kill_times=(0,),third_dist=base_distance,third_yaw=shot.yaw,
                     motion_arc=shot.arc,motion_dolly=shot.dolly,motion_profile=shot.profile,
+                    scene_keyframes=tuple(shot.keyframes),
                     rig=RigInfo(mode='fps',third=True,h=(0.0,-1.0)))
     points=[]
     for i in range(samples):
@@ -53,7 +54,13 @@ class ShotMotionGraph(tk.Canvas):
         kill_x=left+(right-left)*shot.pre/(shot.pre+shot.post)
         self.create_line(kill_x,top,kill_x,bottom,fill='#F97316',dash=(3,3))
         self.create_text(kill_x,13,text='KILL',fill='#C2410C',font=('Meiryo UI',8))
-        self.create_text(left,h-8,text=f'-{shot.pre:g}s',fill='#64748B',font=('Meiryo UI',8))
+        for frame in shot.keyframes:
+            rel = frame['time'] + shot.pre
+            if 0 <= rel <= (shot.pre + shot.post):
+                x = left + (right-left) * rel / (shot.pre + shot.post)
+                self.create_line(x, top, x, bottom, fill='#94A3B8', dash=(2, 3))
+                self.create_oval(x-3, top+2, x+3, top+8, fill='#334155', outline='')
+        self.create_text(left,h-8,text=f'-{shot.pre:g}s' ,fill='#64748B',font=('Meiryo UI',8))
         self.create_text(right,h-8,text=f'+{shot.post:g}s',fill='#64748B',anchor='e',font=('Meiryo UI',8))
         metrics=[('FOV',1,'#2563EB'),('距離',2,'#16A34A'),('Orbit',3,'#9A49C5')]
         for m,col,color in metrics:

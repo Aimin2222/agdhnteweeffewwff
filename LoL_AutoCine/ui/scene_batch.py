@@ -19,8 +19,18 @@ class BatchResult:
     montage: object = None
 
 
-def build_scene_templates(kills, tpl, overrides: dict, *, auto: bool):
-    for kill in kills:
+def order_scenes(kills, order):
+    """Stable ordering: explicitly ordered kills first, new/unlisted kills afterwards."""
+    if not order:
+        return list(kills)
+    lookup = {key: i for i, key in enumerate(order)}
+    incoming = list(kills)
+    return [kill for _, kill in sorted(enumerate(incoming),
+                                     key=lambda entry: (lookup.get(scene_key(entry[1]), len(lookup)), entry[0]))]
+
+
+def build_scene_templates(kills, tpl, overrides: dict, *, auto: bool, order=None):
+    for kill in order_scenes(kills, order):
         key=scene_key(kill)
         if key in overrides:
             shot=Shot.validated(overrides[key])
@@ -38,7 +48,7 @@ def build_scene_templates(kills, tpl, overrides: dict, *, auto: bool):
 
 def render_scenes(api,source,player,kills,tpl,out_root,make_montage,
                   overrides, *, auto=False,progress=None,stop=None,log=lambda s:None,audio_factory=None,
-                  run_edit=None, concat=None, unique_path=None):
+                  run_edit=None, concat=None, unique_path=None, order=None):
     """Inject dependencies for tests; never read tkinter variables here.
 
     Per-scene override uses standalone clips (no cross-scene multikill merging).
@@ -51,7 +61,7 @@ def render_scenes(api,source,player,kills,tpl,out_root,make_montage,
     if unique_path is None:
         from core.jobs import unique_path as unique_path
     out=BatchResult()
-    scenes=list(build_scene_templates(kills,tpl,overrides,auto=auto))
+    scenes=list(build_scene_templates(kills,tpl,overrides,auto=auto,order=order))
     for i,(kill,scene_tpl) in enumerate(scenes,1):
         if stop is not None and stop.is_set():
             log('中止しました。');break

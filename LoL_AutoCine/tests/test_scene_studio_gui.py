@@ -48,6 +48,6 @@ def test_saved_scene_dispatch(monkeypatch,tmp_path):
         assert args[3] is True and args[4][key]['arc']==44
         app.on_smart_one_click()
         assert captured[-1][0].__name__=='_make'
-        assert captured[-1][1][-3] is True
+        assert captured[-1][1][-4] is True
     finally:
         root.destroy()

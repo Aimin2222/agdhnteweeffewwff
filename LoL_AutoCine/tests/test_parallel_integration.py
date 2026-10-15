@@ -4,7 +4,7 @@ import subprocess
 
 import pytest
 
-from tools.check_parallel_integration import inspect
+from tools.check_parallel_integration import inspect, objects
 
 
 def command(root, *args):
@@ -38,6 +38,7 @@ def history(root, gpu_file, ui_file):
 
 @pytest.mark.parametrize("ui_file", [
     "legacy_app.py", "tests/test_scene_studio.py", "tests/test_scene_studio_gui.py",
+    "tests/test_scene_sequence.py", "tests/test_scene_keyframes_v592.py",
 ])
 def test_independent_changes_preserve_checkout(tmp_path, ui_file):
     history(tmp_path, "core/effects.py", ui_file)
@@ -55,6 +56,8 @@ def test_independent_changes_preserve_checkout(tmp_path, ui_file):
     ("legacy_app.py", "docs/ui.md", "gpu_changed_ui_files"),
     ("tests/test_scene_studio.py", "docs/ui.md", "gpu_changed_ui_files"),
     ("tests/test_scene_studio_gui.py", "docs/ui.md", "gpu_changed_ui_files"),
+    ("tests/test_scene_sequence.py", "docs/ui.md", "gpu_changed_ui_files"),
+    ("tests/test_scene_keyframes_v592.py", "docs/ui.md", "gpu_changed_ui_files"),
     ("core/effects.py", "core/jobs.py", "shared_files_requiring_review"),
 ])
 def test_ownership_and_shared_api_are_blocked(tmp_path, gpu_file, ui_file, key):
@@ -89,3 +92,58 @@ def test_post_merge_gpu_rollback_is_detected(tmp_path):
     report = inspect(tmp_path, "stable", "gpu", "ui", "integration")
     assert report["status"] == "review_required"
     assert report["integration_gpu_mismatches"] == ["core/effects.py"]
+
+
+def shared_review(root):
+    return {"schema_version": 1, "base": command(root, "rev-parse", "stable"),
+            "files": {"core/jobs.py": {"branch": "gpu", "object": objects(root, "gpu")["core/jobs.py"]}}}
+
+
+def test_shared_review_is_explicit_and_applies_to_exact_object(tmp_path):
+    history(tmp_path, "core/jobs.py", "legacy_app.py")
+    assert inspect(tmp_path, "stable", "gpu", "ui")["shared_files_requiring_review"] == ["core/jobs.py"]
+    review = shared_review(tmp_path)
+    report = inspect(tmp_path, "stable", "gpu", "ui", shared_review=review)
+    assert report["status"] == "ok" and report["shared_files_reviewed"] == ["core/jobs.py"]
+    command(tmp_path, "switch", "gpu")
+    commit_file(tmp_path, "core/jobs.py", "later unreviewed change\n")
+    report = inspect(tmp_path, "stable", "gpu", "ui", shared_review=review)
+    assert report["status"] == "review_required"
+    assert report["shared_files_requiring_review"] == ["core/jobs.py"]
+
+
+def test_shared_review_does_not_cover_other_branch_or_new_shared_file(tmp_path):
+    history(tmp_path, "core/jobs.py", "legacy_app.py")
+    review = shared_review(tmp_path)
+    commit_file(tmp_path, "core/jobs.py", "UI also changed this shared API\n")
+    commit_file(tmp_path, "core/audio.py", "unreviewed shared audio API\n")
+    report = inspect(tmp_path, "stable", "gpu", "ui", shared_review=review)
+    assert report["status"] == "review_required"
+    assert report["shared_files_requiring_review"] == ["core/audio.py", "core/jobs.py"]
+    assert report["shared_files_reviewed"] == []
+
+
+def test_reviewed_shared_file_rollback_after_merge_is_detected(tmp_path):
+    history(tmp_path, "core/jobs.py", "legacy_app.py")
+    review = shared_review(tmp_path)
+    command(tmp_path, "switch", "-c", "integration", "gpu")
+    command(tmp_path, "merge", "--no-ff", "ui", "-m", "test reviewed merge")
+    assert inspect(tmp_path, "stable", "gpu", "ui", "integration", review)["status"] == "ok"
+    commit_file(tmp_path, "core/jobs.py", "base\n")
+    report = inspect(tmp_path, "stable", "gpu", "ui", "integration", review)
+    assert report["status"] == "review_required"
+    assert report["integration_shared_mismatches"] == ["core/jobs.py"]
+
+
+@pytest.mark.parametrize("change", ["stale_base", "gpu_owned_file", "invalid_branch"])
+def test_invalid_shared_review_never_reports_safe(tmp_path, change):
+    history(tmp_path, "core/jobs.py", "legacy_app.py")
+    review = shared_review(tmp_path)
+    if change == "stale_base":
+        review["base"] = "0" * 40
+    elif change == "gpu_owned_file":
+        review["files"]["core/effects.py"] = {"branch": "gpu", "object": "unused"}
+    else:
+        review["files"]["core/jobs.py"]["branch"] = "other"
+    with pytest.raises(ValueError):
+        inspect(tmp_path, "stable", "gpu", "ui", shared_review=review)

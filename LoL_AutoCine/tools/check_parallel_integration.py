@@ -16,7 +16,8 @@ GPU_FILES = {"core/effects.py", "core/gpu_pipeline.py", "core/recorder.py",
              "tests/test_v585_diagnostics.py", "tests/test_v31_regressions.py"}
 UI_FILES = {"legacy_app.py", "tests/test_editor_ui_contract.py",
             "tests/test_checked_dispatch.py", "tests/gui_smoke.py",
-            "tests/test_scene_studio.py", "tests/test_scene_studio_gui.py"}
+            "tests/test_scene_studio.py", "tests/test_scene_studio_gui.py",
+            "tests/test_scene_sequence.py", "tests/test_scene_keyframes_v592.py"}
 SHARED_FILES = {"core/jobs.py", "core/camera.py", "core/audio.py",
                 "core/scanner.py", "app.py", "requirements.txt",
                 "core/procloop.py", "core/audio_worker.py", "core/capture.py"}
@@ -32,7 +33,7 @@ def owner(path: str) -> str:
         return "shared"
     if path in INFRA_FILES or path.startswith("docs/") or path in {"VERSION.txt", ".gitignore"}:
         return "metadata"
-    if path.startswith(("README", "CODEX_")):
+    if path.startswith(("README", "CODEX_")) or path == "ui_changes_v5.9.1.patch":
         return "metadata"
     return "shared"
 
@@ -61,7 +62,8 @@ def objects(repo: Path, commit: str) -> dict:
     return entries
 
 
-def inspect(repo: Path, base: str, gpu: str, ui: str, integration: str | None = None) -> dict:
+def inspect(repo: Path, base: str, gpu: str, ui: str, integration: str | None = None,
+            shared_review: dict | None = None) -> dict:
     # Resolve first so names beginning with '-' cannot be interpreted as options.
     refs = {name: checked_git(repo, "rev-parse", "--verify", "--end-of-options", ref + "^{commit}")
             for name, ref in {"base": base, "gpu": gpu, "ui": ui}.items()}
@@ -79,29 +81,54 @@ def inspect(repo: Path, base: str, gpu: str, ui: str, integration: str | None = 
     wrong_ui = sorted(p for p in changes["ui"] if owner(p) == "gpu")
     wrong_gpu = sorted(p for p in changes["gpu"] if owner(p) == "ui")
     shared = sorted(p for p in changes["ui"] | changes["gpu"] if owner(p) == "shared")
+    reviewed = {}
+    if shared_review is not None:
+        if (not isinstance(shared_review, dict) or shared_review.get("schema_version") != 1
+                or shared_review.get("base") != refs["base"]
+                or not isinstance(shared_review.get("files"), dict)):
+            raise ValueError("共有APIレビューの形式または基準コミットが不一致です")
+        branch_objects = {branch: objects(repo, refs[branch]) for branch in ("gpu", "ui")}
+        for path, approval in shared_review["files"].items():
+            if (owner(path) != "shared" or not isinstance(approval, dict)
+                    or approval.get("branch") not in ("gpu", "ui")
+                    or not isinstance(approval.get("object"), str)):
+                raise ValueError("共有APIレビューのファイル指定が不正です")
+            branch = approval["branch"]
+            other = "ui" if branch == "gpu" else "gpu"
+            # A review applies only to this exact file object on its designated branch.
+            # Later edits, deletions, and changes on the other branch still require review.
+            if (path in changes[branch] and path not in changes[other]
+                    and branch_objects[branch].get(path) == approval["object"]):
+                reviewed[path] = approval["object"]
+        shared = [path for path in shared if path not in reviewed]
     overlap = sorted(changes["ui"] & changes["gpu"])
     # merge-tree writes only Git objects, never files/index/branch refs.
     merge = git(repo, "merge-tree", "--write-tree", "--name-only", "--messages", refs["gpu"], refs["ui"])
     if merge.returncode not in (0, 1):
         raise ValueError("Git merge-treeを検証できません: " + merge.stderr.strip())
     mismatches = {"gpu": [], "ui": []}
+    shared_mismatches = []
     if integration:
         integrated = objects(repo, refs["integration"])
         for branch in ("gpu", "ui"):
             expected = objects(repo, refs[branch])
             mismatches[branch] = sorted(path for path in expected.keys() | integrated.keys()
                                         if owner(path) == branch and expected.get(path) != integrated.get(path))
+        shared_mismatches = sorted(path for path, expected in reviewed.items()
+                                   if integrated.get(path) != expected)
     blockers = bool(wrong_ui or wrong_gpu or shared or overlap or merge.returncode
-                    or mismatches["gpu"] or mismatches["ui"])
+                    or mismatches["gpu"] or mismatches["ui"] or shared_mismatches)
     return {
         "status": "review_required" if blockers else "ok", "refs": refs,
         "ui_changed": sorted(changes["ui"]), "gpu_changed": sorted(changes["gpu"]),
         "ui_changed_gpu_files": wrong_ui, "gpu_changed_ui_files": wrong_gpu,
         "shared_files_requiring_review": shared, "both_changed_files": overlap,
+        "shared_files_reviewed": sorted(reviewed),
         "merge_conflicts": merge.returncode == 1,
         "merge_details": merge.stdout.strip() if merge.returncode else "",
         "integration_gpu_mismatches": mismatches["gpu"],
         "integration_ui_mismatches": mismatches["ui"],
+        "integration_shared_mismatches": shared_mismatches,
         "scope": "committed branch tips only; inspect git status for uncommitted work",
     }
 
@@ -113,10 +140,16 @@ def main() -> int:
     parser.add_argument("--gpu", default="feature/gpu-engine")
     parser.add_argument("--ui", default="feature/ui-editor-v586")
     parser.add_argument("--integration", help="After merging, verify committed owned files match their source branches")
+    parser.add_argument("--shared-review", type=Path,
+                        help="Explicit JSON review of exact shared file objects; other changes remain blocked")
     args = parser.parse_args()
     try:
-        report = inspect(args.repo, args.base, args.gpu, args.ui, args.integration)
-    except ValueError as exc:
+        review = None
+        if args.shared_review:
+            path = args.shared_review if args.shared_review.is_absolute() else args.repo / args.shared_review
+            review = json.loads(path.read_text(encoding="utf-8"))
+        report = inspect(args.repo, args.base, args.gpu, args.ui, args.integration, review)
+    except (ValueError, OSError) as exc:
         print(json.dumps({"status": "unverified", "error": str(exc)}, ensure_ascii=False, indent=2))
         return 2
     print(json.dumps(report, ensure_ascii=False, indent=2))
