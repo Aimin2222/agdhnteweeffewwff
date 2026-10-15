@@ -20,6 +20,7 @@ expected_blobs={}
 for entry in tree.split(b'\0'):
     if entry:
         header,name=entry.split(b'\t',1);expected_blobs[name.decode('utf-8')]=header.split()[2].decode('ascii')
+changed=sorted(name for name in expected_blobs if name.startswith('LoL_AutoCine/assets/kill_frames_chatgpt/'))
 with zipfile.ZipFile(archive) as z:
     top=z.namelist()[0].split('/')[0]
     for name in changed:
