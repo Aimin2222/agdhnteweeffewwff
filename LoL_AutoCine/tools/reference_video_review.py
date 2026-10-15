@@ -112,7 +112,7 @@ def create_sheets(input_folder, output_folder, *, ffmpeg=None, logger=print):
     report_path.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
     for index,path in enumerate(videos,1):
         entry={"number":index,"original_name":path.name,
-               "relative_path":str(path.relative_to(input_root)),
+               "relative_path":path.relative_to(input_root).as_posix(),
                "size_bytes":path.stat().st_size,"samples":[],
                "contact_sheet":None,"errors":[]}
         try:
@@ -148,7 +148,7 @@ def create_sheets(input_folder, output_folder, *, ffmpeg=None, logger=print):
                 filename=f"{index:03d}_{sanitized_filename(path.stem)}.jpg"
                 destination=shots/filename
                 sheet.save(destination,quality=86,optimize=True)
-                entry["contact_sheet"]=str(destination.relative_to(output))
+                entry["contact_sheet"]=destination.relative_to(output).as_posix()
                 logger(f"[{index}/{len(videos)}] {path.name} -> {filename}")
         except (OSError,ValueError,subprocess.SubprocessError) as exc:
             entry["errors"].append(f"{type(exc).__name__}: {exc}")
