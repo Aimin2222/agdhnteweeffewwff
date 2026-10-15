@@ -179,13 +179,23 @@
       "source": "image-gen-10(1).png",
       "source_sha256": "53ab61bed8c2edd4cb5dcdaa8a4ecc4bc2260ae66b7e6d0251f13895ad600fa5",
       "source_bytes": 2526737,
-      "status": "transparent_candidate_saved_qa_failed",
+      "status": "review_assets_saved_not_fully_identical",
       "generated_png": null,
-      "visual_qa": "not_passed_incomplete_decorations",
-      "alpha_qa": "rgba_generated_but_visual_contamination_possible",
+      "visual_qa": "reviewed_dark_light_background_not_approved_exact_match",
+      "alpha_qa": "RGBA icon slots and corners transparent; central original parchment suppression improved, remaining soft halo",
       "reference_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/reference_previews/015.jpg",
       "candidate_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/batch_011_020/candidates/015/",
-      "candidate_parts": 5
+      "candidate_parts": 5,
+      "review_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/review/BANDLE_CITY/",
+      "review_parts": [
+        "bandle_weak_spiral_crystal_review_rgba.png",
+        "bandle_strong_spiral_crystal_review_rgba.png",
+        "bandle_weak_paw_crest_review_rgba.png",
+        "bandle_strong_paw_crest_review_rgba.png",
+        "bandle_weak_star_portal_review_rgba.png",
+        "bandle_strong_star_portal_review_rgba.png"
+      ],
+      "note": "6 separately saved 1800x400 transparent original-guided sprite review variants, not exact source match. Source sha matched; original and Codex data unchanged."
     },
     {
       "number": "016",
@@ -944,7 +954,7 @@
     }
   ],
   "skipped_count": 0,
-  "current_batch": "No.015 next, No.013 PROJECT and No.014 IXTAL saved as review-only",
+  "current_batch": "No.016 VOId next; No.013-015 review-only GitHub PNGs stored",
   "notes": "Full-resolution originals 011-020 accessible on GitHub Actions and SHA-256 checked. 51 native-resolution RGBA candidates saved separately from Codex, but visual QA found missing outlines/background fragments; none is approved as finished. Preview JPGs of all 89 originals also saved; originals untouched.",
   "candidate_counts": {
     "source_images": 10,
