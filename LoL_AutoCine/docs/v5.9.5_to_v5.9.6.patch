@@ -1,0 +1,474 @@
+diff --git a/README_v5.9.6_JA.md b/README_v5.9.6_JA.md
+new file mode 100644
+index 0000000..ce87458
+--- /dev/null
++++ b/README_v5.9.6_JA.md
+@@ -0,0 +1,43 @@
++# LoL AutoCine v5.9.6 — HUDプリセット / チェック済み一括設定
++
++v5.9.5をベースに、Codex版の統合を待たずにChatGPT側で進めた更新です。
++
++## 追加・改善
++
++### HUDを3択に整理
++- **すべて非表示（シネマ）**：UIとHPバーを隠す従来の設定。
++- **体力バー中心（名前はLoL設定）**：Replay APIの既存HUDフラグでチャンピオンのHPバーを残し、その他のUIを隠す設定。
++- **通常HUD（ゲーム内表示のまま）**：HUDを変更せず、LoLで表示している状態をそのまま収録。
++
++「かんたん編集」と「詳細編集 → 出力」のどちらでも切り替え可能。設定は保存され、再起動後に復元されます。UIが二重に異なる状態にならないよう共通変数にしました。既存のテンプレートにある `hide_hud` / `keep_champion_bars` フラグとの互換性も維持しています。
++
++**重要：名前の非表示そのものはAutoCineが自動設定しません。** LoLリプレイ側のインターフェース設定で、体力バー上の名前の表示を「なし」にしてください。項目名はLoLのバージョンで変わる可能性があります。ミラーで名前が消えているか事前確認をしてください。自動で名前を消せると保証するUIにはしていません。
++
++### シーン設定の一括適用
++「詳細編集 → シーン → ☑ チェックした全シーンに適用」で、現在選択中のシーンの**未保存の編集値**も含め、チェックが付いた複数シーンへ適用します。確認ダイアログあり。**1回のUndoですべて戻せます。** 実際の書き出しに反映する既存のシーン別演出モードを自動的にONにします。
++
++### 診断ログ
++作成開始時のHUD状態をログに表示します（体力バー中心・シネマ・通常HUD）。
++
++## 変更していない部分
++- Replay APIのカメラ座標系、OrbitTargetLock、カメラ時計
++- クリップの録画・エフェクト・GPU処理本体
++- Windows Native Process LoopbackによるLoL専用音声録音
++- 音声mux、NVENCのエンコードパイプライン
++
++## テスト
++自動テスト61件をLinux/Xvfb上で実行し通過。LoLリプレイ実機・WindowsでのHUDフラグ/名前表示の挙動と映像・音声は利用者側の確認が必要です。
++
++## Windows動作確認の順序
++1. 新しいフォルダにZIPを展開して `START.bat` で起動。
++2. かんたん編集でHUD表示を「体力バー中心」にして、詳細編集 → 出力で同じ選択になっているか確認。
++3. LoL内で体力バー上の名前表示を「なし」に設定し、ミラーを確認。
++4. 1クリップを作成し、HPバーが表示され名前が消えているか（出ていれば画像または短い動画を送付）。
++5. シーン設定を編集→2シーンにチェック→「☑ チェックした全シーンに適用」→Undo/Redoを確認。
++6. チェックした2シーンで書き出し、カラー・音声・カメラの動きを確認。
++7. 必要なら `COLLECT_DIAGNOSTICS.bat` で診断ZIPを作成。
++
++## トラブルの切り分け
++- HPバーも表示されない：Replay APIでのHUD変更がLoLのバージョンと合っていない可能性。診断ログと映像を確認。
++- 名前だけ残る：LoL側の名前表示設定を確認。AutoCineからゲーム内の名前表示を変更する仕組みは現時点でありません。
++- 操作後にクラッシュ：v5.9.5の安定フォルダへ戻し、診断ZIPを提供してください。
+diff --git a/VERSION.txt b/VERSION.txt
+index d4fa927..9bc6cde 100644
+--- a/VERSION.txt
++++ b/VERSION.txt
+@@ -1 +1 @@
+-5.9.5
++5.9.6
+diff --git a/core/jobs.py b/core/jobs.py
+index e9af811..71275c3 100644
+--- a/core/jobs.py
++++ b/core/jobs.py
+@@ -255,9 +255,12 @@ def run_auto_edit(api: ReplayAPI, source: FrameSource, player: Player, kills: li
+     if total == 0:
+         log("対象プレイヤーのキルがありません。")
+         return res
++    hud_desc = ("体力バー中心（名前表示はLoL側設定）" if tpl.hide_hud and tpl.keep_champion_bars
++                else "HUD非表示" if tpl.hide_hud else "通常HUD")
+     log(f"対象: {player.label()} / {total} クリップを作成します"
+-        + (" / HUD非表示" if tpl.hide_hud else "") + (" / ゲーム音あり" if audio_factory and tpl.game_audio else ""))
+-    # HUDはReplay APIへ変更を送らない。HUD変更によるReplayクラッシュを避ける。
++        + f" / HUD: {hud_desc}" + (" / ゲーム音あり" if audio_factory and tpl.game_audio else ""))
++    # HUD flags are applied once per clip by record_one_clip(), not on every frame.
++    # Name visibility is deliberately left to LoL settings; no unsupported API property is sent.
+     try:
+         for i, (s, e, ks) in enumerate(clips, 1):
+             if stop is not None and stop.is_set():
+diff --git a/docs/CHANGELOG_v5.9.6_JA.md b/docs/CHANGELOG_v5.9.6_JA.md
+new file mode 100644
+index 0000000..ca80045
+--- /dev/null
++++ b/docs/CHANGELOG_v5.9.6_JA.md
+@@ -0,0 +1,9 @@
++# 変更履歴 v5.9.6
++
++- HUD設定を3択プリセット化。既存のHUDレンダーフラグと相互接続。
++- かんたん編集と詳細編集（出力）で設定共有、再起動時の選択復元。
++- 名前を隠すにはLoL側の設定が必要であることをヘルプに明記。
++- 右の重複HUDチェックUIを整理。
++- チェックした複数シーンへ現在の編集値を一括反映。1 Undoで復元。
++- 作成開始ログにHUD状態を表示。
++- カメラ座標／音声／GPU処理本体は変更なし。
+diff --git a/legacy_app.py b/legacy_app.py
+index 09b3343..40d3cde 100644
+--- a/legacy_app.py
++++ b/legacy_app.py
+@@ -38,6 +38,7 @@ from ui.scene_timeline import SceneTimeline                     # noqa: E402
+ from ui.scene_project import SceneProject, Shot, scene_key, recommend, apply_shot  # noqa: E402
+ from ui.scene_batch import render_scenes                      # noqa: E402
+ from ui.motion_graph import ShotMotionGraph                  # noqa: E402
++from ui.hud_presets import (HUD_MODES, hud_mode_from_flags, hud_flags, hud_summary)  # noqa: E402
+ 
+ APP = "LoL AutoCine"
+ FONT = ("Meiryo UI", 10)
+@@ -312,7 +313,7 @@ class DofViz(tk.Canvas):
+ class App:
+     def __init__(self, root: tk.Tk):
+         self.root = root
+-        root.title(f"{APP} v5.9.5 - かんたん / 詳細ワークスペース")
++        root.title(f"{APP} v5.9.6 - HUDプリセット / シーン一括編集")
+         sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
+         root.geometry(f"{min(1560, sw - 40)}x{min(960, sh - 90)}+10+10")
+         root.option_add("*Font", FONT)
+@@ -354,6 +355,10 @@ class App:
+         self.var_auto_director = tk.BooleanVar(value=False)  # preserve old one-click default
+         self.var_scene_mode = tk.BooleanVar(value=False)    # opt-in per-scene rendering
+         self.var_edit_mode = tk.StringVar(value="easy")  # view only: never silently change rendering state
++        # A single HUD preset drives the legacy render flags. LoL player-name visibility is an in-game setting.
++        self.var_hud_mode = tk.StringVar(value="hidden")
++        self.var_hud = tk.BooleanVar(value=True)
++        self.var_bars = tk.BooleanVar(value=False)
+         self.scene_project = SceneProject()
+         self.scene_project_path = ROOT / 'projects' / 'scene_project.json'
+         self._project_autosave_token = None
+@@ -436,6 +441,8 @@ class App:
+         # 上部ナビからも同じ設定・処理を操作できるようにする。
+         self.var_tpl = tk.StringVar(value=list(self.templates)[0])
+         self.var_int = tk.StringVar(value="standard")
++        self.var_hud_choice = tk.StringVar(value=HUD_MODES['hidden'])
++        self.var_hud_summary = tk.StringVar(value=hud_summary('hidden'))
+ 
+         top = ttk.Frame(r, padding=(12, 3, 12, 3))
+         top.pack(fill="x")
+@@ -680,6 +687,15 @@ class App:
+                         variable=self.var_auto_director).pack(anchor="w", pady=(6, 1))
+         ttk.Label(easy, text="ONなら自動作成前に既存のOrbit/ドリー設定を調整します。OFFでは以前の挙動のまま。",
+                   style="CardMuted.TLabel").pack(anchor="w")
++        hud_easy = ttk.Frame(easy, style="Card.TFrame")
++        hud_easy.pack(fill="x", pady=(12, 2))
++        ttk.Label(hud_easy, text="映像に残すHUD", style="Card.TLabel", width=16).pack(side="left")
++        cb_hud_easy = ttk.Combobox(hud_easy, state="readonly", values=list(HUD_MODES.values()),
++                                   textvariable=self.var_hud_choice, width=25)
++        cb_hud_easy.pack(side="left", padx=(4, 8))
++        cb_hud_easy.bind("<<ComboboxSelected>>", self._on_hud_choice)
++        ttk.Button(hud_easy, text="名前を消すには？", command=self.on_hud_name_help).pack(side="left")
++        ttk.Label(easy, textvariable=self.var_hud_summary, style="CardMuted.TLabel", wraplength=700).pack(anchor="w")
+ 
+         self._mode_detail_sections = []
+         timeline = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
+@@ -794,7 +810,8 @@ class App:
+             ttk.Button(actions,text=label,command=handler).pack(side="left",padx=(0,4))
+         project_bar=ttk.Frame(scene_card,style="Card.TFrame");project_bar.pack(fill="x",pady=(3,0))
+         ttk.Button(project_bar,text="設定をコピー",command=self.on_copy_scene_settings).pack(side="left", padx=(0, 4))
+-        ttk.Button(project_bar,text="設定を貼り付け",command=self.on_paste_scene_settings).pack(side="left", padx=(0, 10))
++        ttk.Button(project_bar,text="設定を貼り付け",command=self.on_paste_scene_settings).pack(side="left", padx=(0, 4))
++        ttk.Button(project_bar,text="☑ チェックした全シーンに適用",command=self.on_apply_shot_to_checked).pack(side="left", padx=(0, 10))
+         ttk.Button(project_bar,text="編集プロジェクトを保存",command=self.on_scene_export).pack(side="left")
+         ttk.Button(project_bar,text="読み込み",command=self.on_scene_import).pack(side="left",padx=5)
+         ttk.Label(project_bar,text="自動保存 / Undo・Redo（最大100回） / ON時は1シーン1クリップ",style="CardMuted.TLabel").pack(side="right")
+@@ -1017,6 +1034,16 @@ class App:
+         ttk.Label(rl, textvariable=self.var_lut, style="CardMuted.TLabel").pack(side="left", padx=5)
+         slider(output,"game_volume","ゲーム音量",0,1.5)
+         slider(output,"bgm_volume","BGM音量",0,1.0)
++        hud_export = ttk.LabelFrame(output, text="HUD・名前表示（映像に残す情報）", padding=9)
++        hud_export.pack(fill="x", pady=(10, 5))
++        hud_row = ttk.Frame(hud_export, style="Card.TFrame"); hud_row.pack(fill="x")
++        ttk.Label(hud_row, text="HUDの表示", style="Card.TLabel").pack(side="left", padx=(0, 8))
++        cb_hud_output = ttk.Combobox(hud_row, state="readonly", values=list(HUD_MODES.values()),
++                                     textvariable=self.var_hud_choice, width=30)
++        cb_hud_output.pack(side="left", fill="x", expand=True)
++        cb_hud_output.bind("<<ComboboxSelected>>", self._on_hud_choice)
++        ttk.Button(hud_export, text="名前を消すためのLoL設定を確認", command=self.on_hud_name_help).pack(anchor="w", pady=(6, 2))
++        ttk.Label(hud_export, textvariable=self.var_hud_summary, style="CardMuted.TLabel", wraplength=530).pack(anchor="w")
+         ttk.Label(output, text="出力先", style="Card.TLabel").pack(anchor="w", pady=(5,2))
+         self.lbl_out=ttk.Label(output, text=str(self.out_root), style="CardMuted.TLabel", wraplength=560); self.lbl_out.pack(fill="x")
+         ttk.Button(output, text="出力フォルダを変更", command=self.on_pick_out).pack(fill="x", pady=3)
+@@ -1127,8 +1154,10 @@ class App:
+             ttk.Checkbutton(f, text=text, variable=tk.BooleanVar(value=True)).pack(anchor="w")
+ 
+         f = card(right, "⚙  その他の設定")
+-        self.var_hud=tk.BooleanVar(value=True); ttk.Checkbutton(f, text="HUD非表示", variable=self.var_hud).pack(anchor="w", pady=2)
+-        self.var_bars=tk.BooleanVar(value=False); ttk.Checkbutton(f, text="チャンピオンHPバーだけ残す", variable=self.var_bars).pack(anchor="w", pady=2)
++        ttk.Label(f, text="HUDは『出力』ゾーンと、かんたん編集に集約しました。",
++                  style="CardMuted.TLabel", wraplength=300).pack(anchor="w", pady=2)
++        ttk.Label(f, textvariable=self.var_hud_choice, style="Card.TLabel").pack(anchor="w", pady=2)
++        ttk.Button(f, text="HUD表示を変更", command=lambda: self._focus_editor_zone("output")).pack(fill="x", pady=(2,5))
+         self.var_dof_blur=tk.DoubleVar(value=0.0); self.var_dof_focus_distance=tk.DoubleVar(value=5510.0); self.var_dof_near_distance=tk.DoubleVar(value=10000.0); self.var_dof_far_distance=tk.DoubleVar(value=10000.0)
+         ttk.Checkbutton(f, text="音声クラッシュ防止", variable=tk.BooleanVar(value=True)).pack(anchor="w", pady=2)
+         # Quick-output duplicates stay available from the scene/camera/color zones,
+@@ -1258,6 +1287,35 @@ class App:
+         self.var_editor_zone.set(zone)
+         self._apply_edit_mode(log=False)
+ 
++    def _on_hud_choice(self, _event=None) -> None:
++        mode = next((m for m, title in HUD_MODES.items() if title == self.var_hud_choice.get()), "hidden")
++        self.var_hud_mode.set(mode)
++        hide, bars = hud_flags(mode)
++        self.var_hud.set(hide)
++        self.var_bars.set(bars)
++        self.var_hud_summary.set(hud_summary(mode))
++        if _event is not None:
++            self._save_settings()
++            self.log(f"HUDモード: {HUD_MODES[mode]}" +
++                     ("（名前非表示はLoLのゲーム内設定が別途必要）" if mode == 'health' else ""))
++
++    def _set_hud_mode(self, mode: str, *, save: bool = False) -> None:
++        mode = mode if mode in HUD_MODES else 'hidden'
++        self.var_hud_choice.set(HUD_MODES[mode])
++        self._on_hud_choice()
++        if save:
++            self._save_settings()
++
++    def on_hud_name_help(self) -> None:
++        messagebox.showinfo("体力バーの名前を非表示にする方法",
++            "【体力バーだけ表示】は、Replay APIのHUD/HPバー制御を利用します。\n\n"
++            "チャンピオン名・プレイヤー名の表示はLoL側の設定が必要です。\n"
++            "LoLのリプレイ中に Esc → インターフェース（表示設定）を開き、\n"
++            "『体力バーの上の名前表示』に相当する項目を『なし』にしてください。\n\n"
++            "項目名や位置はLoLのバージョン・言語で異なります。\n"
++            "AutoCineはゲーム内の名前表示設定を自動変更しません。\n"
++            "録画前にミラーで名前が消えているか確認してください。")
++
+     def on_copy_scene_settings(self) -> None:
+         """Copy current UNSAVED shot values to a safe in-app clipboard."""
+         if self._current_scene() is None:
+@@ -1293,6 +1351,31 @@ class App:
+         except (ValueError, TypeError, tk.TclError) as exc:
+             self.log(f'設定貼り付け失敗: {exc}')
+ 
++    def on_apply_shot_to_checked(self) -> None:
++        """Apply the current (including unsaved) shot to checked scenes in ONE Undo step."""
++        if self.busy:
++            self.log("書き出し中はシーン設定を一括変更できません。")
++            return
++        if self._current_scene() is None:
++            self.log("一括適用: 最初に右側でコピー元シーンを選んでください。")
++            return
++        targets = [self.kills[i] for i in sorted(self.checked_kills) if 0 <= i < len(self.kills)]
++        if not targets:
++            self.log("一括適用: 右側の一覧で対象シーンにチェックを入れてください。")
++            return
++        try:
++            shot = Shot.validated(__import__('dataclasses').asdict(self._scene_shot_from_ui()))
++        except (ValueError, TypeError, tk.TclError) as exc:
++            self.log(f"一括適用の設定値が不正: {exc}")
++            return
++        if not messagebox.askyesno(APP, f"チェックした {len(targets)} シーンに、現在の編集値をまとめて適用しますか？\nUndoで一度に戻せます。"):
++            return
++        self.scene_project.put_many({scene_key(k): shot for k in targets})
++        self.var_scene_mode.set(True)
++        self._schedule_project_save()
++        self._refresh_scene_list()
++        self.log(f"シーン設定を一括適用: {len(targets)}シーン（Undoでまとめて戻せます）")
++
+     def on_camera_safe_pose(self) -> None:
+         """Restore conservative 3rd-person framing without deleting shot edits."""
+         self.var_style.set(STYLES["third_cinema"])
+@@ -2098,8 +2181,7 @@ class App:
+         self.var_pre.set(t.pre)
+         self.var_post.set(t.post)
+         self.var_merge.set(t.merge_multikill)
+-        self.var_hud.set(t.hide_hud)
+-        self.var_bars.set(t.keep_champion_bars)
++        self._set_hud_mode(hud_mode_from_flags(t.hide_hud, t.keep_champion_bars))
+         self.var_gaudio.set(t.game_audio)
+         self.var_fog.set(t.fog_enabled)
+         self.var_fog_preset.set(FOG_PRESETS.get(t.fog_preset, t.fog_preset))
+@@ -2134,7 +2216,7 @@ class App:
+         t.bgm_path, t.lut_path = self.var_bgm.get(), self.var_lut.get()
+         # 空欄ならタイトルを一切表示しない。自動KILL文字は生成しない。
+         t.title_auto = False
+-        t.hide_hud, t.keep_champion_bars = bool(self.var_hud.get()), bool(self.var_bars.get())
++        t.hide_hud, t.keep_champion_bars = hud_flags(self.var_hud_mode.get())
+         t.game_audio = bool(self.var_gaudio.get())
+         t.fog_enabled = bool(self.var_fog.get())
+         t.fog_preset = rev(FOG_PRESETS).get(self.var_fog_preset.get(), "teal")
+@@ -2195,10 +2277,15 @@ class App:
+             if d.get("right_width"):
+                 self.var_right_width.set(int(d["right_width"]))
+             self._apply_panel_widths()
++            if d.get("hud_mode") in HUD_MODES:
++                self._set_hud_mode(d["hud_mode"])
+             restored_mode = d.get("edit_mode", "easy")
+             if restored_mode in ("easy", "advanced"):
+                 self.var_edit_mode.set(restored_mode)
+                 self._apply_edit_mode(log=False)
++            # A prior _apply_panel_widths() call also saves settings; persist
++            # the fully restored edit/HUD modes to avoid erasing preferences.
++            self._save_settings()
+         except Exception:
+             pass
+ 
+@@ -2207,7 +2294,8 @@ class App:
+             SETTINGS.write_text(json.dumps({"out_root": str(self.out_root),
+                                              "left_width": int(self.var_left_width.get()),
+                                              "right_width": int(self.var_right_width.get()),
+-                                             "edit_mode": self.var_edit_mode.get()}, ensure_ascii=False), encoding="utf-8")
++                                             "edit_mode": self.var_edit_mode.get(),
++                                             "hud_mode": self.var_hud_mode.get()}, ensure_ascii=False), encoding="utf-8")
+         except Exception:
+             pass
+ 
+diff --git a/tests/test_v596_hud_batch.py b/tests/test_v596_hud_batch.py
+new file mode 100644
+index 0000000..01cde3d
+--- /dev/null
++++ b/tests/test_v596_hud_batch.py
+@@ -0,0 +1,124 @@
++# -*- coding: utf-8 -*-
++"""Regression tests for independent HUD presets and checked-scene batch editing."""
++import tkinter as tk
++from types import SimpleNamespace
++from dataclasses import asdict
++
++from core.hud import hide_values
++from core.effects import Template
++from legacy_app import App
++from ui.hud_presets import HUD_MODES, hud_flags, hud_mode_from_flags, hud_summary
++from ui.scene_project import scene_key, Shot
++
++
++def sample_kill(n):
++    return SimpleNamespace(time=float(n*12), event_id=n, killer='Aimin', victim=f'Enemy{n}', multikill=1, role='kill')
++
++
++def test_hud_presets_legacy_flags():
++    assert hud_flags('hidden') == (True, False)
++    assert hud_flags('health') == (True, True)
++    assert hud_flags('full') == (False, False)
++    assert hud_mode_from_flags(True, True) == 'health'
++    assert hud_mode_from_flags(True, False) == 'hidden'
++    assert hud_mode_from_flags(False, True) == 'full'
++    assert hide_values(True)['healthBarChampions'] is True
++    assert all(not v for k, v in hide_values(True).items() if k != 'healthBarChampions')
++    assert 'LoL' in hud_summary('health')
++
++
++def test_gui_presets_and_template_roundtrip(monkeypatch, tmp_path):
++    root = tk.Tk()
++    try:
++        app = App(root)
++        monkeypatch.setattr(app, '_save_settings', lambda: None)
++        for mode, (hide, bars) in [('hidden',(True,False)),('health',(True,True)),('full',(False,False))]:
++            app.var_hud_choice.set(HUD_MODES[mode])
++            app._on_hud_choice()
++            assert app.var_hud_mode.get() == mode
++            assert app.var_hud.get() == hide
++            assert app.var_bars.get() == bars
++            tpl = app.current_template()
++            assert (tpl.hide_hud, tpl.keep_champion_bars) == (hide, bars)
++            app.apply_template('三人称 自然め')
++            app.apply_template('三人称 自然め')
++            app.apply_template('三人称 自然め')
++            # Applying the template uses its own legacy HUD flags.
++            tpl.hide_hud = hide
++            tpl.keep_champion_bars = bars
++            app.templates['__HUD TEST__'] = tpl
++            app.apply_template('__HUD TEST__')
++            assert app.var_hud_mode.get() == mode
++        app.var_edit_mode.set('advanced')
++        app._apply_edit_mode(log=False)
++        app.var_editor_zone.set('output')
++        app._apply_editor_zone()
++        assert app._editor_advanced_tabs.index('current') == 2
++    finally:
++        root.destroy()
++
++
++def test_bulk_apply_is_one_undo_step(monkeypatch):
++    root=tk.Tk()
++    try:
++        app=App(root)
++        app.kills=[sample_kill(1), sample_kill(2), sample_kill(3)]
++        app.lb_kills.insert('end','first','second','third')
++        app.lb_kills.selection_set(0)
++        app.on_scene_selection()
++        app.scene_vars['yaw'].set(35)
++        app.on_keyframe_preset('push_pull')
++        app.checked_kills={0,2}
++        monkeypatch.setattr('legacy_app.messagebox.askyesno', lambda *a,**k:True)
++        monkeypatch.setattr(app, '_schedule_project_save', lambda:None)
++        monkeypatch.setattr(app, '_refresh_scene_list', lambda:None)
++        app.on_apply_shot_to_checked()
++        assert set(app.scene_project.shots)=={scene_key(app.kills[0]),scene_key(app.kills[2])}
++        assert app.scene_project.shots[scene_key(app.kills[2])].yaw == 35
++        assert len(app.scene_project.shots[scene_key(app.kills[2])].keyframes)>=3
++        assert app.var_scene_mode.get() is True
++        assert len(app.scene_project._undo) == 1
++        assert app.scene_project.undo()
++        assert not app.scene_project.shots
++    finally:
++        root.destroy()
++
++
++def test_batch_cancel_or_none(monkeypatch):
++    root=tk.Tk()
++    try:
++        app=App(root)
++        app.kills=[sample_kill(1)]
++        app.lb_kills.insert('end','first')
++        app.lb_kills.selection_set(0)
++        app.on_scene_selection()
++        app.checked_kills={0}
++        monkeypatch.setattr('legacy_app.messagebox.askyesno', lambda *a,**k:False)
++        app.on_apply_shot_to_checked()
++        assert app.scene_project._undo == []
++        app.checked_kills=set()
++        app.on_apply_shot_to_checked()
++        assert app.scene_project._undo == []
++    finally:
++        root.destroy()
++
++
++def test_hud_mode_survives_restart(monkeypatch, tmp_path):
++    monkeypatch.setattr('legacy_app.SETTINGS', tmp_path/'settings.json')
++    root=tk.Tk()
++    try:
++        app=App(root)
++        app.var_hud_choice.set(HUD_MODES['health'])
++        app._on_hud_choice('<<ComboboxSelected>>')
++        assert (tmp_path/'settings.json').exists()
++    finally:
++        root.destroy()
++    root2=tk.Tk()
++    try:
++        new_app=App(root2)
++        assert new_app.var_hud_mode.get() == 'health'
++        assert new_app.var_hud.get() is True
++        assert new_app.var_bars.get() is True
++        assert __import__('json').loads((tmp_path/'settings.json').read_text(encoding='utf-8'))['hud_mode']=='health'
++    finally:
++        root2.destroy()
+diff --git a/ui/hud_presets.py b/ui/hud_presets.py
+new file mode 100644
+index 0000000..91ee7c6
+--- /dev/null
++++ b/ui/hud_presets.py
+@@ -0,0 +1,38 @@
++# -*- coding: utf-8 -*-
++"""Stable HUD presets; never claim to change the in-game name display setting.
++
++LoL name display is controlled by the game UI. Keep only proven Replay API
++render flags here; do not guess additional unsupported `set_render` properties.
++"""
++
++HUD_MODES = {
++    "hidden": "すべて非表示（シネマ）",
++    "health": "体力バー中心（名前はLoL設定）",
++    "full": "通常HUD（ゲーム内表示のまま）",
++}
++
++
++def hud_flags(mode: str) -> tuple[bool, bool]:
++    """Return (hide_interface, keep_champion_health_bars)."""
++    if mode == "full":
++        return False, False
++    if mode == "health":
++        return True, True
++    if mode == "hidden":
++        return True, False
++    raise ValueError(f"Unknown HUD mode: {mode}")
++
++
++def hud_mode_from_flags(hide_hud: bool, keep_champion_bars: bool) -> str:
++    # Legacy saved templates represent HUD with two independent flags.
++    if not hide_hud:
++        return "full"
++    return "health" if keep_champion_bars else "hidden"
++
++
++def hud_summary(mode: str) -> str:
++    if mode == "health":
++        return "体力バーを残す設定です。名前を消すにはLoL側の名前表示を『なし』にしてください（録画前にミラーで確認）。"
++    if mode == "full":
++        return "LoLが表示しているHUDを維持します。名前・体力バーもLoL側の設定に従います。"
++    return "HUD・HPバーを非表示にするシネマ向け設定です。"

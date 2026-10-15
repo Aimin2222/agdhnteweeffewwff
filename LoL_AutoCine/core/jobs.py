@@ -255,9 +255,12 @@ def run_auto_edit(api: ReplayAPI, source: FrameSource, player: Player, kills: li
     if total == 0:
         log("対象プレイヤーのキルがありません。")
         return res
+    hud_desc = ("体力バー中心（名前表示はLoL側設定）" if tpl.hide_hud and tpl.keep_champion_bars
+                else "HUD非表示" if tpl.hide_hud else "通常HUD")
     log(f"対象: {player.label()} / {total} クリップを作成します"
-        + (" / HUD非表示" if tpl.hide_hud else "") + (" / ゲーム音あり" if audio_factory and tpl.game_audio else ""))
-    # HUDはReplay APIへ変更を送らない。HUD変更によるReplayクラッシュを避ける。
+        + f" / HUD: {hud_desc}" + (" / ゲーム音あり" if audio_factory and tpl.game_audio else ""))
+    # HUD flags are applied once per clip by record_one_clip(), not on every frame.
+    # Name visibility is deliberately left to LoL settings; no unsupported API property is sent.
     try:
         for i, (s, e, ks) in enumerate(clips, 1):
             if stop is not None and stop.is_set():
