@@ -160,13 +160,19 @@
       "source": "image-gen-1(9).png",
       "source_sha256": "0a0d439dbdf2c72cf72b6c4e03cf3bbdbf54da5b00714b70069b344742c6bfd5",
       "source_bytes": 3129904,
-      "status": "transparent_candidate_saved_qa_failed",
+      "status": "review_assets_saved_not_fully_identical",
       "generated_png": null,
-      "visual_qa": "not_passed_incomplete_decorations",
-      "alpha_qa": "rgba_generated_but_visual_contamination_possible",
+      "visual_qa": "not_approved_exactness",
+      "alpha_qa": "transparent_corners_and_icon_holes_checked",
       "reference_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/reference_previews/014.jpg",
       "candidate_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/batch_011_020/candidates/014/",
-      "candidate_parts": 5
+      "candidate_parts": 5,
+      "review_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/review/IXTAL/",
+      "review_parts": [
+        "ixtal_weak_review_rgba.png",
+        "ixtal_strong_review_rgba.png"
+      ],
+      "note": "Original Ixtal foliage/crystal motif referenced with its original pixels; outer graphic reconstructed. Two 1740x350 RGBA PNG sprites and black/white QA images are saved but not exact match. Keep as review."
     },
     {
       "number": "015",
@@ -938,7 +944,7 @@
     }
   ],
   "skipped_count": 0,
-  "current_batch": "PROJECT visual QA review, source 013; next only after quality gate",
+  "current_batch": "No.015 next, No.013 PROJECT and No.014 IXTAL saved as review-only",
   "notes": "Full-resolution originals 011-020 accessible on GitHub Actions and SHA-256 checked. 51 native-resolution RGBA candidates saved separately from Codex, but visual QA found missing outlines/background fragments; none is approved as finished. Preview JPGs of all 89 originals also saved; originals untouched.",
   "candidate_counts": {
     "source_images": 10,
