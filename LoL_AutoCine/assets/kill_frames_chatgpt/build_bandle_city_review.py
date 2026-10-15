@@ -66,11 +66,15 @@ def cropped_motif(kind,ornate):
     blue=raw[:,:,2]-raw[:,:,0]*.85
     saturated=(mx-mn)
     dim=255-mn
-    if kind==1:
-        selected=np.maximum.reduce([(saturated-17)*3.7,(dim-130)*1.6,blue*2.0])
-    else:
-        selected=np.maximum.reduce([(saturated-15)*3.2,(dim-130)*1.5,blue*2.2])
-    a=np.clip((selected-16)/103,0,1)
+    # Parchement background is low-chroma pale tan. Avoid making this solid:
+    # unlike naive brightness segmentation it should have alpha ~0.
+    chroma=np.clip((saturated-53)/70,0,1)
+    cool=np.clip((blue-23)/88,0,1)
+    # Preserve the deep saturated ornament core without including shaded paper.
+    green=np.clip((raw[:,:,1]-raw[:,:,0]*.68-29)/105,0,1)
+    a=np.maximum.reduce([chroma,cool,green])
+    a=np.where((mx>205)&(saturated<66)&(raw[:,:,0]>raw[:,:,2]*1.08),a*.12,a)
+    a=np.clip((a-.075)*1.10,0,1)
     h,w=selected.shape
     yy,xx=np.mgrid[0:h,0:w]
     rx=.49 if ornate else .47
