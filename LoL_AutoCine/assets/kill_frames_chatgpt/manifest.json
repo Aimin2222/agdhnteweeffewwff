@@ -140,13 +140,20 @@
       "source": "image-gen-1(8).png",
       "source_sha256": "aa50fa648e0ffc3859d290881d8867f010918f0d4e8311c25228eeaa6d8d03d0",
       "source_bytes": 2623146,
-      "status": "transparent_candidate_saved_qa_failed",
+      "status": "review_assets_saved_not_fully_identical",
       "generated_png": null,
-      "visual_qa": "not_passed_incomplete_decorations",
-      "alpha_qa": "rgba_generated_but_visual_contamination_possible",
+      "visual_qa": "not_approved_exactness",
+      "alpha_qa": "passed_alpha_structure_check",
       "reference_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/reference_previews/013.jpg",
       "candidate_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/batch_011_020/candidates/013/",
-      "candidate_parts": 5
+      "candidate_parts": 5,
+      "review_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/review/PROJECT/",
+      "review_parts": [
+        "project_weak_review_rgba.png",
+        "project_strong_review_rgba.png"
+      ],
+      "review_qa": "4-background alpha proof generated, original design only approximately reproduced",
+      "note": "ChatGPT reference-guided sprite reconstruction. Original central X preserved; frame geometry recreated. Not a finished/final frame."
     },
     {
       "number": "014",
@@ -931,7 +938,7 @@
     }
   ],
   "skipped_count": 0,
-  "current_batch": "011-020 QA rework before final; 021-030 next sources",
+  "current_batch": "PROJECT visual QA review, source 013; next only after quality gate",
   "notes": "Full-resolution originals 011-020 accessible on GitHub Actions and SHA-256 checked. 51 native-resolution RGBA candidates saved separately from Codex, but visual QA found missing outlines/background fragments; none is approved as finished. Preview JPGs of all 89 originals also saved; originals untouched.",
   "candidate_counts": {
     "source_images": 10,
