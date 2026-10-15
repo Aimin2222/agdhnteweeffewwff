@@ -219,13 +219,16 @@
       "source": "image-gen-10(3).png",
       "source_sha256": "ca151d3b48583f6de20178d291288b32281ca39f613f215c3354a5006d6d539a",
       "source_bytes": 3064577,
-      "status": "transparent_candidate_saved_qa_failed",
+      "status": "review_assets_saved_not_fully_identical",
       "generated_png": null,
-      "visual_qa": "not_passed_incomplete_decorations",
-      "alpha_qa": "rgba_generated_but_visual_contamination_possible",
+      "visual_qa": "not_final_approved_see_inventory",
+      "alpha_qa": "measured_not_final_approved",
       "reference_preview": "LoL_AutoCine/assets/kill_frames_chatgpt/reference_previews/017.jpg",
       "candidate_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/batch_011_020/candidates/017/",
-      "candidate_parts": 5
+      "candidate_parts": 5,
+      "review_directory": "LoL_AutoCine/assets/kill_frames_chatgpt/review/POOL_PARTY/",
+      "review_png_count": 7,
+      "final_approved": false
     },
     {
       "number": "018",
@@ -958,7 +961,7 @@
     }
   ],
   "skipped_count": 0,
-  "current_batch": "No.016 incomplete: two image_gen reconstructions failed source fidelity and edge-alpha checks; No.017 onward not started this session",
+  "current_batch": "No.017 review work in progress; final approval separate",
   "notes": "Full-resolution originals 011-020 accessible on GitHub Actions and SHA-256 checked. 51 native-resolution RGBA candidates saved separately from Codex, but visual QA found missing outlines/background fragments; none is approved as finished. Preview JPGs of all 89 originals also saved; originals untouched.",
   "candidate_counts": {
     "source_images": 10,
