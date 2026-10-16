@@ -1,5 +1,5 @@
 {
-  "count": 218,
+  "count": 220,
   "status": "review_findings_not_final_approval",
   "assets": [
     {
@@ -3011,21 +3011,6 @@
       "final_approved": false
     },
     {
-      "key": "085/targon_variant_1",
-      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/085/targon_variant_1.generated.png",
-      "sha256": "25437b50d582ec90f466a6b2cbc7849c8b9345276114065393a36c3572aa1576",
-      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/085/targon_variant_1.source_crop.png",
-      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
-      "notes": [
-        "生成画像が1983×793で長辺2K未満。拡大処理で済ませず、ネイティブ2048px以上で再生成する。"
-      ],
-      "repair_required": true,
-      "strict_source_match": "not_final_approved",
-      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_65717df127_0006.jpg",
-      "contact_sha256": "d04afc10e729dbebe1ffea89833eb8df2fdfb88a8700882f4c4b4d8b68cc0ac8",
-      "final_approved": false
-    },
-    {
       "key": "085/zaun_variant_1",
       "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/085/zaun_variant_1.generated.png",
       "sha256": "a82349461a8c52dd99e4735bdc0e9ff6024b3f7ebaa256d9927c00f2ebc09377",
@@ -3266,6 +3251,21 @@
       "final_approved": false
     },
     {
+      "key": "088/arcade_strong",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/arcade_strong.generated.png",
+      "sha256": "02428fd4e34e21589ce30b6748c8cb9161c2f01774a9e8652ef0856ece0ee71d",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/arcade_strong.source_crop.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "原本の右肖像領域内に描かれたカボチャが、小さな顔付き装飾として右リング外側へ移されて追加されている。肖像領域の占有物を枠飾りに転用しない。"
+      ],
+      "repair_required": true,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0000.jpg",
+      "contact_sha256": "85cea9a1cd20dcc4f427c505a841c45bd4c61dd71fcef6fc3c7379b7ad0d07f0",
+      "final_approved": false
+    },
+    {
       "key": "088/cosmic_weak",
       "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/cosmic_weak.generated.png",
       "sha256": "bf500a38e67f35aebed791998e8122b4f2e2c83f204cbd5d84d0d11cd8308290",
@@ -3293,6 +3293,36 @@
       "strict_source_match": "not_final_approved",
       "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_f4661acfd7_0006.jpg",
       "contact_sha256": "7399f0de92c3e8a4e47c07ada91f77fde70fe931d301f6c02855212b35b3167e",
+      "final_approved": false
+    },
+    {
+      "key": "088/porcelain_weak",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/porcelain_weak.generated.png",
+      "sha256": "08d28f78edbd3190bae4b43531ce57a044458c5eebdfefe67405c133cb288221",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/porcelain_weak.source_crop.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "銀青の枝・羽状の飾りが肖像穴の内側へ侵入している。原本の肖像枠内縁と透過領域を再比較して修正する。"
+      ],
+      "repair_required": true,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0006.jpg",
+      "contact_sha256": "695ba9813b4764ad92fbfe72c403bc00d239d1ad37a46e5d4656bdf9eecb5d2d",
+      "final_approved": false
+    },
+    {
+      "key": "089/arcade_frame",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/089/arcade_frame.generated.png",
+      "sha256": "723ee544df7474fe902fdc9f3d30a5659f5767db99e079f6f0b54db44b3d655e",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/089/arcade_frame.source_crop_v5_1.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "左右リングの間に濃い紫黒の板状背景が残っている。原本のフレーム線・ピクセル・発光以外を背景として再確認し、背景板を焼き込まない。"
+      ],
+      "repair_required": true,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0006.jpg",
+      "contact_sha256": "695ba9813b4764ad92fbfe72c403bc00d239d1ad37a46e5d4656bdf9eecb5d2d",
       "final_approved": false
     }
   ]

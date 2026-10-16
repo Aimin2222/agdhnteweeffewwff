@@ -52,3 +52,5 @@ print(json.dumps(dict(saved=len(rows),all_native_2k=all(a['native_long_edge_at_l
 current_reviews=json.loads(reviewed_path.read_text(encoding='utf-8'))['assets'] if reviewed_path.exists() else []
 repairs=[a for a in current_reviews if a.get('repair_required')]
 (qa/'repair_queue.json').write_text(json.dumps(dict(count=len(repairs),status='review_findings_not_final_approval',assets=repairs),ensure_ascii=False,indent=2),encoding='utf-8')
+strict=[dict(key=a['key'],file=a['file'],sha256=a['sha256'],outer_border_nonzero_alpha_samples=a['edge_nonzero'],source_partial=a['source_partial'],final_approved=False) for a in rows if a['edge_nonzero']>0]
+(qa/'strict_transparency_queue.json').write_text(json.dumps(dict(count=len(strict),status='outer_border_alpha_zero_requirement_not_met',overlaps_visual_repair_queue=True,assets=strict),ensure_ascii=False,indent=2),encoding='utf-8')

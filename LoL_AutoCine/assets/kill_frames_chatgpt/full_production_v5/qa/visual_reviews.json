@@ -1,5 +1,5 @@
 {
-  "count": 632,
+  "count": 652,
   "review_level": "Contact sheets; not a claim of pixel-exact fidelity or all-resolution inspection",
   "final_approved": 0,
   "assets": [
@@ -8675,17 +8675,17 @@
     },
     {
       "key": "085/targon_variant_1",
-      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/085/targon_variant_1.generated.png",
-      "sha256": "25437b50d582ec90f466a6b2cbc7849c8b9345276114065393a36c3572aa1576",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/085/targon_variant_1.generated_v5_1.png",
+      "sha256": "ad680a7a9133cf74a91453b49faf864f24f1f991ff9dfb5a8b15d7ece7657c16",
       "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/085/targon_variant_1.source_crop.png",
       "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
       "notes": [
-        "生成画像が1983×793で長辺2K未満。拡大処理で済ませず、ネイティブ2048px以上で再生成する。"
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
       ],
-      "repair_required": true,
+      "repair_required": false,
       "strict_source_match": "not_final_approved",
-      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_65717df127_0006.jpg",
-      "contact_sha256": "d04afc10e729dbebe1ffea89833eb8df2fdfb88a8700882f4c4b4d8b68cc0ac8",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_db34efa371_0000.jpg",
+      "contact_sha256": "9db46f209b5e5374519fb81fc50bbbee2cc5b0600f58e979395c84645b01738b",
       "final_approved": false
     },
     {
@@ -9409,6 +9409,66 @@
       "final_approved": false
     },
     {
+      "key": "088/arcade_strong",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/arcade_strong.generated.png",
+      "sha256": "02428fd4e34e21589ce30b6748c8cb9161c2f01774a9e8652ef0856ece0ee71d",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/arcade_strong.source_crop.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "原本の右肖像領域内に描かれたカボチャが、小さな顔付き装飾として右リング外側へ移されて追加されている。肖像領域の占有物を枠飾りに転用しない。"
+      ],
+      "repair_required": true,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0000.jpg",
+      "contact_sha256": "85cea9a1cd20dcc4f427c505a841c45bd4c61dd71fcef6fc3c7379b7ad0d07f0",
+      "final_approved": false
+    },
+    {
+      "key": "088/arcade_weak",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/arcade_weak.generated.png",
+      "sha256": "7c839e27d3587573db51c2d0333754ef1061756eca343a6fa5cf662ebda8a3ed",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/arcade_weak.source_crop.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0000.jpg",
+      "contact_sha256": "85cea9a1cd20dcc4f427c505a841c45bd4c61dd71fcef6fc3c7379b7ad0d07f0",
+      "final_approved": false
+    },
+    {
+      "key": "088/bewitching_strong",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/bewitching_strong.generated.png",
+      "sha256": "737a24ded2922f55f83438766bb473746a65a856618262f22160398b78009df2",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/bewitching_strong.source_crop.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0000.jpg",
+      "contact_sha256": "85cea9a1cd20dcc4f427c505a841c45bd4c61dd71fcef6fc3c7379b7ad0d07f0",
+      "final_approved": false
+    },
+    {
+      "key": "088/bewitching_weak",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/bewitching_weak.generated.png",
+      "sha256": "315c105316050b884c54985372b39bbc80e1b6536f014f4d64bd707691a09405",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/bewitching_weak.source_crop.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0000.jpg",
+      "contact_sha256": "85cea9a1cd20dcc4f427c505a841c45bd4c61dd71fcef6fc3c7379b7ad0d07f0",
+      "final_approved": false
+    },
+    {
       "key": "088/cosmic_strong",
       "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/cosmic_strong.generated.png",
       "sha256": "9e2095058919efe6658bac5087f7f0327824a347989c6ffe3da87e9c8f4f6342",
@@ -9529,6 +9589,36 @@
       "final_approved": false
     },
     {
+      "key": "088/infernal_strong",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/infernal_strong.generated.png",
+      "sha256": "ff478e88fc574b6240f16367c6b4782c87652f23465e689d7ee4be73232a9404",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/infernal_strong.source_crop.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0000.jpg",
+      "contact_sha256": "85cea9a1cd20dcc4f427c505a841c45bd4c61dd71fcef6fc3c7379b7ad0d07f0",
+      "final_approved": false
+    },
+    {
+      "key": "088/infernal_weak",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/infernal_weak.generated.png",
+      "sha256": "c0baf08ebf02b12a426db67fd7fafb0bd3e6eb93461f0a6a10dcd6dbef110a68",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/infernal_weak.source_crop.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0000.jpg",
+      "contact_sha256": "85cea9a1cd20dcc4f427c505a841c45bd4c61dd71fcef6fc3c7379b7ad0d07f0",
+      "final_approved": false
+    },
+    {
       "key": "088/nightbringer_strong",
       "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/nightbringer_strong.generated.png",
       "sha256": "623ef8be55f5a79536d5c58572abcf463b704a04acc562743c462bf8bd9b839e",
@@ -9556,6 +9646,216 @@
       "strict_source_match": "not_final_approved",
       "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_f4661acfd7_0006.jpg",
       "contact_sha256": "7399f0de92c3e8a4e47c07ada91f77fde70fe931d301f6c02855212b35b3167e",
+      "final_approved": false
+    },
+    {
+      "key": "088/porcelain_strong",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/porcelain_strong.generated.png",
+      "sha256": "05e0dfd318d53ec3da7e01f5c1eff6fad455930a09b4e65f019cfb699bfdbab3",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/porcelain_strong.source_crop.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0006.jpg",
+      "contact_sha256": "695ba9813b4764ad92fbfe72c403bc00d239d1ad37a46e5d4656bdf9eecb5d2d",
+      "final_approved": false
+    },
+    {
+      "key": "088/porcelain_weak",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/porcelain_weak.generated.png",
+      "sha256": "08d28f78edbd3190bae4b43531ce57a044458c5eebdfefe67405c133cb288221",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/porcelain_weak.source_crop.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "銀青の枝・羽状の飾りが肖像穴の内側へ侵入している。原本の肖像枠内縁と透過領域を再比較して修正する。"
+      ],
+      "repair_required": true,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0006.jpg",
+      "contact_sha256": "695ba9813b4764ad92fbfe72c403bc00d239d1ad37a46e5d4656bdf9eecb5d2d",
+      "final_approved": false
+    },
+    {
+      "key": "088/psyops_strong",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/psyops_strong.generated.png",
+      "sha256": "042666cc2f37e8bac4450790ed163ac018caa2a55bd67ab3b470844059107d71",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/psyops_strong.source_crop.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0006.jpg",
+      "contact_sha256": "695ba9813b4764ad92fbfe72c403bc00d239d1ad37a46e5d4656bdf9eecb5d2d",
+      "final_approved": false
+    },
+    {
+      "key": "088/psyops_weak",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/psyops_weak.generated.png",
+      "sha256": "8d255fa07cdaba42587327f175f6cc4a93df49580eeff27986e1f03febdcc474",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/psyops_weak.source_crop.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0006.jpg",
+      "contact_sha256": "695ba9813b4764ad92fbfe72c403bc00d239d1ad37a46e5d4656bdf9eecb5d2d",
+      "final_approved": false
+    },
+    {
+      "key": "089/arcade_frame",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/089/arcade_frame.generated.png",
+      "sha256": "723ee544df7474fe902fdc9f3d30a5659f5767db99e079f6f0b54db44b3d655e",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/089/arcade_frame.source_crop_v5_1.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "左右リングの間に濃い紫黒の板状背景が残っている。原本のフレーム線・ピクセル・発光以外を背景として再確認し、背景板を焼き込まない。"
+      ],
+      "repair_required": true,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0006.jpg",
+      "contact_sha256": "695ba9813b4764ad92fbfe72c403bc00d239d1ad37a46e5d4656bdf9eecb5d2d",
+      "final_approved": false
+    },
+    {
+      "key": "089/battle_academia_frame",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/089/battle_academia_frame.generated.png",
+      "sha256": "e5351dd0b0aa372e0266f2231b292e3a9b5fbaaa798f12e34fc0dbae11a03943",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/089/battle_academia_frame.source_crop_v5_1.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0006.jpg",
+      "contact_sha256": "695ba9813b4764ad92fbfe72c403bc00d239d1ad37a46e5d4656bdf9eecb5d2d",
+      "final_approved": false
+    },
+    {
+      "key": "089/dragon_emperor_frame",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/089/dragon_emperor_frame.generated.png",
+      "sha256": "a12bf2ade232fcbe32612c3dd27fd016148d222c3e864eaf002ca80c786bfe61",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/089/dragon_emperor_frame.source_crop_v5_1.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0012.jpg",
+      "contact_sha256": "d032ee2bcfbcc1e44f3eef0b8909837025772967fceee68d2621b1272c273af7",
+      "final_approved": false
+    },
+    {
+      "key": "089/frosted_frame",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/089/frosted_frame.generated.png",
+      "sha256": "786bbd1d49fbe88931d5d55633a22c561b8bf1e8554e901aba9598678ff314bf",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/089/frosted_frame.source_crop_v5_1.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0012.jpg",
+      "contact_sha256": "d032ee2bcfbcc1e44f3eef0b8909837025772967fceee68d2621b1272c273af7",
+      "final_approved": false
+    },
+    {
+      "key": "089/infernal_frame",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/089/infernal_frame.generated.png",
+      "sha256": "f121d37019d7cfa3695f104112743ac7cebb3192e0a4ec3acbbc951a1f9cab89",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/089/infernal_frame.source_crop_v5_1.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0012.jpg",
+      "contact_sha256": "d032ee2bcfbcc1e44f3eef0b8909837025772967fceee68d2621b1272c273af7",
+      "final_approved": false
+    },
+    {
+      "key": "089/mythic_frame",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/089/mythic_frame.generated.png",
+      "sha256": "4515477f5d0b52deccac619495aabb1d4e7419c7e0425c48905ee197ea206cbf",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/089/mythic_frame.source_crop_v5_1.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0018.jpg",
+      "contact_sha256": "518b94ba63449c3622e179c52b514a7733aa9c3d8de5db69af16201e516f2d0a",
+      "final_approved": false
+    },
+    {
+      "key": "089/odyssey_frame",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/089/odyssey_frame.generated.png",
+      "sha256": "5fc84f271dd2e20ea8e7d4d9e36b64d26c7a74ccfbb53bebad4909ae9cf5fa8a",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/089/odyssey_frame.source_crop_v5_1.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0012.jpg",
+      "contact_sha256": "d032ee2bcfbcc1e44f3eef0b8909837025772967fceee68d2621b1272c273af7",
+      "final_approved": false
+    },
+    {
+      "key": "089/prestige_frame",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/089/prestige_frame.generated.png",
+      "sha256": "e40240d6a747ad835a8764c50cfef8b15b9d207458d84e6d49cfb90ee0aa4245",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/089/prestige_frame.source_crop_v5_1.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0018.jpg",
+      "contact_sha256": "518b94ba63449c3622e179c52b514a7733aa9c3d8de5db69af16201e516f2d0a",
+      "final_approved": false
+    },
+    {
+      "key": "089/pulsefire_frame",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/089/pulsefire_frame.generated.png",
+      "sha256": "02eb2e5230472ba8b78e7bebfe245a6978f2475bd6c8f8c3dae83b52993b4939",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/089/pulsefire_frame.source_crop_v5_1.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0012.jpg",
+      "contact_sha256": "d032ee2bcfbcc1e44f3eef0b8909837025772967fceee68d2621b1272c273af7",
+      "final_approved": false
+    },
+    {
+      "key": "089/ruined_frame",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/089/ruined_frame.generated.png",
+      "sha256": "bbef2a59f506a634e8aaff413732ec99a6f09b8e9e35c06a586dc553e88de3b6",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/089/ruined_frame.source_crop_v5_1.png",
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false,
+      "strict_source_match": "not_final_approved",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_9acb2c51e3_0012.jpg",
+      "contact_sha256": "d032ee2bcfbcc1e44f3eef0b8909837025772967fceee68d2621b1272c273af7",
       "final_approved": false
     }
   ]
