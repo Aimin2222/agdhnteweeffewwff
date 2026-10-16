@@ -1,5 +1,6 @@
 from pathlib import Path
 from PIL import Image, ImageDraw
+from datetime import datetime, timezone
 import json,hashlib,shutil,sys,time,msvcrt
 import os
 import numpy as np
@@ -76,6 +77,7 @@ def save_unlocked(index,path):
     a['quality_flags']=flags
     a['visual_review']='pending_original_comparison'
     data['status']='production_in_progress'
+    data['last_updated_utc']=datetime.now(timezone.utc).isoformat()
     data['saved_candidates']=sum(x['status']!='pending' for x in data['assets'])
     data['counts']={s:sum(x['status']==s for x in data['assets']) for s in sorted({x['status'] for x in data['assets']})}
     data['next_unproduced_key']=next((x['key'] for x in data['assets'] if x['status']=='pending'),None)
