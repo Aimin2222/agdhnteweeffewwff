@@ -32582,7 +32582,7 @@
       "reference_sha256": "ecf794c9bdac910f786987d36eb8c0e6a2745e9d499d92c502020da3ef5ed08e",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/087/mecha_weak.generated.png",
       "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.087, exact variant mecha_weak, theme mecha, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
-      "status": "pending",
+      "status": "generated_review_pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
       "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想ゲームUIデザイン大全 61–70.png",
@@ -32600,7 +32600,27 @@
       ],
       "reference_correction_record": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/087/corrections.json",
       "prompt_guidance_revision": "source-fidelity-20261016-r2",
-      "native_solid_ornament_guidance": true
+      "native_solid_ornament_guidance": true,
+      "sha256": "6ba3e5b5bf8d691e5b0ec1eb05f9e2f345ec1a138c78e81fac8bb99442e1332e",
+      "bytes": 1351902,
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "generator": "built-in image_gen",
+      "generated_epoch": 1792161717,
+      "generation_prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.087, exact variant mecha_weak, theme mecha, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters.  Canvas composition: very wide 3:1 landscape, at least 2048 pixels on the long edge; keep vertical frame proportions faithful, centered with transparent padding.",
+      "alpha_zero_pixels": 1067208,
+      "edge_alpha_nonzero": 4,
+      "quality_flags": [
+        "outer_edge_alpha_residue"
+      ],
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "review_notes": [
+        "原本は左が銀青・右が金赤のリングなのに、両側とも金青になっている。左右の配色を保持し、大きく追加された外周の刃を抑える。"
+      ],
+      "repair_required": true
     },
     {
       "index": 619,
@@ -32686,7 +32706,7 @@
       "reference_sha256": "95558d6def7a5e7ef1128e91572e67e9f7fb155f7a901a804ac56782a79531ab",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/087/battlecast_weak.generated.png",
       "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.087, exact variant battlecast_weak, theme battlecast, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
-      "status": "pending",
+      "status": "generated_review_pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
       "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想ゲームUIデザイン大全 61–70.png",
@@ -32704,7 +32724,27 @@
       ],
       "reference_correction_record": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/087/corrections.json",
       "prompt_guidance_revision": "source-fidelity-20261016-r2",
-      "native_solid_ornament_guidance": true
+      "native_solid_ornament_guidance": true,
+      "sha256": "80f227a7a148a3e05076f91072158e15729e204c585b91d821edeee805a3d6bb",
+      "bytes": 1388788,
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "generator": "built-in image_gen",
+      "generated_epoch": 1792161807,
+      "generation_prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.087, exact variant battlecast_weak, theme battlecast, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters.  Canvas composition: very wide 3:1 landscape, at least 2048 pixels on the long edge; keep vertical frame proportions faithful, centered with transparent padding.",
+      "alpha_zero_pixels": 970895,
+      "edge_alpha_nonzero": 6,
+      "quality_flags": [
+        "outer_edge_alpha_residue"
+      ],
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "review_notes": [
+        "原本シートの下端の区切り線と角飾りが、左右全体を囲う大きな赤い下枠に再構成されている。シートの罫線を素材に含めず、独立した2つの肖像リングと中央Xだけにする。"
+      ],
+      "repair_required": true
     },
     {
       "index": 621,
@@ -32728,7 +32768,7 @@
       "reference_sha256": "79e32a8f3c77dda07c07800c98be77bb8ae1a98e9a7dffeaef773473241ca758",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/087/battlecast_strong.generated.png",
       "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.087, exact variant battlecast_strong, theme battlecast, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
-      "status": "pending",
+      "status": "generated_review_pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
       "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想ゲームUIデザイン大全 61–70.png",
@@ -32746,7 +32786,27 @@
       ],
       "reference_correction_record": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/087/corrections.json",
       "prompt_guidance_revision": "source-fidelity-20261016-r2",
-      "native_solid_ornament_guidance": true
+      "native_solid_ornament_guidance": true,
+      "sha256": "0a9ef85123a2b7ad81c675cf45976914734a68dd981be4c394da982f5d20d764",
+      "bytes": 1605526,
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "generator": "built-in image_gen",
+      "generated_epoch": 1792161757,
+      "generation_prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.087, exact variant battlecast_strong, theme battlecast, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters.  Canvas composition: very wide 3:1 landscape, at least 2048 pixels on the long edge; keep vertical frame proportions faithful, centered with transparent padding.",
+      "alpha_zero_pixels": 908968,
+      "edge_alpha_nonzero": 7,
+      "quality_flags": [
+        "outer_edge_alpha_residue"
+      ],
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "review_notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false
     },
     {
       "index": 622,
@@ -32770,12 +32830,32 @@
       "reference_sha256": "ab027bbbf9c96ff7b9628600c4afc5154ce5646f5d30a74dca8429062135d86a",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/elderwood_weak.generated.png",
       "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant elderwood_weak, theme elderwood, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
-      "status": "pending",
+      "status": "generated_review_pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
       "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
       "prompt_guidance_revision": "source-fidelity-20261016-r2",
-      "native_solid_ornament_guidance": true
+      "native_solid_ornament_guidance": true,
+      "sha256": "bbf843fc8e320cc3ce10d41a506058606a67529306079b4867a13f2262c0baa2",
+      "bytes": 1652908,
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "generator": "built-in image_gen",
+      "generated_epoch": 1792161920,
+      "generation_prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant elderwood_weak, theme elderwood, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters.  Canvas composition: very wide 3:1 landscape, at least 2048 pixels on the long edge; keep vertical frame proportions faithful, centered with transparent padding.",
+      "alpha_zero_pixels": 916296,
+      "edge_alpha_nonzero": 34,
+      "quality_flags": [
+        "outer_edge_alpha_residue"
+      ],
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "review_notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false
     },
     {
       "index": 623,
@@ -32799,12 +32879,32 @@
       "reference_sha256": "50649bc1347a38a4c8abf9c6dfe433a5ff74fb6d9bd17fe1731b87505012964d",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/elderwood_strong.generated.png",
       "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant elderwood_strong, theme elderwood, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
-      "status": "pending",
+      "status": "generated_review_pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
       "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
       "prompt_guidance_revision": "source-fidelity-20261016-r2",
-      "native_solid_ornament_guidance": true
+      "native_solid_ornament_guidance": true,
+      "sha256": "b5b928f9244812c444b5a6e54444814dc7f920ca582d08205916fd70c058191c",
+      "bytes": 1658080,
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "generator": "built-in image_gen",
+      "generated_epoch": 1792161879,
+      "generation_prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant elderwood_strong, theme elderwood, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters.  Canvas composition: very wide 3:1 landscape, at least 2048 pixels on the long edge; keep vertical frame proportions faithful, centered with transparent padding.",
+      "alpha_zero_pixels": 906755,
+      "edge_alpha_nonzero": 28,
+      "quality_flags": [
+        "outer_edge_alpha_residue"
+      ],
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "review_notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false
     },
     {
       "index": 624,
@@ -32828,12 +32928,32 @@
       "reference_sha256": "ed939bb0555f7e8f2ddcc3991e92609e0a655876d2939645eac4964712c33b12",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/cosmic_weak.generated.png",
       "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant cosmic_weak, theme cosmic, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
-      "status": "pending",
+      "status": "generated_review_pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
       "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
       "prompt_guidance_revision": "source-fidelity-20261016-r2",
-      "native_solid_ornament_guidance": true
+      "native_solid_ornament_guidance": true,
+      "sha256": "bf500a38e67f35aebed791998e8122b4f2e2c83f204cbd5d84d0d11cd8308290",
+      "bytes": 1512517,
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "generator": "built-in image_gen",
+      "generated_epoch": 1792161848,
+      "generation_prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant cosmic_weak, theme cosmic, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters.  Canvas composition: very wide 3:1 landscape, at least 2048 pixels on the long edge; keep vertical frame proportions faithful, centered with transparent padding.",
+      "alpha_zero_pixels": 898686,
+      "edge_alpha_nonzero": 21,
+      "quality_flags": [
+        "outer_edge_alpha_residue"
+      ],
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "review_notes": [
+        "原本の細い金の接続線に対し、中央球と左右リングの間へ太い青い翼状の板が追加されている。"
+      ],
+      "repair_required": true
     },
     {
       "index": 625,
@@ -32856,11 +32976,33 @@
       ],
       "reference_sha256": "f1f389496c83d4abe1ba9364b1d3f2f5a92ca129963844d3a9648d0d53d20d79",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/cosmic_strong.generated.png",
-      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant cosmic_strong, theme cosmic, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation. ",
-      "status": "pending",
+      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant cosmic_strong, theme cosmic, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
+      "status": "generated_review_pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
-      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png"
+      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
+      "prompt_guidance_revision": "source-fidelity-20261016-r2",
+      "native_solid_ornament_guidance": true,
+      "sha256": "9e2095058919efe6658bac5087f7f0327824a347989c6ffe3da87e9c8f4f6342",
+      "bytes": 2032281,
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "generator": "built-in image_gen",
+      "generated_epoch": 1792161964,
+      "generation_prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant cosmic_strong, theme cosmic, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters.  Canvas composition: very wide 3:1 landscape, at least 2048 pixels on the long edge; keep vertical frame proportions faithful, centered with transparent padding.",
+      "alpha_zero_pixels": 728117,
+      "edge_alpha_nonzero": 138,
+      "quality_flags": [
+        "outer_edge_alpha_residue"
+      ],
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "review_notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false
     },
     {
       "index": 626,
@@ -32883,11 +33025,33 @@
       ],
       "reference_sha256": "5724b23ef9d8aa703cfe9d0ccc506433bf3472b00868a4c7b31c384b8dbbdd60",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/dark_cosmic_weak.generated.png",
-      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant dark_cosmic_weak, theme dark_cosmic, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation. ",
-      "status": "pending",
+      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant dark_cosmic_weak, theme dark_cosmic, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
+      "status": "generated_review_pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
-      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png"
+      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
+      "prompt_guidance_revision": "source-fidelity-20261016-r2",
+      "native_solid_ornament_guidance": true,
+      "sha256": "004cd67c22d83bf8697475e63a3f14191f7343f5180709d957ae8f357fb4fbe3",
+      "bytes": 1639526,
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "generator": "built-in image_gen",
+      "generated_epoch": 1792162011,
+      "generation_prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant dark_cosmic_weak, theme dark_cosmic, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters.  Canvas composition: very wide 3:1 landscape, at least 2048 pixels on the long edge; keep vertical frame proportions faithful, centered with transparent padding.",
+      "alpha_zero_pixels": 850506,
+      "edge_alpha_nonzero": 10,
+      "quality_flags": [
+        "outer_edge_alpha_residue"
+      ],
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "review_notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false
     },
     {
       "index": 627,
@@ -32910,11 +33074,33 @@
       ],
       "reference_sha256": "f52ca7a86ac316d7c55acaa46c44f62639ed29b14e8f7a4122e66bb124a5fc7c",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/dark_cosmic_strong.generated.png",
-      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant dark_cosmic_strong, theme dark_cosmic, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation. ",
-      "status": "pending",
+      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant dark_cosmic_strong, theme dark_cosmic, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
+      "status": "generated_review_pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
-      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png"
+      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
+      "prompt_guidance_revision": "source-fidelity-20261016-r2",
+      "native_solid_ornament_guidance": true,
+      "sha256": "f03811550a4d2dadc5b340b4b0b75aede0aa240b1437c5a0e71b9e778ee79ace",
+      "bytes": 1713096,
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "generator": "built-in image_gen",
+      "generated_epoch": 1792162206,
+      "generation_prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant dark_cosmic_strong, theme dark_cosmic, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters.  Canvas composition: very wide 3:1 landscape, at least 2048 pixels on the long edge; keep vertical frame proportions faithful, centered with transparent padding.",
+      "alpha_zero_pixels": 840034,
+      "edge_alpha_nonzero": 123,
+      "quality_flags": [
+        "outer_edge_alpha_residue"
+      ],
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "review_notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false
     },
     {
       "index": 628,
@@ -32937,11 +33123,33 @@
       ],
       "reference_sha256": "9ddcbcb8008ba793a905212d4b898f07bff90b3c0a39eef4cfdeafa24d6f81e6",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/dawnbringer_weak.generated.png",
-      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant dawnbringer_weak, theme dawnbringer, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation. ",
-      "status": "pending",
+      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant dawnbringer_weak, theme dawnbringer, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
+      "status": "generated_review_pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
-      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png"
+      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
+      "prompt_guidance_revision": "source-fidelity-20261016-r2",
+      "native_solid_ornament_guidance": true,
+      "sha256": "18cf29122a152a147b56b041efd48a12396cdead7f510d60b13e211e6a5e2ea4",
+      "bytes": 1803576,
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "generator": "built-in image_gen",
+      "generated_epoch": 1792162049,
+      "generation_prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant dawnbringer_weak, theme dawnbringer, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters.  Canvas composition: very wide 3:1 landscape, at least 2048 pixels on the long edge; keep vertical frame proportions faithful, centered with transparent padding.",
+      "alpha_zero_pixels": 786829,
+      "edge_alpha_nonzero": 185,
+      "quality_flags": [
+        "outer_edge_alpha_residue"
+      ],
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "review_notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false
     },
     {
       "index": 629,
@@ -32964,11 +33172,33 @@
       ],
       "reference_sha256": "3ffff827d774c55e8373397d6ba6eabe398b2502e3da62d78fba0b176f887a65",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/dawnbringer_strong.generated.png",
-      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant dawnbringer_strong, theme dawnbringer, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation. ",
-      "status": "pending",
+      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant dawnbringer_strong, theme dawnbringer, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
+      "status": "generated_review_pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
-      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png"
+      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
+      "prompt_guidance_revision": "source-fidelity-20261016-r2",
+      "native_solid_ornament_guidance": true,
+      "sha256": "ed98337f0ce3f63d1522792bd158071479c5d40c3195ee13effa8888dbe2cc4b",
+      "bytes": 2048507,
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "generator": "built-in image_gen",
+      "generated_epoch": 1792162122,
+      "generation_prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant dawnbringer_strong, theme dawnbringer, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters.  Canvas composition: very wide 3:1 landscape, at least 2048 pixels on the long edge; keep vertical frame proportions faithful, centered with transparent padding.",
+      "alpha_zero_pixels": 643218,
+      "edge_alpha_nonzero": 293,
+      "quality_flags": [
+        "outer_edge_alpha_residue"
+      ],
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "review_notes": [
+        "青い羽・炎状の光が肖像穴の内側に大きく侵入している。原本の肖像枠内縁と透過領域を維持する。"
+      ],
+      "repair_required": true
     },
     {
       "index": 630,
@@ -32991,11 +33221,33 @@
       ],
       "reference_sha256": "3ac6db948877d773b5d2102b560dfb6977ee1ee1aa78e75cb33cc5cb39dd243b",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/nightbringer_weak.generated.png",
-      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant nightbringer_weak, theme nightbringer, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation. ",
-      "status": "pending",
+      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant nightbringer_weak, theme nightbringer, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
+      "status": "generated_review_pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
-      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png"
+      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
+      "prompt_guidance_revision": "source-fidelity-20261016-r2",
+      "native_solid_ornament_guidance": true,
+      "sha256": "c929904dbc42e7504a5b643afcb82f30692bd830b9869a11fbd150b0dc0bf917",
+      "bytes": 1512484,
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "generator": "built-in image_gen",
+      "generated_epoch": 1792162166,
+      "generation_prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant nightbringer_weak, theme nightbringer, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters.  Canvas composition: very wide 3:1 landscape, at least 2048 pixels on the long edge; keep vertical frame proportions faithful, centered with transparent padding.",
+      "alpha_zero_pixels": 877531,
+      "edge_alpha_nonzero": 146,
+      "quality_flags": [
+        "outer_edge_alpha_residue"
+      ],
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "review_notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false
     },
     {
       "index": 631,
@@ -33018,11 +33270,33 @@
       ],
       "reference_sha256": "c7df46bd25525c7cf87a0004b7649f15bf49f8e8732e5c99fe2d628f8e4f9ea4",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/nightbringer_strong.generated.png",
-      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant nightbringer_strong, theme nightbringer, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation. ",
-      "status": "pending",
+      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant nightbringer_strong, theme nightbringer, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
+      "status": "generated_review_pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
-      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png"
+      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
+      "prompt_guidance_revision": "source-fidelity-20261016-r2",
+      "native_solid_ornament_guidance": true,
+      "sha256": "623ef8be55f5a79536d5c58572abcf463b704a04acc562743c462bf8bd9b839e",
+      "bytes": 1484893,
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "generator": "built-in image_gen",
+      "generated_epoch": 1792162262,
+      "generation_prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant nightbringer_strong, theme nightbringer, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters.  Canvas composition: very wide 3:1 landscape, at least 2048 pixels on the long edge; keep vertical frame proportions faithful, centered with transparent padding.",
+      "alpha_zero_pixels": 887617,
+      "edge_alpha_nonzero": 24,
+      "quality_flags": [
+        "outer_edge_alpha_residue"
+      ],
+      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
+      "review_notes": [
+        "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+      ],
+      "repair_required": false
     },
     {
       "index": 632,
@@ -33045,11 +33319,13 @@
       ],
       "reference_sha256": "3b08adc27bf05cc140f5128e94d4259253500ac3b66a9ed40e1b060bc6c013b7",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/infernal_weak.generated.png",
-      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant infernal_weak, theme infernal, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation. ",
+      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant infernal_weak, theme infernal, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
       "status": "pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
-      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png"
+      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
+      "prompt_guidance_revision": "source-fidelity-20261016-r2",
+      "native_solid_ornament_guidance": true
     },
     {
       "index": 633,
@@ -33072,11 +33348,13 @@
       ],
       "reference_sha256": "fe15488270becdee2a715fbb207ad66059395c0a44485dcf9fae6f0ec9d42a54",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/infernal_strong.generated.png",
-      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant infernal_strong, theme infernal, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation. ",
+      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant infernal_strong, theme infernal, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
       "status": "pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
-      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png"
+      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
+      "prompt_guidance_revision": "source-fidelity-20261016-r2",
+      "native_solid_ornament_guidance": true
     },
     {
       "index": 634,
@@ -33099,11 +33377,13 @@
       ],
       "reference_sha256": "ecdf311506b48d01560b2cb0154f115887b41832b0987e84e24e79229a2d77d7",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/arcade_weak.generated.png",
-      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant arcade_weak, theme arcade, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation. ",
+      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant arcade_weak, theme arcade, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
       "status": "pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
-      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png"
+      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
+      "prompt_guidance_revision": "source-fidelity-20261016-r2",
+      "native_solid_ornament_guidance": true
     },
     {
       "index": 635,
@@ -33126,11 +33406,13 @@
       ],
       "reference_sha256": "c9b42e014834ad4f895e7bd1a674fbdbdc948b852043ff8de8672861ef7d59a5",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/arcade_strong.generated.png",
-      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant arcade_strong, theme arcade, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation. ",
+      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant arcade_strong, theme arcade, intensity strong, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
       "status": "pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
-      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png"
+      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
+      "prompt_guidance_revision": "source-fidelity-20261016-r2",
+      "native_solid_ornament_guidance": true
     },
     {
       "index": 636,
@@ -33153,11 +33435,13 @@
       ],
       "reference_sha256": "f3654fa801e4dcba35fdd55eb01dca6e8982f58b6c3d59b426884b37a1f637ba",
       "output": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/088/bewitching_weak.generated.png",
-      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant bewitching_weak, theme bewitching, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation. ",
+      "prompt": "Use case: stylized-concept, precise reference-based game UI reconstruction. Make ONE high-resolution isolated horizontal kill-frame asset, source No.088, exact variant bewitching_weak, theme bewitching, intensity weak, role unspecified. Image 1 is the exact cropped variant to reconstruct. Image 2 is the complete original sheet for context: reconstruct ONLY the variant shown in Image 1, never another row. Create a crisp richly detailed 2K-or-higher painted metallic/fantasy/sci-fi UI asset on an actual transparent RGBA canvas, preferably 2560 pixels wide, no blurry upscaling. Preserve the reference silhouette, palette, material, exact portrait-ring shape (round or angular), both left/right borders, central ornament, connecting bars, spacing, line weights and theme motifs. Weak and strong variants must remain distinct. Remove champion faces, heads, hair, people, portrait occupants, ALL text/numbers/labels and scenery. Both portrait interiors must be entirely empty alpha-zero holes. Keep native decorative animal/mascot ornaments only if part of the frame. Do not add generic symbols, larger invented central emblems, extra frames or a whole contact sheet. No logo, watermark, paper or checkerboard painted into pixels. Keep the ENTIRE frame and every feather/flame/light/particle tip inside a generous fully transparent 15% margin on every side. Local translucent glow is allowed; the background and all negative spaces must be truly transparent. Single usable frame only, no title or presentation.  Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross.  Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. ",
       "status": "pending",
       "effect_status": "pending_after_frame",
       "final_approved": false,
-      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png"
+      "source_reference": "LoL_AutoCine/assets/kill_concepts/幻想テーマ別キルアイコン大全.png",
+      "prompt_guidance_revision": "source-fidelity-20261016-r2",
+      "native_solid_ornament_guidance": true
     },
     {
       "index": 637,
@@ -33696,14 +33980,14 @@
     }
   ],
   "counts": {
-    "generated_review_pending": 601,
+    "generated_review_pending": 614,
     "existing_review_candidate": 18,
-    "pending": 33
+    "pending": 20
   },
-  "saved_candidates": 619,
-  "visual_comparison_count": 619,
-  "next_unproduced_key": "087/mecha_weak",
-  "last_updated_utc": "2026-10-16T14:41:16.708855+00:00",
+  "saved_candidates": 632,
+  "visual_comparison_count": 632,
+  "next_unproduced_key": "088/infernal_weak",
+  "last_updated_utc": "2026-10-16T14:51:02.282386+00:00",
   "previous_blocker": {
     "code": "usage_limit_reached",
     "service": "built-in image_gen",
@@ -33711,5 +33995,5 @@
     "reported_reset_jst": "2026-10-16T17:42:43+09:00",
     "automatic_resume_scheduled": false
   },
-  "checkpoint_utc": "2026-10-16T14:41:52.342184+00:00"
+  "checkpoint_utc": "2026-10-16T14:51:05.406770+00:00"
 }

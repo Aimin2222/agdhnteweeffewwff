@@ -19,7 +19,7 @@ def repair_jobs(count,preview=False):
   assert not any(a['status']=='pending' for a in d['assets']), 'Finish the first frame pass before starting repair image generation'
  reviews=json.loads((OUT/'qa/visual_reviews.json').read_text(encoding='utf-8'))['assets']
  by={a['key']:a for a in reviews};jobs=[]
- for a in d['assets']:
+ for a in sorted(d['assets'],key=lambda x:(max(x.get('dimensions',[9999]))>=2048,x['index'])):
   rv=by.get(a['key'])
   if a['status']=='pending' or not rv or rv['sha256']!=a['sha256'] or not rv.get('repair_required') or a['source_partial']:
    continue
@@ -37,6 +37,7 @@ def repair_jobs(count,preview=False):
    'Keep the structural central X/cross whenever the original contains it. Do not borrow adjacent strong/weak ornament, invent connectors, change left/right colors, or carry portrait hair accessories into the empty holes. '
    'Remove champion people, faces, hair and all writing. Native animal/mascot ornament is allowed only where it belongs to the frame in the exact source. '
    'Keep native solid black ornament such as an eclipse disc, dark orb, cat silhouette or castle opening where the reference depicts it; black ornament is not a transparency hole. Preserve blank paper talisman shapes while removing their writing. '
+   'A rectangular portrait opening must stay rectangular, with the source corner shape; do not insert a circular hole, colored corner wedges or decorative plates. '
    'Both portrait holes and negative spaces must be empty alpha-zero. Every outer-border pixel must be alpha-zero: no nearly-transparent canvas tint, residue, paper, backdrop or checkerboard. '
    'Keep every supported decorative tip fully inside a generous transparent margin. Crisp native 2K-or-higher RGBA PNG, wide 3:1 composition, no upscaling. '
    'Output one usable transparent frame asset only, without a comparison sheet or caption.')
