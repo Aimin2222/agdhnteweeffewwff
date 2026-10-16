@@ -1,0 +1,42 @@
+{
+  "status": "engine_smoke_only_no_full_motion_delivery",
+  "renderer_version": "frame-native-v5.4",
+  "tested_modes": [
+    "minimal",
+    "glint",
+    "collision",
+    "petal",
+    "snow",
+    "scan",
+    "lock",
+    "flame",
+    "water",
+    "pixel",
+    "orbit",
+    "inward",
+    "star",
+    "wing",
+    "beat",
+    "arc",
+    "slash",
+    "dragon",
+    "brush"
+  ],
+  "sample_times_s": [
+    -0.3,
+    -0.1,
+    0,
+    0.08,
+    0.24,
+    0.7,
+    1.4,
+    2.7
+  ],
+  "checks": [
+    "RGBA_512x288",
+    "transparent_clip_boundaries",
+    "unchanged_input_file_sha256"
+  ],
+  "passed": true,
+  "full_video_render_tested": false
+}
