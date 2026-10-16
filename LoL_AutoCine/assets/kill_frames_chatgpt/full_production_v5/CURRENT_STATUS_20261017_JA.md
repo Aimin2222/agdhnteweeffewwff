@@ -17,3 +17,9 @@ v5全件分の動くエフェクト、全件確認ZIP、高画質画像ZIPは未
 次回は086/faerie_court_strongのネイティブ2K再生成から。production_tools/frame_repair.pyが原本crop・全原本・現候補を区別したジョブを返す。外周alphaの数値検査も修正対象に含める。旧版を上書きせず新規版を保存し、新しいSHAで原本比較をやり直す。比較記録が古いSHAのままでは合格を引き継がない。修正後に全件のエフェクト、動き、ZIPを作成・検査し、実ファイルとSHAをGitHubで確認する。
 
 指定ブランチ: chatgpt/killframes-source-numbering-20261014。現時点の途中台帳はcheckpoints/checkpoint_0634_repair0001_quota.json。GitHubの保存確認は親フォルダのFULL_PRODUCTION_V5_COMMIT_*_REMOTE_VERIFICATION.jsonを参照。
+
+## GitHub保存・実ファイル照合
+
+制作物コミット: [120ed3bad77914ea29b66dbc760c008250d89afb](https://github.com/Aimin2222/agdhnteweeffewwff/commit/120ed3bad77914ea29b66dbc760c008250d89afb)。今回の追加45ファイルはGitHubから読み戻し、コミット内の実バイトと全件一致。
+
+現在の652候補についても全件のSHAとGitオブジェクトを照合済み。605件は既に読み戻し済みのファイルと同一のGitオブジェクト、残る47件は今回の固定コミットから実画像を読み戻してSHA-256とGitオブジェクトを直接照合した。qa/github_current_candidate_coverage.jsonに1候補ごとの証拠を記録。保存の検証は視覚品質の合格を意味しない。
