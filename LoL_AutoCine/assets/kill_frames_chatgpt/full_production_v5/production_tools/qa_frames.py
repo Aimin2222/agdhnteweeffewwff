@@ -29,13 +29,13 @@ for a in plan['assets']:
     visible=np.argwhere(aa>32)
     y0,x0=visible.min(axis=0);y1,x1=visible.max(axis=0)
     margins=[int(x0),int(y0),int(im.width-1-x1),int(im.height-1-y1)]
-    rows.append(dict(key=a['key'],file=a['output'],sha256=a['sha256'],dimensions=list(im.size),native_long_edge_at_least_2048=max(im.size)>=2048,edge_nonzero=int((edge!=0).sum()),alpha_zero_pixels=int((aa==0).sum()),visible_alpha_gt32_margin_px=margins,portrait_holes=holes,portrait_holes_detected=len(holes),reference=a['reference'],source_partial=a['source_partial'],palette_reference=a['palette_reference'],visual_review='pending',final_approved=False))
+    rows.append(dict(key=a['key'],file=a['output'],sha256=a['sha256'],dimensions=list(im.size),native_long_edge_at_least_2048=max(im.size)>=2048,edge_nonzero=int((edge!=0).sum()),alpha_zero_pixels=int((aa==0).sum()),visible_alpha_gt32_margin_px=margins,portrait_holes=holes,portrait_holes_detected=len(holes),reference=a.get('comparison_reference',a['reference']),generation_reference=a['reference'],source_partial=a['source_partial'],palette_reference=a['palette_reference'],visual_review='pending',final_approved=False))
 (qa/'technical_snapshot.json').write_text(json.dumps(dict(count=len(rows),scope='Only currently saved candidates; not all production completed',final_approved=0,assets=rows),ensure_ascii=False,indent=2),encoding='utf-8')
 font=ImageFont.truetype('C:/Windows/Fonts/meiryo.ttc',16)
 reviewed_path=qa/'visual_reviews.json'
-reviewed={a['key']:a['sha256'] for a in json.loads(reviewed_path.read_text(encoding='utf-8'))['assets']} if reviewed_path.exists() else {}
-new=[a for a in rows if reviewed.get(a['key'])!=a['sha256']]
-snapshot=hashlib.sha256(''.join(a['sha256'] for a in rows).encode()).hexdigest()[:10];pages=[]
+reviewed={a['key']:(a['sha256'],a['reference']) for a in json.loads(reviewed_path.read_text(encoding='utf-8'))['assets']} if reviewed_path.exists() else {}
+new=[a for a in rows if reviewed.get(a['key'])!=(a['sha256'],a['reference'])]
+snapshot=hashlib.sha256(''.join(a['sha256']+a['reference'] for a in rows).encode()).hexdigest()[:10];pages=[]
 for start in range(0,len(new),6):
     page=new[start:start+6];canvas=Image.new('RGB',(1800,len(page)*320),'#30343a');d=ImageDraw.Draw(canvas)
     for i,a in enumerate(page):
@@ -48,3 +48,7 @@ for start in range(0,len(new),6):
     pages.append(dict(file=p.as_posix(),sha256=hashlib.sha256(p.read_bytes()).hexdigest(),assets=[dict(key=a['key'],sha256=a['sha256']) for a in page]))
 (qa/'contacts_manifest.json').write_text(json.dumps(dict(snapshot=snapshot,saved_count=len(rows),unreviewed_count=len(new),pages=pages),ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps(dict(saved=len(rows),all_native_2k=all(a['native_long_edge_at_least_2048'] for a in rows),holes_not_two=[a['key'] for a in rows if a['portrait_holes_detected']!=2],geometry_flags=[a['key'] for a in rows if any(h['possible_geometry_mismatch'] for h in a['portrait_holes'])],unreviewed=len(new),new_contact_pages=len(pages))))
+
+current_reviews=json.loads(reviewed_path.read_text(encoding='utf-8'))['assets'] if reviewed_path.exists() else []
+repairs=[a for a in current_reviews if a.get('repair_required')]
+(qa/'repair_queue.json').write_text(json.dumps(dict(count=len(repairs),status='review_findings_not_final_approval',assets=repairs),ensure_ascii=False,indent=2),encoding='utf-8')

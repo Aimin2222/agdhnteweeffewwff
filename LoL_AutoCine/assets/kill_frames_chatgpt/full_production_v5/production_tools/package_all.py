@@ -18,7 +18,7 @@ def preview(a):
     folder=VIEW/'media'/a['number']/a['id'];folder.mkdir(parents=True,exist_ok=True)
     source=ROOT/'motion'/a['number']/a['id']
     im=Image.open(a['output']).convert('RGBA');im.thumbnail((1024,500),Image.Resampling.LANCZOS);im.save(folder/'frame.webp',quality=84,method=4)
-    ref=Image.open(a['reference']).convert('RGB');ref.thumbnail((600,340));ref.save(folder/'source.jpg',quality=94)
+    ref=Image.open(a.get('comparison_reference',a['reference'])).convert('RGB');ref.thumbnail((600,340));ref.save(folder/'source.jpg',quality=94)
     poster=Image.open(source/'poster.jpg');poster.thumbnail((480,270));poster.save(folder/'poster.jpg',quality=80)
     movie=folder/'comparison.mp4'
     subprocess.run([shutil.which('ffmpeg'),'-v','error','-y','-i',str(source/'comparison.mp4'),'-an','-map_metadata','-1','-vf','scale=640:360:flags=lanczos','-r','24','-c:v','libx264','-preset','medium','-threads','1','-b:v','160k','-maxrate','180k','-bufsize','360k','-pix_fmt','yuv420p','-movflags','+faststart',str(movie)],check=True)
