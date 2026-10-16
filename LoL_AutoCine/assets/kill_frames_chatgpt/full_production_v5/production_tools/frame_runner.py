@@ -91,7 +91,7 @@ def save(index,path):
         try:save_unlocked(index,path)
         finally:
             lock.seek(0);msvcrt.locking(lock.fileno(),msvcrt.LK_UNLCK,1)
-def jobs():
+def jobs_unlocked():
     start,count=int(sys.argv[2]),int(sys.argv[3])
     config=Path('production_batch_config.json')
     if start==0 and len(sys.argv)==4 and config.exists():
@@ -107,6 +107,15 @@ def jobs():
         fields=['index','key','number','id','theme','role','intensity','source_file','source_partial','palette_reference','reference','output']
         rows=[{k:a[k] for k in fields} for a in rows]
     print(json.dumps(rows,ensure_ascii=True))
+def jobs():
+    with (OUT/'production.lock').open('a+b') as lock:
+        lock.seek(0,2)
+        if lock.tell()==0:lock.write(b'0');lock.flush()
+        lock.seek(0);msvcrt.locking(lock.fileno(),msvcrt.LK_LOCK,1)
+        try:jobs_unlocked()
+        finally:
+            lock.seek(0);msvcrt.locking(lock.fileno(),msvcrt.LK_UNLCK,1)
+
 def atlas(start,count):
     data=load();page=[a for a in data['assets'] if a['status']=='pending'][start:start+count]
     im=Image.new('RGB',(1500,len(page)*220),'#30343b');d=ImageDraw.Draw(im)
