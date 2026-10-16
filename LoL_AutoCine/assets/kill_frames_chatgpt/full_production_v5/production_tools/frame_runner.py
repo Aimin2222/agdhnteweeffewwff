@@ -104,6 +104,9 @@ def jobs_unlocked():
             if a.get('prompt_guidance_revision')!='source-fidelity-20261016-r2':
                 a['prompt']+=' Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross. '
                 a['prompt_guidance_revision']='source-fidelity-20261016-r2'
+            if not a.get('native_solid_ornament_guidance'):
+                a['prompt']+=' Keep native solid black eclipse discs, dark orbs and other dark ornament opaque where the exact source shows them; these are not empty portrait holes. Preserve blank paper talisman silhouettes while removing all writing. Do not replace missing writing with new objects or characters. '
+                a['native_solid_ornament_guidance']=True
         write(data)
     if len(sys.argv)>4 and sys.argv[4]=='metadata':
         fields=['index','key','number','id','theme','role','intensity','source_file','source_partial','palette_reference','reference','output']
