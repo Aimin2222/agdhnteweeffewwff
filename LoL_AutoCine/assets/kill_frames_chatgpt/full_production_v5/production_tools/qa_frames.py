@@ -1,9 +1,9 @@
 from pathlib import Path
 from PIL import Image,ImageDraw,ImageFont,ImageOps
-import json,hashlib
+import json,hashlib,sys
 import numpy as np,cv2
 ROOT=Path('LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5')
-plan=json.loads((ROOT/'production.json').read_text(encoding='utf-8'))
+plan=json.loads((Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'production.json').read_text(encoding='utf-8'))
 original=json.loads((ROOT.parent/'full_production_v4/inventory.json').read_text(encoding='utf-8'))
 expected={a['key']:[next(iter(h)) for h in a['portrait_holes']] for a in original['assets']}
 qa=ROOT/'qa';qa.mkdir(exist_ok=True)

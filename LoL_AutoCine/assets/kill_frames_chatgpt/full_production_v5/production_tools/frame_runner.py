@@ -75,6 +75,10 @@ def save_unlocked(index,path):
     if a['palette_reference']:flags.append('tiny_palette_reference_not_independent_high_detail_original')
     a['quality_flags']=flags
     a['visual_review']='pending_original_comparison'
+    data['status']='production_in_progress'
+    data['saved_candidates']=sum(x['status']!='pending' for x in data['assets'])
+    data['counts']={s:sum(x['status']==s for x in data['assets']) for s in sorted({x['status'] for x in data['assets']})}
+    data['next_unproduced_key']=next((x['key'] for x in data['assets'] if x['status']=='pending'),None)
     write(data)
     print(json.dumps(dict(key=a['key'],status=a['status'],dimensions=size,flags=flags)))
 def save(index,path):
@@ -93,6 +97,12 @@ def jobs():
     if start==0 and len(sys.argv)==4 and config.exists():
         count=max(count,min(12,int(json.loads(config.read_text(encoding='utf-8'))['parallel_assets'])))
     data=load();rows=[a for a in data['assets'] if a['status']=='pending'];rows=rows[start:start+count]
+    if len(sys.argv)==4 and rows:
+        for a in rows:
+            if a.get('prompt_guidance_revision')!='source-fidelity-20261016-r2':
+                a['prompt']+=' Additional source-fidelity constraints: empty reference spaces must remain empty. If portrait frames and the central ornament are separate in the exact crop, preserve those gaps; do not invent connecting bars, outer arcs, stars, gems, flowers or spikes. Never borrow ornament from adjacent strong variants. A central X or cross that belongs to the frame is a required structural ornament: retain its exact form; remove explanatory writing only, not the cross. '
+                a['prompt_guidance_revision']='source-fidelity-20261016-r2'
+        write(data)
     if len(sys.argv)>4 and sys.argv[4]=='metadata':
         fields=['index','key','number','id','theme','role','intensity','source_file','source_partial','palette_reference','reference','output']
         rows=[{k:a[k] for k in fields} for a in rows]
