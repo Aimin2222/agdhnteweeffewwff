@@ -4,7 +4,7 @@
 
 フレームの制作を先に進め、その後に全件の個別エフェクト、動く確認版、一覧ZIP、ChatGPT向け引継ぎ資料を揃える。高解像度PNGを1点ごとに保存し、透過・寸法・SHAと要修正点を記録。長辺2048px未満の候補は新旧を問わず不合格として再生成対象にし、単純拡大で合格扱いにしない。原本一致・透過品質の要修正点もQA台帳に記録。
 
-最新の途中台帳: [checkpoint_0634_repair0075.json](checkpoints/checkpoint_0634_repair0075.json)
+最新の途中台帳: [checkpoint_0634_repair0100.json](checkpoints/checkpoint_0634_repair0100.json)
 
 - frames/: 原本の比較用cropと、新規生成のRGBA PNG。原本そのものは変更していない。
 - 制作方針_JA.md: 対象範囲・高画質・透過・エフェクト・保存方針。
