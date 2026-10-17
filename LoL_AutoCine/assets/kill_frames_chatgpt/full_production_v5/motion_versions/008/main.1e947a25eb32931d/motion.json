@@ -1,0 +1,140 @@
+{
+  "version": "frame-native-v5.4",
+  "key": "008/main",
+  "source_number": "008",
+  "theme": "a1_simple",
+  "mode": "minimal",
+  "strength": 0.8,
+  "frame": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/alpha_cleanup_v1/frames/008/main.from_bb667886d99bcc72.alpha0.png",
+  "frame_sha256": "1e947a25eb32931d9eaadaa2a25db8f8ecd6cec7debc86339b835b6dc3389ab6",
+  "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/008/main.source_crop.png",
+  "reference_sha256": "687789c733e900faaf11f7ae1a82b2d5eb65cf4fd4648e5a77dfee9f5a18393a",
+  "palette": [
+    [
+      249,
+      2,
+      10
+    ],
+    [
+      2,
+      139,
+      251
+    ],
+    [
+      6,
+      81,
+      174
+    ]
+  ],
+  "seed": 83399613090479,
+  "particles": [],
+  "coordinate_contract": {
+    "reference_canvas": [
+      512,
+      288
+    ],
+    "origin": [
+      256,
+      144
+    ],
+    "frame_width_px": 460,
+    "scale_rule": "Multiply positions, sizes and speeds by target width / 512"
+  },
+  "timeline": {
+    "start_s": -0.3,
+    "kill_s": 0,
+    "end_s": 2.7,
+    "fps": 30,
+    "frame_enter_s": 0.2,
+    "hold_s": 1.1,
+    "frame_exit_start_s": 1.3,
+    "frame_exit_end_s": 1.45,
+    "effects_zero_after_s": 0.45,
+    "pre_effect_start_s": 0
+  },
+  "method": "Immutable native frame UV particles plus selected existing AI theme VFX textures, per-frame palette material, and code-native animation. Shared sources unchanged.",
+  "source_partial": false,
+  "quality_flags": [
+    "outer_edge_alpha_residue"
+  ],
+  "final_approved": false,
+  "uv_window_contract": "For ellipse_feather multiply sampled alpha by clamp((1-x*x-y*y)/0.35,0,1), UV x/y in [-1,1]; immutable source texture.",
+  "side_palette": {
+    "left": [
+      2,
+      139,
+      251
+    ],
+    "right": [
+      249,
+      2,
+      10
+    ]
+  },
+  "glow_contract": "Blur premultiplied RGBA, then unpremultiply for straight-alpha output.",
+  "portrait_holes": [
+    {
+      "side": 0,
+      "bbox": [
+        153,
+        75,
+        544,
+        536
+      ],
+      "area": 226025
+    },
+    {
+      "side": 1,
+      "bbox": [
+        1473,
+        77,
+        540,
+        535
+      ],
+      "area": 226738
+    }
+  ],
+  "portrait_mask_is_preview_estimate": true,
+  "qa": {
+    "mp4_frames": 90,
+    "fps": 30.0,
+    "duration_ms": 3000,
+    "webp_frames": 13,
+    "unique_frames": 12,
+    "outer_edge_nonzero_samples": 0,
+    "encoded_webp_edge_hits": 0,
+    "deterministic": true,
+    "zero_at_clip_boundaries": true,
+    "portrait_holes_detected": 2,
+    "source_frame_alpha_warning": [
+      "outer_edge_alpha_residue"
+    ],
+    "final_approved": false
+  },
+  "outputs": [
+    {
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/motion_versions/008/main.1e947a25eb32931d/comparison.mp4",
+      "bytes": 68885,
+      "sha256": "97c3e7bdcf2a4f1b8b02cc12744e83e056c042d5f1ec875029f2d5a831189b88"
+    },
+    {
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/motion_versions/008/main.1e947a25eb32931d/effect_alpha.webp",
+      "bytes": 5186,
+      "sha256": "ff2125d01680d1a0b96d8c77a4f99299a317baad8fd3b162cf6ae9340b0e2dd6"
+    },
+    {
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/motion_versions/008/main.1e947a25eb32931d/impact_2048_rgba.png",
+      "bytes": 11262,
+      "sha256": "5d14ea412a732c3da7701617ba109672c561f56b90aca66b9bd54d716e4064ad"
+    },
+    {
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/motion_versions/008/main.1e947a25eb32931d/poster.jpg",
+      "bytes": 107395,
+      "sha256": "153e268c88b6df5e548a771098e4c09b074203e48b6e13805ae957335ac801a9"
+    }
+  ],
+  "source_visual_repair_required": false,
+  "source_visual_review_notes": [
+    "主要形状・色・肖像穴を比較。細部の厳密一致・等倍の最終合格とは別。"
+  ]
+}
