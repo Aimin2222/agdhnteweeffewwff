@@ -38,6 +38,8 @@ def build_one(a):
  with Image.open(target) as im:
   assert im.mode=='RGBA' and list(im.size)==size
   after=np.array(im)
+  for key in ['icc_profile','gamma','srgb','chromaticity']:
+   assert im.info.get(key)==info.get(key),'Color metadata changed: '+key
  assert np.array_equal(after[:,:,:3],before[:,:,:3]),'RGB changed'
  assert np.array_equal(after[:,:,3][~mask],alpha[~mask]),'Alpha other than one changed'
  assert (after[:,:,3][mask]==0).all() and not (after[:,:,3]==1).any()
