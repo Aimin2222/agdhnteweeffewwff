@@ -1,3 +1,7 @@
+## Alpha cleanup GitHub verification update
+
+Commit a690e954f6ec1d98d67f7a592da75e414e024ae1: 652 alpha-one-only derivative PNGs plus their manifest were saved and all 653 files were downloaded from GitHub and matched the committed bytes and SHA-256. The earlier local-only description below is historical. These derivatives correspond to checkpoint 0634_repair0010; ongoing geometry repairs have not been adopted into this derivative set. Final approved: 0.
+
 ## 2026-10-17 透過の微小残りの処理許可と検査
 
 利用者が選び直した結果、alpha=1のみを0にする別版の数値処理を明示許可した。原本と生成原本を保持し、RGB・寸法・alpha=0および2～255は変更しない。チェックポイント0634_repair0010の652件で処理前後を検査し、この条件と生成原本のSHA不変を全件確認した。端にalphaが2以上の画素が残る196件は未解決であり、切り捨てず修正対象として扱う。最終合格0。
