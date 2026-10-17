@@ -14,9 +14,19 @@ def online(p):return RAW+quote(str(p).replace('\\','/'),safe='/')
 def reviewed_notes():
     path=ROOT/'qa/visual_reviews.json'
     return {a['key']:a for a in json.loads(path.read_text(encoding='utf-8'))['assets']} if path.exists() else {}
+@lru_cache(maxsize=1)
+def motion_rows():
+    return {x['key']:x for x in json.loads((ROOT/'motion_catalog.json').read_text(encoding='utf-8'))['assets']}
+def motion_folder(a):
+    folder=Path(motion_rows()[a['key']]['outputs'][0]['file']).parent
+    assert folder.as_posix().startswith(ROOT.as_posix()+'/')
+    spec=json.loads((folder/'motion.json').read_text(encoding='utf-8'))
+    assert spec['frame_sha256']==a['sha256']
+    return folder
+
 def preview(a):
     folder=VIEW/'media'/a['number']/a['id'];folder.mkdir(parents=True,exist_ok=True)
-    source=ROOT/'motion'/a['number']/a['id']
+    source=motion_folder(a)
     im=Image.open(a['output']).convert('RGBA');im.thumbnail((1024,500),Image.Resampling.LANCZOS);im.save(folder/'frame.webp',quality=84,method=4)
     ref=Image.open(a.get('comparison_reference',a['reference'])).convert('RGB');ref.thumbnail((600,340));ref.save(folder/'source.jpg',quality=94)
     poster=Image.open(source/'poster.jpg');poster.thumbnail((480,270));poster.save(folder/'poster.jpg',quality=80)
@@ -50,7 +60,7 @@ def native_packs(assets):
     entries=[]
     for a in assets:
         entries.append((Path(a['output']),f'native/frames/{a["number"]}/{a["id"]}.png',a['key'],'frame'))
-        entries.append((ROOT/'motion'/a['number']/a['id']/'impact_2048_rgba.png',f'native/effects/{a["number"]}/{a["id"]}.png',a['key'],'effect'))
+        entries.append((motion_folder(a)/'impact_2048_rgba.png',f'native/effects/{a["number"]}/{a["id"]}.png',a['key'],'effect'))
     groups=[];group=[];size=0
     for e in entries:
         n=e[0].stat().st_size

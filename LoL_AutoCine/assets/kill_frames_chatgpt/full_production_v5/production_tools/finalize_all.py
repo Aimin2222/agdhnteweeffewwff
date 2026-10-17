@@ -20,7 +20,7 @@ for a in assets:
         assert im.mode=='RGBA' and max(im.size)>=2048
         im.verify()
     assert v[a['key']]['sha256']==a['sha256']
-    spec=r/'motion'/a['number']/a['id']/'motion.json';s=json.loads(spec.read_text(encoding='utf-8'))
+    spec=Path(m[a['key']]['outputs'][0]['file']).parent/'motion.json';s=json.loads(spec.read_text(encoding='utf-8'))
     assert s['frame_sha256']==a['sha256']
     assert s['qa']['mp4_frames']==90 and s['qa']['duration_ms']==3000 and s['qa']['zero_at_clip_boundaries']
     for output in s['outputs']:assert sha(Path(output['file']))==output['sha256']

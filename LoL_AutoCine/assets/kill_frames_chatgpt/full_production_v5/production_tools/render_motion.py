@@ -268,8 +268,28 @@ def effect(frame,spec,t,width=512):
 def checker(size):
     yy,xx=np.indices((size[1],size[0]));v=np.where(((xx//18+yy//18)%2)==0,40,52).astype('uint8');return Image.fromarray(np.dstack([v,v+2,v+6,np.full_like(v,255)]))
 
+def reusable_motion(folder,digest):
+    prior=folder/'motion.json'
+    if not prior.exists():return False
+    try:
+        previous=json.loads(prior.read_text(encoding='utf-8'))
+        return previous.get('version')=='frame-native-v5.4' and previous['frame_sha256']==digest and all(sha(Path(x['file']))==x['sha256'] for x in previous['outputs'])
+    except (OSError,KeyError,ValueError):return False
+
+def output_folder(a):
+    digest=sha(Path(a['output']))
+    canonical=ROOT/'motion'/a['number']/a['id']
+    if reusable_motion(canonical,digest):return canonical
+    base=ROOT/'motion_versions'/a['number']
+    name=a['id']+'.'+digest[:16]
+    folder=base/name;attempt=1
+    while folder.exists():
+        if reusable_motion(folder,digest):return folder
+        attempt+=1;folder=base/(name+'_'+str(attempt))
+    return folder
+
 def produce(a):
-    folder=ROOT/'motion'/a['number']/a['id'];folder.mkdir(parents=True,exist_ok=True)
+    folder=output_folder(a);folder.mkdir(parents=True,exist_ok=True)
     prior=folder/'motion.json'
     if prior.exists():
         previous=json.loads(prior.read_text(encoding='utf-8'))
