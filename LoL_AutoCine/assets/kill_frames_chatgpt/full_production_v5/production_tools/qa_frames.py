@@ -6,6 +6,9 @@ ROOT=Path('LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5')
 plan=json.loads((Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'production.json').read_text(encoding='utf-8'))
 original=json.loads((ROOT.parent/'full_production_v4/inventory.json').read_text(encoding='utf-8'))
 expected={a['key']:[next(iter(h)) for h in a['portrait_holes']] for a in original['assets']}
+override_path=ROOT/'reference_corrections/source_geometry_overrides_20261017.json'
+if override_path.exists():
+    for entry in json.loads(override_path.read_text(encoding='utf-8'))['assets']:expected[entry['key']]=entry['portrait_holes']
 qa=ROOT/'qa';qa.mkdir(exist_ok=True)
 rows=[]
 for a in plan['assets']:

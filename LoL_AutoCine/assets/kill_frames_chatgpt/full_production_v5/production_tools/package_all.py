@@ -27,11 +27,11 @@ def motion_folder(a):
 def preview(a):
     folder=VIEW/'media'/a['number']/a['id'];folder.mkdir(parents=True,exist_ok=True)
     source=motion_folder(a)
-    im=Image.open(a['output']).convert('RGBA');im.thumbnail((1024,500),Image.Resampling.LANCZOS);im.save(folder/'frame.webp',quality=84,method=4)
-    ref=Image.open(a.get('comparison_reference',a['reference'])).convert('RGB');ref.thumbnail((600,340));ref.save(folder/'source.jpg',quality=94)
-    poster=Image.open(source/'poster.jpg');poster.thumbnail((480,270));poster.save(folder/'poster.jpg',quality=80)
+    im=Image.open(a['output']).convert('RGBA');im.thumbnail((768,400),Image.Resampling.LANCZOS);im.save(folder/'frame.webp',quality=74,method=4)
+    ref=Image.open(a.get('comparison_reference',a['reference'])).convert('RGB');ref.thumbnail((480,280));ref.save(folder/'source.jpg',quality=86)
+    poster=Image.open(source/'poster.jpg');poster.thumbnail((320,180));poster.save(folder/'poster.jpg',quality=75)
     movie=folder/'comparison.mp4'
-    subprocess.run([shutil.which('ffmpeg'),'-v','error','-y','-i',str(source/'comparison.mp4'),'-an','-map_metadata','-1','-vf','scale=640:360:flags=lanczos','-r','24','-c:v','libx264','-preset','medium','-threads','1','-b:v','160k','-maxrate','180k','-bufsize','360k','-pix_fmt','yuv420p','-movflags','+faststart',str(movie)],check=True)
+    subprocess.run([shutil.which('ffmpeg'),'-v','error','-y','-i',str(source/'comparison.mp4'),'-an','-map_metadata','-1','-vf','scale=512:288:flags=lanczos','-r','20','-c:v','libx264','-preset','medium','-threads','1','-b:v','90k','-maxrate','110k','-bufsize','220k','-pix_fmt','yuv420p','-movflags','+faststart',str(movie)],check=True)
     assert movie.stat().st_size>3000
     spec=VIEW/'specs'/a['number']/(a['id']+'.json');spec.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source/'motion.json',spec)
     review=reviewed_notes().get(a['key'],{})
@@ -93,7 +93,7 @@ def main():
         for task in as_completed(tasks):items.append(task.result());print('review preview '+tasks[task],flush=True)
     items.sort(key=lambda a:a['id']);build_viewer(items)
     (VIEW/'catalog.json').write_text(json.dumps(dict(count=len(items),status='review_not_final_approved',assets=items),ensure_ascii=False,indent=2),encoding='utf-8')
-    (VIEW/'確認方法_JA.md').write_text('ZIPをすべて展開し「ここから全件確認.html」を開いてください。一覧・原本比較・連続再生・スロー・採否記録に対応します。比較動画は軽量640×360/24fpsで、素材本体の画質とは別です。フレームは横2K以上の透過PNG、エフェクトピークPNGは2048×1152。本体組み込み・実LoL映像・GPU動作は別工程です。原本見切れや再構成の差分は品質記録に残しています。高画質素材は別のPNG ZIP、または一覧のGitHubリンクから取得できます。',encoding='utf-8')
+    (VIEW/'確認方法_JA.md').write_text('ZIPをすべて展開し「ここから全件確認.html」を開いてください。一覧・原本比較・連続再生・スロー・採否記録に対応します。比較動画は軽量512×288/20fpsで、素材本体の画質とは別です。フレームは横2K以上の透過PNG、エフェクトピークPNGは2048×1152。本体組み込み・実LoL映像・GPU動作は別工程です。原本見切れや再構成の差分は品質記録に残しています。高画質素材は別のPNG ZIP、または一覧のGitHubリンクから取得できます。',encoding='utf-8')
     for name in ['technical_snapshot.json','visual_reviews.json','source_integrity.json','delivery_summary.json']:
         source=ROOT/'qa'/name
         if source.exists():shutil.copyfile(source,VIEW/name)

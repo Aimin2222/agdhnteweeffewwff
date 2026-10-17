@@ -1,3 +1,7 @@
+## 最新状況の参照先
+
+最新の件数・許可された透過処理・原本内縁判定の訂正は [LATEST_REVIEW_STATUS_20261017_JA.md](LATEST_REVIEW_STATUS_20261017_JA.md) を参照してください。以下は途中経過を含む履歴です。全件正式合格ではありません。
+
 ## Alpha cleanup GitHub verification update
 
 Commit a690e954f6ec1d98d67f7a592da75e414e024ae1: 652 alpha-one-only derivative PNGs plus their manifest were saved and all 653 files were downloaded from GitHub and matched the committed bytes and SHA-256. The earlier local-only description below is historical. These derivatives correspond to checkpoint 0634_repair0010; ongoing geometry repairs have not been adopted into this derivative set. Final approved: 0.
