@@ -20,7 +20,7 @@ def repair_jobs(count,preview=False):
  reviews=json.loads((OUT/'qa/visual_reviews.json').read_text(encoding='utf-8'))['assets']
  technical={x['key']:x for x in json.loads((OUT/'qa/technical_snapshot.json').read_text(encoding='utf-8'))['assets']}
  by={a['key']:a for a in reviews};jobs=[]
- for a in sorted(d['assets'],key=lambda x:(max(x.get('dimensions',[9999]))>=2048,x['index'])):
+ for a in sorted(d['assets'],key=lambda x:(max(x.get('dimensions',[9999]))>=2048,not by.get(x['key'],{}).get('repair_required',False),x['index'])):
   rv=by.get(a['key'])
   tv=technical.get(a['key'],{});edge_issue=tv.get('sha256')==a.get('sha256') and tv.get('edge_nonzero',0)>0
   if a['status']=='pending' or not rv or rv['sha256']!=a['sha256'] or not (rv.get('repair_required') or edge_issue) or a['source_partial']:

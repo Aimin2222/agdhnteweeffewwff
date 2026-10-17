@@ -1,117 +1,20 @@
 {
-  "count": 220,
+  "count": 213,
   "status": "review_findings_not_final_approval",
   "assets": [
     {
-      "key": "001/arcade_strong",
-      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/001/arcade_strong.generated.png",
-      "sha256": "a98c6bda24f9217900bd296d02d174642aeb62da6fef71aff3ecef8b88f7c423",
-      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/001/arcade_strong.source_crop.png",
-      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
-      "no_obvious_champion_portrait_or_label_at_contact_scale": true,
-      "strict_source_match": "not_final_approved",
-      "notes": [
-        "星周辺・枠の追加装飾と原本のピクセル配置に差分。"
-      ],
-      "repair_required": true,
-      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/comparison_0012.jpg",
-      "contact_sha256": "2595ae3987e1304e37657d3dac08e5cc508a32ed374e56a17940127d3ced5b7d",
-      "final_approved": false
-    },
-    {
-      "key": "001/porcelain_strong",
-      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/001/porcelain_strong.generated.png",
-      "sha256": "b0bb5977be6dec94c9e60c2262d4f65bb1f3c80169ca5203900ea03200903e6a",
-      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/001/porcelain_strong.source_crop.png",
-      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
-      "no_obvious_champion_portrait_or_label_at_contact_scale": true,
-      "strict_source_match": "not_final_approved",
-      "notes": [
-        "中央の青白い模様が再解釈されており、厳密一致は未合格。"
-      ],
-      "repair_required": true,
-      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/comparison_0012.jpg",
-      "contact_sha256": "2595ae3987e1304e37657d3dac08e5cc508a32ed374e56a17940127d3ced5b7d",
-      "final_approved": false
-    },
-    {
       "key": "002/beast_kingdom_variant_2",
-      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/002/beast_kingdom_variant_2.generated.png",
-      "sha256": "450bcd23c7c8cc11efbb24307821ce49a44e4d3ce2d27d89bb3b064b684430db",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/002/beast_kingdom_variant_2.generated_v5_1.png",
+      "sha256": "d4aeca481c044c32df73452c340aaad760aa46e56d4dc52bd9a0a24d1fe668e6",
       "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/002/beast_kingdom_variant_2.source_crop.png",
       "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
-      "no_obvious_champion_portrait_or_label_at_contact_scale": true,
-      "strict_source_match": "not_final_approved",
       "notes": [
-        "原本全体にある上部マスコットが省略されている。既存cropで一部が欠ける点にも注意。"
+        "上側のマスコットは追加されたが、外側にも配置があり数量・位置と原本との一致は未確認。"
       ],
       "repair_required": true,
-      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/comparison_0036.jpg",
-      "contact_sha256": "173fba1100540dc7b66a33eca511bada421e6591066e6f0d60d6769bc76af669",
-      "final_approved": false
-    },
-    {
-      "key": "002/cafe_cuties_variant_2",
-      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/002/cafe_cuties_variant_2.generated.png",
-      "sha256": "01f87a68e0e6171458c18189fc13a19ad4ea16c2dddcefe92ee4d06aa0784771",
-      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/002/cafe_cuties_variant_2.source_crop.png",
-      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
-      "no_obvious_champion_portrait_or_label_at_contact_scale": true,
       "strict_source_match": "not_final_approved",
-      "notes": [
-        "外側マスコットとギフト装飾の数・配置が原本と異なる。"
-      ],
-      "repair_required": true,
-      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/comparison_0036.jpg",
-      "contact_sha256": "173fba1100540dc7b66a33eca511bada421e6591066e6f0d60d6769bc76af669",
-      "final_approved": false
-    },
-    {
-      "key": "002/empyrean_variant_2",
-      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/002/empyrean_variant_2.generated.png",
-      "sha256": "722c797d1daf0c71cd6e4ff93ab5c9ae5bde47474c37c083bf3a8790562d71f8",
-      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/002/empyrean_variant_2.source_crop.png",
-      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
-      "no_obvious_champion_portrait_or_label_at_contact_scale": true,
-      "strict_source_match": "not_final_approved",
-      "notes": [
-        "原本では黒い中央コアが、生成版では透過になっている。"
-      ],
-      "repair_required": true,
-      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/comparison_0030.jpg",
-      "contact_sha256": "4e0efa40bc6e619127c1a13e1b1f59e191fcebd49a9f66e667412dd4e84681d0",
-      "final_approved": false
-    },
-    {
-      "key": "002/odyssey_variant_1",
-      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/002/odyssey_variant_1.generated.png",
-      "sha256": "a72e19f64acba9fc37f6f9a92872567a536533c9c4d3ccf3a0d4b715d21f8721",
-      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/002/odyssey_variant_1.source_crop.png",
-      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
-      "no_obvious_champion_portrait_or_label_at_contact_scale": true,
-      "strict_source_match": "not_final_approved",
-      "notes": [
-        "白背景で肖像穴の縁に暗い小片が見える。穴内断片の要修正。"
-      ],
-      "repair_required": true,
-      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/comparison_0024.jpg",
-      "contact_sha256": "4dde1ad228cab0b0cd3e417e8f52ea22459d3477496d343f3a39a903a2c7b594",
-      "final_approved": false
-    },
-    {
-      "key": "002/victorious_variant_1",
-      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/002/victorious_variant_1.generated.png",
-      "sha256": "4c1bd710883e71ec7ee942c78cf865d006f46ef47891013bc71f1014d2442870",
-      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/002/victorious_variant_1.source_crop.png",
-      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
-      "no_obvious_champion_portrait_or_label_at_contact_scale": true,
-      "strict_source_match": "not_final_approved",
-      "notes": [
-        "原本の縦に長い羽と生成版の羽の高さ・配置に差分。"
-      ],
-      "repair_required": true,
-      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/comparison_0018.jpg",
-      "contact_sha256": "d2321fbc465e8cb881f39056e3ce61f896282565d11431e4b10c0904d51b1606",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_4edcefab6c_0000.jpg",
+      "contact_sha256": "3051ae68d1f774133e8c68c241cd0fefd00a5a9d8038366e707e20bfdbaecf93",
       "final_approved": false
     },
     {
@@ -131,8 +34,8 @@
     },
     {
       "key": "003/ionia_variant_1",
-      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/003/ionia_variant_1.generated.png",
-      "sha256": "03bb50106b366660cc34beb94499e5cb6ef69b5082f1dfee588eedb96132a448",
+      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/003/ionia_variant_1.generated_v5_1.png",
+      "sha256": "a510820bf5deac0e0bbb408bb4c005eafa4e2b9b3ffe798e25ce08f933d7738e",
       "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/003/ionia_variant_1.source_crop.png",
       "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
       "notes": [
@@ -140,8 +43,8 @@
       ],
       "repair_required": true,
       "strict_source_match": "not_final_approved",
-      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_da9380951e_0000.jpg",
-      "contact_sha256": "4f7c5558fd885311e7a75b787ad3bd34ed57f262302588708124a76f5decfb56",
+      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_4edcefab6c_0006.jpg",
+      "contact_sha256": "43294df3586d77c64d18294f7b95f47fc62037da49e7e91087f9789ebb6a8407",
       "final_approved": false
     },
     {
@@ -3068,21 +2971,6 @@
       "strict_source_match": "not_final_approved",
       "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_bc9312f3b6_0006.jpg",
       "contact_sha256": "09926a816c603a12f1845b3de6385d7c22322450b253bb8f37af3f5dd9933f28",
-      "final_approved": false
-    },
-    {
-      "key": "086/faerie_court_strong",
-      "file": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/086/faerie_court_strong.generated.png",
-      "sha256": "136aaf3641c27e5051b16db351330b1d78decdb8d12f65931198b9c3aa0af4ed",
-      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/086/faerie_court_strong.source_crop.png",
-      "visual_review": "reviewed_original_crop_and_white_black_composites_major_geometry",
-      "notes": [
-        "1983×793で長辺2K未満。単純拡大せずネイティブ2048px以上で再生成する。"
-      ],
-      "repair_required": true,
-      "strict_source_match": "not_final_approved",
-      "contact_sheet": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/qa/review_bc9312f3b6_0000.jpg",
-      "contact_sha256": "121e52b833f76a9b3cfd3d7be597ab48b002ab2769e1ad9350b2c589958f509b",
       "final_approved": false
     },
     {
