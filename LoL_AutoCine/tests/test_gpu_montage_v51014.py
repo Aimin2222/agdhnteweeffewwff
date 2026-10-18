@@ -18,7 +18,7 @@ def test_every_accent_builds_gpu_graph_and_preserves_original_frame_count(tmp_pa
     def render(cmd,**kw):
         graph=cmd[cmd.index('-filter_complex')+1]
         kernel_path=graph.split("source='")[1].split("'")[0]
-        shader=Path(kernel_path).read_text()
+        shader=Path(kernel_path.replace(r'\:', ':')).read_text()
         assert 'eq_rgb' in shader and gpu_full.number(montage_fx.MONTAGE_PROFILES[style][0]) in shader
         assert cmd[cmd.index('-frames:v')+1]=='61'
         assert 'trim=end_frame=61' in graph and 'setpts=N/(60*TB)' in graph

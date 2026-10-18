@@ -9,7 +9,9 @@ import tempfile
 import threading
 import time
 import traceback
+from functools import wraps
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
@@ -41,6 +43,7 @@ def probe(path: Path) -> dict:
 
 
 def test(fn):
+    @wraps(fn)
     def w():
         t0 = time.time()
         try:
@@ -147,32 +150,41 @@ def t06_effects_all_templates_and_grades():
         src = d / "src.mp4"
         subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-f", "lavfi", "-i", "testsrc2=size=640x360:rate=60:duration=3",
                         "-pix_fmt", "yuv420p", str(src)], check=True)
+        wav = d / "game.wav"
+        subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-f", "lavfi", "-i", "sine=f=330:d=3", str(wav)], check=True)
         from core.scanner import Kill
         ks = [Kill(1, 1, "a", "b", [])] * 2
         # 全テンプレ + 全グレード
         for name, tpl in one_click_templates().items():
             out = d / f"o_{abs(hash(name))}.mp4"
-            apply_effects(src, out, tpl, 3.0, ks)
+            apply_effects(src, out, tpl, 3.0, ks, game_wav=wav)
             p = probe(out)
             assert out.exists() and abs(p["dur"] - 3.0) < 0.3 and abs(p["fps"] - 60) < 1, (name, p["dur"], p["fps"])
+            assert "1920x1080" in p["text"] and "Audio:" in p["text"]
         for g in GRADES:
             tpl = Template(grade=g, grade_strength=1.0, temperature=0.5, bpm=120, bars=0.5, transition="flash",
                            title_text="日本語タイトル テスト")
             out = d / f"g_{g}.mp4"
-            apply_effects(src, out, tpl, 3.0, ks)
+            apply_effects(src, out, tpl, 3.0, ks, game_wav=wav)
             assert out.exists() and out.stat().st_size > 1000, g
         assert find_jp_font() is not None or sys.platform == "win32"
 
 
 @test
 def t07_no_desktop_fallback():
-    assert find_lol_hwnd() is None               # 非Windows/LoL無し -> None
     from core.capture import WGCWindowSource
-    try:
-        WGCWindowSource().start()
-        raise AssertionError("例外が出るべき")
-    except CaptureError as e:
-        assert "フォールバックは行いません" in str(e)
+    # Simulate missing LoL on every OS; never try the user's live game/desktop.
+    with patch("core.capture.find_lol_hwnd", return_value=None), \
+         patch("core.capture_process.CaptureSession") as session:
+        source = WGCWindowSource()
+        try:
+            source.start()
+            raise AssertionError("例外が出るべき")
+        except CaptureError as e:
+            assert "LoL" in str(e) and "ウィンドウ" in str(e)
+        assert not source.running and source.latest() is None
+        assert source._session is None
+        session.assert_not_called()  # No native or desktop capture was allocated.
 
 
 @test
@@ -260,26 +272,34 @@ def t10_utf8_paths_and_names():
         subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-f", "lavfi", "-i", "color=c=blue:s=320x180:r=60:d=1",
                         "-pix_fmt", "yuv420p", str(src)], check=True)
         dst = out / "結果.mp4"
-        apply_effects(src, dst, Template(title_text="ペンタキル！"), 1.0, [])
+        wav = out / "ゲーム音.wav"
+        subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-f", "lavfi", "-i", "sine=f=330:d=1", str(wav)], check=True)
+        apply_effects(src, dst, Template(title_text="ペンタキル！"), 1.0, [], game_wav=wav)
         assert dst.exists()
+        assert "Audio:" in probe(dst)["text"]
 
 
 @test
-def t11_hud_safe_mode_does_not_touch_replay():
+def t11_hud_is_hidden_and_restored():
     st, base, down = start_mock(length=60)
     try:
         api = ReplayAPI(base)
         player = parse_players(api.playerlist())[0]
+        st.render["interfaceChat"] = False  # Restore mixed original values too.
+        original_hud = {key: st.render[key] for key in hide_values()}
         from core.scanner import Kill
         src = SyntheticSource(time_fn=lambda: st.time)
         src.start()
         tpl = Template(style="top", pre=1, post=1, hide_hud=True)
         with tempfile.TemporaryDirectory() as d:
-            res = run_auto_edit(api, src, player, [Kill(1, 10, "Taki", "x", [])], tpl, Path(d), make_montage=False)
+            res = run_auto_edit(api, src, player, [Kill(1, 10, "Taki", "x", [])], tpl, Path(d), make_montage=False,
+                                audio_factory=lambda p: SyntheticAudio(p))
             src.stop()
             assert not res.failed, res.failed
-        assert not st.hud_log, "安全モードなのにReplay HUDを変更した"
-        assert all(st.render[k] for k in hide_values()), "安全モードでHUD状態が変化した"
+            assert "Audio:" in probe(res.outputs[0])["text"]
+        assert st.hud_log[0] == hide_values(), "録画前にHUDが隠れていない"
+        assert st.hud_log[-1] == original_hud, "録画後に元のHUD値を復元していない"
+        assert {key: st.render[key] for key in original_hud} == original_hud
         # HPバーだけ残す設定値の生成自体は維持
         # HPバーだけ残すオプション
         vals = hide_values(keep_champion_bars=True)
@@ -316,16 +336,40 @@ def t12_fps_camera_falls_back_to_top_instead_of_underground():
         # その状態で録画しても fps オフセットは送られない
         src = SyntheticSource(time_fn=lambda: st.time)
         src.start()
+        from core.recorder import ClipRecorder
+        boundaries = {}
+        record_start, record_stop = ClipRecorder.start, ClipRecorder.stop
+        def start_recording(recorder):
+            result = record_start(recorder)
+            boundaries["start_pose"] = api.render()
+            boundaries["start"] = len(st.render_log)
+            return result
+        def stop_recording(recorder):
+            boundaries["end"] = len(st.render_log)
+            boundaries["end_pose"] = api.render()
+            return record_stop(recorder)
         with tempfile.TemporaryDirectory() as d:
             from core.scanner import Kill
-            take = record_one_clip(api, src, p, Template(style="cinema", pre=1, post=1), 8.0, 12.0,
-                                   [Kill(1, 10, "Taki", "x", [])], Path(d) / "r.mp4")
+            with patch.object(ClipRecorder, "start", start_recording), \
+                 patch.object(ClipRecorder, "stop", stop_recording):
+                take = record_one_clip(api, src, p, Template(style="cinema", pre=1, post=1, game_audio=False), 8.0, 12.0,
+                                       [Kill(1, 10, "Taki", "x", [])], Path(d) / "r.mp4")
             assert take.rig.mode == "top"
         src.stop()
-        # 試し置き(検証用)の後に俯瞰へ戻した時点から、録画中に FPS オフセットは一切送られない
-        last_top = max(i for i, r in enumerate(st.render_log) if r.get("cameraMode") == "top" and r.get("cameraAttached"))
-        after = st.render_log[last_top + 1:]
-        assert after and not [r for r in after if r.get("selectionOffset", {}).get("y", 0) > 0]
+        # Exclude calibration before capture and mirror restoration after stop.
+        during = st.render_log[boundaries["start"]:boundaries["end"]]
+        assert during and any(r.get("cameraMode") == "top" for r in during)
+        pose = dict(boundaries["start_pose"])
+        for write in during:
+            pose.update(write)
+            assert pose["cameraMode"] == "top" and pose["cameraAttached"]
+            assert pose["selectionName"] == p.selection_name
+            assert pose["selectionOffset"] == {"x": 0, "y": 0, "z": 0}
+        for pose in (boundaries["start_pose"], boundaries["end_pose"]):
+            assert pose["cameraMode"] == "top" and pose["selectionName"] == p.selection_name
+            assert pose["cameraPosition"]["y"] - champ_pos(p.selection_name)[1] >= MIN_CLEARANCE
+        assert st.render["cameraMode"] == "top" and st.render["cameraAttached"]
+        assert st.render["selectionName"] == p.selection_name
     finally:
         down()
 
@@ -342,8 +386,8 @@ def t13_audio_mix_and_sync():
         bgm = d / "bgm.wav"
         subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-f", "lavfi", "-i", "sine=f=110:d=2", str(bgm)], check=True)
         # ゲーム音のみ / ゲーム音+BGM(BGMは短くてもループ) / BGMのみ / 音声なし
-        for name, game, b, gflag in (("g", wav, "", True), ("gb", wav, str(bgm), True), ("b", None, str(bgm), True),
-                                      ("n", None, "", True), ("off", wav, "", False)):
+        for name, game, b, gflag in (("g", wav, "", True), ("gb", wav, str(bgm), True), ("b", None, str(bgm), False),
+                                      ("n", None, "", False), ("off", wav, "", False)):
             out = d / f"o_{name}.mp4"
             apply_effects(src, out, Template(bgm_path=b, game_audio=gflag, title_text="T"), 4.0, [],
                           game_audio=game, audio_offset=0.3)
@@ -403,13 +447,23 @@ def t16_template_preview():
     with tempfile.TemporaryDirectory() as d:
         out = PV.render_exact_still(img, one_click_templates()["ジャネット風シネマ"], Path(d) / "x.png")
         assert Image.open(out).size == (480, 270)
-    # 近似プレビューが ffmpeg の最終出力と大きくズレない (平均誤差 < 12/255)
+    # 軽量近似は傾向を上で検査。厳密描画は1080p CPU動画グラフと比較する。
+    # RGB/YUV420の色変換・クロマ間引きによる差だけを許容する。
+    from core.effects import build_graph
     for name, tpl in one_click_templates().items():
         t2 = Template(**{**tpl.to_dict(), "grain": 0.0, "transition": "cut", "bpm": 0.0})
         with tempfile.TemporaryDirectory() as d:
-            ex = np.asarray(Image.open(PV.render_exact_still(img, t2, Path(d) / "e.png")).convert("RGB")).astype(float)
-        pv = PV.grade_rgb(img, t2).astype(float)
-        assert np.abs(ex - pv).mean() < 12, (name, np.abs(ex - pv).mean())
+            work = Path(d)
+            ex = np.asarray(Image.open(PV.render_exact_still(img, t2, work / "e.png")).convert("RGB")).astype(float)
+            Image.fromarray(img).save(work / "source.png")
+            graph = build_graph(t2, 1.0, False, pre_filters="scale=1920:1080:flags=lanczos")
+            graph += ";[vout]scale=480:270:flags=lanczos,format=rgb24[reference]"
+            subprocess.run([FFMPEG, "-y", "-hide_banner", "-loglevel", "error", "-i", str(work / "source.png"),
+                            "-filter_complex", graph, "-map", "[reference]", "-frames:v", "1", str(work / "reference.png")],
+                           check=True, capture_output=True, timeout=60)
+            reference = np.asarray(Image.open(work / "reference.png").convert("RGB")).astype(float)
+        assert ex.shape == img.shape and np.isfinite(ex).all()
+        assert np.abs(ex - reference).mean() < 3, (name, np.abs(ex - reference).mean())
 
 
 if __name__ == "__main__":
@@ -419,7 +473,7 @@ if __name__ == "__main__":
     for f in [t01_game_cfg_patch, t02_players_ten, t03_scan_only_selected_player, t04_group_clips,
               t05_camera_curves_smooth, t06_effects_all_templates_and_grades, t07_no_desktop_fallback,
               t08_end_to_end_auto_edit, t09_stall_guard_no_same_frame_recording, t10_utf8_paths_and_names,
-              t11_hud_safe_mode_does_not_touch_replay, t12_fps_camera_falls_back_to_top_instead_of_underground,
+              t11_hud_is_hidden_and_restored, t12_fps_camera_falls_back_to_top_instead_of_underground,
               t13_audio_mix_and_sync, t14_padded_wav_fills_silence_gaps, t15_vignette_strength_is_monotonic,
               t16_template_preview]:
         f()

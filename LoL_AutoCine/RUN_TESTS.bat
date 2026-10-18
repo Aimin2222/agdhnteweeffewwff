@@ -1,9 +1,12 @@
 @echo off
+setlocal EnableExtensions
 cd /d "%~dp0"
 if not exist ".venv\Scripts\python.exe" (
-  echo Run START.bat once first.
+  echo Run SETUP_DEV_ENV.bat first to create the development environment.
   pause
-  goto :eof
+  exit /b 2
 )
-".venv\Scripts\python.exe" tests\run_tests.py
+".venv\Scripts\python.exe" tools\run_local_tests.py %*
+set "RC=%ERRORLEVEL%"
 pause
+exit /b %RC%

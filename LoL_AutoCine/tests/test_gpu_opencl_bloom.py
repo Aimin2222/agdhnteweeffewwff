@@ -55,7 +55,7 @@ def test_rgba_probe_rejects_gpu_failure_and_keeps_reason(monkeypatch):
         ok,reason=gpu._rgba_probe()
         assert not ok and 'No matching GPU' in reason
         assert calls[0][calls[0].index('-init_hw_device')+1]==OPENCL_DEVICE
-        assert not Path(calls[0][calls[0].index('-vf')+1].split("source='")[1].split("'")[0]).exists()
+        assert not Path(calls[0][calls[0].index('-vf')+1].split("source='")[1].split("'")[0].replace(r'\:', ':')).exists()
     finally:gpu._rgba_probe.cache_clear()
 
 
@@ -86,7 +86,7 @@ def test_gpu_failure_restores_bloom_dof_title_audio_and_event_timing(tmp_path,mo
         assert "between(t,0.300,1.000)" in graph
         calls.append((cmd,kw,graph))
         if len(calls)==1:
-            path=Path(graph.split("source='")[1].split("'")[0]);shader_paths.append(path)
+            path=Path(graph.split("source='")[1].split("'")[0].replace(r'\:', ':'));shader_paths.append(path)
             assert path.exists() and kw['gpu_effects']=={'bloom','dof'}
             if failure=='driver':
                 return SimpleNamespace(returncode=1,stderr='GPU driver refused')

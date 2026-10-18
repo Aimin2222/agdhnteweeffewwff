@@ -45,7 +45,7 @@ def gallery_app(tmp_path):
     root.withdraw()
     kill = SimpleNamespace(event_id=1, time=31., killer='Alpha', victim='Beta', role='kill')
     instance = SimpleNamespace(root=root, kills=[kill], templates={'原色': Template(grade='default'), '金': Template(grade='golden')},
-        _scene_thumbnail_path=lambda key: tmp_path/f'{key}.png', _preview_input=lambda event: None)
+        _scene_thumbnail_path=lambda key: tmp_path/f'{key.replace("|", "_")}.png', _preview_input=lambda event: None)
     yield instance
     root.destroy()
 

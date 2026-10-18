@@ -100,8 +100,9 @@ def test_help_button_opens_visible_dialog(monkeypatch):
 
 def test_two_gold_kill_pairs_really_stack_in_ffmpeg(tmp_path):
     import shutil, subprocess
-    ff=shutil.which('ffmpeg')
-    if not ff:
+    from core.gpu_binary import ffmpeg_exe
+    ff=ffmpeg_exe()
+    if not (Path(ff).is_file() or shutil.which(ff)):
         pytest.skip('FFmpeg missing')
     a=_img(tmp_path/'a.png',(235,35,50));b=_img(tmp_path/'b.png',(40,90,240))
     c=_img(tmp_path/'c.png',(15,200,100))
