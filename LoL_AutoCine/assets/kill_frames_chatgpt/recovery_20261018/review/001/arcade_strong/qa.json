@@ -1,0 +1,44 @@
+{
+  "key": "001/arcade_strong",
+  "baseline_commit": "88872ce9b37bf8c2c1ffc1a2b515ea4a3425aa7c",
+  "original_sha256": "1705d7ab9509ee1865ec8b68313bdecec5bbe32bc3e257f95079d5e478bbc964",
+  "generator": "built-in image_gen",
+  "status": "review_rejected_keep_history",
+  "final_approved": 0,
+  "attempts": [
+    {
+      "attempt": 1,
+      "file": "repair_attempt_01.png",
+      "sha256": "4f1fd0bc9e51ca9b15d8954ec65d7333b26507148547f79156d6bde0021d804b",
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "edge_nonzero": 15,
+      "edge_max_alpha": 1,
+      "visual_review_performed": true,
+      "source_match": "failed",
+      "final_approved": false,
+      "adopted_into_production": false,
+      "reason": "外側の大きな棘は減ったが、円枠周囲の十字星と中央周囲の装飾・配置が原本と異なる。"
+    },
+    {
+      "attempt": 2,
+      "file": "repair_attempt_02.png",
+      "sha256": "705e2241ef8ff7dbcf67046bf4257055026b1f90ebe51241319310f2cf6eb2e5",
+      "mode": "RGBA",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "edge_nonzero": 66,
+      "edge_max_alpha": 1,
+      "visual_review_performed": true,
+      "source_match": "failed",
+      "final_approved": false,
+      "adopted_into_production": false,
+      "reason": "中央星は縮小したが、肖像穴の輪郭が歪み、内側に色の残りがある。光膜と装飾の配置も原本と異なる。"
+    }
+  ]
+}
