@@ -1,0 +1,181 @@
+{
+  "version": "frame-native-v5.4",
+  "key": "036/strong_02",
+  "source_number": "036",
+  "theme": "ionia",
+  "mode": "petal",
+  "strength": 1.0,
+  "frame": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/alpha_cleanup_v1/frames/036/strong_02.from_c06413bb0a697949.alpha0.png",
+  "frame_sha256": "d3e70822de3328fb1e50d199095b54c4cae4b40f88a56e22ce8e9d1f7d314f6e",
+  "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/036/strong_02.source_crop_v5_1.png",
+  "reference_sha256": "ca7cced063689dcc618a4c48892a7276d80d1b342e17f241245c9b517ef28061",
+  "palette": [
+    [
+      252,
+      145,
+      174
+    ],
+    [
+      253,
+      241,
+      204
+    ],
+    [
+      249,
+      210,
+      143
+    ]
+  ],
+  "seed": 163347291749636,
+  "particles": [],
+  "coordinate_contract": {
+    "reference_canvas": [
+      512,
+      288
+    ],
+    "origin": [
+      256,
+      144
+    ],
+    "frame_width_px": 460,
+    "scale_rule": "Multiply positions, sizes and speeds by target width / 512"
+  },
+  "timeline": {
+    "start_s": -0.3,
+    "kill_s": 0,
+    "end_s": 2.7,
+    "fps": 30,
+    "frame_enter_s": 0.28,
+    "hold_s": 1.2,
+    "frame_exit_start_s": 1.48,
+    "frame_exit_end_s": 1.7,
+    "effects_zero_after_s": 2.2,
+    "pre_effect_start_s": 0
+  },
+  "method": "Immutable native frame UV particles plus selected existing AI theme VFX textures, per-frame palette material, and code-native animation. Shared sources unchanged.",
+  "source_partial": false,
+  "quality_flags": [],
+  "final_approved": false,
+  "uv_window_contract": "For ellipse_feather multiply sampled alpha by clamp((1-x*x-y*y)/0.35,0,1), UV x/y in [-1,1]; immutable source texture.",
+  "base_fx": {
+    "id": "D_spirit_blossom",
+    "texture": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/frame_based_review_v2/D_spirit_blossom/impact_rgba.png",
+    "sha256": "e7432856fd81b0c58abf5c3e1f9fcd272dc5d64b182ac59a464dc17e0ee48cbb",
+    "palette_mapping": "soft_chroma_3_anchor_preserve_neutral_white",
+    "source_palette": [
+      [
+        240,
+        139,
+        176
+      ],
+      [
+        253,
+        202,
+        216
+      ],
+      [
+        240,
+        84,
+        146
+      ]
+    ],
+    "target_palette": [
+      [
+        249,
+        210,
+        143
+      ],
+      [
+        253,
+        241,
+        204
+      ],
+      [
+        252,
+        145,
+        174
+      ]
+    ],
+    "source_texture_quality_warnings": [
+      "Outer-edge alpha residue; strict transparent-margin check pending repair"
+    ],
+    "sample_alpha_floor_u8": 2,
+    "end_s": 1.25,
+    "opacity": 0.72
+  },
+  "side_palette": {
+    "left": [
+      253,
+      204,
+      207
+    ],
+    "right": [
+      252,
+      145,
+      172
+    ]
+  },
+  "glow_contract": "Blur premultiplied RGBA, then unpremultiply for straight-alpha output.",
+  "portrait_holes": [
+    {
+      "side": 0,
+      "bbox": [
+        58,
+        197,
+        315,
+        303
+      ],
+      "area": 92592
+    },
+    {
+      "side": 1,
+      "bbox": [
+        1799,
+        197,
+        315,
+        304
+      ],
+      "area": 92894
+    }
+  ],
+  "portrait_mask_is_preview_estimate": true,
+  "variant": "no_floating_petals",
+  "change_note": "Remove all animated detached flower/petal particles. Preserve native frame, timing, light trails, and base FX.",
+  "original_motion_sha256": "148fe10eec314b82ea02e9db62f4304244ff2b861f895192b3ab78e199c90410",
+  "qa": {
+    "mp4_frames": 90,
+    "fps": 30.0,
+    "duration_ms": 3000,
+    "webp_frames": 38,
+    "unique_frames": 37,
+    "outer_edge_nonzero_samples": 0,
+    "encoded_webp_edge_hits": 0,
+    "deterministic": true,
+    "zero_at_clip_boundaries": true,
+    "portrait_holes_detected": 2,
+    "source_frame_alpha_warning": [],
+    "final_approved": false
+  },
+  "outputs": [
+    {
+      "file": "C:/Users/saoan/Documents/Codex/2026-10-18/lol-autocine-work-windows-pc-usb/outputs/complete_review_20261018/delivery/variants/0263_no_petals/comparison.mp4",
+      "bytes": 189356,
+      "sha256": "3489841a991bd3c9a2bbe0edc10bbff318eb11d0f4a0d26a8f122f2928a474d0"
+    },
+    {
+      "file": "C:/Users/saoan/Documents/Codex/2026-10-18/lol-autocine-work-windows-pc-usb/outputs/complete_review_20261018/delivery/variants/0263_no_petals/effect_alpha.webp",
+      "bytes": 1421782,
+      "sha256": "f473c7e8cf1967f959e79bbcefa73216788918e62560497b68794b56dc177b6b"
+    },
+    {
+      "file": "C:/Users/saoan/Documents/Codex/2026-10-18/lol-autocine-work-windows-pc-usb/outputs/complete_review_20261018/delivery/variants/0263_no_petals/impact_2048_rgba.png",
+      "bytes": 1612653,
+      "sha256": "77dada7d361cd87950348005e908f2c8c47593ef87c60d34769e9bbc7ec30ec4"
+    },
+    {
+      "file": "C:/Users/saoan/Documents/Codex/2026-10-18/lol-autocine-work-windows-pc-usb/outputs/complete_review_20261018/delivery/variants/0263_no_petals/poster.jpg",
+      "bytes": 135181,
+      "sha256": "06f83c343fc8866ab73995da16bb7aa8ba48d7f4d180a335727ea9aac990dfd0"
+    }
+  ]
+}
