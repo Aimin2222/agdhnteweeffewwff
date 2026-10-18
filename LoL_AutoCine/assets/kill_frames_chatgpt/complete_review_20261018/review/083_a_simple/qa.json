@@ -1,0 +1,54 @@
+{
+  "key": "083/a_simple_main",
+  "generator": "built-in image_gen",
+  "mode": "RGBA",
+  "dimensions": [
+    2172,
+    724
+  ],
+  "sha256": "615a01b862fa279b5f2d4721b8dffe5cf1965f73682a5587451d0eeace72f036",
+  "edge_nonzero": 0,
+  "holes_detected": [
+    {
+      "side": 0,
+      "bbox": [
+        406,
+        136,
+        430,
+        436
+      ],
+      "area": 147032
+    },
+    {
+      "side": 1,
+      "bbox": [
+        1337,
+        138,
+        430,
+        436
+      ],
+      "area": 147380
+    }
+  ],
+  "visual_comparison_performed": true,
+  "status": "review_not_final",
+  "final_approved": false,
+  "adopted_into_current_652": false,
+  "notes": [
+    "既存候補の太い青いバーと大きな発光は減った。原本より円枠の青・赤が強く、X端部の輪郭とハイライト、上下接続線の位置・幅に厳密一致の保証がない。微小alpha・肖像穴内の全画素も別途記録して判定する。"
+  ],
+  "conservative_inner_ellipse_checks": [
+    {
+      "side": 0,
+      "safe_interior_pixels": 106395,
+      "nonzero": 9,
+      "max_alpha": 1
+    },
+    {
+      "side": 1,
+      "safe_interior_pixels": 106395,
+      "nonzero": 14,
+      "max_alpha": 1
+    }
+  ]
+}
