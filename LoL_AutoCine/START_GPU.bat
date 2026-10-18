@@ -2,7 +2,11 @@
 setlocal EnableExtensions
 cd /d "%~dp0"
 echo [GPU] Preparing OpenCL effects and NVENC...
-py -3 tools\setup_gpu_ffmpeg.py
+if exist ".venv\Scripts\python.exe" (
+  ".venv\Scripts\python.exe" tools\setup_gpu_ffmpeg.py
+) else (
+  py -3 tools\setup_gpu_ffmpeg.py
+)
 if errorlevel 1 (
   echo [GPU] Setup did not complete. Original START.bat is still available.
   pause

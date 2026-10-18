@@ -162,8 +162,9 @@ def test_easy_controls_create_valid_template():
 def test_ffmpeg_can_render_kill_badge_into_real_mp4(tmp_path):
     import shutil
     import subprocess
-    ffmpeg = shutil.which("ffmpeg")
-    if ffmpeg is None:
+    from core.gpu_binary import ffmpeg_exe
+    ffmpeg = ffmpeg_exe()
+    if not (Path(ffmpeg).is_file() or shutil.which(ffmpeg)):
         pytest.skip("System ffmpeg is not available")
     badge = make_badge(tmp_path / "badge.png", "neon", 1)
     graph = with_badge("[0:v]format=yuv420p[vout]", 1, [(1.0, 1.4)],

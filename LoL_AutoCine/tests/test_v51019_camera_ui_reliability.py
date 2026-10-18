@@ -89,8 +89,8 @@ def test_side_review_videos_use_only_their_own_side(monkeypatch,tmp_path):
         target.write_bytes(b"review")
     result=assemble_side_reels(tmp_path,rows,concatenate=concat)
     assert len(result["RED"]["outputs"])==len(result["BLUE"]["outputs"])==1
-    assert all("/RED/" in p for p in observed["RED"])
-    assert all("/BLUE/" in p for p in observed["BLUE"])
+    assert all("RED" in Path(p).parts for p in observed["RED"])
+    assert all("BLUE" in Path(p).parts for p in observed["BLUE"])
 
 
 def test_editors_share_preset_choice_and_easy_color_is_opt_in():

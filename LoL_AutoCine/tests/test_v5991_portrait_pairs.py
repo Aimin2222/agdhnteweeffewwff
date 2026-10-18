@@ -86,8 +86,9 @@ def test_missing_players_or_icons_omit_instead_of_faking(tmp_path):
 
 
 def test_time_specific_pair_overlays_encode_to_mp4(tmp_path):
-    ff=shutil.which('ffmpeg')
-    if not ff:pytest.skip('no ffmpeg')
+    from core.gpu_binary import ffmpeg_exe
+    ff=ffmpeg_exe()
+    if not (Path(ff).is_file() or shutil.which(ff)):pytest.skip('no ffmpeg')
     icons=demo_icons(tmp_path)
     k=[SimpleNamespace(killer='Aimin',victim='Enemy'),SimpleNamespace(killer='Aimin',victim='Another')]
     entries=make_event_badges(tmp_path/'scene.mp4','simple',k,[(.65,1),(1.7,2)],roster(),icon_lookup=lambda p:icons[p['selection_name']])

@@ -79,6 +79,11 @@ def test_real_unicode_zip_flattens_paths_and_maps_duplicate_names(monkeypatch,tm
         for name in names:z.writestr(name,media)
         z.writestr('ignored.exe',b'not executed')
     original=source.read_bytes();temps=[];tempdir=review.tempfile.TemporaryDirectory
+    # ZipFile may normalize Windows separators when writing an entry. Compare
+    # to the names actually stored in the archive, not the writer's input.
+    with ZipFile(source) as z:
+        archived_names = [entry.filename for entry in z.infolist()
+                          if entry.filename.lower().endswith('.mp4')]
     def temp(**kw):
         result=tempdir(dir=tmp_path,**kw);temps.append(Path(result.name));return result
     monkeypatch.setattr(review.tempfile,'TemporaryDirectory',temp)
@@ -86,7 +91,7 @@ def test_real_unicode_zip_flattens_paths_and_maps_duplicate_names(monkeypatch,tm
     with ZipFile(result) as z:
         assert z.testzip() is None
         mapping=json.loads(z.read('reference_archive_names.json'))
-        assert [r['archived_name'] for r in mapping['items']]==names
+        assert [r['archived_name'] for r in mapping['items']]==archived_names
         assert len({r['extracted_name'] for r in mapping['items']})==2
         assert all('/' not in r['extracted_name'] and '\\' not in r['extracted_name'] for r in mapping['items'])
         rows=json.loads(z.read('reference_review.json'))['items']

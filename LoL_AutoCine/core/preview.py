@@ -311,12 +311,19 @@ def render_exact_still(frame_rgb: np.ndarray, t: Template, dst: Path) -> Path:
     dst.parent.mkdir(parents=True, exist_ok=True)
     h, w = frame_rgb.shape[:2]
     t2 = Template(**{**t.to_dict(), "transition": "cut", "bpm": 0.0})
-    graph = build_graph(t2, 1.0, False)
+    # CPU Bloom/band DOF use the video's 1080p working canvas. Normalize both
+    # split branches before compositing, then return to the caller's size.
+    # Still mode excludes temporal flashes. Keep the video's YUV420 working
+    # format through the effects, then convert to RGB for PNG encoding.
+    pre = "" if (w, h) == (1920, 1080) else "scale=1920:1080:flags=lanczos"
+    graph = build_graph(t2, 1.0, False, still=True, pre_filters=pre, output_format="yuv420p")
+    graph += f";[vout]scale={w}:{h}:flags=lanczos,format=rgb24[stillout]"
+    output = "[stillout]"
     with tempfile.TemporaryDirectory() as d:
         src = Path(d) / "in.png"
         Image.fromarray(frame_rgb).save(src)
         cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error", "-i", str(src), "-filter_complex", graph,
-               "-map", "[vout]", "-frames:v", "1", str(dst)]
+               "-map", output, "-frames:v", "1", str(dst)]
         r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     if r.returncode != 0:
         raise RuntimeError("正確プレビューに失敗: " + r.stderr[-400:])

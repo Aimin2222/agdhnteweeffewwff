@@ -1,0 +1,145 @@
+{
+  "date": "2026-10-18",
+  "baseline_branch": "codex/takeover-windows-qa-20261015",
+  "baseline_commit": "8210afb507f56a48985a582d5e53a222cf1ba692",
+  "working_branch": "codex/recovery-windows-dev-20261018",
+  "python": "3.12.14",
+  "tests": {
+    "collected": 864,
+    "latest_unique_outcomes": 864,
+    "passed": 862,
+    "failure": 2,
+    "error": 0,
+    "skipped": 0,
+    "overall_pass": false,
+    "initial_full_run": {
+      "reported": 835,
+      "complete": false
+    },
+    "aggregation_method": "Initial full collection plus subsequent complete module/case reruns after Windows test portability and child-process isolation fixes; this is not a single all-green full-suite run",
+    "test_exclusions": [],
+    "history": [
+      {
+        "scope": "20261018_215520_614413/regressions.xml",
+        "reported_cases": 835,
+        "nonpassing": [
+          {
+            "key": "tests.test_gpu_qa_support_v51022::test_log_tail_is_bounded_byte_exact_and_original_remains",
+            "status": "failure"
+          },
+          {
+            "key": "tests.test_gpu_reference_framing_v51023::test_picker_file_folder_cancel_and_root_cleanup[-]",
+            "status": "failure"
+          },
+          {
+            "key": "tests.test_gpu_releaseqa_v51018::test_archive_never_includes_external_symlink",
+            "status": "failure"
+          },
+          {
+            "key": "tests.test_gpu_target_center_zip_v51024::test_real_unicode_zip_flattens_paths_and_maps_duplicate_names",
+            "status": "failure"
+          },
+          {
+            "key": "tests.test_scene_keyframes_v592::test_scene_thumbnail_is_opt_in_and_written_from_mirror",
+            "status": "failure"
+          },
+          {
+            "key": "tests.test_v5101_scroll_check_warmup::test_dynamically_added_combobox_uses_wheel_guard",
+            "status": "error"
+          },
+          {
+            "key": "tests.test_v51022_oneclick_utf8_camera::test_double_click_starts_only_one_background_sequence",
+            "status": "failure"
+          },
+          {
+            "key": "tests.test_v5103_nonblocking_dispatch::test_all_scene_dispatch_and_stop_work_while_status_is_blocked[gpu]",
+            "status": "error"
+          },
+          {
+            "key": "tests.test_v5104_notebook_livefx_camera::test_live_fx_draw_during_camera_preview_only",
+            "status": "error"
+          },
+          {
+            "key": "tests.test_v5105_killfeed_glow_side_help::test_two_gold_kill_pairs_really_stack_in_ffmpeg",
+            "status": "skipped"
+          },
+          {
+            "key": "tests.test_v5107_mirror_controls::test_workspace_replaces_nested_notebook_without_resetting_mirror",
+            "status": "error"
+          },
+          {
+            "key": "tests.test_v5991_portrait_pairs::test_time_specific_pair_overlays_encode_to_mp4",
+            "status": "skipped"
+          },
+          {
+            "key": "tests.test_v599_automontage_killbadges::test_ffmpeg_can_render_kill_badge_into_real_mp4",
+            "status": "skipped"
+          }
+        ]
+      },
+      {
+        "scope": "20261018_215852_929260/regressions.xml",
+        "reported_cases": 51,
+        "nonpassing": []
+      },
+      {
+        "scope": "20261018_220249_115703/regressions.xml",
+        "reported_cases": 52,
+        "nonpassing": [
+          {
+            "key": "tests.test_v5105_killfeed_glow_side_help::test_two_gold_kill_pairs_really_stack_in_ffmpeg",
+            "status": "skipped"
+          }
+        ]
+      },
+      {
+        "scope": "20261018_220443_495645/regressions.xml",
+        "reported_cases": 35,
+        "nonpassing": []
+      },
+      {
+        "scope": "local_dev/gold_stack.xml",
+        "reported_cases": 1,
+        "nonpassing": []
+      },
+      {
+        "scope": "local_dev/badges_real.xml",
+        "reported_cases": 2,
+        "nonpassing": []
+      }
+    ],
+    "remaining": [
+      {
+        "key": "tests.test_gpu_qa_support_v51022::test_log_tail_is_bounded_byte_exact_and_original_remains",
+        "status": "failure"
+      },
+      {
+        "key": "tests.test_gpu_releaseqa_v51018::test_archive_never_includes_external_symlink",
+        "status": "failure"
+      }
+    ]
+  },
+  "smoke": {
+    "gui": true,
+    "synthetic_1080p60_audio": true,
+    "nvenc": true,
+    "libx264": true,
+    "real_lol": false,
+    "gpu_effects": false,
+    "gpu_fallback_reason": "ffmpeg_missing_program_opencl"
+  },
+  "normal_video_graph": {
+    "cases": 168,
+    "all_equal": true
+  },
+  "protected_sources_unchanged": true,
+  "protected_legacy_badges": 37,
+  "camera_fingerprint": "cbe032cb7369ed4f",
+  "new_director_implementation": false,
+  "known_limitations": [
+    "Two symlink-creation tests cannot run past their fixture setup because this Windows session lacks symlink privilege.",
+    "Native Tcl lifetime cause remains unresolved in the application; GUI tests were isolated, not disabled.",
+    "Real replay camera, process-only audio, WGC, GPU FX and long recording have not been validated.",
+    "The new Smart Camera Director modes remain a proposal."
+  ]
+}
