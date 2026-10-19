@@ -114,6 +114,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         **identity,
         "kind": "live_replay_camera_test",
         "expected_clips": len(scenarios),
+        "camera_control_mode": getattr(template, 'camera_control_mode', None),
         "test_plan": config,
         "test_plan_source": plan_source,
         "qa_archives": [],
@@ -147,8 +148,13 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         current = {"number": index, "side": side, "mode": mode, "label": label,
                    "player": player.label(), "event_time": float(scene.time), "outputs": [],
                    "failed": [], "camera_diagnostics": []}
+        current['camera_control_mode'] = getattr(clip_template, 'camera_control_mode', None)
+        current['camera_decisions'] = []
         current["baseline_reads"] = []
         def capture_camera_log(message):
+            if str(message).startswith('SMART_CAMERA_DECISION '):
+                try: current['camera_decisions'].append(json.loads(str(message).split(' ', 1)[1]))
+                except (ValueError, TypeError, IndexError): pass
             if str(message).startswith(("CAMERA_QA_BASELINE ", "CAMERA_QA_TIMING ", "CAMERA_QA_INITIAL_POSE ")):
                 try:
                     evidence = json.loads(str(message).split(" ", 1)[1])
