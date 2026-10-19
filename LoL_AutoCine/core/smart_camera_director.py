@@ -62,7 +62,10 @@ def decide_camera(mode, team, selected_style, kill_times=(), *, approved=None, e
     chosen = next((s for s in priority if s in candidates), None)
     if chosen is None:
         # Explicitly excluded views must also be excluded from a fallback.
-        fallback = selected_style if selected_style in SUPPORTED_STYLES and selected_style not in excluded else "top"
+        fallback = next((s for s in (selected_style, 'top', *SUPPORTED_STYLES)
+                         if s in SUPPORTED_STYLES and s not in excluded), None)
+        if fallback is None:
+            raise ValueError('no_nonexcluded_camera_for_side:' + side)
         return CameraDecision(mode, side, selected_style, fallback, times,
                               ("no_verified_candidate_for_side", "fixed_target_lock_fallback", "visual_qa_unverified"), True)
     return CameraDecision(mode, side, selected_style, chosen, times,

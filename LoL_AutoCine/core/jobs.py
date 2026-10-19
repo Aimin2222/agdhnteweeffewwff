@@ -257,11 +257,17 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
     if actual is not None and abs(float(actual) - float(start)) > 0.80:
         raise ReplayApiError(f'リプレイのシーク位置が確定しません ({actual:.2f}s / 目標 {start:.2f}s)')
     from .smart_camera_director import decide_camera
-    decision = decide_camera(getattr(tpl, "camera_control_mode", None),
-                             getattr(player, "team", "ORDER"), tpl.style,
-                             (k.time for k in kills),
-                             approved=getattr(tpl, "camera_auto_qa_approved", None),
-                             excluded=getattr(tpl, "camera_auto_excluded", ()))
+    side_choice = getattr(tpl, 'camera_side', 'auto')
+    decision_side = {'blue': 'BLUE', 'red': 'RED'}.get(side_choice, getattr(player, 'team', 'ORDER'))
+    try:
+        decision = decide_camera(getattr(tpl, "camera_control_mode", None),
+                                 decision_side, tpl.style,
+                                 (k.time for k in kills),
+                                 approved=getattr(tpl, "camera_auto_qa_approved", None),
+                                 excluded=getattr(tpl, "camera_auto_excluded", ()))
+    except ValueError as error:
+        log("SMART_CAMERA_FALLBACK " + json.dumps({"reason":str(error), "capture_refused":True, "visual_qa_pass":False}))
+        raise ReplayApiError("使用可能なカメラ候補がありません。サイド別の除外設定を確認してください。") from error
     log("SMART_CAMERA_DECISION " + json.dumps(decision.to_dict(), ensure_ascii=False))
     if decision.mode is not None:
         tpl = deepcopy(tpl)  # runtime selection never modifies the project/UI

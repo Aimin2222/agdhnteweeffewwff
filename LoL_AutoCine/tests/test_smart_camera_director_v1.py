@@ -102,6 +102,21 @@ def test_decisions_are_side_specific_reproducible_and_wide_for_multi():
     assert decide_camera('full_auto','RED','third',[23],approved={}).fallback
 
 
+@pytest.mark.parametrize('team,side,expected', [('ORDER','red','third'), ('CHAOS','blue','cinema_top')])
+def test_explicit_side_uses_matching_qa_ledger(monkeypatch,team,side,expected):
+    plan,_,_=setup(monkeypatch,team,'fps','full_auto',camera_side=side,
+                   camera_auto_qa_approved={'BLUE':['cinema_top'],'RED':['third']})
+    assert plan.style==expected
+    assert plan._camera_decision['team']==side.upper()
+
+
+def test_excluded_fallback_is_not_reintroduced():
+    result=decide_camera('full_auto','RED','fps',approved={},excluded=['RED:fps','RED:top'])
+    assert result.style not in ('fps','top') and result.fallback
+    with pytest.raises(ValueError,match='no_nonexcluded_camera_for_side:RED'):
+        decide_camera('full_auto','RED','fps',excluded=list(SUPPORTED_STYLES))
+
+
 def test_runtime_selection_does_not_mutate_template_or_switch_within_clip(monkeypatch):
     monkeypatch.setattr(camera.time,'sleep',lambda _s:None)
     tpl=Template(style='fps')

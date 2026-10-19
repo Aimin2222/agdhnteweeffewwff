@@ -80,3 +80,5 @@
 `SMART_CAMERA_DECISION`にモード、対象サイド、元style/採用style、イベント時刻、理由、fallbackを保存。`SMART_CAMERA_FALLBACK`に基準不成立または無効poseと`visual_qa_pass:false`を記録。既存`CAMERA_QA_BASELINE`/`CAMERA_QA_POSE`/`CAMERA_QA_INITIAL_POSE`とAPI遅延診断を引き続き使用する。個人名や診断生ログを公開Gitへ追加しない。
 
 `tests/test_smart_camera_director_v1.py`はBLUE/RED×全10style×固定/フルオート×0/90/180度、同一選択2回、送信時の追従向き、低速API、欠損/stale/non-finite、明示manual、台帳とサイド別除外、決定再現性、複数キル優先順位、Template実保存/再読込を検査する。これらは数値・制御契約の検証。人物の可視性、地形遮蔽、FPSらしさ、RED2/4/5の実映像回帰、上下反転の見た目はWindowsの同一リプレイ比較で別途判定する。
+
+サイド設定をblue/redへ明示固定した場合は、実際に使用する補正側のQA台帳で候補を選ぶ。フォールバックでも除外済み視点を再採用せず、全視点が除外されていれば理由を記録し録画前に中止する。
