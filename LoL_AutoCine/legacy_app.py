@@ -4410,7 +4410,7 @@ class App:
                         cam = STYLES.get(t.style, t.style)
                         hud = "HUD安全モード" if t.hide_hud else "HUDそのまま"
                         self.canvas.itemconfigure(self._preview_text_item,
-                                                  text=f"ミラーFX表示（カラー/DOF適用） / カメラ: {cam} / {hud}")
+                                                  text=f"ミラーFXプレビュー / カメラ: {cam} / {hud}")
                         now = time.monotonic()
                         if (hasattr(self, "curve_editor") and self.curve_editor.winfo_viewable()
                                 and now - self._histogram_updated >= .5):
