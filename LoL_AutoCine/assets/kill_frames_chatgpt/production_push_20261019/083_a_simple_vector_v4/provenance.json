@@ -1,0 +1,24 @@
+{
+  "key": "083/a_simple_main",
+  "status": "review_pending",
+  "final_approved": false,
+  "previous_svg_sha256": "5a263f1ec12bf599c82fb007f21f0d2ab34ab9631699949cabdc16fa2f4448e7",
+  "source_reference_sha256": "851a49e31888ed575145abd0d7a5fbcecad4c57ce7a8b3017c59a76a2b6968ba",
+  "changes": [
+    "Replace kinked sampled connector polyline with continuous cubic paths, retaining existing sampled color gradients and widths.",
+    "Smooth ring material sampling seams by source-space Gaussian sigma0.22 inside an exact annular vector clip; ring inner/outer geometry remains unchanged."
+  ],
+  "connector_paths": [
+    "M112 30.90 C168 30.95 250 30.80 310 30.50",
+    "M112 145.00 C146 142.70 154 142.65 210 142.85 C268 142.65 282 142.70 310 145.00"
+  ],
+  "portrait_holes": "inner radius56.8; full interior and antialias boundary must be examined",
+  "unchanged": [
+    "center X source trace and material",
+    "ring positions and radii",
+    "connector widths and sampled colors",
+    "existing files/source/candidates"
+  ],
+  "native_geometry": true,
+  "material_detail_origin": "Source-derived low-resolution RGB; does not claim independent newly painted 2K detail."
+}
