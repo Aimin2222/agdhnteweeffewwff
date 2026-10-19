@@ -1,0 +1,65 @@
+{
+  "count": 4,
+  "new_source_shape_repairs": 0,
+  "review_not_final": 4,
+  "final_approved": 0,
+  "scope": "Fresh side-by-side comparisons from current SHA-verified source/candidate bytes. Native full-pixel final approval is not claimed for these four.",
+  "assets": [
+    {
+      "key": "085/demacia_variant_1",
+      "candidate": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/alpha_cleanup_v1/frames/085/demacia_variant_1.from_cc176ccfd00dea79.alpha0.png",
+      "frame_sha256": "bf670d2aa265525aa3472dd2cacd669907d83e09805fa3ac4868081c0d754647",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/085/demacia_variant_1.source_crop.png",
+      "reference_sha256": "f6be5b26a7d1cb235cc7c54985316730ba4ac5f4fb66cf5b79cf05e6a8f503c6",
+      "decision": "further_detailed_review_required",
+      "findings": [
+        "Exact rounded/diagonal inner portrait-corner transitions require native contour comparison. Do not alter hole shape or formally approve from overall theme similarity alone."
+      ],
+      "final_approved": false,
+      "comparison": "085_demacia_variant_1.png",
+      "old_candidate_modified": false
+    },
+    {
+      "key": "085/ionia_variant_2",
+      "candidate": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/alpha_cleanup_v1/frames/085/ionia_variant_2.from_44703729559348a6.alpha0.png",
+      "frame_sha256": "563fca60415a35f2bf070c04e86df5fda453b80d1f743bbb55b96b38c3695236",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/frames/085/ionia_variant_2.source_crop.png",
+      "reference_sha256": "c82b6b26e6d9e76bf2050fc046896e43bbfe9f84c13aa61b22b4333c4aba0f61",
+      "decision": "further_detailed_review_required",
+      "findings": [
+        "Exact rounded/diagonal inner portrait-corner transitions require native contour comparison. Do not alter hole shape or formally approve from overall theme similarity alone."
+      ],
+      "final_approved": false,
+      "comparison": "085_ionia_variant_2.png",
+      "old_candidate_modified": false
+    },
+    {
+      "key": "089/frosted_frame",
+      "candidate": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/alpha_cleanup_v1/frames/089/frosted_frame.from_786bbd1d49fbe889.alpha0.png",
+      "frame_sha256": "a0699173fd8325013807ec771e3c9bc6ff783a6c1a9347f138fe534f0b237b50",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/089/frosted_frame.source_crop_v5_1.png",
+      "reference_sha256": "5fdbf003d334186485fc4d007550178f48915f39ba56e2f2415f1e3cb67cf4fb",
+      "decision": "further_detailed_review_required",
+      "findings": [
+        "Broad silhouette/palette correspondence is insufficient for final approval. Central ornament facets, branching and negative-space boundaries still require detailed comparison."
+      ],
+      "final_approved": false,
+      "comparison": "089_frosted_frame.png",
+      "old_candidate_modified": false
+    },
+    {
+      "key": "089/ruined_frame",
+      "candidate": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/alpha_cleanup_v1/frames/089/ruined_frame.from_bbef2a59f506a634.alpha0.png",
+      "frame_sha256": "03c4481e9e51bde823bf983bf55cb2cd77a2908151c775d91da80516eac86b2a",
+      "reference": "LoL_AutoCine/assets/kill_frames_chatgpt/full_production_v5/reference_corrections/089/ruined_frame.source_crop_v5_1.png",
+      "reference_sha256": "b3014a38ab7ce22eac92352fe1f9e734e7c1f98a37ccfdc8c373ecfcb8996c50",
+      "decision": "further_detailed_review_required",
+      "findings": [
+        "Broad silhouette/palette correspondence is insufficient for final approval. Central ornament facets, branching and negative-space boundaries still require detailed comparison."
+      ],
+      "final_approved": false,
+      "comparison": "089_ruined_frame.png",
+      "old_candidate_modified": false
+    }
+  ]
+}
