@@ -153,4 +153,3 @@ def test_actual_approved_native_asset_stays_immutable(pack):
         assert image.mode=='RGBA' and image.size==(2520,1050)
         for cx,cy,r in item['portrait_circles']:
             assert image.getpixel((round(cx),round(cy)))[3]==0
-
