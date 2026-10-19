@@ -1,0 +1,50 @@
+{
+  "key": "083/a_simple_main",
+  "version": "vector_v4",
+  "image_quality_review": "passed",
+  "reviewer": "assistant visual production review under user-authorized autonomous QA; not a claim of user-per-image approval",
+  "source_original_sha256": "bb37217ab7f0257bf8b630de68f5910f4f9c6faf6668d1e4b17251408c18c79a",
+  "source_reference_sha256": "851a49e31888ed575145abd0d7a5fbcecad4c57ce7a8b3017c59a76a2b6968ba",
+  "image_sha256": "b1b360c15d860e1fdd12ff01af67f5c1b9693538fa6d2b5babb9c0aa3602440f",
+  "image_dimensions": [
+    2520,
+    1050
+  ],
+  "criteria": [
+    {
+      "requirement": "Source-specific two circular rims, central X, thin top/bottom connectors; proportions and positions maintained",
+      "result": "pass",
+      "evidence": "Source crop and v4 inspected side-by-side at source size on black/gray/white; native joins and X inspected. No extra source-absent decoration."
+    },
+    {
+      "requirement": "Blue left rim, red right rim, silver X and source highlight arrangement",
+      "result": "pass",
+      "evidence": "Source-derived material colors; v3 X material retained; ring seams smoothed inside unchanged annular geometry. Source comparison viewed on all three backgrounds."
+    },
+    {
+      "requirement": "No portraits, text, opaque background, or unexpected marks in negative space",
+      "result": "pass",
+      "evidence": "SVG embeds no source raster. 2301910 tested background pixels have alpha0. Portrait circles and central gap inspected."
+    },
+    {
+      "requirement": "Portrait interiors and outer margin transparent",
+      "result": "pass",
+      "evidence": "720696 strict interior pixels alpha0; outer edge alpha0; analytic inner ring radius56.8, diagnostic radius56.45 in source coordinates."
+    },
+    {
+      "requirement": "High-resolution RGBA with clean editable geometry",
+      "result": "pass",
+      "evidence": "2520x1050 RGBA native SVG render; crisp vector geometry, no bitmap upscale or fake detail. Material color information remains derived from the small original."
+    },
+    {
+      "requirement": "Prior candidate, original, history, badges and app code preserved",
+      "result": "pass",
+      "evidence": "Separate versioned files only; current652 production candidates not overwritten."
+    }
+  ],
+  "known_open_image_defects": [],
+  "material_provenance": "Native editable vector reconstruction; ring/X material sampled from 420x175 source. No independent high-resolution painted detail is claimed.",
+  "quality_scope": "Final static frame image only. Six current-SHA CPU previews are separate deliverables; no game/GPU/37-badge integration or theme-FX approval.",
+  "storage_status": "pending GitHub commit and full byte readback; formal count becomes1 only after receipt verifies this exact image",
+  "supersedes_in_final_image_index_only": "Earlier 083/a_simple_main candidates remain unchanged; no production.json overwrite"
+}

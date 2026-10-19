@@ -1,0 +1,92 @@
+{
+  "id": "D_arcade",
+  "label": "アーケード",
+  "kind": "single_peak_impact_texture",
+  "reference_frame": "LoL_AutoCine/assets/kill_frames_chatgpt/review/ARCADE/066_strong_review_rgba.png",
+  "reference_frame_sha256": "d78a869db77a9b8e733a5c555c11a6763740389f0d8df04a2436fc5dc61f6984",
+  "source_number": "066",
+  "texture": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/frame_based_review_v2/D_arcade/impact_rgba_v2.png",
+  "texture_sha256": "fda15015c8b378cd03c5bbbd80212fb6c33cd80c425970751762f19c8afc324a",
+  "native_dimensions": [
+    1536,
+    1024
+  ],
+  "color_space": "sRGB",
+  "alpha": "straight; premultiply once in compositor",
+  "placement": {
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "coordinates": "normalized texture coordinates",
+    "attach_to": "actual frame center",
+    "aspect": "preserve, do not stretch",
+    "width_relative_to_frame": 0.85,
+    "max_height_relative_to_frame": 1.4,
+    "fit": "min(width_limit/native_width, height_limit/native_height); preserve aspect"
+  },
+  "layer_order": "above frame ornament, below killer/victim portraits; clip all effects out of actual portrait masks",
+  "blend": "source-over baseline; optional linear-light additive with alpha applied once",
+  "new_design_proposal": true,
+  "existing_design_spec": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_specs/review_v1/D/arcade.json",
+  "timeline": {
+    "clock": "seconds relative to kill output timestamp",
+    "pre_kill": "texture opacity=0 for t<0; existing optional anticipation is separate",
+    "appear_s": 0.04,
+    "peak_s": 0.08,
+    "fade_end_s": 0.8,
+    "opacity_keyframes": [
+      [
+        0,
+        0
+      ],
+      [
+        0.04,
+        0.8
+      ],
+      [
+        0.08,
+        1
+      ],
+      [
+        0.2,
+        0.65
+      ],
+      [
+        0.8,
+        0
+      ]
+    ],
+    "scale_keyframes": [
+      [
+        0,
+        0.8
+      ],
+      [
+        0.08,
+        1
+      ],
+      [
+        0.8,
+        1.12
+      ]
+    ],
+    "rotation_degrees": 0
+  },
+  "intensity": {
+    "weak_opacity_multiplier": 0.45,
+    "strong_opacity_multiplier": 1.0,
+    "do_not_recolor": "use source-derived palette"
+  },
+  "design_brief": "True crisp BLOCK-PIXEL neon impact matching the reference cyan, magenta, yellow, white palette. Crossed stepped pixel rays and scattered SQUARE pixel sparks, every main contour built from visible right-angle square-grid steps. No smooth vector wings, smooth feather shapes, crown or solid badge. Retro 8-bit geometry rendered sharply at high resolution with localized glow around the block shapes.",
+  "limits": [
+    "This is one combined peak texture; individual particles are not separately controllable within it.",
+    "Do not replace or modify frame PNG; keep this on a separate effect layer.",
+    "Review material, not a final approved game integration.",
+    "Existing frame images may themselves contain quality defects; reference use does not approve them."
+  ],
+  "qa_warnings": [
+    "Outer-edge alpha residue; strict transparent-margin check pending repair"
+  ],
+  "final_approved": false
+}

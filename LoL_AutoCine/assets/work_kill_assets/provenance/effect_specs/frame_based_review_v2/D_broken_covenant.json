@@ -1,0 +1,92 @@
+{
+  "id": "D_broken_covenant",
+  "label": "Broken Covenant",
+  "kind": "single_peak_impact_texture",
+  "reference_frame": "LoL_AutoCine/assets/kill_frames_chatgpt/review/BROKEN_COVENANT/022_strong_review_rgba.png",
+  "reference_frame_sha256": "aa907d389fb4bcde756a70690b01bd0fd2dc11e878fa5e215c3580da74445a43",
+  "source_number": "022",
+  "texture": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/frame_based_review_v2/D_broken_covenant/impact_rgba.png",
+  "texture_sha256": "46b53083a407a7e947e07fb6ac168222ad760321b799d2bfb0ed8ebc1efe2a82",
+  "native_dimensions": [
+    1536,
+    1024
+  ],
+  "color_space": "sRGB",
+  "alpha": "straight; premultiply once in compositor",
+  "placement": {
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "coordinates": "normalized texture coordinates",
+    "attach_to": "actual frame center",
+    "aspect": "preserve, do not stretch",
+    "width_relative_to_frame": 0.85,
+    "max_height_relative_to_frame": 1.4,
+    "fit": "min(width_limit/native_width, height_limit/native_height); preserve aspect"
+  },
+  "layer_order": "above frame ornament, below killer/victim portraits; clip all effects out of actual portrait masks",
+  "blend": "source-over baseline; optional linear-light additive with alpha applied once",
+  "new_design_proposal": true,
+  "existing_design_spec": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_specs/review_v1/D/broken_covenant.json",
+  "timeline": {
+    "clock": "seconds relative to kill output timestamp",
+    "pre_kill": "texture opacity=0 for t<0; existing optional anticipation is separate",
+    "appear_s": 0.04,
+    "peak_s": 0.08,
+    "fade_end_s": 0.8,
+    "opacity_keyframes": [
+      [
+        0,
+        0
+      ],
+      [
+        0.04,
+        0.8
+      ],
+      [
+        0.08,
+        1
+      ],
+      [
+        0.2,
+        0.65
+      ],
+      [
+        0.8,
+        0
+      ]
+    ],
+    "scale_keyframes": [
+      [
+        0,
+        0.8
+      ],
+      [
+        0.08,
+        1
+      ],
+      [
+        0.8,
+        1.12
+      ]
+    ],
+    "rotation_degrees": 0
+  },
+  "intensity": {
+    "weak_opacity_multiplier": 0.45,
+    "strong_opacity_multiplier": 1.0,
+    "do_not_recolor": "use source-derived palette"
+  },
+  "design_brief": "Crimson and silver stained-glass-like angular splinters, red thorn-shaped light sweeps and tiny white glints matching the gothic frame, no cathedral background.",
+  "limits": [
+    "This is one combined peak texture; individual particles are not separately controllable within it.",
+    "Do not replace or modify frame PNG; keep this on a separate effect layer.",
+    "Review material, not a final approved game integration.",
+    "Existing frame images may themselves contain quality defects; reference use does not approve them."
+  ],
+  "qa_warnings": [
+    "Outer-edge alpha residue; strict transparent-margin check pending repair"
+  ],
+  "final_approved": false
+}

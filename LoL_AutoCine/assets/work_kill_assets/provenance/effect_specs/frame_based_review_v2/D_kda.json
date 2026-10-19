@@ -1,0 +1,92 @@
+{
+  "id": "D_kda",
+  "label": "K/DA",
+  "kind": "single_peak_impact_texture",
+  "reference_frame": "LoL_AutoCine/assets/kill_frames_chatgpt/review/KDA/037_strong_review_rgba.png",
+  "reference_frame_sha256": "bd232760742506a45c8f9221259d2e507098ba7dac2e11795b6c5da004fdfdf0",
+  "source_number": "037",
+  "texture": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/frame_based_review_v2/D_kda/impact_rgba.png",
+  "texture_sha256": "c936985486517fb2727366842066409ec3ce39c53f3ae8b780fe396b0fc03139",
+  "native_dimensions": [
+    1536,
+    1024
+  ],
+  "color_space": "sRGB",
+  "alpha": "straight; premultiply once in compositor",
+  "placement": {
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "coordinates": "normalized texture coordinates",
+    "attach_to": "actual frame center",
+    "aspect": "preserve, do not stretch",
+    "width_relative_to_frame": 0.85,
+    "max_height_relative_to_frame": 1.4,
+    "fit": "min(width_limit/native_width, height_limit/native_height); preserve aspect"
+  },
+  "layer_order": "above frame ornament, below killer/victim portraits; clip all effects out of actual portrait masks",
+  "blend": "source-over baseline; optional linear-light additive with alpha applied once",
+  "new_design_proposal": true,
+  "existing_design_spec": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_specs/review_v1/D/kda.json",
+  "timeline": {
+    "clock": "seconds relative to kill output timestamp",
+    "pre_kill": "texture opacity=0 for t<0; existing optional anticipation is separate",
+    "appear_s": 0.04,
+    "peak_s": 0.08,
+    "fade_end_s": 0.8,
+    "opacity_keyframes": [
+      [
+        0,
+        0
+      ],
+      [
+        0.04,
+        0.8
+      ],
+      [
+        0.08,
+        1
+      ],
+      [
+        0.2,
+        0.65
+      ],
+      [
+        0.8,
+        0
+      ]
+    ],
+    "scale_keyframes": [
+      [
+        0,
+        0.8
+      ],
+      [
+        0.08,
+        1
+      ],
+      [
+        0.8,
+        1.12
+      ]
+    ],
+    "rotation_degrees": 0
+  },
+  "intensity": {
+    "weak_opacity_multiplier": 0.45,
+    "strong_opacity_multiplier": 1.0,
+    "do_not_recolor": "use source-derived palette"
+  },
+  "design_brief": "Violet and electric blue prism stage-light shards with magenta sharp laser streaks, diamond facet glints and intersecting narrow triangular light paths.",
+  "limits": [
+    "This is one combined peak texture; individual particles are not separately controllable within it.",
+    "Do not replace or modify frame PNG; keep this on a separate effect layer.",
+    "Review material, not a final approved game integration.",
+    "Existing frame images may themselves contain quality defects; reference use does not approve them."
+  ],
+  "qa_warnings": [
+    "Outer-edge alpha residue; strict transparent-margin check pending repair"
+  ],
+  "final_approved": false
+}
