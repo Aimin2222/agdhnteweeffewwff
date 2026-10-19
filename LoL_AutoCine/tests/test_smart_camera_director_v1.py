@@ -117,6 +117,15 @@ def test_excluded_fallback_is_not_reintroduced():
         decide_camera('full_auto','RED','fps',excluded=list(SUPPORTED_STYLES))
 
 
+def test_full_auto_multi_kill_wide_guard_applies_after_saved_keyframes():
+    plan=camera.CameraPlan(style='third',kill_time=10.,kill_times=(10.,11.),
+                           scene_keyframes=({'time':0.,'yaw':0.,'zoom':0.,'fov':-40.},))
+    plan.camera_control_mode='full_auto'
+    assert plan.fov_at(10.)>=camera.BASE_FOV
+    plan.camera_control_mode=None
+    assert plan.fov_at(10.)<camera.BASE_FOV
+
+
 def test_runtime_selection_does_not_mutate_template_or_switch_within_clip(monkeypatch):
     monkeypatch.setattr(camera.time,'sleep',lambda _s:None)
     tpl=Template(style='fps')

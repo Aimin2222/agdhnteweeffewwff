@@ -367,7 +367,10 @@ class CameraPlan:
                 base = max(BASE_FOV, base)  # multi-kill: never punch into a narrow FOV
         if not self.scene_keyframes or self.style not in THIRD_STYLES:
             return base
-        return max(32.0, min(100.0, base + self.keyframe_values(t)[2]))
+        value = max(32.0, min(100.0, base + self.keyframe_values(t)[2]))
+        if self.camera_control_mode == "full_auto" and len(self.kill_times) >= 2:
+            value = max(BASE_FOV, value)
+        return value
 
     def _base_fov_at(self, t: float) -> float:
         w = self._cue(t, (-2.0, -0.4, 0.4, 1.8))
