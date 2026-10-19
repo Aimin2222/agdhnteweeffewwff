@@ -18,8 +18,12 @@ def test_work_dialog_defaults_to_only_approved_and_explicit_review_toggle():
     window.withdraw()
     try:
         root.update()
-        body = window.winfo_children()[0]
-        combos = [w for w in body.winfo_children() if isinstance(w,ttk.Combobox)]
+        def descendants(widget):
+            for child in widget.winfo_children():
+                yield child
+                yield from descendants(child)
+        widgets = list(descendants(window))
+        combos = [w for w in widgets if isinstance(w,ttk.Combobox)]
         frames,effects,_ = combos
         assert len(frames['values']) == 2  # off + approved083
         assert len(effects['values']) == 1
@@ -27,7 +31,7 @@ def test_work_dialog_defaults_to_only_approved_and_explicit_review_toggle():
         frames.event_generate('<<ComboboxSelected>>')
         root.update()
         assert apply(app,Template()).work_kill_frame_id == '083/a_simple_main'
-        review = next(w for w in body.winfo_children() if isinstance(w,ttk.Checkbutton))
+        review = next(w for w in widgets if isinstance(w,ttk.Checkbutton))
         review.invoke()
         assert app.var_work_review.get()
         assert len(frames['values']) == 653 and len(effects['values']) == 36
