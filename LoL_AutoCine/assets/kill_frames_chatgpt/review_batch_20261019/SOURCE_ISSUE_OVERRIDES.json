@@ -1,0 +1,26 @@
+{
+  "historical_candidate_status_unchanged": true,
+  "override_count": 3,
+  "newly_identified_issue_count": 1,
+  "previously_documented_issue_count": 2,
+  "assets": [
+    {
+      "key": "001/elderwood_weak",
+      "kind": "documented_source_shape_difference",
+      "evidence": "complete_review_20261018/VISUAL_FOLLOWUP_20261019.json",
+      "note": "以前の個別追跡ですでに中央の角・葉の質量と比率差が記録されている。今回の並列比較でも確認。旧candidate_statusのshape_repair=falseを合格根拠にしない。"
+    },
+    {
+      "key": "001/elderwood_strong",
+      "kind": "documented_source_shape_difference",
+      "evidence": "complete_review_20261018/VISUAL_FOLLOWUP_20261019.json",
+      "note": "以前の個別追跡ですでに角の枝分かれと中央飾りの比率差が記録されている。今回の並列比較でも確認。"
+    },
+    {
+      "key": "003/kda_variant_1",
+      "kind": "missing_source_emblem",
+      "evidence": "sheet_02.jpg, slot13; current source and candidate also inspected individually",
+      "note": "原本の中央プレートにあるK/DA図案が現行候補から完全に欠ける。参照内の顔や説明文とは異なり、フレーム内の中央モチーフとして扱い修正が必要。"
+    }
+  ]
+}

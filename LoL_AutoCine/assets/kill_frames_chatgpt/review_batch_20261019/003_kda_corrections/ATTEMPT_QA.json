@@ -1,0 +1,57 @@
+{
+  "key": "003/kda_variant_1",
+  "attempt_count": 2,
+  "final_approved": 0,
+  "old_candidate_unchanged": true,
+  "assets": [
+    {
+      "attempt": 1,
+      "image": "003_kda_corrections/attempt_1.png",
+      "sha256": "433a51d4c0048c97f5f62233884f51b1fdc3958898669c1c3a827abc2ab9c938",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "native_long_edge_at_least_2048": true,
+      "edge_nonzero": 108,
+      "alpha1_pixels": 31640,
+      "alpha2_or3_pixels": 18341,
+      "status": "rejected_not_final",
+      "logo_presence_improved": true,
+      "final_approved": false,
+      "adopted": false,
+      "reasons": [
+        "ロゴの欠落を補ったが、原本の細い図案と同一形状とは未確認。",
+        "旧候補から引き継いだ枠と中央プレートの比率差が残る。"
+      ],
+      "tool": "built-in image_gen",
+      "paid_api_used": false
+    },
+    {
+      "attempt": 2,
+      "image": "003_kda_corrections/attempt_2.png",
+      "sha256": "5707c3bd57e26dd4559b731843881840aa593aee6f51b51b5660aefb1c1d98c0",
+      "dimensions": [
+        1704,
+        923
+      ],
+      "mode": "RGBA",
+      "native_long_edge_at_least_2048": false,
+      "edge_nonzero": 22,
+      "alpha1_pixels": 43409,
+      "alpha2_or3_pixels": 20578,
+      "status": "rejected_not_final",
+      "logo_presence_improved": true,
+      "final_approved": false,
+      "adopted": false,
+      "reasons": [
+        "肖像開口の縦横比を修正しようとしたが、原本にない四隅の大きな棘を保持している。",
+        "肖像穴の縁に青い残りが見え、原本と同じ開口輪郭とは認められない。",
+        "原寸長辺1704pxで要件2048px未満。拡大や余白追加で合格にしない。"
+      ],
+      "tool": "built-in image_gen",
+      "paid_api_used": false
+    }
+  ]
+}
