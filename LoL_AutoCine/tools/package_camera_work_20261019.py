@@ -31,7 +31,7 @@ def main():
                  distribution='source Windows test build; Python and C++ tools not bundled',
                  real_lol_visual_qa='not_performed')
     manifest=[]
-    full=output/'LoL_AutoCine_CameraWork_20261019_Windows_Test_Full.zip'
+    full=output/'LoL_AutoCine_20261020_Windows_Test_Full.zip'
     delta=output/'LoL_AutoCine_CameraWork_20261019_Codex_Code_Delta.zip'
     for target,selected in ((full,files),(delta,[n for n in files if n in changed and Path(n).suffix.lower()!='.png'])):
         with ZipFile(target,'w',compression=ZIP_DEFLATED,compresslevel=4) as archive:
@@ -42,12 +42,11 @@ def main():
                 if target==full: manifest.append(dict(path=name,bytes=len(data),sha256=hashlib.sha256(data).hexdigest()))
             archive.writestr('BUILD_INFO.json',json.dumps(version,indent=2))
             archive.writestr('README_TEST_JA.txt',
-                '実機未確認の統合テスト版です。旧版と別フォルダに展開してください。\n'
-                '手順: LoL_AutoCine/docs/CAMERA_WORK_WINDOWS_TEST_20261019_JA.md\n'
+                '2026-10-20の修正を含むWindowsテスト版です。新しいフォルダに展開してください。\n'
+                '起動: LoL_AutoCine/START.bat\n'
+                'テスト順: LoL_AutoCine/docs/QA_FOLLOWUP_20261020_JA.md\n'
                 'Python 3.12 x64を自動検出して初回セットアップします。pyは必須ではありません。Native Audio Helper構築フローは既存通りです。\n'
-                'Code_Deltaには新しいPNGを入れていません。Full版または次の明示ダウンロードで補完します:\n'
-                'python tools/import_work_assets.py --cache work_asset_cache --download\n'
-                'GitHub最新開発ブランチの取得を優先し、異なる版への無条件上書きは避けてください。\n')
+                'このFull版には現在のコードとWork素材を同梱しています。\n')
         with ZipFile(target) as archive:
             assert archive.testzip() is None
         print(target.name,target.stat().st_size,flush=True)
