@@ -482,7 +482,8 @@ class FocusCircleViz(tk.Canvas):
 
 
 def _render_live_preview(request):
-    source, width, height, template, title, split, canvas_width, canvas_height = request
+    source, width, height, template, title, split, canvas_width, canvas_height = request[:8]
+    work_context = request[8] if len(request) > 8 else None
     frame = source.latest()
     if frame is None:
         return None
@@ -498,6 +499,9 @@ def _render_live_preview(request):
         rgb = apply_video_effect_preview(rgb, template, phase=0.5)
         rgb = compose_compare(rgb, template, title, split)
     image = Image.fromarray(rgb)
+    if template is not None and work_context:
+        from ui.director_work_controls import composite_mirror
+        image = composite_mirror(image, template, work_context)
     ratio = min(canvas_width / image.width, canvas_height / image.height)
     if ratio != 1:
         image = image.resize((max(1, round(image.width * ratio)),
@@ -562,6 +566,8 @@ class App:
         self.var_auto_director_strength = tk.DoubleVar(value=1.0)
         self.var_smart_highlight_style = tk.StringVar(value=SMART_STYLES['auto'])
         self.var_smart_highlight_enabled = tk.BooleanVar(value=False)
+        from ui.director_work_controls import initialize as initialize_director_work
+        initialize_director_work(self)
         self.var_kill_icon_style = tk.StringVar(value=KILL_ICON_STYLES['off'])
         self.var_kill_icon_position = tk.StringVar(value=KILL_ICON_POSITIONS['right-top'])
         self.var_kill_icon_motion = tk.StringVar(value=KILL_MOTIONS['instant'])
@@ -972,6 +978,8 @@ class App:
                      values=list(SMART_STYLES.values()), width=31).pack(side="left", fill="x", expand=True)
         ttk.Label(easy, text="戦闘を見せる→キル直前に寄る→瞬間を短く強調→自然に戻る。通常の自動作成には影響しません。",
                   style="CardMuted.TLabel", wraplength=850).pack(anchor="w")
+        from ui.director_work_controls import build as build_director_work
+        build_director_work(self, easy)
         badge_easy = ttk.Frame(easy, style="Card.TFrame")
         badge_easy.pack(fill="x", pady=(8, 2))
         ttk.Label(badge_easy, text="キルアイコン装飾", style="Card.TLabel", width=16).pack(side="left")
@@ -3314,6 +3322,8 @@ class App:
             v.set(getattr(t, k))
         self.var_tr.set(TRANSITIONS.get(t.transition, t.transition))
         self.var_montage_fx.set(MONTAGE_LABELS.get(getattr(t,"montage_fx","cut"),MONTAGE_LABELS["cut"]))
+        from ui.director_work_controls import restore as restore_director_work
+        restore_director_work(self, t.to_dict())
         self.var_kill_icon_style.set(KILL_ICON_STYLES.get(getattr(t, "kill_icon_style", "off"), KILL_ICON_STYLES["off"]))
         self.var_kill_icon_position.set(KILL_ICON_POSITIONS.get(getattr(t, "kill_icon_position", "right-top"), KILL_ICON_POSITIONS["right-top"]))
         self.var_kill_icon_motion.set(KILL_MOTIONS.get(getattr(t, "kill_icon_motion", "instant"), KILL_MOTIONS["instant"]))
@@ -3486,6 +3496,8 @@ class App:
                               if label == self.var_camera_side.get()), "auto")
         # LoLミラー/カメラは144Hzで内部サンプリングし、最終出力FPSだけUI選択値へ合わせる。
         # これで60fps書き出しでも、カメラ演出の元データを144Hzで保持できる。
+        from ui.director_work_controls import apply as apply_director_work
+        apply_director_work(self, t)
         t.capture_fps = 144
         try:
             fps = int(str(self.var_fps_ui.get()).split()[0])
@@ -3595,6 +3607,8 @@ class App:
             if restored_mode in ("easy", "advanced"):
                 self.var_edit_mode.set(restored_mode)
                 self._apply_edit_mode(log=False)
+            from ui.director_work_controls import restore as restore_director_work
+            restore_director_work(self, d)
             # A prior _apply_panel_widths() call also saves settings; persist
             # the fully restored edit/HUD modes to avoid erasing preferences.
             self._save_settings()
@@ -3603,7 +3617,8 @@ class App:
 
     def _save_settings(self) -> None:
         try:
-            SETTINGS.write_text(json.dumps({"out_root": str(self.out_root),
+            from ui.director_work_controls import values as director_work_values
+            SETTINGS.write_text(json.dumps({**director_work_values(self), "out_root": str(self.out_root),
                                              "preview_quality": self.var_preview_quality.get(),
                                              "left_width": int(self.var_left_width.get()),
                                              "right_width": int(self.var_right_width.get()),
@@ -4148,7 +4163,7 @@ class App:
         if self._match_scan_cache and self._match_scan_cache.complete:
             self._filter_scanned_for_locked()
         director_strength = None
-        if self.var_auto_director.get():
+        if self.var_auto_director.get() and (not hasattr(self, "var_camera_control_mode") or self.var_camera_control_mode.get() != "従来の手動カメラ"):
             try:
                 director_strength = self._auto_director_gain()
                 self._apply_auto_director()
@@ -4348,7 +4363,9 @@ class App:
                 # Native display quality is opt-in; default keeps controls responsive.
                 # GPU Full is still used by export; live display is CPU/PIL.
                 self._live_preview.submit(key, (self.source, process_w, process_h,
-                                               t, title, split, cw, ch))
+                                               t, title, split, cw, ch,
+                                               (self.api, [k.to_dict() for k in self.kills],
+                                                [p.to_dict() for p in self.players])))
                 if result is not None and result is not self._preview_presented:
                     image, original = result[1]
                     self._photo = ImageTk.PhotoImage(image)
