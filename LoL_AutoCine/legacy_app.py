@@ -598,7 +598,11 @@ class App:
         self.scene_project_path = ROOT / 'projects' / 'scene_project.json'
         self._project_autosave_token = None
         self._scene_loading = False
-        self._live_preview = LatestPreview(_render_live_preview)
+        self._live_preview = LatestPreview(_render_live_preview,
+            fallback=lambda request: _render_live_preview((*request[:3], None, '', 0., *request[6:8])),
+            on_error=lambda message: self.q.put(('preview_error', message)))
+        self._capture_preview_source = None
+        self._capture_preview_enabled = True
         self._preview_presented = None
         self._preview_snapshot = None
         self._preview_input_at = 0.0
@@ -2499,6 +2503,13 @@ class App:
                         messagebox.showwarning("キルフレーム", a[1], parent=self.root)
                     elif not self._closing:
                         self._show_badge_preview(a[0])
+                elif kind == "capture_preview_ready":
+                    self._capture_preview_source = a[0]
+                    if self._capture_preview_enabled:
+                        self.var_mirror.set(True)
+                        self.log("録画用のLoL映像をミラーへ表示します（同じ映像入力を共有）。")
+                elif kind == "preview_error":
+                    self.log("ミラー描画エラー（演出が原因の場合は元映像へ戻します）: " + str(a[0]))
                 elif kind == "mirror_ready":
                     token, source, error = a
                     if self._mirror.accept(token, source, error):
@@ -4088,6 +4099,7 @@ class App:
         else:
             src = WGCWindowSource()
         src.start()
+        self.q.put(("capture_preview_ready", src))
         return src, True
 
     def on_make_clips(self) -> None:
@@ -4250,7 +4262,15 @@ class App:
 
     # ミラー (LoLウィンドウのみ)
     def on_mirror_start(self) -> None:
-        if self._closing or self.busy or self._mirror.pending:
+        if self._closing:
+            return
+        self._capture_preview_enabled = True
+        if self.busy:
+            self.var_mirror.set(True)
+            self.log("撮影準備・撮影中です。録画用の映像が届き次第ミラーに表示します。")
+            return
+        if self._mirror.pending:
+            self.log("ミラーの映像入力を準備中です。")
             return
         if self.source is not None:
             if self.source.running:
@@ -4268,8 +4288,12 @@ class App:
 
     def on_mirror_stop(self, reason: str = "操作または再接続") -> None:
         self.log(f"ミラーを停止します（理由: {reason}）")
-        self._mirror.stop()
-        self.source = None
+        self._capture_preview_enabled = False
+        if not self.busy:
+            self._mirror.stop()
+            self.source = None
+        else:
+            self.log("撮影中のため映像入力は維持し、ミラー表示だけを停止します。")
         self.canvas.delete("all")
         self._preview_image_item = self._preview_text_item = None
         self._preview_presented = None
@@ -4347,7 +4371,12 @@ class App:
         editing = time.monotonic() - self._preview_input_at < .25
         try:
             cw, ch = max(160, self.canvas.winfo_width()), max(90, self.canvas.winfo_height())
-            if self.source is not None and self.source.running:
+            source = self.source
+            if source is None or not source.running:
+                source = getattr(self, '_capture_preview_source', None)
+            if not getattr(self, '_capture_preview_enabled', True):
+                source = None
+            if source is not None and source.running:
                 # Snapshot Tk values here. The worker gets only data and the capture source.
                 t, settings_key = self._preview_template_snapshot() if preview_fx else (None, '')
                 title = preview_title(t, self._selected_multikill()) if t is not None else ''
@@ -4356,13 +4385,13 @@ class App:
                     process_w, process_h = cw, ch
                 else:
                     process_w, process_h = (640, 360) if editing else (960, 540)
-                key = (id(self.source), cw, ch, process_w, process_h, settings_key, title, split)
+                key = (id(source), cw, ch, process_w, process_h, settings_key, title, split)
                 result = self._live_preview.result(key)
                 # During drags/scrolls lower only the approximate mirror workload.
                 # Export templates, recording clocks and output resolution are untouched.
                 # Native display quality is opt-in; default keeps controls responsive.
                 # GPU Full is still used by export; live display is CPU/PIL.
-                self._live_preview.submit(key, (self.source, process_w, process_h,
+                self._live_preview.submit(key, (source, process_w, process_h,
                                                t, title, split, cw, ch,
                                                (self.api, [k.to_dict() for k in self.kills],
                                                 [p.to_dict() for p in self.players])))
@@ -4399,8 +4428,16 @@ class App:
                                         text="LoLミラーを開始するとここに実映像が表示されます")
         except (ValueError, tk.TclError):
             pass  # A numeric entry may be temporarily empty while the user edits it.
-        delay = 167 if editing else (100 if self.busy and not preview_fx else (67 if preview_fx else 50))
-        self.root.after(delay, self._preview_tick)
+        except Exception as error:
+            now = time.monotonic()
+            if now - getattr(self, '_preview_tick_error_at', 0.) >= 5.:
+                self._preview_tick_error_at = now
+                self.log(f"ミラー更新エラー（更新は継続します）: {type(error).__name__}: {error}")
+                _diag_write(CRASH_LOG, "MIRROR_PREVIEW_ERROR\n" + traceback.format_exc())
+        finally:
+            if not self._closing:
+                delay = 167 if editing else (100 if self.busy and not preview_fx else (67 if preview_fx else 50))
+                self.root.after(delay, self._preview_tick)
 
     def on_exact_still(self) -> None:
         try:

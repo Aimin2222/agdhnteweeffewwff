@@ -2,11 +2,16 @@
 from __future__ import annotations
 
 import threading
+import time
 
 
 class LatestPreview:
-    def __init__(self, render):
+    def __init__(self, render, *, fallback=None, on_error=None):
         self._render = render
+        self._fallback = fallback
+        self._on_error = on_error
+        self._last_error = None
+        self._last_error_at = 0.
         self._lock = threading.Lock()
         self._wake = threading.Event()
         self._pending = None
@@ -50,8 +55,18 @@ class LatestPreview:
             key, request = job
             try:
                 value = self._render(request)
-            except Exception:
+            except Exception as exc:
                 value = None  # A stopped capture source must not kill the UI worker.
+                message = f'{type(exc).__name__}: {exc}'
+                now = time.monotonic()
+                if message != self._last_error or now-self._last_error_at >= 5.:
+                    self._last_error, self._last_error_at = message, now
+                    if self._on_error:
+                        try: self._on_error(message)
+                        except Exception: pass
+                if self._fallback:
+                    try: value = self._fallback(request)
+                    except Exception: pass
             with self._lock:
                 if not self._closed and key == self._key and value is not None:
                     self._result = (key, value)
