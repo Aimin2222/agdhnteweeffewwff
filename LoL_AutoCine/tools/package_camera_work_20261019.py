@@ -44,7 +44,7 @@ def main():
             archive.writestr('README_TEST_JA.txt',
                 '実機未確認の統合テスト版です。旧版と別フォルダに展開してください。\n'
                 '手順: LoL_AutoCine/docs/CAMERA_WORK_WINDOWS_TEST_20261019_JA.md\n'
-                'Python 3.12 x64/pyランチャー、依存セットアップ、既存Native Audio Helper構築が必要です。\n'
+                'Python 3.12 x64を自動検出して初回セットアップします。pyは必須ではありません。Native Audio Helper構築フローは既存通りです。\n'
                 'Code_Deltaには新しいPNGを入れていません。Full版または次の明示ダウンロードで補完します:\n'
                 'python tools/import_work_assets.py --cache work_asset_cache --download\n'
                 'GitHub最新開発ブランチの取得を優先し、異なる版への無条件上書きは避けてください。\n')
