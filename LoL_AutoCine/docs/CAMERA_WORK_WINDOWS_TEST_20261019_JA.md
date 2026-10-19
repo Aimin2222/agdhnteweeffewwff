@@ -13,7 +13,7 @@ Work参照は `chatgpt/killframes-source-numbering-20261014` の `30fdce48dd83a2
 ## 用意するもの・起動
 
 1. Full ZIPを旧版と別の短いフォルダへ展開する。録画・既存設定を上書きしない。
-2. Python 3.12の64bit版とpyランチャーを用意し、LoL_AutoCine内のSETUP_DEV_ENV.batを実行する。検証に使った依存の固定一覧はrequirements-recovery-20261018.txt。ZIPはソース配布で、Python・C++ Build Toolsを内包しない。
+2. 更新版START.batは利用可能なPython 3.12 x64（Codex付属も含む）を自動検出し、初回にアプリ内.venvと依存を準備する。pyランチャーは必須ではない。明示的な再セットアップにはSETUP_DEV_ENV.batを使う。依存の固定一覧はrequirements-recovery-20261018.txt。Python・C++ Build Tools自体はZIPに内包しない。
 3. START.batで起動。Native Audio Helper未配置なら、既存のBUILD_AUDIO_HELPER/Build Tools導入フローが必要。初回には管理者確認や大きなダウンロードが発生しうる。本環境ではHelperの再ビルド・LoLプロセス録音は未検証。
 4. 同じパッチで再生できるリプレイ、BLUE/RED双方の対象プレイヤー、単独キルと連続キルを用意する。ゲームクライアント・録画先の空き容量も確認する。
 5. NVIDIAドライバーを確認。検証機ではGTX 1070 TiのNVENCが動作。標準FFmpegにprogram_openclがないためCPUエフェクトへ戻る。START_GPU.batなど既存経路は維持しているが、追加FFmpeg導入の成功を本版の結果とは扱わない。

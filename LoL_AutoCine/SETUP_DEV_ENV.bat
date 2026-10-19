@@ -1,15 +1,10 @@
 @echo off
 setlocal EnableExtensions
 cd /d "%~dp0"
-rem Optional launcher version, e.g. SETUP_DEV_ENV.bat -3.12
-set "PY_VERSION=-3"
+set "PY_VERSION=3.12"
 if not "%~1"=="" set "PY_VERSION=%~1"
-if not exist ".venv\Scripts\python.exe" (
-  py %PY_VERSION% -m venv .venv
-  if errorlevel 1 exit /b 2
-)
-echo Installing development dependencies into .venv only...
-".venv\Scripts\python.exe" -m pip install -r requirements-dev.txt
-if errorlevel 1 exit /b 3
-".venv\Scripts\python.exe" -m pip check
-exit /b %ERRORLEVEL%
+"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File "%~dp0tools\bootstrap_python.ps1" -Mode Setup -RequestedVersion "%PY_VERSION%"
+set "RC=%ERRORLEVEL%"
+if not "%RC%"=="0" echo Setup failed. Read the error above, then try again.
+pause
+exit /b %RC%

@@ -27,11 +27,7 @@ if not exist "tools\bin\lol_audio_helper.exe" (
 
 echo [Audio] Native LoL audio helper is ready.
 echo [App] Starting LoL AutoCine...
-if exist ".venv\Scripts\python.exe" (
-  ".venv\Scripts\python.exe" app.py
-) else (
-  py -3 app.py
-)
+"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File "%~dp0tools\bootstrap_python.ps1" -Mode Start
 set "RC=%ERRORLEVEL%"
 echo.
 echo LoL AutoCine exited with code %RC%.
