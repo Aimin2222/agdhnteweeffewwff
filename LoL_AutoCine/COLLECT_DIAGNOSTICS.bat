@@ -2,9 +2,8 @@
 setlocal EnableExtensions
 cd /d "%~dp0"
 echo Collecting ALL AutoCine diagnostics...
-py -3 "tools\collect_diagnostics.py"
-if errorlevel 1 (
-    python "tools\collect_diagnostics.py"
-)
+"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File "%~dp0tools\bootstrap_python.ps1" -Mode Diagnostics
+set "RC=%ERRORLEVEL%"
 echo.
 pause
+exit /b %RC%

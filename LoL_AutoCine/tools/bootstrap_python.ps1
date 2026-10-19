@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('Start', 'Setup', 'Probe')][string]$Mode = 'Start',
+    [ValidateSet('Start', 'Setup', 'Probe', 'Diagnostics')][string]$Mode = 'Start',
     [string]$RequestedVersion = '3.12'
 )
 $ErrorActionPreference = 'Stop'
@@ -51,6 +51,11 @@ try {
     }
     Write-Host "[Python] Found: $python"
     if ($Mode -eq 'Probe') { exit 0 }
+    if ($Mode -eq 'Diagnostics') {
+        # The collector uses only the standard library. Never require pip or LoL.
+        & $python (Join-Path $appRoot 'tools\collect_diagnostics.py')
+        exit $LASTEXITCODE
+    }
 
     $venv = Join-Path $appRoot '.venv\Scripts\python.exe'
     if (-not (Test-Path -LiteralPath $venv -PathType Leaf)) {

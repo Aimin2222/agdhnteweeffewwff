@@ -71,3 +71,20 @@ def test_start_bat_preserves_audio_helper_and_app_exit_code_without_py(tmp_path)
     assert result.returncode==23,result.stdout+result.stderr
     assert b'BOOTSTRAP_APP_STARTED' in result.stdout and b'exited with code 23' in result.stdout
     assert helper.read_bytes()==b'launcher fixture; never executed'
+
+
+def test_diagnostics_without_py_or_dependencies_creates_zip(tmp_path):
+    app,env=setup_folder(tmp_path)
+    env['AUTOCINE_PYTHON']=sys.executable
+    shutil.copy2(ROOT/'COLLECT_DIAGNOSTICS.bat',app/'COLLECT_DIAGNOSTICS.bat')
+    shutil.copy2(ROOT/'tools/collect_diagnostics.py',app/'tools/collect_diagnostics.py')
+    (app/'diagnostics').mkdir()
+    (app/'diagnostics/runtime.log').write_text('mirror evidence')
+    result=subprocess.run([str(Path(env['SYSTEMROOT'])/'System32/cmd.exe'),'/d','/c','COLLECT_DIAGNOSTICS.bat'],
+        cwd=app,env=env,input=b'\n',capture_output=True,timeout=30)
+    assert result.returncode==0,result.stdout+result.stderr
+    from zipfile import ZipFile
+    with ZipFile(app/'AutoCine_Diagnostics.zip') as archive:
+        assert archive.read('diagnostics/runtime.log')==b'mirror evidence'
+        assert 'diagnostics/collector_environment.json' in archive.namelist()
+    assert not (app/'.venv').exists()  # collection must not install app dependencies
