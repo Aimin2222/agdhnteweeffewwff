@@ -203,6 +203,9 @@ class Template:
     kill_icon_motion: str = "instant"  # badge entrance, legacy behavior by default
 
     auto_director_strength: float | None = None  # appended; None preserves legacy camera motion
+    camera_control_mode: str | None = None
+    camera_auto_excluded: list = field(default_factory=list)
+    camera_auto_qa_approved: dict = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         from .kill_icons import normalize_motion

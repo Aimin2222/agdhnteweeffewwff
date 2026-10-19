@@ -47,3 +47,36 @@
 
 環境復旧→既存回帰→旧モード出力の固定→固定視点補正→自動選択→Windows同一シーンQA→必要なモードだけ修正→配布。
 90°/180°、BLUE/RED、PRE/KILL/POST、複数キル、API遅延／欠損、座標stale、無効値、候補なし、旧データ再読込、録画非開始、同期を自動検証する。最終画角・ターゲット視認・操作性・LoL音だけの収録はWindows実機で確認する。
+
+
+## 2026-10-19 実装追記（数値検証済み・LoL実映像QA未確認）
+
+前節までは10月18日の設計記録。本節の変更は復旧版 de453046 を基準にした追加であり、過去の動画を再視聴したという意味ではない。privateのBLUE/REDテスト動画は取得できていないため、BLUE6/9/10・RED1/3の最終的な原因確定とRED2/4/5の映像比較は保留する。
+
+### 実装した契約
+
+- Templateの`camera_control_mode=None`は旧挙動を数値維持する。`manual`では新しい自動補正を無効化し、保存済み手動値は消去しない。`fixed_auto`は選択styleを維持。`full_auto`は録画前の1クリップ1種類だけ決め、実行中にstyleを切り替えない。
+- `core/smart_camera_director.py`は純粋な選択関数。入力はモード、BLUE/RED、選択style、有限なイベント時刻、明示QA承認台帳、除外リスト。敵3D座標や画面内の人物検出は行わない。
+- `camera_auto_qa_approved`は`{"BLUE": ["third"], "RED": [...]}`形式。初期は空。過去の良好カメラ番号を自動転記しない。明示承認されたstyleだけ自動選択候補にする。
+- `camera_auto_excluded`はstyle名で両サイド除外、`BLUE:third`/`RED:third`で片サイド除外。除外styleをfallbackにも採用しない。候補がない場合は指定styleの固定補正へ戻り、指定styleも除外されていれば安全なtopへ戻る。これは視覚品質の合格判定ではない。
+- 単独イベントはthird_cinema→third→lolnam_cinema→cinema_top→follow→cinema→top→geo_aim→fps→orbit、複数イベントはcinema_top→top→third→third_cinema→follow→cinema→geo_aim→lolnam_cinema→fps→orbitの順。候補台帳に存在するものだけ採用する決定的な初期順序。実機比較後に変更可能。
+
+### 軸・追従の安全策と旧機能保護
+
+旧校正はtop側のEulerからpitch軸を推定するため、stale座標と別styleの回転を組み合わせると、yawをrollへ送り上下反転する経路がある。v5.10.27ですでに対象/モードごとのcache分離、7モードの軸修正が導入されている。本変更はこの旧修正を重複実装せず、新モードだけ同じ安全契約を全fps系/Orbitへ拡張する。
+
+- 新モードは`safe_axes=True`で同じ対象のtop/fps基準ペアを読み、選択名・attached・mode・ZERO offset・有限座標・距離・高さが不一致なら最大2回再取得する。成立しなければ既存topへ戻る。過去の絶対Pや別styleのcacheは採用しない。
+- 新モードcacheには`smart_v1`区分を付け、旧手動校正を汚染しない。旧NoneのRED FPS/geo_aimやRED2/4/5用の数値調整は変更しない。
+- 位置から視線を毎回算出し、X=yaw/Y=下向きpitch/Z=0を使用。144Hz計算→offset平滑化→API遅延時の移動制限の後、**実際に送るoffset**から再度視線を算出する。これにより90/180度や角度境界で位置と向きの時刻を分離しない。
+- 新モードの明示手動yawは0/90/180度をそのまま保持し、自動keyframe/kill補正だけ既存の±55度範囲に制約する。旧Noneのclamp数値は維持。
+- 新モードOrbitは旧実験モードのcue外半径0を避け、既存third距離/高さを基準に相対公転する。旧手動Orbitは変更しない。
+- 新モードは既存FOV範囲32〜100度とtarget_center_rotationの14〜72度に合わせて有限な相対poseを構成する。複数キルのfull_autoはFOVを既存基本60度未満にしない。無効poseは有限な相対rear offset `(0,650,-1050)`へ戻し、理由を一度ログへ記録する。これは暫定安全境界であり、見た目の最適値を実測したものではない。
+- `_vec`でNaN/Infinityを拒否し、位置検証の`NaN > threshold == False`による誤合格を防ぐ。通常の有限入力結果は変わらない。
+- 録画前の最終pose読み戻しを新モードに適用。新モードのプレビューも同じ確認を行う。確認失敗時は録画/音声開始前に中止する既存経路を利用する。
+- フルオートでstyleが変化した場合の録画timeoutだけ既存最低シネマ速度0.35を考慮。音声/GPU/録画のクロック、SmoothReplayClock、API更新頻度、HUD復帰は維持。
+
+### 診断と検証範囲
+
+`SMART_CAMERA_DECISION`にモード、対象サイド、元style/採用style、イベント時刻、理由、fallbackを保存。`SMART_CAMERA_FALLBACK`に基準不成立または無効poseと`visual_qa_pass:false`を記録。既存`CAMERA_QA_BASELINE`/`CAMERA_QA_POSE`/`CAMERA_QA_INITIAL_POSE`とAPI遅延診断を引き続き使用する。個人名や診断生ログを公開Gitへ追加しない。
+
+`tests/test_smart_camera_director_v1.py`はBLUE/RED×全10style×固定/フルオート×0/90/180度、同一選択2回、送信時の追従向き、低速API、欠損/stale/non-finite、明示manual、台帳とサイド別除外、決定再現性、複数キル優先順位、Template実保存/再読込を検査する。これらは数値・制御契約の検証。人物の可視性、地形遮蔽、FPSらしさ、RED2/4/5の実映像回帰、上下反転の見た目はWindowsの同一リプレイ比較で別途判定する。
