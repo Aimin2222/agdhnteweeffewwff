@@ -81,7 +81,15 @@ def open_settings(app):
     body.bind('<Configure>', lambda _event: canvas.configure(scrollregion=canvas.bbox('all')))
     canvas.bind('<Configure>', lambda event: canvas.itemconfigure(window_id, width=event.width))
     win.bind('<MouseWheel>', lambda event: canvas.yview_scroll(-int(event.delta / 120), 'units'))
-    ttk.Label(body, text='正式合格：No.083 A。未合格素材は確認用の明示選択のみ。', wraplength=790).pack(anchor='w')
+    frames = list_assets('frames', review=True)
+    effects = list_assets('effects', review=True)
+    approved_frames = sum(item['status'] == 'approved' for item in frames)
+    approved_effects = sum(item['status'] == 'approved' for item in effects)
+    ttk.Label(body, text=f'キルフレーム {len(frames)}候補（正式合格{approved_frames}）／'
+                         f'エフェクト {len(effects)}案（正式合格{approved_effects}）。',
+              wraplength=790).pack(anchor='w')
+    ttk.Label(body, text='未合格素材は確認用の明示選択のみ。肖像穴が未検証の候補は原画確認に限定します。',
+              wraplength=790).pack(anchor='w')
     ttk.Label(body, text='Work素材を選ぶと既存37キルバッジに代わって表示します。オフで既存設定へ戻ります。', wraplength=790).pack(anchor='w')
     ttk.Label(body, text='選択したWork素材はキル時にミラーへ表示します。動画全体のFX表示は別スイッチです。', wraplength=790).pack(anchor='w')
     ttk.Label(body, text='肖像穴が未検証の候補は原画確認のみ。合成出力は穴の検証完了後に使用できます。', wraplength=790).pack(anchor='w')
@@ -106,6 +114,12 @@ def open_settings(app):
                 var.set(next((k for k, v in mapping.items() if v == selected.get()), 'オフ'))
         except (OSError, ValueError) as exc:
             app.log(f'Work素材台帳を開けません: {exc}')
+
+    def select_approved():
+        app.var_work_frame.set('083/a_simple_main')
+        refresh()
+
+    ttk.Button(body, text='正式合格 No.083 A を選択', command=select_approved).pack(fill='x', pady=(8, 2))
 
     ttk.Checkbutton(body, text='未合格素材を確認・テスト用に表示する（品質合格にはなりません）',
                     variable=app.var_work_review, command=refresh).pack(anchor='w', pady=8)

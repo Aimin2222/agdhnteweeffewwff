@@ -27,6 +27,13 @@ def test_work_dialog_defaults_to_only_approved_and_explicit_review_toggle():
         frames,effects,_ = combos
         assert len(frames['values']) == 2  # off + approved083
         assert len(effects['values']) == 1
+        labels = [w.cget('text') for w in widgets if isinstance(w, ttk.Label)]
+        assert any('652候補（正式合格1）' in text and '35案（正式合格0）' in text
+                   for text in labels)
+        approved_button = next(w for w in widgets if isinstance(w, ttk.Button)
+                               and 'No.083 A' in w.cget('text'))
+        approved_button.invoke()
+        assert app.var_work_frame.get() == '083/a_simple_main'
         frames.current(1)
         frames.event_generate('<<ComboboxSelected>>')
         root.update()

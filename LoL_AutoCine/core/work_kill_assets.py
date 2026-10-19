@@ -247,44 +247,69 @@ def render_preview_pair(template, icon_a, icon_b, elapsed, *, size=(1920, 1080),
     Icons are resolved real champion PNG paths. No text or fabricated portrait.
     """
     from PIL import Image
-    native = _render_preview_native(template, icon_a, icon_b, elapsed, row=row)
-    return native if size == (1920, 1080) else native.resize(size, Image.Resampling.LANCZOS)
+    # Render at the mirror's actual size. Building a 1080p canvas and scaling
+    # it back down for every frame was the dominant Work-preview CPU cost.
+    return _render_preview_native(template, icon_a, icon_b, elapsed, row=row, size=size)
 
 
-def _render_preview_native(template, icon_a, icon_b, elapsed, *, row=0):
+def _preview_layers(template, icon_a, icon_b, size, scale):
+    frame_id = template.work_kill_frame_id
+    effect_id = getattr(template, 'work_kill_effect_id', '')
+    review = bool(getattr(template, 'work_kill_review', False))
+    _, frame_path = resolve_asset(frame_id, review=review)
+    effect_path = resolve_asset(effect_id, 'effects', review)[1] if effect_id else None
+    return _preview_layers_cached(frame_id, file_signature(icon_a), file_signature(icon_b),
+                                  effect_id, review, size, scale, file_signature(CATALOG),
+                                  file_signature(frame_path),
+                                  file_signature(effect_path) if effect_path else None)
+
+
+@lru_cache(maxsize=16)
+def _preview_layers_cached(frame_id, icon_a, icon_b, effect_id, review, size, scale,
+                           catalog_signature, frame_signature, effect_signature):
+    from PIL import Image
+    frame, _ = resolve_asset(frame_id, review=review)
+    width = int(384*scale/2)*2
+    layers = []
+    if effect_id:
+        effect, path = resolve_asset(effect_id, 'effects', review)
+        layers.append((_rgba_cached(frame_signature), 1., 0.))
+        layers.append((render_peak(frame, effect, path), 0., float(effect.get('duration', .8))))
+    layers.append((render_pair(frame_id, icon_a[0], icon_b[0], review=review,
+                               include_ornament=not bool(effect_id)), 1., 0.))
+    result = []
+    for image, fixed_alpha, duration in layers:
+        height = int(image.height*width/image.width/2)*2
+        scaled = image.resize((max(1, round(width*size[0]/1920)),
+                               max(1, round(height*size[1]/1080))), Image.Resampling.LANCZOS)
+        result.append((scaled, fixed_alpha, duration, width, height))
+    return tuple(result)
+
+
+def _render_preview_native(template, icon_a, icon_b, elapsed, *, row=0, size=(1920, 1080)):
     from PIL import Image
     from .kill_icons import normalize_options, normalize_motion, normalize_stack_gap
-    size = (1920, 1080)
+    scale_x, scale_y = size[0] / 1920., size[1] / 1080.
     canvas = Image.new('RGBA', size)
     position, scale, seconds, opacity = normalize_options(template.kill_icon_position,
             template.kill_icon_scale, template.kill_icon_duration, template.kill_icon_opacity)
     if elapsed < 0 or elapsed >= seconds: return canvas
-    review = bool(getattr(template, 'work_kill_review', False))
-    effect_id = getattr(template, 'work_kill_effect_id', '')
-    frame = render_pair(template.work_kill_frame_id, icon_a, icon_b, review=review, include_ornament=not bool(effect_id))
-    layers = []
-    if effect_id:
-        item, path = resolve_asset(effect_id, 'effects', review)
-        frame_item, frame_path = resolve_asset(template.work_kill_frame_id, review=review)
-        layers.append((_rgba_cached(file_signature(frame_path)), 1.))
-        peak = render_peak(frame_item, item, path)
-        layers.append((peak, peak_opacity(elapsed, item.get('duration', .8))*strength(template.work_kill_strength)))
-    layers.append((frame, 1.))
+    layers = _preview_layers(template, icon_a, icon_b, size, scale)
     motion = normalize_motion(template.kill_icon_motion)
-    for image, alpha in layers:
-        w = int(384*scale/2)*2
-        h = int(image.height*w/image.width/2)*2
-        image = image.resize((w, h), Image.Resampling.LANCZOS)
-        x = size[0]-w-32 if position.startswith('right') else 32
+    for image, fixed_alpha, duration, w, h in layers:
+        alpha = (fixed_alpha if not duration else
+                 peak_opacity(elapsed, duration)*strength(template.work_kill_strength))
+        x = 1920-w-32 if position.startswith('right') else 32
         offset = round(160*scale + normalize_stack_gap(template.kill_stack_gap))*row
-        y = 62+offset if position.endswith('top') else size[1]-h-62-offset
+        y = 62+offset if position.endswith('top') else 1080-h-62-offset
         u = max(0., min(1., 1-elapsed/.260))
         ease = u*u*(3-2*u)
-        if motion == 'slide_left': x -= (size[0]+20)*ease
-        elif motion == 'slide_right': x += (size[0]+20)*ease
-        elif motion == 'slide_up': y += (size[1]+20)*ease
-        elif motion == 'slide_down': y -= (size[1]+20)*ease
+        if motion == 'slide_left': x -= (1920+20)*ease
+        elif motion == 'slide_right': x += (1920+20)*ease
+        elif motion == 'slide_up': y += (1080+20)*ease
+        elif motion == 'slide_down': y -= (1080+20)*ease
         elif motion == 'pop': x += 16*math.exp(-18*elapsed)*math.cos(28*elapsed)
-        image.putalpha(image.getchannel('A').point(lambda v: round(v*alpha*opacity)))
-        canvas.alpha_composite(image, (round(x), round(y)))
+        layer = image.copy()
+        layer.putalpha(layer.getchannel('A').point(lambda v: round(v*alpha*opacity)))
+        canvas.alpha_composite(layer, (round(x*scale_x), round(y*scale_y)))
     return canvas
