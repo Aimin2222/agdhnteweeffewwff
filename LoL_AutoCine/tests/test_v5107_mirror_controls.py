@@ -102,10 +102,10 @@ def test_editor_events_slow_only_mirror_and_resume(app, monkeypatch):
     monkeypatch.setattr(app.root, 'after', lambda delay, fn: scheduled.append(delay))
     app._preview_input()
     app._preview_tick()
-    assert scheduled[-1] == 167
+    assert scheduled[-1] == 100
     app._preview_input_at -= 1
     app._preview_tick()
-    assert scheduled[-1] == 50
+    assert scheduled[-1] == 33
     assert app.current_template().fps == 60
 
 

@@ -91,7 +91,9 @@ def test_close_discards_pending_work_without_waiting_for_slow_render():
 
 def test_mirror_fx_does_not_block_sliders_tab_switch_or_tk_callbacks(tmp_path, monkeypatch):
     import legacy_app
+    from core import gpu_mirror
     monkeypatch.setattr(legacy_app, 'SETTINGS', tmp_path / 'settings.json')
+    monkeypatch.setattr(gpu_mirror, 'probe', lambda: (False, 'CPU fallback test'))
     root = tk.Tk()
     app = legacy_app.App(root)
     entered, release = threading.Event(), threading.Event()

@@ -31,7 +31,7 @@ def main():
                  distribution='source Windows test build; Python and C++ tools not bundled',
                  real_lol_visual_qa='not_performed')
     manifest=[]
-    full=output/'LoL_AutoCine_20261020_Windows_Test_Full.zip'
+    full=output/'LoL_AutoCine_20261020_GPU_Work_Full.zip'
     delta=output/'LoL_AutoCine_CameraWork_20261019_Codex_Code_Delta.zip'
     for target,selected in ((full,files),(delta,[n for n in files if n in changed and Path(n).suffix.lower()!='.png'])):
         with ZipFile(target,'w',compression=ZIP_DEFLATED,compresslevel=4) as archive:
@@ -44,9 +44,11 @@ def main():
             archive.writestr('README_TEST_JA.txt',
                 '2026-10-20の修正を含むWindowsテスト版です。新しいフォルダに展開してください。\n'
                 '起動: LoL_AutoCine/START.bat\n'
-                'テスト順: LoL_AutoCine/docs/QA_FOLLOWUP_20261020_JA.md\n'
+                'テスト順: LoL_AutoCine/docs/QA_GPU_WORK_20261020_JA.md\n'
                 'Python 3.12 x64を自動検出して初回セットアップします。pyは必須ではありません。Native Audio Helper構築フローは既存通りです。\n'
-                'このFull版には現在のコードとWork素材を同梱しています。\n')
+                'このFull版には現在のコードとWork素材を同梱しています。\n'
+                'ミラー映像はOpenCL GPU優先。非対応効果はCPUへ自動復帰します。\n'
+                '652候補・35演出案は確認可能ですが、正式合格はNo.083 Aのみです。\n')
         with ZipFile(target) as archive:
             assert archive.testzip() is None
         print(target.name,target.stat().st_size,flush=True)

@@ -488,17 +488,24 @@ def _render_live_preview(request):
     frame = source.latest()
     if frame is None:
         return None
-    # Pillow's raw decoder avoids NumPy's full-size advanced channel indexing.
-    # Alpha from WGC is ignored: it is not guaranteed to be opaque.
-    image = Image.frombytes('RGB', (frame.shape[1], frame.shape[0]),
-                            frame.tobytes(), 'raw', 'BGRX')
-    image.thumbnail((width, height), Image.Resampling.BILINEAR, reducing_gap=2.0)
-    original = np.asarray(image)
-    rgb = original
-    if template is not None and video_fx:
-        rgb = apply_camera_preview(rgb, template)
-        rgb = apply_video_effect_preview(rgb, template, phase=0.5)
-        rgb = compose_compare(rgb, template, title, split)
+    from core.gpu_mirror import render as render_gpu_mirror
+    gpu_result = render_gpu_mirror(frame, width, height,
+                                   template if video_fx else None,
+                                   title if video_fx else '', split if video_fx else 0.)
+    if gpu_result is not None:
+        rgb, original = gpu_result
+    else:
+        # Alpha from WGC is not guaranteed opaque. Keep the existing CPU
+        # composition as the complete fallback for unsupported effects.
+        base = Image.frombytes('RGB', (frame.shape[1], frame.shape[0]),
+                               frame.tobytes(), 'raw', 'BGRX')
+        base.thumbnail((width, height), Image.Resampling.BILINEAR, reducing_gap=2.0)
+        original = np.asarray(base)
+        rgb = original
+        if template is not None and video_fx:
+            rgb = apply_camera_preview(rgb, template)
+            rgb = apply_video_effect_preview(rgb, template, phase=0.5)
+            rgb = compose_compare(rgb, template, title, split)
     image = Image.fromarray(rgb)
     if template is not None and work_context:
         from ui.director_work_controls import composite_mirror
@@ -620,8 +627,8 @@ class App:
         except Exception as e:
             self.log(f"シーンプロジェクトの復元をスキップ: {e}")
         self.root.after(80, self._pump)
-        # UIプレビューはTkinter/PIL/NumpyのCPU合成。書き出し側はGPU Fullを使用。
-        # ミラーのCPU合成は別スレッド。録画・最終出力のFPSとは独立。
+        # ミラーはOpenCL GPU優先、非対応効果はCPUへ復帰。Tk表示はUIスレッド。
+        # 録画・最終出力のFPSとは独立。
         self.root.after(16, self._preview_tick)
         self.log("起動しました。①から順に、または上部の『★ これで自動作成』を押してください。")
         self._refresh_status()
@@ -875,7 +882,7 @@ class App:
         tools.pack(fill="x", pady=(0, 7))
         ttk.Button(tools, text="ミラー開始", command=self.on_mirror_start).pack(side="left")
         ttk.Button(tools, text="停止", command=lambda: self.on_mirror_stop(reason="停止ボタン")) .pack(side="left", padx=(4,0))
-        ttk.Checkbutton(tools, text="FXをミラーに反映（CPU・低速）", variable=self.var_live).pack(side="left", padx=10)
+        ttk.Checkbutton(tools, text="FXをミラーに反映（GPU優先）", variable=self.var_live).pack(side="left", padx=10)
         ttk.Label(tools, text="ミラー画質", style="CardMuted.TLabel").pack(side="left",padx=(2,4))
         quality = ttk.Combobox(tools, textvariable=self.var_preview_quality, state="readonly",
                                values=("操作優先", "表示サイズで確認"), width=17)
@@ -890,7 +897,7 @@ class App:
         self.canvas.pack(fill="both", expand=True)
         # Center placeholder whenever paned windows settle or the user resizes.
         self.canvas.bind("<Configure>", self._recenter_preview_placeholder, add="+")
-        ttk.Label(preview_card, text="FXをミラーに反映をONにすると簡易表示します（CPU処理）。完成MP4は書き出し処理で適用。",
+        ttk.Label(preview_card, text="FXはGPU優先の簡易表示です。非対応効果はCPUで表示。完成MP4は別の書き出し処理で適用。",
                   style="CardMuted.TLabel").pack(anchor="w")
         ttk.Label(preview_card, text="上段：準備・プレビュー・検出シーン　／　下段：全幅エディタ（境界ドラッグで高さ調整）",
                   style="CardMuted.TLabel").pack(anchor="w", pady=(4,0))
@@ -3536,8 +3543,11 @@ class App:
         def collect():
             try:
                 ok = bool(gpu_encoder_available())
+                from core.gpu_mirror import probe as probe_gpu_mirror
                 text = (("FFmpeg NVENC登録あり" if ok else "FFmpeg NVENC未検出") +
-                        " / " + gpu_pipeline_status() + " / プレビューCPU合成")
+                        " / " + gpu_pipeline_status() + " / ミラー: "
+                        + ("OpenCL GPU利用可能" if probe_gpu_mirror()[0]
+                           else "CPUフォールバック"))
             except Exception as e:
                 text = f"GPU状態: 判定できません ({type(e).__name__})"
             try:
@@ -4392,13 +4402,13 @@ class App:
                 if self.var_preview_quality.get() == "表示サイズで確認":
                     process_w, process_h = cw, ch
                 else:
-                    process_w, process_h = (640, 360) if editing else (960, 540)
+                    process_w, process_h = (640, 360) if editing or preview_fx else (960, 540)
                 key = (id(source), cw, ch, process_w, process_h, settings_key, title, split, preview_fx)
                 result = self._live_preview.result(key)
                 # During drags/scrolls lower only the approximate mirror workload.
                 # Export templates, recording clocks and output resolution are untouched.
                 # Native display quality is opt-in; default keeps controls responsive.
-                # Export selects GPU Full only when supported; live display is CPU/PIL.
+                # Export and live mirror have independent GPU capability checks.
                 work_context = ((self.api, [k.to_dict() for k in self.kills],
                                  [p.to_dict() for p in self.players])
                                 if t is not None and t.work_kill_frame_id else None)
@@ -4406,6 +4416,12 @@ class App:
                                                t, title, split, cw, ch, work_context, preview_fx))
                 if result is not None and result is not self._preview_presented:
                     image, original = result[1]
+                    from core.gpu_mirror import last_status as mirror_gpu_status
+                    backend, reason = mirror_gpu_status()
+                    backend_state = (backend, reason)
+                    if backend_state != getattr(self, '_preview_backend_last', None):
+                        self._preview_backend_last = backend_state
+                        self.log(f"ミラー処理: {backend} ({reason})")
                     self._photo = ImageTk.PhotoImage(image)
                     if self._preview_image_item is None:
                         self.canvas.delete('all')
@@ -4419,7 +4435,7 @@ class App:
                         cam = STYLES.get(t.style, t.style)
                         hud = "HUD安全モード" if t.hide_hud else "HUDそのまま"
                         self.canvas.itemconfigure(self._preview_text_item,
-                                                  text=f"ミラーFXプレビュー / カメラ: {cam} / {hud}")
+                                                  text=f"ミラーFXプレビュー / {backend} / カメラ: {cam} / {hud}")
                         now = time.monotonic()
                         if (hasattr(self, "curve_editor") and self.curve_editor.winfo_viewable()
                                 and now - self._histogram_updated >= .5):
@@ -4427,7 +4443,7 @@ class App:
                             self._histogram_updated = now
                     else:
                         self.canvas.itemconfigure(self._preview_text_item,
-                                                  text='Workキル素材プレビュー' if show_work else '')
+                                                  text=f'Workキル素材プレビュー / {backend}' if show_work else '')
             else:
                 if self._preview_presented is not None or self._preview_text_item is None:
                     self._preview_presented = None
@@ -4446,7 +4462,9 @@ class App:
                 _diag_write(CRASH_LOG, "MIRROR_PREVIEW_ERROR\n" + traceback.format_exc())
         finally:
             if not self._closing:
-                delay = 100 if editing else (67 if preview_fx else 33)
+                from core.gpu_mirror import last_status as mirror_gpu_status
+                gpu_active = mirror_gpu_status()[0] == 'OpenCL GPU'
+                delay = 100 if editing else (33 if gpu_active or not preview_fx else 67)
                 self.root.after(delay, self._preview_tick)
 
     def on_exact_still(self) -> None:
