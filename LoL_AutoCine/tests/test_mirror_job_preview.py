@@ -79,6 +79,26 @@ def test_effect_failure_fallback_keeps_captured_colors(monkeypatch):
     finally:worker.close()
 
 
+def test_work_frame_can_preview_without_expensive_video_fx(monkeypatch):
+    from core.effects import Template
+    from ui import director_work_controls
+    frame=np.zeros((90,160,4),np.uint8);frame[:,:,2]=220
+    source=SimpleNamespace(latest=lambda:frame)
+    template=Template(work_kill_frame_id='083/a_simple_main')
+    monkeypatch.setattr(app_module,'apply_video_effect_preview',
+                        Mock(side_effect=AssertionError('video FX must remain off')))
+    called=[]
+    def work_overlay(image, current, context):
+        called.append((current.work_kill_frame_id, context))
+        image.putpixel((80,45),(0,220,0))
+        return image
+    monkeypatch.setattr(director_work_controls,'composite_mirror',work_overlay)
+    result,_=app_module._render_live_preview(
+        (source,160,90,template,'',0.,160,90,('replay',[],[]),False))
+    assert result.getpixel((80,45))==(0,220,0)
+    assert called==[('083/a_simple_main',('replay',[],[]))]
+
+
 def test_unexpected_ui_preview_error_is_logged_and_rescheduled(monkeypatch):
     writes=[]
     monkeypatch.setattr(app_module,'_diag_write',lambda *args:writes.append(args))
@@ -89,4 +109,4 @@ def test_unexpected_ui_preview_error_is_logged_and_rescheduled(monkeypatch):
     app_module.App._preview_tick(app)
     app.log.assert_called_once()
     assert 'MIRROR_PREVIEW_ERROR' in writes[0][1]
-    root.after.assert_called_once_with(50,app._preview_tick)
+    root.after.assert_called_once_with(33,app._preview_tick)

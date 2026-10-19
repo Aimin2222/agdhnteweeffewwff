@@ -57,6 +57,7 @@ class SharedFrame:
                 resource_tracker.unregister(self.memory._name, 'shared_memory')
         self.capacity = self.memory.size - HEADER_BYTES
         self.sequence = 0
+        self.invalid_headers = 0
 
     def write(self, frame):
         if frame.dtype != np.uint8 or frame.ndim != 3 or frame.shape[2] != 4:
@@ -66,21 +67,32 @@ class SharedFrame:
         if h <= 0 or w <= 0 or size > self.capacity:
             raise ValueError('Capture frame exceeds shared buffer capacity')
         sequence = self.sequence + 2
-        HEADER.pack_into(self.memory.buf, 0, sequence - 1, h, w, size)
+        # Publish the odd sequence before changing dimensions. The reader must
+        # never treat a partly updated header as a completed frame.
+        struct.pack_into('<Q', self.memory.buf, 0, sequence - 1)
+        struct.pack_into('<III', self.memory.buf, 8, h, w, size)
         target = np.ndarray(frame.shape, dtype=np.uint8, buffer=self.memory.buf, offset=HEADER_BYTES)
         try:
             np.copyto(target, frame)  # Copy while the native callback owns its buffer.
         finally:
             del target
-        HEADER.pack_into(self.memory.buf, 0, sequence, h, w, size)
+        struct.pack_into('<Q', self.memory.buf, 0, sequence)
         self.sequence = sequence
 
     def read(self, previous):
         sequence, h, w, size = HEADER.unpack_from(self.memory.buf)
         if sequence == 0 or sequence == previous or sequence & 1:
             return None
+        if struct.unpack_from('<Q', self.memory.buf)[0] != sequence:
+            return None
         if h <= 0 or w <= 0 or size != h * w * 4 or size > self.capacity:
-            raise ValueError('Invalid shared capture frame header')
+            # A concurrent write can expose a transient header. Keep the last
+            # good frame; only a sustained malformed header is fatal.
+            self.invalid_headers += 1
+            if self.invalid_headers > 250:
+                raise ValueError('Invalid shared capture frame header')
+            return None
+        self.invalid_headers = 0
         view = np.ndarray((h, w, 4), dtype=np.uint8, buffer=self.memory.buf, offset=HEADER_BYTES)
         try:
             result = view.copy()

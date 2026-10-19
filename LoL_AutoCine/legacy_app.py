@@ -484,6 +484,7 @@ class FocusCircleViz(tk.Canvas):
 def _render_live_preview(request):
     source, width, height, template, title, split, canvas_width, canvas_height = request[:8]
     work_context = request[8] if len(request) > 8 else None
+    video_fx = request[9] if len(request) > 9 else True
     frame = source.latest()
     if frame is None:
         return None
@@ -494,7 +495,7 @@ def _render_live_preview(request):
     image.thumbnail((width, height), Image.Resampling.BILINEAR, reducing_gap=2.0)
     original = np.asarray(image)
     rgb = original
-    if template is not None:
+    if template is not None and video_fx:
         rgb = apply_camera_preview(rgb, template)
         rgb = apply_video_effect_preview(rgb, template, phase=0.5)
         rgb = compose_compare(rgb, template, title, split)
@@ -620,7 +621,7 @@ class App:
             self.log(f"シーンプロジェクトの復元をスキップ: {e}")
         self.root.after(80, self._pump)
         # UIプレビューはTkinter/PIL/NumpyのCPU合成。書き出し側はGPU Fullを使用。
-        # 簡易合成は別スレッドで最大15Hz。録画・最終出力のFPSとは独立。
+        # ミラーのCPU合成は別スレッド。録画・最終出力のFPSとは独立。
         self.root.after(16, self._preview_tick)
         self.log("起動しました。①から順に、または上部の『★ これで自動作成』を押してください。")
         self._refresh_status()
@@ -707,6 +708,8 @@ class App:
         ttk.Button(nav, text="⌂  ホーム", style="Nav.TButton", command=lambda: self._focus_home()).pack(side="left")
         ttk.Button(nav, text="▣  テンプレート", style="Nav.TButton", command=self._open_template_gallery).pack(side="left")
         ttk.Button(nav, text="✦  キルフレーム図鑑", style="Nav.TButton", command=self._open_kill_frame_gallery).pack(side="left")
+        ttk.Button(nav, text="✦  Work素材", style="Nav.TButton",
+                   command=self._open_work_kill_settings).pack(side="left")
         ttk.Button(nav, text="✓  自動診断", style="Nav.TButton", command=self.on_automatic_qa).pack(side="left")
         ttk.Button(nav, text="▰  参考動画", style="Nav.TButton", command=lambda: self._focus_reference()).pack(side="left")
         ttk.Button(nav, text="⚙  設定", style="Nav.TButton", command=self._focus_settings).pack(side="left")
@@ -864,7 +867,7 @@ class App:
         self.preview_badge = ttk.Label(ph, textvariable=self.var_camera_status, style="CardMuted.TLabel")
         self.preview_badge.pack(side="right")
 
-        self.var_live = tk.BooleanVar(value=True)
+        self.var_live = tk.BooleanVar(value=False)
         self.var_preview_quality = tk.StringVar(value="操作優先")
         self.var_split = tk.DoubleVar(value=0.0)
         self.var_mirror = tk.BooleanVar(value=False)
@@ -872,7 +875,7 @@ class App:
         tools.pack(fill="x", pady=(0, 7))
         ttk.Button(tools, text="ミラー開始", command=self.on_mirror_start).pack(side="left")
         ttk.Button(tools, text="停止", command=lambda: self.on_mirror_stop(reason="停止ボタン")) .pack(side="left", padx=(4,0))
-        ttk.Checkbutton(tools, text="FXをミラーに反映", variable=self.var_live).pack(side="left", padx=10)
+        ttk.Checkbutton(tools, text="FXをミラーに反映（CPU・低速）", variable=self.var_live).pack(side="left", padx=10)
         ttk.Label(tools, text="ミラー画質", style="CardMuted.TLabel").pack(side="left",padx=(2,4))
         quality = ttk.Combobox(tools, textvariable=self.var_preview_quality, state="readonly",
                                values=("操作優先", "表示サイズで確認"), width=17)
@@ -887,7 +890,7 @@ class App:
         self.canvas.pack(fill="both", expand=True)
         # Center placeholder whenever paned windows settle or the user resizes.
         self.canvas.bind("<Configure>", self._recenter_preview_placeholder, add="+")
-        ttk.Label(preview_card, text="ぼかし・色はミラー再生中にも簡易表示（LoL本体の画面にはかかりません）。完成MP4は書き出し処理で適用。",
+        ttk.Label(preview_card, text="FXをミラーに反映をONにすると簡易表示します（CPU処理）。完成MP4は書き出し処理で適用。",
                   style="CardMuted.TLabel").pack(anchor="w")
         ttk.Label(preview_card, text="上段：準備・プレビュー・検出シーン　／　下段：全幅エディタ（境界ドラッグで高さ調整）",
                   style="CardMuted.TLabel").pack(anchor="w", pady=(4,0))
@@ -1857,7 +1860,7 @@ class App:
             for panel, parent, title in self._mode_sidecards:
                 # Keep replay/player/template and results accessible in easy mode;
                 # hide specialist edit/FX blocks while keeping them instantiated.
-                if easy and title.startswith(("▶  参考", "◉  参考", "◈  カラー", "◈  カメラ詳細", "◈  LoLnam", "✧  自動")):
+                if easy and title.startswith(("◈  カラー", "◈  カメラ詳細", "◈  LoLnam", "✧  自動")):
                     continue
                 # Right inspector never repeats lower workspace parameters.
                 if title.startswith("⚙  その他の設定"):
@@ -2134,6 +2137,10 @@ class App:
     def _open_kill_frame_gallery(self):
         from ui.kill_frame_gallery import open_gallery
         return open_gallery(self)
+
+    def _open_work_kill_settings(self):
+        from ui.director_work_controls import open_settings
+        return open_settings(self)
 
     def _open_easy_preset_comparison(self):
         """Large real-frame comparison using the same bounded worker as hover."""
@@ -4368,6 +4375,7 @@ class App:
         if self._closing:
             return
         preview_fx = bool(self.var_live.get()) and (not self.busy or self._preview_fx_during_camera)
+        show_work = bool(self.var_work_frame.get()) if hasattr(self, 'var_work_frame') else False
         editing = time.monotonic() - self._preview_input_at < .25
         try:
             cw, ch = max(160, self.canvas.winfo_width()), max(90, self.canvas.winfo_height())
@@ -4378,23 +4386,24 @@ class App:
                 source = None
             if source is not None and source.running:
                 # Snapshot Tk values here. The worker gets only data and the capture source.
-                t, settings_key = self._preview_template_snapshot() if preview_fx else (None, '')
-                title = preview_title(t, self._selected_multikill()) if t is not None else ''
-                split = float(self.var_split.get()) if t is not None else 0.0
+                t, settings_key = self._preview_template_snapshot() if preview_fx or show_work else (None, '')
+                title = preview_title(t, self._selected_multikill()) if preview_fx else ''
+                split = float(self.var_split.get()) if preview_fx else 0.0
                 if self.var_preview_quality.get() == "表示サイズで確認":
                     process_w, process_h = cw, ch
                 else:
                     process_w, process_h = (640, 360) if editing else (960, 540)
-                key = (id(source), cw, ch, process_w, process_h, settings_key, title, split)
+                key = (id(source), cw, ch, process_w, process_h, settings_key, title, split, preview_fx)
                 result = self._live_preview.result(key)
                 # During drags/scrolls lower only the approximate mirror workload.
                 # Export templates, recording clocks and output resolution are untouched.
                 # Native display quality is opt-in; default keeps controls responsive.
-                # GPU Full is still used by export; live display is CPU/PIL.
+                # Export selects GPU Full only when supported; live display is CPU/PIL.
+                work_context = ((self.api, [k.to_dict() for k in self.kills],
+                                 [p.to_dict() for p in self.players])
+                                if t is not None and t.work_kill_frame_id else None)
                 self._live_preview.submit(key, (source, process_w, process_h,
-                                               t, title, split, cw, ch,
-                                               (self.api, [k.to_dict() for k in self.kills],
-                                                [p.to_dict() for p in self.players])))
+                                               t, title, split, cw, ch, work_context, preview_fx))
                 if result is not None and result is not self._preview_presented:
                     image, original = result[1]
                     self._photo = ImageTk.PhotoImage(image)
@@ -4417,7 +4426,8 @@ class App:
                             self.curve_editor.set_histogram(original[::4, ::4])
                             self._histogram_updated = now
                     else:
-                        self.canvas.itemconfigure(self._preview_text_item, text='')
+                        self.canvas.itemconfigure(self._preview_text_item,
+                                                  text='Workキル素材プレビュー' if show_work else '')
             else:
                 if self._preview_presented is not None or self._preview_text_item is None:
                     self._preview_presented = None
@@ -4436,7 +4446,7 @@ class App:
                 _diag_write(CRASH_LOG, "MIRROR_PREVIEW_ERROR\n" + traceback.format_exc())
         finally:
             if not self._closing:
-                delay = 167 if editing else (100 if self.busy and not preview_fx else (67 if preview_fx else 50))
+                delay = 100 if editing else (67 if preview_fx else 33)
                 self.root.after(delay, self._preview_tick)
 
     def on_exact_still(self) -> None:
