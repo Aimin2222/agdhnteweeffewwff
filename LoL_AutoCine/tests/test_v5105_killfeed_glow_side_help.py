@@ -45,7 +45,7 @@ def test_template_camera_side_append_compatibility():
     assert data['camera_side']=='red'
     old=Template()
     assert old.camera_side=='auto'
-    assert [f.name for f in fields(Template) if f.name != 'auto_director_strength'][-4:] == ['camera_side', 'kill_sparkle_intensity', 'kill_stack_gap', 'kill_icon_motion']
+    assert [f.name for f in fields(Template) if f.name not in {'auto_director_strength', 'camera_control_mode', 'camera_auto_excluded', 'camera_auto_qa_approved', 'work_kill_frame_id', 'work_kill_effect_id', 'work_kill_review', 'work_kill_strength'}][-4:] == ['camera_side', 'kill_sparkle_intensity', 'kill_stack_gap', 'kill_icon_motion']
 
 
 def test_actual_glow_works_and_portraits_are_unchanged(tmp_path):
