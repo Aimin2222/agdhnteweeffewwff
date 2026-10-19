@@ -1,0 +1,42 @@
+{
+  "technical_commit": "de453046c2e2a7f522571e4d45d804947b05a150",
+  "source_path": "LoL_AutoCine/core/kill_icons.py",
+  "source_blob": "c82b0e2b836974b2f215405a04d34bedc59efe87",
+  "approval_record_path": "LoL_AutoCine/docs/RECEIVED_IMPLEMENTATION_v51020_JA.md",
+  "approval_record_blob": "8edad5e46ab953d0e027000f2864af4ddc143fc9",
+  "approval_scope": "Technical document states user accepted six kill-frame entrances; this is an inherited record, not fresh user/video/GPU validation.",
+  "modes": [
+    {
+      "id": "instant",
+      "label": "一気に表示"
+    },
+    {
+      "id": "slide_left",
+      "label": "左から登場"
+    },
+    {
+      "id": "slide_right",
+      "label": "右から登場"
+    },
+    {
+      "id": "slide_up",
+      "label": "下から登場"
+    },
+    {
+      "id": "slide_down",
+      "label": "上から登場"
+    },
+    {
+      "id": "pop",
+      "label": "パッと飛び出す"
+    }
+  ],
+  "duration_seconds_slide": 0.26,
+  "smoothstep_u": "clamp(1-(t-start)/0.260,0,1)",
+  "smoothstep": "u*u*(3-2*u)",
+  "slide_distance": "full canvas width+20 or height+20, matching existing CPU/OpenCL code",
+  "pop_offset_x": "16*exp(-18*max(0,t-start))*cos(28*max(0,t-start))",
+  "pop_scale_rotation": "none; existing pop is x-position only",
+  "integration_scope": "Existing 37 badges; reuse of motion design does not prove integration/fidelity of the 652 review candidates.",
+  "app_code_modified": false
+}

@@ -1,0 +1,34 @@
+MOTION_STYLES = {"instant":"一気に表示","slide_left":"左から登場","slide_right":"右から登場","slide_up":"下から登場","slide_down":"上から登場","pop":"パッと飛び出す"}
+MOTION_REVERSE = {v:k for k,v in MOTION_STYLES.items()}
+
+
+def normalize_motion(motion):
+    return motion if isinstance(motion, str) and motion in MOTION_STYLES else "instant"
+
+
+def badge_motion_xy(position, motion, start, base_x, base_y, *, backend="ffmpeg"):
+    """Same bounded entrance for CPU expressions and resident OpenCL compositing."""
+    motion = normalize_motion(motion)
+    if motion == "instant":
+        return base_x, base_y
+    if backend == "ffmpeg":
+        clock, width, height = "t", "W+20", "H+20"
+        elapsed = f"max(0,{clock}-{float(start):.3f})"
+        u = f"max(0,min(1,1-({clock}-{float(start):.3f})/0.260))"
+        easing = f"({u}*{u}*(3-2*{u}))"
+        pop = f"16*exp(-18*{elapsed})*cos(28*{elapsed})"
+    elif backend == "opencl":
+        clock, width, height = "time", "size.x+20.0f", "size.y+20.0f"
+        elapsed = f"fmax(0.0f,{clock}-{float(start):.3f}f)"
+        u = f"clamp(1.0f-({clock}-{float(start):.3f}f)/0.260f,0.0f,1.0f)"
+        easing = f"({u}*{u}*(3.0f-2.0f*{u}))"
+        pop = f"16.0f*exp(-18.0f*{elapsed})*cos(28.0f*{elapsed})"
+    else:
+        raise ValueError("Unknown badge motion backend")
+    if motion == "slide_left": return f"({base_x})-({width})*{easing}", base_y
+    if motion == "slide_right": return f"({base_x})+({width})*{easing}", base_y
+    if motion == "slide_up": return base_x, f"({base_y})+({height})*{easing}"
+    if motion == "slide_down": return base_x, f"({base_y})-({height})*{easing}"
+    return f"({base_x})+{pop}", base_y
+
+
