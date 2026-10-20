@@ -48,13 +48,16 @@ def test_real_opencl_device_processes_mirror_pixels(monkeypatch):
     assert gpu_mirror.last_status() == ('OpenCL GPU', device)
 
 
-def test_mirror_fill_canvas_is_optional_and_keeps_output_resolution():
+def test_mirror_preserves_full_frame_aspect_and_never_upscales():
     source = SimpleNamespace(latest=frame)
-    # A wide editor panel would otherwise have large side bars around 16:9.
-    fit, _ = legacy_app._render_live_preview((source, 160, 90, None, '', 0.,
-                                               240, 90, None, False, False))
-    fill, _ = legacy_app._render_live_preview((source, 160, 90, None, '', 0.,
-                                                240, 90, None, False, True))
-    assert fit.size == (160, 90)
-    assert fill.size == (240, 90)
-    assert fill.getpixel((5, 45)) == (180, 0, 0)
+    # The previous build saved preview_fill=True. Ignore it even if an older
+    # caller passes the legacy flag, preserving every edge of the source.
+    image, _ = legacy_app._render_live_preview((source, 160, 90, None, '', 0.,
+                                                 240, 90, None, False, True))
+    assert image.size == (160, 90)
+    assert image.getpixel((5, 45)) == (180, 0, 0)
+    downscaled, _ = legacy_app._render_live_preview((source, 160, 90, None, '', 0.,
+                                                     120, 90, None, False))
+    assert downscaled.size == (120, 68)
+    assert legacy_app._native_preview_size(1290, 393) == (688, 387)
+    assert legacy_app._native_preview_size(1920, 1080) == (1920, 1080)

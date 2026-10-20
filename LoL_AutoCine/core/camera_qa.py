@@ -64,7 +64,7 @@ def plan_eight_cases(players, events, preferred=None, modes=None):
                 result.append((side, player, chosen, mode, label))
     return result
 
-QA_BUILD_VERSION = "5.10.28-test"
+QA_BUILD_VERSION = "5.10.29-test"
 
 
 def camera_build_identity(project_root=None):

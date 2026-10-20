@@ -12,15 +12,15 @@ from core import camera_qa, qa_visual, jobs
 from core.effects import Template, FFMPEG
 
 
-@pytest.mark.parametrize('version',['5.10.28-test','5.10.26-test','5.10.23-test'])
+@pytest.mark.parametrize('version',['5.10.29-test','5.10.26-test','5.10.23-test'])
 def test_identity_compares_installed_version_and_exact_code_bytes(tmp_path,version):
     (tmp_path/'core').mkdir();(tmp_path/'VERSION.txt').write_text(version)
     (tmp_path/'core/camera.py').write_bytes(b'CAMERA\r\n');(tmp_path/'core/camera_tuning.py').write_bytes(b'TUNING\n')
     identity=camera_qa.camera_build_identity(tmp_path)
     digest=hashlib.sha256(b'CAMERA\r\nTUNING\n').hexdigest()
     assert identity['installed_version']==version
-    assert identity['qa_build_version']=='5.10.28-test'
-    assert identity['version_mismatch']==(version!='5.10.28-test')
+    assert identity['qa_build_version']=='5.10.29-test'
+    assert identity['version_mismatch']==(version!='5.10.29-test')
     assert identity['camera_code_sha256']==digest and identity['camera_code_fingerprint']==digest[:16]
     (tmp_path/'core/camera_tuning.py').write_bytes(b'CHANGED')
     assert camera_qa.camera_build_identity(tmp_path)['camera_code_fingerprint']!=digest[:16]
@@ -89,7 +89,7 @@ def test_report_identity_notes_and_final_zip_are_consistent(monkeypatch,tmp_path
     monkeypatch.setattr(camera_qa,'assemble_side_reels',lambda *a,**kw:{})
     report=camera_qa.run_camera_record_test(None,None,[],[],None,Template(),tmp_path)
     data=json.loads(report.read_text(encoding="utf-8"))
-    assert data['version']==data['installed_version']=='5.10.28-test'
+    assert data['version']==data['installed_version']=='5.10.29-test'
     assert not data['version_mismatch']
     notes=(report.parent/'QA_Support/READ_ME_FIRST_JA.md').read_text(encoding="utf-8")
     assert data['camera_code_fingerprint'] in notes and '時間割合' in notes

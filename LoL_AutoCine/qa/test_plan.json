@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "plan_id": "2026-10-20-v51028-camera-workqa",
-  "title": "v5.10.28 開発用: RED/BLUE各5手動＋固定自動/フルオート・Work素材・演出・診断 / 30MB送信",
+  "plan_id": "2026-10-20-v51029-camera-workqa-ui",
+  "title": "v5.10.29 開発用: RED/BLUE各5手動＋固定自動/フルオート・Work素材・演出・診断 / 30MB送信",
   "camera_modes": [
     "third",
     "third_cinema",
@@ -25,7 +25,7 @@
   "max_zip_mb": 30,
   "include_visual_comparison": true,
   "manual_review": [
-    "results.jsonのversion/installed_version/qa_build_versionは5.10.28-test。camera_code_fingerprintも配布物と一致すること",
+    "results.jsonのversion/installed_version/qa_build_versionは5.10.29-test。camera_code_fingerprintも配布物と一致すること",
     "一括QAはRED/BLUE各5手動＋固定自動/フルオート各1の計14録画。WorkQA/report.jsonで998素材・35演出・6登場動作を確認する",
     "同じリプレイ・同じイベントで旧版と比較。BLUE全5種: 被写体と敵がPRE/KILL/POSTと移動中に見えるか、空/地形裏/見切れを確認",
     "RED #1: 自動サイドだけ距離を8%増加。近すぎの改善と戦闘の見やすさを比較",

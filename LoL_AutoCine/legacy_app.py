@@ -485,7 +485,6 @@ def _render_live_preview(request):
     source, width, height, template, title, split, canvas_width, canvas_height = request[:8]
     work_context = request[8] if len(request) > 8 else None
     video_fx = request[9] if len(request) > 9 else True
-    fill_canvas = request[10] if len(request) > 10 else False
     frame = source.latest()
     if frame is None:
         return None
@@ -511,17 +510,21 @@ def _render_live_preview(request):
     if template is not None and work_context:
         from ui.director_work_controls import composite_mirror
         image = composite_mirror(image, template, work_context)
-    if fill_canvas:
-        from PIL import ImageOps
-        image = ImageOps.fit(image, (canvas_width, canvas_height),
-                             method=Image.Resampling.BILINEAR)
-    else:
-        ratio = min(canvas_width / image.width, canvas_height / image.height)
-        if ratio != 1:
-            image = image.resize((max(1, round(image.width * ratio)),
-                                  max(1, round(image.height * ratio))), Image.Resampling.BILINEAR)
+    # Preview the whole frame at its native aspect. Never crop or enlarge a
+    # processed frame to fill a wide editor panel: that loses detail and hides
+    # the top/bottom of the replay. Older saved preview_fill values are ignored.
+    ratio = min(1., canvas_width / image.width, canvas_height / image.height)
+    if ratio < 1.:
+        image = image.resize((max(1, round(image.width * ratio)),
+                              max(1, round(image.height * ratio))), Image.Resampling.LANCZOS)
     # All resize work is finished before the UI uploads pixels to Tk.
     return image, original
+
+
+def _native_preview_size(canvas_width, canvas_height):
+    """Largest 16:9 processing size that fits the canvas and 1080p source."""
+    units = max(1, min(int(canvas_width) // 16, int(canvas_height) // 9, 120))
+    return 16 * units, 9 * units
 
 class App:
     def __init__(self, root: tk.Tk):
@@ -742,8 +745,7 @@ class App:
         ttk.Label(right_top, text="出力", style="Muted.TLabel").pack(side="left", padx=(0, 4))
         ttk.Combobox(right_top, state="readonly", width=9, textvariable=self.var_fps_ui,
                      values=["60 FPS", "144 FPS"]).pack(side="left")
-        ttk.Button(right_top, text="＋", width=3, command=self.on_quick_prepare).pack(side="left", padx=5)
-        ttk.Button(right_top, text="設定", width=5, command=self._focus_settings).pack(side="left", padx=(3,0))
+        ttk.Button(right_top, text="準備", width=5, command=self.on_quick_prepare).pack(side="left", padx=5)
         ttk.Button(right_top, text="ログ", width=4, command=self.on_show_diagnostics).pack(side="left")
 
         # View switch is UI-only. Project, checkmarks, templates and the render mode
@@ -887,39 +889,33 @@ class App:
 
         self.var_live = tk.BooleanVar(value=False)
         self.var_preview_quality = tk.StringVar(value="操作優先")
-        self.var_preview_fill = tk.BooleanVar(value=True)
         self.var_split = tk.DoubleVar(value=0.0)
         self.var_mirror = tk.BooleanVar(value=False)
         tools = ttk.Frame(preview_card, style="Card.TFrame")
         tools.pack(fill="x", pady=(0, 7))
         ttk.Button(tools, text="ミラー開始", command=self.on_mirror_start).pack(side="left")
-        ttk.Button(tools, text="停止", command=lambda: self.on_mirror_stop(reason="停止ボタン")) .pack(side="left", padx=(4,0))
-        ttk.Checkbutton(tools, text="FXをミラーに反映（GPU優先）", variable=self.var_live).pack(side="left", padx=10)
-        ttk.Label(tools, text="ミラー画質", style="CardMuted.TLabel").pack(side="left",padx=(2,4))
+        ttk.Button(tools, text="ミラー停止", command=lambda: self.on_mirror_stop(reason="停止ボタン")).pack(side="left", padx=(4,0))
+        ttk.Checkbutton(tools, text="FX反映", variable=self.var_live).pack(side="left", padx=10)
+        ttk.Label(tools, text="画質", style="CardMuted.TLabel").pack(side="left",padx=(2,4))
         quality = ttk.Combobox(tools, textvariable=self.var_preview_quality, state="readonly",
                                values=("操作優先", "表示サイズで確認"), width=17)
         quality.pack(side="left")
         quality.bind("<<ComboboxSelected>>", lambda _: self._save_settings())
-        ttk.Checkbutton(tools, text='余白なく拡大', variable=self.var_preview_fill,
-                        command=self._save_settings).pack(side='left', padx=(8, 0))
         bind_effect_hover_tip(quality,"操作優先：UIを軽く保つ表示品質。表示サイズで確認：ミラーの表示領域に合わせて画質を高める（書き出し画質は変わらない）。",500)
         ttk.Button(tools, text="▶ 再生", style="Accent.TButton", command=self.on_preview_play).pack(side="right", padx=4)
-        ttk.Button(tools, text="■ 停止", command=self.on_preview_stop).pack(side="right", padx=4)
-        ttk.Button(tools, text="1枚だけ更新", command=self.on_exact_still).pack(side="right", padx=4)
+        ttk.Button(tools, text="■ 再生停止", command=self.on_preview_stop).pack(side="right", padx=4)
+        ttk.Button(tools, text="静止画更新", command=self.on_exact_still).pack(side="right", padx=4)
 
-        self.canvas = tk.Canvas(preview_card, bg="#111827", width=560, height=230, highlightthickness=0)
+        self.canvas = tk.Canvas(preview_card, bg="#111827", width=560, height=315, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
         # Center placeholder whenever paned windows settle or the user resizes.
         self.canvas.bind("<Configure>", self._recenter_preview_placeholder, add="+")
-        ttk.Label(preview_card, text="FXはGPU優先の簡易表示です。非対応効果はCPUで表示。完成MP4は別の書き出し処理で適用。",
+        ttk.Label(preview_card, text="16:9の全体表示。左右の余白は映像を切らずに残します。",
                   style="CardMuted.TLabel").pack(anchor="w")
-        ttk.Label(preview_card, text="上段：準備・プレビュー・検出シーン　／　下段：全幅エディタ（境界ドラッグで高さ調整）",
-                  style="CardMuted.TLabel").pack(anchor="w", pady=(4,0))
 
         player_bar = ttk.Frame(preview_card, style="Card.TFrame", padding=(4, 5, 4, 0))
         player_bar.pack(fill="x")
-        ttk.Label(player_bar, text="再生位置はLoLリプレイと同期", style="CardMuted.TLabel").pack(side="left")
-        ttk.Label(player_bar, text="ゲーム音のみ・カメラ演出は下段で編集", style="CardMuted.TLabel").pack(side="right")
+        ttk.Label(player_bar, text="LoLリプレイと同期 / カメラ演出は下段で編集", style="CardMuted.TLabel").pack(side="left")
 
         split_hint = ttk.Frame(edit_host, style="Card.TFrame")
         split_hint.pack(fill="x", padx=8, pady=(5, 0))
@@ -959,7 +955,7 @@ class App:
         self._template_tone_canvas = tk.Canvas(f, width=141, height=23, bg="#FFFFFF",
                                                 highlightthickness=0)
         self._template_tone_canvas.pack(anchor="w", pady=(1,5))
-        ttk.Button(f, text="A：かんたん色見本カードを開閉",
+        ttk.Button(f, text="色見本を表示／閉じる",
                    command=self._toggle_inline_template_cards).pack(fill="x", pady=(3,2))
         self._inline_color_cards=ttk.Frame(f, style="Card.TFrame")
         from ui.template_gallery import template_info, draw_color_bars
@@ -975,7 +971,7 @@ class App:
             draw_color_bars(bar,details["colors"])
             ttk.Button(chip,text=preset[:13],width=17,
                        command=lambda n=preset:self._choose_easy_preset(n)).pack(side="left",padx=4)
-        ttk.Button(f, text="B：全テンプレート図鑑（実シーン比較）",
+        ttk.Button(f, text="テンプレート図鑑を開く（実シーン比較）",
                    command=self._open_template_gallery).pack(fill="x", pady=(3,0))
         ttk.Label(f, text="スキャン→シーン選択→実画面保存で、補正前/後を比較します。",
                   style="CardMuted.TLabel", wraplength=255).pack(anchor="w", pady=(2,0))
@@ -994,31 +990,35 @@ class App:
 
         ttk.Label(easy, text="① リプレイを開く → ② 対象プレイヤーを選ぶ → ③ ボタン1つでキル/アシストを検出して動画を作成", style="CardMuted.TLabel", wraplength=900).pack(anchor="w", pady=(4, 7))
         ttk.Button(easy, text="★ 自動作成（標準）", style="Accent.TButton", command=self.on_one_click).pack(fill="x", ipady=4)
-        ttk.Label(easy, text="現在の設定でキル／アシストを自動抽出して書き出します。初めてならこちら。",
-                  style="CardMuted.TLabel", wraplength=880).pack(anchor="w",pady=(1,5))
         ttk.Button(easy, text="✨ スマート自動編集（演出重視）", command=self.on_smart_one_click).pack(fill="x", pady=(4,0))
-        ttk.Label(easy, text="キル前後のズーム・カメラの回り込み・短い発光を自動で加えて出力します。",
-                  style="CardMuted.TLabel", wraplength=880).pack(anchor="w",pady=(1,5))
-        smart_row = ttk.Frame(easy, style="Card.TFrame")
+        ttk.Label(easy, text="標準は見やすさ優先。スマートはカメラと発光の演出を加えます。",
+                  style="CardMuted.TLabel", wraplength=880).pack(anchor="w",pady=(2,5))
+        self._easy_options_open = False
+        self._easy_options_button = ttk.Button(easy, text="演出・素材・仕上がりの設定を表示 ▾",
+                                                command=self._toggle_easy_options)
+        self._easy_options_button.pack(fill="x", pady=(2, 3))
+        options = ttk.Frame(easy, style="Card.TFrame")
+        self._easy_options_panel = options
+        smart_row = ttk.Frame(options, style="Card.TFrame")
         smart_row.pack(fill="x", pady=(6,2))
         ttk.Label(smart_row, text="自動カメラ演出", style="Card.TLabel", width=16).pack(side="left")
         ttk.Combobox(smart_row, state="readonly", textvariable=self.var_smart_highlight_style,
                      values=list(SMART_STYLES.values()), width=31).pack(side="left", fill="x", expand=True)
-        ttk.Label(easy, text="戦闘を見せる→キル直前に寄る→瞬間を短く強調→自然に戻る。通常の自動作成には影響しません。",
+        ttk.Label(options, text="戦闘を見せる→キル直前に寄る→瞬間を短く強調→自然に戻る。通常の自動作成には影響しません。",
                   style="CardMuted.TLabel", wraplength=850).pack(anchor="w")
         from ui.director_work_controls import build as build_director_work
-        build_director_work(self, easy)
-        badge_easy = ttk.Frame(easy, style="Card.TFrame")
+        build_director_work(self, options)
+        badge_easy = ttk.Frame(options, style="Card.TFrame")
         badge_easy.pack(fill="x", pady=(8, 2))
         ttk.Label(badge_easy, text="キルアイコン装飾", style="Card.TLabel", width=16).pack(side="left")
         ttk.Combobox(badge_easy, state="readonly", textvariable=self.var_kill_icon_style,
                      values=list(KILL_ICON_STYLES.values()), width=26).pack(side="left", fill="x", expand=True)
         ttk.Button(badge_easy,text="▣ 見た目で選ぶ",command=self._open_kill_frame_gallery).pack(side="left",padx=4)
-        ttk.Checkbutton(easy, text="スマートモンタージュ（見せ場を後半に配置）",
+        ttk.Checkbutton(options, text="スマートモンタージュ（見せ場を後半に配置）",
                         variable=self.var_smart_montage).pack(anchor="w", pady=(5, 2))
-        ttk.Label(easy,text="ONなら複数キルの順番を見せ場中心に自動構成。OFFは時刻順を優先。",
+        ttk.Label(options,text="ONなら複数キルの順番を見せ場中心に自動構成。OFFは時刻順を優先。",
                   style="CardMuted.TLabel",wraplength=880).pack(anchor="w")
-        quick_presets = ttk.Frame(easy, style="Card.TFrame")
+        quick_presets = ttk.Frame(options, style="Card.TFrame")
         quick_presets.pack(fill="x", pady=(10, 3))
         ttk.Label(quick_presets, text="仕上がり", style="Card.TLabel").pack(side="left", padx=(0, 6))
         for title, key in (("自然（LoL色）", "三人称 自然め"),
@@ -1028,13 +1028,13 @@ class App:
                        command=lambda k=key: self._choose_easy_preset(k))
             button.pack(side="left", padx=3, fill="x", expand=True)
             self._bind_preset_hover(button,key)
-        ttk.Button(easy, text="▣ 仕上がりを大きな比較画面で見る", command=self._open_easy_preset_comparison).pack(fill="x", pady=(4,5))
-        self.lbl_easy_preset = ttk.Label(easy, textvariable=self.var_tpl, style="CardMuted.TLabel")
+        ttk.Button(options, text="▣ 仕上がりを大きな比較画面で見る", command=self._open_easy_preset_comparison).pack(fill="x", pady=(4,5))
+        self.lbl_easy_preset = ttk.Label(options, textvariable=self.var_tpl, style="CardMuted.TLabel")
         self.lbl_easy_preset.pack(anchor="w", pady=(0, 3))
-        self._director_toggle = ttk.Checkbutton(easy, text="自動ディレクター：キル数に合わせてカメラ演出を自動調整（任意）",
+        self._director_toggle = ttk.Checkbutton(options, text="自動ディレクター：キル数に合わせてカメラ演出を自動調整（任意）",
                         variable=self.var_auto_director, command=self._update_auto_director_controls)
         self._director_toggle.pack(anchor="w", pady=(6, 1))
-        self._auto_director_panel = ttk.Frame(easy, style="Card.TFrame")
+        self._auto_director_panel = ttk.Frame(options, style="Card.TFrame")
         self.var_auto_director.trace_add("write", lambda *_: self._update_auto_director_controls())
         ttk.Label(self._auto_director_panel, text="自動カメラ演出の強さ（0～150%）",
                   style="Card.TLabel").pack(anchor="w")
@@ -1045,9 +1045,9 @@ class App:
         ttk.Entry(director_row, textvariable=self.var_auto_director_strength, width=8).pack(side="right")
         ttk.Label(self._auto_director_panel, text="キル数に応じた回り込み・接近量の倍率です。録画開始前に適用します。",
                   style="CardMuted.TLabel", wraplength=550).pack(anchor="w")
-        ttk.Label(easy, text="ON：キル数・シーンに合わせてカメラの回り込みと接近を調整。OFF：選んだカメラ設定を優先。",
+        ttk.Label(options, text="ON：キル数・シーンに合わせてカメラの回り込みと接近を調整。OFF：選んだカメラ設定を優先。",
                   style="CardMuted.TLabel").pack(anchor="w")
-        hud_easy = ttk.Frame(easy, style="Card.TFrame")
+        hud_easy = ttk.Frame(options, style="Card.TFrame")
         hud_easy.pack(fill="x", pady=(12, 2))
         ttk.Label(hud_easy, text="映像に残すHUD", style="Card.TLabel", width=16).pack(side="left")
         cb_hud_easy = ttk.Combobox(hud_easy, state="readonly", values=list(HUD_MODES.values()),
@@ -1055,8 +1055,8 @@ class App:
         cb_hud_easy.pack(side="left", padx=(4, 8))
         cb_hud_easy.bind("<<ComboboxSelected>>", self._on_hud_choice)
         ttk.Button(hud_easy, text="名前を消すには？", command=self.on_hud_name_help).pack(side="left")
-        ttk.Label(easy, textvariable=self.var_hud_summary, style="CardMuted.TLabel", wraplength=700).pack(anchor="w")
-        easy_montage_row = ttk.Frame(easy, style="Card.TFrame")
+        ttk.Label(options, textvariable=self.var_hud_summary, style="CardMuted.TLabel", wraplength=700).pack(anchor="w")
+        easy_montage_row = ttk.Frame(options, style="Card.TFrame")
         easy_montage_row.pack(fill="x", pady=(7,1))
         ttk.Label(easy_montage_row, text="動画のつなぎ目", style="Card.TLabel", width=16).pack(side="left")
         ttk.Combobox(easy_montage_row, state="readonly", textvariable=self.var_montage_fx,
@@ -2211,6 +2211,17 @@ class App:
         widget.bind('<Leave>',hide,add='+')
         widget.bind('<ButtonPress>',hide,add='+')
         widget.bind('<Destroy>',lambda event:hide() if event.widget is widget else None,add='+')
+
+    def _toggle_easy_options(self):
+        """Show optional controls without changing any render settings."""
+        panel = self._easy_options_panel
+        self._easy_options_open = not self._easy_options_open
+        if self._easy_options_open:
+            panel.pack(fill="x", pady=(4, 6))
+            self._easy_options_button.configure(text="演出・素材・仕上がりの設定を閉じる ▴")
+        else:
+            panel.pack_forget()
+            self._easy_options_button.configure(text="演出・素材・仕上がりの設定を表示 ▾")
 
     def _update_auto_director_controls(self):
         panel = getattr(self, "_auto_director_panel", None)
@@ -3606,8 +3617,6 @@ class App:
                     self.var_out_right.set(str(self.out_root))
             if d.get("preview_quality") in ("操作優先", "表示サイズで確認"):
                 self.var_preview_quality.set(d["preview_quality"])
-            if "preview_fill" in d:
-                self.var_preview_fill.set(bool(d["preview_fill"]))
             if d.get("left_width"):
                 self.var_left_width.set(int(d["left_width"]))
             if d.get("right_width"):
@@ -3668,7 +3677,6 @@ class App:
             from ui.director_work_controls import values as director_work_values
             SETTINGS.write_text(json.dumps({**director_work_values(self), "out_root": str(self.out_root),
                                              "preview_quality": self.var_preview_quality.get(),
-                                             "preview_fill": bool(self.var_preview_fill.get()) if hasattr(self, 'var_preview_fill') else False,
                                              "left_width": int(self.var_left_width.get()),
                                              "right_width": int(self.var_right_width.get()),
                                              "edit_mode": self.var_edit_mode.get(),
@@ -4428,11 +4436,10 @@ class App:
                 title = preview_title(t, self._selected_multikill()) if preview_fx else ''
                 split = float(self.var_split.get()) if preview_fx else 0.0
                 if self.var_preview_quality.get() == "表示サイズで確認":
-                    process_w, process_h = cw, ch
+                    process_w, process_h = _native_preview_size(cw, ch)
                 else:
                     process_w, process_h = (640, 360) if editing or preview_fx else (960, 540)
-                fill_canvas = bool(self.var_preview_fill.get()) if hasattr(self, 'var_preview_fill') else False
-                key = (id(source), cw, ch, process_w, process_h, settings_key, title, split, preview_fx, fill_canvas)
+                key = (id(source), cw, ch, process_w, process_h, settings_key, title, split, preview_fx)
                 result = self._live_preview.result(key)
                 # During drags/scrolls lower only the approximate mirror workload.
                 # Export templates, recording clocks and output resolution are untouched.
@@ -4442,8 +4449,7 @@ class App:
                                  [p.to_dict() for p in self.players])
                                 if t is not None and t.work_kill_frame_id else None)
                 self._live_preview.submit(key, (source, process_w, process_h,
-                                               t, title, split, cw, ch, work_context, preview_fx,
-                                               fill_canvas))
+                                               t, title, split, cw, ch, work_context, preview_fx))
                 if result is not None and result is not self._preview_presented:
                     image, original = result[1]
                     from core.gpu_mirror import last_status as mirror_gpu_status
