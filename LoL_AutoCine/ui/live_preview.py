@@ -7,6 +7,45 @@ from collections import deque
 import statistics
 
 
+class PresentationRate:
+    """Count frames actually handed to Tk, independent of GPU render time."""
+
+    def __init__(self, window_seconds=3.0):
+        self._times = deque()
+        self.window_seconds = window_seconds
+
+    def record(self, now):
+        self._times.append(now)
+        cutoff = now - self.window_seconds
+        while self._times and self._times[0] < cutoff:
+            self._times.popleft()
+
+    def fps(self, now=None):
+        if len(self._times) < 2:
+            return 0.0
+        if now is not None and now - self._times[-1] >= 1.0:
+            return 0.0
+        elapsed = self._times[-1] - self._times[0]
+        return (len(self._times) - 1) / elapsed if elapsed > 0 else 0.0
+
+    def stalled(self, now):
+        return bool(self._times) and now - self._times[-1] >= 1.0
+
+    def reset(self):
+        self._times.clear()
+
+
+def preview_delay_ms(hz, *, editing, gpu_active, preview_fx, elapsed_ms):
+    """Schedule from tick start, so Tk work does not add to the frame period."""
+    if editing:
+        period = 100
+    elif gpu_active:
+        period = 1000 / (144 if hz == '144 Hz' else 60)
+    else:
+        period = 67 if preview_fx else 33
+    return max(1, round(period - elapsed_ms))
+
+
 class LatestPreview:
     def __init__(self, render, *, fallback=None, on_error=None):
         self._render = render

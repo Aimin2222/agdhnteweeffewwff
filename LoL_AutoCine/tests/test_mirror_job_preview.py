@@ -6,7 +6,7 @@ from unittest.mock import Mock
 import numpy as np
 from PIL import Image
 import legacy_app as app_module
-from ui.live_preview import LatestPreview
+from ui.live_preview import LatestPreview, PresentationRate, preview_delay_ms
 
 
 def await_result(worker,key):
@@ -57,7 +57,7 @@ def test_mirror_stop_during_job_hides_display_without_stopping_capture():
     source=SimpleNamespace(running=True)
     mirror=Mock()
     app=SimpleNamespace(busy=True,log=Mock(),_mirror=mirror,source=source,
-                        canvas=Mock(),var_mirror=Mock())
+                        canvas=Mock(),var_mirror=Mock(),_mirror_present_rate=PresentationRate())
     app_module.App.on_mirror_stop(app)
     assert app.source is source and source.running
     assert not app._capture_preview_enabled
@@ -109,4 +109,27 @@ def test_unexpected_ui_preview_error_is_logged_and_rescheduled(monkeypatch):
     app_module.App._preview_tick(app)
     app.log.assert_called_once()
     assert 'MIRROR_PREVIEW_ERROR' in writes[0][1]
-    root.after.assert_called_once_with(33,app._preview_tick)
+    assert root.after.call_args.args[1] is app._preview_tick
+    assert 1 <= root.after.call_args.args[0] <= 33
+
+
+def test_mirror_pacer_targets_selected_rate_without_adding_tk_transfer_time():
+    assert preview_delay_ms('60 Hz', editing=False, gpu_active=True,
+                            preview_fx=True, elapsed_ms=8) == 9
+    assert preview_delay_ms('144 Hz', editing=False, gpu_active=True,
+                            preview_fx=True, elapsed_ms=3) == 4
+    assert preview_delay_ms('60 Hz', editing=True, gpu_active=True,
+                            preview_fx=True, elapsed_ms=8) == 92
+    assert preview_delay_ms('60 Hz', editing=False, gpu_active=False,
+                            preview_fx=True, elapsed_ms=8) == 59
+
+
+def test_presented_fps_counts_distinct_tk_uploads_and_resets():
+    rate = PresentationRate(window_seconds=3)
+    for index in range(61):
+        rate.record(index / 30)
+    assert round(rate.fps(), 1) == 30.0
+    assert rate.stalled(3.1)
+    assert rate.fps(3.1) == 0
+    rate.reset()
+    assert rate.fps() == 0

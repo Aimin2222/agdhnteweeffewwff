@@ -42,7 +42,7 @@ from core.players import Player, parse_players                     # noqa: E402
 from core.replay_api import ReplayAPI                              # noqa: E402
 from core.scanner import scan_kills, filter_scanned_events                                # noqa: E402
 from ui.scene_timeline import SceneTimeline                     # noqa: E402
-from ui.live_preview import LatestPreview
+from ui.live_preview import LatestPreview, PresentationRate, preview_delay_ms
 from ui.redraw import request_redraw
 from ui.mirror_capture import MirrorCapture                     # noqa: E402
 from ui.scene_project import SceneProject, Shot, scene_key, recommend, apply_shot  # noqa: E402
@@ -621,6 +621,7 @@ class App:
         self._capture_preview_source = None
         self._capture_preview_enabled = True
         self._preview_presented = None
+        self._mirror_present_rate = PresentationRate()
         self._preview_snapshot = None
         self._preview_input_at = 0.0
         self._preview_image_item = self._preview_text_item = None
@@ -738,12 +739,14 @@ class App:
         right_top = ttk.Frame(top)
         right_top.pack(side="right")
         self.var_fps_ui = tk.StringVar(value="60 FPS")
-        self.var_preview_hz = tk.StringVar(value="144 Hz")
+        self.var_preview_hz = tk.StringVar(value="60 Hz")
         self._top_performance_controls = ttk.Frame(right_top)
         self._top_performance_controls.pack(side="left")
         ttk.Label(self._top_performance_controls, text="プレビュー", style="Muted.TLabel").pack(side="left", padx=(0, 4))
-        ttk.Combobox(self._top_performance_controls, state="readonly", width=9, textvariable=self.var_preview_hz,
-                     values=["60 Hz", "144 Hz"]).pack(side="left", padx=(0, 6))
+        preview_hz_choice = ttk.Combobox(self._top_performance_controls, state="readonly", width=9,
+                                         textvariable=self.var_preview_hz, values=["60 Hz", "144 Hz"])
+        preview_hz_choice.pack(side="left", padx=(0, 6))
+        preview_hz_choice.bind('<<ComboboxSelected>>', lambda _event: self._save_settings())
         ttk.Label(self._top_performance_controls, text="出力", style="Muted.TLabel").pack(side="left", padx=(0, 4))
         ttk.Combobox(self._top_performance_controls, state="readonly", width=9, textvariable=self.var_fps_ui,
                      values=["60 FPS", "144 FPS"]).pack(side="left")
@@ -3625,6 +3628,8 @@ class App:
                     self.var_out_right.set(str(self.out_root))
             if d.get("preview_quality") in ("操作優先", "表示サイズで確認"):
                 self.var_preview_quality.set(d["preview_quality"])
+            if d.get("preview_hz") in ("60 Hz", "144 Hz"):
+                self.var_preview_hz.set(d["preview_hz"])
             if d.get("left_width"):
                 self.var_left_width.set(int(d["left_width"]))
             if d.get("right_width"):
@@ -3686,6 +3691,7 @@ class App:
             SETTINGS.write_text(json.dumps({**director_work_values(self), "out_root": str(self.out_root),
                                              "preview_quality": self.var_preview_quality.get(),
                                              "left_width": int(self.var_left_width.get()),
+                                             "preview_hz": self.var_preview_hz.get(),
                                              "right_width": int(self.var_right_width.get()),
                                              "edit_mode": self.var_edit_mode.get(),
                                              "smart_highlight_style": SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto'),
@@ -4358,6 +4364,7 @@ class App:
         self.canvas.delete("all")
         self._preview_image_item = self._preview_text_item = None
         self._preview_presented = None
+        self._mirror_present_rate.reset()
         self.log(f"ミラーOFF（{reason}）。")
         if hasattr(self, "var_mirror"):
             self.var_mirror.set(False)
@@ -4428,6 +4435,7 @@ class App:
     def _preview_tick(self) -> None:
         if self._closing:
             return
+        tick_started = time.monotonic()
         preview_fx = bool(self.var_live.get()) and (not self.busy or self._preview_fx_during_camera)
         show_work = bool(self.var_work_frame.get()) if hasattr(self, 'var_work_frame') else False
         editing = time.monotonic() - self._preview_input_at < .25
@@ -4476,11 +4484,14 @@ class App:
                         self.canvas.itemconfigure(self._preview_image_item, image=self._photo)
                         self.canvas.coords(self._preview_image_item, cw // 2, ch // 2)
                     self._preview_presented = result
+                    stamp = time.monotonic()
+                    self._mirror_present_rate.record(stamp)
+                    shown_fps = self._mirror_present_rate.fps()
                     if preview_fx:
                         cam = STYLES.get(t.style, t.style)
                         hud = "HUD安全モード" if t.hide_hud else "HUDそのまま"
                         self.canvas.itemconfigure(self._preview_text_item,
-                                                  text=f"ミラーFXプレビュー / {backend} / カメラ: {cam} / {hud}")
+                                                  text=f"ミラー実測 {shown_fps:.1f} fps / FX / {backend} / カメラ: {cam} / {hud}")
                         now = time.monotonic()
                         if (hasattr(self, "curve_editor") and self.curve_editor.winfo_viewable()
                                 and now - self._histogram_updated >= .5):
@@ -4488,25 +4499,31 @@ class App:
                             self._histogram_updated = now
                     else:
                         self.canvas.itemconfigure(self._preview_text_item,
-                                                  text=f'Workキル素材プレビュー / {backend}' if show_work else '')
+                                                  text=f"ミラー実測 {shown_fps:.1f} fps / {backend}"
+                                                       + (' / Workキル素材' if show_work else ''))
                     ui_ms = (time.perf_counter()-tk_started)*1000
                     samples = getattr(self, '_mirror_tk_ms', [])
                     samples.append(ui_ms)
                     if len(samples) > 120:
                         del samples[:-120]
                     self._mirror_tk_ms = samples
-                    stamp = time.monotonic()
                     if stamp-getattr(self, '_mirror_perf_logged_at', 0.) >= 30 and hasattr(self._live_preview, 'stats'):
                         from statistics import median
                         stats = self._live_preview.stats()
-                        self.log(f"ミラー性能: {backend} / 合成中央値 {stats['median_ms']}ms / "
+                        self.log(f"ミラー性能: 表示実測 {shown_fps:.1f}fps / 目標 {self.var_preview_hz.get()} / "
+                                 f"{backend} / 合成中央値 {stats['median_ms']}ms / "
                                  f"合成p95 {stats['p95_ms']}ms / Tk転送中央値 {median(samples):.2f}ms / "
                                  f"更新 {stats['completed']} / 上書き {stats['replaced']} / "
                                  f"表示 {cw}x{ch} / Work {'on' if show_work else 'off'}")
                         self._mirror_perf_logged_at = stamp
+                elif (self._preview_presented is not None and self._preview_text_item is not None
+                      and self._mirror_present_rate.stalled(time.monotonic())):
+                    self.canvas.itemconfigure(self._preview_text_item,
+                                              text='ミラー実測 0.0 fps / 映像更新待ち')
             else:
                 if self._preview_presented is not None or self._preview_text_item is None:
                     self._preview_presented = None
+                    self._mirror_present_rate.reset()
                     self._preview_image_item = None
                     self.canvas.delete("all")
                     self._preview_text_item = self.canvas.create_text(cw // 2, ch // 2, anchor="center",
@@ -4524,7 +4541,11 @@ class App:
             if not self._closing:
                 from core.gpu_mirror import last_status as mirror_gpu_status
                 gpu_active = mirror_gpu_status()[0] == 'OpenCL GPU'
-                delay = 100 if editing else (33 if gpu_active or not preview_fx else 67)
+                preview_hz = getattr(self, 'var_preview_hz', None)
+                delay = preview_delay_ms(preview_hz.get() if preview_hz else '60 Hz',
+                                         editing=editing, gpu_active=gpu_active,
+                                         preview_fx=preview_fx,
+                                         elapsed_ms=(time.monotonic()-tick_started)*1000)
                 self.root.after(delay, self._preview_tick)
 
     def on_exact_still(self) -> None:

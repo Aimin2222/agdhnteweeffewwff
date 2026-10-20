@@ -40,7 +40,7 @@ def test_cached_snapshot_refreshes_all_changed_settings(app, monkeypatch):
     assert len(calls) == 2
 
 
-def test_full_resize_is_done_before_tk_upload_and_items_are_reused(app, monkeypatch):
+def test_native_size_is_preserved_before_tk_upload_and_items_are_reused(app, monkeypatch):
     import legacy_app
     app.var_live.set(False)
     cw, ch = 1600, 900
@@ -54,7 +54,9 @@ def test_full_resize_is_done_before_tk_upload_and_items_are_reused(app, monkeypa
         time.sleep(.01)
     assert app._live_preview.result(key) is not None
     image, original = app._live_preview.result(key)[1]
-    assert image.size == (cw, ch)
+    # The mirror stays at its processed resolution; the wide panel must not
+    # stretch 640x360 pixels to 1600x900 and lose sharpness.
+    assert image.size == (640, 360)
     assert original.shape[:2] == (360, 640)
     main = threading.get_ident()
     resize = Image.Image.resize
@@ -62,6 +64,7 @@ def test_full_resize_is_done_before_tk_upload_and_items_are_reused(app, monkeypa
         assert threading.get_ident() != main, 'UI thread performed a pixel resize'
         return resize(*args, **kw)
     monkeypatch.setattr(Image.Image, 'resize', checked_resize)
+    app._preview_input()
     app._preview_tick()
     items = app.canvas.find_all()
     assert len(items) == 2
@@ -69,9 +72,10 @@ def test_full_resize_is_done_before_tk_upload_and_items_are_reused(app, monkeypa
     old_result = app._preview_presented
     while app._live_preview.result(key) is old_result and time.monotonic() < deadline:
         time.sleep(.01)
+    app._preview_input()
     app._preview_tick()
     assert app.canvas.find_all() == items
-    assert app._photo.width() == cw
+    assert app._photo.width() == 640
 
 
 def test_raw_decode_ignores_zero_alpha_and_keeps_bgr_colors():
@@ -105,7 +109,7 @@ def test_editor_events_slow_only_mirror_and_resume(app, monkeypatch):
     assert scheduled[-1] == 100
     app._preview_input_at -= 1
     app._preview_tick()
-    assert scheduled[-1] == 33
+    assert 1 <= scheduled[-1] <= 17  # GPU mirror aims at 60 Hz after editing.
     assert app.current_template().fps == 60
 
 
