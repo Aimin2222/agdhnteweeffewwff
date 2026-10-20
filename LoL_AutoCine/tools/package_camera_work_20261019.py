@@ -47,8 +47,8 @@ def main():
                  distribution='source Windows test build; Python and C++ tools not bundled',
                  real_lol_visual_qa='not_performed')
     manifest=[]
-    full=output/'LoL_AutoCine_20261020_FX_Gallery_Full.zip'
-    delta=output/'LoL_AutoCine_20261020_FX_Gallery_Code_Delta.zip'
+    full=output/'LoL_AutoCine_20261020_MirrorFPS_Catalog_Full.zip'
+    delta=output/'LoL_AutoCine_20261020_MirrorFPS_Catalog_Code_Delta.zip'
     for target,selected in ((full,files),(delta,[n for n in files if n in changed and Path(n).suffix.lower()!='.png'])):
         with ZipFile(target,'w',compression=ZIP_DEFLATED,compresslevel=4) as archive:
             for name in sorted(selected):
@@ -67,14 +67,15 @@ def main():
                     '機能は残してあります。アプリの開発用一括QAは画面内のボタンから実行できます。\n')
             archive.writestr('BUILD_INFO.json',json.dumps(version,indent=2))
             archive.writestr('README_TEST_JA.txt',
-                'v5.10.30-testのWindowsテスト版です。新しいフォルダに展開してください。\n'
+                'v5.10.31-testのWindowsテスト版です。新しいフォルダに展開してください。\n'
                 '起動: LoL_AutoCine/START.bat\n'
                 'テスト順: LoL_AutoCine/docs/QA_CAMERA_WORK_AUTOMATION_20261020_JA.md\n'
                 'Python 3.12 x64を自動検出して初回セットアップします。pyは必須ではありません。Native Audio Helper構築フローは既存通りです。\n'
                 'このFull版には現在のコードとWork素材を同梱しています。補助BATはDeveloper_Toolsへ整理しました。\n'
                 'ミラー映像はOpenCL GPU優先。非対応効果はCPUへ自動復帰します。\n'
                 'プレビューの余白埋め拡大は撤去し、16:9の全体表示と元フレーム以上に拡大しない画質を優先します。\n'
-                'Workの枠を選ぶと同名テーマの仮エフェクトも選択します。図鑑は6件ずつ、ページ操作は上部です。\n'
+                'Workの枠を選ぶと同名テーマの仮エフェクトも選択します。図鑑は6件ずつ、系統・テーマで絞り込めます。\n'
+                'ミラーは60 Hz目標で更新し、実際に表示できたfpsを画面とログへ表示します。144 Hzは任意の目標値で、実測値やMP4のFPSとは別です。\n'
                 'ミラーの粒状ノイズはOpenCLで合成します。録画とTk転送は別経路です。\n'
                 '652候補・35演出案は仮素材として明示選択できます。正式合格はNo.083 Aのみです。\n')
         with ZipFile(target) as archive:
