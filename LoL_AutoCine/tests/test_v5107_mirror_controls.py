@@ -101,6 +101,7 @@ def test_scan_passes_the_ui_selected_event_mode(app, monkeypatch):
 
 
 def test_editor_events_slow_only_mirror_and_resume(app, monkeypatch):
+    assert app.var_preview_hz.get() == '144 Hz'
     app.var_live.set(False)
     scheduled = []
     monkeypatch.setattr(app.root, 'after', lambda delay, fn: scheduled.append(delay))

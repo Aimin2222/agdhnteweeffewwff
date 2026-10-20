@@ -739,7 +739,7 @@ class App:
         right_top = ttk.Frame(top)
         right_top.pack(side="right")
         self.var_fps_ui = tk.StringVar(value="60 FPS")
-        self.var_preview_hz = tk.StringVar(value="60 Hz")
+        self.var_preview_hz = tk.StringVar(value="144 Hz")
         self._top_performance_controls = ttk.Frame(right_top)
         self._top_performance_controls.pack(side="left")
         ttk.Label(self._top_performance_controls, text="プレビュー", style="Muted.TLabel").pack(side="left", padx=(0, 4))
