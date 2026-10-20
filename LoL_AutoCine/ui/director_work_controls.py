@@ -143,6 +143,8 @@ def open_settings(app):
     def select_approved():
         select_frame_with_effect(app, '083/a_simple_main')
         refresh()
+        app._invalidate_preview_snapshot()
+        app._save_settings()
 
     def choose_frame(_event=None):
         frame_id = mappings['frames'][frame_choice.get()]
@@ -153,6 +155,8 @@ def open_settings(app):
             app.var_work_effect.set('')
             app.var_work_review.set(False)
         refresh()
+        app._invalidate_preview_snapshot()
+        app._save_settings()
 
     def choose_effect(_event=None):
         identifier = mappings['effects'][effect_choice.get()]
@@ -160,6 +164,8 @@ def open_settings(app):
         if identifier:
             app.var_work_review.set(True)  # Current effect catalog is review-only.
         refresh()
+        app._invalidate_preview_snapshot()
+        app._save_settings()
 
     app._work_settings_refresh = refresh
     ttk.Button(work_tab, text='▣ Work素材図鑑を開く（画像から選ぶ）',

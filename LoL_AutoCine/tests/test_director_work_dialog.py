@@ -34,14 +34,21 @@ def test_work_dialog_defaults_to_only_approved_and_explicit_review_toggle():
                                and 'No.083 A' in w.cget('text'))
         approved_button.invoke()
         assert app.var_work_frame.get() == '083/a_simple_main'
-        frames.current(1)
-        frames.event_generate('<<ComboboxSelected>>')
+        assert app.var_work_effect.get() == 'A'
+        assert app.var_work_review.get()  # Only the frame is formally approved.
         root.update()
         assert apply(app,Template()).work_kill_frame_id == '083/a_simple_main'
         review = next(w for w in widgets if isinstance(w,ttk.Checkbutton))
+        assert len(frames['values']) == 653 and len(effects['values']) == 36
+        review.invoke()
+        assert not app.var_work_review.get()
+        assert not app.var_work_effect.get()
         review.invoke()
         assert app.var_work_review.get()
-        assert len(frames['values']) == 653 and len(effects['values']) == 36
+        frames.current(1)
+        frames.event_generate('<<ComboboxSelected>>')
+        root.update()
+        assert app.var_work_effect.get() == 'D_elderwood'
         effects.current(1)
         effects.event_generate('<<ComboboxSelected>>')
         root.update()
