@@ -27,8 +27,8 @@ def test_unavailable_gpu_falls_back_without_losing_color(monkeypatch):
 
 def test_unsupported_effect_reports_cpu_reason(monkeypatch):
     monkeypatch.setattr(gpu_mirror, 'probe', lambda: (True, 'test GPU'))
-    assert gpu_mirror.render(frame(), 160, 90, Template(grain=.5)) is None
-    assert gpu_mirror.last_status() == ('CPU', 'grain uses CPU preview')
+    assert gpu_mirror.render(frame(), 160, 90, Template(curve_enabled=True)) is None
+    assert gpu_mirror.last_status() == ('CPU', 'curve uses CPU preview')
 
 
 def test_real_opencl_device_processes_mirror_pixels(monkeypatch):
@@ -46,6 +46,18 @@ def test_real_opencl_device_processes_mirror_pixels(monkeypatch):
     assert with_fx.size == raw.size
     assert np.any(np.asarray(with_fx) != np.asarray(raw))
     assert gpu_mirror.last_status() == ('OpenCL GPU', device)
+
+
+def test_grain_keeps_gpu_mirror_and_varies_pixels():
+    usable, device = gpu_mirror.probe()
+    if not usable:
+        pytest.skip(device)
+    source = frame()
+    plain, _ = gpu_mirror.render(source, 160, 90, Template())
+    grained, _ = gpu_mirror.render(source, 160, 90, Template(grain=.5))
+    assert gpu_mirror.last_status() == ('OpenCL GPU', device)
+    assert grained.shape == plain.shape
+    assert np.any(grained != plain)
 
 
 def test_mirror_preserves_full_frame_aspect_and_never_upscales():

@@ -61,8 +61,6 @@ SUPPORTED_VIDEO_FX = {
 def unsupported_reason(template):
     if template is None:
         return ''
-    if getattr(template, 'grain', 0) > 0:
-        return 'grain uses CPU preview'
     if getattr(template, 'curve_enabled', False):
         return 'curve uses CPU preview'
     if getattr(template, 'lut_path', ''):
@@ -218,6 +216,15 @@ def _grade(u, template, width, height):
                            float(template.dof_far_distance))
         blurred = cv2.GaussianBlur(u, (0, 0), float(template.dof_blur)*.75)
         u = _pixel_mix(u, blurred, mask)
+    grain = max(0., min(1., float(getattr(template, 'grain', 0.) or 0.)))
+    if grain:
+        # The CPU preview's grain used a full-frame float conversion, which
+        # made a common preset take over 130 ms. Upload one grayscale noise
+        # plane and blend on the GPU; export keeps its existing FFmpeg filter.
+        noise = np.random.default_rng().integers(0, 256, (height, width), dtype=np.uint8)
+        noise_gpu = cv2.cvtColor(cv2.UMat(noise), cv2.COLOR_GRAY2RGB)
+        amplitude = (3.06 + 12.75 * grain) / 73.9
+        u = cv2.addWeighted(u, 1., noise_gpu, amplitude, -127.5 * amplitude)
     if template.bars > 0:
         bar = int(height * .12 * min(1., float(template.bars)))
         if bar:
