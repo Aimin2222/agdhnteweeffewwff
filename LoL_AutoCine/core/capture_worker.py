@@ -29,7 +29,8 @@ def run(memory_name, title):
     bridge = SharedFrame(memory_name)
     closed = threading.Event()
     failed = threading.Event()
-    last_copy = 0.0
+    rate_started = time.perf_counter()
+    rate_frames = 0
     parameters = inspect.signature(WindowsCapture).parameters
     kwargs = dict(cursor_capture=False, draw_border=False)
     # The native API accepts exactly ONE target. Passing both the name and
@@ -45,15 +46,22 @@ def run(memory_name, title):
     cap = WindowsCapture(**kwargs)
     @cap.event
     def on_frame_arrived(frame, control):
-        nonlocal last_copy
+        nonlocal rate_started, rate_frames
         try:
-            now = time.perf_counter()
-            if now - last_copy < 1 / 60:
-                return
-            last_copy = now
+            # WGC already has a 16 ms minimum update interval. A second
+            # 1/60 s timer dropped legitimate ~16 ms callbacks and reduced
+            # unique frames in 60 FPS exports to about 39 FPS on the QA host.
+            # The shared slot is latest-only; recording still samples at 60.
             # Direct shared-memory copy while the native BGRA mapping is valid.
             first = bridge.sequence == 0
             bridge.write(frame.frame_buffer)
+            rate_frames += 1
+            now = time.perf_counter()
+            elapsed = now-rate_started
+            if elapsed >= 5.0:
+                print(f'WGC_STAGE published_fps={rate_frames/elapsed:.1f} '
+                      f'frames={rate_frames} seconds={elapsed:.1f}', file=sys.stderr, flush=True)
+                rate_started, rate_frames = now, 0
             if first:
                 faulthandler.cancel_dump_traceback_later()
                 print('WGC_STAGE first_frame_written', file=sys.stderr, flush=True)

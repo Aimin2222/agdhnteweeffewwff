@@ -64,7 +64,7 @@ def plan_eight_cases(players, events, preferred=None, modes=None):
                 result.append((side, player, chosen, mode, label))
     return result
 
-QA_BUILD_VERSION = "5.10.27-test"
+QA_BUILD_VERSION = "5.10.30-test"
 
 
 def camera_build_identity(project_root=None):
@@ -94,7 +94,8 @@ def camera_build_identity(project_root=None):
 
 def run_camera_record_test(api, source, players, events, preferred, template, destination,
                            *, stop=None, log=lambda _m: None, audio_factory=None, progress=None,
-                           plan=None, plan_source="bundled"):
+                           plan=None, plan_source="bundled", work_qa_runner=None,
+                           include_smart_modes=False):
     """Record four modes per side, returning the report path.
 
     Only one clip per style is created; capture and game audio use exactly the
@@ -104,6 +105,16 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     config = validate_plan(plan) if plan is not None else None
     scenarios = (plan_eight_cases(players, events, preferred, modes=config["camera_modes"])
                  if config else plan_eight_cases(players, events, preferred))
+    if include_smart_modes:
+        # Manual baselines plus one fixed and one full-auto case per side.
+        scenarios = [(*row, 'manual') for row in scenarios]
+        for side in ('RED', 'BLUE'):
+            baseline = next((row for row in scenarios if row[0] == side and row[3] == 'third_cinema'),
+                            next((row for row in scenarios if row[0] == side), None))
+            if baseline is not None:
+                for control, label in (('fixed_auto', '固定視点＋自動構図補正'),
+                                       ('full_auto', 'フルオートシネマ')):
+                    scenarios.append((side, baseline[1], baseline[2], 'third_cinema', label, control))
     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S_%f"))
     folder.mkdir(parents=True, exist_ok=False)
     identity = camera_build_identity()
@@ -114,6 +125,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         **identity,
         "kind": "live_replay_camera_test",
         "expected_clips": len(scenarios),
+        "camera_control_mode": 'mixed_manual_fixed_full' if include_smart_modes else getattr(template, 'camera_control_mode', None),
         "test_plan": config,
         "test_plan_source": plan_source,
         "qa_archives": [],
@@ -127,11 +139,15 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     def flush():
         (folder / "results.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     flush()
-    for index, (side, player, scene, mode, label) in enumerate(scenarios, 1):
+    for index, scenario in enumerate(scenarios, 1):
+        side, player, scene, mode, label = scenario[:5]
+        control = scenario[5] if len(scenario) > 5 else None
         if stop is not None and stop.is_set():
             log("カメラテスト: ユーザー操作により中止しました。")
             break
         clip_template = replace(template)
+        if control is not None:
+            clip_template.camera_control_mode = control
         clip_template.name = f"CameraQA {side} {label}"
         clip_template.style = mode
         clip_template.camera_side = "auto"
@@ -147,8 +163,13 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         current = {"number": index, "side": side, "mode": mode, "label": label,
                    "player": player.label(), "event_time": float(scene.time), "outputs": [],
                    "failed": [], "camera_diagnostics": []}
+        current['camera_control_mode'] = getattr(clip_template, 'camera_control_mode', None)
+        current['camera_decisions'] = []
         current["baseline_reads"] = []
         def capture_camera_log(message):
+            if str(message).startswith('SMART_CAMERA_DECISION '):
+                try: current['camera_decisions'].append(json.loads(str(message).split(' ', 1)[1]))
+                except (ValueError, TypeError, IndexError): pass
             if str(message).startswith(("CAMERA_QA_BASELINE ", "CAMERA_QA_TIMING ", "CAMERA_QA_INITIAL_POSE ")):
                 try:
                     evidence = json.loads(str(message).split(" ", 1)[1])
@@ -178,7 +199,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         try:
             (folder / side).mkdir(exist_ok=True)
             result = run_auto_edit(
-                api, source, player, [scene], clip_template, folder / side / f"{index:02d}_{mode}",
+                api, source, player, [scene], clip_template, folder / side / f"{index:02d}_{mode}_{control or 'legacy'}",
                 False, progress=None, stop=stop, log=capture_camera_log, audio_factory=audio_factory)
             current["outputs"] = [str(p) for p in result.outputs]
             current["failed"] = [[int(i), str(msg)] for i,msg in result.failed]
@@ -200,6 +221,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     ready = [p for p in generated if p.is_file()]
     quality = [Path(p) for side in ("RED", "BLUE") for row in manifest["outputs"]
                if row["side"] == side and row["mode"] == "third_cinema"
+               and row["camera_control_mode"] in (None, 'manual')
                for p in row["outputs"] if Path(p).is_file()]
     join_sources = quality if len(quality) == 2 else ready[:2]
     if len(ready) >= 2 and not (stop is not None and stop.is_set()):
@@ -289,6 +311,16 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         except Exception as exc:
             manifest["visual_qa_error"] = str(exc)
             log(f"比較画像生成失敗（録画結果は保持）: {exc}")
+    if work_qa_runner is not None and not (stop is not None and stop.is_set()):
+        try:
+            report = work_qa_runner(folder, source_video=ready[0] if ready else None,
+                                    stop=stop, log=log)
+            manifest['work_qa'] = json.loads(report.read_text(encoding='utf-8'))
+            flush()
+        except Exception as exc:
+            manifest['work_qa_error'] = f'{type(exc).__name__}: {exc}'
+            log(f'Work素材一括QA失敗（カメラ動画は保持）: {exc}')
+            flush()
     manifest["completed_clips"] = sum(bool(row["outputs"]) for row in manifest["outputs"])
     manifest["canceled"] = bool(stop is not None and stop.is_set())
     flush()
@@ -297,7 +329,8 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
             log("開発用QA: 送信用のみ540p・60fpsへ軽量化し、各ZIPを30MB以下にします。元映像は保持します。")
             copies, manifest["qa_upload"] = prepare_upload_copies(
                 folder, encoder_policy=template.encoder_policy, stop=stop, log=log)
-            manifest["qa_support"] = collect_qa_support(folder, log=log, build_identity=identity)
+            manifest["qa_support"] = collect_qa_support(folder, log=log, build_identity=identity,
+                                                         expected_capture_count=manifest["completed_clips"])
             flush()
             def update_archives(paths):
                 manifest["qa_archives"] = [str(p) for p in paths]

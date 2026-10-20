@@ -335,7 +335,9 @@ class GPUFullStage:
             step('clip_transition',f'float alpha=clamp(time/{number(a)},0.0f,1.0f)*clamp(1-(time-{number(start)})/{number(b)},0.0f,1.0f); c.xyz=mix({col},c.xyz,alpha);')
             self.effects.add('transition')
         position,scale,seconds,opacity=normalize_options(t.kill_icon_position,t.kill_icon_scale,t.kill_icon_duration,t.kill_icon_opacity)
-        plan=badge_plan(badges,duration,seconds)
+        from .work_kill_assets import WorkEntries, layer_plan, peak_expression
+        work = isinstance(badges, WorkEntries)
+        plan=layer_plan(badges,duration,seconds) if work else badge_plan(badges,duration,seconds)
         for n,entry in enumerate(plan):
             label=f'fg_badge_{n}'
             stages.append(f'[{badge_index+entry["index"]}:v]settb=1/{int(t.fps)},setpts=0,format=rgba,hwupload[{label}]')
@@ -343,16 +345,22 @@ class GPUFullStage:
             x='size.x-ow-32' if position.startswith('right') else '32.0f'
             # Same scaled badge height + unscaled editor gap as CPU compositing.
             from .kill_icons import normalize_stack_gap
-            row=int(round(116*scale + normalize_stack_gap(getattr(t, 'kill_stack_gap', 4))))*entry['row']
+            row=int(round((160 if work else 116)*scale + normalize_stack_gap(getattr(t, 'kill_stack_gap', 4))))*entry['row']
             y=f'62.0f+{row}' if position.endswith('top') else f'size.y-oh-62-{row}'
             x,y=badge_motion_xy(position,getattr(t,'kill_icon_motion','instant'),entry['start'],x,y,backend='opencl')
-            if normalize(t.kill_icon_style)=='impact':
+            if not work and normalize(t.kill_icon_style)=='impact':
                 x+=f'+7*sin(35*(time-{number(entry["time"])}))*exp(-11*fabs(time-{number(entry["time"])}))'
             alpha=f'{number(opacity)}*(time>={number(entry["start"])} && time<={number(entry["end"])})'
-            material_scale = scale * (0.5 if normalize(t.kill_icon_style) in ASSET_STYLES else 1.0)
-            self._overlay(step,f'badge_{n}',label,x,y,alpha,material_scale)
+            if work:
+                alpha=f'{number(opacity)}*(time>={number(entry["start"])} && time<{number(entry["end"])})'
+            material_scale = 384*scale/entry['width'] if work else scale * (0.5 if normalize(t.kill_icon_style) in ASSET_STYLES else 1.0)
+            if work and entry['kind'] == 'peak':
+                alpha += f'*{number(badges.strength)}*({peak_expression(entry["time"],entry["duration"],backend="opencl")})'
+            self._overlay(step,f'badge_{n}',label,x,y,alpha,material_scale,
+                          width=int(384*scale/2)*2 if work else None)
         if plan:
             self.effects.add('kill_icons')
+            if work: self.effects.add('work_kill_assets')
             if normalize_motion(getattr(t,'kill_icon_motion','instant'))!='instant':
                 self.effects.add('kill_icon_motion')
         # program_opencl does not advertise its input frame rate. Re-establish
@@ -364,8 +372,11 @@ class GPUFullStage:
         self.path.write_text(code,encoding='utf-8')
 
     @staticmethod
-    def _overlay(step,name,label,x,y,alpha,scale=1):
-        body=f'float ow=floor(get_image_width(aux)*{number(scale)}/2)*2,oh=floor(get_image_height(aux)*{number(scale)}/2)*2; float2 q=(convert_float2(p)-(float2)({x},{y}))/(float2)(ow,oh); if(q.x>=0&&q.x<1&&q.y>=0&&q.y<1){{float4 b=sample_at(aux,q); c.xyz=mix(c.xyz,b.xyz,b.w*({alpha}));}}'
+    def _overlay(step,name,label,x,y,alpha,scale=1,width=None):
+        dimensions = (f'float ow={number(width)},oh=floor(get_image_height(aux)*ow/get_image_width(aux)/2)*2;'
+                      if width is not None else
+                      f'float ow=floor(get_image_width(aux)*{number(scale)}/2)*2,oh=floor(get_image_height(aux)*{number(scale)}/2)*2;')
+        body=dimensions+f' float2 q=(convert_float2(p)-(float2)({x},{y}))/(float2)(ow,oh); if(q.x>=0&&q.x<1&&q.y>=0&&q.y<1){{float4 b=sample_at(aux,q); c.xyz=mix(c.xyz,b.xyz,b.w*({alpha}));}}'
         step(name,body,(label,))
 
 

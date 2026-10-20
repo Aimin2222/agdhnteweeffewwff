@@ -39,7 +39,12 @@ def test_large_video_split_restores_bytes_keeps_original_and_final_report(tmp_pa
 def test_archive_never_includes_external_symlink(tmp_path):
     private = tmp_path / 'private.json'; private.write_text('PRIVATE')
     folder = tmp_path/'QA'; folder.mkdir(); (folder/'results.json').write_text('{}')
-    (folder/'outside.json').symlink_to(private)
+    try:
+        (folder/'outside.json').symlink_to(private)
+    except OSError as exc:
+        if getattr(exc, 'winerror', None) == 1314:
+            pytest.skip('Windows symbolic-link privilege is unavailable')
+        raise
     archives = split_test_results(folder, max_bytes=2_000_000)
     with ZipFile(archives[0]) as z: assert 'outside.json' not in z.namelist()
 

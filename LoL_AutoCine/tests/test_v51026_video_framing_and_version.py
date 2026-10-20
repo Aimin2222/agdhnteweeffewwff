@@ -38,7 +38,7 @@ def test_camera_qa_embeds_version_and_code_fingerprint():
     from core.camera_qa import camera_build_identity
     import hashlib
     identity=camera_build_identity(root)
-    assert version=="5.10.27-test"
+    assert version=="5.10.30-test"
     assert identity["installed_version"]==identity["qa_build_version"]==version
     expected=hashlib.sha256((root/"core/camera.py").read_bytes()
                             +(root/"core/camera_tuning.py").read_bytes()).hexdigest()

@@ -203,6 +203,13 @@ class Template:
     kill_icon_motion: str = "instant"  # badge entrance, legacy behavior by default
 
     auto_director_strength: float | None = None  # appended; None preserves legacy camera motion
+    camera_control_mode: str | None = None
+    camera_auto_excluded: list = field(default_factory=list)
+    camera_auto_qa_approved: dict = field(default_factory=dict)
+    work_kill_frame_id: str = ''
+    work_kill_effect_id: str = ''
+    work_kill_review: bool = False
+    work_kill_strength: str = 'strong'
 
     def __post_init__(self) -> None:
         from .kill_icons import normalize_motion
@@ -772,11 +779,18 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
                      glow_enabled=t.kill_glow_enabled, glow_strength=t.kill_glow_strength,
                      border_width=t.kill_frame_width, mark_style=t.kill_mark_style,
                      sparkle_strength=getattr(t, "kill_sparkle_intensity", 1.0))
-                     if badge_style != "off" else [])
+                     if badge_style != "off" and not getattr(t, 'work_kill_frame_id', '') else [])
+    if getattr(t, 'work_kill_frame_id', ''):
+        from .work_kill_assets import make_event_work_badges
+        # Work rendering replaces only the optional feed, never source images.
+        badge_entries = make_event_work_badges(dst, t, kills, events,
+                            getattr(t, 'kill_icon_players', []), log=logging.getLogger(__name__).warning)
     badge_idx = 1 + int(png is not None)
     def add_pair_graph(g):
         if not badge_entries: return g
-        return with_badges(g, badge_idx, badge_entries, duration=duration,
+        from .work_kill_assets import WorkEntries, with_work_badges
+        compositor = with_work_badges if isinstance(badge_entries, WorkEntries) else with_badges
+        return compositor(g, badge_idx, badge_entries, duration=duration,
                            position=t.kill_icon_position, scale=t.kill_icon_scale,
                            seconds=t.kill_icon_duration, opacity=t.kill_icon_opacity,
                            style=badge_style, motion=getattr(t, 'kill_icon_motion', 'instant'), stack_gap=getattr(t, "kill_stack_gap", 4))
@@ -901,7 +915,12 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
         "dof_radius": focus_settings(t)[2],
         "filter_graph": graph,
         "kill_icon_style": badge_style,
-        "kill_icon_pairs_resolved": len(badge_entries),
+        "kill_icon_pairs_resolved": len(getattr(badge_entries, 'layers', badge_entries)),
+        "work_kill_frame_id": getattr(t, 'work_kill_frame_id', ''),
+        "work_kill_effect_id": getattr(t, 'work_kill_effect_id', ''),
+        "work_kill_review": bool(getattr(t, 'work_kill_review', False)),
+        "work_kill_strength": getattr(t, 'work_kill_strength', 'strong'),
+        "work_kill_compositor": ('opencl' if full_stage is not None else 'cpu') if getattr(t, 'work_kill_frame_id', '') else None,
         "kill_icon_position": getattr(t, "kill_icon_position", "right-top"),
         "kill_icon_motion": getattr(t, "kill_icon_motion", "instant"),
         "kill_icon_scale": getattr(t, "kill_icon_scale", 1.0),

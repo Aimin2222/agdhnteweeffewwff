@@ -1,0 +1,158 @@
+{
+  "qa_id": "CameraQA_20261019_213616_306198",
+  "installed_camera_sha256": "0f602271cafdca134bb614db7b26afcf31894bac1ca8c1ff7bf527d645918519",
+  "completed_clips": 10,
+  "new_camera_modes_tested": false,
+  "recorded_control_mode": "legacy (null) in all 10 SMART_CAMERA_DECISION logs",
+  "records": [
+    {
+      "number": 1,
+      "side": "RED",
+      "mode": "third",
+      "decode_ok": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "fps": 60.0,
+      "audio_stream": true,
+      "audio_mean_db": "-41.8",
+      "visual_quality_approved": false
+    },
+    {
+      "number": 2,
+      "side": "RED",
+      "mode": "third_cinema",
+      "decode_ok": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "fps": 60.0,
+      "audio_stream": true,
+      "audio_mean_db": "-42.9",
+      "visual_quality_approved": false
+    },
+    {
+      "number": 3,
+      "side": "RED",
+      "mode": "fps",
+      "decode_ok": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "fps": 60.0,
+      "audio_stream": true,
+      "audio_mean_db": "-43.2",
+      "visual_quality_approved": false
+    },
+    {
+      "number": 4,
+      "side": "RED",
+      "mode": "lolnam_cinema",
+      "decode_ok": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "fps": 60.0,
+      "audio_stream": true,
+      "audio_mean_db": "-44.0",
+      "visual_quality_approved": false
+    },
+    {
+      "number": 5,
+      "side": "RED",
+      "mode": "geo_aim",
+      "decode_ok": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "fps": 60.0,
+      "audio_stream": true,
+      "audio_mean_db": "-42.1",
+      "visual_quality_approved": false
+    },
+    {
+      "number": 6,
+      "side": "BLUE",
+      "mode": "third",
+      "decode_ok": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "fps": 60.0,
+      "audio_stream": true,
+      "audio_mean_db": "-48.0",
+      "visual_quality_approved": false
+    },
+    {
+      "number": 7,
+      "side": "BLUE",
+      "mode": "third_cinema",
+      "decode_ok": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "fps": 60.0,
+      "audio_stream": true,
+      "audio_mean_db": "-47.0",
+      "visual_quality_approved": false
+    },
+    {
+      "number": 8,
+      "side": "BLUE",
+      "mode": "fps",
+      "decode_ok": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "fps": 60.0,
+      "audio_stream": true,
+      "audio_mean_db": "-48.1",
+      "visual_quality_approved": false
+    },
+    {
+      "number": 9,
+      "side": "BLUE",
+      "mode": "lolnam_cinema",
+      "decode_ok": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "fps": 60.0,
+      "audio_stream": true,
+      "audio_mean_db": "-47.0",
+      "visual_quality_approved": false
+    },
+    {
+      "number": 10,
+      "side": "BLUE",
+      "mode": "geo_aim",
+      "decode_ok": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "fps": 60.0,
+      "audio_stream": true,
+      "audio_mean_db": "-46.8",
+      "visual_quality_approved": false
+    }
+  ],
+  "stills_review": "No obvious upside-down view in provided samples; character centering, occlusion and motion need further review. No blanket visual approval.",
+  "archive_integrity": {
+    "parts": 4,
+    "crc_errors": 0
+  },
+  "scope": "User-provided live LoL QA. Codec/audio decoding is separate from camera visual approval.",
+  "mirror_evidence": "No manual mirror-start record in supplied runtime excerpt. QA-owned source had a first WGC frame but was not published to the mirror UI by _ensure_source.",
+  "badge_motion_results": "6 successful renders; metadata says CPU effects / h264_nvenc / ffmpeg_missing_program_opencl. Does not prove new Work083 integration.",
+  "camera_settings_changed": false
+}

@@ -1,0 +1,92 @@
+{
+  "id": "D_winter_festival",
+  "label": "冬の祝祭",
+  "kind": "single_peak_impact_texture",
+  "reference_frame": "LoL_AutoCine/assets/kill_frames_chatgpt/review/WINTER_FESTIVAL_SECOND/082_strong_review_rgba.png",
+  "reference_frame_sha256": "ba5afa3a340308eb711625c66e965724a29ea2224b7254e99110c2b931d65c85",
+  "source_number": "082",
+  "texture": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_assets/frame_based_review_v2/D_winter_festival/impact_rgba.png",
+  "texture_sha256": "4e16c33bef176be0089c7bd94d2ed89bb8321704e18a3b7179b2bcd778ce3ac1",
+  "native_dimensions": [
+    1774,
+    887
+  ],
+  "color_space": "sRGB",
+  "alpha": "straight; premultiply once in compositor",
+  "placement": {
+    "anchor": [
+      0.5,
+      0.5
+    ],
+    "coordinates": "normalized texture coordinates",
+    "attach_to": "actual frame center",
+    "aspect": "preserve, do not stretch",
+    "width_relative_to_frame": 0.85,
+    "max_height_relative_to_frame": 1.4,
+    "fit": "min(width_limit/native_width, height_limit/native_height); preserve aspect"
+  },
+  "layer_order": "above frame ornament, below killer/victim portraits; clip all effects out of actual portrait masks",
+  "blend": "source-over baseline; optional linear-light additive with alpha applied once",
+  "new_design_proposal": true,
+  "existing_design_spec": "LoL_AutoCine/assets/kill_frames_chatgpt/effect_specs/review_v1/D/winter_festival.json",
+  "timeline": {
+    "clock": "seconds relative to kill output timestamp",
+    "pre_kill": "texture opacity=0 for t<0; existing optional anticipation is separate",
+    "appear_s": 0.04,
+    "peak_s": 0.08,
+    "fade_end_s": 0.8,
+    "opacity_keyframes": [
+      [
+        0,
+        0
+      ],
+      [
+        0.04,
+        0.8
+      ],
+      [
+        0.08,
+        1
+      ],
+      [
+        0.2,
+        0.65
+      ],
+      [
+        0.8,
+        0
+      ]
+    ],
+    "scale_keyframes": [
+      [
+        0,
+        0.8
+      ],
+      [
+        0.08,
+        1
+      ],
+      [
+        0.8,
+        1.12
+      ]
+    ],
+    "rotation_degrees": 0
+  },
+  "intensity": {
+    "weak_opacity_multiplier": 0.45,
+    "strong_opacity_multiplier": 1.0,
+    "do_not_recolor": "use source-derived palette"
+  },
+  "design_brief": "Branching pale blue snow crystal light rays, fine crystalline snowflakes and a few silver ice splinters, airy cold winter burst.",
+  "limits": [
+    "This is one combined peak texture; individual particles are not separately controllable within it.",
+    "Do not replace or modify frame PNG; keep this on a separate effect layer.",
+    "Review material, not a final approved game integration.",
+    "Existing frame images may themselves contain quality defects; reference use does not approve them."
+  ],
+  "qa_warnings": [
+    "Outer-edge alpha residue; strict transparent-margin check pending repair"
+  ],
+  "final_approved": false
+}

@@ -72,7 +72,8 @@ def _play_until(api: ReplayAPI, end: float, start: float, tpl: Template, rec: Op
     """end まで再生しつつ、停止検知 (同じ画面を録り続けない) を行う。"""
     t_begin = time.time()
     last_t, last_move = -1.0, time.time()
-    min_speed = 0.35 if tpl.style in ("cinema", "cinema_top", "third_cinema", "lolnam_cinema", "geo_aim") else 1.0
+    min_speed = 0.35 if (tpl.style in ("cinema", "cinema_top", "third_cinema", "lolnam_cinema", "geo_aim")
+                         or getattr(tpl, "camera_control_mode", None) == "full_auto") else 1.0
     wall_limit = (end - start) / min_speed + limit_extra
     while True:
         if stop is not None and stop.is_set():
@@ -255,13 +256,34 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
         actual = api.seek(start)
     if actual is not None and abs(float(actual) - float(start)) > 0.80:
         raise ReplayApiError(f'リプレイのシーク位置が確定しません ({actual:.2f}s / 目標 {start:.2f}s)')
+    from .smart_camera_director import decide_camera
+    side_choice = getattr(tpl, 'camera_side', 'auto')
+    decision_side = {'blue': 'BLUE', 'red': 'RED'}.get(side_choice, getattr(player, 'team', 'ORDER'))
+    try:
+        decision = decide_camera(getattr(tpl, "camera_control_mode", None),
+                                 decision_side, tpl.style,
+                                 (k.time for k in kills),
+                                 approved=getattr(tpl, "camera_auto_qa_approved", None),
+                                 excluded=getattr(tpl, "camera_auto_excluded", ()))
+    except ValueError as error:
+        log("SMART_CAMERA_FALLBACK " + json.dumps({"reason":str(error), "capture_refused":True, "visual_qa_pass":False}))
+        raise ReplayApiError("使用可能なカメラ候補がありません。サイド別の除外設定を確認してください。") from error
+    log("SMART_CAMERA_DECISION " + json.dumps(decision.to_dict(), ensure_ascii=False))
+    if decision.mode is not None:
+        tpl = deepcopy(tpl)  # runtime selection never modifies the project/UI
+        tpl.style = decision.style
+        tpl.smart_composition = decision.mode in ("fixed_auto", "full_auto")
+        if decision.mode == "manual":
+            tpl.auto_director_strength = 0.0
+    auto_camera = decision.mode in ("fixed_auto", "full_auto")
     side_choice = getattr(tpl, 'camera_side', 'auto')
     profile = live_side_profile(getattr(player, 'team', 'ORDER'), side_choice, style=tpl.style)
     live_third = tpl.style in ('third', 'third_cinema', 'lolnam_cinema', 'geo_aim')
     elev = max(float(getattr(tpl, 'third_elev', 28.0)), profile['elevation']) if live_third else float(getattr(tpl, 'third_elev', 28.0))
     dist = max(float(getattr(tpl, 'third_dist', 950.0)), profile['distance']) if live_third else float(getattr(tpl, 'third_dist', 950.0))
+    attach_options = {"safe_axes": True} if auto_camera else {}
     rig = attach_to_player(api, player, tpl.style, dist_scale=tpl.dist_scale, height=tpl.cam_height,
-                           third_elev=elev, third_dist=dist, log=log)
+                           third_elev=elev, third_dist=dist, log=log, **attach_options)
     time.sleep(0.35)
     plan = CameraPlan(style=tpl.style, intensity=tpl.amp(), kill_time=kills[0].time,
                       kill_times=tuple(k.time for k in kills), dist_scale=tpl.dist_scale, height=tpl.cam_height,
@@ -276,6 +298,9 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
                        side_yaw=((profile['yaw'] - 8.0 if tpl.style == 'third' and side_choice == 'auto' and str(getattr(player, 'team', '')).upper() in ('CHAOS', 'RED') else profile['yaw']) if live_third else 0.0),
                        team=getattr(player, 'team', 'ORDER'),
                       sel_name=player.selection_name or player.champion)
+    plan.camera_control_mode = decision.mode
+    plan._camera_decision = decision.to_dict()
+    plan._decision_log = log
     plan._auto_director_strength = getattr(tpl, "auto_director_strength", None)
     plan._target_aliases = frozenset(player.aliases() if hasattr(player, "aliases") else
                                      {norm(player.selection_name), norm(player.champion)})
@@ -317,6 +342,14 @@ def _setup_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, kil
     if red_normal_pullback:
         plan._live_dist_factor *= framing["distance_extra"]
     plan._prepare_pose_before_capture = framing["target_lock"] or red_normal_pullback
+    if auto_camera:
+        plan._live_engine_target_lock = rig.mode == "fps"
+        plan._live_angle_bias = {}
+        plan._prepare_pose_before_capture = rig.mode == "fps"
+        if rig.fell_back:
+            log("SMART_CAMERA_FALLBACK " + json.dumps({"reason": rig.note,
+                "requested_style": decision.style, "actual_mode": rig.mode,
+                "visual_qa_pass": False}, ensure_ascii=False))
     # QA-only readout: compare RED/BLUE rotations and positions numerically.
     # Logging itself adds no Replay API writes.
     if str(getattr(tpl, "name", "")).startswith("CameraQA "):
@@ -551,6 +584,8 @@ def preview_clip(api: ReplayAPI, player: Player, tpl: Template, start: float, en
     """録画せずに、テンプレートのカメラ演出(追従/ズーム/スロー/HUD非表示)をLoL上で再生して確認する。"""
     try:
         plan, rig = _setup_clip(api, player, tpl, start, kills, log)
+        if plan.camera_control_mode in ("fixed_auto", "full_auto"):
+            _apply_initial_camera_pose(api, plan, start, stop, log)
     except Exception:
         try:
             if player is not None:

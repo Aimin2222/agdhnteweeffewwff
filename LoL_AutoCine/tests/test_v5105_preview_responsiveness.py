@@ -18,6 +18,26 @@ def wait_for(predicate, root=None):
     assert predicate()
 
 
+def test_reference_cards_remain_visible_in_both_edit_modes(tmp_path, monkeypatch):
+    import legacy_app
+    monkeypatch.setattr(legacy_app, 'SETTINGS', tmp_path / 'settings.json')
+    root = tk.Tk()
+    app = legacy_app.App(root)
+    try:
+        references = [panel for panel, _, title in app._mode_sidecards
+                      if title.startswith(('▶  参考', '◉  参考'))]
+        assert len(references) == 2
+        assert app.var_live.get() is False
+        for mode in ('easy', 'advanced'):
+            app.var_edit_mode.set(mode)
+            app._apply_edit_mode(log=False)
+            root.update_idletasks()
+            assert all(panel.winfo_manager() == 'pack' for panel in references)
+    finally:
+        app._live_preview.close()
+        root.destroy()
+
+
 def test_pending_frames_are_bounded_and_old_settings_never_return():
     entered, release = threading.Event(), threading.Event()
     seen = []
@@ -71,7 +91,9 @@ def test_close_discards_pending_work_without_waiting_for_slow_render():
 
 def test_mirror_fx_does_not_block_sliders_tab_switch_or_tk_callbacks(tmp_path, monkeypatch):
     import legacy_app
+    from core import gpu_mirror
     monkeypatch.setattr(legacy_app, 'SETTINGS', tmp_path / 'settings.json')
+    monkeypatch.setattr(gpu_mirror, 'probe', lambda: (False, 'CPU fallback test'))
     root = tk.Tk()
     app = legacy_app.App(root)
     entered, release = threading.Event(), threading.Event()

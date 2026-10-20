@@ -42,7 +42,7 @@ from core.players import Player, parse_players                     # noqa: E402
 from core.replay_api import ReplayAPI                              # noqa: E402
 from core.scanner import scan_kills, filter_scanned_events                                # noqa: E402
 from ui.scene_timeline import SceneTimeline                     # noqa: E402
-from ui.live_preview import LatestPreview
+from ui.live_preview import LatestPreview, PresentationRate, preview_delay_ms
 from ui.redraw import request_redraw
 from ui.mirror_capture import MirrorCapture                     # noqa: E402
 from ui.scene_project import SceneProject, Shot, scene_key, recommend, apply_shot  # noqa: E402
@@ -482,28 +482,49 @@ class FocusCircleViz(tk.Canvas):
 
 
 def _render_live_preview(request):
-    source, width, height, template, title, split, canvas_width, canvas_height = request
+    source, width, height, template, title, split, canvas_width, canvas_height = request[:8]
+    work_context = request[8] if len(request) > 8 else None
+    video_fx = request[9] if len(request) > 9 else True
     frame = source.latest()
     if frame is None:
         return None
-    # Pillow's raw decoder avoids NumPy's full-size advanced channel indexing.
-    # Alpha from WGC is ignored: it is not guaranteed to be opaque.
-    image = Image.frombytes('RGB', (frame.shape[1], frame.shape[0]),
-                            frame.tobytes(), 'raw', 'BGRX')
-    image.thumbnail((width, height), Image.Resampling.BILINEAR, reducing_gap=2.0)
-    original = np.asarray(image)
-    rgb = original
-    if template is not None:
-        rgb = apply_camera_preview(rgb, template)
-        rgb = apply_video_effect_preview(rgb, template, phase=0.5)
-        rgb = compose_compare(rgb, template, title, split)
+    from core.gpu_mirror import render as render_gpu_mirror
+    gpu_result = render_gpu_mirror(frame, width, height,
+                                   template if video_fx else None,
+                                   title if video_fx else '', split if video_fx else 0.)
+    if gpu_result is not None:
+        rgb, original = gpu_result
+    else:
+        # Alpha from WGC is not guaranteed opaque. Keep the existing CPU
+        # composition as the complete fallback for unsupported effects.
+        base = Image.frombytes('RGB', (frame.shape[1], frame.shape[0]),
+                               frame.tobytes(), 'raw', 'BGRX')
+        base.thumbnail((width, height), Image.Resampling.BILINEAR, reducing_gap=2.0)
+        original = np.asarray(base)
+        rgb = original
+        if template is not None and video_fx:
+            rgb = apply_camera_preview(rgb, template)
+            rgb = apply_video_effect_preview(rgb, template, phase=0.5)
+            rgb = compose_compare(rgb, template, title, split)
     image = Image.fromarray(rgb)
-    ratio = min(canvas_width / image.width, canvas_height / image.height)
-    if ratio != 1:
+    if template is not None and work_context:
+        from ui.director_work_controls import composite_mirror
+        image = composite_mirror(image, template, work_context)
+    # Preview the whole frame at its native aspect. Never crop or enlarge a
+    # processed frame to fill a wide editor panel: that loses detail and hides
+    # the top/bottom of the replay. Older saved preview_fill values are ignored.
+    ratio = min(1., canvas_width / image.width, canvas_height / image.height)
+    if ratio < 1.:
         image = image.resize((max(1, round(image.width * ratio)),
-                              max(1, round(image.height * ratio))), Image.Resampling.BILINEAR)
+                              max(1, round(image.height * ratio))), Image.Resampling.LANCZOS)
     # All resize work is finished before the UI uploads pixels to Tk.
     return image, original
+
+
+def _native_preview_size(canvas_width, canvas_height):
+    """Largest 16:9 processing size that fits the canvas and 1080p source."""
+    units = max(1, min(int(canvas_width) // 16, int(canvas_height) // 9, 120))
+    return 16 * units, 9 * units
 
 class App:
     def __init__(self, root: tk.Tk):
@@ -562,6 +583,8 @@ class App:
         self.var_auto_director_strength = tk.DoubleVar(value=1.0)
         self.var_smart_highlight_style = tk.StringVar(value=SMART_STYLES['auto'])
         self.var_smart_highlight_enabled = tk.BooleanVar(value=False)
+        from ui.director_work_controls import initialize as initialize_director_work
+        initialize_director_work(self)
         self.var_kill_icon_style = tk.StringVar(value=KILL_ICON_STYLES['off'])
         self.var_kill_icon_position = tk.StringVar(value=KILL_ICON_POSITIONS['right-top'])
         self.var_kill_icon_motion = tk.StringVar(value=KILL_MOTIONS['instant'])
@@ -592,8 +615,13 @@ class App:
         self.scene_project_path = ROOT / 'projects' / 'scene_project.json'
         self._project_autosave_token = None
         self._scene_loading = False
-        self._live_preview = LatestPreview(_render_live_preview)
+        self._live_preview = LatestPreview(_render_live_preview,
+            fallback=lambda request: _render_live_preview((*request[:3], None, '', 0., *request[6:8])),
+            on_error=lambda message: self.q.put(('preview_error', message)))
+        self._capture_preview_source = None
+        self._capture_preview_enabled = True
         self._preview_presented = None
+        self._mirror_present_rate = PresentationRate()
         self._preview_snapshot = None
         self._preview_input_at = 0.0
         self._preview_image_item = self._preview_text_item = None
@@ -609,8 +637,8 @@ class App:
         except Exception as e:
             self.log(f"シーンプロジェクトの復元をスキップ: {e}")
         self.root.after(80, self._pump)
-        # UIプレビューはTkinter/PIL/NumpyのCPU合成。書き出し側はGPU Fullを使用。
-        # 簡易合成は別スレッドで最大15Hz。録画・最終出力のFPSとは独立。
+        # ミラーはOpenCL GPU優先、非対応効果はCPUへ復帰。Tk表示はUIスレッド。
+        # 録画・最終出力のFPSとは独立。
         self.root.after(16, self._preview_tick)
         self.log("起動しました。①から順に、または上部の『★ これで自動作成』を押してください。")
         self._refresh_status()
@@ -695,24 +723,35 @@ class App:
         nav = ttk.Frame(top)
         nav.pack(side="left", padx=(15, 0))
         ttk.Button(nav, text="⌂  ホーム", style="Nav.TButton", command=lambda: self._focus_home()).pack(side="left")
-        ttk.Button(nav, text="▣  テンプレート", style="Nav.TButton", command=self._open_template_gallery).pack(side="left")
-        ttk.Button(nav, text="✦  キルフレーム図鑑", style="Nav.TButton", command=self._open_kill_frame_gallery).pack(side="left")
+        materials = ttk.Menubutton(nav, text='▣  素材・参考', style='Nav.TMenubutton')
+        materials_menu = tk.Menu(materials, tearoff=0)
+        materials_menu.add_command(label='テンプレート図鑑', command=self._open_template_gallery)
+        materials_menu.add_command(label='既存キルフレーム図鑑', command=self._open_kill_frame_gallery)
+        materials_menu.add_command(label='Work素材・エフェクト図鑑',
+                                   command=self._open_work_gallery)
+        materials_menu.add_command(label='Work素材の設定', command=self._open_work_kill_settings)
+        materials_menu.add_command(label='参考動画', command=self._focus_reference)
+        materials.configure(menu=materials_menu)
+        materials.pack(side='left')
         ttk.Button(nav, text="✓  自動診断", style="Nav.TButton", command=self.on_automatic_qa).pack(side="left")
-        ttk.Button(nav, text="▰  参考動画", style="Nav.TButton", command=lambda: self._focus_reference()).pack(side="left")
         ttk.Button(nav, text="⚙  設定", style="Nav.TButton", command=self._focus_settings).pack(side="left")
 
         right_top = ttk.Frame(top)
         right_top.pack(side="right")
         self.var_fps_ui = tk.StringVar(value="60 FPS")
         self.var_preview_hz = tk.StringVar(value="144 Hz")
-        ttk.Label(right_top, text="プレビュー", style="Muted.TLabel").pack(side="left", padx=(0, 4))
-        ttk.Combobox(right_top, state="readonly", width=9, textvariable=self.var_preview_hz,
-                     values=["60 Hz", "144 Hz"]).pack(side="left", padx=(0, 6))
-        ttk.Label(right_top, text="出力", style="Muted.TLabel").pack(side="left", padx=(0, 4))
-        ttk.Combobox(right_top, state="readonly", width=9, textvariable=self.var_fps_ui,
+        self._top_performance_controls = ttk.Frame(right_top)
+        self._top_performance_controls.pack(side="left")
+        ttk.Label(self._top_performance_controls, text="プレビュー", style="Muted.TLabel").pack(side="left", padx=(0, 4))
+        preview_hz_choice = ttk.Combobox(self._top_performance_controls, state="readonly", width=9,
+                                         textvariable=self.var_preview_hz, values=["60 Hz", "144 Hz"])
+        preview_hz_choice.pack(side="left", padx=(0, 6))
+        preview_hz_choice.bind('<<ComboboxSelected>>', lambda _event: self._save_settings())
+        ttk.Label(self._top_performance_controls, text="出力", style="Muted.TLabel").pack(side="left", padx=(0, 4))
+        ttk.Combobox(self._top_performance_controls, state="readonly", width=9, textvariable=self.var_fps_ui,
                      values=["60 FPS", "144 FPS"]).pack(side="left")
-        ttk.Button(right_top, text="＋", width=3, command=self.on_quick_prepare).pack(side="left", padx=5)
-        ttk.Button(right_top, text="設定", width=5, command=self._focus_settings).pack(side="left", padx=(3,0))
+        self._top_prepare_button = ttk.Button(right_top, text="準備", width=5, command=self.on_quick_prepare)
+        self._top_prepare_button.pack(side="left", padx=5)
         ttk.Button(right_top, text="ログ", width=4, command=self.on_show_diagnostics).pack(side="left")
 
         # View switch is UI-only. Project, checkmarks, templates and the render mode
@@ -854,38 +893,35 @@ class App:
         self.preview_badge = ttk.Label(ph, textvariable=self.var_camera_status, style="CardMuted.TLabel")
         self.preview_badge.pack(side="right")
 
-        self.var_live = tk.BooleanVar(value=True)
+        self.var_live = tk.BooleanVar(value=False)
         self.var_preview_quality = tk.StringVar(value="操作優先")
         self.var_split = tk.DoubleVar(value=0.0)
         self.var_mirror = tk.BooleanVar(value=False)
         tools = ttk.Frame(preview_card, style="Card.TFrame")
         tools.pack(fill="x", pady=(0, 7))
         ttk.Button(tools, text="ミラー開始", command=self.on_mirror_start).pack(side="left")
-        ttk.Button(tools, text="停止", command=lambda: self.on_mirror_stop(reason="停止ボタン")) .pack(side="left", padx=(4,0))
-        ttk.Checkbutton(tools, text="FXをミラーに反映", variable=self.var_live).pack(side="left", padx=10)
-        ttk.Label(tools, text="ミラー画質", style="CardMuted.TLabel").pack(side="left",padx=(2,4))
+        ttk.Button(tools, text="ミラー停止", command=lambda: self.on_mirror_stop(reason="停止ボタン")).pack(side="left", padx=(4,0))
+        ttk.Checkbutton(tools, text="FX反映", variable=self.var_live).pack(side="left", padx=10)
+        ttk.Label(tools, text="画質", style="CardMuted.TLabel").pack(side="left",padx=(2,4))
         quality = ttk.Combobox(tools, textvariable=self.var_preview_quality, state="readonly",
                                values=("操作優先", "表示サイズで確認"), width=17)
         quality.pack(side="left")
         quality.bind("<<ComboboxSelected>>", lambda _: self._save_settings())
         bind_effect_hover_tip(quality,"操作優先：UIを軽く保つ表示品質。表示サイズで確認：ミラーの表示領域に合わせて画質を高める（書き出し画質は変わらない）。",500)
         ttk.Button(tools, text="▶ 再生", style="Accent.TButton", command=self.on_preview_play).pack(side="right", padx=4)
-        ttk.Button(tools, text="■ 停止", command=self.on_preview_stop).pack(side="right", padx=4)
-        ttk.Button(tools, text="1枚だけ更新", command=self.on_exact_still).pack(side="right", padx=4)
+        ttk.Button(tools, text="■ 再生停止", command=self.on_preview_stop).pack(side="right", padx=4)
+        ttk.Button(tools, text="静止画更新", command=self.on_exact_still).pack(side="right", padx=4)
 
-        self.canvas = tk.Canvas(preview_card, bg="#111827", width=560, height=230, highlightthickness=0)
+        self.canvas = tk.Canvas(preview_card, bg="#111827", width=560, height=315, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
         # Center placeholder whenever paned windows settle or the user resizes.
         self.canvas.bind("<Configure>", self._recenter_preview_placeholder, add="+")
-        ttk.Label(preview_card, text="ぼかし・色はミラー再生中にも簡易表示（LoL本体の画面にはかかりません）。完成MP4は書き出し処理で適用。",
+        ttk.Label(preview_card, text="16:9の全体表示。左右の余白は映像を切らずに残します。",
                   style="CardMuted.TLabel").pack(anchor="w")
-        ttk.Label(preview_card, text="上段：準備・プレビュー・検出シーン　／　下段：全幅エディタ（境界ドラッグで高さ調整）",
-                  style="CardMuted.TLabel").pack(anchor="w", pady=(4,0))
 
         player_bar = ttk.Frame(preview_card, style="Card.TFrame", padding=(4, 5, 4, 0))
         player_bar.pack(fill="x")
-        ttk.Label(player_bar, text="再生位置はLoLリプレイと同期", style="CardMuted.TLabel").pack(side="left")
-        ttk.Label(player_bar, text="ゲーム音のみ・カメラ演出は下段で編集", style="CardMuted.TLabel").pack(side="right")
+        ttk.Label(player_bar, text="LoLリプレイと同期 / カメラ演出は下段で編集", style="CardMuted.TLabel").pack(side="left")
 
         split_hint = ttk.Frame(edit_host, style="Card.TFrame")
         split_hint.pack(fill="x", padx=8, pady=(5, 0))
@@ -925,7 +961,7 @@ class App:
         self._template_tone_canvas = tk.Canvas(f, width=141, height=23, bg="#FFFFFF",
                                                 highlightthickness=0)
         self._template_tone_canvas.pack(anchor="w", pady=(1,5))
-        ttk.Button(f, text="A：かんたん色見本カードを開閉",
+        ttk.Button(f, text="色見本を表示／閉じる",
                    command=self._toggle_inline_template_cards).pack(fill="x", pady=(3,2))
         self._inline_color_cards=ttk.Frame(f, style="Card.TFrame")
         from ui.template_gallery import template_info, draw_color_bars
@@ -941,7 +977,7 @@ class App:
             draw_color_bars(bar,details["colors"])
             ttk.Button(chip,text=preset[:13],width=17,
                        command=lambda n=preset:self._choose_easy_preset(n)).pack(side="left",padx=4)
-        ttk.Button(f, text="B：全テンプレート図鑑（実シーン比較）",
+        ttk.Button(f, text="テンプレート図鑑を開く（実シーン比較）",
                    command=self._open_template_gallery).pack(fill="x", pady=(3,0))
         ttk.Label(f, text="スキャン→シーン選択→実画面保存で、補正前/後を比較します。",
                   style="CardMuted.TLabel", wraplength=255).pack(anchor="w", pady=(2,0))
@@ -960,29 +996,35 @@ class App:
 
         ttk.Label(easy, text="① リプレイを開く → ② 対象プレイヤーを選ぶ → ③ ボタン1つでキル/アシストを検出して動画を作成", style="CardMuted.TLabel", wraplength=900).pack(anchor="w", pady=(4, 7))
         ttk.Button(easy, text="★ 自動作成（標準）", style="Accent.TButton", command=self.on_one_click).pack(fill="x", ipady=4)
-        ttk.Label(easy, text="現在の設定でキル／アシストを自動抽出して書き出します。初めてならこちら。",
-                  style="CardMuted.TLabel", wraplength=880).pack(anchor="w",pady=(1,5))
         ttk.Button(easy, text="✨ スマート自動編集（演出重視）", command=self.on_smart_one_click).pack(fill="x", pady=(4,0))
-        ttk.Label(easy, text="キル前後のズーム・カメラの回り込み・短い発光を自動で加えて出力します。",
-                  style="CardMuted.TLabel", wraplength=880).pack(anchor="w",pady=(1,5))
-        smart_row = ttk.Frame(easy, style="Card.TFrame")
+        ttk.Label(easy, text="標準は見やすさ優先。スマートはカメラと発光の演出を加えます。",
+                  style="CardMuted.TLabel", wraplength=880).pack(anchor="w",pady=(2,5))
+        self._easy_options_open = False
+        self._easy_options_button = ttk.Button(easy, text="演出・素材・仕上がりの設定を表示 ▾",
+                                                command=self._toggle_easy_options)
+        self._easy_options_button.pack(fill="x", pady=(2, 3))
+        options = ttk.Frame(easy, style="Card.TFrame")
+        self._easy_options_panel = options
+        smart_row = ttk.Frame(options, style="Card.TFrame")
         smart_row.pack(fill="x", pady=(6,2))
         ttk.Label(smart_row, text="自動カメラ演出", style="Card.TLabel", width=16).pack(side="left")
         ttk.Combobox(smart_row, state="readonly", textvariable=self.var_smart_highlight_style,
                      values=list(SMART_STYLES.values()), width=31).pack(side="left", fill="x", expand=True)
-        ttk.Label(easy, text="戦闘を見せる→キル直前に寄る→瞬間を短く強調→自然に戻る。通常の自動作成には影響しません。",
+        ttk.Label(options, text="戦闘を見せる→キル直前に寄る→瞬間を短く強調→自然に戻る。通常の自動作成には影響しません。",
                   style="CardMuted.TLabel", wraplength=850).pack(anchor="w")
-        badge_easy = ttk.Frame(easy, style="Card.TFrame")
+        from ui.director_work_controls import build as build_director_work
+        build_director_work(self, options)
+        badge_easy = ttk.Frame(options, style="Card.TFrame")
         badge_easy.pack(fill="x", pady=(8, 2))
         ttk.Label(badge_easy, text="キルアイコン装飾", style="Card.TLabel", width=16).pack(side="left")
         ttk.Combobox(badge_easy, state="readonly", textvariable=self.var_kill_icon_style,
                      values=list(KILL_ICON_STYLES.values()), width=26).pack(side="left", fill="x", expand=True)
         ttk.Button(badge_easy,text="▣ 見た目で選ぶ",command=self._open_kill_frame_gallery).pack(side="left",padx=4)
-        ttk.Checkbutton(easy, text="スマートモンタージュ（見せ場を後半に配置）",
+        ttk.Checkbutton(options, text="スマートモンタージュ（見せ場を後半に配置）",
                         variable=self.var_smart_montage).pack(anchor="w", pady=(5, 2))
-        ttk.Label(easy,text="ONなら複数キルの順番を見せ場中心に自動構成。OFFは時刻順を優先。",
+        ttk.Label(options,text="ONなら複数キルの順番を見せ場中心に自動構成。OFFは時刻順を優先。",
                   style="CardMuted.TLabel",wraplength=880).pack(anchor="w")
-        quick_presets = ttk.Frame(easy, style="Card.TFrame")
+        quick_presets = ttk.Frame(options, style="Card.TFrame")
         quick_presets.pack(fill="x", pady=(10, 3))
         ttk.Label(quick_presets, text="仕上がり", style="Card.TLabel").pack(side="left", padx=(0, 6))
         for title, key in (("自然（LoL色）", "三人称 自然め"),
@@ -992,13 +1034,13 @@ class App:
                        command=lambda k=key: self._choose_easy_preset(k))
             button.pack(side="left", padx=3, fill="x", expand=True)
             self._bind_preset_hover(button,key)
-        ttk.Button(easy, text="▣ 仕上がりを大きな比較画面で見る", command=self._open_easy_preset_comparison).pack(fill="x", pady=(4,5))
-        self.lbl_easy_preset = ttk.Label(easy, textvariable=self.var_tpl, style="CardMuted.TLabel")
+        ttk.Button(options, text="▣ 仕上がりを大きな比較画面で見る", command=self._open_easy_preset_comparison).pack(fill="x", pady=(4,5))
+        self.lbl_easy_preset = ttk.Label(options, textvariable=self.var_tpl, style="CardMuted.TLabel")
         self.lbl_easy_preset.pack(anchor="w", pady=(0, 3))
-        self._director_toggle = ttk.Checkbutton(easy, text="自動ディレクター：キル数に合わせてカメラ演出を自動調整（任意）",
+        self._director_toggle = ttk.Checkbutton(options, text="自動ディレクター：キル数に合わせてカメラ演出を自動調整（任意）",
                         variable=self.var_auto_director, command=self._update_auto_director_controls)
         self._director_toggle.pack(anchor="w", pady=(6, 1))
-        self._auto_director_panel = ttk.Frame(easy, style="Card.TFrame")
+        self._auto_director_panel = ttk.Frame(options, style="Card.TFrame")
         self.var_auto_director.trace_add("write", lambda *_: self._update_auto_director_controls())
         ttk.Label(self._auto_director_panel, text="自動カメラ演出の強さ（0～150%）",
                   style="Card.TLabel").pack(anchor="w")
@@ -1009,9 +1051,9 @@ class App:
         ttk.Entry(director_row, textvariable=self.var_auto_director_strength, width=8).pack(side="right")
         ttk.Label(self._auto_director_panel, text="キル数に応じた回り込み・接近量の倍率です。録画開始前に適用します。",
                   style="CardMuted.TLabel", wraplength=550).pack(anchor="w")
-        ttk.Label(easy, text="ON：キル数・シーンに合わせてカメラの回り込みと接近を調整。OFF：選んだカメラ設定を優先。",
+        ttk.Label(options, text="ON：キル数・シーンに合わせてカメラの回り込みと接近を調整。OFF：選んだカメラ設定を優先。",
                   style="CardMuted.TLabel").pack(anchor="w")
-        hud_easy = ttk.Frame(easy, style="Card.TFrame")
+        hud_easy = ttk.Frame(options, style="Card.TFrame")
         hud_easy.pack(fill="x", pady=(12, 2))
         ttk.Label(hud_easy, text="映像に残すHUD", style="Card.TLabel", width=16).pack(side="left")
         cb_hud_easy = ttk.Combobox(hud_easy, state="readonly", values=list(HUD_MODES.values()),
@@ -1019,8 +1061,8 @@ class App:
         cb_hud_easy.pack(side="left", padx=(4, 8))
         cb_hud_easy.bind("<<ComboboxSelected>>", self._on_hud_choice)
         ttk.Button(hud_easy, text="名前を消すには？", command=self.on_hud_name_help).pack(side="left")
-        ttk.Label(easy, textvariable=self.var_hud_summary, style="CardMuted.TLabel", wraplength=700).pack(anchor="w")
-        easy_montage_row = ttk.Frame(easy, style="Card.TFrame")
+        ttk.Label(options, textvariable=self.var_hud_summary, style="CardMuted.TLabel", wraplength=700).pack(anchor="w")
+        easy_montage_row = ttk.Frame(options, style="Card.TFrame")
         easy_montage_row.pack(fill="x", pady=(7,1))
         ttk.Label(easy_montage_row, text="動画のつなぎ目", style="Card.TLabel", width=16).pack(side="left")
         ttk.Combobox(easy_montage_row, state="readonly", textvariable=self.var_montage_fx,
@@ -1649,9 +1691,9 @@ class App:
         ttk.Button(f, text="✓ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
         ttk.Separator(f).pack(fill="x",pady=(8,6))
-        ttk.Button(f, text="開発用：全カメラテスト・30MB ZIP",
+        ttk.Button(f, text="開発用：カメラ＋Work素材一括QA・30MB ZIP",
                    command=self.on_dev_camera_qa).pack(fill="x",pady=(0,3))
-        ttk.Label(f, text="1回で接続→全体スキャン→動画・画像・診断を自動作成。ZIPは各30MB以下。完成版では削除予定。",
+        ttk.Label(f, text="接続→全体スキャン→カメラ・演出動画→Work全素材の整合性と図鑑画像→GPUミラー計測→診断ZIP。各30MB以下。",
                   style="CardMuted.TLabel",wraplength=300).pack(fill="x")
 
         f = card(right, "☁  出力状況")
@@ -1823,6 +1865,11 @@ class App:
         """
         mode = self.var_edit_mode.get()
         easy = mode != "advanced"
+        if hasattr(self, "_top_performance_controls"):
+            if easy:
+                self._top_performance_controls.pack_forget()
+            elif not self._top_performance_controls.winfo_manager():
+                self._top_performance_controls.pack(side="left", before=self._top_prepare_button)
         if hasattr(self, "_mode_easy_section"):
             self._mode_easy_section.pack_forget()
             self.editor_zone_bar.pack_forget()
@@ -1845,7 +1892,7 @@ class App:
             for panel, parent, title in self._mode_sidecards:
                 # Keep replay/player/template and results accessible in easy mode;
                 # hide specialist edit/FX blocks while keeping them instantiated.
-                if easy and title.startswith(("▶  参考", "◉  参考", "◈  カラー", "◈  カメラ詳細", "◈  LoLnam", "✧  自動")):
+                if easy and title.startswith(("◈  カラー", "◈  カメラ詳細", "◈  LoLnam", "✧  自動")):
                     continue
                 # Right inspector never repeats lower workspace parameters.
                 if title.startswith("⚙  その他の設定"):
@@ -2123,6 +2170,14 @@ class App:
         from ui.kill_frame_gallery import open_gallery
         return open_gallery(self)
 
+    def _open_work_gallery(self):
+        from ui.work_gallery import open_gallery
+        return open_gallery(self)
+
+    def _open_work_kill_settings(self):
+        from ui.director_work_controls import open_settings
+        return open_settings(self)
+
     def _open_easy_preset_comparison(self):
         """Large real-frame comparison using the same bounded worker as hover."""
         from ui.frame_comparison import open_comparison
@@ -2167,6 +2222,17 @@ class App:
         widget.bind('<Leave>',hide,add='+')
         widget.bind('<ButtonPress>',hide,add='+')
         widget.bind('<Destroy>',lambda event:hide() if event.widget is widget else None,add='+')
+
+    def _toggle_easy_options(self):
+        """Show optional controls without changing any render settings."""
+        panel = self._easy_options_panel
+        self._easy_options_open = not self._easy_options_open
+        if self._easy_options_open:
+            panel.pack(fill="x", pady=(4, 6))
+            self._easy_options_button.configure(text="演出・素材・仕上がりの設定を閉じる ▴")
+        else:
+            panel.pack_forget()
+            self._easy_options_button.configure(text="演出・素材・仕上がりの設定を表示 ▾")
 
     def _update_auto_director_controls(self):
         panel = getattr(self, "_auto_director_panel", None)
@@ -2491,6 +2557,13 @@ class App:
                         messagebox.showwarning("キルフレーム", a[1], parent=self.root)
                     elif not self._closing:
                         self._show_badge_preview(a[0])
+                elif kind == "capture_preview_ready":
+                    self._capture_preview_source = a[0]
+                    if self._capture_preview_enabled:
+                        self.var_mirror.set(True)
+                        self.log("録画用のLoL映像をミラーへ表示します（同じ映像入力を共有）。")
+                elif kind == "preview_error":
+                    self.log("ミラー描画エラー（演出が原因の場合は元映像へ戻します）: " + str(a[0]))
                 elif kind == "mirror_ready":
                     token, source, error = a
                     if self._mirror.accept(token, source, error):
@@ -3314,6 +3387,8 @@ class App:
             v.set(getattr(t, k))
         self.var_tr.set(TRANSITIONS.get(t.transition, t.transition))
         self.var_montage_fx.set(MONTAGE_LABELS.get(getattr(t,"montage_fx","cut"),MONTAGE_LABELS["cut"]))
+        from ui.director_work_controls import restore as restore_director_work
+        restore_director_work(self, t.to_dict())
         self.var_kill_icon_style.set(KILL_ICON_STYLES.get(getattr(t, "kill_icon_style", "off"), KILL_ICON_STYLES["off"]))
         self.var_kill_icon_position.set(KILL_ICON_POSITIONS.get(getattr(t, "kill_icon_position", "right-top"), KILL_ICON_POSITIONS["right-top"]))
         self.var_kill_icon_motion.set(KILL_MOTIONS.get(getattr(t, "kill_icon_motion", "instant"), KILL_MOTIONS["instant"]))
@@ -3486,6 +3561,8 @@ class App:
                               if label == self.var_camera_side.get()), "auto")
         # LoLミラー/カメラは144Hzで内部サンプリングし、最終出力FPSだけUI選択値へ合わせる。
         # これで60fps書き出しでも、カメラ演出の元データを144Hzで保持できる。
+        from ui.director_work_controls import apply as apply_director_work
+        apply_director_work(self, t)
         t.capture_fps = 144
         try:
             fps = int(str(self.var_fps_ui.get()).split()[0])
@@ -3506,8 +3583,11 @@ class App:
         def collect():
             try:
                 ok = bool(gpu_encoder_available())
+                from core.gpu_mirror import probe as probe_gpu_mirror
                 text = (("FFmpeg NVENC登録あり" if ok else "FFmpeg NVENC未検出") +
-                        " / " + gpu_pipeline_status() + " / プレビューCPU合成")
+                        " / " + gpu_pipeline_status() + " / ミラー: "
+                        + ("OpenCL GPU利用可能" if probe_gpu_mirror()[0]
+                           else "CPUフォールバック"))
             except Exception as e:
                 text = f"GPU状態: 判定できません ({type(e).__name__})"
             try:
@@ -3548,6 +3628,8 @@ class App:
                     self.var_out_right.set(str(self.out_root))
             if d.get("preview_quality") in ("操作優先", "表示サイズで確認"):
                 self.var_preview_quality.set(d["preview_quality"])
+            if d.get("preview_hz") in ("60 Hz", "144 Hz"):
+                self.var_preview_hz.set(d["preview_hz"])
             if d.get("left_width"):
                 self.var_left_width.set(int(d["left_width"]))
             if d.get("right_width"):
@@ -3595,6 +3677,8 @@ class App:
             if restored_mode in ("easy", "advanced"):
                 self.var_edit_mode.set(restored_mode)
                 self._apply_edit_mode(log=False)
+            from ui.director_work_controls import restore as restore_director_work
+            restore_director_work(self, d)
             # A prior _apply_panel_widths() call also saves settings; persist
             # the fully restored edit/HUD modes to avoid erasing preferences.
             self._save_settings()
@@ -3603,9 +3687,11 @@ class App:
 
     def _save_settings(self) -> None:
         try:
-            SETTINGS.write_text(json.dumps({"out_root": str(self.out_root),
+            from ui.director_work_controls import values as director_work_values
+            SETTINGS.write_text(json.dumps({**director_work_values(self), "out_root": str(self.out_root),
                                              "preview_quality": self.var_preview_quality.get(),
                                              "left_width": int(self.var_left_width.get()),
+                                             "preview_hz": self.var_preview_hz.get(),
                                              "right_width": int(self.var_right_width.get()),
                                              "edit_mode": self.var_edit_mode.get(),
                                              "smart_highlight_style": SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto'),
@@ -4008,7 +4094,7 @@ class App:
             messagebox.showerror(APP, str(exc))
             return
         destination = Path(self.out_root)
-        self.log("開発テスト: 接続・全体スキャン・撮影・比較画像・各30MB以下の分割ZIPをまとめて開始します。")
+        self.log("開発テスト: カメラ・Work全素材・演出・GPUミラーを一括検査し、各30MB以下の送信用ZIPを作ります。")
         self._run_bg(self._run_one_click_camera_qa, template, destination)
 
     def _run_one_click_camera_qa(self, template, destination):
@@ -4038,13 +4124,19 @@ class App:
                                self.locked, destination)
 
     def _record_camera_qa(self, tpl, players, events, preferred, destination):
-        """Worker: records 8 representative clips, then post-processes 10 variants."""
+        """Worker: records manual and smart-camera clips, then runs media QA."""
+        from core.work_qa import run_work_qa
         src = None
         own = False
         try:
             if self.stop_ev.is_set():
                 return
             qa_plan, plan_source = load_qa_plan(log=self.log)
+            from core.qa_plan import ALLOWED_CAMERA
+            # A remote legacy plan may narrow the camera list. The one-click
+            # comparison must always cover every supported RED/BLUE baseline.
+            qa_plan = {**qa_plan, 'camera_modes': list(ALLOWED_CAMERA)}
+            plan_source += '+all-camera-modes'
             plan_eight_cases(players, events, preferred, modes=qa_plan["camera_modes"])  # Validate before capture.
             src, own = self._ensure_source()
             factory = ((lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else
@@ -4053,7 +4145,8 @@ class App:
                         tpl,destination,stop=self.stop_ev,log=self.log,
                         audio_factory=factory,
                         progress=lambda *values:self.q.put(("job",*values)),
-                        plan=qa_plan, plan_source=plan_source)
+                        plan=qa_plan, plan_source=plan_source,
+                        work_qa_runner=run_work_qa, include_smart_modes=True)
             self.log(f"開発用一括テストの結果: {report}")
         finally:
             if own and src is not None:
@@ -4073,6 +4166,7 @@ class App:
         else:
             src = WGCWindowSource()
         src.start()
+        self.q.put(("capture_preview_ready", src))
         return src, True
 
     def on_make_clips(self) -> None:
@@ -4148,7 +4242,7 @@ class App:
         if self._match_scan_cache and self._match_scan_cache.complete:
             self._filter_scanned_for_locked()
         director_strength = None
-        if self.var_auto_director.get():
+        if self.var_auto_director.get() and (not hasattr(self, "var_camera_control_mode") or self.var_camera_control_mode.get() != "従来の手動カメラ"):
             try:
                 director_strength = self._auto_director_gain()
                 self._apply_auto_director()
@@ -4235,7 +4329,15 @@ class App:
 
     # ミラー (LoLウィンドウのみ)
     def on_mirror_start(self) -> None:
-        if self._closing or self.busy or self._mirror.pending:
+        if self._closing:
+            return
+        self._capture_preview_enabled = True
+        if self.busy:
+            self.var_mirror.set(True)
+            self.log("撮影準備・撮影中です。録画用の映像が届き次第ミラーに表示します。")
+            return
+        if self._mirror.pending:
+            self.log("ミラーの映像入力を準備中です。")
             return
         if self.source is not None:
             if self.source.running:
@@ -4253,11 +4355,16 @@ class App:
 
     def on_mirror_stop(self, reason: str = "操作または再接続") -> None:
         self.log(f"ミラーを停止します（理由: {reason}）")
-        self._mirror.stop()
-        self.source = None
+        self._capture_preview_enabled = False
+        if not self.busy:
+            self._mirror.stop()
+            self.source = None
+        else:
+            self.log("撮影中のため映像入力は維持し、ミラー表示だけを停止します。")
         self.canvas.delete("all")
         self._preview_image_item = self._preview_text_item = None
         self._preview_presented = None
+        self._mirror_present_rate.reset()
         self.log(f"ミラーOFF（{reason}）。")
         if hasattr(self, "var_mirror"):
             self.var_mirror.set(False)
@@ -4328,29 +4435,46 @@ class App:
     def _preview_tick(self) -> None:
         if self._closing:
             return
+        tick_started = time.monotonic()
         preview_fx = bool(self.var_live.get()) and (not self.busy or self._preview_fx_during_camera)
+        show_work = bool(self.var_work_frame.get()) if hasattr(self, 'var_work_frame') else False
         editing = time.monotonic() - self._preview_input_at < .25
         try:
             cw, ch = max(160, self.canvas.winfo_width()), max(90, self.canvas.winfo_height())
-            if self.source is not None and self.source.running:
+            source = self.source
+            if source is None or not source.running:
+                source = getattr(self, '_capture_preview_source', None)
+            if not getattr(self, '_capture_preview_enabled', True):
+                source = None
+            if source is not None and source.running:
                 # Snapshot Tk values here. The worker gets only data and the capture source.
-                t, settings_key = self._preview_template_snapshot() if preview_fx else (None, '')
-                title = preview_title(t, self._selected_multikill()) if t is not None else ''
-                split = float(self.var_split.get()) if t is not None else 0.0
+                t, settings_key = self._preview_template_snapshot() if preview_fx or show_work else (None, '')
+                title = preview_title(t, self._selected_multikill()) if preview_fx else ''
+                split = float(self.var_split.get()) if preview_fx else 0.0
                 if self.var_preview_quality.get() == "表示サイズで確認":
-                    process_w, process_h = cw, ch
+                    process_w, process_h = _native_preview_size(cw, ch)
                 else:
-                    process_w, process_h = (640, 360) if editing else (960, 540)
-                key = (id(self.source), cw, ch, process_w, process_h, settings_key, title, split)
+                    process_w, process_h = (640, 360) if editing or preview_fx else (960, 540)
+                key = (id(source), cw, ch, process_w, process_h, settings_key, title, split, preview_fx)
                 result = self._live_preview.result(key)
                 # During drags/scrolls lower only the approximate mirror workload.
                 # Export templates, recording clocks and output resolution are untouched.
                 # Native display quality is opt-in; default keeps controls responsive.
-                # GPU Full is still used by export; live display is CPU/PIL.
-                self._live_preview.submit(key, (self.source, process_w, process_h,
-                                               t, title, split, cw, ch))
+                # Export and live mirror have independent GPU capability checks.
+                work_context = ((self.api, [k.to_dict() for k in self.kills],
+                                 [p.to_dict() for p in self.players])
+                                if t is not None and t.work_kill_frame_id else None)
+                self._live_preview.submit(key, (source, process_w, process_h,
+                                               t, title, split, cw, ch, work_context, preview_fx))
                 if result is not None and result is not self._preview_presented:
                     image, original = result[1]
+                    from core.gpu_mirror import last_status as mirror_gpu_status
+                    backend, reason = mirror_gpu_status()
+                    backend_state = (backend, reason)
+                    if backend_state != getattr(self, '_preview_backend_last', None):
+                        self._preview_backend_last = backend_state
+                        self.log(f"ミラー処理: {backend} ({reason})")
+                    tk_started = time.perf_counter()
                     self._photo = ImageTk.PhotoImage(image)
                     if self._preview_image_item is None:
                         self.canvas.delete('all')
@@ -4360,21 +4484,46 @@ class App:
                         self.canvas.itemconfigure(self._preview_image_item, image=self._photo)
                         self.canvas.coords(self._preview_image_item, cw // 2, ch // 2)
                     self._preview_presented = result
+                    stamp = time.monotonic()
+                    self._mirror_present_rate.record(stamp)
+                    shown_fps = self._mirror_present_rate.fps()
                     if preview_fx:
                         cam = STYLES.get(t.style, t.style)
                         hud = "HUD安全モード" if t.hide_hud else "HUDそのまま"
                         self.canvas.itemconfigure(self._preview_text_item,
-                                                  text=f"ミラーFX表示（カラー/DOF適用） / カメラ: {cam} / {hud}")
+                                                  text=f"ミラー実測 {shown_fps:.1f} fps / FX / {backend} / カメラ: {cam} / {hud}")
                         now = time.monotonic()
                         if (hasattr(self, "curve_editor") and self.curve_editor.winfo_viewable()
                                 and now - self._histogram_updated >= .5):
                             self.curve_editor.set_histogram(original[::4, ::4])
                             self._histogram_updated = now
                     else:
-                        self.canvas.itemconfigure(self._preview_text_item, text='')
+                        self.canvas.itemconfigure(self._preview_text_item,
+                                                  text=f"ミラー実測 {shown_fps:.1f} fps / {backend}"
+                                                       + (' / Workキル素材' if show_work else ''))
+                    ui_ms = (time.perf_counter()-tk_started)*1000
+                    samples = getattr(self, '_mirror_tk_ms', [])
+                    samples.append(ui_ms)
+                    if len(samples) > 120:
+                        del samples[:-120]
+                    self._mirror_tk_ms = samples
+                    if stamp-getattr(self, '_mirror_perf_logged_at', 0.) >= 30 and hasattr(self._live_preview, 'stats'):
+                        from statistics import median
+                        stats = self._live_preview.stats()
+                        self.log(f"ミラー性能: 表示実測 {shown_fps:.1f}fps / 目標 {self.var_preview_hz.get()} / "
+                                 f"{backend} / 合成中央値 {stats['median_ms']}ms / "
+                                 f"合成p95 {stats['p95_ms']}ms / Tk転送中央値 {median(samples):.2f}ms / "
+                                 f"更新 {stats['completed']} / 上書き {stats['replaced']} / "
+                                 f"表示 {cw}x{ch} / Work {'on' if show_work else 'off'}")
+                        self._mirror_perf_logged_at = stamp
+                elif (self._preview_presented is not None and self._preview_text_item is not None
+                      and self._mirror_present_rate.stalled(time.monotonic())):
+                    self.canvas.itemconfigure(self._preview_text_item,
+                                              text='ミラー実測 0.0 fps / 映像更新待ち')
             else:
                 if self._preview_presented is not None or self._preview_text_item is None:
                     self._preview_presented = None
+                    self._mirror_present_rate.reset()
                     self._preview_image_item = None
                     self.canvas.delete("all")
                     self._preview_text_item = self.canvas.create_text(cw // 2, ch // 2, anchor="center",
@@ -4382,8 +4531,22 @@ class App:
                                         text="LoLミラーを開始するとここに実映像が表示されます")
         except (ValueError, tk.TclError):
             pass  # A numeric entry may be temporarily empty while the user edits it.
-        delay = 167 if editing else (100 if self.busy and not preview_fx else (67 if preview_fx else 50))
-        self.root.after(delay, self._preview_tick)
+        except Exception as error:
+            now = time.monotonic()
+            if now - getattr(self, '_preview_tick_error_at', 0.) >= 5.:
+                self._preview_tick_error_at = now
+                self.log(f"ミラー更新エラー（更新は継続します）: {type(error).__name__}: {error}")
+                _diag_write(CRASH_LOG, "MIRROR_PREVIEW_ERROR\n" + traceback.format_exc())
+        finally:
+            if not self._closing:
+                from core.gpu_mirror import last_status as mirror_gpu_status
+                gpu_active = mirror_gpu_status()[0] == 'OpenCL GPU'
+                preview_hz = getattr(self, 'var_preview_hz', None)
+                delay = preview_delay_ms(preview_hz.get() if preview_hz else '60 Hz',
+                                         editing=editing, gpu_active=gpu_active,
+                                         preview_fx=preview_fx,
+                                         elapsed_ms=(time.monotonic()-tick_started)*1000)
+                self.root.after(delay, self._preview_tick)
 
     def on_exact_still(self) -> None:
         try:

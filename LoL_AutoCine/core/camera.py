@@ -19,7 +19,7 @@ import math
 import threading
 import time
 from dataclasses import dataclass
-from typing import Callable, Optional
+from typing import Callable, Optional, ClassVar
 
 from .players import Player, norm
 from .replay_api import ReplayAPI, ReplayApiError
@@ -212,7 +212,8 @@ def window(t: float, a: float, b: float, c: float, d: float) -> float:
 
 def _vec(d) -> Optional[tuple]:
     try:
-        return (float(d["x"]), float(d["y"]), float(d["z"]))
+        value = (float(d["x"]), float(d["y"]), float(d["z"]))
+        return value if all(math.isfinite(v) for v in value) else None
     except Exception:
         return None
 
@@ -290,6 +291,7 @@ class CameraPlan:
     smart_impact: float = 0.0         # optional kill-time speed envelope
     side_yaw: float = 0.0            # v5.10.5: side-aware orbit bias; calibrated rig unchanged
     team: str = "ORDER"             # appended: preserve old positional arguments
+    camera_control_mode: ClassVar[str | None] = None  # runtime-only; preserve positional ABI
 
     @staticmethod
     def _keyframe_channel(frames, left_idx: int, key: str, local_t: float) -> float:
@@ -357,9 +359,18 @@ class CameraPlan:
 
     def fov_at(self, t: float) -> float:
         base = self._base_fov_at(t)
+        if self.camera_control_mode in ("fixed_auto", "full_auto"):
+            if not math.isfinite(base):
+                base = BASE_FOV
+            base = max(32.0, min(100.0, base))
+            if self.camera_control_mode == "full_auto" and len(self.kill_times) >= 2:
+                base = max(BASE_FOV, base)  # multi-kill: never punch into a narrow FOV
         if not self.scene_keyframes or self.style not in THIRD_STYLES:
             return base
-        return max(32.0, min(100.0, base + self.keyframe_values(t)[2]))
+        value = max(32.0, min(100.0, base + self.keyframe_values(t)[2]))
+        if self.camera_control_mode == "full_auto" and len(self.kill_times) >= 2:
+            value = max(BASE_FOV, value)
+        return value
 
     def _base_fov_at(self, t: float) -> float:
         w = self._cue(t, (-2.0, -0.4, 0.4, 1.8))
@@ -489,6 +500,40 @@ class CameraPlan:
         return ((rhx * dist * math.cos(eang), dist * sin_e, rhz * dist * math.cos(eang)), math.degrees(eang))
 
     def offset_at(self, t: float) -> tuple:
+        if self.camera_control_mode not in ("fixed_auto", "full_auto"):
+            return self._base_offset_at(t)
+        try:
+            if self.style == "orbit" and self.rig is not None and self.rig.mode == "fps":
+                # Old experimental Orbit had radius=0 outside the cue and never
+                # aimed at its target. Keep a real target-relative orbit radius.
+                yaw = math.radians(self.side_yaw + self.third_yaw +
+                                   35.0 * self._cue(t) * self._director_gain())
+                hx, hz = self.rig.h or (0.0, -1.0)
+                distance = max(950.0, float(self.third_dist))
+                elevation = math.radians(max(31.0, min(58.0, self.third_elev)))
+                pose = ((hx*math.cos(yaw)-hz*math.sin(yaw))*distance*math.cos(elevation),
+                        max(MIN_CAM_HEIGHT, distance*math.sin(elevation)),
+                        (hx*math.sin(yaw)+hz*math.cos(yaw))*distance*math.cos(elevation))
+            else:
+                pose = self._base_offset_at(t)
+            if self.rig is not None and self.rig.mode == "fps":
+                if len(pose) != 3 or not all(math.isfinite(float(v)) for v in pose) or math.hypot(pose[0], pose[2]) < 1.0:
+                    raise ValueError("Invalid target-relative pose")
+                # Keep the existing pitch guard's interval geometrically true.
+                horizontal = math.hypot(pose[0], pose[2])
+                pose = (pose[0], max(horizontal*math.tan(math.radians(14.0)),
+                                    min(horizontal*math.tan(math.radians(72.0)), pose[1])), pose[2])
+            return pose
+        except (ValueError, TypeError, OverflowError):
+            # A numeric failure cannot reuse stale absolute player coordinates.
+            # The rig remains attached: conservative relative rear shot only.
+            reason = "invalid_pose_safe_relative_offset"
+            if getattr(self, "_numeric_fallback_reason", None) != reason:
+                getattr(self, "_decision_log", lambda _m: None)("SMART_CAMERA_FALLBACK " + json.dumps({"reason": reason, "visual_qa_pass": False}))
+            self._numeric_fallback_reason = reason
+            return (0.0, 650.0, -1050.0)
+
+    def _base_offset_at(self, t: float) -> tuple:
         if self.style == "orbit":
             ks = tuple(self.kill_times) or (self.kill_time,)
             k = min(ks, key=lambda kk: abs(t - kk))
@@ -548,6 +593,8 @@ class CameraPlan:
 
     def rotation_at(self, t: float) -> Optional[dict]:
         """Optional side+mode-only composition corrections on a stable base."""
+        if self.camera_control_mode in ("fixed_auto", "full_auto") and self.rig is not None and self.rig.mode == "fps":
+            return target_center_rotation(self.offset_at(t))
         rot = self._raw_rotation_at(t)
         if rot is None:
             return None
@@ -661,7 +708,10 @@ class CameraPlan:
 
     def _third_heading(self, t, orbit_delta=0.0):
         # Clamp extra shot motion, never the explicit BLUE/RED base heading.
-        motion = float(self.third_yaw) + self.keyframe_values(t)[0] + orbit_delta
+        # New fixed mode never clips an explicit 90/180-degree user Orbit.
+        # Only automatic/keyframe motion is bounded, not the base viewpoint.
+        explicit = float(self.third_yaw) if self.camera_control_mode in ("fixed_auto", "full_auto") else 0.0
+        motion = float(self.third_yaw) - explicit + self.keyframe_values(t)[0] + orbit_delta
         if self.smart_composition:
             motion = max(-55.0, min(55.0, motion))
         if self.style in ("third", "third_cinema") and (self.kill_times or self.kill_time > 0):
@@ -679,7 +729,7 @@ class CameraPlan:
             # Clamp the FINAL motion including kill cue. This prevents the
             # supplemental nudge bypassing the safe ±55° bound.
             motion = max(-55.0, min(55.0, motion))
-        return self.side_yaw + motion + (8.0 if getattr(self, "_live_red_normal_reframe", False) else 0.0)
+        return self.side_yaw + explicit + motion + (8.0 if getattr(self, "_live_red_normal_reframe", False) else 0.0)
 
     def _lolnam_orbit(self, t):
         if self.style != 'lolnam_cinema':
@@ -854,7 +904,7 @@ class CameraDirector:
                 self._last_speed = current_speed
 
                 body = {}
-                if plan.style in CINEMA_STYLES:
+                if plan.style in CINEMA_STYLES or plan.camera_control_mode in ("fixed_auto", "full_auto"):
                     target_fov = float(plan.fov_at(t))
                     alpha = 1.0 - math.exp(-real_dt / 0.075) if self._smooth_fov is not None else 1.0
                     self._smooth_fov = target_fov if self._smooth_fov is None else self._smooth_fov + (target_fov - self._smooth_fov) * alpha
@@ -894,7 +944,7 @@ class CameraDirector:
                     body = limit_camera_post(
                         body, self._last_render_body, interval,
                         slow_api=self._recent_render_ms >= 45.0)
-                    if getattr(plan, "_live_engine_target_lock", False) and "selectionOffset" in body:
+                    if (getattr(plan, "_live_engine_target_lock", False) or plan.camera_control_mode in ("fixed_auto", "full_auto")) and "selectionOffset" in body:
                         # The last limiter/smoother may have moved the camera.
                         # Aim from the actual SENT offset, not from its future
                         # unsmoothed position. Offset smoothing keeps motion smooth.
@@ -955,7 +1005,8 @@ def _fallback_top(api: ReplayAPI, sel: str, base_fov: float, why: str) -> RigInf
 def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 0.8,
                      base_fov: float = BASE_FOV, settle: float = 0.25,
                      log: Callable = lambda m: None,
-                     third_elev: float = 28.0, third_dist: float = 950.0, height: float = 0.0) -> RigInfo:
+                     third_elev: float = 28.0, third_dist: float = 950.0, height: float = 0.0,
+                     safe_axes: bool = False) -> RigInfo:
     """固定プレイヤーをカメラ対象にして追従させる。
 
     三人称については、プレビュー/録画をまたいで成功したリグを再利用する。
@@ -969,8 +1020,10 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
     # stabilization. Keep calibrated axes and last-good direction per
     # player *and* camera preset. Never reuse another mode's stale rig.
     cache_key = (sel, str(p.team).upper(), style)
+    if safe_axes:
+        cache_key = (*cache_key, "smart_v1")  # never seed legacy calibrated modes
     cached = _TPS_CALIBRATION.get(cache_key)
-    repair_axes = live_framing_policy(p.team, style)["target_lock"]
+    repair_axes = safe_axes or live_framing_policy(p.team, style)["target_lock"]
 
     api.set_render(selectionName=sel, cameraMode="top", cameraAttached=True,
                    fieldOfView=base_fov, selectionOffset=ZERO)
@@ -1184,6 +1237,10 @@ def attach_to_player(api: ReplayAPI, p: Player, style: str, dist_scale: float = 
             note_extra = " (保存済み三人称リグもなく、方向を特定できないためFPS風)"
         off = (v[0] * dist_scale, v[1] * dist_scale, v[2] * dist_scale)
 
+    if safe_axes:
+        # FPS/follow/Orbit also need a canonical provisional pose. Do not
+        # briefly send a stale top-camera roll before the final pre-roll check.
+        rot_use = target_center_rotation(off)
     api.set_render(cameraMode="fps", cameraAttached=True,
                    selectionOffset={"x": off[0], "y": off[1], "z": off[2]},
                    cameraRotation=rot_use, fieldOfView=base_fov)

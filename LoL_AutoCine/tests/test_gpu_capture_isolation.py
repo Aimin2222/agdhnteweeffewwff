@@ -116,6 +116,13 @@ def test_shared_frame_owns_pixels_and_rejects_incomplete_or_invalid_frames():
         cp.HEADER.pack_into(bridge.memory.buf,0,seq+1,12,16,12*16*4)
         assert bridge.read(seq) is None
         cp.HEADER.pack_into(bridge.memory.buf,0,seq+2,12,16,1)
+        assert bridge.read(seq) is None  # A transient torn header must not stop capture.
+        cp.HEADER.pack_into(bridge.memory.buf,0,seq+4,12,16,12*16*4)
+        assert bridge.read(seq)[0] == seq+4
+        assert bridge.invalid_headers == 0
+        cp.HEADER.pack_into(bridge.memory.buf,0,seq+6,12,16,1)
+        for _ in range(250):
+            assert bridge.read(seq) is None
         with pytest.raises(ValueError,match='header'):bridge.read(seq)
         with pytest.raises(ValueError):bridge.write(np.zeros((100,100,4),np.uint8))
         with pytest.raises(ValueError):bridge.write(np.zeros((12,16,3),np.uint8))
