@@ -3,7 +3,8 @@ import tkinter as tk
 from types import SimpleNamespace
 from PIL import Image
 
-from ui.work_gallery import WorkGallery, matching, PAGE_SIZE, centered_preview, theme_category
+from ui.work_gallery import (WorkGallery, matching, PAGE_SIZE, centered_preview,
+                             page_layout, theme_category, thumbnail_width)
 
 
 def test_filter_preserves_quality_labels():
@@ -32,7 +33,16 @@ def test_gallery_only_centers_alpha_content_without_upscaling_or_editing_source(
     assert source.getchannel('A').getbbox() == (10, 10, 30, 30)
 
 
-def test_gallery_pages_assets_and_explicitly_marks_draft_selection():
+def test_responsive_catalog_page_layout_keeps_cards_legible():
+    assert page_layout(800, 600) == (3, PAGE_SIZE)
+    assert page_layout(620, 600) == (2, 4)  # Normal 1090px window.
+    assert page_layout(345, 400) == (2, 2)  # Minimum window, smaller thumbnails.
+    assert thumbnail_width(345, 2) < thumbnail_width(620, 2)
+    assert page_layout(300, 600) == (1, 2)
+    assert page_layout(300, 350) == (1, 1)
+
+
+def test_gallery_pages_assets_and_explicitly_marks_draft_selection(monkeypatch):
     root = tk.Tk()
     root.withdraw()
     app = SimpleNamespace(root=root, var_work_frame=tk.StringVar(value=''),
@@ -45,9 +55,16 @@ def test_gallery_pages_assets_and_explicitly_marks_draft_selection():
     try:
         assert len(gallery.items['frames']) == 652
         assert len(gallery.items['effects']) == 35
+        assert len(gallery.cards) == 4
+        monkeypatch.setattr(gallery.left, 'winfo_width', lambda: 800)
+        monkeypatch.setattr(gallery.left, 'winfo_height', lambda: 600)
+        gallery._sync_layout()
         assert len(gallery.cards) == PAGE_SIZE
+        monkeypatch.setattr(gallery.left, 'winfo_width', lambda: 300)
+        gallery._sync_layout()
+        assert len(gallery.cards) == 2
         gallery.kind.set('エフェクト')
-        assert len(gallery.cards) == PAGE_SIZE
+        assert len(gallery.cards) == 2
         gallery.status.set('正式合格')
         assert len(gallery.cards) == 0
         gallery.status.set('すべて')

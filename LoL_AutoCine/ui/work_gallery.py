@@ -20,6 +20,18 @@ REGION_THEMES = {
 CATEGORIES = ('すべて', 'スキンテーマ', '地域モチーフ', '基本案・その他')
 
 
+def page_layout(width, height):
+    """Keep each card legible at the current pane size."""
+    columns = 3 if width >= 660 else 2 if width >= 330 else 1
+    rows = 2 if height >= 485 else 1
+    return columns, columns * rows
+
+
+def thumbnail_width(width, columns):
+    card_width = (width - 16 - 8 * columns) // columns
+    return max(96, min(205, ((card_width - 12) // 16) * 16))
+
+
 def theme_category(theme):
     if theme in REGION_THEMES:
         return '地域モチーフ'
@@ -41,10 +53,10 @@ def centered_preview(image, bounds):
     return tile
 
 
-@lru_cache(maxsize=48)
-def thumbnail(signature):
+@lru_cache(maxsize=64)
+def thumbnail(signature, width=205):
     with Image.open(signature[0]) as source:
-        return centered_preview(source.convert('RGBA'), (205, 108))
+        return centered_preview(source.convert('RGBA'), (width, round(width * 108 / 205)))
 
 
 def matching(items, text, status, category='すべて', theme='すべて'):
@@ -71,51 +83,61 @@ class WorkGallery:
         self.category = tk.StringVar(value='すべて')
         self.theme = tk.StringVar(value='すべて')
         self.page = 0
+        self.columns = 2
+        self.page_size = 4
+        self.thumb_width = 205
         self.selected = None
         self.generation = 0
         self.preview_generation = 0
         self.ready = queue.Queue()
         self.photos = []
+        self._layout_job = None
 
-        top = ttk.Frame(self.win, padding=10)
+        heading = ttk.Frame(self.win, padding=(10, 8, 10, 0))
+        heading.pack(fill='x')
+        ttk.Label(heading, text='Work素材図鑑', font=('Meiryo UI', 15, 'bold')).pack(side='left')
+        ttk.Label(heading, text='正式合格と仮素材を区別して表示').pack(side='right')
+        top = ttk.Frame(self.win, padding=(10, 6, 10, 2))
         top.pack(fill='x')
-        ttk.Label(top, text='Work素材図鑑', font=('Meiryo UI', 15, 'bold')).pack(side='left')
-        ttk.Label(top, text='正式合格と仮素材を区別して表示', padding=(15, 0)).pack(side='left')
-        ttk.Combobox(top, textvariable=self.status, values=('すべて', '正式合格', '仮素材'),
-                     state='readonly', width=12).pack(side='right', padx=4)
-        ttk.Entry(top, textvariable=self.search, width=26).pack(side='right', padx=4)
-        ttk.Label(top, text='検索').pack(side='right')
+        top.columnconfigure(3, weight=1)
+        ttk.Label(top, text='種類').grid(row=0, column=0, sticky='w')
         ttk.Combobox(top, textvariable=self.kind, values=list(KINDS),
-                     state='readonly', width=16).pack(side='right', padx=9)
+                     state='readonly', width=16).grid(row=0, column=1, sticky='ew', padx=(6, 16))
+        ttk.Label(top, text='検索').grid(row=0, column=2, sticky='w')
+        ttk.Entry(top, textvariable=self.search).grid(row=0, column=3, sticky='ew', padx=(6, 12))
+        ttk.Combobox(top, textvariable=self.status, values=('すべて', '正式合格', '仮素材'),
+                     state='readonly', width=12).grid(row=0, column=4, sticky='e')
         filters = ttk.Frame(self.win, padding=(10, 0, 10, 8))
         filters.pack(fill='x')
-        ttk.Label(filters, text='素材の系統').pack(side='left')
+        ttk.Label(filters, text='素材の系統').grid(row=0, column=0, sticky='w')
         self.category_box = ttk.Combobox(filters, textvariable=self.category, values=CATEGORIES,
                                          state='readonly', width=16)
-        self.category_box.pack(side='left', padx=(6, 16))
-        ttk.Label(filters, text='テーマ').pack(side='left')
+        self.category_box.grid(row=0, column=1, sticky='ew', padx=(6, 16))
+        ttk.Label(filters, text='テーマ').grid(row=0, column=2, sticky='w')
         self.theme_box = ttk.Combobox(filters, textvariable=self.theme, state='readonly', width=24)
-        self.theme_box.pack(side='left', padx=6)
-        ttk.Label(filters, text='地域は素材のモチーフ分類です', padding=(12, 0)).pack(side='left')
+        self.theme_box.grid(row=0, column=3, sticky='ew', padx=(6, 0))
+        ttk.Label(filters, text='地域は素材のモチーフ分類です').grid(row=1, column=0,
+                                                   columnspan=4, sticky='w', pady=(4, 0))
 
         main = ttk.PanedWindow(self.win, orient='horizontal')
         main.pack(fill='both', expand=True)
         left = ttk.Frame(main, padding=8)
         right = ttk.Frame(main, padding=12)
+        self.left = left
         main.add(left, weight=3)
         main.add(right, weight=2)
         pager = ttk.Frame(left)
         pager.pack(fill='x', pady=(0, 7))
-        self.prev_button = ttk.Button(pager, text='◀ 前のページ', command=lambda: self.turn(-1))
+        self.prev_button = ttk.Button(pager, text='◀ 前へ', command=lambda: self.turn(-1))
         self.prev_button.pack(side='left')
         self.page_label = ttk.Label(pager, text='')
         self.page_label.pack(side='left', expand=True)
-        self.next_button = ttk.Button(pager, text='次のページ ▶', command=lambda: self.turn(1))
+        self.next_button = ttk.Button(pager, text='次へ ▶', command=lambda: self.turn(1))
         self.next_button.pack(side='right')
         self.grid = ttk.Frame(left)
         self.grid.pack(fill='both', expand=True)
         for column in range(3):
-            self.grid.columnconfigure(column, weight=1)
+            self.grid.columnconfigure(column, weight=1 if column < self.columns else 0)
 
         self.preview = ttk.Label(right, text='素材を選択してください', anchor='center')
         self.preview.pack(fill='both', expand=True)
@@ -132,6 +154,8 @@ class WorkGallery:
             variable.trace_add('write', lambda *_: self.refresh(reset=True))
         self._update_theme_choices()
         self.refresh(reset=True)
+        left.bind('<Configure>', lambda _event: self._queue_layout(), add='+')
+        self.win.after_idle(self._sync_layout)
         self._poll_id = self.win.after(50, self.poll)
 
     def filtered(self):
@@ -151,6 +175,32 @@ class WorkGallery:
         if self.theme.get() not in choices:
             self.theme.set('すべて')
 
+    def _sync_layout(self):
+        if not self.win.winfo_exists():
+            return
+        width, height = self.left.winfo_width(), self.left.winfo_height()
+        if width < 200 or height < 200:
+            return  # Ignore Tk's initial 1x1 geometry before the pane settles.
+        columns, page_size = page_layout(width, height)
+        thumb_width = thumbnail_width(width, columns)
+        if (columns, page_size, thumb_width) == (self.columns, self.page_size, self.thumb_width):
+            return
+        first_visible = self.page * self.page_size
+        self.columns, self.page_size, self.thumb_width = columns, page_size, thumb_width
+        self.page = first_visible // page_size
+        for column in range(3):
+            self.grid.columnconfigure(column, weight=1 if column < columns else 0)
+        self.refresh()
+
+    def _queue_layout(self):
+        if self._layout_job is not None:
+            self.win.after_cancel(self._layout_job)
+        self._layout_job = self.win.after(100, self._apply_queued_layout)
+
+    def _apply_queued_layout(self):
+        self._layout_job = None
+        self._sync_layout()
+
     def refresh(self, *, reset=False):
         if reset:
             self.page = 0
@@ -161,7 +211,7 @@ class WorkGallery:
         self.generation += 1
         generation = self.generation
         rows = self.filtered()
-        page_count = max(1, (len(rows)+PAGE_SIZE-1)//PAGE_SIZE)
+        page_count = max(1, (len(rows)+self.page_size-1)//self.page_size)
         self.page = min(self.page, page_count-1)
         self.page_label.configure(text=f'{len(rows)}件  /  {self.page+1} / {page_count}')
         self.prev_button.configure(state='normal' if self.page else 'disabled')
@@ -171,28 +221,30 @@ class WorkGallery:
         for widget in self.grid.winfo_children():
             widget.destroy()
         self.photos.clear()
-        shown = rows[self.page*PAGE_SIZE:(self.page+1)*PAGE_SIZE]
+        shown = rows[self.page*self.page_size:(self.page+1)*self.page_size]
         self.cards = []
         for index, item in enumerate(shown):
             cell = ttk.Frame(self.grid, padding=4, relief='solid', borderwidth=1)
-            cell.grid(row=index//3, column=index%3, sticky='nsew', padx=4, pady=4)
+            cell.grid(row=index//self.columns, column=index%self.columns,
+                      sticky='nsew', padx=4, pady=4)
             image = ttk.Label(cell, text='画像を読込中', anchor='center')
             image.pack(fill='both', expand=True)
             status = '正式合格' if item['status'] == 'approved' else '仮素材・未合格'
-            ttk.Label(cell, text=f"{item['id']}  [{status}]", wraplength=200).pack(fill='x')
+            ttk.Label(cell, text=item['id'], wraplength=self.thumb_width).pack(fill='x')
+            ttk.Label(cell, text=status).pack(fill='x')
             ttk.Button(cell, text='選択', command=lambda row=item: self.select(row)).pack(fill='x')
             self.cards.append(image)
         kind = KINDS[self.kind.get()]
-        threading.Thread(target=self._load_page, args=(generation, kind, shown),
+        threading.Thread(target=self._load_page, args=(generation, kind, shown, self.thumb_width),
                          name='AutoCine-WorkGallery', daemon=True).start()
 
-    def _load_page(self, generation, kind, shown):
+    def _load_page(self, generation, kind, shown, width):
         for index, item in enumerate(shown):
             if generation != self.generation:
                 return
             try:
                 _, path = resolve_asset(item['id'], kind, review=True)
-                image = thumbnail(file_signature(path))
+                image = thumbnail(file_signature(path), width)
                 self.ready.put((generation, index, image, ''))
             except Exception as exc:
                 self.ready.put((generation, index, None, f'{type(exc).__name__}: {exc}'))
@@ -227,7 +279,7 @@ class WorkGallery:
 
     def turn(self, offset):
         count = len(self.filtered())
-        page_count = max(1, (count+PAGE_SIZE-1)//PAGE_SIZE)
+        page_count = max(1, (count+self.page_size-1)//self.page_size)
         next_page = max(0, min(page_count-1, self.page+offset))
         if next_page != self.page:
             self.page = next_page
@@ -280,6 +332,9 @@ class WorkGallery:
         self.close()
 
     def close(self):
+        if self._layout_job is not None:
+            self.win.after_cancel(self._layout_job)
+            self._layout_job = None
         if getattr(self, '_poll_id', None):
             self.win.after_cancel(self._poll_id)
             self._poll_id = None
