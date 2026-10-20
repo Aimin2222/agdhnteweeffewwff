@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-20",
+  "repository": "Aimin2222/agdhnteweeffewwff",
+  "branch": "codex/camera-effects-integration-20261019",
+  "commit": "feb895491ca4bc780da4aab91990f25177cd35ab",
+  "version": "5.10.32-test",
+  "sources": [
+    {
+      "path": "LoL_AutoCine/legacy_app.py",
+      "blob_sha": "40d7f4ecc4c4789b3f565c30301e8f3b90e00f61",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/feb895491ca4bc780da4aab91990f25177cd35ab/LoL_AutoCine/legacy_app.py"
+    },
+    {
+      "path": "LoL_AutoCine/ui/scene_timeline.py",
+      "blob_sha": "b3553904cd9bf2e222d1416aab5dd3ced4c55ff0",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/feb895491ca4bc780da4aab91990f25177cd35ab/LoL_AutoCine/ui/scene_timeline.py"
+    },
+    {
+      "path": "LoL_AutoCine/ui/kill_frame_gallery.py",
+      "blob_sha": "cce890765adbcf3ab09c82b66e6764c3ba6c79bc",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/feb895491ca4bc780da4aab91990f25177cd35ab/LoL_AutoCine/ui/kill_frame_gallery.py"
+    },
+    {
+      "path": "LoL_AutoCine/ui/work_gallery.py",
+      "blob_sha": "033050e45e201ae7ab26c1b621a6be1950a02396",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/feb895491ca4bc780da4aab91990f25177cd35ab/LoL_AutoCine/ui/work_gallery.py"
+    },
+    {
+      "path": "LoL_AutoCine/ui/director_work_controls.py",
+      "blob_sha": "c839edbfbe1131a4d57971af02af6e4651406762",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/feb895491ca4bc780da4aab91990f25177cd35ab/LoL_AutoCine/ui/director_work_controls.py"
+    }
+  ],
+  "other_sources": [
+    "LoL_AutoCine/core/smart_camera_director.py",
+    "LoL_AutoCine/core/camera.py",
+    "LoL_AutoCine/core/kill_icons.py",
+    "LoL_AutoCine/assets/work_kill_assets/catalog.json",
+    "LoL_AutoCine/VERSION.txt"
+  ],
+  "catalog": {
+    "frames": 652,
+    "approved_frames": 1,
+    "approved_frame_id": "083/a_simple_main",
+    "review_frames": 651,
+    "effects": 35,
+    "approved_effects": 0
+  },
+  "observations": {
+    "existing_layout": "Three upper columns: preparation / fixed mirror / scenes, lower independently scrolling full-width editor",
+    "minimum_window": [
+      1280,
+      780
+    ],
+    "mirror_target_default": 144,
+    "measured_fps_is_separate": true,
+    "timeline": "pre/post trim, not match event selection",
+    "camera_styles": 10,
+    "motions": 6
+  },
+  "screenshot_reference": {
+    "description": "Latest user-attached Work gallery screenshot in technical chat, before responsive-gallery fix in v5.10.32; inspected as current-family visual reference.",
+    "private_screenshot_not_republished": true
+  },
+  "prior_ui": {
+    "directory": "../ui_mockups_20261020",
+    "purpose": "Full redesign concepts; not implementation specification for this incremental test UI."
+  },
+  "new_ui_proposals": [
+    "Inline camera/frame/effect/motion thumbnail selection integration",
+    "Match kill-selection event row",
+    "Aggregated test results panel",
+    "1366x768 reflow and minimum-height change"
+  ],
+  "no_application_or_asset_changes": true
+}

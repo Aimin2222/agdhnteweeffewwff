@@ -1,0 +1,25 @@
+{
+  "reviewed_images": [
+    "A_main",
+    "B_main",
+    "B_camera",
+    "B_effects",
+    "C_main",
+    "B_compact"
+  ],
+  "review_method": "Visual inspection of all final generated screenshots",
+  "checks": [
+    "Layout distinctness and central mirror",
+    "White/light gray/blue Japanese UI",
+    "Preview versus actual video creation",
+    "No fabricated test PASS",
+    "Frame versus FX approval separation",
+    "Six existing entrance motions",
+    "New UI proposal labels"
+  ],
+  "limitations": [
+    "Generated gameplay and asset thumbnail images are illustrative; replace with actual catalog assets during implementation.",
+    "No runtime, DPI, camera, GPU or recording test performed.",
+    "Layout region sizes are intended logical guidance, not pixel measurements of generated output."
+  ]
+}
