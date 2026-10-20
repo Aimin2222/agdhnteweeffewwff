@@ -1,0 +1,334 @@
+{
+  "logical_canvas": [
+    1920,
+    1080
+  ],
+  "coordinates": "Design-intent rectangles [x,y,width,height] in logical pixels; not measurements extracted from generated PNGs, not a claim of pixel-identical implementation.",
+  "common_header": [
+    0,
+    0,
+    1920,
+    48
+  ],
+  "persistence": [
+    "mirror_preview",
+    "timeline",
+    "basic_settings_entry"
+  ],
+  "scroll_containers": [
+    "detected_scenes",
+    "asset_library",
+    "inspector"
+  ],
+  "shared_state": [
+    "selected_match",
+    "selected_scene_ids",
+    "playhead_time",
+    "camera_settings",
+    "frame_selection",
+    "effect_selection",
+    "output_settings"
+  ],
+  "screens": [
+    {
+      "id": "03_normal",
+      "regions": {
+        "scene": [
+          12,
+          60,
+          336,
+          760
+        ],
+        "preview": [
+          364,
+          60,
+          1140,
+          598
+        ],
+        "quick_choices": [
+          364,
+          666,
+          1140,
+          154
+        ],
+        "inspector": [
+          1516,
+          60,
+          392,
+          760
+        ],
+        "timeline": [
+          12,
+          832,
+          1896,
+          236
+        ]
+      },
+      "behavior": "同じ画面で簡単／詳細を切替。通常は視覚カードと少数の調整値を優先。"
+    },
+    {
+      "id": "03_detail",
+      "regions": {
+        "scene": [
+          12,
+          60,
+          300,
+          710
+        ],
+        "preview": [
+          328,
+          60,
+          1140,
+          590
+        ],
+        "quick_choices": [
+          328,
+          658,
+          1140,
+          112
+        ],
+        "inspector": [
+          1480,
+          60,
+          428,
+          710
+        ],
+        "timeline": [
+          12,
+          782,
+          1896,
+          286
+        ]
+      },
+      "behavior": "プレビューの列と固定ドックを維持し、右の詳細項目とタイムラインを拡張。"
+    },
+    {
+      "id": "06_library",
+      "regions": {
+        "library": [
+          12,
+          60,
+          548,
+          794
+        ],
+        "preview": [
+          576,
+          60,
+          980,
+          620
+        ],
+        "applied_assets": [
+          576,
+          692,
+          980,
+          162
+        ],
+        "selection_detail": [
+          1572,
+          60,
+          336,
+          794
+        ],
+        "timeline": [
+          12,
+          866,
+          1896,
+          202
+        ]
+      },
+      "behavior": "図鑑だけスクロール。ライブラリから選択してもプレビュー・タイムラインは残す。"
+    },
+    {
+      "id": "06_edit",
+      "regions": {
+        "scene": [
+          12,
+          60,
+          300,
+          710
+        ],
+        "preview": [
+          328,
+          60,
+          1140,
+          590
+        ],
+        "applied_assets": [
+          328,
+          658,
+          1140,
+          112
+        ],
+        "inspector": [
+          1480,
+          60,
+          428,
+          710
+        ],
+        "timeline": [
+          12,
+          782,
+          1896,
+          286
+        ]
+      },
+      "behavior": "素材を探す操作と配置・調整をページ分離。選択した素材は両ページで共有。"
+    },
+    {
+      "id": "05_wizard",
+      "regions": {
+        "steps": [
+          12,
+          60,
+          1896,
+          64
+        ],
+        "scene": [
+          12,
+          136,
+          320,
+          664
+        ],
+        "preview": [
+          348,
+          136,
+          1120,
+          540
+        ],
+        "quick_choices": [
+          348,
+          688,
+          1120,
+          112
+        ],
+        "guide": [
+          1484,
+          136,
+          424,
+          664
+        ],
+        "timeline": [
+          12,
+          812,
+          1896,
+          198
+        ],
+        "step_navigation": [
+          12,
+          1022,
+          1896,
+          46
+        ]
+      },
+      "behavior": "4ステップ中も映像は常時表示。詳細設定への導線を残し、戻る操作で設定を失わない。"
+    },
+    {
+      "id": "02_editor",
+      "regions": {
+        "materials": [
+          12,
+          60,
+          420,
+          650
+        ],
+        "preview": [
+          448,
+          60,
+          1036,
+          582
+        ],
+        "camera_choices": [
+          448,
+          654,
+          1036,
+          56
+        ],
+        "inspector": [
+          1500,
+          60,
+          408,
+          650
+        ],
+        "timeline": [
+          12,
+          722,
+          1896,
+          346
+        ]
+      },
+      "behavior": "素材・プレビュー・インスペクタの3列。シーン／カメラ／フレーム／エフェクトを独立トラック化。"
+    },
+    {
+      "id": "04_dock",
+      "regions": {
+        "scene": [
+          12,
+          60,
+          300,
+          590
+        ],
+        "preview": [
+          328,
+          60,
+          1140,
+          590
+        ],
+        "right_docks": [
+          1480,
+          60,
+          428,
+          710
+        ],
+        "settings_docks": [
+          12,
+          662,
+          1456,
+          150
+        ],
+        "timeline": [
+          12,
+          824,
+          1896,
+          244
+        ]
+      },
+      "behavior": "ペインごとのドック見出し。レイアウト復元を提供し、映像を覆うフローティング配置を初期状態にしない。"
+    },
+    {
+      "id": "01_home",
+      "regions": {
+        "start_and_scenes": [
+          12,
+          60,
+          336,
+          770
+        ],
+        "preview": [
+          364,
+          60,
+          1140,
+          600
+        ],
+        "quick_choices": [
+          364,
+          672,
+          1140,
+          158
+        ],
+        "recommendation": [
+          1516,
+          60,
+          392,
+          770
+        ],
+        "timeline": [
+          12,
+          842,
+          1896,
+          226
+        ]
+      },
+      "behavior": "スキャン→見どころ選択→おすすめ出力を主操作とし、詳細編集と図鑑へも移動可能。"
+    }
+  ]
+}

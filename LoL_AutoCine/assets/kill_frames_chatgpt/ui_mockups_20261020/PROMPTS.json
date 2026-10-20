@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-20",
+  "tool": "built-in image_gen",
+  "transparent_background": false,
+  "target_canvas": [
+    1920,
+    1080
+  ],
+  "shared_prompt": "Use case: ui-mockup. Deliver ONE full-window Windows desktop app UI mockup image for LoL AutoCine, target EXACTLY 1920x1080 pixels, 16:9 landscape. Straight-on screen capture, no laptop, no perspective, no browser chrome, no presentation board, no multiple screens. Original AutoCine interface, not a copy of another product. Premium but approachable LIGHT interface: white #FFFFFF panels, very light gray #F4F7FB canvas, dark navy #182B43 text, blue #2878EF accents. Japanese UI in clean large readable Japanese sans-serif, minimum perceived 17-18px at 1920, meaningful succinct labels, ample spacing. Thin neutral separators, subtle shadows, 8px card corners, blue selected states, clearly visible blue checked boxes. Sliders ALWAYS paired with visible numeric input boxes. Prefer thumbnail cards, segmented buttons and icon buttons over dropdowns. Compact Windows titlebar with LoL AutoCine at left, minimize/maximize/close at right. Main header has project 'サモナーズリフト / 試合01' and prominent blue '書き出し' top right. Persistent access button '基本設定' opens GPU / 音声 / HUD / TargetLock / 37キルバッジ; show these exact labels as concise settings links or chips so no existing function appears removed. Main '簡単編集 | 詳細編集' segmented control. Always show a LARGE CENTRAL 16:9 LoL mirror preview, about 40-50% of content width or more, never hidden behind a full-screen gallery, with a top-down Summoner's Rift team fight including small champions, minions, paths, blue/red abilities and recognizable restrained LoL HUD; colorful game imagery contrasts the white UI. Preview header 'ミラープレビュー', '接続中' status, transport play/pause and time '12:34 / 32:18'. Mirror preview stays in a FIXED workspace pane when lists scroll. Timeline dock ALWAYS visible at bottom, labeled 'タイムライン', time ruler, blue playhead, separate horizontal rows '検出シーン', 'カメラ', 'キルフレーム', 'エフェクト', colored small clips. Detected scene thumbnails with Japanese labels such as 'ダブルキル 12:34', '集団戦 18:52', 'バロン 25:10'. A large clear '試合全体スキャン' action and a detected scene list label '検出シーン'. Accessible 'カメラ', 'キルフレーム', 'エフェクト' controls with VISUAL cards (camera shot thumbnails; gold/blue/rose portrait-frame motifs; light/spark/trail thumbnails), NOT just words. Output settings summary '出力設定', '1920×1080', '60 fps', 'MP4', and button '設定を開く'. Do NOT imply currently unfinished frame assets are quality approved. No completion badges, no feature removal, no cluttered tiny text. No real brand logo other than LoL AutoCine text. This is a static design mockup; no unsupported new product feature claims.",
+  "screens": [
+    {
+      "id": "03_normal",
+      "file": "plan03_hybrid_normal.png",
+      "title": "案3 ハイブリッド固定プレビュー型・通常画面",
+      "prompt": "LAYOUT PLAN 03 NORMAL: A hybrid fixed-preview workspace. Header navigation tabs '試合', '編集' (selected), '書き出し'. Below header, a narrow left dock 280px '検出シーン' with '試合全体スキャン' blue outlined button and 3 thumbnail scene rows with big visible checkboxes. CENTER 1160px area is dominated by large mirror preview; below preview a horizontal three-card quick-selection shelf 'カメラ', 'キルフレーム', 'エフェクト', each with one large image and selected name ('自動シネマ', 'クラシック', '控えめ'). RIGHT compact 320px inspector 'かんたん設定': recommended preset 'おすすめ', camera speed slider with 1.0 numeric field, effect strength slider with 40 numeric field, clear enabled checkboxes 'HUDを隠す', 'TargetLock'. Output settings card at lower right. '簡単編集' selected; next to it '詳細編集' visible. Timeline dock bottom height180px across workspace, preview fixed above it. Keep large readable typography and breathing room. All required elements present. This is the primary recommended everyday screen."
+    },
+    {
+      "id": "03_detail",
+      "file": "plan03_hybrid_detail.png",
+      "title": "案3 ハイブリッド固定プレビュー型・詳細編集画面",
+      "prompt": "LAYOUT PLAN 03 DETAILED: SAME exact header, left detected-scenes dock, CENTRAL mirror preview location and BOTTOM timeline structure as plan03 normal; switch '詳細編集' selected. Main difference: RIGHT inspector expands to 380px and shows tabs 'カメラ' (selected), 'フレーム', 'エフェクト'. Camera shot cards '自動シネマ' '固定視点' '追従', four precise slider + numeric input rows: '距離 1200', '高さ 850', '角度 45°', '速度 1.0'. Visible checked 'TargetLock', '自動構図補正', clear 'カメラをリセット' secondary button. Under preview keep small visual frame/effect choice shelf so selections remain accessible. Left scene 'ダブルキル 12:34' selected. Output card and '基本設定' links retained. Dense enough for advanced control but text stays readable. Timeline taller220px with scene/camera/frame/effect rows, selected clip outlined blue. Preview remains fixed, never replaced by inspector."
+    },
+    {
+      "id": "06_library",
+      "file": "plan06_library.png",
+      "title": "案6 ライブラリ＋編集分離型・ライブラリ画面",
+      "prompt": "LAYOUT PLAN 06 LIBRARY: Clear two-page top segmented navigation 'ライブラリ' SELECTED and '編集'. LARGE CENTRAL mirror preview fixed in center 900px column. LEFT 580px library pane: '試合全体スキャン' action, tabs '検出シーン' 'キルフレーム' 'エフェクト'; 'キルフレーム' selected, search field 'フレームを検索', category chips 'すべて' 'シンプル' '地域' 'スキン', a scrollable 2-column grid of six VISUAL frame cards with real intricate colored gold/blue/rose double portrait-frame designs and Japanese names 'クラシック' 'アイス' 'ローズ' 'メカ' '深海' 'シンプル'. Small secondary detected-scenes strip visible beneath grid showing 3 timed scenes. RIGHT 300px selection detail '選択中: アイス', thumbnail, 'プレビューに適用' primary button, camera/effect thumbnail shortcuts, output card and settings links. Library never fills over preview. Bottom a compact visible 180px timeline with four tracks, persistent '編集へ進む' button. Large visual searchability and clear transition to editing, no high-resolution approval claims or fake final counts."
+    },
+    {
+      "id": "06_edit",
+      "file": "plan06_edit.png",
+      "title": "案6 ライブラリ＋編集分離型・編集画面",
+      "prompt": "LAYOUT PLAN 06 EDIT: Same family as plan06 library but top navigation 'ライブラリ | 編集' has EDIT selected. A concise LEFT 270px dock '使用するシーン' with selected scene thumbnail list, '試合全体スキャン' and return button 'ライブラリで選び直す'. LARGE CENTRAL 1050px fixed mirror preview. Under preview a compact applied-assets strip with three visual thumbnail chips '自動シネマ', 'アイス', '光の粒子' plus button 'ライブラリを開く'. RIGHT 360px inspector with tabbed 'カメラ | キルフレーム | エフェクト', camera cards and sliders with numeric fields, effect strength40, readable checkboxes HUD/TargetLock. Bottom timeline around250px high with more clip editing room, transport and blue playhead. Retain easy/detail toggle, output settings, main export button and all base settings links. Visually distinct from library: scene assembly and inspector are primary rather than catalog grid. Central preview must remain large."
+    },
+    {
+      "id": "05_wizard",
+      "file": "plan05_step_wizard.png",
+      "title": "案5 ステップウィザード型・メイン画面",
+      "prompt": "LAYOUT PLAN 05 STEP WIZARD: Below shared header, a large horizontal numbered 4-step progress bar '1 試合を選ぶ' > '2 シーンを探す' > '3 見た目を整える' (ACTIVE) > '4 書き出す'. Keep all stages as accessible steps, not disabled features. LEFT 300px '検出シーン' dock with completed-looking scan action '試合全体スキャン' and scene thumbnails with checked boxes; no asset quality approval markers. CENTER large fixed 1000px mirror preview, underneath three big quick choice cards 'カメラ' 'キルフレーム' 'エフェクト' with selected thumbnails. RIGHT 380px guided card headed '見た目を整える', friendly short instruction 'おすすめ設定から始めましょう', preset cards 'おすすめ' '落ち着いた演出' '迫力ある演出', two slider+number controls, '簡単編集 | 詳細編集' plus '詳細設定を開く'. Right bottom output summary. Bottom fixed timeline180px with all four tracks, and clean navigation bar '戻る' at lower left, blue '次へ：書き出し' lower right. Central preview is visible THROUGHOUT wizard; not an empty step form. Retain global export button and base settings links."
+    },
+    {
+      "id": "02_editor",
+      "file": "plan02_standard_editor.png",
+      "title": "案2 動画編集ソフト標準型・メイン画面",
+      "prompt": "LAYOUT PLAN 02 STANDARD EDITOR: A familiar three-column video editor. LEFT 450px material browser with tabs 'シーン' 'キルフレーム' 'エフェクト', scan button and a 2-column grid of scene thumbnails; beneath it a small selected-frame thumbnail gallery. CENTER 1000px fixed mirror preview with transport, shot selection three thumbnail cards '自動' '固定' '追従'. RIGHT 360px inspector 'プロパティ' with tabs camera/frame/effect, numeric sliders, visible checkboxes, output summary. Bottom timeline largest among variants at300px height, four clearly labeled tracks with blue/violet/turquoise clips, ruler, timecode and playhead. '簡単編集 | 詳細編集' visible in workspace header, detailed selected. Page tabs '素材' '編集' '書き出し' top. Standard editor organization but legible for a novice, clear section headings, minimal small icons. Preserve all required functions and large center preview; no professional-code jargon."
+    },
+    {
+      "id": "04_dock",
+      "file": "plan04_dock_workspace.png",
+      "title": "案4 OBS風ドック型・メイン画面",
+      "prompt": "LAYOUT PLAN 04 DOCK WORKSPACE: Original dock-oriented AutoCine desktop UI, LIGHT theme. Central upper fixed LARGE mirror preview ~1100px wide. A narrow LEFT 280px dock '検出シーン' with scan button and 3 thumbnail rows. RIGHT 360px stack of titled docks 'カメラ' with shot thumbnail cards, 'フレーム・エフェクト' with two image thumbnails, sliders with numerical input. Under preview and above timeline a compact settings docks band with '音声' showing a green level meter and volume slider + 80 numeric box, '出力設定' showing1080p60MP4, '基本設定' showing GPU/HUD/TargetLock/37キルバッジ access. Each dock has a restrained drag handle and tiny dock icon in header, yet no floating panel covers preview. Bottom timeline180px all four tracks. 'レイアウトを戻す' secondary control, easy/detail toggle, blue export button. Clearly different dock blocks, clean aligned gutters; do not copy OBS exact UI, never use dark interface."
+    },
+    {
+      "id": "01_home",
+      "file": "plan01_oneclick_home.png",
+      "title": "案1 ワンクリックホーム型・メイン画面",
+      "prompt": "LAYOUT PLAN 01 ONE CLICK HOME: Beginner-first original dashboard, LIGHT theme. Header has navigation 'ホーム' (selected) '編集' 'ライブラリ', easy/detail toggle, export. LEFT 320px prominent start card '試合から動画を作る', big blue '試合全体スキャン', one short line '見どころを自動で探します', detected scene thumbnail list immediately below with big checkboxes. CENTER huge fixed mirror preview about1100px wide; below it three large graphical quick-preset cards camera/frame/effect with names '自動シネマ', 'クラシック', '控えめ', each has '変更' button; no giant marketing heading. RIGHT 310px concise 'おすすめ設定' card with selectable 'かんたん' preset, one speed slider+1.0 numeric entry, effect strength40 numeric entry, clear '詳細編集へ' button, output settings summary and basic settings links. Bottom compact timeline160px with 4tracks still visible, selected scene clips. Primary main CTA 'おすすめで書き出す' is blue and positioned near output summary, normal export header still present. Keep enough space for novice but no feature deleted or hidden without a visible route. Large Japanese labels."
+    }
+  ]
+}

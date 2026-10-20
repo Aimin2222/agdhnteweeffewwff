@@ -1,0 +1,107 @@
+{
+  "scope": "Assistant visual inspection of 8 delivered static mockups; not application behavior tests.",
+  "review_date": "2026-10-20",
+  "status": "static_ui_mockup_review_complete",
+  "runtime_behavior_verified": false,
+  "all_existing_application_settings_exhaustively_audited": false,
+  "limitations": [
+    "1920x1080 is the logical composition reference. Native generated PNG dimensions are retained and separately reported.",
+    "Preview pinning and independent scrolling are layout specifications, not demonstrated by static PNGs.",
+    "Game visuals, scene thumbnails, asset thumbnails and timecodes are illustrative dummy content and not synchronized live state.",
+    "Small generated thumbnail artwork and non-primary game HUD lettering should be replaced by real assets/data at implementation.",
+    "Numeric input pairs are specified for editable settings; transport/zoom behavior and keyboard/accessibility details still require implementation design."
+  ],
+  "requirements_checked": [
+    "light Windows desktop presentation",
+    "Japanese primary controls and readable hierarchy",
+    "large central mirror preview on all8 screens",
+    "scan and detected-scenes route",
+    "timeline with scene/camera/frame/effect rows",
+    "camera/frame/effect visual selection or explicit tabs/library route",
+    "easy and detailed editing entry",
+    "export and output settings entry",
+    "GPU/audio/HUD/TargetLock/37-badge routes"
+  ],
+  "screens": [
+    {
+      "id": "03_normal",
+      "file": "plan03_hybrid_normal_v2.png",
+      "title": "案3 ハイブリッド固定プレビュー型・通常画面",
+      "review": "accepted_for_layout_comparison",
+      "observations": [
+        "中央プレビュー、左のスキャン／シーン一覧、下の4トラック、右の簡単設定を確認。",
+        "v2で書き出しを青い主操作へ変更し、表示中のHUDと右のラベルを揃えた。"
+      ]
+    },
+    {
+      "id": "03_detail",
+      "file": "plan03_hybrid_detail.png",
+      "title": "案3 ハイブリッド固定プレビュー型・詳細編集画面",
+      "review": "accepted_for_layout_comparison",
+      "observations": [
+        "通常画面と同じ領域構成を維持し、右にショットカード・距離／高さ／角度／速度と数値欄を表示。",
+        "詳細編集が選択され、TargetLock・自動構図補正と基本設定の導線を確認。"
+      ]
+    },
+    {
+      "id": "06_library",
+      "file": "plan06_library_v2.png",
+      "title": "案6 ライブラリ＋編集分離型・ライブラリ画面",
+      "review": "accepted_for_layout_comparison",
+      "observations": [
+        "左の検索・カテゴリ・2列の図鑑と、中央プレビュー・右の選択詳細・下のタイムラインを確認。",
+        "v2でフレームの選択をアイス1件へ整理。プレビュー下に簡単／詳細の切替と編集画面への導線を追加。"
+      ]
+    },
+    {
+      "id": "06_edit",
+      "file": "plan06_edit_v2.png",
+      "title": "案6 ライブラリ＋編集分離型・編集画面",
+      "review": "accepted_for_layout_comparison",
+      "observations": [
+        "左の使用シーン、中央プレビュー、適用中素材の帯、右インスペクタ、下のタイムラインを確認。",
+        "v2でカメラの揺れ・FOVの追加案を外し、距離／高さ／角度／速度の値欄と簡単／詳細切替へ整理。"
+      ]
+    },
+    {
+      "id": "05_wizard",
+      "file": "plan05_step_wizard.png",
+      "title": "案5 ステップウィザード型・メイン画面",
+      "review": "accepted_for_layout_comparison",
+      "observations": [
+        "上部4ステップと、右の短い案内・プリセット、戻る／次へを確認。",
+        "ウィザード中もプレビュー、シーン一覧、素材のカード、タイムライン、出力と基本設定への導線を残した。"
+      ]
+    },
+    {
+      "id": "02_editor",
+      "file": "plan02_standard_editor.png",
+      "title": "案2 動画編集ソフト標準型・メイン画面",
+      "review": "accepted_for_layout_comparison",
+      "observations": [
+        "左のタブ式素材一覧、中央プレビュー、右のプロパティ、下のタイムラインの標準3列構成を確認。",
+        "カメラカード、数値併設スライダー、簡単／詳細切替、出力と基本設定への導線を確認。"
+      ]
+    },
+    {
+      "id": "04_dock",
+      "file": "plan04_dock_workspace.png",
+      "title": "案4 OBS風ドック型・メイン画面",
+      "review": "accepted_for_layout_comparison",
+      "observations": [
+        "シーン／カメラ／フレーム・エフェクト／音声／出力／基本設定の独立したドックを確認。",
+        "中央プレビューを覆わず、音量数値欄・メーター・レイアウト復元・タイムラインを配置。"
+      ]
+    },
+    {
+      "id": "01_home",
+      "file": "plan01_oneclick_home.png",
+      "title": "案1 ワンクリックホーム型・メイン画面",
+      "review": "accepted_for_layout_comparison",
+      "observations": [
+        "大きいスキャン操作、選択シーン、中央プレビュー、下の見た目カード、右のおすすめ出力を確認。",
+        "簡単／詳細の切替、出力要約、基本設定とタイムラインを残した。"
+      ]
+    }
+  ]
+}
