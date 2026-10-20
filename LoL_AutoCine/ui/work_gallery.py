@@ -4,14 +4,23 @@ from __future__ import annotations
 import queue
 import threading
 import tkinter as tk
+from functools import lru_cache
 from tkinter import ttk
 
 from PIL import Image, ImageTk
 
-from core.work_kill_assets import list_assets, resolve_asset
+from core.work_kill_assets import file_signature, list_assets, paired_effect_for_frame, resolve_asset
 
-PAGE_SIZE = 12
+PAGE_SIZE = 6
 KINDS = {'キルフレーム': 'frames', 'エフェクト': 'effects'}
+
+
+@lru_cache(maxsize=48)
+def thumbnail(signature):
+    with Image.open(signature[0]) as source:
+        image = source.convert('RGBA')
+        image.thumbnail((205, 108), Image.Resampling.LANCZOS)
+    return image
 
 
 def matching(items, text, status):
@@ -57,22 +66,25 @@ class WorkGallery:
         right = ttk.Frame(main, padding=12)
         main.add(left, weight=3)
         main.add(right, weight=2)
+        pager = ttk.Frame(left)
+        pager.pack(fill='x', pady=(0, 7))
+        self.prev_button = ttk.Button(pager, text='◀ 前のページ', command=lambda: self.turn(-1))
+        self.prev_button.pack(side='left')
+        self.page_label = ttk.Label(pager, text='')
+        self.page_label.pack(side='left', expand=True)
+        self.next_button = ttk.Button(pager, text='次のページ ▶', command=lambda: self.turn(1))
+        self.next_button.pack(side='right')
         self.grid = ttk.Frame(left)
         self.grid.pack(fill='both', expand=True)
         for column in range(3):
             self.grid.columnconfigure(column, weight=1)
-        pager = ttk.Frame(left)
-        pager.pack(fill='x', pady=5)
-        ttk.Button(pager, text='前へ', command=lambda: self.turn(-1)).pack(side='left')
-        self.page_label = ttk.Label(pager, text='')
-        self.page_label.pack(side='left', expand=True)
-        ttk.Button(pager, text='次へ', command=lambda: self.turn(1)).pack(side='right')
 
         self.preview = ttk.Label(right, text='素材を選択してください', anchor='center')
         self.preview.pack(fill='both', expand=True)
         self.info = ttk.Label(right, text='', wraplength=370)
         self.info.pack(fill='x', pady=8)
-        ttk.Button(right, text='この素材を適用', command=self.apply).pack(fill='x', pady=5)
+        self.apply_button = ttk.Button(right, text='この枠と同名のエフェクトを適用', command=self.apply)
+        self.apply_button.pack(fill='x', pady=5)
         ttk.Button(right, text='閉じる', command=self.close).pack(fill='x')
         ttk.Label(right, text='仮素材を適用すると試作動画にも出せます。品質台帳の合格数は変わりません。',
                   wraplength=370).pack(anchor='w', pady=8)
@@ -97,13 +109,17 @@ class WorkGallery:
         page_count = max(1, (len(rows)+PAGE_SIZE-1)//PAGE_SIZE)
         self.page = min(self.page, page_count-1)
         self.page_label.configure(text=f'{len(rows)}件  /  {self.page+1} / {page_count}')
+        self.prev_button.configure(state='normal' if self.page else 'disabled')
+        self.next_button.configure(state='normal' if self.page+1 < page_count else 'disabled')
+        self.apply_button.configure(text=('この枠と同名のエフェクトを適用' if self.kind.get() == 'キルフレーム'
+                                          else 'このエフェクトだけ変更（詳細）'))
         for widget in self.grid.winfo_children():
             widget.destroy()
         self.photos.clear()
         shown = rows[self.page*PAGE_SIZE:(self.page+1)*PAGE_SIZE]
         self.cards = []
         for index, item in enumerate(shown):
-            cell = ttk.Frame(self.grid, padding=7, relief='solid', borderwidth=1)
+            cell = ttk.Frame(self.grid, padding=4, relief='solid', borderwidth=1)
             cell.grid(row=index//3, column=index%3, sticky='nsew', padx=4, pady=4)
             image = ttk.Label(cell, text='画像を読込中', anchor='center')
             image.pack(fill='both', expand=True)
@@ -117,11 +133,11 @@ class WorkGallery:
 
     def _load_page(self, generation, kind, shown):
         for index, item in enumerate(shown):
+            if generation != self.generation:
+                return
             try:
                 _, path = resolve_asset(item['id'], kind, review=True)
-                with Image.open(path) as source:
-                    image = source.convert('RGBA')
-                    image.thumbnail((225, 120), Image.Resampling.LANCZOS)
+                image = thumbnail(file_signature(path))
                 self.ready.put((generation, index, image, ''))
             except Exception as exc:
                 self.ready.put((generation, index, None, f'{type(exc).__name__}: {exc}'))
@@ -167,7 +183,10 @@ class WorkGallery:
         status = '正式合格' if item['status'] == 'approved' else '仮素材・品質未合格'
         layout = ('検証済み肖像穴' if item.get('portrait_boxes') else
                   '肖像は仮位置。合格品と差し替えるまで構図は暫定')
-        self.info.configure(text=f"{item.get('label', item['id'])}\n{item['id']} / {status}\n{layout}")
+        effect = paired_effect_for_frame(item['id']) if self.selected[0] == 'frames' else None
+        pairing = (f"\n連動エフェクト: {effect['label']}（仮素材）" if effect else
+                   '\n連動エフェクト: なし') if self.selected[0] == 'frames' else ''
+        self.info.configure(text=f"{item.get('label', item['id'])}\n{item['id']} / {status}\n{layout}{pairing}")
         self.preview_generation += 1
         generation = self.preview_generation
         kind = self.selected[0]
@@ -177,7 +196,7 @@ class WorkGallery:
                 _, path = resolve_asset(item['id'], kind, review=True)
                 with Image.open(path) as source:
                     image = source.convert('RGBA')
-                    image.thumbnail((410, 370), Image.Resampling.LANCZOS)
+                    image.thumbnail((320, 215), Image.Resampling.LANCZOS)
                 self.ready.put((generation, -1, image, ''))
             except Exception as exc:
                 self.ready.put((generation, -1, None, str(exc)))
@@ -188,19 +207,22 @@ class WorkGallery:
             return
         kind, item = self.selected
         if kind == 'frames':
-            self.app.var_work_frame.set(item['id'])
+            from ui.director_work_controls import select_frame_with_effect
+            effect = select_frame_with_effect(self.app, item['id'])
         else:
             self.app.var_work_effect.set(item['id'])
+            effect = item
             if not self.app.var_work_frame.get():
                 self.app.var_work_frame.set('083/a_simple_main')
-        if item['status'] != 'approved':
+        if item['status'] != 'approved' or (effect and effect['status'] != 'approved'):
             self.app.var_work_review.set(True)
         refresh = getattr(self.app, '_work_settings_refresh', None)
         if callable(refresh):
             refresh()
         self.app._invalidate_preview_snapshot()
         self.app._save_settings()
-        self.app.log(f"Work素材を選択: {item['id']} / 品質状態 {item['status']}")
+        self.app.log(f"Work素材を選択: {item['id']} / 品質状態 {item['status']}"
+                     + (f" / 連動エフェクト {effect['id']}（仮素材）" if kind == 'frames' and effect else ''))
         self.close()
 
     def close(self):

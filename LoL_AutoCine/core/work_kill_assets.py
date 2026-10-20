@@ -45,6 +45,24 @@ def list_assets(kind='frames', review=False):
             if review or x.get('status') == 'approved']
 
 
+def paired_effect_for_frame(frame_id):
+    """Find only a same-theme effect; never guess from an unrelated skin name."""
+    frame = next((row for row in catalog().get('frames', []) if row['id'] == frame_id), None)
+    if frame is None:
+        raise ValueError('Work frame missing: ' + str(frame_id))
+    theme = str(frame.get('theme') or '').lower().replace('-', '_')
+    if theme.startswith('d_'):
+        theme = theme[2:]
+    groups = {
+        'a_simple': 'A', 'a1_simple': 'A', 'a2_glass': 'A',
+        'b_prestige': 'B', 'b1_royal_gold': 'B', 'b2_blue_silver': 'B',
+        'c_cinema': 'C', 'c1_slash_burst': 'C', 'c2_arcane_collision': 'C',
+    }
+    identifier = groups.get(theme, 'D_' + theme)
+    return next((dict(row) for row in catalog().get('effects', [])
+                 if row['id'] == identifier), None)
+
+
 def resolve_asset(identifier, kind='frames', review=False):
     item = next((x for x in list_assets(kind, review) if x['id'] == identifier), None)
     if item is None:

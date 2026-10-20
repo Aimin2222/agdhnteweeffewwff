@@ -51,6 +51,24 @@ def apply(app, template):
     return template
 
 
+def select_frame_with_effect(app, frame_id):
+    """A deliberate frame choice carries its audited same-theme draft effect."""
+    from core.work_kill_assets import list_assets, paired_effect_for_frame
+    frame = next((row for row in list_assets('frames', review=True)
+                  if row['id'] == frame_id), None)
+    if frame is None:
+        raise ValueError('Work frame missing: ' + str(frame_id))
+    effect = paired_effect_for_frame(frame_id)
+    app.var_work_frame.set(frame_id)
+    # Clear an older, mismatched effect when this frame has no exact match.
+    app.var_work_effect.set(effect['id'] if effect else '')
+    app.var_work_review.set(frame['status'] != 'approved' or
+                            bool(effect and effect['status'] != 'approved'))
+    if frame.get('intensity') in ('weak', 'strong'):
+        app.var_work_strength.set(frame['intensity'])
+    return effect
+
+
 def build(app, parent):
     row = ttk.Frame(parent, style='Card.TFrame')
     row.pack(fill='x', pady=(6, 4))
@@ -101,7 +119,8 @@ def open_settings(app):
     ttk.Label(work_tab, text='合格品への差し替え時は同じ素材IDから検証済み配置を読みます。原本画像や台帳の合格状態は変更しません。', wraplength=790).pack(anchor='w')
     frame_choice, effect_choice = tk.StringVar(), tk.StringVar()
     frame_box = ttk.Combobox(work_tab, state='readonly', textvariable=frame_choice, width=100)
-    effect_box = ttk.Combobox(work_tab, state='readonly', textvariable=effect_choice, width=100)
+    effect_advanced = ttk.Frame(work_tab)
+    effect_box = ttk.Combobox(effect_advanced, state='readonly', textvariable=effect_choice, width=100)
     mappings = {}
 
     def refresh():
@@ -122,22 +141,49 @@ def open_settings(app):
             app.log(f'Work素材台帳を開けません: {exc}')
 
     def select_approved():
-        app.var_work_frame.set('083/a_simple_main')
+        select_frame_with_effect(app, '083/a_simple_main')
+        refresh()
+
+    def choose_frame(_event=None):
+        frame_id = mappings['frames'][frame_choice.get()]
+        if frame_id:
+            select_frame_with_effect(app, frame_id)
+        else:
+            app.var_work_frame.set('')
+            app.var_work_effect.set('')
+            app.var_work_review.set(False)
+        refresh()
+
+    def choose_effect(_event=None):
+        identifier = mappings['effects'][effect_choice.get()]
+        app.var_work_effect.set(identifier)
+        if identifier:
+            app.var_work_review.set(True)  # Current effect catalog is review-only.
         refresh()
 
     app._work_settings_refresh = refresh
     ttk.Button(work_tab, text='▣ Work素材図鑑を開く（画像から選ぶ）',
                command=lambda: open_gallery(app)).pack(fill='x', pady=(8, 2))
-    ttk.Button(work_tab, text='正式合格 No.083 A を選択', command=select_approved).pack(fill='x', pady=(2, 2))
+    ttk.Button(work_tab, text='No.083 A 枠＋同名の仮エフェクトを選択', command=select_approved).pack(fill='x', pady=(2, 2))
 
     ttk.Checkbutton(work_tab, text='未合格の仮素材も選べるようにする（品質合格にはなりません）',
                     variable=app.var_work_review, command=refresh).pack(anchor='w', pady=8)
     ttk.Label(work_tab, text='キルフレーム').pack(anchor='w')
     frame_box.pack(fill='x', pady=4)
-    frame_box.bind('<<ComboboxSelected>>', lambda _: app.var_work_frame.set(mappings['frames'][frame_choice.get()]))
-    ttk.Label(work_tab, text='A/B/C/D・D31テーマ演出（すべて未合格、確認許可が必要）').pack(anchor='w')
+    frame_box.bind('<<ComboboxSelected>>', choose_frame)
+    ttk.Label(work_tab, text='同名テーマの仮エフェクトを枠と一緒に選択します。対応素材がない枠ではエフェクトなし。',
+              wraplength=790).pack(anchor='w')
+    ttk.Label(effect_advanced, text='エフェクトだけ変更（詳細設定・仮素材）').pack(anchor='w')
     effect_box.pack(fill='x', pady=4)
-    effect_box.bind('<<ComboboxSelected>>', lambda _: app.var_work_effect.set(mappings['effects'][effect_choice.get()]))
+    effect_box.bind('<<ComboboxSelected>>', choose_effect)
+    effect_open = tk.BooleanVar(value=False)
+    def toggle_effect():
+        if effect_open.get():
+            effect_advanced.pack(fill='x', pady=4)
+        else:
+            effect_advanced.pack_forget()
+    ttk.Checkbutton(work_tab, text='別のエフェクトへ変更する（詳細）',
+                    variable=effect_open, command=toggle_effect).pack(anchor='w')
     ttk.Label(work_tab, text='登場アニメーション（既存6種類）').pack(anchor='w')
     ttk.Combobox(work_tab, state='readonly', textvariable=app.var_kill_icon_motion,
                  values=list(MOTION_STYLES.values())).pack(fill='x', pady=4)

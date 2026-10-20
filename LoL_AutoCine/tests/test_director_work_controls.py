@@ -6,7 +6,7 @@ import pytest
 
 from core.effects import Template
 from core.kill_icons import MOTION_STYLES
-from ui.director_work_controls import apply, restore, values, MODE_LABELS, mirror_event_rows, composite_mirror
+from ui.director_work_controls import apply, restore, values, MODE_LABELS, mirror_event_rows, composite_mirror, select_frame_with_effect
 
 
 class Variable:
@@ -30,6 +30,27 @@ def test_existing_settings_keep_legacy_camera_and_badges():
     assert template.work_kill_frame_id == template.work_kill_effect_id == ''
     assert not template.work_kill_review
     assert template.camera_auto_qa_approved == {}
+
+
+def test_frame_selection_pairs_only_the_same_theme_effect_and_preserves_quality_state():
+    app = application()
+    effect = select_frame_with_effect(app, '001/elderwood_weak')
+    assert effect['id'] == 'D_elderwood'
+    assert (app.var_work_frame.get(), app.var_work_effect.get()) == ('001/elderwood_weak', 'D_elderwood')
+    assert app.var_work_review.get()  # Neither asset has passed source comparison.
+    assert app.var_work_strength.get() == 'weak'
+    effect = select_frame_with_effect(app, '083/a_simple_main')
+    assert effect['id'] == 'A'
+    assert app.var_work_review.get()  # The approved frame's paired effect is still a draft.
+    select_frame_with_effect(app, '001/elderwood_weak')
+    effect = select_frame_with_effect(app, '003/project_variant_1')
+    assert effect['id'] == 'D_project'
+    # A theme without a matching effect must not retain the old skin's effect.
+    from core.work_kill_assets import list_assets
+    unmatched = next(row['id'] for row in list_assets('frames', review=True)
+                     if row.get('theme') == 'demacia')
+    assert select_frame_with_effect(app, unmatched) is None
+    assert app.var_work_effect.get() == ''
 
 
 @pytest.mark.parametrize('mode', ('manual', 'fixed_auto', 'full_auto'))
