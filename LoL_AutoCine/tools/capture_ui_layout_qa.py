@@ -15,6 +15,7 @@ from PIL import ImageGrab
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import legacy_app
+from ui.layout_variants import LAYOUT_NAMES
 
 
 def main() -> None:
@@ -22,7 +23,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--width", type=int, default=1366)
     parser.add_argument("--height", type=int, default=768)
-    parser.add_argument("--layout", choices=("現行配置 A", "テスト配置 B"), default="テスト配置 B")
+    parser.add_argument("--layout", choices=LAYOUT_NAMES, default=LAYOUT_NAMES[7])
     parser.add_argument("--scale", type=float, default=1.0)
     args = parser.parse_args()
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -38,9 +39,8 @@ def main() -> None:
         root.update()
         root.after(150, root.quit)
         root.mainloop()
-        x, y = root.winfo_rootx(), root.winfo_rooty()
-        width, height = root.winfo_width(), root.winfo_height()
-        ImageGrab.grab(bbox=(x, y, x + width, y + height), all_screens=True).save(args.output)
+        # Capture this Tk HWND, not whatever game/window happens to be in front.
+        ImageGrab.grab(window=root.winfo_id()).save(args.output)
         app._live_preview.close()
         root.destroy()
 

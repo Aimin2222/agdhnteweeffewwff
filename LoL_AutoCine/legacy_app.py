@@ -43,6 +43,7 @@ from core.replay_api import ReplayAPI                              # noqa: E402
 from core.scanner import scan_kills, filter_scanned_events                                # noqa: E402
 from ui.scene_timeline import SceneTimeline                     # noqa: E402
 from ui.kill_event_timeline import KillEventTimeline            # noqa: E402
+from ui.layout_variants import LAYOUT_NAMES, OLD_NAMES, SCENE_LEFT  # noqa: E402
 from ui.live_preview import LatestPreview, PresentationRate, preview_delay_ms
 from ui.redraw import request_redraw
 from ui.mirror_capture import MirrorCapture                     # noqa: E402
@@ -608,7 +609,7 @@ class App:
         self.var_smart_composition = tk.BooleanVar(value=False)
         self.var_scene_mode = tk.BooleanVar(value=False)    # opt-in per-scene rendering
         self.var_edit_mode = tk.StringVar(value="easy")  # view only: never silently change rendering state
-        self.var_ui_layout = tk.StringVar(value="現行配置 A")
+        self.var_ui_layout = tk.StringVar(value=LAYOUT_NAMES[6])
         # A single HUD preset drives the legacy render flags. LoL player-name visibility is an in-game setting.
         self.var_hud_mode = tk.StringVar(value="hidden")
         self.var_hud = tk.BooleanVar(value=True)
@@ -740,9 +741,9 @@ class App:
         ttk.Button(nav, text="✓  自動診断", style="Nav.TButton", command=self.on_automatic_qa).pack(side="left")
         ttk.Button(nav, text="⚙  設定", style="Nav.TButton", command=self._focus_settings).pack(side="left")
         ttk.Label(nav, text="配置", style="Muted.TLabel").pack(side="left", padx=(10, 3))
-        layout_choice = ttk.Combobox(nav, state="readonly", width=12,
+        layout_choice = ttk.Combobox(nav, state="readonly", width=29,
                                      textvariable=self.var_ui_layout,
-                                     values=("現行配置 A", "テスト配置 B"))
+                                     values=LAYOUT_NAMES)
         layout_choice.pack(side="left")
         layout_choice.bind("<<ComboboxSelected>>", lambda _e: self._apply_ui_layout())
 
@@ -786,6 +787,7 @@ class App:
         # editor.  No tkinter widgets are destroyed when switching modes.
         body = ttk.Frame(r, padding=(7, 2, 7, 2))
         body.pack(fill="both", expand=True)
+        self._ui_body = body
         studio_split = tk.PanedWindow(body, orient="vertical", sashwidth=9,
             sashrelief="raised", bd=0, relief="flat", bg="#CFD8E5", opaqueresize=True)
         studio_split.pack(fill="both", expand=True)
@@ -1676,6 +1678,7 @@ class App:
         # Keep scene selection and render progress at the top of the inspector, even
         # when the user switches to camera/color/output editing zones.
         f = card(right, "◉  検出シーン")
+        self._ui_scene_card = f
         ttk.Button(f, text="① スキャン（接続・10人取得・試合全体）", command=self.on_scan, style="Accent.TButton").pack(fill="x", pady=(0,6))
         self.pb_scan = ttk.Progressbar(f, maximum=100); self.pb_scan.pack(fill="x", pady=2)
         self.lbl_scan = ttk.Label(f, text="未スキャン｜スキャンを押すだけで接続・プレイヤー取得から開始", style="CardMuted.TLabel", wraplength=300)
@@ -1887,6 +1890,10 @@ class App:
         ttk.Label(quick, text="正式合格と確認用の区別は図鑑の品質台帳を使用します。",
                   style="CardMuted.TLabel", wraplength=260).pack(anchor="w", pady=(4, 0))
 
+        from ui.layout_variants import install as install_layout_variants
+        self._ui_variant_cards, self._ui_wizard_strip = install_layout_variants(
+            self, left, right, r, body)
+
         # Initialize template camera/FX controls, but do not silently apply a
         # creative color grade before the user chooses one.
         self.apply_template(self.var_tpl.get())
@@ -1954,22 +1961,40 @@ class App:
             self.log("編集画面を切替: " + ("かんたん編集" if easy else "詳細編集"))
 
     def _apply_ui_layout(self, *, save: bool = True) -> None:
-        """Swap existing panels for comparison; never rebuild camera/render state."""
+        """Arrange one set of controls in nine shells; keep all render state."""
         if not hasattr(self, "_ui_topdeck"):
             return
-        b = self.var_ui_layout.get() == "テスト配置 B"
+        from ui.layout_variants import configure as configure_layout_variant
+        chosen = OLD_NAMES.get(self.var_ui_layout.get(), self.var_ui_layout.get())
+        if chosen not in LAYOUT_NAMES:
+            chosen = LAYOUT_NAMES[6]
+        self.var_ui_layout.set(chosen)
+        index = LAYOUT_NAMES.index(chosen) + 1
         for panel in (self.left_scroll, self.right_scroll, self._ui_center):
             panel.pack_forget()
-        if b:
+        if index in SCENE_LEFT:
             self.right_scroll.pack(side="left", fill="y")
             self.left_scroll.pack(side="right", fill="y")
             self._ui_center.pack(side="left", fill="both", expand=True, padx=7)
-            self._ui_test_inspector.pack(before=self._nav_home_card, fill="x", pady=(0, 8))
         else:
             self.left_scroll.pack(side="left", fill="y")
             self._ui_center.pack(side="left", fill="both", expand=True, padx=7)
             self.right_scroll.pack(side="right", fill="y")
+        if index == 8:
+            self._ui_test_inspector.pack(before=self._nav_home_card, fill="x", pady=(0, 8))
+        else:
             self._ui_test_inspector.pack_forget()
+        configure_layout_variant(self, index)
+        # Editing software places more of the current, shared editor in view.
+        fraction = 0.55 if index == 2 else 0.66
+        def place_sash():
+            try:
+                h = self.studio_split.winfo_height()
+                if h > 500:
+                    self.studio_split.sash_place(0, 0, max(260, min(h - 180, int(h * fraction))))
+            except tk.TclError:
+                pass
+        self.root.after_idle(place_sash)
         if save:
             self._save_settings()
 
@@ -3760,8 +3785,9 @@ class App:
             if restored_mode in ("easy", "advanced"):
                 self.var_edit_mode.set(restored_mode)
                 self._apply_edit_mode(log=False)
-            if d.get("ui_layout") in ("現行配置 A", "テスト配置 B"):
-                self.var_ui_layout.set(d["ui_layout"])
+            saved_layout = OLD_NAMES.get(d.get("ui_layout"), d.get("ui_layout"))
+            if saved_layout in LAYOUT_NAMES:
+                self.var_ui_layout.set(saved_layout)
                 self._apply_ui_layout(save=False)
             from ui.director_work_controls import restore as restore_director_work
             restore_director_work(self, d)

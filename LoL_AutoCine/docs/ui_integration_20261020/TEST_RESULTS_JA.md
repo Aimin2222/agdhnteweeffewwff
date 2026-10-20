@@ -3,11 +3,11 @@
 ## 自動確認
 
 - 指定報告書のモック原本: 全面UI案8 PNG、テストUI案6 PNG。各 `MANIFEST.json` のSHA-256と14/14一致。
-- `tests/test_ui_layout_integration.py`: 4件通過。WindowsのTk環境で複数Tk rootを1プロセスで作るとTclの初期化エラーが不定期に出るため、4件を個別プロセスで実行。
+- `tests/test_ui_layout_integration.py`: 従来4件に加え、9案全切替でカメラ・シーン選択・中央ミラーを保持するテストを追加。WindowsのTk環境で複数Tk rootを1プロセスで作るとTclの初期化エラーが不定期に出るため、個別プロセスで実行。
 - `tests/test_portable_capture_command.py` とカメラ軸・GPUキャプチャ・GPUミラー: 合計60件通過。
 - Work UI、ミラー、60fpsキャプチャの選択テスト: 19件通過。まとめ実行時にTk init.tcl読込エラーが1件出たが、該当テスト単独では通過。この実行上の問題は未解決。
-- 実Tk画面のスクリーンショット: A 1366×768、B 1366×768、B 1366×768 Tkスケール125%相当。`screenshots/` に保存。
-- ポータブルEXEをWindows上で起動し、8秒後もGUIプロセスが稼働していることを確認。ZIPの全エントリCRC検証も通過。リプレイ未接続のため、ミラー実映像までは未確認。
+- 実Tk画面のスクリーンショット: 9案の各1366×768画面と一覧、既存A/BとBのTkスケール125%相当。`screenshots/` に保存。画面キャプチャは対象Tkウィンドウを指定し、別アプリの誤撮影を防ぐ。
+- 先行ZIPでは `_internal/VERSION.txt` が欠落し、ユーザー環境で起動時の `FileNotFoundError` が発生した。配布スクリプトにVERSION同梱・必須ファイル検査・GUI EXEの `--smoke-test` を追加。先行ZIPは使用しない。
 
 ## 実機で残る確認
 
