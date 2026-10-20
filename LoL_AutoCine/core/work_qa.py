@@ -17,6 +17,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from .effects import FFMPEG, Template
+from .kill_icons import MOTION_STYLES
 from .work_kill_assets import catalog, file_signature, _verified, render_preview_pair, resolve_asset
 
 
@@ -87,6 +88,7 @@ def run_work_qa(folder, *, source_video=None, stop=None, log=lambda _message: No
               'legacy_layers_total': len(data['legacy_layers']),
               'files_checked': 0, 'file_errors': [], 'effect_errors': [],
               'effect_composites_checked': 0, 'draft_composites_checked': 0,
+              'motion_styles_checked': [], 'motion_errors': [],
               'contact_sheets': [],
               'visual_approval': 'not_performed; human source comparison required'}
     report_path = destination/'report.json'
@@ -148,6 +150,23 @@ def run_work_qa(folder, *, source_video=None, stop=None, log=lambda _message: No
                 report['draft_composites_checked'] += 1
             except Exception as exc:
                 report['file_errors'].append({'id': row['id'], 'error': f'composite: {exc}'})
+        motions = []
+        for motion in MOTION_STYLES:
+            try:
+                template = Template(work_kill_frame_id='083/a_simple_main',
+                                    work_kill_review=True, kill_icon_motion=motion)
+                for elapsed in (.08, .35, 1.0):
+                    image = render_preview_pair(template, a, b, elapsed, size=(640, 360))
+                    if elapsed == .35 and image.getbbox() is None:
+                        raise ValueError('motion is invisible at 0.35s')
+                    motions.append((f'{motion} {elapsed:.2f}s', image))
+                report['motion_styles_checked'].append(motion)
+            except Exception as exc:
+                report['motion_errors'].append({'motion': motion, 'error': f'{type(exc).__name__}: {exc}'})
+        if motions:
+            target = destination/'work_six_entrances.jpg'
+            _sheet(motions, target, columns=3)
+            report['contact_sheets'].append(target.name)
         effects = []
         for row in data['effects']:
             if stop is not None and stop.is_set():

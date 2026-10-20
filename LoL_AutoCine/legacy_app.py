@@ -4110,6 +4110,11 @@ class App:
             if self.stop_ev.is_set():
                 return
             qa_plan, plan_source = load_qa_plan(log=self.log)
+            from core.qa_plan import ALLOWED_CAMERA
+            # A remote legacy plan may narrow the camera list. The one-click
+            # comparison must always cover every supported RED/BLUE baseline.
+            qa_plan = {**qa_plan, 'camera_modes': list(ALLOWED_CAMERA)}
+            plan_source += '+all-camera-modes'
             plan_eight_cases(players, events, preferred, modes=qa_plan["camera_modes"])  # Validate before capture.
             src, own = self._ensure_source()
             factory = ((lambda path: SyntheticAudio(path)) if FAKE_CAPTURE else
