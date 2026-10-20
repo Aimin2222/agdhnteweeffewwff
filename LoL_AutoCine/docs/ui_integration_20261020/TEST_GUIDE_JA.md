@@ -2,6 +2,8 @@
 
 これは本物のAutoCineに接続する比較版です。画面内の「配置 A/B」を切り替えても、カメラやシーンの値は共有されます。モック画像のような架空の試合・成功結果は出しません。
 
+Windows ZIPは、UIブランチのGitHub Actions「AutoCine UI comparison portable Windows build」の成功した実行から `LoL_AutoCine_UI_Comparison_Portable` アーティファクトを一括ダウンロードできます。ローカルビルドの場合も同名ZIPを使用します。アーティファクトの有効期間は30日です。ビルドが成功していない実行のZIPは使用しないでください。
+
 1. 新しいフォルダへ配布ZIPを一括展開する。EXE版では `LoL_AutoCine.exe`、Python版では `LoL_AutoCine/START.bat` を起動する。配布版の `README_TEST_JA.txt` に実際の同梱形式を記載する。
 2. LoLのリプレイを再生し、AutoCineで「リプレイを開く」→必要ならReplay API設定→「スキャン」。接続、10人の取得、スキャン完了と件数を確認する。
 3. キル／アシストを切り替え、シーンのチェックをON/OFFする。下のイベントマークをクリックし、一覧の選択が同じシーンに移るか見る。
