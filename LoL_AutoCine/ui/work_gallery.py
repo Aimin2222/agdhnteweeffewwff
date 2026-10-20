@@ -13,20 +13,46 @@ from core.work_kill_assets import file_signature, list_assets, paired_effect_for
 
 PAGE_SIZE = 6
 KINDS = {'キルフレーム': 'frames', 'エフェクト': 'effects'}
+REGION_THEMES = {
+    'bandle_city', 'bilgewater', 'demacia', 'freljord', 'ionia', 'ixtal',
+    'noxus', 'piltover', 'shadow_isles', 'shurima', 'targon', 'void', 'zaun',
+}
+CATEGORIES = ('すべて', 'スキンテーマ', '地域モチーフ', '基本案・その他')
+
+
+def theme_category(theme):
+    if theme in REGION_THEMES:
+        return '地域モチーフ'
+    if theme.startswith(('a_', 'a1_', 'a2_', 'b_', 'b1_', 'b2_', 'c_', 'c1_', 'c2_')) or theme in {
+        'abcd_palette_reference', 'unlabeled_s005',
+    }:
+        return '基本案・その他'
+    return 'スキンテーマ'
+
+
+def centered_preview(image, bounds):
+    """Center visible pixels for catalog display only; never alter source PNGs."""
+    alpha_bounds = image.getchannel('A').getbbox()
+    content = image.crop(alpha_bounds) if alpha_bounds else image
+    content.thumbnail(bounds, Image.Resampling.LANCZOS)
+    tile = Image.new('RGBA', bounds)
+    tile.alpha_composite(content, ((bounds[0] - content.width) // 2,
+                                   (bounds[1] - content.height) // 2))
+    return tile
 
 
 @lru_cache(maxsize=48)
 def thumbnail(signature):
     with Image.open(signature[0]) as source:
-        image = source.convert('RGBA')
-        image.thumbnail((205, 108), Image.Resampling.LANCZOS)
-    return image
+        return centered_preview(source.convert('RGBA'), (205, 108))
 
 
-def matching(items, text, status):
+def matching(items, text, status, category='すべて', theme='すべて'):
     needle = text.strip().casefold()
     return [item for item in items
             if (status == 'すべて' or (item['status'] == 'approved') == (status == '正式合格'))
+            and (category == 'すべて' or theme_category(item.get('theme', '')) == category)
+            and (theme == 'すべて' or item.get('theme') == theme)
             and (not needle or needle in (item['id']+' '+item.get('label', '')).casefold())]
 
 
@@ -42,6 +68,8 @@ class WorkGallery:
         self.kind = tk.StringVar(value='キルフレーム')
         self.search = tk.StringVar()
         self.status = tk.StringVar(value='すべて')
+        self.category = tk.StringVar(value='すべて')
+        self.theme = tk.StringVar(value='すべて')
         self.page = 0
         self.selected = None
         self.generation = 0
@@ -59,6 +87,16 @@ class WorkGallery:
         ttk.Label(top, text='検索').pack(side='right')
         ttk.Combobox(top, textvariable=self.kind, values=list(KINDS),
                      state='readonly', width=16).pack(side='right', padx=9)
+        filters = ttk.Frame(self.win, padding=(10, 0, 10, 8))
+        filters.pack(fill='x')
+        ttk.Label(filters, text='素材の系統').pack(side='left')
+        self.category_box = ttk.Combobox(filters, textvariable=self.category, values=CATEGORIES,
+                                         state='readonly', width=16)
+        self.category_box.pack(side='left', padx=(6, 16))
+        ttk.Label(filters, text='テーマ').pack(side='left')
+        self.theme_box = ttk.Combobox(filters, textvariable=self.theme, state='readonly', width=24)
+        self.theme_box.pack(side='left', padx=6)
+        ttk.Label(filters, text='地域は素材のモチーフ分類です', padding=(12, 0)).pack(side='left')
 
         main = ttk.PanedWindow(self.win, orient='horizontal')
         main.pack(fill='both', expand=True)
@@ -88,13 +126,30 @@ class WorkGallery:
         ttk.Button(right, text='閉じる', command=self.close).pack(fill='x')
         ttk.Label(right, text='仮素材を適用すると試作動画にも出せます。品質台帳の合格数は変わりません。',
                   wraplength=370).pack(anchor='w', pady=8)
-        for variable in (self.kind, self.search, self.status):
+        for variable in (self.kind, self.category):
+            variable.trace_add('write', lambda *_: self._update_theme_choices())
+        for variable in (self.kind, self.search, self.status, self.category, self.theme):
             variable.trace_add('write', lambda *_: self.refresh(reset=True))
+        self._update_theme_choices()
         self.refresh(reset=True)
         self._poll_id = self.win.after(50, self.poll)
 
     def filtered(self):
-        return matching(self.items[KINDS[self.kind.get()]], self.search.get(), self.status.get())
+        if self.kind.get() == 'エフェクト':
+            return matching(self.items['effects'], self.search.get(), self.status.get())
+        return matching(self.items['frames'], self.search.get(), self.status.get(),
+                        self.category.get(), self.theme.get())
+
+    def _update_theme_choices(self):
+        frames = self.kind.get() == 'キルフレーム'
+        self.category_box.configure(state='readonly' if frames else 'disabled')
+        self.theme_box.configure(state='readonly' if frames else 'disabled')
+        choices = sorted({item.get('theme', '') for item in self.items['frames']
+                          if item.get('theme') and (self.category.get() == 'すべて' or
+                          theme_category(item['theme']) == self.category.get())})
+        self.theme_box.configure(values=('すべて', *choices))
+        if self.theme.get() not in choices:
+            self.theme.set('すべて')
 
     def refresh(self, *, reset=False):
         if reset:
@@ -195,8 +250,7 @@ class WorkGallery:
             try:
                 _, path = resolve_asset(item['id'], kind, review=True)
                 with Image.open(path) as source:
-                    image = source.convert('RGBA')
-                    image.thumbnail((320, 215), Image.Resampling.LANCZOS)
+                    image = centered_preview(source.convert('RGBA'), (320, 215))
                 self.ready.put((generation, -1, image, ''))
             except Exception as exc:
                 self.ready.put((generation, -1, None, str(exc)))

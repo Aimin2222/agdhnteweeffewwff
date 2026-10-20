@@ -1,8 +1,9 @@
 """Work catalog stays usable with 652 candidates without 652 Tk cards."""
 import tkinter as tk
 from types import SimpleNamespace
+from PIL import Image
 
-from ui.work_gallery import WorkGallery, matching, PAGE_SIZE
+from ui.work_gallery import WorkGallery, matching, PAGE_SIZE, centered_preview, theme_category
 
 
 def test_filter_preserves_quality_labels():
@@ -10,6 +11,25 @@ def test_filter_preserves_quality_labels():
             dict(id='001/a', label='Draft', status='review')]
     assert [x['id'] for x in matching(rows, '083', 'すべて')] == ['083/a_simple_main']
     assert [x['id'] for x in matching(rows, '', '仮素材')] == ['001/a']
+
+
+def test_region_and_skin_filters_use_catalog_theme_without_reclassifying_quality():
+    rows = [dict(id='001/demacia_weak', label='Demacia', theme='demacia', status='review'),
+            dict(id='002/elderwood_weak', label='Elderwood', theme='elderwood', status='review'),
+            dict(id='083/a_simple_main', label='No.083 A', theme='a_simple', status='approved')]
+    assert theme_category('demacia') == '地域モチーフ'
+    assert theme_category('elderwood') == 'スキンテーマ'
+    assert [x['id'] for x in matching(rows, '', 'すべて', '地域モチーフ')] == ['001/demacia_weak']
+    assert [x['id'] for x in matching(rows, '', '仮素材', 'スキンテーマ', 'elderwood')] == ['002/elderwood_weak']
+    assert [x['id'] for x in matching(rows, '', '正式合格', '基本案・その他')] == ['083/a_simple_main']
+
+
+def test_gallery_only_centers_alpha_content_without_upscaling_or_editing_source():
+    source = Image.new('RGBA', (100, 50))
+    source.paste((255, 0, 0, 255), (10, 10, 30, 30))
+    output = centered_preview(source, (100, 50))
+    assert output.getchannel('A').getbbox() == (40, 15, 60, 35)
+    assert source.getchannel('A').getbbox() == (10, 10, 30, 30)
 
 
 def test_gallery_pages_assets_and_explicitly_marks_draft_selection():
