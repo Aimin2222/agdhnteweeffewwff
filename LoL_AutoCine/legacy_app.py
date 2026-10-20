@@ -739,13 +739,16 @@ class App:
         right_top.pack(side="right")
         self.var_fps_ui = tk.StringVar(value="60 FPS")
         self.var_preview_hz = tk.StringVar(value="144 Hz")
-        ttk.Label(right_top, text="プレビュー", style="Muted.TLabel").pack(side="left", padx=(0, 4))
-        ttk.Combobox(right_top, state="readonly", width=9, textvariable=self.var_preview_hz,
+        self._top_performance_controls = ttk.Frame(right_top)
+        self._top_performance_controls.pack(side="left")
+        ttk.Label(self._top_performance_controls, text="プレビュー", style="Muted.TLabel").pack(side="left", padx=(0, 4))
+        ttk.Combobox(self._top_performance_controls, state="readonly", width=9, textvariable=self.var_preview_hz,
                      values=["60 Hz", "144 Hz"]).pack(side="left", padx=(0, 6))
-        ttk.Label(right_top, text="出力", style="Muted.TLabel").pack(side="left", padx=(0, 4))
-        ttk.Combobox(right_top, state="readonly", width=9, textvariable=self.var_fps_ui,
+        ttk.Label(self._top_performance_controls, text="出力", style="Muted.TLabel").pack(side="left", padx=(0, 4))
+        ttk.Combobox(self._top_performance_controls, state="readonly", width=9, textvariable=self.var_fps_ui,
                      values=["60 FPS", "144 FPS"]).pack(side="left")
-        ttk.Button(right_top, text="準備", width=5, command=self.on_quick_prepare).pack(side="left", padx=5)
+        self._top_prepare_button = ttk.Button(right_top, text="準備", width=5, command=self.on_quick_prepare)
+        self._top_prepare_button.pack(side="left", padx=5)
         ttk.Button(right_top, text="ログ", width=4, command=self.on_show_diagnostics).pack(side="left")
 
         # View switch is UI-only. Project, checkmarks, templates and the render mode
@@ -1859,6 +1862,11 @@ class App:
         """
         mode = self.var_edit_mode.get()
         easy = mode != "advanced"
+        if hasattr(self, "_top_performance_controls"):
+            if easy:
+                self._top_performance_controls.pack_forget()
+            elif not self._top_performance_controls.winfo_manager():
+                self._top_performance_controls.pack(side="left", before=self._top_prepare_button)
         if hasattr(self, "_mode_easy_section"):
             self._mode_easy_section.pack_forget()
             self.editor_zone_bar.pack_forget()
