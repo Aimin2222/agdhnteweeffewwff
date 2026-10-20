@@ -64,7 +64,7 @@ def plan_eight_cases(players, events, preferred=None, modes=None):
                 result.append((side, player, chosen, mode, label))
     return result
 
-QA_BUILD_VERSION = "5.10.27-test"
+QA_BUILD_VERSION = "5.10.28-test"
 
 
 def camera_build_identity(project_root=None):
@@ -94,7 +94,7 @@ def camera_build_identity(project_root=None):
 
 def run_camera_record_test(api, source, players, events, preferred, template, destination,
                            *, stop=None, log=lambda _m: None, audio_factory=None, progress=None,
-                           plan=None, plan_source="bundled"):
+                           plan=None, plan_source="bundled", work_qa_runner=None):
     """Record four modes per side, returning the report path.
 
     Only one clip per style is created; capture and game audio use exactly the
@@ -295,6 +295,16 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         except Exception as exc:
             manifest["visual_qa_error"] = str(exc)
             log(f"比較画像生成失敗（録画結果は保持）: {exc}")
+    if work_qa_runner is not None and not (stop is not None and stop.is_set()):
+        try:
+            report = work_qa_runner(folder, source_video=ready[0] if ready else None,
+                                    stop=stop, log=log)
+            manifest['work_qa'] = json.loads(report.read_text(encoding='utf-8'))
+            flush()
+        except Exception as exc:
+            manifest['work_qa_error'] = f'{type(exc).__name__}: {exc}'
+            log(f'Work素材一括QA失敗（カメラ動画は保持）: {exc}')
+            flush()
     manifest["completed_clips"] = sum(bool(row["outputs"]) for row in manifest["outputs"])
     manifest["canceled"] = bool(stop is not None and stop.is_set())
     flush()
@@ -303,7 +313,8 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
             log("開発用QA: 送信用のみ540p・60fpsへ軽量化し、各ZIPを30MB以下にします。元映像は保持します。")
             copies, manifest["qa_upload"] = prepare_upload_copies(
                 folder, encoder_policy=template.encoder_policy, stop=stop, log=log)
-            manifest["qa_support"] = collect_qa_support(folder, log=log, build_identity=identity)
+            manifest["qa_support"] = collect_qa_support(folder, log=log, build_identity=identity,
+                                                         expected_capture_count=manifest["completed_clips"])
             flush()
             def update_archives(paths):
                 manifest["qa_archives"] = [str(p) for p in paths]

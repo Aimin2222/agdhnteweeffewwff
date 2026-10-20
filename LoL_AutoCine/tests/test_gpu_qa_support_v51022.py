@@ -16,7 +16,12 @@ def test_log_tail_is_bounded_byte_exact_and_original_remains(tmp_path):
     data=b'first private history'+bytes(range(256))*5000
     original=origin/'runtime.log';original.write_bytes(data)
     outside=tmp_path/'outside.log';outside.write_bytes(b'PRIVATE OUTSIDE')
-    (origin/'crash.log').symlink_to(outside)
+    try:
+        (origin/'crash.log').symlink_to(outside)
+    except OSError as exc:
+        if getattr(exc, 'winerror', None) == 1314:
+            pytest.skip('Windows symbolic-link privilege is unavailable')
+        raise
     output=tmp_path/'QA'
     report=qa_support.collect_qa_support(output,diagnostics=origin)
     tail=output/'QA_Support/runtime.log'
@@ -49,6 +54,29 @@ def test_support_and_final_results_are_in_direct_archive(tmp_path):
         assert z.read('results.json')==result.read_bytes()
         assert z.read('QA_Support/runtime.log')==b'GPU effects verified'
         assert 'QA_Support/READ_ME_FIRST_JA.md' in z.namelist()
+
+
+def test_capture_freshness_and_worker_rate_are_packaged_without_private_paths(tmp_path):
+    origin=tmp_path/'diagnostics';performance=origin/'performance';performance.mkdir(parents=True)
+    (origin/'capture_worker_123.log').write_text('WGC_STAGE published_fps=58.5\n')
+    for index in range(3):
+        data={'output':'C:/private/user/video.mp4','pipeline':{'stage':'capture',
+              'frames':60,'fresh_frames':45+index,'duration_s':1.0,'output_fps':60}}
+        path=performance/f'render_{index}.json';path.write_text(json.dumps(data))
+        import os
+        os.utime(path, (1_700_000_000+index, 1_700_000_000+index))
+    folder=tmp_path/'QA'
+    report=qa_support.collect_qa_support(folder,diagnostics=origin,expected_capture_count=2)
+    summary=json.loads((folder/'QA_Support/capture_freshness.json').read_text())
+    assert summary['capture_count']==2 and summary['fresh_fps_median']==46.5
+    assert len(summary['captures'])==2
+    assert 'private' not in json.dumps(summary)
+    assert (folder/'QA_Support/capture_worker_latest.log').read_text().strip()=='WGC_STAGE published_fps=58.5'
+    assert 'QA_Support/capture_freshness.json' in report['files']
+    (folder/'results.json').write_text('{}')
+    with ZipFile(split_test_results(folder,max_bytes=2_000_000)[0]) as z:
+        assert 'QA_Support/capture_worker_latest.log' in z.namelist()
+        assert 'QA_Support/capture_freshness.json' in z.namelist()
 
 
 def test_cancel_skips_support_and_archive_work(monkeypatch,tmp_path):
