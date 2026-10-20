@@ -1,0 +1,219 @@
+"""Paged visual catalog for immutable Work frames and effect drafts."""
+from __future__ import annotations
+
+import queue
+import threading
+import tkinter as tk
+from tkinter import ttk
+
+from PIL import Image, ImageTk
+
+from core.work_kill_assets import list_assets, resolve_asset
+
+PAGE_SIZE = 12
+KINDS = {'キルフレーム': 'frames', 'エフェクト': 'effects'}
+
+
+def matching(items, text, status):
+    needle = text.strip().casefold()
+    return [item for item in items
+            if (status == 'すべて' or (item['status'] == 'approved') == (status == '正式合格'))
+            and (not needle or needle in (item['id']+' '+item.get('label', '')).casefold())]
+
+
+class WorkGallery:
+    def __init__(self, app):
+        self.app = app
+        self.win = tk.Toplevel(app.root)
+        self.win.title('LoL AutoCine｜Work素材図鑑')
+        self.win.geometry('1090x720')
+        self.win.minsize(770, 520)
+        self.win.protocol('WM_DELETE_WINDOW', self.close)
+        self.items = {kind: list_assets(kind, review=True) for kind in KINDS.values()}
+        self.kind = tk.StringVar(value='キルフレーム')
+        self.search = tk.StringVar()
+        self.status = tk.StringVar(value='すべて')
+        self.page = 0
+        self.selected = None
+        self.generation = 0
+        self.preview_generation = 0
+        self.ready = queue.Queue()
+        self.photos = []
+
+        top = ttk.Frame(self.win, padding=10)
+        top.pack(fill='x')
+        ttk.Label(top, text='Work素材図鑑', font=('Meiryo UI', 15, 'bold')).pack(side='left')
+        ttk.Label(top, text='正式合格と仮素材を区別して表示', padding=(15, 0)).pack(side='left')
+        ttk.Combobox(top, textvariable=self.status, values=('すべて', '正式合格', '仮素材'),
+                     state='readonly', width=12).pack(side='right', padx=4)
+        ttk.Entry(top, textvariable=self.search, width=26).pack(side='right', padx=4)
+        ttk.Label(top, text='検索').pack(side='right')
+        ttk.Combobox(top, textvariable=self.kind, values=list(KINDS),
+                     state='readonly', width=16).pack(side='right', padx=9)
+
+        main = ttk.PanedWindow(self.win, orient='horizontal')
+        main.pack(fill='both', expand=True)
+        left = ttk.Frame(main, padding=8)
+        right = ttk.Frame(main, padding=12)
+        main.add(left, weight=3)
+        main.add(right, weight=2)
+        self.grid = ttk.Frame(left)
+        self.grid.pack(fill='both', expand=True)
+        for column in range(3):
+            self.grid.columnconfigure(column, weight=1)
+        pager = ttk.Frame(left)
+        pager.pack(fill='x', pady=5)
+        ttk.Button(pager, text='前へ', command=lambda: self.turn(-1)).pack(side='left')
+        self.page_label = ttk.Label(pager, text='')
+        self.page_label.pack(side='left', expand=True)
+        ttk.Button(pager, text='次へ', command=lambda: self.turn(1)).pack(side='right')
+
+        self.preview = ttk.Label(right, text='素材を選択してください', anchor='center')
+        self.preview.pack(fill='both', expand=True)
+        self.info = ttk.Label(right, text='', wraplength=370)
+        self.info.pack(fill='x', pady=8)
+        ttk.Button(right, text='この素材を適用', command=self.apply).pack(fill='x', pady=5)
+        ttk.Button(right, text='閉じる', command=self.close).pack(fill='x')
+        ttk.Label(right, text='仮素材を適用すると試作動画にも出せます。品質台帳の合格数は変わりません。',
+                  wraplength=370).pack(anchor='w', pady=8)
+        for variable in (self.kind, self.search, self.status):
+            variable.trace_add('write', lambda *_: self.refresh(reset=True))
+        self.refresh(reset=True)
+        self._poll_id = self.win.after(50, self.poll)
+
+    def filtered(self):
+        return matching(self.items[KINDS[self.kind.get()]], self.search.get(), self.status.get())
+
+    def refresh(self, *, reset=False):
+        if reset:
+            self.page = 0
+            self.selected = None
+            self.info.configure(text='')
+            self.preview.configure(image='', text='素材を選択してください')
+            self.preview_generation += 1
+        self.generation += 1
+        generation = self.generation
+        rows = self.filtered()
+        page_count = max(1, (len(rows)+PAGE_SIZE-1)//PAGE_SIZE)
+        self.page = min(self.page, page_count-1)
+        self.page_label.configure(text=f'{len(rows)}件  /  {self.page+1} / {page_count}')
+        for widget in self.grid.winfo_children():
+            widget.destroy()
+        self.photos.clear()
+        shown = rows[self.page*PAGE_SIZE:(self.page+1)*PAGE_SIZE]
+        self.cards = []
+        for index, item in enumerate(shown):
+            cell = ttk.Frame(self.grid, padding=7, relief='solid', borderwidth=1)
+            cell.grid(row=index//3, column=index%3, sticky='nsew', padx=4, pady=4)
+            image = ttk.Label(cell, text='画像を読込中', anchor='center')
+            image.pack(fill='both', expand=True)
+            status = '正式合格' if item['status'] == 'approved' else '仮素材・未合格'
+            ttk.Label(cell, text=f"{item['id']}  [{status}]", wraplength=200).pack(fill='x')
+            ttk.Button(cell, text='選択', command=lambda row=item: self.select(row)).pack(fill='x')
+            self.cards.append(image)
+        kind = KINDS[self.kind.get()]
+        threading.Thread(target=self._load_page, args=(generation, kind, shown),
+                         name='AutoCine-WorkGallery', daemon=True).start()
+
+    def _load_page(self, generation, kind, shown):
+        for index, item in enumerate(shown):
+            try:
+                _, path = resolve_asset(item['id'], kind, review=True)
+                with Image.open(path) as source:
+                    image = source.convert('RGBA')
+                    image.thumbnail((225, 120), Image.Resampling.LANCZOS)
+                self.ready.put((generation, index, image, ''))
+            except Exception as exc:
+                self.ready.put((generation, index, None, f'{type(exc).__name__}: {exc}'))
+
+    def poll(self):
+        if not self.win.winfo_exists():
+            return
+        for _ in range(8):
+            try:
+                generation, index, image, error = self.ready.get_nowait()
+            except queue.Empty:
+                break
+            if index == -1:
+                if generation != self.preview_generation:
+                    continue
+            elif generation != self.generation or index >= len(self.cards):
+                continue
+            if index == -1:
+                if image is None:
+                    self.preview.configure(text=error[:100], image='')
+                else:
+                    self.preview_photo = ImageTk.PhotoImage(image)
+                    self.preview.configure(image=self.preview_photo, text='')
+                continue
+            if image is None:
+                self.cards[index].configure(text=error[:70])
+            else:
+                photo = ImageTk.PhotoImage(image)
+                self.photos.append(photo)
+                self.cards[index].configure(image=photo, text='')
+        self._poll_id = self.win.after(50, self.poll)
+
+    def turn(self, offset):
+        count = len(self.filtered())
+        page_count = max(1, (count+PAGE_SIZE-1)//PAGE_SIZE)
+        next_page = max(0, min(page_count-1, self.page+offset))
+        if next_page != self.page:
+            self.page = next_page
+            self.refresh()
+
+    def select(self, item):
+        self.selected = (KINDS[self.kind.get()], item)
+        status = '正式合格' if item['status'] == 'approved' else '仮素材・品質未合格'
+        layout = ('検証済み肖像穴' if item.get('portrait_boxes') else
+                  '肖像は仮位置。合格品と差し替えるまで構図は暫定')
+        self.info.configure(text=f"{item.get('label', item['id'])}\n{item['id']} / {status}\n{layout}")
+        self.preview_generation += 1
+        generation = self.preview_generation
+        kind = self.selected[0]
+        # A separate load keeps the full-size preview off the Tk thread.
+        def load():
+            try:
+                _, path = resolve_asset(item['id'], kind, review=True)
+                with Image.open(path) as source:
+                    image = source.convert('RGBA')
+                    image.thumbnail((410, 370), Image.Resampling.LANCZOS)
+                self.ready.put((generation, -1, image, ''))
+            except Exception as exc:
+                self.ready.put((generation, -1, None, str(exc)))
+        threading.Thread(target=load, daemon=True).start()
+
+    def apply(self):
+        if self.selected is None:
+            return
+        kind, item = self.selected
+        if kind == 'frames':
+            self.app.var_work_frame.set(item['id'])
+        else:
+            self.app.var_work_effect.set(item['id'])
+            if not self.app.var_work_frame.get():
+                self.app.var_work_frame.set('083/a_simple_main')
+        if item['status'] != 'approved':
+            self.app.var_work_review.set(True)
+        refresh = getattr(self.app, '_work_settings_refresh', None)
+        if callable(refresh):
+            refresh()
+        self.app._invalidate_preview_snapshot()
+        self.app._save_settings()
+        self.app.log(f"Work素材を選択: {item['id']} / 品質状態 {item['status']}")
+        self.close()
+
+    def close(self):
+        if getattr(self, '_poll_id', None):
+            self.win.after_cancel(self._poll_id)
+            self._poll_id = None
+        self.win.destroy()
+
+
+def open_gallery(app):
+    gallery = getattr(app, '_work_gallery', None)
+    if gallery is not None and gallery.win.winfo_exists():
+        gallery.win.lift()
+        return gallery.win
+    gallery = app._work_gallery = WorkGallery(app)
+    return gallery.win

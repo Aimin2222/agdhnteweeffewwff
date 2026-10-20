@@ -9,6 +9,22 @@ from zipfile import ZipFile, ZIP_DEFLATED, ZIP_STORED
 APP=Path(__file__).resolve().parents[1]
 REPO=APP.parent
 BASE='de453046c2e2a7f522571e4d45d804947b05a150'
+ROOT_BATS={'START.bat','START_GPU.bat','START_LOCAL_GPU.bat',
+           'BUILD_AUDIO_HELPER.bat','ENSURE_CPP_BUILD_TOOLS.bat',
+           'COLLECT_DIAGNOSTICS.bat'}
+
+
+def packaged_file(name, data):
+    """Keep all launchers, but put secondary ones in one clearly named folder.
+
+    Source BAT files stay in their original paths for developer workflows.
+    The package copies secondary launchers one level down and re-bases only
+    their %~dp0 references; each script still changes to the app root first.
+    """
+    path=Path(name)
+    if len(path.parts)==2 and path.suffix.lower()=='.bat' and path.name not in ROOT_BATS:
+        return f'LoL_AutoCine/Developer_Tools/{path.name}',data.replace(b'%~dp0',b'%~dp0..\\')
+    return name,data
 
 
 def git(*args):
@@ -31,24 +47,33 @@ def main():
                  distribution='source Windows test build; Python and C++ tools not bundled',
                  real_lol_visual_qa='not_performed')
     manifest=[]
-    full=output/'LoL_AutoCine_20261020_GPU_Work_Full.zip'
-    delta=output/'LoL_AutoCine_CameraWork_20261019_Codex_Code_Delta.zip'
+    full=output/'LoL_AutoCine_20261020_CameraWorkQA_Full.zip'
+    delta=output/'LoL_AutoCine_20261020_CameraWorkQA_Code_Delta.zip'
     for target,selected in ((full,files),(delta,[n for n in files if n in changed and Path(n).suffix.lower()!='.png'])):
         with ZipFile(target,'w',compression=ZIP_DEFLATED,compresslevel=4) as archive:
             for name in sorted(selected):
                 path=REPO/name
                 data=path.read_bytes()
-                archive.writestr(name,data,compress_type=ZIP_STORED if path.suffix.lower()=='.png' else ZIP_DEFLATED)
-                if target==full: manifest.append(dict(path=name,bytes=len(data),sha256=hashlib.sha256(data).hexdigest()))
+                packaged_name,packaged_data=packaged_file(name,data) if target==full else (name,data)
+                archive.writestr(packaged_name,packaged_data,
+                                 compress_type=ZIP_STORED if path.suffix.lower()=='.png' else ZIP_DEFLATED)
+                if target==full:
+                    manifest.append(dict(path=packaged_name,bytes=len(packaged_data),
+                                         sha256=hashlib.sha256(packaged_data).hexdigest()))
+            if target==full:
+                archive.writestr('LoL_AutoCine/Developer_Tools/README_JA.txt',
+                    '通常起動は1階層上のSTART.bat、診断収集はCOLLECT_DIAGNOSTICS.batを使います。\n'
+                    'このフォルダには音声・GPU・参考動画・旧QAの補助起動ファイルをまとめています。\n'
+                    '機能は残してあります。アプリの開発用一括QAは画面内のボタンから実行できます。\n')
             archive.writestr('BUILD_INFO.json',json.dumps(version,indent=2))
             archive.writestr('README_TEST_JA.txt',
                 '2026-10-20の修正を含むWindowsテスト版です。新しいフォルダに展開してください。\n'
                 '起動: LoL_AutoCine/START.bat\n'
-                'テスト順: LoL_AutoCine/docs/QA_GPU_WORK_20261020_JA.md\n'
+                'テスト順: LoL_AutoCine/docs/QA_CAMERA_WORK_AUTOMATION_20261020_JA.md\n'
                 'Python 3.12 x64を自動検出して初回セットアップします。pyは必須ではありません。Native Audio Helper構築フローは既存通りです。\n'
-                'このFull版には現在のコードとWork素材を同梱しています。\n'
+                'このFull版には現在のコードとWork素材を同梱しています。補助BATはDeveloper_Toolsへ整理しました。\n'
                 'ミラー映像はOpenCL GPU優先。非対応効果はCPUへ自動復帰します。\n'
-                '652候補・35演出案は確認可能ですが、正式合格はNo.083 Aのみです。\n')
+                '652候補・35演出案は仮素材として明示選択できます。正式合格はNo.083 Aのみです。\n')
         with ZipFile(target) as archive:
             assert archive.testzip() is None
         print(target.name,target.stat().st_size,flush=True)

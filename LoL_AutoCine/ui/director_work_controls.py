@@ -64,6 +64,7 @@ def build(app, parent):
 def open_settings(app):
     from core.work_kill_assets import list_assets
     from core.kill_icons import MOTION_STYLES
+    from .work_gallery import open_gallery
     win = tk.Toplevel(app.root)
     win.title('カメラ・Workキル素材')
     win.geometry('840x660')
@@ -81,21 +82,26 @@ def open_settings(app):
     body.bind('<Configure>', lambda _event: canvas.configure(scrollregion=canvas.bbox('all')))
     canvas.bind('<Configure>', lambda event: canvas.itemconfigure(window_id, width=event.width))
     win.bind('<MouseWheel>', lambda event: canvas.yview_scroll(-int(event.delta / 120), 'units'))
+    tabs = ttk.Notebook(body)
+    tabs.pack(fill='both', expand=True)
+    work_tab = ttk.Frame(tabs, padding=8)
+    camera_tab = ttk.Frame(tabs, padding=8)
+    tabs.add(work_tab, text='Work素材・エフェクト')
+    tabs.add(camera_tab, text='カメラ自動選択')
     frames = list_assets('frames', review=True)
     effects = list_assets('effects', review=True)
     approved_frames = sum(item['status'] == 'approved' for item in frames)
     approved_effects = sum(item['status'] == 'approved' for item in effects)
-    ttk.Label(body, text=f'キルフレーム {len(frames)}候補（正式合格{approved_frames}）／'
+    ttk.Label(work_tab, text=f'キルフレーム {len(frames)}候補（正式合格{approved_frames}）／'
                          f'エフェクト {len(effects)}案（正式合格{approved_effects}）。',
               wraplength=790).pack(anchor='w')
-    ttk.Label(body, text='未合格素材は確認用の明示選択のみ。肖像穴が未検証の候補は原画確認に限定します。',
+    ttk.Label(work_tab, text='未合格素材も仮素材として表示・出力できます。肖像の位置は仮配置で、正式な品質合格にはなりません。',
               wraplength=790).pack(anchor='w')
-    ttk.Label(body, text='Work素材を選ぶと既存37キルバッジに代わって表示します。オフで既存設定へ戻ります。', wraplength=790).pack(anchor='w')
-    ttk.Label(body, text='選択したWork素材はキル時にミラーへ表示します。動画全体のFX表示は別スイッチです。', wraplength=790).pack(anchor='w')
-    ttk.Label(body, text='肖像穴が未検証の候補は原画確認のみ。合成出力は穴の検証完了後に使用できます。', wraplength=790).pack(anchor='w')
+    ttk.Label(work_tab, text='Work素材を選ぶと既存37キルバッジに代わって表示します。オフで既存設定へ戻ります。', wraplength=790).pack(anchor='w')
+    ttk.Label(work_tab, text='合格品への差し替え時は同じ素材IDから検証済み配置を読みます。原本画像や台帳の合格状態は変更しません。', wraplength=790).pack(anchor='w')
     frame_choice, effect_choice = tk.StringVar(), tk.StringVar()
-    frame_box = ttk.Combobox(body, state='readonly', textvariable=frame_choice, width=100)
-    effect_box = ttk.Combobox(body, state='readonly', textvariable=effect_choice, width=100)
+    frame_box = ttk.Combobox(work_tab, state='readonly', textvariable=frame_choice, width=100)
+    effect_box = ttk.Combobox(work_tab, state='readonly', textvariable=effect_choice, width=100)
     mappings = {}
 
     def refresh():
@@ -119,30 +125,32 @@ def open_settings(app):
         app.var_work_frame.set('083/a_simple_main')
         refresh()
 
-    ttk.Button(body, text='正式合格 No.083 A を選択', command=select_approved).pack(fill='x', pady=(8, 2))
+    app._work_settings_refresh = refresh
+    ttk.Button(work_tab, text='▣ Work素材図鑑を開く（画像から選ぶ）',
+               command=lambda: open_gallery(app)).pack(fill='x', pady=(8, 2))
+    ttk.Button(work_tab, text='正式合格 No.083 A を選択', command=select_approved).pack(fill='x', pady=(2, 2))
 
-    ttk.Checkbutton(body, text='未合格素材を確認・テスト用に表示する（品質合格にはなりません）',
+    ttk.Checkbutton(work_tab, text='未合格の仮素材も選べるようにする（品質合格にはなりません）',
                     variable=app.var_work_review, command=refresh).pack(anchor='w', pady=8)
-    ttk.Label(body, text='キルフレーム').pack(anchor='w')
+    ttk.Label(work_tab, text='キルフレーム').pack(anchor='w')
     frame_box.pack(fill='x', pady=4)
     frame_box.bind('<<ComboboxSelected>>', lambda _: app.var_work_frame.set(mappings['frames'][frame_choice.get()]))
-    ttk.Label(body, text='A/B/C/D・D31テーマ演出（すべて未合格、確認許可が必要）').pack(anchor='w')
+    ttk.Label(work_tab, text='A/B/C/D・D31テーマ演出（すべて未合格、確認許可が必要）').pack(anchor='w')
     effect_box.pack(fill='x', pady=4)
     effect_box.bind('<<ComboboxSelected>>', lambda _: app.var_work_effect.set(mappings['effects'][effect_choice.get()]))
-    ttk.Label(body, text='登場アニメーション（既存6種類）').pack(anchor='w')
-    ttk.Combobox(body, state='readonly', textvariable=app.var_kill_icon_motion,
+    ttk.Label(work_tab, text='登場アニメーション（既存6種類）').pack(anchor='w')
+    ttk.Combobox(work_tab, state='readonly', textvariable=app.var_kill_icon_motion,
                  values=list(MOTION_STYLES.values())).pack(fill='x', pady=4)
-    strength = ttk.Frame(body)
+    strength = ttk.Frame(work_tab)
     strength.pack(fill='x')
     for label, key in [('弱', 'weak'), ('強', 'strong')]:
         ttk.Radiobutton(strength, text=label, value=key, variable=app.var_work_strength).pack(side='left', padx=8)
-    ttk.Button(body, text='選択素材の配置・アニメーションを確認', command=lambda: open_demo(app)).pack(fill='x', pady=8)
-    ttk.Separator(body).pack(fill='x', pady=8)
-    ttk.Label(body, text='フルオートの候補：実機確認を終えた視点だけチェックしてください。', wraplength=790).pack(anchor='w')
-    ttk.Label(body, text='初期状態は未登録のため選択中の固定視点へ戻ります。映像品質の合格を自動で付けません。', wraplength=790).pack(anchor='w')
+    ttk.Button(work_tab, text='選択素材の配置・アニメーションを確認', command=lambda: open_demo(app)).pack(fill='x', pady=8)
+    ttk.Label(camera_tab, text='フルオートの候補：実機確認を終えた視点だけチェックしてください。', wraplength=790).pack(anchor='w')
+    ttk.Label(camera_tab, text='初期状態は未登録のため選択中の固定視点へ戻ります。映像品質の合格を自動で付けません。', wraplength=790).pack(anchor='w')
     from core.camera import STYLES
     for side in ('BLUE', 'RED'):
-        group = ttk.LabelFrame(body, text=side)
+        group = ttk.LabelFrame(camera_tab, text=side)
         group.pack(fill='x', pady=4)
         for index, style in enumerate(SUPPORTED_STYLES):
             variable = tk.BooleanVar(value=style in app.camera_auto_qa_approved.get(side, []))
@@ -156,6 +164,7 @@ def open_settings(app):
                             command=change).grid(row=index // 5, column=index % 5, sticky='w')
     def close():
         app._save_settings()
+        app._work_settings_refresh = None
         win.destroy()
     ttk.Button(footer, text='保存して閉じる', command=close).pack(fill='x')
     win.protocol('WM_DELETE_WINDOW', close)
@@ -181,15 +190,6 @@ def open_demo(app):
         try:
             from core.work_kill_assets import resolve_asset
             item, path = resolve_asset(template.work_kill_frame_id, review=template.work_kill_review)
-            if not item.get('portrait_boxes'):
-                with Image.open(path) as source:
-                    raw = source.convert('RGBA')
-                    raw.thumbnail((960, 480), Image.Resampling.LANCZOS)
-                    base = Image.new('RGBA', (960, 540), '#c7ced6')
-                    base.alpha_composite(raw, ((960-raw.width)//2, (480-raw.height)//2))
-                    ImageDraw.Draw(base).text((20, 510), 'REVIEW ONLY - portrait layout unverified', fill='black')
-                    results.put([base.convert('RGB')])
-                return
             with tempfile.TemporaryDirectory(prefix='ac-work-preview-') as folder:
                 icons = []
                 for i, color in enumerate(('#326fcb', '#b83e4d')):
@@ -203,6 +203,8 @@ def open_demo(app):
                     overlay = render_preview_pair(template, *icons, i / 60., size=(960, 540))
                     base = Image.new('RGBA', overlay.size, '#c7ced6')
                     base.alpha_composite(overlay)
+                    if not item.get('portrait_boxes'):
+                        ImageDraw.Draw(base).text((20, 510), 'DRAFT - temporary icon placement', fill='black')
                     images.append(base.convert('RGB'))
                 results.put(images)
         except Exception as exc: results.put(exc)

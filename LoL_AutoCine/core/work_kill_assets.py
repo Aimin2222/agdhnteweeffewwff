@@ -61,6 +61,24 @@ def strength(value):
     return .45 if value == 'weak' else 1.
 
 
+def portrait_layout(item, *, review=False):
+    """Return verified holes, or a visibly separate temporary icon placement.
+
+    Review placement never changes the source PNG or the catalog's QA status.
+    Approved geometry in a later catalog revision replaces it automatically.
+    """
+    boxes = item.get('portrait_boxes')
+    if boxes:
+        return boxes, False
+    if not review or item.get('status') == 'approved':
+        raise ValueError('Portrait layout not verified for Work material: ' + item['id'])
+    width, height = int(item['width']), int(item['height'])
+    side = max(12, round(height * .56))
+    top = round((height - side) / 2)
+    return [[round(width * center - side / 2), top, side, side]
+            for center in (.20, .80)], True
+
+
 def peak_opacity(elapsed, end=.8):
     if elapsed < 0 or elapsed >= end:
         return 0.
@@ -92,20 +110,28 @@ def _pair_cached(frame_id, icon_a, icon_b, catalog_signature, source_signature, 
     """Verified circular portraits; optional ornament for the no-peak path."""
     from PIL import Image, ImageOps, ImageDraw, ImageChops
     item, path = resolve_asset(frame_id, review=review)
-    if not item.get('portrait_boxes'):
-        raise ValueError('Portrait layout not verified for Work material: ' + frame_id)
+    boxes, provisional = portrait_layout(item, review=review)
     with Image.open(path) as image:
         frame = image.convert('RGBA')
     base = Image.new('RGBA', frame.size)
-    for portrait, box in zip((icon_a[0], icon_b[0]), item['portrait_boxes']):
+    if provisional and include_ornament:
+        base.alpha_composite(frame)
+    for portrait, box in zip((icon_a[0], icon_b[0]), boxes):
         x, y, w, h = map(int, box)
+        if provisional:
+            # Keep real champion icons legible above arbitrary draft artwork.
+            backing = Image.new('RGBA', frame.size)
+            d = ImageDraw.Draw(backing)
+            d.ellipse((x-5, y-5, x+w+5, y+h+5), fill=(6, 13, 27, 225),
+                      outline=(235, 195, 102, 255), width=max(2, round(h*.012)))
+            base.alpha_composite(backing)
         with Image.open(portrait) as image:
             fitted = ImageOps.fit(image.convert('RGBA'), (w, h), method=Image.Resampling.LANCZOS)
         mask = Image.new('L', (w, h))
         ImageDraw.Draw(mask).ellipse((0, 0, w-1, h-1), fill=255)
         fitted.putalpha(ImageChops.multiply(fitted.getchannel('A'), mask))
         base.alpha_composite(fitted, (x, y))
-    if include_ornament: base.alpha_composite(frame)
+    if include_ornament and not provisional: base.alpha_composite(frame)
     return base
 
 
@@ -130,7 +156,8 @@ def _peak_cached(frame_json, effect_json, signature):
     canvas.alpha_composite(image, (round(width*anchor[0]-image.width/2), round(height*anchor[1]-image.height/2)))
     alpha = canvas.getchannel('A')
     draw = ImageDraw.Draw(alpha)
-    for x,y,w,h in frame['portrait_boxes']:
+    boxes, _ = portrait_layout(frame, review=True)
+    for x,y,w,h in boxes:
         draw.ellipse((round(x),round(y),round(x+w),round(y+h)),fill=0)
     canvas.putalpha(alpha)
     return canvas
@@ -156,6 +183,8 @@ def make_event_work_badges(output, template, kills, events, roster, *, icon_look
     review = bool(getattr(template, 'work_kill_review', False))
     # Validate before any downloads or temporary rendering.
     frame, _ = resolve_asset(frame_id, review=review)
+    if log and not frame.get('portrait_boxes'):
+        log('Work: provisional icon placement; source artwork is unapproved and unchanged')
     effect = resolve_asset(effect_id, 'effects', review) if effect_id else None
     lookup = icon_lookup or champion_icon
     cache = {}

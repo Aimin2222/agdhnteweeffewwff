@@ -485,6 +485,7 @@ def _render_live_preview(request):
     source, width, height, template, title, split, canvas_width, canvas_height = request[:8]
     work_context = request[8] if len(request) > 8 else None
     video_fx = request[9] if len(request) > 9 else True
+    fill_canvas = request[10] if len(request) > 10 else False
     frame = source.latest()
     if frame is None:
         return None
@@ -510,10 +511,15 @@ def _render_live_preview(request):
     if template is not None and work_context:
         from ui.director_work_controls import composite_mirror
         image = composite_mirror(image, template, work_context)
-    ratio = min(canvas_width / image.width, canvas_height / image.height)
-    if ratio != 1:
-        image = image.resize((max(1, round(image.width * ratio)),
-                              max(1, round(image.height * ratio))), Image.Resampling.BILINEAR)
+    if fill_canvas:
+        from PIL import ImageOps
+        image = ImageOps.fit(image, (canvas_width, canvas_height),
+                             method=Image.Resampling.BILINEAR)
+    else:
+        ratio = min(canvas_width / image.width, canvas_height / image.height)
+        if ratio != 1:
+            image = image.resize((max(1, round(image.width * ratio)),
+                                  max(1, round(image.height * ratio))), Image.Resampling.BILINEAR)
     # All resize work is finished before the UI uploads pixels to Tk.
     return image, original
 
@@ -713,12 +719,17 @@ class App:
         nav = ttk.Frame(top)
         nav.pack(side="left", padx=(15, 0))
         ttk.Button(nav, text="⌂  ホーム", style="Nav.TButton", command=lambda: self._focus_home()).pack(side="left")
-        ttk.Button(nav, text="▣  テンプレート", style="Nav.TButton", command=self._open_template_gallery).pack(side="left")
-        ttk.Button(nav, text="✦  キルフレーム図鑑", style="Nav.TButton", command=self._open_kill_frame_gallery).pack(side="left")
-        ttk.Button(nav, text="✦  Work素材", style="Nav.TButton",
-                   command=self._open_work_kill_settings).pack(side="left")
+        materials = ttk.Menubutton(nav, text='▣  素材・参考', style='Nav.TMenubutton')
+        materials_menu = tk.Menu(materials, tearoff=0)
+        materials_menu.add_command(label='テンプレート図鑑', command=self._open_template_gallery)
+        materials_menu.add_command(label='既存キルフレーム図鑑', command=self._open_kill_frame_gallery)
+        materials_menu.add_command(label='Work素材・エフェクト図鑑',
+                                   command=self._open_work_gallery)
+        materials_menu.add_command(label='Work素材の設定', command=self._open_work_kill_settings)
+        materials_menu.add_command(label='参考動画', command=self._focus_reference)
+        materials.configure(menu=materials_menu)
+        materials.pack(side='left')
         ttk.Button(nav, text="✓  自動診断", style="Nav.TButton", command=self.on_automatic_qa).pack(side="left")
-        ttk.Button(nav, text="▰  参考動画", style="Nav.TButton", command=lambda: self._focus_reference()).pack(side="left")
         ttk.Button(nav, text="⚙  設定", style="Nav.TButton", command=self._focus_settings).pack(side="left")
 
         right_top = ttk.Frame(top)
@@ -876,6 +887,7 @@ class App:
 
         self.var_live = tk.BooleanVar(value=False)
         self.var_preview_quality = tk.StringVar(value="操作優先")
+        self.var_preview_fill = tk.BooleanVar(value=True)
         self.var_split = tk.DoubleVar(value=0.0)
         self.var_mirror = tk.BooleanVar(value=False)
         tools = ttk.Frame(preview_card, style="Card.TFrame")
@@ -888,6 +900,8 @@ class App:
                                values=("操作優先", "表示サイズで確認"), width=17)
         quality.pack(side="left")
         quality.bind("<<ComboboxSelected>>", lambda _: self._save_settings())
+        ttk.Checkbutton(tools, text='余白なく拡大', variable=self.var_preview_fill,
+                        command=self._save_settings).pack(side='left', padx=(8, 0))
         bind_effect_hover_tip(quality,"操作優先：UIを軽く保つ表示品質。表示サイズで確認：ミラーの表示領域に合わせて画質を高める（書き出し画質は変わらない）。",500)
         ttk.Button(tools, text="▶ 再生", style="Accent.TButton", command=self.on_preview_play).pack(side="right", padx=4)
         ttk.Button(tools, text="■ 停止", command=self.on_preview_stop).pack(side="right", padx=4)
@@ -1671,9 +1685,9 @@ class App:
         ttk.Button(f, text="✓ チェックしたシーンだけ作成", style="Accent.TButton", command=self.on_make_checked).pack(fill="x", pady=(5,0))
         ttk.Button(f, text="▶ 全検出シーンを一括作成", command=self.on_make_clips).pack(fill="x", pady=(5,0))
         ttk.Separator(f).pack(fill="x",pady=(8,6))
-        ttk.Button(f, text="開発用：全カメラテスト・30MB ZIP",
+        ttk.Button(f, text="開発用：カメラ＋Work素材一括QA・30MB ZIP",
                    command=self.on_dev_camera_qa).pack(fill="x",pady=(0,3))
-        ttk.Label(f, text="1回で接続→全体スキャン→動画・画像・診断を自動作成。ZIPは各30MB以下。完成版では削除予定。",
+        ttk.Label(f, text="接続→全体スキャン→カメラ・演出動画→Work全素材の整合性と図鑑画像→GPUミラー計測→診断ZIP。各30MB以下。",
                   style="CardMuted.TLabel",wraplength=300).pack(fill="x")
 
         f = card(right, "☁  出力状況")
@@ -2143,6 +2157,10 @@ class App:
 
     def _open_kill_frame_gallery(self):
         from ui.kill_frame_gallery import open_gallery
+        return open_gallery(self)
+
+    def _open_work_gallery(self):
+        from ui.work_gallery import open_gallery
         return open_gallery(self)
 
     def _open_work_kill_settings(self):
@@ -3588,6 +3606,8 @@ class App:
                     self.var_out_right.set(str(self.out_root))
             if d.get("preview_quality") in ("操作優先", "表示サイズで確認"):
                 self.var_preview_quality.set(d["preview_quality"])
+            if "preview_fill" in d:
+                self.var_preview_fill.set(bool(d["preview_fill"]))
             if d.get("left_width"):
                 self.var_left_width.set(int(d["left_width"]))
             if d.get("right_width"):
@@ -3648,6 +3668,7 @@ class App:
             from ui.director_work_controls import values as director_work_values
             SETTINGS.write_text(json.dumps({**director_work_values(self), "out_root": str(self.out_root),
                                              "preview_quality": self.var_preview_quality.get(),
+                                             "preview_fill": bool(self.var_preview_fill.get()) if hasattr(self, 'var_preview_fill') else False,
                                              "left_width": int(self.var_left_width.get()),
                                              "right_width": int(self.var_right_width.get()),
                                              "edit_mode": self.var_edit_mode.get(),
@@ -4051,7 +4072,7 @@ class App:
             messagebox.showerror(APP, str(exc))
             return
         destination = Path(self.out_root)
-        self.log("開発テスト: 接続・全体スキャン・撮影・比較画像・各30MB以下の分割ZIPをまとめて開始します。")
+        self.log("開発テスト: カメラ・Work全素材・演出・GPUミラーを一括検査し、各30MB以下の送信用ZIPを作ります。")
         self._run_bg(self._run_one_click_camera_qa, template, destination)
 
     def _run_one_click_camera_qa(self, template, destination):
@@ -4082,6 +4103,7 @@ class App:
 
     def _record_camera_qa(self, tpl, players, events, preferred, destination):
         """Worker: records 8 representative clips, then post-processes 10 variants."""
+        from core.work_qa import run_work_qa
         src = None
         own = False
         try:
@@ -4096,7 +4118,8 @@ class App:
                         tpl,destination,stop=self.stop_ev,log=self.log,
                         audio_factory=factory,
                         progress=lambda *values:self.q.put(("job",*values)),
-                        plan=qa_plan, plan_source=plan_source)
+                        plan=qa_plan, plan_source=plan_source,
+                        work_qa_runner=run_work_qa)
             self.log(f"開発用一括テストの結果: {report}")
         finally:
             if own and src is not None:
@@ -4403,7 +4426,8 @@ class App:
                     process_w, process_h = cw, ch
                 else:
                     process_w, process_h = (640, 360) if editing or preview_fx else (960, 540)
-                key = (id(source), cw, ch, process_w, process_h, settings_key, title, split, preview_fx)
+                fill_canvas = bool(self.var_preview_fill.get()) if hasattr(self, 'var_preview_fill') else False
+                key = (id(source), cw, ch, process_w, process_h, settings_key, title, split, preview_fx, fill_canvas)
                 result = self._live_preview.result(key)
                 # During drags/scrolls lower only the approximate mirror workload.
                 # Export templates, recording clocks and output resolution are untouched.
@@ -4413,7 +4437,8 @@ class App:
                                  [p.to_dict() for p in self.players])
                                 if t is not None and t.work_kill_frame_id else None)
                 self._live_preview.submit(key, (source, process_w, process_h,
-                                               t, title, split, cw, ch, work_context, preview_fx))
+                                               t, title, split, cw, ch, work_context, preview_fx,
+                                               fill_canvas))
                 if result is not None and result is not self._preview_presented:
                     image, original = result[1]
                     from core.gpu_mirror import last_status as mirror_gpu_status
@@ -4422,6 +4447,7 @@ class App:
                     if backend_state != getattr(self, '_preview_backend_last', None):
                         self._preview_backend_last = backend_state
                         self.log(f"ミラー処理: {backend} ({reason})")
+                    tk_started = time.perf_counter()
                     self._photo = ImageTk.PhotoImage(image)
                     if self._preview_image_item is None:
                         self.canvas.delete('all')
@@ -4444,6 +4470,21 @@ class App:
                     else:
                         self.canvas.itemconfigure(self._preview_text_item,
                                                   text=f'Workキル素材プレビュー / {backend}' if show_work else '')
+                    ui_ms = (time.perf_counter()-tk_started)*1000
+                    samples = getattr(self, '_mirror_tk_ms', [])
+                    samples.append(ui_ms)
+                    if len(samples) > 120:
+                        del samples[:-120]
+                    self._mirror_tk_ms = samples
+                    stamp = time.monotonic()
+                    if stamp-getattr(self, '_mirror_perf_logged_at', 0.) >= 30 and hasattr(self._live_preview, 'stats'):
+                        from statistics import median
+                        stats = self._live_preview.stats()
+                        self.log(f"ミラー性能: {backend} / 合成中央値 {stats['median_ms']}ms / "
+                                 f"合成p95 {stats['p95_ms']}ms / Tk転送中央値 {median(samples):.2f}ms / "
+                                 f"更新 {stats['completed']} / 上書き {stats['replaced']} / "
+                                 f"表示 {cw}x{ch} / Work {'on' if show_work else 'off'}")
+                        self._mirror_perf_logged_at = stamp
             else:
                 if self._preview_presented is not None or self._preview_text_item is None:
                     self._preview_presented = None

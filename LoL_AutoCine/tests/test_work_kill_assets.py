@@ -31,6 +31,7 @@ def pack(tmp_path, monkeypatch):
     item['portrait_boxes'] = [[19,19,66,66],[166,19,66,66]]
     pending = dict(item, id='review')
     pending['status']='review'
+    pending['portrait_boxes']=None
     effect = record('peak.png','A','review')
     effect['duration']=.35
     (folder/'catalog.json').write_text(json.dumps(dict(frames=[item,pending],effects=[effect])))
@@ -55,6 +56,33 @@ def test_quality_gate_integrity_and_native_layers(pack):
     assert image.getpixel((19,19))[3]==0  # circular portrait, no square corner leak
     (folder/'assets/work_kill_assets/frame.png').write_bytes(b'altered')
     with pytest.raises(ValueError,match='SHA256'): work.resolve_asset('083/a_simple_main')
+
+
+def test_unapproved_frame_and_effect_render_as_explicit_provisional_assets(pack):
+    folder,a,b=pack
+    before=(folder/'assets/work_kill_assets/frame.png').read_bytes()
+    review_item,_=work.resolve_asset('review',review=True)
+    boxes,provisional=work.portrait_layout(review_item,review=True)
+    assert provisional and len(boxes)==2
+    assert review_item['portrait_boxes'] is None and review_item['status']=='review'
+    with pytest.raises(ValueError): work.render_pair('review',a,b)
+    image=work.render_pair('review',a,b,review=True)
+    assert image.size==(252,105)
+    for x,y,w,h in boxes:
+        assert image.getpixel((x+w//2,y+h//2))[3]==255
+    effect,_=work.resolve_asset('A','effects',review=True)
+    peak=work.render_peak(review_item,effect,folder/'assets/work_kill_assets/peak.png')
+    assert peak.getpixel((boxes[0][0]+boxes[0][2]//2,boxes[0][1]+boxes[0][3]//2))[3]==0
+    template=Template(work_kill_frame_id='review',work_kill_effect_id='A',work_kill_review=True)
+    assert work.render_preview_pair(template,a,b,.1,size=(640,360)).getbbox() is not None
+    logs=[]
+    entries=work.make_event_work_badges(folder/'draft.mp4',template,
+        [SimpleNamespace(killer='A',victim='B')],[(.1,.42)],
+        [dict(name='A',raw_champion='Annie'),dict(name='B',raw_champion='Ahri')],
+        icon_lookup=lambda _player:a,log=logs.append)
+    assert len(entries)==3 and all(path.is_file() for path,_ in entries)
+    assert any('provisional' in message for message in logs)
+    assert (folder/'assets/work_kill_assets/frame.png').read_bytes()==before
 
 
 def test_event_plan_multikill_and_peak_masks(pack):

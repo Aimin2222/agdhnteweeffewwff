@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import threading
 import time
+from collections import deque
+import statistics
 
 
 class LatestPreview:
@@ -19,12 +21,17 @@ class LatestPreview:
         self._key = None
         self._closed = False
         self._thread = None
+        self._durations_ms = deque(maxlen=120)
+        self._replaced = 0
+        self._completed = 0
 
     def submit(self, key, request):
         with self._lock:
             if self._closed:
                 return
             self._key = key
+            if self._pending is not None:
+                self._replaced += 1
             self._pending = (key, request)  # Replace obsolete frames, never queue them.
             if self._thread is None:
                 self._thread = threading.Thread(target=self._run, daemon=True,
@@ -42,6 +49,13 @@ class LatestPreview:
             self._pending = self._result = None
             self._wake.set()
 
+    def stats(self):
+        with self._lock:
+            samples = list(self._durations_ms)
+            return {'completed': self._completed, 'replaced': self._replaced,
+                    'median_ms': round(statistics.median(samples), 2) if samples else None,
+                    'p95_ms': round(sorted(samples)[int(.95*(len(samples)-1))], 2) if samples else None}
+
     def _run(self):
         while True:
             self._wake.wait()
@@ -53,6 +67,7 @@ class LatestPreview:
             if job is None:
                 continue
             key, request = job
+            started = time.perf_counter()
             try:
                 value = self._render(request)
             except Exception as exc:
@@ -68,5 +83,7 @@ class LatestPreview:
                     try: value = self._fallback(request)
                     except Exception: pass
             with self._lock:
+                self._durations_ms.append((time.perf_counter()-started)*1000)
+                self._completed += 1
                 if not self._closed and key == self._key and value is not None:
                     self._result = (key, value)
