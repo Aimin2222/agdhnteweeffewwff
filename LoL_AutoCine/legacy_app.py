@@ -4102,7 +4102,7 @@ class App:
                                self.locked, destination)
 
     def _record_camera_qa(self, tpl, players, events, preferred, destination):
-        """Worker: records 8 representative clips, then post-processes 10 variants."""
+        """Worker: records manual and smart-camera clips, then runs media QA."""
         from core.work_qa import run_work_qa
         src = None
         own = False
@@ -4119,7 +4119,7 @@ class App:
                         audio_factory=factory,
                         progress=lambda *values:self.q.put(("job",*values)),
                         plan=qa_plan, plan_source=plan_source,
-                        work_qa_runner=run_work_qa)
+                        work_qa_runner=run_work_qa, include_smart_modes=True)
             self.log(f"開発用一括テストの結果: {report}")
         finally:
             if own and src is not None:

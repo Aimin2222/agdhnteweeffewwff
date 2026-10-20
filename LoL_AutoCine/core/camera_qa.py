@@ -94,7 +94,8 @@ def camera_build_identity(project_root=None):
 
 def run_camera_record_test(api, source, players, events, preferred, template, destination,
                            *, stop=None, log=lambda _m: None, audio_factory=None, progress=None,
-                           plan=None, plan_source="bundled", work_qa_runner=None):
+                           plan=None, plan_source="bundled", work_qa_runner=None,
+                           include_smart_modes=False):
     """Record four modes per side, returning the report path.
 
     Only one clip per style is created; capture and game audio use exactly the
@@ -104,6 +105,16 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     config = validate_plan(plan) if plan is not None else None
     scenarios = (plan_eight_cases(players, events, preferred, modes=config["camera_modes"])
                  if config else plan_eight_cases(players, events, preferred))
+    if include_smart_modes:
+        # Manual baselines plus one fixed and one full-auto case per side.
+        scenarios = [(*row, 'manual') for row in scenarios]
+        for side in ('RED', 'BLUE'):
+            baseline = next((row for row in scenarios if row[0] == side and row[3] == 'third_cinema'),
+                            next((row for row in scenarios if row[0] == side), None))
+            if baseline is not None:
+                for control, label in (('fixed_auto', '固定視点＋自動構図補正'),
+                                       ('full_auto', 'フルオートシネマ')):
+                    scenarios.append((side, baseline[1], baseline[2], 'third_cinema', label, control))
     folder = Path(destination) / ("CameraQA_" + datetime.now().strftime("%Y%m%d_%H%M%S_%f"))
     folder.mkdir(parents=True, exist_ok=False)
     identity = camera_build_identity()
@@ -114,7 +125,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         **identity,
         "kind": "live_replay_camera_test",
         "expected_clips": len(scenarios),
-        "camera_control_mode": getattr(template, 'camera_control_mode', None),
+        "camera_control_mode": 'mixed_manual_fixed_full' if include_smart_modes else getattr(template, 'camera_control_mode', None),
         "test_plan": config,
         "test_plan_source": plan_source,
         "qa_archives": [],
@@ -128,11 +139,15 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     def flush():
         (folder / "results.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     flush()
-    for index, (side, player, scene, mode, label) in enumerate(scenarios, 1):
+    for index, scenario in enumerate(scenarios, 1):
+        side, player, scene, mode, label = scenario[:5]
+        control = scenario[5] if len(scenario) > 5 else None
         if stop is not None and stop.is_set():
             log("カメラテスト: ユーザー操作により中止しました。")
             break
         clip_template = replace(template)
+        if control is not None:
+            clip_template.camera_control_mode = control
         clip_template.name = f"CameraQA {side} {label}"
         clip_template.style = mode
         clip_template.camera_side = "auto"
@@ -184,7 +199,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
         try:
             (folder / side).mkdir(exist_ok=True)
             result = run_auto_edit(
-                api, source, player, [scene], clip_template, folder / side / f"{index:02d}_{mode}",
+                api, source, player, [scene], clip_template, folder / side / f"{index:02d}_{mode}_{control or 'legacy'}",
                 False, progress=None, stop=stop, log=capture_camera_log, audio_factory=audio_factory)
             current["outputs"] = [str(p) for p in result.outputs]
             current["failed"] = [[int(i), str(msg)] for i,msg in result.failed]
@@ -206,6 +221,7 @@ def run_camera_record_test(api, source, players, events, preferred, template, de
     ready = [p for p in generated if p.is_file()]
     quality = [Path(p) for side in ("RED", "BLUE") for row in manifest["outputs"]
                if row["side"] == side and row["mode"] == "third_cinema"
+               and row["camera_control_mode"] in (None, 'manual')
                for p in row["outputs"] if Path(p).is_file()]
     join_sources = quality if len(quality) == 2 else ready[:2]
     if len(ready) >= 2 and not (stop is not None and stop.is_set()):

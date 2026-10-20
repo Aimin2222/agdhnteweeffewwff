@@ -74,6 +74,30 @@ def test_qa_reports_capture_failure_and_transition_fallback(tmp_path, monkeypatc
     assert all(row['failed'] for row in data['montage_tests'] if row['style'] != 'cut')
 
 
+def test_one_click_qa_adds_fixed_and_full_auto_per_side_without_changing_template(tmp_path, monkeypatch):
+    stop=Event();recorded=[]
+    original=Template(camera_control_mode='fixed_auto', style='fps')
+    snapshot=original.to_dict()
+    monkeypatch.setattr(qa,'plan_eight_cases',lambda *a,**k:cases())
+    def record(api,source,player,scenes,tpl,dest,merge,**kw):
+        recorded.append((player.label(),tpl.style,tpl.camera_control_mode,str(dest)))
+        p=Path(dest).with_suffix('.mp4');p.write_bytes(b'clip')
+        if len(recorded)==12:
+            stop.set()  # keep this test focused on the recording plan
+        return SimpleNamespace(outputs=[p],failed=[])
+    monkeypatch.setattr(qa,'run_auto_edit',record)
+    report=qa.run_camera_record_test(None,None,[],[],None,original,tmp_path,
+                                     stop=stop,include_smart_modes=True)
+    data=json.loads(report.read_text())
+    assert data['expected_clips']==12 and data['completed_clips']==12
+    assert data['camera_control_mode']=='mixed_manual_fixed_full'
+    assert all(row['camera_control_mode']=='manual' for row in data['outputs'][:8])
+    assert [(row['side'],row['camera_control_mode']) for row in data['outputs'][8:]] == [
+        ('RED','fixed_auto'),('RED','full_auto'),('BLUE','fixed_auto'),('BLUE','full_auto')]
+    assert len({row[3] for row in recorded})==12
+    assert original.to_dict()==snapshot
+
+
 def test_stable_rotation_survives_recalibration_and_clears_on_replay_change():
     old_cal = dict(camera._TPS_CALIBRATION); old_rot = dict(camera._TPS_STABLE_ROTATIONS)
     try:
