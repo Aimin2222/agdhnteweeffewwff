@@ -42,7 +42,10 @@ from legacy_app import App
 
 def main() -> None:
     root = tk.Tk()
-    App(root)
+    app = App(root)
+    if "--legacy-ui" not in sys.argv:
+        from ui.reference_studio import ReferenceStudio
+        ReferenceStudio(app)
     root.mainloop()
 
 
