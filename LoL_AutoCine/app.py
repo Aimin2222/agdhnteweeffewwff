@@ -42,9 +42,21 @@ from legacy_app import App
 
 def main() -> None:
     root = tk.Tk()
-    App(root)
+    app = App(root)
+    if "--legacy-ui" not in sys.argv:
+        from ui.reference_studio import ReferenceStudio
+        ReferenceStudio(app)
     root.mainloop()
 
 
 if __name__ == "__main__":
-    main()
+    if "--smoke-test" in sys.argv:
+        # Importing legacy_app above verifies the packaged VERSION.txt as well.
+        from pathlib import Path
+        from legacy_app import ROOT
+        required = [ROOT / "VERSION.txt", ROOT / "assets" / "work_kill_assets" / "catalog.json",
+                    ROOT / "tools" / "bin" / "lol_audio_helper.exe"]
+        if any(not path.is_file() for path in required):
+            raise SystemExit(2)
+    else:
+        main()

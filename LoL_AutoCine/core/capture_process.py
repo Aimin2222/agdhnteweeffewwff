@@ -22,6 +22,19 @@ _sessions = weakref.WeakSet()
 _registry_lock = threading.Lock()
 
 
+def capture_worker_command(memory_name, title, *, executable=None, frozen=None):
+    """Select the same isolated WGC worker for source and portable builds."""
+    executable = executable or sys.executable
+    frozen = getattr(sys, 'frozen', False) if frozen is None else frozen
+    if frozen:
+        worker = Path(executable).with_name('LoL_AutoCine_Capture.exe')
+        if not worker.is_file():
+            raise FileNotFoundError(f'Portable WGC worker missing: {worker}')
+        return [str(worker), '--memory', memory_name, '--title', title]
+    return [executable, '-u', str(Path(__file__).with_name('capture_worker.py')),
+            '--memory', memory_name, '--title', title]
+
+
 def _log(message):
     logging.getLogger(__name__).info(message)
     try:
@@ -136,8 +149,7 @@ class CaptureSession:
             # Each attempt keeps its own native startup diagnostics.
             self.error_path = folder / f'capture_worker_{time.time_ns()}.log'
             self.stderr = self.error_path.open('wb')
-            cmd = [sys.executable, '-u', str(Path(__file__).with_name('capture_worker.py')),
-                   '--memory', self.frame.memory.name, '--title', self.title]
+            cmd = capture_worker_command(self.frame.memory.name, self.title)
             flags = getattr(subprocess, 'CREATE_NO_WINDOW', 0) if sys.platform == 'win32' else 0
             self.process = subprocess.Popen(cmd, stdin=subprocess.DEVNULL,
                                             stdout=subprocess.DEVNULL, stderr=self.stderr,

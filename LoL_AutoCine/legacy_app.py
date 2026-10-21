@@ -42,6 +42,8 @@ from core.players import Player, parse_players                     # noqa: E402
 from core.replay_api import ReplayAPI                              # noqa: E402
 from core.scanner import scan_kills, filter_scanned_events                                # noqa: E402
 from ui.scene_timeline import SceneTimeline                     # noqa: E402
+from ui.kill_event_timeline import KillEventTimeline            # noqa: E402
+from ui.layout_variants import LAYOUT_NAMES, OLD_NAMES, SCENE_LEFT  # noqa: E402
 from ui.live_preview import LatestPreview, PresentationRate, preview_delay_ms
 from ui.redraw import request_redraw
 from ui.mirror_capture import MirrorCapture                     # noqa: E402
@@ -607,6 +609,7 @@ class App:
         self.var_smart_composition = tk.BooleanVar(value=False)
         self.var_scene_mode = tk.BooleanVar(value=False)    # opt-in per-scene rendering
         self.var_edit_mode = tk.StringVar(value="easy")  # view only: never silently change rendering state
+        self.var_ui_layout = tk.StringVar(value=LAYOUT_NAMES[6])
         # A single HUD preset drives the legacy render flags. LoL player-name visibility is an in-game setting.
         self.var_hud_mode = tk.StringVar(value="hidden")
         self.var_hud = tk.BooleanVar(value=True)
@@ -659,7 +662,9 @@ class App:
         green = "#159A6B"
 
         r.configure(bg=bg)
-        r.minsize(1280, 780)
+        # 1366x768 displays (including the taskbar) must be able to show the
+        # entire window. Scroll panels keep the controls reachable below it.
+        r.minsize(1024, 680)
         style = ttk.Style(r)
         try:
             style.theme_use("clam")
@@ -735,6 +740,12 @@ class App:
         materials.pack(side='left')
         ttk.Button(nav, text="✓  自動診断", style="Nav.TButton", command=self.on_automatic_qa).pack(side="left")
         ttk.Button(nav, text="⚙  設定", style="Nav.TButton", command=self._focus_settings).pack(side="left")
+        ttk.Label(nav, text="配置", style="Muted.TLabel").pack(side="left", padx=(10, 3))
+        layout_choice = ttk.Combobox(nav, state="readonly", width=29,
+                                     textvariable=self.var_ui_layout,
+                                     values=LAYOUT_NAMES)
+        layout_choice.pack(side="left")
+        layout_choice.bind("<<ComboboxSelected>>", lambda _e: self._apply_ui_layout())
 
         right_top = ttk.Frame(top)
         right_top.pack(side="right")
@@ -776,13 +787,14 @@ class App:
         # editor.  No tkinter widgets are destroyed when switching modes.
         body = ttk.Frame(r, padding=(7, 2, 7, 2))
         body.pack(fill="both", expand=True)
+        self._ui_body = body
         studio_split = tk.PanedWindow(body, orient="vertical", sashwidth=9,
             sashrelief="raised", bd=0, relief="flat", bg="#CFD8E5", opaqueresize=True)
         studio_split.pack(fill="both", expand=True)
         topdeck = ttk.Frame(studio_split, style="Card.TFrame")
         edit_host = ttk.Frame(studio_split, style="Card.TFrame")
         studio_split.add(topdeck, minsize=260, stretch="always")
-        studio_split.add(edit_host, minsize=240, stretch="always")
+        studio_split.add(edit_host, minsize=180, stretch="always")
         self.studio_split = studio_split
         self.center_split = studio_split   # compatible attribute name
         self._center_split_initialized = False
@@ -803,6 +815,8 @@ class App:
         center_edit_scroll.pack(fill="both", expand=True)
         center_edit = center_edit_scroll.inner
         self.center_preview_host = preview_host
+        self._ui_topdeck = topdeck
+        self._ui_center = center
         self.center_edit_host = edit_host
         self.center_edit_scroll = center_edit_scroll
 
@@ -812,7 +826,9 @@ class App:
             try:
                 h = studio_split.winfo_height()
                 if h > 510:
-                    studio_split.sash_place(0, 0, max(260, min(h - 240, int(h * 0.48))))
+                    # Reserve most of a short display for the live mirror;
+                    # the timeline and editor remain independently scrollable.
+                    studio_split.sash_place(0, 0, max(260, min(h - 180, int(h * 0.66))))
                     self._center_split_initialized = True
             except tk.TclError:
                 pass
@@ -1078,6 +1094,8 @@ class App:
         self.scene_timeline = SceneTimeline(timeline, self.var_pre, self.var_post)
         self.scene_timeline.pack(fill="x", pady=(5, 4))
         ttk.Label(timeline, text="左・右のハンドルをドラッグ。編集したキル前/後の秒数は実際の書き出しに反映されます。", style="CardMuted.TLabel").pack(anchor="w")
+        self.kill_event_timeline = KillEventTimeline(timeline, self._select_timeline_event)
+        self.kill_event_timeline.pack(fill="x", pady=(6, 0))
         # Per-scene direction controls live in the center editor (GPU code unchanged).
         scene_card = ttk.Frame(center_edit, style="Card.TFrame", padding=(12, 10))
         self._mode_detail_sections.append(scene_card)
@@ -1660,6 +1678,7 @@ class App:
         # Keep scene selection and render progress at the top of the inspector, even
         # when the user switches to camera/color/output editing zones.
         f = card(right, "◉  検出シーン")
+        self._ui_scene_card = f
         ttk.Button(f, text="① スキャン（接続・10人取得・試合全体）", command=self.on_scan, style="Accent.TButton").pack(fill="x", pady=(0,6))
         self.pb_scan = ttk.Progressbar(f, maximum=100); self.pb_scan.pack(fill="x", pady=2)
         self.lbl_scan = ttk.Label(f, text="未スキャン｜スキャンを押すだけで接続・プレイヤー取得から開始", style="CardMuted.TLabel", wraplength=300)
@@ -1848,11 +1867,39 @@ class App:
         log_sb.pack(side="right", fill="y")
         self._mode_sidecards.append((log_card, right, "log"))
 
+        # B is a comparison layout, not a second implementation. Every widget
+        # below is bound to the same Tk variables and handlers as the editor.
+        quick = ttk.Frame(left, style="Card.TFrame", padding=(12, 10))
+        self._ui_test_inspector = quick
+        from core.smart_camera_director import CONTROL_MODES
+        ttk.Label(quick, text="カメラ・キル演出", style="Section.TLabel").pack(anchor="w")
+        ttk.Label(quick, text="カメラ制御", style="CardMuted.TLabel").pack(anchor="w", pady=(7, 2))
+        ttk.Combobox(quick, state="readonly", textvariable=self.var_camera_control_mode,
+                     values=list(CONTROL_MODES.values())).pack(fill="x")
+        ttk.Label(quick, text="視点", style="CardMuted.TLabel").pack(anchor="w", pady=(7, 2))
+        ttk.Combobox(quick, state="readonly", textvariable=self.var_style,
+                     values=list(STYLES.values())).pack(fill="x")
+        ttk.Label(quick, text="対象サイド（TargetLockは維持）", style="CardMuted.TLabel").pack(anchor="w", pady=(7, 2))
+        ttk.Combobox(quick, state="readonly", textvariable=self.var_camera_side,
+                     values=list(CAMERA_SIDE_CHOICES.values())).pack(fill="x")
+        ttk.Button(quick, text="距離・高さ・角度・FOVを調整", command=lambda: self._focus_editor_zone("camera")).pack(fill="x", pady=(8, 3))
+        ttk.Button(quick, text="BLUE/RED カメラ＋素材一括QA", command=self.on_dev_camera_qa).pack(fill="x", pady=3)
+        ttk.Separator(quick).pack(fill="x", pady=8)
+        ttk.Button(quick, text="画像付き Work素材図鑑", command=self._open_work_gallery).pack(fill="x", pady=3)
+        ttk.Button(quick, text="枠・同名FX・登場アニメ・強弱", command=self._open_work_kill_settings).pack(fill="x", pady=3)
+        ttk.Label(quick, text="正式合格と確認用の区別は図鑑の品質台帳を使用します。",
+                  style="CardMuted.TLabel", wraplength=260).pack(anchor="w", pady=(4, 0))
+
+        from ui.layout_variants import install as install_layout_variants
+        self._ui_variant_cards, self._ui_wizard_strip = install_layout_variants(
+            self, left, right, r, body)
+
         # Initialize template camera/FX controls, but do not silently apply a
         # creative color grade before the user chooses one.
         self.apply_template(self.var_tpl.get())
         self.var_grade.set(GRADE_JP["default"])
         self._apply_edit_mode(log=False)
+        self._apply_ui_layout(save=False)
 
         # A compact log window is available from the settings/diagnostics button.
         self._build_log_dialog = None
@@ -1878,6 +1925,10 @@ class App:
                 panel.pack_forget()
             if easy:
                 self._mode_easy_section.pack(fill="x", pady=(0, 8))
+                # Keep the real trim timeline visible in both editing views.
+                # It shares var_pre/var_post with the export path.
+                self._editor_timeline.pack(before=self._mode_easy_section,
+                                           fill="x", pady=(0, 8))
                 # Duplicate right-side quick output stays unmounted; top 設定 opens the real output page.
                 quick_output = getattr(self, "_right_quick_output", None)
                 if quick_output is not None:
@@ -1908,6 +1959,44 @@ class App:
                 "シーン・タイムライン・キーフレーム・カラーまで調整できます。"))
         if log and hasattr(self, "txt"):
             self.log("編集画面を切替: " + ("かんたん編集" if easy else "詳細編集"))
+
+    def _apply_ui_layout(self, *, save: bool = True) -> None:
+        """Arrange one set of controls in nine shells; keep all render state."""
+        if not hasattr(self, "_ui_topdeck"):
+            return
+        from ui.layout_variants import configure as configure_layout_variant
+        chosen = OLD_NAMES.get(self.var_ui_layout.get(), self.var_ui_layout.get())
+        if chosen not in LAYOUT_NAMES:
+            chosen = LAYOUT_NAMES[6]
+        self.var_ui_layout.set(chosen)
+        index = LAYOUT_NAMES.index(chosen) + 1
+        for panel in (self.left_scroll, self.right_scroll, self._ui_center):
+            panel.pack_forget()
+        if index in SCENE_LEFT:
+            self.right_scroll.pack(side="left", fill="y")
+            self.left_scroll.pack(side="right", fill="y")
+            self._ui_center.pack(side="left", fill="both", expand=True, padx=7)
+        else:
+            self.left_scroll.pack(side="left", fill="y")
+            self._ui_center.pack(side="left", fill="both", expand=True, padx=7)
+            self.right_scroll.pack(side="right", fill="y")
+        if index == 8:
+            self._ui_test_inspector.pack(before=self._nav_home_card, fill="x", pady=(0, 8))
+        else:
+            self._ui_test_inspector.pack_forget()
+        configure_layout_variant(self, index)
+        # Editing software places more of the current, shared editor in view.
+        fraction = 0.55 if index == 2 else 0.66
+        def place_sash():
+            try:
+                h = self.studio_split.winfo_height()
+                if h > 500:
+                    self.studio_split.sash_place(0, 0, max(260, min(h - 180, int(h * fraction))))
+            except tk.TclError:
+                pass
+        self.root.after_idle(place_sash)
+        if save:
+            self._save_settings()
 
     def _apply_editor_zone(self) -> None:
         """Show a single center workspace. GPU, audio, template and shot values are untouched."""
@@ -2755,6 +2844,21 @@ class App:
             self.lb_kills.insert("end", f"{mark}{edited}  #{ranks[scene_key(k)]:02d}  {int(k.time // 60):02d}:{k.time % 60:04.1f}  [{role}] {k.killer} → {k.victim}{m}")
 
         self._refresh_order_list()
+        if hasattr(self, "kill_event_timeline"):
+            scan = getattr(self, "_match_scan_cache", None)
+            self.kill_event_timeline.set_events(
+                self.kills, self.checked_kills,
+                duration=getattr(scan, "length", None),
+                selected=self.lb_kills.curselection()[0] if self.lb_kills.curselection() else None)
+
+    def _select_timeline_event(self, index: int) -> None:
+        if index >= len(self.kills):
+            return
+        self.lb_kills.selection_clear(0, "end")
+        self.lb_kills.selection_set(index)
+        self.lb_kills.activate(index)
+        self.lb_kills.see(index)
+        self.on_scene_selection()
 
     def _rebuild_kills_keep_position(self):
         """Redraw checkmarks without moving the list back to its first row.
@@ -2872,6 +2976,10 @@ class App:
         kill = self._current_scene()
         if kill is None:
             return
+        if hasattr(self, "kill_event_timeline"):
+            selected = self.lb_kills.curselection()
+            self.kill_event_timeline.selected = selected[0] if selected else None
+            self.kill_event_timeline.redraw()
         key = scene_key(kill)
         shot = self.scene_project.shots.get(key) or recommend(kill, self.var_pre.get(), self.var_post.get())
         self._scene_loading = True
@@ -3677,6 +3785,10 @@ class App:
             if restored_mode in ("easy", "advanced"):
                 self.var_edit_mode.set(restored_mode)
                 self._apply_edit_mode(log=False)
+            saved_layout = OLD_NAMES.get(d.get("ui_layout"), d.get("ui_layout"))
+            if saved_layout in LAYOUT_NAMES:
+                self.var_ui_layout.set(saved_layout)
+                self._apply_ui_layout(save=False)
             from ui.director_work_controls import restore as restore_director_work
             restore_director_work(self, d)
             # A prior _apply_panel_widths() call also saves settings; persist
@@ -3694,6 +3806,7 @@ class App:
                                              "preview_hz": self.var_preview_hz.get(),
                                              "right_width": int(self.var_right_width.get()),
                                              "edit_mode": self.var_edit_mode.get(),
+                                             "ui_layout": self.var_ui_layout.get(),
                                              "smart_highlight_style": SMART_STYLES_REVERSE.get(self.var_smart_highlight_style.get(), 'auto'),
                                              "hud_mode": self.var_hud_mode.get(),
                                              "kill_icon_style": KILL_ICON_REVERSE.get(self.var_kill_icon_style.get(), "off"),
