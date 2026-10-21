@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "snapshot": "fb03e0390805125fc063f4599af6c2541a653abf",
-  "status_policy": "1=今回実機合格、2=実装/今回実機未検証、3=部分実装、4=今回再現不具合。過去合格は別証拠。今回1/4は付与しない。tagsは独立。",
+  "status_policy": "1=今回実機合格、2=実装/今回実機未検証、3=部分実装、4=今回再現不具合。今回1/4は付与しない。tagsは独立。",
   "features": [
     {
       "id": "REPLAY",
@@ -364,7 +364,7 @@
       "source": "[core/kill_icons.py:1](https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/kill_icons.py#L1)",
       "source_commit": "fb03e0390805125fc063f4599af6c2541a653abf",
       "evidence": "静的原文確認",
-      "finding": "offと別に37種。別名は枚数に数えない",
+      "finding": "ASSET_STYLES37種、STYLESはoff＋手続き描画4種＋素材37種=42項目。別名は枚数に数えない",
       "required_validation": "Windows/LoL実機で同一条件の再検証が必要"
     },
     {

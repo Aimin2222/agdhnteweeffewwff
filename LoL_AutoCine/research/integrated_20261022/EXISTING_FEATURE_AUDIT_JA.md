@@ -51,3 +51,7 @@ flowchart LR
 ## 原文の入口
 
 [core/scanner.py:41](https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/scanner.py#L41)、[core/jobs.py:442](https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/jobs.py#L442)、[ui/highlight_director.py:33](https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/ui/highlight_director.py#L33)、[ui/smart_montage.py:29](https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/ui/smart_montage.py#L29)、[core/auto_qa.py:19](https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/auto_qa.py#L19)。各機能への個別リンクはCSV/JSONに収録。
+
+## 保存機能の境界
+
+scene_projectはtemp書込み・fsync・os.replaceによるatomic保存とundo/redoを持つ。一方、録画工程全体の永続checkpointや失敗clipだけの再開とは別機能。既存のatomic project saveを新規未実装として重複提案しない。scene_keyはeventIDも含むため、eventIDが変わる再scanでの照合を追加検証する。

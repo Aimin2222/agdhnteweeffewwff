@@ -1,0 +1,415 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AutoCine 統合研究資料 2026-10-22</title><style>
+:root{font-family:"Yu Gothic UI","Meiryo",sans-serif;color:#233145;background:#f1f3f6;line-height:1.85;font-size:16px}*{box-sizing:border-box}body{margin:0}header{padding:44px 5vw 32px;background:#e7edf5;border-bottom:1px solid #bbc9dc}header h1{margin:0;font-size:32px}header p{max-width:1100px}.warning{border-left:5px solid #9b6418;background:#fff5df;padding:12px 20px;color:#583909}.stats{display:flex;gap:16px;flex-wrap:wrap}.stats span{background:#fff;padding:10px 18px;border-radius:9px;border:1px solid #c9d1dd}nav{position:sticky;top:0;height:100vh;overflow:auto;width:290px;padding:25px 18px;background:#e8ecf1;float:left}nav a{display:block;padding:8px 4px;border-bottom:1px solid #cad2df;font-size:14px}main{margin-left:290px;padding:24px 4vw;max-width:1600px}article{background:#fff;padding:30px 38px;margin:0 0 30px;border:1px solid #ccd5df;border-radius:10px;scroll-margin-top:20px}h1,h2,h3{line-height:1.5;color:#20354f}article h1{font-size:28px}h2{font-size:22px;margin-top:32px;border-bottom:1px solid #ccd5df;padding-bottom:8px}a{color:#1957a0;text-decoration:none;overflow-wrap:anywhere}a:hover{text-decoration:underline}.download{float:right;font-size:13px}aside{background:#edf2f7;padding:12px 16px;font-size:14px;border-radius:5px}.table{overflow-x:auto}table{border-collapse:collapse;font-size:14px;min-width:650px;width:100%;line-height:1.7}th,td{padding:12px;border:1px solid #cbd3df;text-align:left;vertical-align:top}th{background:#e8eef6}tr:nth-child(even){background:#f7f9fb}code{font-family:Consolas,monospace;background:#edf0f5;font-size:13px;overflow-wrap:anywhere}pre{padding:18px;background:#edf0f5;overflow:auto;line-height:1.6}img{max-width:100%;height:auto}.item{padding-left:8px}footer{padding:25px;color:#526174}@media(max-width:1000px){nav{float:none;position:relative;width:100%;height:auto;max-height:280px}main{margin:0;padding:16px}article{padding:20px}header h1{font-size:26px}}@media print{nav,.download{display:none}main{margin:0;max-width:none;padding:0}article{border:0;break-before:page}header{background:#fff}.table{overflow:visible}table{min-width:0;font-size:10px}}
+</style><header><h1>LoL AutoCine · 統合研究資料</h1><p>既存コード監査／カメラ・FX／品質・信頼性／実装前の提案。2026年10月22日</p><p class="warning"><strong>第1版・未検証を含む資料です。</strong> 動画20本の連続区間分析とWindows/LoL実機検証は未完了。アプリ本体・UI29・素材承認は変更していません。</p><div class="stats"><span>17 報告書</span><span>70 機能対応</span><span>9 参考ツール</span><span>18 素材の静的検査</span></div><p><a href="FEATURE_STATUS.csv">機能CSV</a> · <a href="SCOPE_AND_LIMITATIONS.json">確認範囲と不足</a> · <a href="SAVE_VERIFICATION.json">GitHub保存照合</a></p></header><nav><a href="#doc1">01 LoL AutoCine 統合研究・監査報告（未検証を含む第1版）</a><a href="#doc2">02 既存機能全面監査</a><a href="#doc3">03 新旧カメラ・BLUE/RED・TargetLock分析</a><a href="#doc4">04 参考ツール比較とAutoCineへの応用</a><a href="#doc5">05 モンタージュ映像調査台帳と確認範囲</a><a href="#doc6">06 FXの実体・名称・プレビュー一致の監査</a><a href="#doc7">07 キルフレーム・FX素材の品質監査</a><a href="#doc8">08 シネマティック演出レシピ案</a><a href="#doc9">09 新機能構想と既存機能の重複整理</a><a href="#doc10">10 自動動画品質検査の設計</a><a href="#doc11">11 LoLパッチ互換性とAPI依存の監査</a><a href="#doc12">12 ワンクリック制作の成功率設計</a><a href="#doc13">13 GPU・録画・音声・出力性能の監査</a><a href="#doc14">14 他PC・Windows配布の調査</a><a href="#doc15">15 映像品質ベンチマーク設計</a><a href="#doc16">16 統合評価と推奨開発順序</a><a href="#doc17">17 Codex向け実装・検証指示資料</a></nav><main><article id="doc1"><a class="download" href="CHATGPT_REPORT_JA.md">元のMarkdownを開く</a><h1>LoL AutoCine 統合研究・監査報告（未検証を含む第1版）</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>判断の要点</h2>
+<p>最優先はカメラやFXを増やすことより、出力品質と実行状態の真実性を揃えること。固定自動を安定基準にし、full_autoはサイド別承認済み旧カメラを選ぶ機能として保つ。既存highlight_director、smart_montage、reference_safeを土台に拡張する。</p>
+<p>本体実装は変更していない。UI29の採用は未決定のまま。素材は652frameのうちapproved1、35FXは全reviewを維持した。研究推薦をユーザーの採用決定に変えていない。</p>
+<h2>作成したものと確認範囲</h2>
+<p>17報告書、70機能のCSV/JSON、438取得ソースのhash台帳、9参考ツールの一次資料比較、18素材の静的検査、6レシピ、12新機能案、品質ゲート・互換性・再開・配布・ベンチ設計を収録。</p>
+<p>動画は20候補の一覧まで作成し、本編の点観測は2本。キル前後を連続分析完了したものは0本。このため<strong>動画20本研究とWindows実機品質検証は未完了</strong>。17ファイルが揃ったことを総合プロジェクトの全検証完了とは扱わない。</p>
+<h2>コードから確認した重要事項</h2>
+<p class="item">- full_autoはクリップ境界で旧スタイルを選ぶ。敵の3D位置・遮蔽を認識するベストショット生成器ではない。承認なしの代替を正常な承認済み自動演出として数えない。</p>
+<p class="item">- 既存の自動演出と簡易採点がある。新しいSmart FXや採点を別名で重複実装しない。</p>
+<p class="item">- 音声必須時には開始失敗・空/短/完全無音WAVを失敗にする。過去の「音声失敗でも無音継続」という古い説明は現在の原文と一致しない。</p>
+<p class="item">- CPU flashは複数eventの適用窓と最初のevent中心式が異なり、後続killのpulseが弱くなる静的疑義がある。未再現なので確定不具合とはしていない。</p>
+<p class="item">- 近似previewと最終FFmpegは完全一致しない。radial blurやwipe等の名前も実体を説明する必要がある。</p>
+<p class="item">- バッジは素材37種、UI識別子はoff＋手続き描画4＋素材37の42。素材数と選択肢数を混同しない。</p>
+<h2>性能・過去テスト</h2>
+<p>過去文書の61本NVENC成功とGPU FX未確認、fresh frame約39fps等を別々に記録。144Hz目標改善のユーザー報告はあるが、最終動画60 unique frames/sの新規合格証拠ではない。10月19日の再実行込み1042/1044と、単一実行1023/1035を混同しない。今回pytest・LoL録画・GPU FX・音声聴取は未実施。現在head対象のActions API返却0件をCI合格とも失敗とも扱わない。</p>
+<h2>RTK方針</h2>
+<p>今回の監査では通常の検索と原文読取りを使用し、RTKは使用していない。自動hook・global設定は導入していない。過去のCLI出力bytes削減をWork全体のクレジット削減と換算しない。RTKの有無で研究を止めていない。</p>
+<h2>推奨順</h2>
+<p>A：実行結果schema/ログの意味→失敗clip再開→side/style/patch承認→音声・黒・fresh等の品質検査。B：FX時間窓/preview一致→控えめrecipe→同一戦闘merge/採点説明。C：bestshot、engage、音楽拍、光学flow。実装工数・性能向上率は未実測。</p>
+<h2>ChatGPTとユーザーに判断してほしい点</h2>
+<p>固定自動を当面の基準にするか、品質ゲートは警告から始めるか、最初のrecipeをCinematic/Elegant/Competitiveのどれにするか。未完了の映像研究・実機ベンチを採用前の検証として残すこと。UI29の採用決定と素材の承認は別の判断とする。</p>
+<p>保存先は研究専用branch <code>work/autocine-integrated-research-20261022</code>、<code>LoL_AutoCine/research/integrated_20261022/</code>。コミット・全ファイルの保存照合はSAVE_VERIFICATION.jsonと配布用ZIPのSHA256記録を参照。</p></article><article id="doc2"><a class="download" href="EXISTING_FEATURE_AUDIT_JA.md">元のMarkdownを開く</a><h1>既存機能全面監査</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>監査範囲と証拠の強さ</h2>
+<p>最新UI比較版の読取スナップショット438ファイル、3,805,781 bytesを取得し、全件Git blob SHA-1一致を確認した。取得と原文精読は別であり、全行を精読したという意味ではない。coreの48 Pythonファイルを含み、重要経路は関数単位で原文を確認した。取得一覧はSOURCE_MANIFEST.json、実装棚卸しはFEATURE_STATUS.csv/JSONを参照。</p>
+<p>最新基準は<code>codex/ui-29-implementation-20261021</code>のfb03e0390805125fc063f4599af6c2541a653abf（2026-10-21 16:39:40 UTC）。カメラ基準<code>feb895491ca4bc780da4aab91990f25177cd35ab</code>とcore/legacy範囲のblobを比較すると差異は<code>core/capture_process.py</code>と<code>legacy_app.py</code>。UI29開発ブランチへの書込み・アプリ起動・設定操作は行わない。mainは古い別構成のため基準にしない。</p>
+<h2>状態の定義</h2>
+<p>1=実装かつ今回の実機テスト合格、2=実装確認・今回の実機未検証、3=部分実装、4=今回不具合再現。今回1と4は付けていない。過去の合格、不具合報告、静的な疑義は別欄で管理する。重複、改善、統合、隠す候補、廃止候補は独立の提案タグであり、削除決定ではない。</p>
+<h2>構造</h2>
+<pre><code>
+flowchart LR
+
+ ROFL[ROFL起動・Replay API] --&gt; SCAN[試合スキャン]
+
+ SCAN --&gt; PROJECT[シーン・テンプレート・キーフレーム]
+
+ PROJECT --&gt; JOB[ジョブ設定のスナップショット]
+
+ JOB --&gt; CAM[既存カメラ＋自動選択]
+
+ JOB --&gt; CAP[WGC・録画]
+
+ JOB --&gt; AUDIO[LoL専用音声]
+
+ CAM --&gt; CAP
+
+ CAP --&gt; FX[CPU/OpenCL演出]
+
+ AUDIO --&gt; FX
+
+ FX --&gt; OUT[クリップ・モンタージュ・診断]
+
+ CAP --&gt; MIRROR[固定ミラー／近似プレビュー]
+
+</code></pre>
+<h2>特に重要な判定</h2>
+<div class="table"><table><thead><tr><th>項目</th><th>確認事実</th><th>不足・改善</th></tr></thead><tbody>
+<tr><td>キル・アシスト</td><td>ChampionKillとAssistersを収集、重複を除く</td><td>イベント欠落・中断スキャンの再利用を検査</td></tr>
+<tr><td>エンゲージ</td><td>独立した検出根拠はスキャナにない</td><td>被ダメージ等の取得可能性調査、画像認識を後段提案</td></tr>
+<tr><td>自動カメラ</td><td>旧10スタイルから承認リストに基づき選択</td><td>可視性に基づく自律探索は未実装</td></tr>
+<tr><td>おまかせ演出</td><td>kill/assist/multikillでキーフレーム生成</td><td>新規Smart FX提案はこの既存機能を拡張</td></tr>
+<tr><td>自動モンタージュ</td><td>簡易採点と強弱順並べ替えあり</td><td>画質・同一戦闘・音楽拍は採点しない</td></tr>
+<tr><td>音声</td><td>音声必須時の開始・空・無音エラーは失敗</td><td>非ゼロだけではゲーム音の内容・AV同期は未保証</td></tr>
+<tr><td>GPU</td><td>NVENCとOpenCL経路は別実装</td><td>列挙、実行成功、負荷、品質を別々に記録</td></tr>
+<tr><td>素材</td><td>approved以外は確認用</td><td>原本の変更・承認昇格は行わない</td></tr>
+</tbody></table></div>
+<h2>過去検証と今回検証</h2>
+<p>10月19日の集約JSONは1044件中1042pass・2環境ブロックを記載する一方、単一フル実行は1035件中1023pass・12failと記載する。再実行の集合を「最新コミット全件一括成功」に読み替えない。2件はWindows symlink権限WinError1314でassert前に停止したもの。10月13日Windows XMLの79件成功も歴史資料。今回のhead SHAに対するActions API返却は0件であり、テスト不合格の意味ではない。</p>
+<p>今回実施：原文監査、438blob照合、Python構文AST確認、素材18点静的検査、公式資料照合。未実施：既存pytest、Windows/LoL録画、GPU FX実行、音声聴取、UI29起動。変更なしの研究作業で実機の状態を動かさない。</p>
+<h2>原文の入口</h2>
+<p><a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/scanner.py#L41">core/scanner.py:41</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/jobs.py#L442">core/jobs.py:442</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/ui/highlight_director.py#L33">ui/highlight_director.py:33</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/ui/smart_montage.py#L29">ui/smart_montage.py:29</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/auto_qa.py#L19">core/auto_qa.py:19</a>。各機能への個別リンクはCSV/JSONに収録。</p>
+<h2>保存機能の境界</h2>
+<p>scene_projectはtemp書込み・fsync・os.replaceによるatomic保存とundo/redoを持つ。一方、録画工程全体の永続checkpointや失敗clipだけの再開とは別機能。既存のatomic project saveを新規未実装として重複提案しない。scene_keyはeventIDも含むため、eventIDが変わる再scanでの照合を追加検証する。</p></article><article id="doc3"><a class="download" href="CAMERA_REVIEW_JA.md">元のMarkdownを開く</a><h1>新旧カメラ・BLUE/RED・TargetLock分析</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>結論</h2>
+<p>旧カメラは自動カメラの実行基盤であり、削除対象ではない。固定自動は選択スタイルを保ち、フルオートはクリップ境界でside別承認済み候補を選ぶ。試合状況を映像認識してカメラを常時切り替える機能ではない。</p>
+<p><a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/smart_camera_director.py#L27">core/smart_camera_director.py:27</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/camera.py#L273">core/camera.py:273</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/camera_tuning.py#L12">core/camera_tuning.py:12</a>。</p>
+<h2>10スタイルを残す</h2>
+<div class="table"><table><thead><tr><th>style</th><th>役割／検査上の注意</th></tr></thead><tbody>
+<tr><td>third_cinema</td><td>三人称の演出付き。距離・FOVとロックを同時確認</td></tr>
+<tr><td>third</td><td>安定追従の比較基準</td></tr>
+<tr><td>geo_aim</td><td>実験的。REDの右寄りに過去の指摘</td></tr>
+<tr><td>cinema</td><td>キル前後のカメラ変化を確認</td></tr>
+<tr><td>fps</td><td>主観風。足元・空・過度な近接を確認</td></tr>
+<tr><td>orbit</td><td>実験的。0/90/180/270度を個別検査</td></tr>
+<tr><td>lolnam_cinema</td><td>独自スタイル名。他社実装一致を意味しない</td></tr>
+<tr><td>follow</td><td>追従基準。向き・移動時の遅れ</td></tr>
+<tr><td>cinema_top</td><td>広い構図の候補</td></tr>
+<tr><td>top</td><td>安全なトップダウン候補</td></tr>
+</tbody></table></div>
+<h2>自動選択の実際</h2>
+<p>manual/Noneは従来経路を保持。fixed_autoは選択スタイルを使用。full_autoはBLUE/RED別approvedからexcludedを引き、対象候補を絞る。複数キルは広い画角のスタイルを先に選び、単発は三人称系を優先する。候補なしでは<code>no_verified_candidate_for_side</code>等を残し、固定対象ロックへ代替する。全候補除外はValueError。フォールバック成功を「承認済みフルオート成功」と表示しない。</p>
+<h2>座標・回転の監査</h2>
+<p>side_yawの既定BLUE=0、RED=180だけで全モードを一律反転させない。thirdの初期プロファイルはORDER yaw−12/elev37/dist1060、CHAOS yaw192/elev42/dist1170。実距離は校正・倍率・モード別方針で変わる。<code>LIVE_FRAMING_POLICIES</code>はサイド×スタイルの独立設定で、RED fps/geo_aim等の受容済み経路を保持する。</p>
+<p>最新の<code>target_center_rotation</code>はコード上X=azimuth、Y=elevationとしてatan2から対象方向を計算し、roll=0、俯角14–72度へ制限する。一方<code>camera_geometry.inspect_rig</code>にはpitch_axis=yを確認事項とする診断が残る。過去の座標仮説を機械的な軸交換へ使わず、実際のrender応答と対象中心誤差で判断する。数学上の軸整合と人物が画面に見えることは別検査。</p>
+<p>FOVは32–100に制限され、full_autoの複数キルでは基準60以上を保持する処理がある。キーフレームは対象相対yaw/距離zoom/FOV差分。APIだけで敵全員の3D位置・壁深度・可視性が得られるとは仮定しない。</p>
+<h2>歴史資料をどう読むか</h2>
+<p>10/20 QA文書は固定自動好評、RED geo_aim #5右寄り、full_auto承認台帳が空で12/14代替などを記載。その後144Hz目標で改善、カメラに目立つ問題なしというユーザー報告がある。これだけで全20条件（10style×2side）を最新headで合格へ変更しない。文書の映像原本を今回は直接再生していない。</p>
+<h2>追加開発案と合格条件</h2>
+<p class="item">1. A：camera approval ledgerにside/style/patch/画面比/clipID/審査者/根拠SHAを保存。古い承認を別patchへ自動継承しない。</p>
+<p class="item">2. A：既存ロック経路に対象中心座標の計測を追加。対象検出なしはunknown、失敗と混同しない。画面外・回転急変の時刻を審査用に示す。</p>
+<p class="item">3. B：同一10秒区間を2–3候補で録り、可視性・揺れ・遮蔽を人が比較。採点が信頼できるまで自動採用しない。</p>
+<p class="item">4. C：短い先読みでベストショット選択。録画時間・ディスク増を評価し、固定自動へ常時戻せる。</p>
+<p>Windows試験はBLUE/RED×10style×単発/複数/ダッシュ/障害物を段階実施。パッチ・champion・開始秒・API readbackを固定し、対象ロスト、空、地面下、180度誤反転、急回転、FOV狭窄を目視と数値で審査。許容中心誤差等はベンチ文書の提案値を実映像で調整する。既存旧カメラの設定値を同時変更しない。</p></article><article id="doc4"><a class="download" href="TOOLS_COMPARISON_JA.md">元のMarkdownを開く</a><h1>参考ツール比較とAutoCineへの応用</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>調査方法</h2>
+<p>公式サイト・公式リポジトリ・操作資料を参照した。アプリ9本のインストール・実機比較はしていない。使い勝手と負荷評価は文書に基づく設計上の推論であり、実測ベンチではない。Lolnamのチュートリアルは約00:45のインストール設定画面のみ確認でき、編集全工程を視聴したとは扱わない。</p>
+<div class="table"><table><thead><tr><th>ツール・一次資料</th><th>確認した設計</th><th>AutoCineへ取り込む案</th><th>難点・適用限界</th></tr></thead><tbody>
+<tr><td><a href="https://lolnam.gg/">Lolnam Editor</a></td><td>Replay→カメラsequence/色→録画、graph editor、LUT/曲線、比較</td><td>ゲーム映像を固定表示して相対カメラ曲線と色を分割比較</td><td>公式の宣伝と実機品質は別。敵座標やAutoCine側API可用性の証明にはならない</td></tr>
+<tr><td><a href="https://github.com/RiotGames/leaguedirector">League Director</a></td><td>camera attachment、FOV、fog/DOF、sequencer、保存、キャプチャ</td><td>カメラ設定と時間軸を分離、変更前後を保存</td><td>手動制作に向く。ワンクリック検出・品質判定は別設計</td></tr>
+<tr><td><a href="https://github.com/LeagueOfPoro/LeagueDirectorNG">League Director NG</a></td><td>sequenceの移動・コピー、curve等の改良</td><td>複数キーのまとめ移動、原点復帰</td><td>READMEのTODOは実装済みと扱わない。現在patch互換未実測</td></tr>
+<tr><td><a href="https://www.blackmagicdesign.com/products/davinciresolve/edit">DaVinci Resolve</a></td><td>編集工程をページで分離、クリップ・速度編集</td><td>簡単作成→詳細編集、再利用できる演出レシピ</td><td>多機能ページをそのまま並べると初心者の操作が増える</td></tr>
+<tr><td><a href="https://helpx.adobe.com/au/premiere/desktop/edit-projects/change-clip-speed/change-clip-speed-and-duration-using-time-remapping.html">Premiere</a></td><td>時間再マップと速度キーの緩急</td><td>キル時刻を基準にした速度曲線、映像時刻とreplay時刻の対応</td><td>後処理retimeとゲーム内再生速度を混ぜると音声・イベントがずれる</td></tr>
+<tr><td><a href="https://helpx.adobe.com/after-effects/desktop/animate-in-after-effects/animation-keyframes/editing-moving-copying-keyframes.html">After Effects</a></td><td>value/speed graph、複数キー操作</td><td>アニメ6種を共通時間曲線へ、減衰を数値化</td><td>合成自由度を全部表に出すと操作負荷が高い</td></tr>
+<tr><td><a href="https://www.capcut.com/resource/how-to-do-slow-motion-on-capcut">CapCut</a></td><td>速度曲線を使う編集手順</td><td>短い用途別プリセットと強度の1操作</td><td>低fps素材を遅くしても情報は増えない。補間の破綻を別審査</td></tr>
+<tr><td><a href="https://filmora.wondershare.com/guide/change-video-speed.html">Filmora</a></td><td>速度変更の操作ガイド</td><td>プリセット→カーブ調整、元へ戻す導線</td><td>テンプレート依存でシーン情報を覆わないよう抑制</td></tr>
+<tr><td><a href="https://www.blender.org/features/rendering/">Blender</a>、<a href="https://www.blender.org/features/vfx/">VFX</a></td><td>camera DOF、追跡・マスク・合成</td><td>対象と背景の分離、制約付きカメラ、品質診断</td><td>2D映像からゲーム内深度を正確復元できるという意味ではない。3Dレンダラ移植は過大</td></tr>
+</tbody></table></div>
+<h2>採るもの・採らないもの</h2>
+<p>優先は「イベントを見つける→安定した画角→短い演出→実動画確認→書き出す」の流れ。ノード編集や全3D制作環境の再現は優先しない。AutoCine既存のhighlight_director、smart_montage、reference_safeへ段階統合し、同じ機能を別名で重ねて作らない。</p>
+<p>負荷の見込み：グラフ・プリセット選択そのものは低い。全画面時間方向blur、光学フロー、追跡、複数候補録画は高い。各ソフトのGPU広告をAutoCineの速度保証に流用しない。各案の採用はユーザー判断であり、比較結果は推薦にとどまる。</p></article><article id="doc5"><a class="download" href="MONTAGE_VIDEO_ANALYSIS_JA.md">元のMarkdownを開く</a><h1>モンタージュ映像調査台帳と確認範囲</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>重要：20本の分析は完了していない</h2>
+<p>候補20本のURL・題名・作者・検索時の公開時期を記録した。本編画面を点で確認したのは2本、キル前→瞬間→後を連続して分析完了した本数は0。残り18本はメタデータのみ。広告、シーク後の未更新フレーム、終了まで流れた再生を視聴実績に数えない。公開時期が「○年前」の候補は正確な日付未検証。題名由来の分類と実際の画面観測を区別する。</p>
+<p>ブラウザー上で広告・シーク・更新遅延があり、時刻と本編が一致して確認できた画面のみ採用した。音声は聴取しておらず、拍合わせ・音ハメの評価はしていない。映像はダウンロード・再配布していない。</p>
+<h2>実際の確認内容</h2>
+<div class="table"><table><thead><tr><th>動画</th><th>確認できた本編時刻</th><th>画面で確認した事実</th><th>未確認／推測</th></tr></thead><tbody>
+<tr><td><a href="https://www.youtube.com/watch?v=d-r2kgeFfus">LOLNAM Cinematic Montage #16</a></td><td>約00:25.34、00:54.45、04:10.43の点観測</td><td>斜め俯瞰の戦闘、最初のsampleに選手名lower-third、04:10では暗めの戦闘画面</td><td>連続軌道、速度曲線、kill前後の全time、制作ソフト、正確なgrade値は未確認</td></tr>
+<tr><td><a href="https://www.youtube.com/watch?v=Y1MGS-wlxrM">Yone - League of Legends Montage</a></td><td>冒頭00:00、約01:32.47の点観測</td><td>冒頭Yoneタイトルと2人物、上下letterbox、01:32にTRIPLE KILL表示・戦闘・淡い粒子</td><td>粒子のゲーム由来/追加合成、連続camera/retime、音楽同期は未確認</td></tr>
+</tbody></table></div>
+<p>点観測の間の全区間を見たという意味ではない。YouTubeの画面内時間表示が古い場合があり、HTML video時刻と更新後の画面を併用した。時刻は秒小数を含む概数。</p>
+<h2>AutoCineへの応用（観測と分けた設計上の推論）</h2>
+<p>選手名plateは既存kill badgeと目的が違うため、新設する場合は別overlayとして検討。title/letterboxは低負荷候補だが、LoL HUDや人物を覆わないsafe areaが必要。画角は常に狭めず、複数killでは既存cinema_top/topを比較基準にする。正確な他者camera pathやLUTの逆算は行えない。負荷見込みは2D title低、単純grade低〜中、粒子layer中、追跡や光学flow高で、実測ではない。</p>
+<h2>候補一覧（分析済み一覧ではない）</h2>
+<div class="table"><table><thead><tr><th>ID</th><th>題名・リンク</th><th>作者</th><th>公開時期（未確定を含む）</th><th>本編確認</th></tr></thead><tbody>
+<tr><td>V01</td><td><a href="https://www.youtube.com/watch?v=NolHvXjZA4A">史上最強。全米が震えた神プレイ TOP 30</a></td><td>롤읽남 LOLNAM</td><td>3年前</td><td>未視聴</td></tr>
+<tr><td>V02</td><td><a href="https://www.youtube.com/watch?v=d-r2kgeFfus">&#x27;Don&#x27;t you just have to avoid it?&#x27; ／ LOLNAM Cinematic Montage #16</a></td><td>근육쩌는응애 ᆞ LOLNAM</td><td>2023-08-02</td><td>点観測のみ</td></tr>
+<tr><td>V03</td><td><a href="https://www.youtube.com/watch?v=CDzfUgZHdME">Mind-blowing plays that take it all the way to the grave ／ LOLNAM Cinematic Montage #15</a></td><td>근육쩌는응애 ᆞ LOLNAM</td><td>3年前</td><td>未視聴</td></tr>
+<tr><td>V04</td><td><a href="https://www.youtube.com/watch?v=eYopd5Ynq8o">ジャーヴァンIVモンタージュ2025 - パーフェクト</a></td><td>LOL TIME</td><td>1年前</td><td>未視聴</td></tr>
+<tr><td>V05</td><td><a href="https://www.youtube.com/watch?v=vvjTv5VJzQQ">OUTPLAYS WORLDWIDE that will HYPE you up for SEASON 13 ／ League of Legends Cinematic Montage</a></td><td>GMYugi</td><td>3年前</td><td>未視聴</td></tr>
+<tr><td>V06</td><td><a href="https://www.youtube.com/watch?v=Y1MGS-wlxrM">Yone - League of Legends Montage</a></td><td>diyyo</td><td>2020-08-16</td><td>点観測のみ</td></tr>
+<tr><td>V07</td><td><a href="https://www.youtube.com/watch?v=U_E00b3jKbg">SHEN MONTAGE 2026 - BEST PLAYS</a></td><td>LOL TIME</td><td>7か月前</td><td>未視聴</td></tr>
+<tr><td>V08</td><td><a href="https://www.youtube.com/watch?v=FgqHOT9YeSo">&quot;Defiant&quot; - Challenger Irelia Montage ft. Rate</a></td><td>Luviana</td><td>7年前</td><td>未視聴</td></tr>
+<tr><td>V09</td><td><a href="https://www.youtube.com/watch?v=p6J1CkhYt3M">YASUO-WIND NEVER DIES ／ CINEMATIC MONTAGE</a></td><td>Markeloffs</td><td>2か月前</td><td>未視聴</td></tr>
+<tr><td>V10</td><td><a href="https://www.youtube.com/watch?v=g1DxiJqctkI">Against The Sun - League Of Legends Cinematic Montage</a></td><td>ThePeacePigeon</td><td>11年前</td><td>未視聴</td></tr>
+<tr><td>V11</td><td><a href="https://www.youtube.com/watch?v=aFks00ErSDA">LEE SIN MONTAGE 2025 - GOD PLAYS</a></td><td>LOL TIME</td><td>1年前</td><td>未視聴</td></tr>
+<tr><td>V12</td><td><a href="https://www.youtube.com/watch?v=0m3O1TYzJE0">LOLプレイヤーがとてつもなく頭脳明晰…IQ200のプレイモンタージュ（リーグ・オブ・レジェンド）</a></td><td>Protatomonster</td><td>1年前</td><td>未視聴</td></tr>
+<tr><td>V13</td><td><a href="https://www.youtube.com/watch?v=_JWJgS00hfk">50 ULTRA SATISFYING MOMENTS IN LEAGUE OF LEGENDS</a></td><td>Protatomonster</td><td>2年前</td><td>未視聴</td></tr>
+<tr><td>V14</td><td><a href="https://www.youtube.com/watch?v=lsiWSeWySMU">Frame of Mind - Cinematic League Montage</a></td><td>ThePeacePigeon</td><td>12年前</td><td>未視聴</td></tr>
+<tr><td>V15</td><td><a href="https://www.youtube.com/watch?v=Vv6ykcYJXrE">Skills of an expert you don&#x27;t want to miss ／ LOLNAM Cinematic Montage #24</a></td><td>근육쩌는응애 ᆞ LOLNAM</td><td>2年前</td><td>未視聴</td></tr>
+<tr><td>V16</td><td><a href="https://www.youtube.com/watch?v=53CXTEC17oU">&#x27;a thin line, a fine line&#x27; ／ LOLNAM Cinematic Montage #23</a></td><td>근육쩌는응애 ᆞ LOLNAM</td><td>2年前</td><td>未視聴</td></tr>
+<tr><td>V17</td><td><a href="https://www.youtube.com/watch?v=l7-ArPoCKn4">► League of Legends cinematic montage - my demons } full video</a></td><td>Lunaris</td><td>12年前</td><td>未視聴</td></tr>
+<tr><td>V18</td><td><a href="https://www.youtube.com/watch?v=a43uvdm22_I">League of Legends Cinematic Montage Trailer</a></td><td>BestOutplays Ever</td><td>10年前</td><td>未視聴</td></tr>
+<tr><td>V19</td><td><a href="https://www.youtube.com/watch?v=YHstBNb5_7g">League of Legends ／ It&#x27;s Just A Game</a></td><td>Silvxs</td><td>6年前</td><td>未視聴</td></tr>
+<tr><td>V20</td><td><a href="https://www.youtube.com/watch?v=3c_AK62eY8k">ADC MONTAGE 2026 - INSANE PLAYS</a></td><td>LOL TIME</td><td>9か月前</td><td>未視聴</td></tr>
+</tbody></table></div>
+<h2>残っている審査</h2>
+<p>20候補には公式cinematic再編集・trailerと思われるものもある。まずReplay操作を使う実モンタージュかを本編で選別し、対象外は理由を記録して代替する。作者・champion・強弱・古い/新しい作品が偏らないよう追加する。各採用動画で最低2つのkill区間（前3秒→kill→後3秒）とtransition区間を実際に連続確認し、URL時刻・観測した効果・推測した方法・既存機能との対応・負荷を記録する。速度は音/画とtimecodeを見て推定と明記する。</p>
+<p>この未了分を残したまま「最新モンタージュ20本研究済み」と報告しない。現段階のレシピはコード監査と公式制作手法に基づく設計案であり、20本分析から実証した結果ではない。</p></article><article id="doc6"><a class="download" href="FX_IMPROVEMENTS_JA.md">元のMarkdownを開く</a><h1>FXの実体・名称・プレビュー一致の監査</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>既存と新規を分ける</h2>
+<p>22video effect、16grade、LUT/curves、Bloom、Fog、DOF、highlight pulse、Work35候補、montage transitionが既存の入口。単純に同じ名前の追加機能を新設しない。</p>
+<p>原文：<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/effects.py#L415">core/effects.py:415</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/gpu_full.py#L1">core/gpu_full.py:1</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/preview.py#L159">core/preview.py:159</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/montage_fx.py#L1">core/montage_fx.py:1</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/render_fx.py#L1">core/render_fx.py:1</a>。</p>
+<div class="table"><table><thead><tr><th>名前</th><th>CPU出力の実体／相違点</th><th>改善の方向</th></tr></thead><tbody>
+<tr><td>radial_blur</td><td>tmixによる時間方向混合</td><td>名称を残し説明を正確にするか、真の放射状kernelを別実験</td></tr>
+<tr><td>zoom_blur</td><td>拡縮crop＋tmix</td><td>中心とkill時刻を共有、端欠けと残像を審査</td></tr>
+<tr><td>glitch / chroma_leak</td><td>RGBずらし・noise、適用窓が異なる</td><td>常時適用とkill窓をUIで明示</td></tr>
+<tr><td>focus_blur / vr_blur / sphere_blur</td><td>類似の全面gblur系</td><td>既存IDは互換維持。UI説明で違い、パラメータ共通化は内部案</td></tr>
+<tr><td>glint</td><td>unsharp＋eq等</td><td>選択的発光という説明とは分ける</td></tr>
+<tr><td>vr_light_leak</td><td>kill窓の暖色化</td><td>空間的な光漏れtextureは追加案</td></tr>
+<tr><td>panel_wipe / stretch_wipe</td><td>異なる時間のfadein</td><td>真の2映像wipeとは別。名前だけで完成としない</td></tr>
+<tr><td>mirror</td><td>hflip</td><td>ゲーム内BLUE/RED補正として使わない</td></tr>
+<tr><td>montage soft</td><td>連結後の明暗変化</td><td>重なりを使うdissolveは別設計・音声長さ検証</td></tr>
+</tbody></table></div>
+<p>上表はCPU経路の監査であり、OpenCL版が全て同じ近似だとは断定しない。GPU/CPUの値・時間窓・色空間・合成順を同一入力で比較する必要がある。</p>
+<h2>静的な疑義：flashの複数キル</h2>
+<p>CPU式ではenableは複数event窓を作る一方、輝度のexp中心に<code>events[0][0]</code>を使う。2回目以降の窓が開いてもpulseが極小になる可能性がある。これは原文上の疑義で、今回FFmpegで再現していない。修正前に2キルを十分離した無地クリップでkill±0.1秒の平均輝度を比較し、OpenCL経路と一致を確認する。連続pulseはmax/飽和制限の設計を先に決める。</p>
+<h2>優先改善案</h2>
+<p class="item">1. A：共通event envelopeとreplay→wall clock写像を固定。イベント・カメラ・バッジ・音声に同じ時計を使う。</p>
+<p class="item">2. A：近似previewには「軽量近似」、厳密静止画と短い最終経路動画には「出力経路確認」と表示。既存render_exact_stillを活用し、時間方向FXは静止画で合格にしない。</p>
+<p class="item">3. B：Smart FXのbudgetを1killあたり主演出1＋補助1へ抑制。連続キル、集団戦、色の飽和で自動減衰。ただし既存手動設定は残す。</p>
+<p class="item">4. B：人物領域・HUD保護マスク。認識信頼度が低ければ全面blurや強flashを避ける。CPU/GPU転送コストも計る。</p>
+<p class="item">5. C：true radial、depth-aware blur、2入力transition、optical flow。別枝・別IDから試し、既存の見た目を勝手に置換しない。</p>
+<p>負荷：LUT/色は低〜中、全面blurと時間方向混合は中〜高、光学フローとsegmentationは高。実測ではない。WindowsではFXoff基準→単独1効果→複合、CPU→GPU→GPU失敗時CPUの順で色、速度、バッジ合成、ゲーム音、所要時間を比較する。</p></article><article id="doc7"><a class="download" href="KILL_ASSET_QA_JA.md">元のMarkdownを開く</a><h1>キルフレーム・FX素材の品質監査</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>台帳と保護</h2>
+<p><a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/assets/work_kill_assets/catalog.json#L1">assets/work_kill_assets/catalog.json:1</a>を基準に、フレーム652=approved1＋review651、エフェクト35=review35。legacy_layers311を合わせたPNG998件がtreeに存在する。catalog内部のsource_commitは素材来歴であり、今回のコード基準SHAとは別。既存37バッジと89原本は編集・再生成・番号変更していない。</p>
+<p>唯一のapprovedは<code>083/a_simple_main</code>、2520×1050 RGBA、SHA256 <code>b1b360c15d860e1fdd12ff01af67f5c1b9693538fa6d2b5babb9c0aa3602440f</code>。quality_scopeは静止画。動画合成と全6motionの承認を意味しない。</p>
+<h2>今回の実測</h2>
+<p>frame12/652、FX6/35を固定インデックスで抽出。18件すべてデコード成功、SHA256・台帳寸法一致。正規化したRGBAのalpha0/1–254/255割合をASSET_SAMPLE_QA.jsonへ保存した。29,567,101 bytesを読み取った。抜取りであり、未検査640frames/29FXの品質を推定しない。全998件の新規画素審査は未実施。</p>
+<p><img alt="18点の白・暗背景比較" src="ASSET_SAMPLE_CONTACT_SHEET.jpg" loading="lazy"></p>
+<p>静止縮小表示で、円形/角形の肖像枠の違い、strongの装飾密度、淡いstar_guardianやwinter_festivalの背景依存を確認した。小さな欠け、1pixelの縁、原寸alphaゴミは縮小sheetだけでは合否判定できない。各PNGの承認は一切変更していない。</p>
+<h2>合成コードの条件</h2>
+<p><a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/work_kill_assets.py#L43">core/work_kill_assets.py:43</a>はreview表示をopt-inにし、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/work_kill_assets.py#L1">core/work_kill_assets.py:1</a>等でpath/台帳/ハッシュを検証する。same themeのFX照合は利便性であり正式合格の継承ではない。reviewのportrait boxがない場合の仮配置を、正確な整合として保存しない。2520×1050 RGBAは約10.6MB、cache8だけで約85MB（10進数）の画素メモリに加えcopy等があり、652枚の原寸一括ロードは避ける。</p>
+<h2>6motion・アイコン審査</h2>
+<p>即表示・左/右/上/下スライド・ポップをそれぞれ、登場前/10%/50%/90%/静止/退場で確認。killer/victim逆転なし、肖像の円/角形切抜き、名前・体力UI遮蔽、連続キル上書き、2倍DPIでのジャギーを検査する。過去のsynthetic180frames/60fpsは形式成功の証拠でありLoL実合成の全品質保証ではない。</p>
+<h2>合格記録の設計</h2>
+<p>素材ID＋SHA256＋静止/動作/LoL合成のscope＋画面比＋motion＋killer/victim icon＋審査日時を分離。採点案：alpha/枠整合/切れ/視認/主役遮蔽/動作同期を各0–5。ただし重大欠陥1つは総合点で相殺しない。approved変更はユーザーの採用判断を待つ。実装変更案はサムネイル遅延ロード、承認フィルタ、背景切替、比較zoom。CPU合成・GPU表示の両経路で同じportrait配置を使う。</p>
+<h2>バッジ数の内訳</h2>
+<p>原文ASTの定数を数えるとASSET_STYLES=37、STYLES=42（off＋手続き描画4＋素材37）、MOTION_STYLES=6。37素材の保護と、42個のUI識別子を維持することを区別する。今回は37種の新規全画素審査を行っていない。</p></article><article id="doc8"><a class="download" href="CINEMATIC_RECIPES_JA.md">元のMarkdownを開く</a><h1>シネマティック演出レシピ案</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>適用の前提</h2>
+<p>以下は新規の設計プリセット案で、実装・実機審査済みではない。既存CameraPlan、highlight_director、video_effects、highlight_pulse、Work選択を再利用する。相対時刻0=キル。距離倍率/FOV差分/FX強度0–1と、秒・度を混同しない。音声はLoL専用を基準に維持する。</p>
+<div class="table"><table><thead><tr><th>レシピ</th><th>対象条件</th><th>キル前→瞬間→キル後の提案値</th><th>複数キル時</th><th>既存／追加</th><th>負荷見込み</th></tr></thead><tbody>
+<tr><td>Cinematic</td><td>単発・追走、対象可視</td><td>pre4/post3秒、third_cinema、yaw−4→3→0度、zoom0→6→0%、FOV0→−1.5→0、pulse0.25</td><td>3kill以上はcinema_top、FOVを狭めない</td><td>既存chaseを土台、抑制規則を追加</td><td>低〜中</td></tr>
+<tr><td>Impact</td><td>短い明確なキル</td><td>pre3.5/post2.5秒、キル±0.12秒flash0.12、shake0.08/0.20秒、zoom最大8%</td><td>0.5秒以内は重ねず強い方1回、flash連発を抑制</td><td>既存impact/FX、共通envelope追加</td><td>中</td></tr>
+<tr><td>Elegant</td><td>色とキャラクターを見せる</td><td>pre5/post3、yaw最大±3、pulse0.10、bloom0.12、flash/shake0、LUT強度0.20</td><td>画角を広げカットを少なく</td><td>既存LUT/curve/バッジ、露出保護追加</td><td>低〜中</td></tr>
+<tr><td>Competitive</td><td>プレイの理解優先</td><td>pre4/post3、top/follow、速度1.0、FXoff、frameoffまたは既存小バッジ、HUD選択保持</td><td>同一戦闘の時系列を保持</td><td>既存機能中心。品質基準としても保存</td><td>低</td></tr>
+<tr><td>Montage</td><td>複数の見せ場を短く並べる</td><td>pre4/post3を起点、±0.8秒を基準1.0→0.65→1.0、cut優先、FX主1＋補助1</td><td>重複区間を統合、climax順は手動pin優先</td><td>既存smart_montageを拡張、音楽拍合わせは新規</td><td>中〜高</td></tr>
+<tr><td>Low-load Cinema</td><td>低性能・非対応GPU</td><td>top/third、pre3/post2、色補正のみ、preview540p、出力1080p60維持</td><td>長い戦闘を短く選び直し、無断低fps化なし</td><td>既存CPU代替＋負荷profile</td><td>低〜中</td></tr>
+</tbody></table></div>
+<h2>時間と音声</h2>
+<p>ゲーム再生速度の変更は録画のwall timeを変える。キルのreplay秒をそのまま出力秒へ入れない。録画中観測によるevent_video_secondsを使用し、後処理retimeを重ねる場合は写像を合成する。音声のpitch/retimeをどの層が担当するかを明示し、時間軸は1種類に正規化する。</p>
+<h2>合格までの手順</h2>
+<p>FXoffの同じ区間を比較基準にし、BLUE/RED単発、3連キル、集団戦、壁際で各レシピを比較する。対象可視性・キル瞬間の理解を第一、滑らかさ・色・演出はその後に評価。低負荷案も出力仕様1080p60を黙って下げず、処理時間の増加として扱う。未承認Work素材は確認用のまま使い、公式プリセットの既定素材へ自動採用しない。</p></article><article id="doc9"><a class="download" href="NEW_FEATURE_IDEAS_JA.md">元のMarkdownを開く</a><h1>新機能構想と既存機能の重複整理</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>新規という名前で既存機能を増やさない</h2>
+<p>既存smart_montageの簡易score、highlight_directorの自動キー生成、reference_safeの色・テンポ特徴、scene_projectの保存を先に活用する。以下はそれらの拡張または新しい検査層。全件提案であり、実装開始していない。</p>
+<div class="table"><table><thead><tr><th>案</th><th>既存との差分・必要入力</th><th>変更単位と影響</th><th>負荷／難度</th><th>優先</th></tr></thead><tbody>
+<tr><td>品質ゲート付き書き出し</td><td>exit0と内容合格を分離、映像・音声の検査結果</td><td>jobsの外側にpostflight。失敗ファイルを成功一覧へ混ぜない</td><td>低〜中／中</td><td>A</td></tr>
+<tr><td>失敗シーン再開</td><td>ジョブfingerprint・成功clip hash・段階checkpoint</td><td>既存res.failedを永続台帳へ。二重作成を避ける</td><td>低／中</td><td>A</td></tr>
+<tr><td>カメラ承認台帳</td><td>side/style/patch別の映像審査scope</td><td>既存approved/excludedを構造化。旧カメラ維持</td><td>低／中</td><td>A</td></tr>
+<tr><td>ベストショット</td><td>複数候補映像と対象可視性採点</td><td>directorと撮影job間のplanner。対象認識失敗はunknown</td><td>高／高</td><td>C</td></tr>
+<tr><td>シーン品質スコア</td><td>既存kill数加点に遮蔽・欠落・情報量を追加</td><td>smart_montage拡張。根拠をUIに表示し手動pin優先</td><td>中〜高／高</td><td>B</td></tr>
+<tr><td>同一戦闘マージ</td><td>時間区間重複＋対象＋イベント集合</td><td>scannerを壊さずscene planning層。二重カウント防止</td><td>低／中</td><td>A</td></tr>
+<tr><td>自動カット</td><td>安全な戦闘前後境界とテンポ</td><td>新scene boundary detector。キル・音声を途中切断しない</td><td>中／高</td><td>B</td></tr>
+<tr><td>Smart FX budget</td><td>既存自動演出に強度上限・複数kill抑制</td><td>共通envelope。手動overrideを保存</td><td>低〜中／中</td><td>B</td></tr>
+<tr><td>チャンピオン・テーマ提案</td><td>champion/skin情報の可用性＋素材承認状態</td><td>Work palette提案のみ。未承認を自動昇格しない</td><td>低／中</td><td>B</td></tr>
+<tr><td>参考映像プリセット2.0</td><td>既存色/差分解析に信頼度・対象区間選択</td><td>LUT/tempo候補。3Dカメラそのもののコピーを約束しない</td><td>中／中〜高</td><td>B</td></tr>
+<tr><td>エンゲージ検出</td><td>ChampionKill以外の戦闘開始根拠</td><td>可用データを調査後、画像/音の検出と手動修正</td><td>高／高</td><td>C</td></tr>
+<tr><td>音楽拍合わせ</td><td>音声onset/beat推定・ゲーム音保持</td><td>推定誤差を表示。既存BGMミックスとは別</td><td>中／高</td><td>C</td></tr>
+</tbody></table></div>
+<h2>UIへの接続</h2>
+<p>初心者には1つの推奨レシピと「作成」。詳細は採点根拠、代替理由、素材の承認scope、失敗シーンだけの再試行。候補UI29のどれでも同じbackend状態を使う設計案とし、採用画面は決めない。新しい検査が既存ジョブを阻害しないよう、最初は報告のみ、次に警告、十分な精度が得られてから停止ゲートへ昇格する。</p></article><article id="doc10"><a class="download" href="AUTOMATIC_QUALITY_QA_JA.md">元のMarkdownを開く</a><h1>自動動画品質検査の設計</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>既存の自己診断と追加する内容検査</h2>
+<p><a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/auto_qa.py#L19">core/auto_qa.py:19</a>は依存・FFmpeg列挙・合成・API等の検査。映像中の対象・時間・音声内容をすべて保証するものではない。以下は追加設計。検出と修復を分離し、unknownをpassに変換しない。</p>
+<div class="table"><table><thead><tr><th>検査</th><th>入力／方法案</th><th>誤検出・限界</th><th>修復案（自動適用前に記録）</th><th>負荷</th></tr></thead><tbody>
+<tr><td>黒画面</td><td>輝度率・継続時間、blackdetect</td><td>暗い場面/意図的fade</td><td>該当秒再録画候補。fade区間は別扱い</td><td>低</td></tr>
+<tr><td>フリーズ・drop</td><td>capture frame_id時刻＋freezedetect</td><td>静止場面では画素一致が正常</td><td>fresh低下を診断、再取得・再録画</td><td>低〜中</td></tr>
+<tr><td>対象画面外</td><td>対象追跡boxとconfidence</td><td>エフェクトや透明化で検出不能</td><td>信頼度低はunknown。topへ候補変更</td><td>高</td></tr>
+<tr><td>左右逆転・ロック外れ</td><td>API side/style/pose＋対象画面位置</td><td>hflip演出、追従中の向き</td><td>一律軸反転を禁止し審査へ</td><td>中〜高</td></tr>
+<tr><td>過回転・過zoom</td><td>yaw/FOV/距離の速度・加速度、被写体サイズ</td><td>急なダッシュは正常の可能性</td><td>キー値を制約し再プレビュー</td><td>低〜中</td></tr>
+<tr><td>遮蔽・地中</td><td>対象可視率＋画像サンプル</td><td>depthがないので厳密3D遮蔽判定不可</td><td>広角候補を提示、低confidenceは人審査</td><td>高</td></tr>
+<tr><td>AV同期</td><td>同一時計の開始差、既知cueの音・画相関</td><td>音のないkill、BGMで曖昧</td><td>開始offset修正案、全体のstretchは勝手にしない</td><td>中</td></tr>
+<tr><td>無音・音割れ</td><td>astats/silencedetect、stream有無</td><td>静かな区間は正常、無音バイト検査とは別</td><td>ゲーム音必須なら失敗、BGMだけを代替しない</td><td>低</td></tr>
+<tr><td>過露出・連続flash</td><td>高輝度画素率と変動・event窓</td><td>ゲーム本来のスキル発光</td><td>FX強度減衰案。健康安全の適合認証とは扱わない</td><td>低〜中</td></tr>
+<tr><td>合成ずれ・切れ</td><td>素材box/alpha bounds、icon ID対応</td><td>透明な余白は正常</td><td>承認portrait boxへ戻し、原本は変更しない</td><td>低</td></tr>
+<tr><td>不自然なcut</td><td>シーン境界とevent余白、画面差分</td><td>意図したhardcut</td><td>区間を延長、重複イベントを統合</td><td>中</td></tr>
+<tr><td>色崩れ・モノクロ</td><td>入力出力の色統計・参照chart</td><td>意図的grade、暗い場面</td><td>FXoff基準と比較、原因経路を隔離</td><td>低〜中</td></tr>
+</tbody></table></div>
+<p>参考：<a href="https://ffmpeg.org/ffmpeg-filters.html">FFmpeg filters</a>には黒・静止・無音・音量統計の基礎検出がある。人物の正しい同定やゲーム音の意味を保証する機能ではない。</p>
+<h2>結果schema案</h2>
+<p><code>clip_id, input_hash, template_hash, patch, actual_encoder, actual_fx_path, metric, unit, interval_video_s, replay_s, threshold_version, status(pass/warn/fail/unknown), confidence, evidence, suggested_action</code>。再検査しても旧結果を上書きせずrun_idを付ける。閾値はscene typeごとに版管理。</p>
+<h2>導入と合格条件</h2>
+<p>最初は黒/stream/音声長/fresh比など説明可能な検査から。正常・意図的暗転・静止・バグ入りを各20例以上収集し、clip単位と時間窓単位のprecision/recallを別算出する（必要標本数の設計案）。テストと閾値調整用映像は分離。誤検知で正常クリップを無限再試行しない。再録画は最大1回等の上限と理由を明示し、人が元映像へ戻せる。機械合格を芸術品質合格と同一視しない。</p></article><article id="doc11"><a class="download" href="LOL_PATCH_COMPATIBILITY_JA.md">元のMarkdownを開く</a><h1>LoLパッチ互換性とAPI依存の監査</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>何を保証できるか</h2>
+<p>今回LoLクライアントへの接続は行っていない。現行パッチ番号もローカル実機から取得しておらず、互換済みパッチ一覧は作れない。<a href="https://support.riotgames.com/en-us/league-of-legends/gameplay/replays-faq-pro-tips">Riot Replay FAQ</a>はリプレイがpatch cycleで失効すると説明する。古いroflを新patchで必ず再生できる設計にはしない。</p>
+<h2>依存点と予防策</h2>
+<div class="table"><table><thead><tr><th>依存</th><th>起き得る変化</th><th>事前検査・代替案</th></tr></thead><tbody>
+<tr><td>ROFL/ゲーム版</td><td>リプレイ起動不能</td><td>版不一致を区別し原因表示。ゲームファイルを自動改変しない</td></tr>
+<tr><td>Replay API playback/render</td><td>field型・意味・対応範囲</td><td>read-only schema probe→制限値付き最小操作を別実機試験</td></tr>
+<tr><td>Live Client events/playerlist</td><td>イベント欠落・識別名</td><td>eventID/時刻/killer/victim/assistを保存し欠落はunknown</td></tr>
+<tr><td>camera axes/FOV/attach</td><td>対象が空や地面へ</td><td>side/style/patch別承認。旧承認の無条件再利用なし</td></tr>
+<tr><td>HUD/DOF/Fog</td><td>設定無効・復元不能</td><td>対応fieldを個別probe、復元失敗をログに残す</td></tr>
+<tr><td>LoLプロセス・ウィンドウ</td><td>PID切替、最小化、権限差</td><td>実LoL process treeを検証、WGC freshと別にチェック</td></tr>
+<tr><td>音声</td><td>出力デバイス・OS API対応</td><td>プロセス音声helperの実行試験。全体録音へ代替しない</td></tr>
+<tr><td>champion icon/skin</td><td>Data Dragon版差・欠落</td><td>既存キャッシュ＋欠落用プレースホルダ、別人iconにしない</td></tr>
+</tbody></table></div>
+<p><a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/replay_api.py#L1">core/replay_api.py:1</a>はlocalhost HTTPS2999へのserial access。公開Web APIとローカルReplay APIを同一扱いしない。<a href="https://developer.riotgames.com/docs/lol">Riot LoL developer docs</a>を仕様の入口とし、欲しい敵3D位置やdepth mapが存在すると推測しない。POSTのタイムアウトは「未適用」と限らないのでreadbackしてから再送を決める。</p>
+<h2>サポート台帳と試験</h2>
+<p>OS build/LoL patch/Replay patch/GPU driver/FFmpeg hash/AutoCine SHAを1行へ保存。patch更新時は起動→player→scan→BLUE/REDロック→FXoff→音声あり10秒→復元の順。未試験patchは「未検証」であり「非対応確定」ではない。実機試験はユーザーの開発・自動テストが走っていない時に別途実施する。</p>
+<h2>Riot方針の確認</h2>
+<p><a href="https://developer.riotgames.com/policies/general">General Policies</a>は製品登録・審査、対応サービスの利用、不公正な優位を避けること等を要求する。今回それらへの登録状況は確認していない。<a href="https://www.riotgames.com/en/legal">Legal Jibber Jabber</a>もファン制作物と素材利用の条件を定める。Replay APIを使えることだけで配布・収益化・他者映像/BGMの利用許諾まで確定しない。公開・配布段階に適用条件を再確認するための確認項目であり、今回の研究を止める承認フローではない。</p></article><article id="doc12"><a class="download" href="ONE_CLICK_RELIABILITY_JA.md">元のMarkdownを開く</a><h1>ワンクリック制作の成功率設計</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>成功の定義</h2>
+<p>「ボタン処理が終了」「MP4が存在」「FFmpeg exit0」「映像とLoL音声が正しい」を分離する。成功率を実測していないため今回の数値は出さない。分母は開始要求数、互換環境で開始できた数、clip試行数をそれぞれ保存し、途中キャンセルを除外するなら定義を添える。</p>
+<div class="table"><table><thead><tr><th>段階</th><th>確認と現在の入口</th><th>失敗時の設計案</th></tr></thead><tbody>
+<tr><td>1 接続</td><td>Replay API、ゲーム/ROFL版</td><td>原因分類、接続だけ再試行</td></tr>
+<tr><td>2 対象固定</td><td>Player snapshot</td><td>別対象へ自動切替しない</td></tr>
+<tr><td>3 全体scan</td><td>completeフラグ、元イベント</td><td>中断scanを完全扱いしない</td></tr>
+<tr><td>4 シーン選択</td><td>チェック・pin・並び</td><td>選択状態保存、再scanで無言リセットなし</td></tr>
+<tr><td>5 設定確定</td><td>template/素材ID/hash</td><td>入力を凍結しジョブfingerprint作成</td></tr>
+<tr><td>6 環境事前検査</td><td>空容量・出力権限・helper・NVENC</td><td>書出し前に検出、CPU代替理由を表示</td></tr>
+<tr><td>7 seek/warmup</td><td>新規frameとreplay進行</td><td>既存の制御された復旧を活用、無限再試行なし</td></tr>
+<tr><td>8 camera/HUD/FX</td><td>適用readback・元状態</td><td>失敗時復元、未承認自動cameraは代替明示</td></tr>
+<tr><td>9 音声開始</td><td>LoL helperと実WAV</td><td>game_audio必須なら失敗。全体録音禁止</td></tr>
+<tr><td>10 録画</td><td>wall/replay/frame clock</td><td>停止・キャンセルで資源解放と状態復元</td></tr>
+<tr><td>11 FX/合成</td><td>actual path、色、asset hash</td><td>CPU代替の品質確認、失敗raw保持方針</td></tr>
+<tr><td>12 結合/検査</td><td>clip成功集合、AV/黒/fresh等</td><td>一部失敗を完全成功表示しない</td></tr>
+<tr><td>13 保存/報告</td><td>manifestと出力hash</td><td>atomic確定、成功clipを使って失敗分だけ再開</td></tr>
+</tbody></table></div>
+<h2>既存の保護</h2>
+<p><a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/jobs.py#L442">core/jobs.py:442</a>は音声開始失敗・空/短/完全無音WAVを失敗にし、HUD/FX/mirrorを復元する。<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/jobs.py#L618">core/jobs.py:618</a>はclip単位例外をres.failedへ記録して継続する。スキャン停止、録画停止、結合失敗を同じエラーに丸めない。</p>
+<h2>追加する永続job台帳案</h2>
+<p>job_id、source replay識別子、patch、player、scene interval、settings hash、asset hash、工程、attempt、output hash、error class、取消理由。出力はtmp→検査→renameで確定。途中再起動で同一入力の成功clipを二重生成せず、入力が変わった場合は旧結果を再利用しない。録画・API POSTは副作用があるので単純retry decoratorを付けない。</p>
+<h2>Windows実機試験</h2>
+<p>正常2scene、1scene音声失敗、2scene目GPU FX失敗、容量不足、LoL閉じる、seek停止、キャンセル、再起動再開を試験。音声失敗で無音成功しない、成功済みclipが残る、設定/HUD/camera復元、再試行は失敗clipのみを合格条件にする。現状で全項目が実装済みという意味ではない。</p></article><article id="doc13"><a class="download" href="PERFORMANCE_REVIEW_JA.md">元のMarkdownを開く</a><h1>GPU・録画・音声・出力性能の監査</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>4種類のFPS・GPU結果を分離する</h2>
+<p class="item">1. カメラ制御の送信/更新Hz。</p>
+<p class="item">2. ミラーUIの表示FPS。</p>
+<p class="item">3. WGC等が取得した新しいframeの実効FPS/fresh ratio。</p>
+<p class="item">4. 出力containerのFPSと重複/補間を除いた実映像情報。</p>
+<p>NVENCは圧縮、OpenCLは映像加工。CPU合成＋NVENCでも動画ファイルはGPU encoderを使用できる。<a href="https://docs.nvidia.com/video-technologies/video-codec-sdk/13.0/">NVIDIA Video Codec SDK</a>はencode/decodeの仕組みを提供するが、AutoCineの全処理GPU化の証明にはならない。</p>
+<h2>過去ログの解釈</h2>
+<p>10/20文書には61出力exit0/NVENC、GPU FX confirmed=false全61、12件ffmpeg_missing_program_opencl、fresh ratio62–68%/実効約39fps等が記録される。その後の計測33.12fps、41.42fps、144Hz目標改善という異なるrunがある。別runの数値を1条件の速度向上率へまとめない。OpenCLgrainの688×387オフライン中央値22.24ms/p95 24.9msも1080p全処理60fps合格ではない。</p>
+<p>今回これらの録画・計測は再実行していない。最新UI headにあるcapture_process変更を含め、実効改善の断定には新しい同条件の記録が必要。</p>
+<h2>計測計画</h2>
+<div class="table"><table><thead><tr><th>項目</th><th>記録値</th><th>判定上の注意</th></tr></thead><tbody>
+<tr><td>capture</td><td>frame_id/QPC, delivered/fresh/duplicate, p50/p95待ち</td><td>同一画面で画素一致しても新規取得の場合がある</td></tr>
+<tr><td>mirror</td><td>描画回数/実frame回数、UI遅延p95</td><td>高い目標値だけを成果にしない</td></tr>
+<tr><td>camera</td><td>API latency/slow call/drift/pose</td><td>送信Hzを上げてもfresh映像が増えるとは限らない</td></tr>
+<tr><td>FX</td><td>requested/supported/actual path、filter名、fallback理由</td><td>GPU利用率だけで個別filter成功を証明しない</td></tr>
+<tr><td>encoder</td><td>実encoder、driver、FFmpeg hash、encode時間</td><td>列挙と3秒実encode成功を分離</td></tr>
+<tr><td>audio</td><td>LoL PID/tree、WAV長、start offset、peak/RMS、AVずれ</td><td>他アプリ音が入らない対照試験が必要</td></tr>
+<tr><td>全体</td><td>wall time/映像秒、CPU/GPU/VRAM/RAM、temp disk</td><td>warmup・capture・FX・muxを分ける</td></tr>
+</tbody></table></div>
+<h2>音声の環境条件</h2>
+<p><a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/audio.py#L1">core/audio.py:1</a>はnative helperを使う。legacy endpoint loopbackが残っていても自動代替として使用しない。<a href="https://learn.microsoft.com/en-us/samples/microsoft/windows-classic-samples/applicationloopbackaudio-sample/">Microsoft application loopback sample</a>の最小条件はWindows build20348で、すべてのWindows10が対応する意味ではない。実際のOS機能probeを優先。LoLが無音の時はloopbackも無音になり得る。</p>
+<h2>性能改善の推薦</h2>
+<p>A：重複待ち・clock drift・frame queueを先に計測。bounded queueと古い表示frame破棄はmirrorに有効でも、録画frameを勝手に落として無記録にしない。B：grain/blur等の重いFXを単独最適化、LUTと合成順の共通化。C：ゼロコピーと複数GPU対応は転送コストを証明してから。GPU非対応時CPUは出力品質を守り、遅くなる理由を表示する。1080p60方針を黙って30fpsへ変更しない。</p></article><article id="doc14"><a class="download" href="WINDOWS_PORTABLE_RESEARCH_JA.md">元のMarkdownを開く</a><h1>他PC・Windows配布の調査</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>現状と方針</h2>
+<p>今回配布exeをビルド・起動していない。既存START.bat、音声helper構築経路、FFmpeg探索、設定保存を維持する。UI29のWebView2起動も別開発のため、研究側で置き換えない。</p>
+<p>推奨は最初にone-folder portable版を別ビルド枝で検証し、成功後にinstallerを比較する。<a href="https://www.pyinstaller.org/en/stable/operating-mode.html">PyInstaller公式</a>はPythonランタイムを含む配布と、OS/bit数に依存するビルド、動的import・追加データの手動指定を説明する。Python不要化は可能性の調査であり、本アプリの完成済み配布物ではない。</p>
+<div class="table"><table><thead><tr><th>要素</th><th>同梱/事前検査案</th><th>Windowsで必要な試験</th></tr></thead><tbody>
+<tr><td>Python/Tk/numpy/Pillow</td><td>固定版bundle、hidden imports</td><td>Python未導入・新規user・オフライン起動</td></tr>
+<tr><td>FFmpeg/FFprobe</td><td>版/hash/ライセンス・filter構成一覧</td><td>NVENC実行とCPU代替、OpenCLは別probe</td></tr>
+<tr><td>native audio helper</td><td>対象arch・必要runtime、ビルド入口維持</td><td>OS build/API対応、LoL PID限定・他アプリ音遮断</td></tr>
+<tr><td>WGC/共有メモリ</td><td>bundle内のworkerを明示</td><td>最小化・再起動・複数monitor・権限差</td></tr>
+<tr><td>WebView2</td><td>採用UIに必要ならruntime条件</td><td>未導入時の説明、既存起動経路の保持</td></tr>
+<tr><td>素材</td><td>承認状態とhash manifest</td><td>652原寸一括ロードしない、欠落時にレビュー素材を代用しない</td></tr>
+<tr><td>設定・project</td><td>ユーザー書込領域を分離</td><td>日本語/空白パス、read-only配置、長いパス</td></tr>
+<tr><td>driver/GPU</td><td>機能probeを保存</td><td>NVIDIA旧/新、Intel/AMD、GPUなしCPU（対象範囲の提案）</td></tr>
+<tr><td>画面</td><td>1366×768/1920×1080/125–200%DPI</td><td>数値欄・固定preview・ログ導線が隠れない</td></tr>
+</tbody></table></div>
+<h2>起動診断案</h2>
+<p>ローカル起動→データ読取→書込権限/空容量→FFmpeg→encoder/FX→音声API/helper→LoL接続の順。LoL未起動はアプリ起動失敗にしない。依存downloadや管理者設定を無断実行する設計にはしない。</p>
+<h2>更新・削除・診断</h2>
+<p>アプリ版とプロジェクトschemaの移行を分離。更新前backupとrollbackを残し、アンインストールで映像・素材原本・projectを削除しない。診断は個人パス、ユーザー名、ローカル録画、アカウント識別子を公開Gitへ自動送信しない。収集対象と保持期間を表示し、共有用に匿名化した最小レポートを作る。ライセンス一覧とFFmpeg配布条件の確認もbuild工程に含める。</p></article><article id="doc15"><a class="download" href="VIDEO_QUALITY_BENCHMARK_JA.md">元のMarkdownを開く</a><h1>映像品質ベンチマーク設計</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>比較単位</h2>
+<p>同一ROFL/patch/player/開始終了秒/出力1080p60/音声条件/機材/設定hashを固定し、FXoff→cameraだけ→FXだけ→frameだけ→複合の順で比較する。録画毎にゲーム時刻と壁時計が異なるため、killのvideo時刻を記録し位置合わせする。今回ベンチ映像の実測は0本。</p>
+<h2>最小シーンセット案</h2>
+<div class="table"><table><thead><tr><th>ID</th><th>BLUE/RED条件</th><th>狙い</th></tr></thead><tbody>
+<tr><td>S01/S02</td><td>単発kill各side</td><td>基本ロックと音声同期</td></tr>
+<tr><td>S03/S04</td><td>2〜3連kill各side</td><td>複数pulse・frame重複・wide構図</td></tr>
+<tr><td>S05/S06</td><td>集団戦各side</td><td>主役可視性、情報量、FX抑制</td></tr>
+<tr><td>S07/S08</td><td>壁・タワー・草むら各side</td><td>遮蔽・校正・地中</td></tr>
+<tr><td>S09/S10</td><td>dash/移動skill各side</td><td>追従遅れ・急回転</td></tr>
+<tr><td>S11/S12</td><td>静止→移動・seek復帰各side</td><td>fresh検知とwarmup</td></tr>
+</tbody></table></div>
+<p>全camera×全FXの総当たりを最初から回さず、10camera×両sideの基本20条件、代表scene、問題箇所の組合せへ拡張する。低負荷/高負荷profileとGPU失敗時CPUを含める。</p>
+<h2>客観指標（初期閾値案、未承認）</h2>
+<div class="table"><table><thead><tr><th>指標</th><th>提案判定</th><th>注意</th></tr></thead><tbody>
+<tr><td>出力</td><td>1920×1080、60/1fps、全stream decode成功</td><td>container fpsだけでは滑らかさを判定しない</td></tr>
+<tr><td>fresh capture</td><td>取得fresh ratio≥0.95を目標、p95間隔≤33.3msを参考</td><td>capture時計を使用。閾値は実機で調整</td></tr>
+<tr><td>音声長</td><td>AV長差≤100msを暫定、既知cueでoffset≤80ms目標</td><td>可変speedの時間写像、codec delayを考慮</td></tr>
+<tr><td>黒/フリーズ</td><td>意図したfadeを除き0.25秒以上を要審査</td><td>静止画面は正常であり自動failにしない</td></tr>
+<tr><td>対象位置</td><td>対象検出confidence十分時、画面外0.2秒以上を要審査</td><td>中心から30%ずれ等は構図により正常</td></tr>
+<tr><td>色</td><td>FXoffでchart差分、意図したgradeとの差を比較</td><td>SSIM/PSNR低下を演出失敗と直結しない</td></tr>
+<tr><td>素材</td><td>hash一致、ID/portrait整合、cutなし</td><td>静止合格とmotion合格を分離</td></tr>
+</tbody></table></div>
+<h2>人による審査</h2>
+<p>対象の見やすさ35%、プレイ理解25%、滑らかさ20%、色/演出15%、切替5%の提案。0–5評点、同一シーンの順番を伏せた比較、重大な対象ロスト/無音/破損は点数で相殺しない。好みの評点と不具合を分け、最低2人の評価が割れたら理由と区間を保存する。ユーザー採用を平均点で自動確定しない。</p>
+<h2>保存物</h2>
+<p>run manifest、元/出力hash、環境、設定、イベント時間写像、計測CSV、失敗原文、審査用短区間、代表still。生のユーザーパス・音声・全試合映像を公開リポジトリへ自動保存しない。1回の良好結果ではなく各条件3回を初期案とし、中央値と範囲を示す。</p></article><article id="doc16"><a class="download" href="PRIORITY_ROADMAP_JA.md">元のMarkdownを開く</a><h1>統合評価と推奨開発順序</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>推奨順（採用決定ではない）</h2>
+<div class="table"><table><thead><tr><th>段階</th><th>優先</th><th>小さい変更単位</th><th>完了判定</th><th>主な危険</th></tr></thead><tbody>
+<tr><td>0 基準保存</td><td>A</td><td>SHA固定、既存テスト原文、実機manifest</td><td>同じsceneを再現できる</td><td>別枝の変更を混ぜる</td></tr>
+<tr><td>1 真実性</td><td>A</td><td>GPU/encoder/fresh/表示FPS/音声結果分離</td><td>実ログとUI表示一致</td><td>列挙成功を実行成功にする</td></tr>
+<tr><td>2 安定した制作</td><td>A</td><td>job台帳、失敗clip再開、停止/復元</td><td>正常2scene＋故障注入＋再開合格</td><td>無限retry・二重出力</td></tr>
+<tr><td>3 カメラ品質</td><td>A</td><td>side/style/patch承認台帳、既存経路回帰</td><td>20基本条件と代表scene審査</td><td>旧camera削除・一律軸反転</td></tr>
+<tr><td>4 出力品質</td><td>A</td><td>黒/音声/時刻/素材postflight、flash複数event疑義再現</td><td>検出誤差を測り警告から導入</td><td>正常fade/静止を誤判定</td></tr>
+<tr><td>5 演出改善</td><td>B</td><td>recipe/Smart FX budget、preview parity、戦闘merge</td><td>同一scene比較で内容が見やすい</td><td>既存と重複・色崩れ</td></tr>
+<tr><td>6 制作効率</td><td>B</td><td>参考特徴の信頼度、theme提案、採点説明</td><td>手動pin/素材承認を維持</td><td>他者映像のcameraを正確復元と誤解</td></tr>
+<tr><td>7 高度研究</td><td>C</td><td>bestshot/engage/beat/光学flow</td><td>認識精度と負荷が実測で有利</td><td>処理時間・誤認識増</td></tr>
+<tr><td>8 配布</td><td>A/B</td><td>one-folder、非対応環境probe、rollback</td><td>Pythonなし他PC試験</td><td>音声helper/runtime欠落</td></tr>
+</tbody></table></div>
+<p>実装工数は測定しておらず日数見積りは置かない。難度はFEATURE_STATUS.csvに相対値で記載。最初の実装単位は「性能結果の意味の統一」と「音声を含む失敗表示の一致」を推奨する。派手な新FXやカメラ全面置換から始めない。</p>
+<h2>採用前に判断する点</h2>
+<p class="item">1. 固定自動を安定既定とし、full_autoは承認候補のある条件だけ使う方針。</p>
+<p class="item">2. 品質ゲートを最初は警告として導入し、精度が測れた項目だけ停止へ昇格する方針。</p>
+<p class="item">3. レシピの優先：Competitiveを比較基準、Cinematic/Elegantを最初の候補、Impact/Montageは複数kill抑制後。</p>
+<p class="item">4. 映像研究を20本の時間区間審査へ追加拡充すること。未視聴を分析済みにしない。</p>
+<p>UI29の最終採用は未決定。E Flow/A Studioを含め全候補を残し、このロードマップで画面採用を決めない。素材承認やキルフレーム/FXの新制作も今回開始しない。</p></article><article id="doc17"><a class="download" href="CODEX_IMPLEMENTATION_RESEARCH_JA.md">元のMarkdownを開く</a><h1>Codex向け実装・検証指示資料</h1>
+<aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
+<h2>この資料の使い方</h2>
+<p>採用後に別開発依頼として使う設計資料。今回実装は行っていない。基準SHA、実機環境、進行中UI29作業との調整を再確認し、最新へ移す時はこの資料と変更差分を照合する。歴史的v5.8.5引継ぎより現在の原文と新しいQA記録を優先し、矛盾を残す。</p>
+<div class="table"><table><thead><tr><th>変更案</th><th>既存接続先</th><th>互換性・禁止事項</th><th>検証</th></tr></thead><tbody>
+<tr><td>job永続台帳</td><td>core/jobs.py run_auto_edit / ui/scene_project.py</td><td>UI threadで設定snapshot、workerからTk参照禁止</td><td>failure/cancel/restart、成功clip hash再利用</td></tr>
+<tr><td>実行経路表示</td><td>effects.encoder_args / gpu_full / diagnostics</td><td>requested・supported・actual・fallbackを別field</td><td>GPU不在・列挙のみ・実行失敗・CPU代替</td></tr>
+<tr><td>camera承認</td><td>smart_camera_director.decide_camera</td><td>10旧style保持、side/style/patch別、未知は代替</td><td>manual/None後方互換、全候補除外、BLUE/RED</td></tr>
+<tr><td>イベント時計</td><td>jobs ClipTake.effect_events/qa_event_times</td><td>replay秒とoutput秒を混ぜない</td><td>可変speed、seek、2kill、音声offset</td></tr>
+<tr><td>FX一致</td><td>effects._build_video_effect_filters / preview / gpu_full</td><td>共通値・seed・適用順。旧ID/プリセット維持</td><td>CPU/GPU/厳密動画、2kill flash</td></tr>
+<tr><td>Work素材</td><td>work_kill_assets / kill_icons / work_gallery</td><td>652review区別、37badge/89原本保護、承認は別操作</td><td>全IDroundtrip、portrait box、6motion</td></tr>
+<tr><td>QA postflight</td><td>auto_qa拡張とは別の内容検査層案</td><td>既存selftestのpass意味を変えない</td><td>暗転/静止の誤検出、unknown表示</td></tr>
+<tr><td>scene planning</td><td>smart_montage / highlight_director</td><td>手動pin優先、既存scoreを再利用</td><td>同一戦闘mergeと重複排除</td></tr>
+<tr><td>配布</td><td>START.bat / helper / FFmpeg探索</td><td>native音声と既存起動入口を残す</td><td>Pythonなし、新規OS、DPI、権限差</td></tr>
+</tbody></table></div>
+<h2>最初の小さいPR案</h2>
+<p>PR1は結果schemaと表示の整合、PR2はjob台帳と再開、PR3は承認台帳、PR4は内容QA警告、PR5はレシピ/FX時間窓。各PRは個別rollback可能にし、UI全面書換えやGPUエンジン全置換を混ぜない。</p>
+<h2>回帰条件</h2>
+<p>チェック済み1/2scene出力、色維持、LoLゲーム音のみ、AV同期、TargetLock/Orbit、BLUE/RED、HUD/DOF/Fog復元、GPU失敗CPU代替、キャンセル、ログ匿名化。テストの失敗・例外はRTK要約のみで判断せず原文を添える。環境未対応はskip理由と未到達assertを分ける。Windows symlink権限不足をアプリ不具合と誤分類しない。</p>
+<h2>証拠を残す形式</h2>
+<p>各変更にsource SHA、test SHA、環境、設定hash、コマンド/終了code、失敗原文（匿名化）、実動画の確認秒、known limitsを記録する。passが人工映像か実LoLかを必須fieldにする。GitHub Actions0件をCI合格と記載しない。ユーザー環境のログ・録画は許可なく公開しない。</p>
+<h2>作業保護</h2>
+<p>この研究ブランチは研究専用prefixに追加する。UI29比較のコード、実験素材、既存camera/FX/audio/testのファイルへ変更を加えない。既存の研究推薦は採用決定ではない。新しい実装依頼が来るまで設計案のまま保持する。</p></article><footer>研究専用branch：work/autocine-integrated-research-20261022。元コードは変更していません。</footer></main></html>
