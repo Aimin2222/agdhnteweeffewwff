@@ -78,6 +78,7 @@ def main():
     root.mainloop()
     server.close()
     app.on_close()
+    appearance.unlink(missing_ok=True)
     OUTPUT.write_text(json.dumps(outcome, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(outcome, ensure_ascii=False))
     return 0 if outcome.get("result") == "PASS" else 1

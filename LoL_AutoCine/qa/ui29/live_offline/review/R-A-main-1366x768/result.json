@@ -1,0 +1,648 @@
+{
+  "screen_id": "R-A-main-1366x768",
+  "family": "researchA",
+  "reference_sha256": "be7152804330850d4594b924128becb093f8df3d6a95fb200816b4642f76eece",
+  "reference_size": [
+    1366,
+    768
+  ],
+  "capture_size": [
+    1366,
+    768
+  ],
+  "size_result": "PASS",
+  "visual_result": "REVIEW",
+  "functional_result": "NOT_RUN",
+  "dynamic_image_mask": [
+    344.3333333333333,
+    171.0,
+    597.3333333333334,
+    336.0
+  ],
+  "unmasked_rgb_mae": 2.5816,
+  "regions": [
+    {
+      "region": "header",
+      "rgb_mae": 0.1027
+    },
+    {
+      "region": "theme-switch",
+      "rgb_mae": 0.2704
+    },
+    {
+      "region": "export",
+      "rgb_mae": 0.4123
+    },
+    {
+      "region": "subbar",
+      "rgb_mae": 0.07
+    },
+    {
+      "region": "workspace",
+      "rgb_mae": 3.3539
+    },
+    {
+      "region": "scene-list",
+      "rgb_mae": 19.9863
+    },
+    {
+      "region": "scene-card-0",
+      "rgb_mae": 55.9673
+    },
+    {
+      "region": "scene-card-1",
+      "rgb_mae": 33.3834
+    },
+    {
+      "region": "scene-card-2",
+      "rgb_mae": 25.9296
+    },
+    {
+      "region": "scene-card-3",
+      "rgb_mae": 0.1005
+    },
+    {
+      "region": "scene-card-4",
+      "rgb_mae": 0.2393
+    },
+    {
+      "region": "scene-card-5",
+      "rgb_mae": null
+    },
+    {
+      "region": "preview-panel",
+      "rgb_mae": 0.9776
+    },
+    {
+      "region": "preview-stage",
+      "rgb_mae": 1.4257
+    },
+    {
+      "region": "preview-controls",
+      "rgb_mae": 1.3737
+    },
+    {
+      "region": "inspector",
+      "rgb_mae": 0.1459
+    },
+    {
+      "region": "camera-modes",
+      "rgb_mae": 0.2019
+    },
+    {
+      "region": "slider-third_dist",
+      "rgb_mae": 0.1096
+    },
+    {
+      "region": "slider-cam_height",
+      "rgb_mae": 0.1092
+    },
+    {
+      "region": "slider-third_yaw",
+      "rgb_mae": 0.1024
+    },
+    {
+      "region": "timeline",
+      "rgb_mae": 0.0438
+    },
+    {
+      "region": "trim",
+      "rgb_mae": 0.0707
+    },
+    {
+      "region": "footer-22",
+      "rgb_mae": 0.2024
+    }
+  ],
+  "bounds": [
+    {
+      "region": "header",
+      "result": "PASS",
+      "expected": [
+        0,
+        0,
+        1366,
+        64
+      ],
+      "actual": [
+        0,
+        0,
+        1366,
+        64
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "theme-switch",
+      "result": "PASS",
+      "expected": [
+        893.625,
+        11.5,
+        149,
+        40
+      ],
+      "actual": [
+        893.625,
+        11.5,
+        149,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "export",
+      "result": "PASS",
+      "expected": [
+        1267.9375,
+        11.5,
+        82.0625,
+        40
+      ],
+      "actual": [
+        1267.9375,
+        11.5,
+        82.0625,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "subbar",
+      "result": "PASS",
+      "expected": [
+        0,
+        64,
+        1366,
+        52
+      ],
+      "actual": [
+        0,
+        64,
+        1366,
+        52
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "workspace",
+      "result": "PASS",
+      "expected": [
+        0,
+        116,
+        1366,
+        620
+      ],
+      "actual": [
+        0,
+        116,
+        1366,
+        620
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-list",
+      "result": "PASS",
+      "expected": [
+        16,
+        128,
+        220,
+        442
+      ],
+      "actual": [
+        16,
+        128,
+        220,
+        442
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-0",
+      "result": "FAIL",
+      "expected": [
+        31,
+        317,
+        190,
+        88
+      ],
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "delta": [
+        -31.0,
+        -317.0,
+        -190.0,
+        -88.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-1",
+      "result": "FAIL",
+      "expected": [
+        31,
+        415,
+        190,
+        88
+      ],
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "delta": [
+        -31.0,
+        -415.0,
+        -190.0,
+        -88.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-2",
+      "result": "FAIL",
+      "expected": [
+        31,
+        513,
+        190,
+        88
+      ],
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "delta": [
+        -31.0,
+        -513.0,
+        -190.0,
+        -88.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-3",
+      "result": "FAIL",
+      "expected": [
+        31,
+        611,
+        190,
+        88
+      ],
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "delta": [
+        -31.0,
+        -611.0,
+        -190.0,
+        -88.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-4",
+      "result": "FAIL",
+      "expected": [
+        31,
+        709,
+        190,
+        88
+      ],
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "delta": [
+        -31.0,
+        -709.0,
+        -190.0,
+        -88.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-5",
+      "result": "FAIL",
+      "expected": [
+        31,
+        807,
+        190,
+        88
+      ],
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "delta": [
+        -31.0,
+        -807.0,
+        -190.0,
+        -88.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-panel",
+      "result": "PASS",
+      "expected": [
+        248,
+        128,
+        790,
+        442
+      ],
+      "actual": [
+        248,
+        128,
+        790,
+        442
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-stage",
+      "result": "PASS",
+      "expected": [
+        259,
+        171,
+        768,
+        336
+      ],
+      "actual": [
+        259,
+        171,
+        768,
+        336
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-controls",
+      "result": "PASS",
+      "expected": [
+        259,
+        515,
+        768,
+        44
+      ],
+      "actual": [
+        259,
+        515,
+        768,
+        44
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "inspector",
+      "result": "PASS",
+      "expected": [
+        1050,
+        128,
+        300,
+        442
+      ],
+      "actual": [
+        1050,
+        128,
+        300,
+        442
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "camera-modes",
+      "result": "FAIL",
+      "expected": [
+        1065,
+        222.5,
+        270,
+        260.5
+      ],
+      "actual": [
+        1065,
+        222.5,
+        260,
+        260.5
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        -10.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "slider-third_dist",
+      "result": "FAIL",
+      "expected": [
+        1065,
+        640.5,
+        270,
+        36
+      ],
+      "actual": [
+        1065,
+        640.5,
+        260,
+        36
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        -10.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "slider-cam_height",
+      "result": "FAIL",
+      "expected": [
+        1065,
+        692.5,
+        270,
+        36
+      ],
+      "actual": [
+        1065,
+        692.5,
+        260,
+        36
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        -10.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "slider-third_yaw",
+      "result": "FAIL",
+      "expected": [
+        1065,
+        744.5,
+        270,
+        36
+      ],
+      "actual": [
+        1065,
+        744.5,
+        260,
+        36
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        -10.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "timeline",
+      "result": "PASS",
+      "expected": [
+        16,
+        582,
+        1334,
+        142
+      ],
+      "actual": [
+        16,
+        582,
+        1334,
+        142
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "trim",
+      "result": "PASS",
+      "expected": [
+        31,
+        665.390625,
+        1304,
+        36
+      ],
+      "actual": [
+        31,
+        665.390625,
+        1304,
+        36
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "footer-22",
+      "result": "PASS",
+      "expected": [
+        0,
+        736,
+        1366,
+        32
+      ],
+      "actual": [
+        0,
+        736,
+        1366,
+        32
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    }
+  ]
+}

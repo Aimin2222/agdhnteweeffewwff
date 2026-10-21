@@ -12,6 +12,7 @@
 - `baseline/index.json` は29件すべて `NOT_RUN`。これは実装キャプチャやLoL実機を確認していないという意味で、合格ではない。
 - `source_baseline/index.json` は新18画面の元HTMLをEdgeで再描画して原画像と比べた**設計元の再現性**。全18件を同じ原寸で取得でき、全画素RGB平均絶対差は0.2324〜0.8607/255。これはライブ接続したUIの視覚合格ではない。
 - `local_bridge_probe.json` は本物の `legacy_app.App` とローカルUIブリッジを使い、新A→新E→新Aの切替後もカメラ側・距離・登場モーションを維持した結果。LoLリプレイ、GPU、録画、音声、書き出しは起動していない。
+- `live_offline/` は本物のAppとUIサーバーを起動して新18画面をEdgeで撮影した**LoL未接続の画面審査**。各画面に実装PNG、原本、50%重ね、差分、DOM矩形、結果JSONを保存した。18画面の映像領域外RGB平均絶対差は0.23〜4.17/255。308矩形のうち222が許容内、86が範囲外。シーンカードを未接続時に隠した差などを含む。5画面は全矩形が許容内だが、`MEASURED` は視覚・実機の合格を意味しない。旧11画面は `NOT_RUN` のまま。
 
 ## 画面ごとの審査
 
@@ -22,6 +23,8 @@ python tools/ui29_review.py --capture-dir <実装PNGフォルダ> --bounds-dir <
 ```
 
 実測JSONは `{"regions":{"header":[x,y,w,h], ...}}`。新画像は主要矩形の各辺±2px、旧画像は再構成として±8原画pxを初回許容する。映像内容だけをマスクし、周囲のパネルと操作部品は審査に含める。比較画像ができても自動的に `PASS` にしない。
+
+新18画面の再撮影は `python tools/ui29_live_capture.py`、続けて `python tools/ui29_review.py --capture-dir qa/ui29/live_offline --bounds-dir qa/ui29/live_offline/bounds --output qa/ui29/live_offline/review`。この撮影はリプレイ、GPU、録画、音声、書き出しを実行しない。
 
 LoL実接続、GPU/NVENC、ゲーム音声、録画、動画書き出し、1920×1080/60fps、125%/150%のWindows倍率は別の実機記録で判定する。現時点は未検証。現行版のバックエンド、カメラ計算、GPU、録画、音声、BAT起動には手を加えていない。
 

@@ -14,7 +14,7 @@ from pathlib import Path
 import queue
 import secrets
 import threading
-from urllib.parse import unquote, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 from ui.audit29_runtime import Audit29Runtime, SCREENS
 
@@ -164,6 +164,24 @@ document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>butt
                         '<script src="/runtime/client.js?token=' + owner.token + '"></script>')
                     html = html.replace('href="ui.css"', f'href="/static/ui.css?token={owner.token}"')
                     html = html.replace('src="assets/', f'src="/static/assets/')
+                    if parse_qs(urlparse(self.path).query).get("measure") == ["1"]:
+                        # Read-only DOM bounds for reproducible offline layout QA.
+                        measurement = '''<script>setTimeout(() => {
+const boxes = {};
+document.querySelectorAll('[data-ui]').forEach(element => {
+ const rect = element.getBoundingClientRect();
+ boxes[element.dataset.ui] = [rect.x, rect.y, rect.width, rect.height];
+});
+const footer = document.querySelector('footer');
+if (footer) {
+ const rect = footer.getBoundingClientRect();
+ boxes['footer-' + Object.keys(boxes).length] = [rect.x, rect.y, rect.width, rect.height];
+}
+const result = document.createElement('script');
+result.type = 'application/json'; result.id = 'ui29-bounds';
+result.textContent = JSON.stringify(boxes); document.body.append(result);
+}, 900);</script>'''
+                        html = html.replace("</body>", measurement + "</body>")
                     return self._send(200, html.encode("utf-8"), "text/html; charset=utf-8")
                 if path.startswith("/static/"):
                     source = (DESIGN / path[len("/static/"):]).resolve()

@@ -1,0 +1,351 @@
+{
+  "screen_id": "R-D-main-1366x768",
+  "family": "researchD",
+  "reference_sha256": "78eab38816972811e04ad91e50ba57425972847e45ec25817c7d578ec34f4a3d",
+  "reference_size": [
+    1366,
+    768
+  ],
+  "capture_size": [
+    1366,
+    768
+  ],
+  "size_result": "PASS",
+  "visual_result": "MEASURED",
+  "functional_result": "NOT_RUN",
+  "dynamic_image_mask": [
+    770.1111111111111,
+    171.0,
+    529.7777777777778,
+    298.0
+  ],
+  "unmasked_rgb_mae": 0.6393,
+  "regions": [
+    {
+      "region": "header",
+      "rgb_mae": 0.1077
+    },
+    {
+      "region": "theme-switch",
+      "rgb_mae": 0.2711
+    },
+    {
+      "region": "output-settings",
+      "rgb_mae": 0.5378
+    },
+    {
+      "region": "subbar",
+      "rgb_mae": 0.07
+    },
+    {
+      "region": "workspace",
+      "rgb_mae": 0.7934
+    },
+    {
+      "region": "scene-wall",
+      "rgb_mae": 1.648
+    },
+    {
+      "region": "preview-panel",
+      "rgb_mae": 0.2428
+    },
+    {
+      "region": "preview-stage",
+      "rgb_mae": 0.7279
+    },
+    {
+      "region": "preview-controls",
+      "rgb_mae": 0.2012
+    },
+    {
+      "region": "highlight-filter",
+      "rgb_mae": 0.0553
+    },
+    {
+      "region": "output-queue",
+      "rgb_mae": 0.0567
+    },
+    {
+      "region": "footer-11",
+      "rgb_mae": 0.1996
+    }
+  ],
+  "bounds": [
+    {
+      "region": "header",
+      "result": "PASS",
+      "expected": [
+        0,
+        0,
+        1366,
+        64
+      ],
+      "actual": [
+        0,
+        0,
+        1366,
+        64
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "theme-switch",
+      "result": "PASS",
+      "expected": [
+        903.6875,
+        11.5,
+        149,
+        40
+      ],
+      "actual": [
+        903.6875,
+        11.5,
+        149,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "output-settings",
+      "result": "PASS",
+      "expected": [
+        1278,
+        11.5,
+        72,
+        40
+      ],
+      "actual": [
+        1278,
+        11.5,
+        72,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "subbar",
+      "result": "PASS",
+      "expected": [
+        0,
+        64,
+        1366,
+        52
+      ],
+      "actual": [
+        0,
+        64,
+        1366,
+        52
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "workspace",
+      "result": "PASS",
+      "expected": [
+        0,
+        116,
+        1366,
+        620
+      ],
+      "actual": [
+        0,
+        116,
+        1366,
+        620
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-wall",
+      "result": "PASS",
+      "expected": [
+        16,
+        128,
+        692,
+        404
+      ],
+      "actual": [
+        16,
+        128,
+        692,
+        404
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-panel",
+      "result": "PASS",
+      "expected": [
+        720,
+        128,
+        630,
+        404
+      ],
+      "actual": [
+        720,
+        128,
+        630,
+        404
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-stage",
+      "result": "PASS",
+      "expected": [
+        731,
+        171,
+        608,
+        298
+      ],
+      "actual": [
+        731,
+        171,
+        608,
+        298
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-controls",
+      "result": "PASS",
+      "expected": [
+        731,
+        477,
+        608,
+        44
+      ],
+      "actual": [
+        731,
+        477,
+        608,
+        44
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "highlight-filter",
+      "result": "PASS",
+      "expected": [
+        16,
+        544,
+        692,
+        180
+      ],
+      "actual": [
+        16,
+        544,
+        692,
+        180
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "output-queue",
+      "result": "PASS",
+      "expected": [
+        720,
+        544,
+        630,
+        180
+      ],
+      "actual": [
+        720,
+        544,
+        630,
+        180
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "footer-11",
+      "result": "PASS",
+      "expected": [
+        0,
+        736,
+        1366,
+        32
+      ],
+      "actual": [
+        0,
+        736,
+        1366,
+        32
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    }
+  ]
+}
