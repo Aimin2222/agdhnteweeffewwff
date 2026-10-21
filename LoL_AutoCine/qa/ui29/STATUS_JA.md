@@ -22,7 +22,7 @@
 | L05-M | 旧案5 ウィザード | 未実装 | NOT_RUN | — | — | NOT_RUN |
 | L06-E | 旧案6 ライブラリ／編集 | 未実装 | NOT_RUN | — | — | NOT_RUN |
 | L06-L | 旧案6 ライブラリ／編集 | 未実装 | NOT_RUN | — | — | NOT_RUN |
-| T-A-M | 旧テストA 現行整理 | 部分実装 | MEASURED | 31.7695 | 12/12 | NOT_RUN |
+| T-A-M | 旧テストA 現行整理 | 部分実装 | MEASURED | 31.6168 | 12/12 | NOT_RUN |
 | T-B-S | 旧テストB カメラ・FX | 未実装 | NOT_RUN | — | — | NOT_RUN |
 | T-B-C | 旧テストB カメラ・FX | 未実装 | NOT_RUN | — | — | NOT_RUN |
 | T-B-F | 旧テストB カメラ・FX | 未実装 | NOT_RUN | — | — | NOT_RUN |

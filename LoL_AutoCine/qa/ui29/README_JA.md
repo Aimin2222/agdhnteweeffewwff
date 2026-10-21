@@ -28,7 +28,7 @@ python tools/ui29_review.py --capture-dir <実装PNGフォルダ> --bounds-dir <
 
 新18画面の再撮影は `python tools/ui29_live_capture.py`、続けて `python tools/ui29_review.py --capture-dir qa/ui29/live_offline --bounds-dir qa/ui29/live_offline/bounds --output qa/ui29/live_offline/review`。この撮影はリプレイ、GPU、録画、音声、書き出しを実行しない。
 
-LoL実接続、GPU/NVENC、ゲーム音声、録画、動画書き出し、1920×1080/60fps、125%/150%のWindows倍率は別の実機記録で判定する。現時点は未検証。現行版のバックエンド、カメラ計算、GPU、録画、音声、BAT起動には手を加えていない。
+LoL実接続、GPU/NVENC、ゲーム音声、録画、動画書き出し、1920×1080/60fps、125%/150%のWindows倍率は別の実機記録で判定する。現時点は未検証。ブラウザ版ミラーは現状100ms間隔のJPEG取得なので、この画面で144Hzプレビューが合格したとは扱わない。現行版のバックエンド、カメラ計算、GPU、録画、音声、BAT起動には手を加えていない。
 
 ## 残作業
 

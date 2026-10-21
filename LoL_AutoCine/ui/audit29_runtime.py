@@ -175,6 +175,8 @@ class Audit29Runtime:
             return self.select_theme(str(data["value"]))
         if action == "open_replay":
             app.on_open_replay()
+        elif action == "connect":
+            app.on_connect()
         elif action == "prepare":
             app.on_quick_prepare()
         elif action == "scan":

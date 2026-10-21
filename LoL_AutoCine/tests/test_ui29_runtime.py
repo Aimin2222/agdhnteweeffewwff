@@ -139,6 +139,14 @@ class Audit29RuntimeTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 runtime.perform("edit_mode", {"value": "unknown"})
 
+    def test_connect_uses_existing_replay_handler(self):
+        app = App()
+        called = []
+        app.on_connect = lambda: called.append("connect")
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            Audit29Runtime(app, Path(directory) / "workspace.json").perform("connect")
+        self.assertEqual(called, ["connect"])
+
     def test_local_server_uses_editable_source_and_rejects_old_placeholder(self):
         with TemporaryDirectory(dir=ROOT / "qa") as directory:
             server = UI29Server(App(), Path(directory) / "workspace.json")

@@ -114,6 +114,13 @@
     if (scanStatus) scanStatus.textContent=data.scan.status;
     const sceneCount=document.querySelector('[data-ui="scene-count"]');
     if (sceneCount) sceneCount.textContent=`全${data.scenes.length}件`;
+    const replayStatus=document.querySelector('[data-ui="replay-status"]');
+    if (replayStatus) replayStatus.textContent=data.replay.connected ?
+      `Replay API 接続済み / プレイヤー${data.replay.player_count}人` :
+      'Replay API 未接続。リプレイを開き、試合全体スキャンまたは更新を実行してください。';
+    const replayPath=document.querySelector('[data-ui="replay-path"]');
+    if (replayPath) replayPath.textContent=data.replay.connected ?
+      '接続中の試合（ファイル名は未取得）' : '接続待ち';
     const targetName=document.querySelector('[data-ui="target-name"]');
     if (targetName) {
       const target=data.replay.players.find(player=>player.slot===data.replay.target_slot);
@@ -365,6 +372,10 @@
     return null;
   }
   document.addEventListener('click', event => {
+    if (event.target.closest('.prepare .section-head button')) {
+      invoke('connect');
+      return;
+    }
     const player=event.target.closest('[data-player-slot]');
     if (player) {
       invoke('target_lock',{slot:Number(player.dataset.playerSlot)});
