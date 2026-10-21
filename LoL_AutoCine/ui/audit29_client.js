@@ -66,7 +66,20 @@
     const footnote = document.querySelector('footer.footnote span');
     if (footnote) footnote.textContent = 'UI比較版・実際の操作は既存AutoCineに反映 / LoL未接続時は映像を表示しません';
     const countLabel = document.querySelector('.scene-list .panel-head + button + p');
-    if (countLabel) countLabel.textContent = `検出 ${data.scenes.length}件 / 出力チェック ${data.checked_count}件`;
+    if (countLabel) {
+      countLabel.textContent = `検出 ${data.scenes.length}件 / 出力チェック ${data.checked_count}件` +
+        (data.scan.percent > 0 && data.scan.percent < 100 ? ` / スキャン ${Math.round(data.scan.percent)}%` : '');
+      countLabel.title = data.scan.status;
+    }
+    const sampleCards = [...document.querySelectorAll('[data-ui^="scene-card-"]')];
+    if (sampleCards.length && data.scenes.length > sampleCards.length) {
+      const parent = sampleCards[0].parentElement;
+      for (let index = sampleCards.length; index < data.scenes.length; index++) {
+        const clone = sampleCards[0].cloneNode(true);
+        clone.dataset.ui = `scene-card-${index}`;
+        parent.append(clone);
+      }
+    }
     document.querySelectorAll('[data-ui^="scene-card-"]').forEach((card, position) => {
       const scene = data.scenes[position];
       if (!scene) { card.style.display = 'none'; return; }
@@ -76,10 +89,20 @@
       const time = card.querySelector('.time');
       if (time) time.textContent = `${Math.floor(scene.time/60)}:${String(Math.floor(scene.time%60)).padStart(2,'0')}`;
       const side = card.querySelector('.side');
-      if (side) side.textContent = scene.side || '—';
+      if (side) {
+        side.textContent = scene.side || '—';
+        side.classList.toggle('blue', scene.side === 'BLUE');
+        side.classList.toggle('red', scene.side === 'RED');
+      }
       const title = card.querySelector('strong');
-      if (title) title.textContent = scene.multikill >= 3 ? 'トリプルキル' :
+      if (title) title.textContent = scene.role === 'assist' ? 'アシスト' :
+        scene.multikill >= 3 ? 'トリプルキル' :
         scene.multikill === 2 ? 'ダブルキル' : 'キル';
+      const thumbnail = card.querySelector('img.scene-thumb');
+      if (thumbnail) {
+        thumbnail.style.visibility = 'hidden';
+        thumbnail.alt = 'このシーンのサムネイルは未取得';
+      }
       const check = card.querySelector('.check');
       if (check) { check.textContent = scene.checked ? '✓' : ''; check.classList.toggle('checked', scene.checked); }
     });
@@ -207,6 +230,13 @@
     if (card) {
       const index = Number(card.dataset.sceneIndex);
       if (Number.isInteger(index)) invoke('select_scene',{index});
+      return;
+    }
+    const filter = event.target.closest('.scene-filter button');
+    if (filter) {
+      const label = filter.textContent.trim();
+      const value = label.includes('両方') ? 'both' : label.includes('アシスト') ? 'assist' : 'kill';
+      invoke('event_mode',{value});
       return;
     }
     const camera = event.target.closest('.camera-card');

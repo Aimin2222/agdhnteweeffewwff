@@ -14,6 +14,7 @@ from ui.director_work_controls import MODE_LABELS, select_frame_with_effect
 from core.work_kill_assets import list_assets, paired_effect_for_frame
 from core.camera import CAMERA_SIDE_CHOICES
 from core.kill_icons import MOTION_STYLES
+from core.players import norm
 from ui.scene_project import scene_key
 from ui.hud_presets import HUD_MODES
 
@@ -93,10 +94,16 @@ class Audit29Runtime:
         app = self.app
         scene_rows = []
         selected = app.lb_kills.curselection()
+        teams = {alias: player.team for player in app.players
+                 if callable(getattr(player, "aliases", None))
+                 for alias in player.aliases()}
         for index, event in enumerate(app.kills):
+            team = teams.get(norm(getattr(event, "killer", "")))
             scene_rows.append({
                 "index": index, "time": round(float(event.time), 2),
-                "side": str(getattr(event, "side", "")),
+                "side": "BLUE" if team == "ORDER" else "RED" if team == "CHAOS" else "",
+                "role": str(getattr(event, "role", "kill")),
+                "killer": str(getattr(event, "killer", "")),
                 "victim": str(getattr(event, "victim", "")),
                 "multikill": int(getattr(event, "multikill", 1)),
                 "checked": index in app.checked_kills,
@@ -128,6 +135,8 @@ class Audit29Runtime:
             "scenes": scene_rows,
             "selected_scene_index": selected[0] if selected else None,
             "checked_count": len(app.checked_kills),
+            "scan": {"status": str(app.lbl_scan.cget("text")) if hasattr(app, "lbl_scan") else "未スキャン",
+                     "percent": float(app.pb_scan["value"]) if hasattr(app, "pb_scan") else 0.0},
             "event_mode": app.var_event_mode.get(),
             "camera": {"mode": app.var_camera_control_mode.get(),
                        "side": app.var_camera_side.get(), "style": app.var_style.get(),
