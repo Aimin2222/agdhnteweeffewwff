@@ -1,4 +1,4 @@
-"""Local-only browser presentation of audited HTML, backed by one Tk App.
+"""Loopback presentation of audited HTML, backed by one Tk App.
 
 This is an opt-in implementation slice for the new research screens. Old
 screens have no HTML source and are not silently mapped to these layouts.
@@ -43,7 +43,11 @@ class TkDispatcher:
                 future.set_result(fn())
             except Exception as exc:
                 future.set_exception(exc)
-        self.root.after(20, self._drain)
+        if self.running:
+            try:
+                self.root.after(20, self._drain)
+            except Exception:
+                self.running = False
 
     def call(self, fn, *, timeout=30):
         future = Future()
@@ -219,8 +223,15 @@ result.textContent = JSON.stringify(boxes); document.body.append(result);
                     # Native file dialogs legitimately stay open while a user chooses a path.
                     # Do not report a false HTTP failure after the default 30-second wait.
                     dialog_actions = {"open_replay", "project_export", "project_import", "output_folder"}
-                    result = owner.dispatcher.call(lambda: owner.runtime.perform(action, payload),
-                                                   timeout=None if action in dialog_actions else 30)
+                    if action == "desktop_exit":
+                        def shutdown_app():
+                            owner.app.on_close()
+                            owner.dispatcher.running = False
+                            return {"closing": True}
+                        result = owner.dispatcher.call(shutdown_app)
+                    else:
+                        result = owner.dispatcher.call(lambda: owner.runtime.perform(action, payload),
+                                                       timeout=None if action in dialog_actions else 30)
                     return self._json(200, result)
                 except (ValueError, KeyError, NotImplementedError) as exc:
                     return self._json(422, {"error": str(exc)})

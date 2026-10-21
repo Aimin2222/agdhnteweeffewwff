@@ -37,21 +37,24 @@ def _ensure_dependencies() -> None:
 
 import sys
 _ensure_dependencies()
-from legacy_app import App
 
 
 def main() -> None:
+    if "--ui29-backend" in sys.argv:
+        from ui.audit29_desktop import run_backend
+        run_backend(sys.argv[sys.argv.index("--ui29-backend") + 1])
+        return
+    if "--ui29" in sys.argv:
+        from ui.audit29_desktop import run_desktop, smoke_backend
+        if "--ui29-smoke" in sys.argv:
+            smoke_backend()
+        else:
+            run_desktop(window_smoke="--ui29-window-smoke" in sys.argv)
+        return
+    from legacy_app import App
     root = tk.Tk()
     app = App(root)
-    if "--ui29" in sys.argv:
-        # Development-only live research layouts. The existing Tk App stays
-        # open as the sole backend/controller; no camera or capture code is
-        # duplicated. Old raster screens are still awaiting reconstruction.
-        from ui.audit29_server import UI29Server
-        import webbrowser
-        app._ui29_server = UI29Server(app)
-        webbrowser.open(app._ui29_server.url)
-    elif "--legacy-ui" not in sys.argv:
+    if "--legacy-ui" not in sys.argv:
         from ui.reference_studio import ReferenceStudio
         ReferenceStudio(app)
     root.mainloop()
