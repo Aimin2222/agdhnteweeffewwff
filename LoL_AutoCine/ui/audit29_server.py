@@ -147,6 +147,13 @@ document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>butt
                     except Exception:
                         content = None
                     return self._send(200, content, "image/jpeg") if content else self._send(404, b"")
+                if path.startswith("/api/asset/"):
+                    try:
+                        from core.work_kill_assets import resolve_asset
+                        _, source = resolve_asset(path[len("/api/asset/"):], kind="frames", review=True)
+                        return self._send(200, source.read_bytes(), "image/png")
+                    except (ValueError, OSError):
+                        return self._json(404, {"error": "unknown audited asset"})
                 if path == "/runtime/client.js":
                     return self._send(200, CLIENT.read_bytes(), "text/javascript; charset=utf-8")
                 if path.startswith("/ui/"):

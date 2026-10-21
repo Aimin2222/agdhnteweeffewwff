@@ -47,6 +47,11 @@ def main():
             request("camera_side", {"value": "BLUE"})
             request("camera_number", {"key": "third_dist", "value": 925})
             request("motion", {"value": "slide_left"})
+            request("frame", {"id": "083/a_simple_main"})
+            asset_url = (f"http://127.0.0.1:{server.http.server_port}"
+                         f"/api/asset/083/a_simple_main?token={server.token}")
+            with urlopen(asset_url, timeout=15) as response:
+                assert response.read(8) == b"\x89PNG\r\n\x1a\n"
             request("screen", {"id": "R-E-main"})
             request("screen", {"id": "R-A-main"})
             state = request("theme", {"value": "dark"})
@@ -55,12 +60,15 @@ def main():
             assert state["camera"]["side"] == "ブルー側基準"
             assert state["camera"]["values"]["third_dist"] == 925
             assert state["frame"]["motion"] == "左から登場"
+            assert state["frame"]["id"] == "083/a_simple_main"
+            assert len(state["frame"]["cards"]) == 4
             assert not state["capabilities"]["engage"]
             outcome["result"] = "PASS"
             outcome["screen"] = state["workspace"]["screen_id"]
             outcome["candidate_roundtrip"] = ["R-A-main", "R-E-main", "R-A-main"]
             outcome["tested"] = ["neutral_chooser", "candidate_state", "theme_state",
-                                 "camera_side", "camera_number", "entrance_motion"]
+                                 "camera_side", "camera_number", "entrance_motion",
+                                 "audited_frame_pair", "catalog_asset_route"]
         except Exception as exc:
             outcome["result"] = "FAIL"
             outcome["error"] = repr(exc)

@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 
 from ui.director_work_controls import MODE_LABELS, select_frame_with_effect
+from core.work_kill_assets import list_assets, paired_effect_for_frame
 from core.camera import CAMERA_SIDE_CHOICES
 from core.kill_icons import MOTION_STYLES
 from ui.scene_project import scene_key
@@ -36,6 +37,10 @@ CAMERA_SIDES = {"auto": CAMERA_SIDE_CHOICES["auto"],
 CAMERA_KEYS = {"third_dist": (500.0, 1400.0), "cam_height": (0.0, 900.0),
                "third_yaw": (-180.0, 180.0), "motion_arc": (0.0, 45.0),
                "motion_dolly": (0.0, 15.0)}
+RESEARCH_FRAME_CARDS = (
+    "083/a_simple_main", "004/demacia_frame", "004/noxus_frame",
+    "004/bilgewater_frame",
+)
 
 
 def default_preferences_path() -> Path:
@@ -98,6 +103,18 @@ class Audit29Runtime:
                 "selected": bool(selected and selected[0] == index),
             })
         camera_values = {key: float(app.sl[key].get()) for key in CAMERA_KEYS if key in app.sl}
+        frame_catalog = {item["id"]: item for item in list_assets("frames", review=True)
+                         if item["id"] in RESEARCH_FRAME_CARDS}
+        frame_cards = []
+        for frame_id in RESEARCH_FRAME_CARDS:
+            item = frame_catalog.get(frame_id)
+            if item is None:
+                continue
+            effect = paired_effect_for_frame(frame_id)
+            frame_cards.append({"id": frame_id, "label": item["label"],
+                                "status": item["status"],
+                                "paired_effect_id": effect["id"] if effect else None,
+                                "paired_effect_status": effect["status"] if effect else None})
         return {
             "workspace": {"screen_id": self.screen_id,
                           "candidate_id": SCREENS[self.screen_id]["family"] if self.screen_id else None,
@@ -118,7 +135,7 @@ class Audit29Runtime:
             "frame": {"id": app.var_work_frame.get(), "effect_id": app.var_work_effect.get(),
                       "review": bool(app.var_work_review.get()),
                       "strength": app.var_work_strength.get(),
-                      "motion": app.var_kill_icon_motion.get()},
+                      "motion": app.var_kill_icon_motion.get(), "cards": frame_cards},
             "preview": {"mirror_requested": bool(app.var_mirror.get()),
                         "fx_enabled": bool(app.var_live.get()),
                         "target_hz": app.var_preview_hz.get(),
@@ -174,6 +191,8 @@ class Audit29Runtime:
             app.lb_kills.selection_clear(0, "end")
             app.lb_kills.selection_set(index)
             app.on_scene_selection()
+        elif action == "jump_selected":
+            app.on_jump_selected()
         elif action == "check_scene":
             index = int(data["index"])
             if not 0 <= index < len(app.kills):
@@ -226,6 +245,10 @@ class Audit29Runtime:
             (app.var_pre if key == "pre" else app.var_post).set(value)
         elif action == "frame":
             select_frame_with_effect(app, str(data["id"]))
+        elif action == "work_gallery":
+            app._open_work_gallery()
+        elif action == "work_settings":
+            app._open_work_kill_settings()
         elif action == "effect_strength":
             value = str(data["value"])
             if value not in ("weak", "strong"):

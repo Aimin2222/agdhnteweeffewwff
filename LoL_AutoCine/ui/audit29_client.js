@@ -45,6 +45,8 @@
   }
   function invoke(name, data) { action(name,data).catch(error => message(error.message)); }
   const image = document.querySelector('.preview-stage img.game-image');
+  const decorativeFrame = document.querySelector('.preview-stage img.frame-overlay');
+  if (decorativeFrame) decorativeFrame.style.display = 'none';
   if (image) {
     image.removeAttribute('src');
     image.alt = '実LoLミラー映像は接続後に表示します';
@@ -61,6 +63,10 @@
     if (tag) tag.textContent = data.preview.mirror_requested ?
       `ミラー実測 ${data.preview.measured_fps} fps / 目標 ${data.preview.target_hz}` :
       'LoLミラー未接続・静止イラストは表示しません';
+    const footnote = document.querySelector('footer.footnote span');
+    if (footnote) footnote.textContent = 'UI比較版・実際の操作は既存AutoCineに反映 / LoL未接続時は映像を表示しません';
+    const countLabel = document.querySelector('.scene-list .panel-head + button + p');
+    if (countLabel) countLabel.textContent = `検出 ${data.scenes.length}件 / 出力チェック ${data.checked_count}件`;
     document.querySelectorAll('[data-ui^="scene-card-"]').forEach((card, position) => {
       const scene = data.scenes[position];
       if (!scene) { card.style.display = 'none'; return; }
@@ -71,9 +77,35 @@
       if (time) time.textContent = `${Math.floor(scene.time/60)}:${String(Math.floor(scene.time%60)).padStart(2,'0')}`;
       const side = card.querySelector('.side');
       if (side) side.textContent = scene.side || '—';
+      const title = card.querySelector('strong');
+      if (title) title.textContent = scene.multikill >= 3 ? 'トリプルキル' :
+        scene.multikill === 2 ? 'ダブルキル' : 'キル';
       const check = card.querySelector('.check');
       if (check) { check.textContent = scene.checked ? '✓' : ''; check.classList.toggle('checked', scene.checked); }
     });
+    document.querySelectorAll('[data-ui^="material-card-"]').forEach((card, index) => {
+      const entry = data.frame.cards[index];
+      if (!entry) { card.style.display = 'none'; return; }
+      card.style.display = '';
+      card.dataset.frameId = entry.id;
+      card.classList.toggle('selected', data.frame.id === entry.id);
+      const label = card.querySelector('h3');
+      if (label) label.textContent = entry.label;
+      const badge = card.querySelector('.badge');
+      if (badge) {
+        badge.textContent = entry.status === 'approved' ? '✓ 枠のみ正式合格' : '△ 確認用';
+        badge.classList.toggle('ok',entry.status === 'approved');
+        badge.classList.toggle('warn',entry.status !== 'approved');
+      }
+      const thumbnail = card.querySelector('img.frame-thumb');
+      if (thumbnail && thumbnail.dataset.frameId !== entry.id) {
+        thumbnail.src = endpoint(`/api/asset/${encodeURIComponent(entry.id)}`);
+        thumbnail.alt = `${entry.label} の監査済み原本`;
+        thumbnail.dataset.frameId = entry.id;
+      }
+    });
+    document.querySelectorAll('.motion-grid .motion').forEach(card =>
+      card.classList.toggle('selected',card.textContent.trim().includes(data.frame.motion)));
     document.querySelectorAll('[data-setting]').forEach(input => {
       if (document.activeElement === input) return;
       const key = input.dataset.setting;
@@ -103,6 +135,16 @@
     ['従来の手動カメラ','manual'], ['固定視点＋自動構図補正','fixed_auto'],
     ['フルオートシネマ','full_auto']
   ];
+  const motionLabels = new Map([
+    ['一気に表示','instant'],['左から登場','slide_left'],['右から登場','slide_right'],
+    ['下から登場','slide_up'],['上から登場','slide_down'],['パッと飛び出す','pop']
+  ]);
+  const cameraStyles = new Map([
+    ['三人称シネマ','third_cinema'],['三人称','third'],['Geo Aim','geo_aim'],
+    ['シネマ','cinema'],['FPS風','fps'],['Orbit','orbit'],
+    ['Lolnamシネマ','lolnam_cinema'],['Follow','follow'],
+    ['俯瞰シネマ','cinema_top'],['俯瞰','top']
+  ]);
   function chooseExport() {
     const veil=document.createElement('div');
     veil.style.cssText='position:fixed;inset:0;background:#071321aa;z-index:3000;' +
@@ -142,6 +184,10 @@
     if (/^■?\s*停止$/.test(label)) return ['preview_stop'];
     if (/動画を作成|書き出す/.test(label)) return ['export_menu'];
     if (/ログ|診断/.test(label)) return ['diagnostics'];
+    if (/選択シーンへ移動/.test(label)) return ['jump_selected'];
+    if (/図鑑の全候補を見る/.test(label)) return ['work_gallery'];
+    if (/FX設定/.test(label)) return ['work_settings'];
+    if (/カメラ＋Work素材一括QA/.test(label)) return ['camera_qa'];
     if (/全選択/.test(label)) return ['check_all'];
     if (/全解除/.test(label)) return ['uncheck_all'];
     if (/\bBLUE\b/.test(label)) return ['camera_side',{value:'BLUE'}];
@@ -167,6 +213,24 @@
     if (camera) {
       const match = modeLabels.find(([label]) => camera.textContent.includes(label));
       if (match) invoke('camera_mode',{value:match[1]});
+      return;
+    }
+    const motion = event.target.closest('.motion-grid .motion');
+    if (motion) {
+      const found = [...motionLabels].find(([label])=>motion.textContent.includes(label));
+      if (found) invoke('motion',{value:found[1]});
+      return;
+    }
+    const frameCard = event.target.closest('[data-ui^="material-card-"]');
+    if (frameCard?.dataset.frameId) {
+      invoke('frame',{id:frameCard.dataset.frameId});
+      return;
+    }
+    const preset = event.target.closest('.style-tiles .preset');
+    if (preset) {
+      const found=[...cameraStyles].find(([label])=>preset.textContent.trim()===label);
+      if (found) invoke('camera_style',{value:found[1]});
+      else message('このカメラカードの接続は未完了です');
       return;
     }
     const button = event.target.closest('button');
