@@ -13,11 +13,12 @@
 - ソース版WebView2の非表示ウィンドウで12候補の選択画面を確認。
 - 凍結版UI29 EXEのバックエンド起動、29画面インベントリ読込、WebView2の12候補描画を確認。
 - ポータブルZIPのファイル検査、EXEのバックエンド起動、Captureワーカー起動はビルドスクリプトで確認する。
-- 29画面のうち新18画面と旧テストAの計19画面は部分実装。旧10画面は未実装のまま選択画面に明示し、押せる画像だけの画面として合格扱いしない。
+- 29画面のうち新18画面と旧テストAの計19画面は部分実装。旧10画面は監査矩形に基づく編集可能なHTML/CSSとして再構成し、12候補すべてを選択可能にした。各候補は同じApp操作へ接続するが、外観と全操作は未合格。
+- オフラインの原画像・実装画像・50%重ね・差分・寸法比較を29画面で取得。旧10画面はすべて矩形許容内だが、RGB差が大きい。`MEASURED` は画像合格ではない。
 - LoL実接続、BLUE/RED、TargetLock、FX、WGC、GPU/NVENC、ゲーム音、MP4書き出し、125% DPI、他PCのWebView2 Runtimeは未検証。友達への完成版としての配布判定は保留。
 
 ## 配布物
 
-ビルドコマンドは `tools/build_portable_ui.py --audio-helper <既存MSVC製ヘルパー> --output <出力先>`。ZIPに現行9画面のEXE、UI29比較EXE、キャプチャワーカー、アセット、UI29のHTML/CSS/JS、監査インベントリを入れる。Microsoft Edge WebView2 Runtimeを必要とし、現時点では固定版ランタイムをZIPに同梱していない。WebView2がない友達のPCへのインストール不要性は未達。
+ビルドコマンドは `tools/build_portable_ui.py --audio-helper <既存MSVC製ヘルパー> --output <出力先>`。ZIPに現行9画面のEXE、UI29比較EXE、キャプチャワーカー、アセット、UI29のHTML/CSS/JS、監査インベントリを入れる。Microsoft Edge WebView2 Runtimeを必要とする。公式Fixed Versionを展開済みなら `--webview2-fixed-folder <msedgewebview2.exeを含むフォルダ>` で同梱できるが、現時点ではランタイムを取得・同梱したビルドとRuntime未導入PCでの動作確認は未実施。Fixed Version v120以降のWindows 10ではフォルダのApp Container用読み取り・実行権限も要確認。WebView2がない友達のPCへのインストール不要性は未達。
 
 監査の全29画面・12候補という目標、原画像の比較結果、未完成箇所は `STATUS_JA.md` に維持する。最終採用UIは未選定。

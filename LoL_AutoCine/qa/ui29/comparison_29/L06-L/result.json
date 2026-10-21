@@ -1,0 +1,297 @@
+{
+  "screen_id": "L06-L",
+  "family": "legacy06",
+  "reference_sha256": "e10eae85fb3d5ba56f5d4a365a79060a95e0f91ac036a0f5c09e1bf914e4f6b6",
+  "reference_size": [
+    1672,
+    941
+  ],
+  "capture_size": [
+    1672,
+    941
+  ],
+  "size_result": "PASS",
+  "visual_result": "MEASURED",
+  "functional_result": "NOT_RUN",
+  "dynamic_image_mask": [
+    444.0,
+    106.46875,
+    873,
+    491.0625
+  ],
+  "unmasked_rgb_mae": 54.1886,
+  "regions": [
+    {
+      "region": "header",
+      "rgb_mae": 28.1822
+    },
+    {
+      "region": "material-library",
+      "rgb_mae": 87.8324
+    },
+    {
+      "region": "preview-panel",
+      "rgb_mae": 83.1304
+    },
+    {
+      "region": "preview-stage",
+      "rgb_mae": 14.9446
+    },
+    {
+      "region": "preview-controls",
+      "rgb_mae": 184.8776
+    },
+    {
+      "region": "edit-links",
+      "rgb_mae": 25.3339
+    },
+    {
+      "region": "inspector",
+      "rgb_mae": 92.0503
+    },
+    {
+      "region": "output",
+      "rgb_mae": 24.6604
+    },
+    {
+      "region": "timeline",
+      "rgb_mae": 23.2812
+    },
+    {
+      "region": "proceed",
+      "rgb_mae": 106.6264
+    }
+  ],
+  "bounds": [
+    {
+      "region": "header",
+      "result": "PASS",
+      "expected": [
+        0,
+        0,
+        1672,
+        52
+      ],
+      "actual": [
+        0,
+        0,
+        1672,
+        52
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "material-library",
+      "result": "PASS",
+      "expected": [
+        10,
+        56,
+        416,
+        674
+      ],
+      "actual": [
+        10,
+        56,
+        416,
+        674
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "preview-panel",
+      "result": "PASS",
+      "expected": [
+        438,
+        56,
+        879,
+        598
+      ],
+      "actual": [
+        438,
+        56,
+        879,
+        598
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "preview-stage",
+      "result": "PASS",
+      "expected": [
+        444,
+        101,
+        873,
+        502
+      ],
+      "actual": [
+        444,
+        101,
+        873,
+        502
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "preview-controls",
+      "result": "PASS",
+      "expected": [
+        444,
+        603,
+        873,
+        46
+      ],
+      "actual": [
+        444,
+        603,
+        873,
+        46
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "edit-links",
+      "result": "PASS",
+      "expected": [
+        438,
+        663,
+        879,
+        67
+      ],
+      "actual": [
+        438,
+        663,
+        879,
+        67
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "inspector",
+      "result": "PASS",
+      "expected": [
+        1326,
+        56,
+        336,
+        543
+      ],
+      "actual": [
+        1326,
+        56,
+        336,
+        543
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "output",
+      "result": "PASS",
+      "expected": [
+        1326,
+        606,
+        336,
+        124
+      ],
+      "actual": [
+        1326,
+        606,
+        336,
+        124
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "timeline",
+      "result": "PASS",
+      "expected": [
+        10,
+        741,
+        1652,
+        190
+      ],
+      "actual": [
+        10,
+        741,
+        1652,
+        190
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "proceed",
+      "result": "PASS",
+      "expected": [
+        1501,
+        824,
+        144,
+        60
+      ],
+      "actual": [
+        1501,
+        824,
+        144,
+        60
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    }
+  ]
+}

@@ -17,6 +17,7 @@ from core.kill_icons import MOTION_STYLES
 from core.players import norm
 from ui.scene_project import scene_key
 from ui.hud_presets import HUD_MODES
+from ui.legacy_reconstruct import SCREEN_IDS as RECONSTRUCTED_SCREEN_IDS
 
 
 AUDIT = Path(__file__).resolve().parents[1] / "design" / "ui" / "implementation_audit_29_20261021"
@@ -129,7 +130,9 @@ class Audit29Runtime:
                           "theme": self.theme,
                           "screens": [{"id": x["id"], "family": x["family"],
                                        "name": x["family_name"],
-                                       "implemented": "html" in x or x["id"] in LEGACY_RECONSTRUCTIONS}
+                                       "implemented": "html" in x or x["id"] in LEGACY_RECONSTRUCTIONS
+                                                      or x["id"] in RECONSTRUCTED_SCREEN_IDS,
+                                       "implementation_status": "partial"}
                                       for x in SCREENS.values()]},
             "replay": {"connected": bool(app.players),
                        "player_count": len(app.players),

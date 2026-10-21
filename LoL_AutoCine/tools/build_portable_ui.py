@@ -48,6 +48,7 @@ def validate_bundle(bundle: Path) -> None:
         "_internal/design/ui/implementation_audit_29_20261021/SCREENS_29.json",
         "_internal/design/ui/ui_rethink_20261021/ui.css",
         "_internal/design/ui/ui29_legacy/legacy.css",
+        "_internal/design/ui/ui29_legacy/reconstructed.css",
         "_internal/ui/audit29_client.js",
     )
     missing = [name for name in required if not (bundle / name).is_file()]
@@ -63,6 +64,8 @@ def main() -> None:
     parser.add_argument("--audio-helper", type=Path, required=True, help="MSVC-built lol_audio_helper.exe")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--package-only", action="store_true", help="Reuse already built EXEs")
+    parser.add_argument("--webview2-fixed-folder", type=Path,
+                        help="Optional extracted official WebView2 Fixed Version folder")
     args = parser.parse_args()
     helper = args.audio_helper.resolve()
     if not helper.is_file() or helper.name.lower() != "lol_audio_helper.exe":
@@ -107,6 +110,11 @@ def main() -> None:
     shutil.copy2(APP / "ui" / "audit29_client.js", internal / "ui" / "audit29_client.js")
     (internal / "tools" / "bin").mkdir(parents=True, exist_ok=True)
     shutil.copy2(helper, internal / "tools" / "bin" / helper.name)
+    if args.webview2_fixed_folder:
+        fixed = args.webview2_fixed_folder.resolve()
+        if not (fixed / "msedgewebview2.exe").is_file():
+            parser.error("--webview2-fixed-folder must contain msedgewebview2.exe")
+        copy_tree(fixed, bundle / "WebView2Fixed")
     guide = APP / "docs" / "ui_integration_20261020" / "TEST_GUIDE_JA.md"
     shutil.copy2(guide, bundle / "TEST_GUIDE_JA.md")
     for name in ("settings.json", "diagnostics"):
@@ -119,7 +127,9 @@ def main() -> None:
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=APP, text=True).strip()
     manifest = {"kind": "working AutoCine UI comparison", "layouts": list(range(1, 10)),
                 "ui29_total_screens": 29, "ui29_groups": 12,
-                "ui29_implemented_screens": 19,
+                "ui29_partially_interactive_screens": 29,
+                "ui29_accepted_screens": 0,
+                "webview2_fixed_included": bool(args.webview2_fixed_folder),
                 "source_commit": commit,
                 "audio_helper_sha256": helper_hash,
                 "note": "LoL/WGC/NVENC/audio require Windows hardware validation."}
@@ -128,9 +138,12 @@ def main() -> None:
         "LoL AutoCine UI比較テスト版（実動作・検証用）\n"
         "LoL_AutoCine.exe は現行の配置1～9です。従来のBAT起動もこの経路です。\n"
         "LoL_AutoCine_UI29.exe はWebView2内蔵のUI29比較版です。ブラウザ操作は不要です。\n"
-        "UI29は19/29画面が部分実装、旧10画面とLoL実機検証は未完了です。\n"
-        "WindowsのMicrosoft Edge WebView2 Runtimeが必要です。\n"
-        "同梱のLoL_AutoCine_Capture.exeはミラー用です。削除しないでください。\n"
+        "UI29は29画面を操作できる途中版ですが、外観と全操作の合格は未完了です。\n"
+        "LoL実機検証は未完了です。\n"
+        + ("WebView2 Fixed Runtimeを同梱しています。Windows 10のフォルダ権限要件も確認してください。\n"
+           if args.webview2_fixed_folder else
+           "WindowsのMicrosoft Edge WebView2 Runtimeが必要です（このZIPには未同梱）。\n")
+        + "同梱のLoL_AutoCine_Capture.exeはミラー用です。削除しないでください。\n"
         "リプレイ接続・NVENC・ゲーム音声は各PCで実機確認が必要です。\n"
         "操作順はGitHubのdocs/ui_integration_20261020/TEST_GUIDE_JA.mdを参照してください。\n",
         encoding="utf-8")

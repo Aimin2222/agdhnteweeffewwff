@@ -108,6 +108,13 @@
     if (tag) tag.textContent = data.preview.mirror_requested ?
       `ミラー実測 ${data.preview.measured_fps} fps / 目標 ${data.preview.target_hz}` :
       'LoLミラー未接続・静止イラストは表示しません';
+    document.querySelectorAll('.connection-state').forEach(label=>{
+      label.textContent=data.replay.connected?'接続中':'LoL未接続';
+    });
+    document.querySelectorAll('[data-ui="output-fps"]').forEach(label=>{
+      label.textContent=/fps/i.test(String(data.output.fps)) ?
+        String(data.output.fps) : `${data.output.fps} fps`;
+    });
     const footnote = document.querySelector('footer.footnote span');
     if (footnote) footnote.textContent = 'UI比較版・実際の操作は既存AutoCineに反映 / LoL未接続時は映像を表示しません';
     const scanStatus=document.querySelector('[data-ui="scan-status"]');
@@ -337,6 +344,10 @@
     panel.append(cancel);veil.append(panel);document.body.append(veil);
   }
   function operation(button) {
+    if (button.dataset.action) {
+      const name=button.dataset.action;
+      return [name,button.dataset.actionValue?{value:button.dataset.actionValue}:{}];
+    }
     const label = button.textContent.trim().replace(/\s+/g,' ');
     if (button.closest('.bottom-panel .tabs')) {
       const zones={'シーン':'scene','カメラ':'camera','色・FX':'fx','出力':'output'};
@@ -434,7 +445,10 @@
     const button = event.target.closest('button');
     if (!button) return;
     const found = operation(button);
-    if (found?.[0] === 'export_menu') chooseExport();
+    if (found?.[0] === 'choose_screen') location.assign(endpoint('/choose'));
+    else if (found?.[0] === 'screen') action('screen',{id:button.dataset.actionValue})
+      .then(()=>openScreen(button.dataset.actionValue)).catch(e=>message(e.message));
+    else if (found?.[0] === 'export_menu') chooseExport();
     else if (found?.[0] === 'project_menu') chooseProjectOperation();
     else if (found) invoke(found[0],found[1]);
     else message('この操作の実機接続は未完了です。動作済みとは扱いません。');
@@ -460,7 +474,6 @@
   for (const [family,id] of familyStart) {
     const option=document.createElement('option');option.value=id;
     option.textContent=family + (family.startsWith('research') || family==='testA'?'':'（再構成中）');
-    option.disabled=!(family.startsWith('research') || family==='testA');
     picker.append(option);
   }
   picker.value='R-A-main';

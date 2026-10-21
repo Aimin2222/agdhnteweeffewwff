@@ -17,6 +17,7 @@ import threading
 from urllib.parse import parse_qs, unquote, urlparse
 
 from ui.audit29_runtime import Audit29Runtime, SCREENS, LEGACY_RECONSTRUCTIONS
+from ui.legacy_reconstruct import SCREEN_IDS as RECONSTRUCTED_SCREEN_IDS, render_legacy
 
 
 DESIGN = Path(__file__).resolve().parents[1] / "design" / "ui" / "ui_rethink_20261021"
@@ -69,7 +70,8 @@ class UI29Server:
     def url(self):
         route = (f"/ui/{self.runtime.screen_id}"
                  if self.runtime.screen_id and ("html" in SCREENS[self.runtime.screen_id]
-                                                or self.runtime.screen_id in LEGACY_RECONSTRUCTIONS)
+                                                or self.runtime.screen_id in LEGACY_RECONSTRUCTIONS
+                                                or self.runtime.screen_id in RECONSTRUCTED_SCREEN_IDS)
                  else "/choose")
         return f"http://127.0.0.1:{self.http.server_port}{route}?token={self.token}"
 
@@ -115,9 +117,9 @@ class UI29Server:
                     for row in SCREENS.values():
                         families.setdefault(row["family"], row)
                     buttons = "".join(
-                        f'<button data-id="{row["id"]}" {"" if "html" in row or row["id"] in LEGACY_RECONSTRUCTIONS else "disabled"}>'
+                        f'<button data-id="{row["id"]}">'
                         f'{row["family_name"]} <small>{row["id"]}</small>'
-                        f'{"" if "html" in row or row["id"] in LEGACY_RECONSTRUCTIONS else " — 再構成中"}</button>'
+                        f'{" — 再構成中" if row["id"] in RECONSTRUCTED_SCREEN_IDS else " — 検証中"}</button>'
                         for row in families.values())
                     html = '''<!doctype html><html lang="ja"><meta charset="utf-8">
 <title>AutoCine UI候補を選ぶ</title><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -128,7 +130,7 @@ button{min-height:72px;padding:14px;border:1px solid #6c7d90;border-radius:8px;b
 button:hover:not(:disabled){border:2px solid #245fab;background:#d7e6fc}button:disabled{opacity:.6;cursor:not-allowed}
 small{display:block;color:#465a6f}#status{min-height:24px;color:#a33}</style>
 <main><h1>LoL AutoCine — UI比較候補</h1><p>12候補・29画面は未採用です。選択してもシーンやカメラ設定を初期化しません。</p>
-<p>旧11画面は順次再構成中。旧テストAと新A〜Fは共通Appへ接続し、未接続機能を明示します。</p>
+<p>旧10画面は原画像の領域から再構成中です。全候補が共通Appを使い、未接続機能は明示します。</p>
 <section>''' + buttons + '''</section><p id="status"></p></main><script>
 const token=''' + json.dumps(owner.token) + ''';
 document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>button.onclick=async()=>{
@@ -168,17 +170,22 @@ document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>butt
                     screen = SCREENS.get(screen_id)
                     if screen is None:
                         return self._json(404, {"error": "unknown screen"})
-                    if "html" not in screen and screen_id not in LEGACY_RECONSTRUCTIONS:
+                    if ("html" not in screen and screen_id not in LEGACY_RECONSTRUCTIONS
+                            and screen_id not in RECONSTRUCTED_SCREEN_IDS):
                         return self._json(501, {"error": "旧画面の編集可能なHTMLは監査資料にありません。再構成は未完了です", "screen_id": screen_id})
-                    source = ((LEGACY_DESIGN / LEGACY_RECONSTRUCTIONS[screen_id])
-                              if screen_id in LEGACY_RECONSTRUCTIONS else DESIGN / screen["html"])
-                    html = source.read_text(encoding="utf-8")
+                    if screen_id in RECONSTRUCTED_SCREEN_IDS:
+                        html = render_legacy(screen)
+                    else:
+                        source = ((LEGACY_DESIGN / LEGACY_RECONSTRUCTIONS[screen_id])
+                                  if screen_id in LEGACY_RECONSTRUCTIONS else DESIGN / screen["html"])
+                        html = source.read_text(encoding="utf-8")
                     html = html.replace('<script src="ui.js"></script>',
                         f'<script>window.AUTOCINE_TOKEN={json.dumps(owner.token)};'
                         f'window.AUTOCINE_SCREEN={json.dumps(screen_id)};</script>'
                         '<script src="/runtime/client.js?token=' + owner.token + '"></script>')
                     html = html.replace('href="ui.css"', f'href="/static/ui.css?token={owner.token}"')
                     html = html.replace('href="legacy.css"', f'href="/static/legacy/legacy.css?token={owner.token}"')
+                    html = html.replace('href="reconstructed.css"', f'href="/static/legacy/reconstructed.css?token={owner.token}"')
                     html = html.replace('src="assets/', f'src="/static/assets/')
                     if parse_qs(urlparse(self.path).query).get("measure") == ["1"]:
                         # Read-only DOM bounds for reproducible offline layout QA.

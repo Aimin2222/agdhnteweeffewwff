@@ -131,16 +131,18 @@ def review(entry: dict, capture: Path, output: Path, bounds: Path | None = None)
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--capture-dir", type=Path, help="<画面ID>.pngを29枚置いた実装キャプチャフォルダ")
-    parser.add_argument("--bounds-dir", type=Path, help="<画面ID>.jsonのDOM/Tk矩形実測フォルダ")
+    parser.add_argument("--capture-dir", type=Path, action="append", help="<画面ID>.pngを置いた実装キャプチャフォルダ。複数指定可")
+    parser.add_argument("--bounds-dir", type=Path, action="append", help="<画面ID>.jsonのDOM/Tk矩形実測フォルダ。複数指定可")
     parser.add_argument("--output", type=Path, default=ROOT / "qa" / "ui29" / "review")
     args = parser.parse_args(argv)
     screens = load_inventory()
     rows = []
     for entry in screens:
-        capture = args.capture_dir / f"{entry['id']}.png" if args.capture_dir else None
+        capture = next((directory / f"{entry['id']}.png" for directory in args.capture_dir or []
+                        if (directory / f"{entry['id']}.png").is_file()), None)
         if capture and capture.is_file():
-            bounds = args.bounds_dir / f"{entry['id']}.json" if args.bounds_dir else None
+            bounds = next((directory / f"{entry['id']}.json" for directory in args.bounds_dir or []
+                           if (directory / f"{entry['id']}.json").is_file()), None)
             rows.append(review(entry, capture, args.output / entry["id"], bounds))
         else:
             rows.append({"screen_id": entry["id"], "family": entry["family"],

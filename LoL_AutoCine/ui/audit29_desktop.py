@@ -7,6 +7,7 @@ Both processes ship in the same portable EXE, and no external browser opens.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -17,6 +18,15 @@ from urllib.request import Request, urlopen
 
 
 APP = Path(__file__).resolve().parents[1]
+
+
+def _select_fixed_webview2_runtime() -> Path | None:
+    """Use an optional official Fixed Version runtime beside the portable EXE."""
+    folder = Path(sys.executable).resolve().parent / "WebView2Fixed"
+    if getattr(sys, "frozen", False) and (folder / "msedgewebview2.exe").is_file():
+        os.environ["WEBVIEW2_BROWSER_EXECUTABLE_FOLDER"] = str(folder)
+        return folder
+    return None
 
 
 def _child_command(handoff: Path) -> list[str]:
@@ -110,6 +120,7 @@ def _launch(*, smoke: bool, window_smoke: bool = False) -> None:
                     if len(state["workspace"]["screens"]) != 29:
                         raise RuntimeError("UI29 inventory missing in desktop backend")
                     return
+                _select_fixed_webview2_runtime()
                 import webview
                 webview.settings["OPEN_EXTERNAL_LINKS_IN_BROWSER"] = False
                 if window_smoke:

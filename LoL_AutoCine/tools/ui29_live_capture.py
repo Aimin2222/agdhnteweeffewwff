@@ -23,6 +23,7 @@ from ui29_source_baseline import EDGE_PATHS
 sys.path.insert(0, str(ROOT))
 from legacy_app import App
 from ui.audit29_server import UI29Server
+from ui.legacy_reconstruct import SCREEN_IDS as RECONSTRUCTED_SCREEN_IDS
 
 
 def main(argv=None):
@@ -30,7 +31,9 @@ def main(argv=None):
     parser.add_argument("--edge", type=Path, default=next((p for p in EDGE_PATHS if p.is_file()), None))
     parser.add_argument("--output", type=Path, default=ROOT / "qa" / "ui29" / "live_offline")
     parser.add_argument("--screen", help="capture one implemented audited screen for a quick check")
+    parser.add_argument("--legacy-only", action="store_true", help="capture the ten raster reconstructions")
     args = parser.parse_args(argv)
+    args.output = args.output.resolve()
     if not args.edge or not args.edge.is_file():
         parser.error("Microsoft Edge executable was not found")
     args.output.mkdir(parents=True, exist_ok=True)
@@ -43,7 +46,7 @@ def main(argv=None):
     completed = threading.Event()
     results = []
     implemented = [screen for screen in load_inventory()
-                   if screen["group"] == "research" or screen["id"] == "T-A-M"]
+                   if not args.legacy_only or screen["id"] in RECONSTRUCTED_SCREEN_IDS]
 
     def activate(action, data):
         url = f"http://127.0.0.1:{server.http.server_port}/api/action?token={server.token}"
@@ -70,7 +73,8 @@ def main(argv=None):
                                    "--no-default-browser-check", "--hide-scrollbars",
                                    "--virtual-time-budget=2500", f"--user-data-dir={profile}",
                                    f"--window-size={width},{height}", f"--screenshot={capture}", url]
-                        run = subprocess.run(command, timeout=60, capture_output=True, text=True)
+                        run = subprocess.run(command, timeout=60, capture_output=True, text=True,
+                                             encoding="utf-8", errors="replace")
                     if not capture.is_file() or capture.stat().st_size == 0:
                         raise RuntimeError(f"Edge capture failed ({run.returncode}): {run.stderr[-400:]}")
                     # Use the same live route for a separate, read-only DOM measurement.

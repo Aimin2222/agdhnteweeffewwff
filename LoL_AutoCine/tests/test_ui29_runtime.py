@@ -5,7 +5,6 @@ from pathlib import Path
 import sys
 from tempfile import TemporaryDirectory
 import unittest
-from urllib.error import HTTPError
 from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -147,7 +146,7 @@ class Audit29RuntimeTests(unittest.TestCase):
             Audit29Runtime(app, Path(directory) / "workspace.json").perform("connect")
         self.assertEqual(called, ["connect"])
 
-    def test_local_server_uses_editable_source_and_rejects_old_placeholder(self):
+    def test_local_server_uses_editable_source_and_reconstructs_old_screens(self):
         with TemporaryDirectory(dir=ROOT / "qa") as directory:
             server = UI29Server(App(), Path(directory) / "workspace.json")
             try:
@@ -168,9 +167,24 @@ class Audit29RuntimeTests(unittest.TestCase):
                 self.assertIn('/static/legacy/legacy.css', legacy_html)
                 screen_rows = server.runtime.snapshot()["workspace"]["screens"]
                 self.assertTrue(next(row for row in screen_rows if row["id"] == "T-A-M")["implemented"])
-                with self.assertRaises(HTTPError) as error:
-                    urlopen(server.url.replace("T-A-M", "L02-M"), timeout=5)
-                self.assertEqual(error.exception.code, 501)
+                for old_id in ("L02-M", "L03-N", "L03-D", "L05-M", "L06-L", "L06-E",
+                               "T-B-M", "T-B-S", "T-B-C", "T-B-F"):
+                    server.runtime.select_screen(old_id)
+                    with urlopen(server.url, timeout=5) as response:
+                        reconstructed = response.read().decode("utf-8")
+                    self.assertIn('data-ui="preview-stage"', reconstructed)
+                    self.assertIn('data-ui="timeline"', reconstructed)
+                    self.assertIn('/static/legacy/reconstructed.css', reconstructed)
+                    self.assertIn('/runtime/client.js', reconstructed)
+                    self.assertNotIn('<script src="ui.js"></script>', reconstructed)
+                    if old_id in {"L03-N", "L03-D"}:
+                        self.assertIn('data-action-value="L03-N"', reconstructed)
+                        self.assertIn('data-action-value="L03-D"', reconstructed)
+                    if old_id.startswith("T-B-"):
+                        for target in ("T-B-M", "T-B-S", "T-B-C", "T-B-F"):
+                            self.assertIn(f'data-action-value="{target}"', reconstructed)
+                    self.assertTrue(next(row for row in server.runtime.snapshot()["workspace"]["screens"]
+                                         if row["id"] == old_id)["implemented"])
             finally:
                 server.close()
 

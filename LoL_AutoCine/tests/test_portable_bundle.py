@@ -18,6 +18,7 @@ def test_portable_bundle_requires_version_and_runtime_tools(tmp_path):
         "_internal/design/ui/implementation_audit_29_20261021/SCREENS_29.json",
         "_internal/design/ui/ui_rethink_20261021/ui.css",
         "_internal/design/ui/ui29_legacy/legacy.css",
+        "_internal/design/ui/ui29_legacy/reconstructed.css",
         "_internal/ui/audit29_client.js",
     ]
     for name in paths:
