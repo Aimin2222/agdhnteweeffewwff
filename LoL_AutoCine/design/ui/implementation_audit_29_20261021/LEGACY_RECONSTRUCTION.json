@@ -1,0 +1,3849 @@
+{
+  "L02-M": {
+    "regions": [
+      {
+        "id": "header",
+        "rect": [
+          0,
+          0,
+          1672,
+          52
+        ],
+        "role": "上部バー／出力・基本設定",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "library",
+        "rect": [
+          10,
+          56,
+          406,
+          666
+        ],
+        "role": "素材タブ・シーン一覧",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-panel",
+        "rect": [
+          424,
+          56,
+          880,
+          520
+        ],
+        "role": "固定ミラーパネル",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-stage",
+        "rect": [
+          440,
+          96,
+          850,
+          423
+        ],
+        "role": "ライブ映像の表示面",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-controls",
+        "rect": [
+          440,
+          519,
+          850,
+          41
+        ],
+        "role": "ミラー／演出の操作",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-cards",
+        "rect": [
+          434,
+          578,
+          860,
+          141
+        ],
+        "role": "カメラ画像選択",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "inspector",
+        "rect": [
+          1310,
+          56,
+          352,
+          520
+        ],
+        "role": "設定（独立スクロール）",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "output",
+        "rect": [
+          1310,
+          581,
+          352,
+          142
+        ],
+        "role": "出力設定要約",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "timeline",
+        "rect": [
+          10,
+          730,
+          1652,
+          200
+        ],
+        "role": "固定タイムライン／トリム",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      }
+    ],
+    "controls": [
+      {
+        "id": "L02-M-C000",
+        "label": "基本設定：GPU／音声／HUD／TargetLock／37バッジ",
+        "type": "settings-group",
+        "rect": [
+          1020,
+          7,
+          535,
+          32
+        ],
+        "binding": "F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L02-M-C001",
+        "label": "書き出し／動画作成",
+        "type": "button",
+        "rect": [
+          1527,
+          7,
+          132,
+          34
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L02-M-C002",
+        "label": "ミラー開始／停止；演出プレビュー再生／停止",
+        "type": "transport",
+        "rect": [
+          440,
+          519,
+          850,
+          41
+        ],
+        "binding": "F08/F09",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L02-M-C003",
+        "label": "カメラ画像選択",
+        "type": "composite",
+        "rect": [
+          434,
+          578,
+          860,
+          141
+        ],
+        "binding": "F11",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L02-M-C004",
+        "label": "固定タイムライン／トリム",
+        "type": "composite",
+        "rect": [
+          10,
+          730,
+          1652,
+          200
+        ],
+        "binding": "F17",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L02-M-C005",
+        "label": "出力設定要約",
+        "type": "composite",
+        "rect": [
+          1310,
+          581,
+          352,
+          142
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L02-M-C006",
+        "label": "設定（独立スクロール）",
+        "type": "navigation/inspector",
+        "rect": [
+          1310,
+          56,
+          352,
+          520
+        ],
+        "binding": "F10/F12/F18/F22",
+        "evidence": "raster reconstruction contract"
+      }
+    ],
+    "component_contract_native": {
+      "font": "Yu Gothic UI (reconstruction choice, not identified original font)",
+      "body_px": 16,
+      "secondary_px": 14,
+      "heading_px": 22,
+      "button_height_px": 36,
+      "checkbox_px": 24,
+      "number_input_size": [
+        72,
+        34
+      ],
+      "slider_height_px": 34,
+      "card_radius_px": 6,
+      "panel_radius_px": 10,
+      "border_px": 1,
+      "selected_border_px": 2,
+      "panel_padding_px": 16,
+      "gap_px": 10,
+      "tab_height_px": 38
+    },
+    "observed_neutral_palette": [
+      {
+        "hex": "#FEFEFE",
+        "count": 93011
+      },
+      {
+        "hex": "#FFFFFF",
+        "count": 26919
+      },
+      {
+        "hex": "#FFFEFE",
+        "count": 15796
+      },
+      {
+        "hex": "#FDFDFD",
+        "count": 15513
+      },
+      {
+        "hex": "#FEFDFD",
+        "count": 11561
+      },
+      {
+        "hex": "#F3F7FD",
+        "count": 6243
+      }
+    ],
+    "measurement": "raster reconstruction; manual region placement, boundary uncertainty up to 8 native pixels; fonts are implementation choices"
+  },
+  "L03-D": {
+    "regions": [
+      {
+        "id": "header",
+        "rect": [
+          0,
+          0,
+          1672,
+          52
+        ],
+        "role": "上部バー／出力・基本設定",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "scene-list",
+        "rect": [
+          10,
+          56,
+          298,
+          662
+        ],
+        "role": "検出シーン・スキャン",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-panel",
+        "rect": [
+          320,
+          53,
+          965,
+          518
+        ],
+        "role": "固定ミラーパネル",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-stage",
+        "rect": [
+          328,
+          91,
+          949,
+          437
+        ],
+        "role": "ライブ映像の表示面",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-controls",
+        "rect": [
+          328,
+          528,
+          949,
+          42
+        ],
+        "role": "ミラー／演出の操作",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-cards",
+        "rect": [
+          320,
+          578,
+          327,
+          141
+        ],
+        "role": "カメラ画像選択",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "frame-cards",
+        "rect": [
+          658,
+          578,
+          352,
+          141
+        ],
+        "role": "キルフレーム画像選択",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "effect-cards",
+        "rect": [
+          1018,
+          578,
+          267,
+          141
+        ],
+        "role": "FX画像選択",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "inspector",
+        "rect": [
+          1294,
+          53,
+          368,
+          526
+        ],
+        "role": "設定（独立スクロール）",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "output",
+        "rect": [
+          1294,
+          587,
+          368,
+          132
+        ],
+        "role": "出力設定要約",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "timeline",
+        "rect": [
+          10,
+          730,
+          1652,
+          200
+        ],
+        "role": "固定タイムライン／トリム",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      }
+    ],
+    "controls": [
+      {
+        "id": "L03-D-C000",
+        "label": "基本設定：GPU／音声／HUD／TargetLock／37バッジ",
+        "type": "settings-group",
+        "rect": [
+          1020,
+          7,
+          535,
+          32
+        ],
+        "binding": "F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-D-C001",
+        "label": "書き出し／動画作成",
+        "type": "button",
+        "rect": [
+          1527,
+          7,
+          132,
+          34
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-D-C002",
+        "label": "試合全体スキャン",
+        "type": "button",
+        "rect": [
+          26,
+          101,
+          266,
+          46
+        ],
+        "binding": "F03",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-D-C003",
+        "label": "検出シーン行（繰り返し）",
+        "type": "scene-card",
+        "rect": [
+          26,
+          201,
+          266,
+          86
+        ],
+        "binding": "F06",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-D-C004",
+        "label": "出力チェック（選択行と独立）",
+        "type": "checkbox",
+        "rect": [
+          32,
+          231,
+          24,
+          24
+        ],
+        "binding": "F07",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-D-C005",
+        "label": "ミラー開始／停止；演出プレビュー再生／停止",
+        "type": "transport",
+        "rect": [
+          328,
+          528,
+          949,
+          42
+        ],
+        "binding": "F08/F09",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-D-C006",
+        "label": "カメラ画像選択",
+        "type": "composite",
+        "rect": [
+          320,
+          578,
+          327,
+          141
+        ],
+        "binding": "F11",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-D-C007",
+        "label": "キルフレーム画像選択",
+        "type": "composite",
+        "rect": [
+          658,
+          578,
+          352,
+          141
+        ],
+        "binding": "F14",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-D-C008",
+        "label": "FX画像選択",
+        "type": "composite",
+        "rect": [
+          1018,
+          578,
+          267,
+          141
+        ],
+        "binding": "F15",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-D-C009",
+        "label": "固定タイムライン／トリム",
+        "type": "composite",
+        "rect": [
+          10,
+          730,
+          1652,
+          200
+        ],
+        "binding": "F17",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-D-C010",
+        "label": "出力設定要約",
+        "type": "composite",
+        "rect": [
+          1294,
+          587,
+          368,
+          132
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-D-C011",
+        "label": "設定（独立スクロール）",
+        "type": "navigation/inspector",
+        "rect": [
+          1294,
+          53,
+          368,
+          526
+        ],
+        "binding": "F10/F12/F18/F22",
+        "evidence": "raster reconstruction contract"
+      }
+    ],
+    "component_contract_native": {
+      "font": "Yu Gothic UI (reconstruction choice, not identified original font)",
+      "body_px": 16,
+      "secondary_px": 14,
+      "heading_px": 22,
+      "button_height_px": 36,
+      "checkbox_px": 24,
+      "number_input_size": [
+        72,
+        34
+      ],
+      "slider_height_px": 34,
+      "card_radius_px": 6,
+      "panel_radius_px": 10,
+      "border_px": 1,
+      "selected_border_px": 2,
+      "panel_padding_px": 16,
+      "gap_px": 10,
+      "tab_height_px": 38
+    },
+    "observed_neutral_palette": [
+      {
+        "hex": "#FEFEFE",
+        "count": 96055
+      },
+      {
+        "hex": "#FDFDFD",
+        "count": 32541
+      },
+      {
+        "hex": "#FFFFFF",
+        "count": 20848
+      },
+      {
+        "hex": "#FEFDFD",
+        "count": 12675
+      },
+      {
+        "hex": "#FEFEFD",
+        "count": 11600
+      },
+      {
+        "hex": "#FFFEFE",
+        "count": 10423
+      }
+    ],
+    "measurement": "raster reconstruction; manual region placement, boundary uncertainty up to 8 native pixels; fonts are implementation choices"
+  },
+  "L03-N": {
+    "regions": [
+      {
+        "id": "header",
+        "rect": [
+          0,
+          0,
+          1672,
+          50
+        ],
+        "role": "上部バー／出力・基本設定",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "scene-list",
+        "rect": [
+          10,
+          52,
+          301,
+          666
+        ],
+        "role": "検出シーン・スキャン",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-panel",
+        "rect": [
+          320,
+          52,
+          995,
+          519
+        ],
+        "role": "固定ミラーパネル",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-stage",
+        "rect": [
+          328,
+          91,
+          977,
+          437
+        ],
+        "role": "ライブ映像の表示面",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-controls",
+        "rect": [
+          328,
+          528,
+          977,
+          42
+        ],
+        "role": "ミラー／演出の操作",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-cards",
+        "rect": [
+          320,
+          578,
+          333,
+          140
+        ],
+        "role": "カメラ画像選択",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "frame-cards",
+        "rect": [
+          660,
+          578,
+          353,
+          140
+        ],
+        "role": "キルフレーム画像選択",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "effect-cards",
+        "rect": [
+          1020,
+          578,
+          295,
+          140
+        ],
+        "role": "FX画像選択",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "inspector",
+        "rect": [
+          1323,
+          52,
+          339,
+          514
+        ],
+        "role": "設定（独立スクロール）",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "output",
+        "rect": [
+          1323,
+          573,
+          339,
+          145
+        ],
+        "role": "出力設定要約",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "timeline",
+        "rect": [
+          10,
+          727,
+          1652,
+          202
+        ],
+        "role": "固定タイムライン／トリム",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      }
+    ],
+    "controls": [
+      {
+        "id": "L03-N-C000",
+        "label": "基本設定：GPU／音声／HUD／TargetLock／37バッジ",
+        "type": "settings-group",
+        "rect": [
+          1020,
+          7,
+          535,
+          32
+        ],
+        "binding": "F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-N-C001",
+        "label": "書き出し／動画作成",
+        "type": "button",
+        "rect": [
+          1527,
+          7,
+          132,
+          34
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-N-C002",
+        "label": "試合全体スキャン",
+        "type": "button",
+        "rect": [
+          26,
+          97,
+          269,
+          46
+        ],
+        "binding": "F03",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-N-C003",
+        "label": "検出シーン行（繰り返し）",
+        "type": "scene-card",
+        "rect": [
+          26,
+          197,
+          269,
+          86
+        ],
+        "binding": "F06",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-N-C004",
+        "label": "出力チェック（選択行と独立）",
+        "type": "checkbox",
+        "rect": [
+          32,
+          227,
+          24,
+          24
+        ],
+        "binding": "F07",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-N-C005",
+        "label": "ミラー開始／停止；演出プレビュー再生／停止",
+        "type": "transport",
+        "rect": [
+          328,
+          528,
+          977,
+          42
+        ],
+        "binding": "F08/F09",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-N-C006",
+        "label": "カメラ画像選択",
+        "type": "composite",
+        "rect": [
+          320,
+          578,
+          333,
+          140
+        ],
+        "binding": "F11",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-N-C007",
+        "label": "キルフレーム画像選択",
+        "type": "composite",
+        "rect": [
+          660,
+          578,
+          353,
+          140
+        ],
+        "binding": "F14",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-N-C008",
+        "label": "FX画像選択",
+        "type": "composite",
+        "rect": [
+          1020,
+          578,
+          295,
+          140
+        ],
+        "binding": "F15",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-N-C009",
+        "label": "固定タイムライン／トリム",
+        "type": "composite",
+        "rect": [
+          10,
+          727,
+          1652,
+          202
+        ],
+        "binding": "F17",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-N-C010",
+        "label": "出力設定要約",
+        "type": "composite",
+        "rect": [
+          1323,
+          573,
+          339,
+          145
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L03-N-C011",
+        "label": "設定（独立スクロール）",
+        "type": "navigation/inspector",
+        "rect": [
+          1323,
+          52,
+          339,
+          514
+        ],
+        "binding": "F10/F12/F18/F22",
+        "evidence": "raster reconstruction contract"
+      }
+    ],
+    "component_contract_native": {
+      "font": "Yu Gothic UI (reconstruction choice, not identified original font)",
+      "body_px": 16,
+      "secondary_px": 14,
+      "heading_px": 22,
+      "button_height_px": 36,
+      "checkbox_px": 24,
+      "number_input_size": [
+        72,
+        34
+      ],
+      "slider_height_px": 34,
+      "card_radius_px": 6,
+      "panel_radius_px": 10,
+      "border_px": 1,
+      "selected_border_px": 2,
+      "panel_padding_px": 16,
+      "gap_px": 10,
+      "tab_height_px": 38
+    },
+    "observed_neutral_palette": [
+      {
+        "hex": "#FDFDFD",
+        "count": 67082
+      },
+      {
+        "hex": "#FEFEFE",
+        "count": 65673
+      },
+      {
+        "hex": "#FDFDFE",
+        "count": 17042
+      },
+      {
+        "hex": "#FEFDFD",
+        "count": 15146
+      },
+      {
+        "hex": "#FEFEFD",
+        "count": 12843
+      },
+      {
+        "hex": "#FFFFFF",
+        "count": 11771
+      }
+    ],
+    "measurement": "raster reconstruction; manual region placement, boundary uncertainty up to 8 native pixels; fonts are implementation choices"
+  },
+  "L05-M": {
+    "regions": [
+      {
+        "id": "header",
+        "rect": [
+          0,
+          0,
+          1672,
+          52
+        ],
+        "role": "上部バー／出力・基本設定",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "step-tabs",
+        "rect": [
+          12,
+          54,
+          1648,
+          54
+        ],
+        "role": "4ステップ",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "scene-list",
+        "rect": [
+          10,
+          116,
+          290,
+          587
+        ],
+        "role": "検出シーン・スキャン",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-panel",
+        "rect": [
+          312,
+          116,
+          892,
+          468
+        ],
+        "role": "固定ミラーパネル",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-stage",
+        "rect": [
+          320,
+          155,
+          877,
+          385
+        ],
+        "role": "ライブ映像の表示面",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-controls",
+        "rect": [
+          320,
+          540,
+          877,
+          43
+        ],
+        "role": "ミラー／演出の操作",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-cards",
+        "rect": [
+          312,
+          592,
+          294,
+          111
+        ],
+        "role": "カメラ画像選択",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "frame-cards",
+        "rect": [
+          615,
+          592,
+          293,
+          111
+        ],
+        "role": "キルフレーム画像選択",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "effect-cards",
+        "rect": [
+          918,
+          592,
+          286,
+          111
+        ],
+        "role": "FX画像選択",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "inspector",
+        "rect": [
+          1215,
+          116,
+          447,
+          487
+        ],
+        "role": "設定（独立スクロール）",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "output",
+        "rect": [
+          1215,
+          611,
+          447,
+          92
+        ],
+        "role": "出力設定要約",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "timeline",
+        "rect": [
+          10,
+          712,
+          1652,
+          168
+        ],
+        "role": "固定タイムライン／トリム",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "step-actions",
+        "rect": [
+          10,
+          885,
+          1652,
+          46
+        ],
+        "role": "戻る／次へ",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      }
+    ],
+    "controls": [
+      {
+        "id": "L05-M-C000",
+        "label": "基本設定：GPU／音声／HUD／TargetLock／37バッジ",
+        "type": "settings-group",
+        "rect": [
+          1020,
+          7,
+          535,
+          32
+        ],
+        "binding": "F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L05-M-C001",
+        "label": "書き出し／動画作成",
+        "type": "button",
+        "rect": [
+          1527,
+          7,
+          132,
+          34
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L05-M-C002",
+        "label": "試合全体スキャン",
+        "type": "button",
+        "rect": [
+          26,
+          161,
+          258,
+          46
+        ],
+        "binding": "F03",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L05-M-C003",
+        "label": "検出シーン行（繰り返し）",
+        "type": "scene-card",
+        "rect": [
+          26,
+          261,
+          258,
+          86
+        ],
+        "binding": "F06",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L05-M-C004",
+        "label": "出力チェック（選択行と独立）",
+        "type": "checkbox",
+        "rect": [
+          32,
+          291,
+          24,
+          24
+        ],
+        "binding": "F07",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L05-M-C005",
+        "label": "ミラー開始／停止；演出プレビュー再生／停止",
+        "type": "transport",
+        "rect": [
+          320,
+          540,
+          877,
+          43
+        ],
+        "binding": "F08/F09",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L05-M-C006",
+        "label": "カメラ画像選択",
+        "type": "composite",
+        "rect": [
+          312,
+          592,
+          294,
+          111
+        ],
+        "binding": "F11",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L05-M-C007",
+        "label": "キルフレーム画像選択",
+        "type": "composite",
+        "rect": [
+          615,
+          592,
+          293,
+          111
+        ],
+        "binding": "F14",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L05-M-C008",
+        "label": "FX画像選択",
+        "type": "composite",
+        "rect": [
+          918,
+          592,
+          286,
+          111
+        ],
+        "binding": "F15",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L05-M-C009",
+        "label": "固定タイムライン／トリム",
+        "type": "composite",
+        "rect": [
+          10,
+          712,
+          1652,
+          168
+        ],
+        "binding": "F17",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L05-M-C010",
+        "label": "出力設定要約",
+        "type": "composite",
+        "rect": [
+          1215,
+          611,
+          447,
+          92
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L05-M-C011",
+        "label": "設定（独立スクロール）",
+        "type": "navigation/inspector",
+        "rect": [
+          1215,
+          116,
+          447,
+          487
+        ],
+        "binding": "F10/F12/F18/F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L05-M-C012",
+        "label": "4ステップ",
+        "type": "navigation/inspector",
+        "rect": [
+          12,
+          54,
+          1648,
+          54
+        ],
+        "binding": "NAV",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L05-M-C013",
+        "label": "戻る／次へ",
+        "type": "navigation/inspector",
+        "rect": [
+          10,
+          885,
+          1652,
+          46
+        ],
+        "binding": "NAV",
+        "evidence": "raster reconstruction contract"
+      }
+    ],
+    "component_contract_native": {
+      "font": "Yu Gothic UI (reconstruction choice, not identified original font)",
+      "body_px": 16,
+      "secondary_px": 14,
+      "heading_px": 22,
+      "button_height_px": 36,
+      "checkbox_px": 24,
+      "number_input_size": [
+        72,
+        34
+      ],
+      "slider_height_px": 34,
+      "card_radius_px": 6,
+      "panel_radius_px": 10,
+      "border_px": 1,
+      "selected_border_px": 2,
+      "panel_padding_px": 16,
+      "gap_px": 10,
+      "tab_height_px": 38
+    },
+    "observed_neutral_palette": [
+      {
+        "hex": "#FEFEFE",
+        "count": 102234
+      },
+      {
+        "hex": "#FFFFFF",
+        "count": 26549
+      },
+      {
+        "hex": "#FDFDFD",
+        "count": 22624
+      },
+      {
+        "hex": "#F3F7FC",
+        "count": 9783
+      },
+      {
+        "hex": "#FDFDFE",
+        "count": 7368
+      },
+      {
+        "hex": "#FEFEFD",
+        "count": 7284
+      }
+    ],
+    "measurement": "raster reconstruction; manual region placement, boundary uncertainty up to 8 native pixels; fonts are implementation choices"
+  },
+  "L06-E": {
+    "regions": [
+      {
+        "id": "header",
+        "rect": [
+          0,
+          0,
+          1672,
+          52
+        ],
+        "role": "上部バー／出力・基本設定",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "scene-list",
+        "rect": [
+          10,
+          56,
+          303,
+          675
+        ],
+        "role": "検出シーン・スキャン",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-panel",
+        "rect": [
+          330,
+          54,
+          940,
+          519
+        ],
+        "role": "固定ミラーパネル",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-stage",
+        "rect": [
+          336,
+          95,
+          927,
+          436
+        ],
+        "role": "ライブ映像の表示面",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-controls",
+        "rect": [
+          336,
+          531,
+          927,
+          41
+        ],
+        "role": "ミラー／演出の操作",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "applied-assets",
+        "rect": [
+          330,
+          580,
+          940,
+          152
+        ],
+        "role": "適用アセット・削除・図鑑入口",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "inspector",
+        "rect": [
+          1278,
+          54,
+          382,
+          584
+        ],
+        "role": "設定（独立スクロール）",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "output",
+        "rect": [
+          1278,
+          646,
+          382,
+          86
+        ],
+        "role": "出力設定要約",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "timeline",
+        "rect": [
+          10,
+          741,
+          1652,
+          190
+        ],
+        "role": "固定タイムライン／トリム",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      }
+    ],
+    "controls": [
+      {
+        "id": "L06-E-C000",
+        "label": "基本設定：GPU／音声／HUD／TargetLock／37バッジ",
+        "type": "settings-group",
+        "rect": [
+          1020,
+          7,
+          535,
+          32
+        ],
+        "binding": "F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-E-C001",
+        "label": "書き出し／動画作成",
+        "type": "button",
+        "rect": [
+          1527,
+          7,
+          132,
+          34
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-E-C002",
+        "label": "試合全体スキャン",
+        "type": "button",
+        "rect": [
+          26,
+          101,
+          271,
+          46
+        ],
+        "binding": "F03",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-E-C003",
+        "label": "検出シーン行（繰り返し）",
+        "type": "scene-card",
+        "rect": [
+          26,
+          201,
+          271,
+          86
+        ],
+        "binding": "F06",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-E-C004",
+        "label": "出力チェック（選択行と独立）",
+        "type": "checkbox",
+        "rect": [
+          32,
+          231,
+          24,
+          24
+        ],
+        "binding": "F07",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-E-C005",
+        "label": "ミラー開始／停止；演出プレビュー再生／停止",
+        "type": "transport",
+        "rect": [
+          336,
+          531,
+          927,
+          41
+        ],
+        "binding": "F08/F09",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-E-C006",
+        "label": "適用アセット・削除・図鑑入口",
+        "type": "composite",
+        "rect": [
+          330,
+          580,
+          940,
+          152
+        ],
+        "binding": "F14/F15",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-E-C007",
+        "label": "固定タイムライン／トリム",
+        "type": "composite",
+        "rect": [
+          10,
+          741,
+          1652,
+          190
+        ],
+        "binding": "F17",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-E-C008",
+        "label": "出力設定要約",
+        "type": "composite",
+        "rect": [
+          1278,
+          646,
+          382,
+          86
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-E-C009",
+        "label": "設定（独立スクロール）",
+        "type": "navigation/inspector",
+        "rect": [
+          1278,
+          54,
+          382,
+          584
+        ],
+        "binding": "F10/F12/F18/F22",
+        "evidence": "raster reconstruction contract"
+      }
+    ],
+    "component_contract_native": {
+      "font": "Yu Gothic UI (reconstruction choice, not identified original font)",
+      "body_px": 16,
+      "secondary_px": 14,
+      "heading_px": 22,
+      "button_height_px": 36,
+      "checkbox_px": 24,
+      "number_input_size": [
+        72,
+        34
+      ],
+      "slider_height_px": 34,
+      "card_radius_px": 6,
+      "panel_radius_px": 10,
+      "border_px": 1,
+      "selected_border_px": 2,
+      "panel_padding_px": 16,
+      "gap_px": 10,
+      "tab_height_px": 38
+    },
+    "observed_neutral_palette": [
+      {
+        "hex": "#FEFEFE",
+        "count": 47223
+      },
+      {
+        "hex": "#FDFDFD",
+        "count": 26694
+      },
+      {
+        "hex": "#FDFDFE",
+        "count": 12477
+      },
+      {
+        "hex": "#FFFFFF",
+        "count": 12392
+      },
+      {
+        "hex": "#FEFDFD",
+        "count": 10229
+      },
+      {
+        "hex": "#FEFEFD",
+        "count": 10063
+      }
+    ],
+    "measurement": "raster reconstruction; manual region placement, boundary uncertainty up to 8 native pixels; fonts are implementation choices"
+  },
+  "L06-L": {
+    "regions": [
+      {
+        "id": "header",
+        "rect": [
+          0,
+          0,
+          1672,
+          52
+        ],
+        "role": "上部バー／出力・基本設定",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "material-library",
+        "rect": [
+          10,
+          56,
+          416,
+          674
+        ],
+        "role": "素材図鑑（独立スクロール）",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-panel",
+        "rect": [
+          438,
+          56,
+          879,
+          598
+        ],
+        "role": "固定ミラーパネル",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-stage",
+        "rect": [
+          444,
+          101,
+          873,
+          502
+        ],
+        "role": "ライブ映像の表示面",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-controls",
+        "rect": [
+          444,
+          603,
+          873,
+          46
+        ],
+        "role": "ミラー／演出の操作",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "edit-links",
+        "rect": [
+          438,
+          663,
+          879,
+          67
+        ],
+        "role": "簡単／詳細・編集へ",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "inspector",
+        "rect": [
+          1326,
+          56,
+          336,
+          543
+        ],
+        "role": "設定（独立スクロール）",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "output",
+        "rect": [
+          1326,
+          606,
+          336,
+          124
+        ],
+        "role": "出力設定要約",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "timeline",
+        "rect": [
+          10,
+          741,
+          1652,
+          190
+        ],
+        "role": "固定タイムライン／トリム",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "proceed",
+        "rect": [
+          1501,
+          824,
+          144,
+          60
+        ],
+        "role": "編集へ進む",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      }
+    ],
+    "controls": [
+      {
+        "id": "L06-L-C000",
+        "label": "基本設定：GPU／音声／HUD／TargetLock／37バッジ",
+        "type": "settings-group",
+        "rect": [
+          1020,
+          7,
+          535,
+          32
+        ],
+        "binding": "F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-L-C001",
+        "label": "書き出し／動画作成",
+        "type": "button",
+        "rect": [
+          1527,
+          7,
+          132,
+          34
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-L-C002",
+        "label": "ミラー開始／停止；演出プレビュー再生／停止",
+        "type": "transport",
+        "rect": [
+          444,
+          603,
+          873,
+          46
+        ],
+        "binding": "F08/F09",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-L-C003",
+        "label": "素材図鑑（独立スクロール）",
+        "type": "composite",
+        "rect": [
+          10,
+          56,
+          416,
+          674
+        ],
+        "binding": "F14",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-L-C004",
+        "label": "固定タイムライン／トリム",
+        "type": "composite",
+        "rect": [
+          10,
+          741,
+          1652,
+          190
+        ],
+        "binding": "F17",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-L-C005",
+        "label": "出力設定要約",
+        "type": "composite",
+        "rect": [
+          1326,
+          606,
+          336,
+          124
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-L-C006",
+        "label": "設定（独立スクロール）",
+        "type": "navigation/inspector",
+        "rect": [
+          1326,
+          56,
+          336,
+          543
+        ],
+        "binding": "F10/F12/F18/F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-L-C007",
+        "label": "簡単／詳細・編集へ",
+        "type": "navigation/inspector",
+        "rect": [
+          438,
+          663,
+          879,
+          67
+        ],
+        "binding": "NAV",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "L06-L-C008",
+        "label": "編集へ進む",
+        "type": "navigation/inspector",
+        "rect": [
+          1501,
+          824,
+          144,
+          60
+        ],
+        "binding": "NAV",
+        "evidence": "raster reconstruction contract"
+      }
+    ],
+    "component_contract_native": {
+      "font": "Yu Gothic UI (reconstruction choice, not identified original font)",
+      "body_px": 16,
+      "secondary_px": 14,
+      "heading_px": 22,
+      "button_height_px": 36,
+      "checkbox_px": 24,
+      "number_input_size": [
+        72,
+        34
+      ],
+      "slider_height_px": 34,
+      "card_radius_px": 6,
+      "panel_radius_px": 10,
+      "border_px": 1,
+      "selected_border_px": 2,
+      "panel_padding_px": 16,
+      "gap_px": 10,
+      "tab_height_px": 38
+    },
+    "observed_neutral_palette": [
+      {
+        "hex": "#FEFEFE",
+        "count": 54945
+      },
+      {
+        "hex": "#FFFFFF",
+        "count": 19172
+      },
+      {
+        "hex": "#FDFDFD",
+        "count": 14273
+      },
+      {
+        "hex": "#FEFDFD",
+        "count": 6986
+      },
+      {
+        "hex": "#FFFEFE",
+        "count": 6115
+      },
+      {
+        "hex": "#FEFEFD",
+        "count": 5927
+      }
+    ],
+    "measurement": "raster reconstruction; manual region placement, boundary uncertainty up to 8 native pixels; fonts are implementation choices"
+  },
+  "T-A-M": {
+    "regions": [
+      {
+        "id": "header",
+        "rect": [
+          0,
+          0,
+          1672,
+          49
+        ],
+        "role": "上部バー／出力・基本設定",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "prepare",
+        "rect": [
+          7,
+          54,
+          338,
+          608
+        ],
+        "role": "リプレイ準備・選手・テンプレート",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-panel",
+        "rect": [
+          352,
+          54,
+          902,
+          608
+        ],
+        "role": "固定ミラーパネル",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-stage",
+        "rect": [
+          355,
+          94,
+          895,
+          492
+        ],
+        "role": "ライブ映像の表示面",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-controls",
+        "rect": [
+          355,
+          611,
+          895,
+          46
+        ],
+        "role": "ミラー／演出の操作",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "scene-list",
+        "rect": [
+          1263,
+          54,
+          400,
+          608
+        ],
+        "role": "検出シーン・スキャン",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "detail-tabs",
+        "rect": [
+          7,
+          674,
+          1656,
+          56
+        ],
+        "role": "シーン／カメラ／FX／出力／テスト",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "timeline",
+        "rect": [
+          7,
+          735,
+          1278,
+          53
+        ],
+        "role": "固定タイムライン／トリム",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-detail",
+        "rect": [
+          7,
+          793,
+          588,
+          136
+        ],
+        "role": "詳細カメラ選択",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "target-side",
+        "rect": [
+          603,
+          793,
+          260,
+          136
+        ],
+        "role": "対象・TargetLock",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-numeric",
+        "rect": [
+          871,
+          793,
+          414,
+          136
+        ],
+        "role": "スライダーと数値入力",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "materials",
+        "rect": [
+          1294,
+          735,
+          369,
+          194
+        ],
+        "role": "フレーム／FX／登場",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      }
+    ],
+    "controls": [
+      {
+        "id": "T-A-M-C000",
+        "label": "基本設定：GPU／音声／HUD／TargetLock／37バッジ",
+        "type": "settings-group",
+        "rect": [
+          1020,
+          7,
+          535,
+          32
+        ],
+        "binding": "F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-A-M-C001",
+        "label": "書き出し／動画作成",
+        "type": "button",
+        "rect": [
+          1527,
+          7,
+          132,
+          34
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-A-M-C002",
+        "label": "試合全体スキャン",
+        "type": "button",
+        "rect": [
+          1279,
+          99,
+          368,
+          38
+        ],
+        "binding": "F03",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-A-M-C003",
+        "label": "検出シーン行（繰り返し）",
+        "type": "scene-card",
+        "rect": [
+          1279,
+          199,
+          368,
+          58
+        ],
+        "binding": "F06",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-A-M-C004",
+        "label": "出力チェック（選択行と独立）",
+        "type": "checkbox",
+        "rect": [
+          1285,
+          229,
+          18,
+          18
+        ],
+        "binding": "F07",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-A-M-C005",
+        "label": "ミラー開始／停止；演出プレビュー再生／停止",
+        "type": "transport",
+        "rect": [
+          355,
+          611,
+          895,
+          46
+        ],
+        "binding": "F08/F09",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-A-M-C006",
+        "label": "フレーム／FX／登場",
+        "type": "composite",
+        "rect": [
+          1294,
+          735,
+          369,
+          194
+        ],
+        "binding": "F14/F15/F16",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-A-M-C007",
+        "label": "スライダーと数値入力",
+        "type": "composite",
+        "rect": [
+          871,
+          793,
+          414,
+          136
+        ],
+        "binding": "F12",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-A-M-C008",
+        "label": "固定タイムライン／トリム",
+        "type": "composite",
+        "rect": [
+          7,
+          735,
+          1278,
+          53
+        ],
+        "binding": "F17",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-A-M-C009",
+        "label": "対象・TargetLock",
+        "type": "composite",
+        "rect": [
+          603,
+          793,
+          260,
+          136
+        ],
+        "binding": "F02",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-A-M-C010",
+        "label": "リプレイ準備・選手・テンプレート",
+        "type": "composite",
+        "rect": [
+          7,
+          54,
+          338,
+          608
+        ],
+        "binding": "F01",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-A-M-C011",
+        "label": "シーン／カメラ／FX／出力／テスト",
+        "type": "navigation/inspector",
+        "rect": [
+          7,
+          674,
+          1656,
+          56
+        ],
+        "binding": "NAV",
+        "evidence": "raster reconstruction contract"
+      }
+    ],
+    "component_contract_native": {
+      "font": "Yu Gothic UI (reconstruction choice, not identified original font)",
+      "body_px": 16,
+      "secondary_px": 14,
+      "heading_px": 22,
+      "button_height_px": 36,
+      "checkbox_px": 18,
+      "number_input_size": [
+        72,
+        34
+      ],
+      "slider_height_px": 34,
+      "card_radius_px": 6,
+      "panel_radius_px": 10,
+      "border_px": 1,
+      "selected_border_px": 2,
+      "panel_padding_px": 16,
+      "gap_px": 10,
+      "tab_height_px": 38
+    },
+    "observed_neutral_palette": [
+      {
+        "hex": "#FCFDFE",
+        "count": 34796
+      },
+      {
+        "hex": "#FDFDFE",
+        "count": 15817
+      },
+      {
+        "hex": "#FBFCFD",
+        "count": 14952
+      },
+      {
+        "hex": "#FFFFFF",
+        "count": 14417
+      },
+      {
+        "hex": "#FDFEFE",
+        "count": 11407
+      },
+      {
+        "hex": "#FCFDFD",
+        "count": 10794
+      }
+    ],
+    "measurement": "raster reconstruction; manual region placement, boundary uncertainty up to 8 native pixels; fonts are implementation choices"
+  },
+  "T-B-S": {
+    "regions": [
+      {
+        "id": "header",
+        "rect": [
+          0,
+          0,
+          1672,
+          52
+        ],
+        "role": "上部バー／出力・基本設定",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "scene-list",
+        "rect": [
+          7,
+          59,
+          320,
+          680
+        ],
+        "role": "検出シーン・スキャン",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "edit-tabs",
+        "rect": [
+          338,
+          59,
+          891,
+          43
+        ],
+        "role": "簡単編集／詳細編集",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-panel",
+        "rect": [
+          338,
+          108,
+          891,
+          630
+        ],
+        "role": "固定ミラーパネル",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-stage",
+        "rect": [
+          341,
+          110,
+          883,
+          547
+        ],
+        "role": "ライブ映像の表示面",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-controls",
+        "rect": [
+          341,
+          689,
+          883,
+          46
+        ],
+        "role": "ミラー／演出の操作",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "inspector",
+        "rect": [
+          1239,
+          59,
+          424,
+          680
+        ],
+        "role": "設定（独立スクロール）",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-modes",
+        "rect": [
+          1249,
+          139,
+          404,
+          205
+        ],
+        "role": "既存／固定自動／フルオート",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "side-buttons",
+        "rect": [
+          1249,
+          351,
+          404,
+          44
+        ],
+        "role": "自動／BLUE／RED",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-numeric",
+        "rect": [
+          1249,
+          407,
+          404,
+          155
+        ],
+        "role": "スライダーと数値入力",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "materials",
+        "rect": [
+          1249,
+          577,
+          404,
+          148
+        ],
+        "role": "フレーム／FX／登場",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "bottom-tabs",
+        "rect": [
+          7,
+          748,
+          1656,
+          46
+        ],
+        "role": "キル選択／詳細編集／結果",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "timeline",
+        "rect": [
+          7,
+          802,
+          1656,
+          125
+        ],
+        "role": "固定タイムライン／トリム",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      }
+    ],
+    "controls": [
+      {
+        "id": "T-B-S-C000",
+        "label": "基本設定：GPU／音声／HUD／TargetLock／37バッジ",
+        "type": "settings-group",
+        "rect": [
+          1020,
+          7,
+          535,
+          32
+        ],
+        "binding": "F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-S-C001",
+        "label": "書き出し／動画作成",
+        "type": "button",
+        "rect": [
+          1527,
+          7,
+          132,
+          34
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-S-C002",
+        "label": "試合全体スキャン",
+        "type": "button",
+        "rect": [
+          23,
+          104,
+          288,
+          38
+        ],
+        "binding": "F03",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-S-C003",
+        "label": "検出シーン行（繰り返し）",
+        "type": "scene-card",
+        "rect": [
+          23,
+          204,
+          288,
+          58
+        ],
+        "binding": "F06",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-S-C004",
+        "label": "出力チェック（選択行と独立）",
+        "type": "checkbox",
+        "rect": [
+          29,
+          234,
+          18,
+          18
+        ],
+        "binding": "F07",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-S-C005",
+        "label": "ミラー開始／停止；演出プレビュー再生／停止",
+        "type": "transport",
+        "rect": [
+          341,
+          689,
+          883,
+          46
+        ],
+        "binding": "F08/F09",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-S-C006",
+        "label": "フレーム／FX／登場",
+        "type": "composite",
+        "rect": [
+          1249,
+          577,
+          404,
+          148
+        ],
+        "binding": "F14/F15/F16",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-S-C007",
+        "label": "既存／固定自動／フルオート",
+        "type": "composite",
+        "rect": [
+          1249,
+          139,
+          404,
+          205
+        ],
+        "binding": "F10",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-S-C008",
+        "label": "自動／BLUE／RED",
+        "type": "composite",
+        "rect": [
+          1249,
+          351,
+          404,
+          44
+        ],
+        "binding": "F10",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-S-C009",
+        "label": "スライダーと数値入力",
+        "type": "composite",
+        "rect": [
+          1249,
+          407,
+          404,
+          155
+        ],
+        "binding": "F12",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-S-C010",
+        "label": "固定タイムライン／トリム",
+        "type": "composite",
+        "rect": [
+          7,
+          802,
+          1656,
+          125
+        ],
+        "binding": "F17",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-S-C011",
+        "label": "設定（独立スクロール）",
+        "type": "navigation/inspector",
+        "rect": [
+          1239,
+          59,
+          424,
+          680
+        ],
+        "binding": "F10/F12/F18/F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-S-C012",
+        "label": "簡単編集／詳細編集",
+        "type": "navigation/inspector",
+        "rect": [
+          338,
+          59,
+          891,
+          43
+        ],
+        "binding": "NAV",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-S-C013",
+        "label": "キル選択／詳細編集／結果",
+        "type": "navigation/inspector",
+        "rect": [
+          7,
+          748,
+          1656,
+          46
+        ],
+        "binding": "NAV",
+        "evidence": "raster reconstruction contract"
+      }
+    ],
+    "component_contract_native": {
+      "font": "Yu Gothic UI (reconstruction choice, not identified original font)",
+      "body_px": 16,
+      "secondary_px": 14,
+      "heading_px": 22,
+      "button_height_px": 36,
+      "checkbox_px": 18,
+      "number_input_size": [
+        72,
+        34
+      ],
+      "slider_height_px": 34,
+      "card_radius_px": 6,
+      "panel_radius_px": 10,
+      "border_px": 1,
+      "selected_border_px": 2,
+      "panel_padding_px": 16,
+      "gap_px": 10,
+      "tab_height_px": 38
+    },
+    "observed_neutral_palette": [
+      {
+        "hex": "#FDFDFE",
+        "count": 27402
+      },
+      {
+        "hex": "#FCFDFE",
+        "count": 22313
+      },
+      {
+        "hex": "#FDFEFE",
+        "count": 21051
+      },
+      {
+        "hex": "#FFFFFF",
+        "count": 18478
+      },
+      {
+        "hex": "#FEFEFE",
+        "count": 15586
+      },
+      {
+        "hex": "#FCFDFD",
+        "count": 13371
+      }
+    ],
+    "measurement": "raster reconstruction; manual region placement, boundary uncertainty up to 8 native pixels; fonts are implementation choices"
+  },
+  "T-B-C": {
+    "regions": [
+      {
+        "id": "header",
+        "rect": [
+          0,
+          0,
+          1672,
+          52
+        ],
+        "role": "上部バー／出力・基本設定",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "scene-list",
+        "rect": [
+          7,
+          58,
+          368,
+          620
+        ],
+        "role": "検出シーン・スキャン",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "edit-tabs",
+        "rect": [
+          384,
+          58,
+          789,
+          43
+        ],
+        "role": "簡単編集／詳細編集",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-panel",
+        "rect": [
+          384,
+          103,
+          789,
+          575
+        ],
+        "role": "固定ミラーパネル",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-stage",
+        "rect": [
+          385,
+          104,
+          786,
+          476
+        ],
+        "role": "ライブ映像の表示面",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-controls",
+        "rect": [
+          386,
+          614,
+          783,
+          48
+        ],
+        "role": "ミラー／演出の操作",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "inspector",
+        "rect": [
+          1184,
+          58,
+          479,
+          620
+        ],
+        "role": "設定（独立スクロール）",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-modes",
+        "rect": [
+          1193,
+          111,
+          460,
+          188
+        ],
+        "role": "既存／固定自動／フルオート",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "side-buttons",
+        "rect": [
+          1193,
+          331,
+          460,
+          43
+        ],
+        "role": "自動／BLUE／RED",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-cards",
+        "rect": [
+          1193,
+          424,
+          460,
+          142
+        ],
+        "role": "カメラ画像選択",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-numeric",
+        "rect": [
+          1193,
+          579,
+          460,
+          94
+        ],
+        "role": "スライダーと数値入力",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "timeline",
+        "rect": [
+          7,
+          687,
+          886,
+          241
+        ],
+        "role": "固定タイムライン／トリム",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "side-qa",
+        "rect": [
+          904,
+          687,
+          273,
+          241
+        ],
+        "role": "サイド別カメラQA",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "test-results",
+        "rect": [
+          1184,
+          687,
+          479,
+          241
+        ],
+        "role": "実行結果・ログ",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      }
+    ],
+    "controls": [
+      {
+        "id": "T-B-C-C000",
+        "label": "基本設定：GPU／音声／HUD／TargetLock／37バッジ",
+        "type": "settings-group",
+        "rect": [
+          1020,
+          7,
+          535,
+          32
+        ],
+        "binding": "F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C001",
+        "label": "書き出し／動画作成",
+        "type": "button",
+        "rect": [
+          1527,
+          7,
+          132,
+          34
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C002",
+        "label": "試合全体スキャン",
+        "type": "button",
+        "rect": [
+          23,
+          103,
+          336,
+          38
+        ],
+        "binding": "F03",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C003",
+        "label": "検出シーン行（繰り返し）",
+        "type": "scene-card",
+        "rect": [
+          23,
+          203,
+          336,
+          58
+        ],
+        "binding": "F06",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C004",
+        "label": "出力チェック（選択行と独立）",
+        "type": "checkbox",
+        "rect": [
+          29,
+          233,
+          18,
+          18
+        ],
+        "binding": "F07",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C005",
+        "label": "ミラー開始／停止；演出プレビュー再生／停止",
+        "type": "transport",
+        "rect": [
+          386,
+          614,
+          783,
+          48
+        ],
+        "binding": "F08/F09",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C006",
+        "label": "カメラ画像選択",
+        "type": "composite",
+        "rect": [
+          1193,
+          424,
+          460,
+          142
+        ],
+        "binding": "F11",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C007",
+        "label": "既存／固定自動／フルオート",
+        "type": "composite",
+        "rect": [
+          1193,
+          111,
+          460,
+          188
+        ],
+        "binding": "F10",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C008",
+        "label": "自動／BLUE／RED",
+        "type": "composite",
+        "rect": [
+          1193,
+          331,
+          460,
+          43
+        ],
+        "binding": "F10",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C009",
+        "label": "スライダーと数値入力",
+        "type": "composite",
+        "rect": [
+          1193,
+          579,
+          460,
+          94
+        ],
+        "binding": "F12",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C010",
+        "label": "固定タイムライン／トリム",
+        "type": "composite",
+        "rect": [
+          7,
+          687,
+          886,
+          241
+        ],
+        "binding": "F17",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C011",
+        "label": "実行結果・ログ",
+        "type": "composite",
+        "rect": [
+          1184,
+          687,
+          479,
+          241
+        ],
+        "binding": "F24",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C012",
+        "label": "サイド別カメラQA",
+        "type": "composite",
+        "rect": [
+          904,
+          687,
+          273,
+          241
+        ],
+        "binding": "F24",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C013",
+        "label": "設定（独立スクロール）",
+        "type": "navigation/inspector",
+        "rect": [
+          1184,
+          58,
+          479,
+          620
+        ],
+        "binding": "F10/F12/F18/F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-C-C014",
+        "label": "簡単編集／詳細編集",
+        "type": "navigation/inspector",
+        "rect": [
+          384,
+          58,
+          789,
+          43
+        ],
+        "binding": "NAV",
+        "evidence": "raster reconstruction contract"
+      }
+    ],
+    "component_contract_native": {
+      "font": "Yu Gothic UI (reconstruction choice, not identified original font)",
+      "body_px": 16,
+      "secondary_px": 14,
+      "heading_px": 22,
+      "button_height_px": 36,
+      "checkbox_px": 18,
+      "number_input_size": [
+        72,
+        34
+      ],
+      "slider_height_px": 34,
+      "card_radius_px": 6,
+      "panel_radius_px": 10,
+      "border_px": 1,
+      "selected_border_px": 2,
+      "panel_padding_px": 16,
+      "gap_px": 10,
+      "tab_height_px": 38
+    },
+    "observed_neutral_palette": [
+      {
+        "hex": "#FCFDFE",
+        "count": 22439
+      },
+      {
+        "hex": "#FDFDFE",
+        "count": 19503
+      },
+      {
+        "hex": "#FFFFFF",
+        "count": 13146
+      },
+      {
+        "hex": "#FEFEFE",
+        "count": 9915
+      },
+      {
+        "hex": "#FDFEFE",
+        "count": 9379
+      },
+      {
+        "hex": "#FCFDFD",
+        "count": 8539
+      }
+    ],
+    "measurement": "raster reconstruction; manual region placement, boundary uncertainty up to 8 native pixels; fonts are implementation choices"
+  },
+  "T-B-F": {
+    "regions": [
+      {
+        "id": "header",
+        "rect": [
+          0,
+          0,
+          1672,
+          52
+        ],
+        "role": "上部バー／出力・基本設定",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "scene-list",
+        "rect": [
+          7,
+          58,
+          368,
+          620
+        ],
+        "role": "検出シーン・スキャン",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "edit-tabs",
+        "rect": [
+          384,
+          58,
+          789,
+          43
+        ],
+        "role": "簡単編集／詳細編集",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-panel",
+        "rect": [
+          384,
+          103,
+          789,
+          575
+        ],
+        "role": "固定ミラーパネル",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-stage",
+        "rect": [
+          385,
+          104,
+          786,
+          476
+        ],
+        "role": "ライブ映像の表示面",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-controls",
+        "rect": [
+          386,
+          614,
+          783,
+          48
+        ],
+        "role": "ミラー／演出の操作",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "inspector",
+        "rect": [
+          1184,
+          58,
+          479,
+          870
+        ],
+        "role": "設定（独立スクロール）",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-modes",
+        "rect": [
+          1193,
+          109,
+          460,
+          168
+        ],
+        "role": "既存／固定自動／フルオート",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "side-buttons",
+        "rect": [
+          1193,
+          291,
+          460,
+          38
+        ],
+        "role": "自動／BLUE／RED",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "material-library",
+        "rect": [
+          1193,
+          342,
+          460,
+          388
+        ],
+        "role": "素材図鑑（独立スクロール）",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "motion-grid",
+        "rect": [
+          1193,
+          742,
+          460,
+          162
+        ],
+        "role": "6種類の登場",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "timeline",
+        "rect": [
+          7,
+          687,
+          840,
+          241
+        ],
+        "role": "固定タイムライン／トリム",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "scene-detail",
+        "rect": [
+          858,
+          687,
+          319,
+          241
+        ],
+        "role": "選択シーン詳細",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      }
+    ],
+    "controls": [
+      {
+        "id": "T-B-F-C000",
+        "label": "基本設定：GPU／音声／HUD／TargetLock／37バッジ",
+        "type": "settings-group",
+        "rect": [
+          1020,
+          7,
+          535,
+          32
+        ],
+        "binding": "F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-F-C001",
+        "label": "書き出し／動画作成",
+        "type": "button",
+        "rect": [
+          1527,
+          7,
+          132,
+          34
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-F-C002",
+        "label": "試合全体スキャン",
+        "type": "button",
+        "rect": [
+          23,
+          103,
+          336,
+          38
+        ],
+        "binding": "F03",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-F-C003",
+        "label": "検出シーン行（繰り返し）",
+        "type": "scene-card",
+        "rect": [
+          23,
+          203,
+          336,
+          58
+        ],
+        "binding": "F06",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-F-C004",
+        "label": "出力チェック（選択行と独立）",
+        "type": "checkbox",
+        "rect": [
+          29,
+          233,
+          18,
+          18
+        ],
+        "binding": "F07",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-F-C005",
+        "label": "ミラー開始／停止；演出プレビュー再生／停止",
+        "type": "transport",
+        "rect": [
+          386,
+          614,
+          783,
+          48
+        ],
+        "binding": "F08/F09",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-F-C006",
+        "label": "素材図鑑（独立スクロール）",
+        "type": "composite",
+        "rect": [
+          1193,
+          342,
+          460,
+          388
+        ],
+        "binding": "F14",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-F-C007",
+        "label": "6種類の登場",
+        "type": "composite",
+        "rect": [
+          1193,
+          742,
+          460,
+          162
+        ],
+        "binding": "F16",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-F-C008",
+        "label": "既存／固定自動／フルオート",
+        "type": "composite",
+        "rect": [
+          1193,
+          109,
+          460,
+          168
+        ],
+        "binding": "F10",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-F-C009",
+        "label": "自動／BLUE／RED",
+        "type": "composite",
+        "rect": [
+          1193,
+          291,
+          460,
+          38
+        ],
+        "binding": "F10",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-F-C010",
+        "label": "固定タイムライン／トリム",
+        "type": "composite",
+        "rect": [
+          7,
+          687,
+          840,
+          241
+        ],
+        "binding": "F17",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-F-C011",
+        "label": "設定（独立スクロール）",
+        "type": "navigation/inspector",
+        "rect": [
+          1184,
+          58,
+          479,
+          870
+        ],
+        "binding": "F10/F12/F18/F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-F-C012",
+        "label": "簡単編集／詳細編集",
+        "type": "navigation/inspector",
+        "rect": [
+          384,
+          58,
+          789,
+          43
+        ],
+        "binding": "NAV",
+        "evidence": "raster reconstruction contract"
+      }
+    ],
+    "component_contract_native": {
+      "font": "Yu Gothic UI (reconstruction choice, not identified original font)",
+      "body_px": 16,
+      "secondary_px": 14,
+      "heading_px": 22,
+      "button_height_px": 36,
+      "checkbox_px": 18,
+      "number_input_size": [
+        72,
+        34
+      ],
+      "slider_height_px": 34,
+      "card_radius_px": 6,
+      "panel_radius_px": 10,
+      "border_px": 1,
+      "selected_border_px": 2,
+      "panel_padding_px": 16,
+      "gap_px": 10,
+      "tab_height_px": 38
+    },
+    "observed_neutral_palette": [
+      {
+        "hex": "#FEFEFE",
+        "count": 32493
+      },
+      {
+        "hex": "#FFFFFF",
+        "count": 18368
+      },
+      {
+        "hex": "#FCFDFE",
+        "count": 16177
+      },
+      {
+        "hex": "#FDFDFD",
+        "count": 13659
+      },
+      {
+        "hex": "#FDFDFE",
+        "count": 12628
+      },
+      {
+        "hex": "#FDFEFE",
+        "count": 11444
+      }
+    ],
+    "measurement": "raster reconstruction; manual region placement, boundary uncertainty up to 8 native pixels; fonts are implementation choices"
+  },
+  "T-B-M": {
+    "regions": [
+      {
+        "id": "header",
+        "rect": [
+          0,
+          0,
+          1672,
+          52
+        ],
+        "role": "上部バー／出力・基本設定",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "scene-list",
+        "rect": [
+          7,
+          58,
+          368,
+          605
+        ],
+        "role": "検出シーン・スキャン",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "edit-tabs",
+        "rect": [
+          384,
+          58,
+          789,
+          43
+        ],
+        "role": "簡単編集／詳細編集",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-panel",
+        "rect": [
+          384,
+          103,
+          789,
+          560
+        ],
+        "role": "固定ミラーパネル",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-stage",
+        "rect": [
+          385,
+          104,
+          786,
+          476
+        ],
+        "role": "ライブ映像の表示面",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "preview-controls",
+        "rect": [
+          386,
+          614,
+          783,
+          44
+        ],
+        "role": "ミラー／演出の操作",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "inspector",
+        "rect": [
+          1184,
+          58,
+          479,
+          605
+        ],
+        "role": "設定（独立スクロール）",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-modes",
+        "rect": [
+          1193,
+          109,
+          460,
+          193
+        ],
+        "role": "既存／固定自動／フルオート",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "side-buttons",
+        "rect": [
+          1193,
+          344,
+          460,
+          42
+        ],
+        "role": "自動／BLUE／RED",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "camera-cards",
+        "rect": [
+          1193,
+          421,
+          460,
+          80
+        ],
+        "role": "カメラ画像選択",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "material-summary",
+        "rect": [
+          1193,
+          515,
+          460,
+          131
+        ],
+        "role": "適用素材・登場",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "timeline",
+        "rect": [
+          7,
+          676,
+          974,
+          252
+        ],
+        "role": "固定タイムライン／トリム",
+        "scroll": false,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "scene-detail",
+        "rect": [
+          992,
+          676,
+          299,
+          252
+        ],
+        "role": "選択シーン詳細",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      },
+      {
+        "id": "test-results",
+        "rect": [
+          1302,
+          676,
+          361,
+          252
+        ],
+        "role": "実行結果・ログ",
+        "scroll": true,
+        "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source"
+      }
+    ],
+    "controls": [
+      {
+        "id": "T-B-M-C000",
+        "label": "基本設定：GPU／音声／HUD／TargetLock／37バッジ",
+        "type": "settings-group",
+        "rect": [
+          1020,
+          7,
+          535,
+          32
+        ],
+        "binding": "F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-M-C001",
+        "label": "書き出し／動画作成",
+        "type": "button",
+        "rect": [
+          1527,
+          7,
+          132,
+          34
+        ],
+        "binding": "F23",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-M-C002",
+        "label": "試合全体スキャン",
+        "type": "button",
+        "rect": [
+          23,
+          103,
+          336,
+          38
+        ],
+        "binding": "F03",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-M-C003",
+        "label": "検出シーン行（繰り返し）",
+        "type": "scene-card",
+        "rect": [
+          23,
+          203,
+          336,
+          58
+        ],
+        "binding": "F06",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-M-C004",
+        "label": "出力チェック（選択行と独立）",
+        "type": "checkbox",
+        "rect": [
+          29,
+          233,
+          18,
+          18
+        ],
+        "binding": "F07",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-M-C005",
+        "label": "ミラー開始／停止；演出プレビュー再生／停止",
+        "type": "transport",
+        "rect": [
+          386,
+          614,
+          783,
+          44
+        ],
+        "binding": "F08/F09",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-M-C006",
+        "label": "カメラ画像選択",
+        "type": "composite",
+        "rect": [
+          1193,
+          421,
+          460,
+          80
+        ],
+        "binding": "F11",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-M-C007",
+        "label": "適用素材・登場",
+        "type": "composite",
+        "rect": [
+          1193,
+          515,
+          460,
+          131
+        ],
+        "binding": "F14/F15/F16",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-M-C008",
+        "label": "既存／固定自動／フルオート",
+        "type": "composite",
+        "rect": [
+          1193,
+          109,
+          460,
+          193
+        ],
+        "binding": "F10",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-M-C009",
+        "label": "自動／BLUE／RED",
+        "type": "composite",
+        "rect": [
+          1193,
+          344,
+          460,
+          42
+        ],
+        "binding": "F10",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-M-C010",
+        "label": "固定タイムライン／トリム",
+        "type": "composite",
+        "rect": [
+          7,
+          676,
+          974,
+          252
+        ],
+        "binding": "F17",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-M-C011",
+        "label": "実行結果・ログ",
+        "type": "composite",
+        "rect": [
+          1302,
+          676,
+          361,
+          252
+        ],
+        "binding": "F24",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-M-C012",
+        "label": "設定（独立スクロール）",
+        "type": "navigation/inspector",
+        "rect": [
+          1184,
+          58,
+          479,
+          605
+        ],
+        "binding": "F10/F12/F18/F22",
+        "evidence": "raster reconstruction contract"
+      },
+      {
+        "id": "T-B-M-C013",
+        "label": "簡単編集／詳細編集",
+        "type": "navigation/inspector",
+        "rect": [
+          384,
+          58,
+          789,
+          43
+        ],
+        "binding": "NAV",
+        "evidence": "raster reconstruction contract"
+      }
+    ],
+    "component_contract_native": {
+      "font": "Yu Gothic UI (reconstruction choice, not identified original font)",
+      "body_px": 16,
+      "secondary_px": 14,
+      "heading_px": 22,
+      "button_height_px": 36,
+      "checkbox_px": 18,
+      "number_input_size": [
+        72,
+        34
+      ],
+      "slider_height_px": 34,
+      "card_radius_px": 6,
+      "panel_radius_px": 10,
+      "border_px": 1,
+      "selected_border_px": 2,
+      "panel_padding_px": 16,
+      "gap_px": 10,
+      "tab_height_px": 38
+    },
+    "observed_neutral_palette": [
+      {
+        "hex": "#FBFCFE",
+        "count": 14032
+      },
+      {
+        "hex": "#FFFFFF",
+        "count": 10259
+      },
+      {
+        "hex": "#FEFEFE",
+        "count": 8882
+      },
+      {
+        "hex": "#FBFCFD",
+        "count": 6800
+      },
+      {
+        "hex": "#FAFBFD",
+        "count": 6742
+      },
+      {
+        "hex": "#FCFDFE",
+        "count": 6167
+      }
+    ],
+    "measurement": "raster reconstruction; manual region placement, boundary uncertainty up to 8 native pixels; fonts are implementation choices"
+  }
+}
