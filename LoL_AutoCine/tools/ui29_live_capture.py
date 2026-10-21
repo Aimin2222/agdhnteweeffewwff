@@ -1,4 +1,4 @@
-"""Capture the 18 implemented research screens through the real App bridge.
+"""Capture implemented audited screens through the real App bridge.
 
 No replay, capture, recording, or export is started. The resulting screenshots
 are offline UI evidence, never a functional acceptance of those subsystems.
@@ -29,7 +29,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--edge", type=Path, default=next((p for p in EDGE_PATHS if p.is_file()), None))
     parser.add_argument("--output", type=Path, default=ROOT / "qa" / "ui29" / "live_offline")
-    parser.add_argument("--screen", help="capture one audited research screen for a quick check")
+    parser.add_argument("--screen", help="capture one implemented audited screen for a quick check")
     args = parser.parse_args(argv)
     if not args.edge or not args.edge.is_file():
         parser.error("Microsoft Edge executable was not found")
@@ -42,6 +42,8 @@ def main(argv=None):
     server = UI29Server(app, appearance)
     completed = threading.Event()
     results = []
+    implemented = [screen for screen in load_inventory()
+                   if screen["group"] == "research" or screen["id"] == "T-A-M"]
 
     def activate(action, data):
         url = f"http://127.0.0.1:{server.http.server_port}/api/action?token={server.token}"
@@ -51,9 +53,7 @@ def main(argv=None):
 
     def worker():
         try:
-            for screen in load_inventory():
-                if screen["group"] != "research":
-                    continue
+            for screen in implemented:
                 if args.screen and screen["id"] != args.screen:
                     continue
                 sid = screen["id"]
@@ -115,7 +115,7 @@ def main(argv=None):
     report = {"kind": "LIVE_APP_BRIDGE_OFFLINE", "lol_replay": "NOT_RUN",
               "gpu_record_audio_export": "NOT_RUN", "screens": results}
     (args.output / "index.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    expected_count = 1 if args.screen else 18
+    expected_count = 1 if args.screen else len(implemented)
     return 0 if len(results) == expected_count and all(row["result"] == "CAPTURED_OFFLINE" for row in results) else 1
 
 

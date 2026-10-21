@@ -30,6 +30,7 @@ def _screens() -> dict[str, dict]:
 
 
 SCREENS = _screens()
+LEGACY_RECONSTRUCTIONS = {"T-A-M": "T-A-M.html"}
 DEFAULT_SCREEN = None  # The user has not adopted or selected a candidate yet.
 THEMES = {"light", "dark", "system"}
 CAMERA_SIDES = {"auto": CAMERA_SIDE_CHOICES["auto"],
@@ -127,9 +128,15 @@ class Audit29Runtime:
                           "candidate_id": SCREENS[self.screen_id]["family"] if self.screen_id else None,
                           "theme": self.theme,
                           "screens": [{"id": x["id"], "family": x["family"],
-                                       "name": x["family_name"]} for x in SCREENS.values()]},
+                                       "name": x["family_name"],
+                                       "implemented": "html" in x or x["id"] in LEGACY_RECONSTRUCTIONS}
+                                      for x in SCREENS.values()]},
             "replay": {"connected": bool(app.players),
                        "player_count": len(app.players),
+                       "players": [{"slot": int(player.slot), "name": player.name,
+                                    "champion": player.champion,
+                                    "side": "BLUE" if player.team == "ORDER" else "RED"}
+                                   for player in app.players if hasattr(player, "slot")],
                        "capture_running": bool(getattr(app, "source", None) and app.source.running),
                        "target_slot": getattr(getattr(app, "locked", None), "slot", None)},
             "scenes": scene_rows,
@@ -139,6 +146,7 @@ class Audit29Runtime:
                      "percent": float(app.pb_scan["value"]) if hasattr(app, "pb_scan") else 0.0,
                      "duration": float(getattr(getattr(app, "_match_scan_cache", None), "length", 0) or 0)},
             "event_mode": app.var_event_mode.get(),
+            "edit_mode": app.var_edit_mode.get() if hasattr(app, "var_edit_mode") else "easy",
             "camera": {"mode": app.var_camera_control_mode.get(),
                        "side": app.var_camera_side.get(), "style": app.var_style.get(),
                        "values": camera_values},
@@ -331,6 +339,15 @@ class Audit29Runtime:
             app._focus_editor_zone(zone)
             app.root.deiconify()
             app.root.lift()
+        elif action == "edit_mode":
+            mode = str(data["value"])
+            if mode not in ("easy", "advanced"):
+                raise ValueError("unknown edit mode")
+            app.var_edit_mode.set(mode)
+            app._apply_edit_mode(log=False)
+            if mode == "advanced":
+                app.root.deiconify()
+                app.root.lift()
         elif action == "diagnostics":
             app.on_show_diagnostics()
         elif action == "automatic_qa":

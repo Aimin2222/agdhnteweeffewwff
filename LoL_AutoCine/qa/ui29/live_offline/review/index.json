@@ -54,9 +54,352 @@
       "screen_id": "T-A-M",
       "family": "testA",
       "reference_sha256": "b05abe6a04732069729abd58fc4e7aca3b09c19e8d2703c5d9af3e5a5ed01a13",
-      "visual_result": "NOT_RUN",
+      "reference_size": [
+        1672,
+        941
+      ],
+      "capture_size": [
+        1672,
+        941
+      ],
+      "size_result": "PASS",
+      "visual_result": "MEASURED",
       "functional_result": "NOT_RUN",
-      "reason": "実装画面のキャプチャ未提出"
+      "dynamic_image_mask": [
+        365.1666666666667,
+        94.0,
+        874.6666666666666,
+        492.0
+      ],
+      "unmasked_rgb_mae": 31.7695,
+      "regions": [
+        {
+          "region": "header",
+          "rgb_mae": 57.609
+        },
+        {
+          "region": "prepare",
+          "rgb_mae": 24.7934
+        },
+        {
+          "region": "preview-panel",
+          "rgb_mae": 32.6581
+        },
+        {
+          "region": "preview-stage",
+          "rgb_mae": 39.4513
+        },
+        {
+          "region": "preview-controls",
+          "rgb_mae": 30.3962
+        },
+        {
+          "region": "scene-list",
+          "rgb_mae": 28.8546
+        },
+        {
+          "region": "detail-tabs",
+          "rgb_mae": 15.1305
+        },
+        {
+          "region": "timeline",
+          "rgb_mae": 33.7068
+        },
+        {
+          "region": "camera-detail",
+          "rgb_mae": 69.7392
+        },
+        {
+          "region": "target-side",
+          "rgb_mae": 29.128
+        },
+        {
+          "region": "camera-numeric",
+          "rgb_mae": 15.209
+        },
+        {
+          "region": "materials",
+          "rgb_mae": 47.9475
+        }
+      ],
+      "bounds": [
+        {
+          "region": "header",
+          "result": "PASS",
+          "expected": [
+            0,
+            0,
+            1672,
+            49
+          ],
+          "actual": [
+            0,
+            0,
+            1672,
+            49
+          ],
+          "delta": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance_px": 8
+        },
+        {
+          "region": "prepare",
+          "result": "PASS",
+          "expected": [
+            7,
+            54,
+            338,
+            608
+          ],
+          "actual": [
+            7,
+            54,
+            338.8125,
+            611.90625
+          ],
+          "delta": [
+            0.0,
+            0.0,
+            0.812,
+            3.906
+          ],
+          "tolerance_px": 8
+        },
+        {
+          "region": "preview-panel",
+          "result": "PASS",
+          "expected": [
+            352,
+            54,
+            902,
+            608
+          ],
+          "actual": [
+            352.8125,
+            54,
+            904.203125,
+            611.90625
+          ],
+          "delta": [
+            0.812,
+            0.0,
+            2.203,
+            3.906
+          ],
+          "tolerance_px": 8
+        },
+        {
+          "region": "preview-stage",
+          "result": "PASS",
+          "expected": [
+            355,
+            94,
+            895,
+            492
+          ],
+          "actual": [
+            356.8125,
+            92.796875,
+            896.203125,
+            491.109375
+          ],
+          "delta": [
+            1.812,
+            -1.203,
+            1.203,
+            -0.891
+          ],
+          "tolerance_px": 8
+        },
+        {
+          "region": "preview-controls",
+          "result": "PASS",
+          "expected": [
+            355,
+            611,
+            895,
+            46
+          ],
+          "actual": [
+            356.8125,
+            610.90625,
+            896.203125,
+            47
+          ],
+          "delta": [
+            1.812,
+            -0.094,
+            1.203,
+            1.0
+          ],
+          "tolerance_px": 8
+        },
+        {
+          "region": "scene-list",
+          "result": "PASS",
+          "expected": [
+            1263,
+            54,
+            400,
+            608
+          ],
+          "actual": [
+            1264.015625,
+            54,
+            400.984375,
+            611.90625
+          ],
+          "delta": [
+            1.016,
+            0.0,
+            0.984,
+            3.906
+          ],
+          "tolerance_px": 8
+        },
+        {
+          "region": "detail-tabs",
+          "result": "PASS",
+          "expected": [
+            7,
+            674,
+            1656,
+            56
+          ],
+          "actual": [
+            8,
+            674.90625,
+            1656,
+            56
+          ],
+          "delta": [
+            1.0,
+            0.906,
+            0.0,
+            0.0
+          ],
+          "tolerance_px": 8
+        },
+        {
+          "region": "timeline",
+          "result": "PASS",
+          "expected": [
+            7,
+            735,
+            1278,
+            53
+          ],
+          "actual": [
+            8,
+            734.90625,
+            1281.4375,
+            53
+          ],
+          "delta": [
+            1.0,
+            -0.094,
+            3.438,
+            0.0
+          ],
+          "tolerance_px": 8
+        },
+        {
+          "region": "camera-detail",
+          "result": "PASS",
+          "expected": [
+            7,
+            793,
+            588,
+            136
+          ],
+          "actual": [
+            8,
+            793.90625,
+            589.671875,
+            132.09375
+          ],
+          "delta": [
+            1.0,
+            0.906,
+            1.672,
+            -3.906
+          ],
+          "tolerance_px": 8
+        },
+        {
+          "region": "target-side",
+          "result": "PASS",
+          "expected": [
+            603,
+            793,
+            260,
+            136
+          ],
+          "actual": [
+            603.671875,
+            793.90625,
+            262.078125,
+            132.09375
+          ],
+          "delta": [
+            0.672,
+            0.906,
+            2.078,
+            -3.906
+          ],
+          "tolerance_px": 8
+        },
+        {
+          "region": "camera-numeric",
+          "result": "PASS",
+          "expected": [
+            871,
+            793,
+            414,
+            136
+          ],
+          "actual": [
+            871.75,
+            793.90625,
+            417.6875,
+            132.09375
+          ],
+          "delta": [
+            0.75,
+            0.906,
+            3.688,
+            -3.906
+          ],
+          "tolerance_px": 8
+        },
+        {
+          "region": "materials",
+          "result": "PASS",
+          "expected": [
+            1294,
+            735,
+            369,
+            194
+          ],
+          "actual": [
+            1295.4375,
+            734.90625,
+            368.546875,
+            191.09375
+          ],
+          "delta": [
+            1.438,
+            -0.094,
+            -0.453,
+            -2.906
+          ],
+          "tolerance_px": 8
+        }
+      ]
     },
     {
       "screen_id": "T-B-S",
@@ -111,7 +454,7 @@
         872.0,
         490.5
       ],
-      "unmasked_rgb_mae": 9.7284,
+      "unmasked_rgb_mae": 10.8672,
       "regions": [
         {
           "region": "header",
@@ -131,11 +474,11 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 11.9536
+          "rgb_mae": 13.3782
         },
         {
           "region": "scene-list",
-          "rgb_mae": 27.1619
+          "rgb_mae": 27.7551
         },
         {
           "region": "scene-card-0",
@@ -163,7 +506,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.8391
+          "rgb_mae": 0.884
         },
         {
           "region": "preview-stage",
@@ -175,11 +518,11 @@
         },
         {
           "region": "inspector",
-          "rgb_mae": 0.2153
+          "rgb_mae": 7.4053
         },
         {
           "region": "camera-modes",
-          "rgb_mae": 0.1762
+          "rgb_mae": 21.8358
         },
         {
           "region": "slider-third_dist",
@@ -759,7 +1102,7 @@
         918.2222222222222,
         516.5
       ],
-      "unmasked_rgb_mae": 0.7406,
+      "unmasked_rgb_mae": 0.7547,
       "regions": [
         {
           "region": "header",
@@ -779,7 +1122,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 0.6978
+          "rgb_mae": 0.7156
         },
         {
           "region": "preset-library",
@@ -803,7 +1146,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.4976
+          "rgb_mae": 0.5587
         },
         {
           "region": "preview-stage",
@@ -1191,7 +1534,7 @@
         747.5555555555555,
         420.5
       ],
-      "unmasked_rgb_mae": 0.4395,
+      "unmasked_rgb_mae": 1.7096,
       "regions": [
         {
           "region": "header",
@@ -1211,11 +1554,11 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 0.342
+          "rgb_mae": 1.9056
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.699
+          "rgb_mae": 0.7468
         },
         {
           "region": "preview-stage",
@@ -1227,11 +1570,11 @@
         },
         {
           "region": "inspector",
-          "rgb_mae": 0.1348
+          "rgb_mae": 5.1854
         },
         {
           "region": "camera-modes",
-          "rgb_mae": 0.1296
+          "rgb_mae": 20.171
         },
         {
           "region": "slider-motion_arc",
@@ -1623,7 +1966,7 @@
         754,
         424.125
       ],
-      "unmasked_rgb_mae": 1.056,
+      "unmasked_rgb_mae": 1.2005,
       "regions": [
         {
           "region": "header",
@@ -1643,7 +1986,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 1.1012
+          "rgb_mae": 1.2791
         },
         {
           "region": "scene-wall",
@@ -1651,7 +1994,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.6377
+          "rgb_mae": 0.7598
         },
         {
           "region": "preview-stage",
@@ -1663,11 +2006,11 @@
         },
         {
           "region": "highlight-filter",
-          "rgb_mae": 0.0318
+          "rgb_mae": 0.8964
         },
         {
           "region": "output-queue",
-          "rgb_mae": 0.0364
+          "rgb_mae": 0.1741
         },
         {
           "region": "footer-11",
@@ -1974,7 +2317,7 @@
         932.4444444444445,
         524.5
       ],
-      "unmasked_rgb_mae": 0.4049,
+      "unmasked_rgb_mae": 0.4192,
       "regions": [
         {
           "region": "header",
@@ -1990,7 +2333,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 0.2732
+          "rgb_mae": 0.2912
         },
         {
           "region": "flow-rail",
@@ -1998,7 +2341,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.4736
+          "rgb_mae": 0.5364
         },
         {
           "region": "preview-stage",
@@ -2352,7 +2695,7 @@
         1014.2222222222222,
         570.5
       ],
-      "unmasked_rgb_mae": 2.7946,
+      "unmasked_rgb_mae": 2.8097,
       "regions": [
         {
           "region": "header",
@@ -2372,7 +2715,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 3.3423
+          "rgb_mae": 3.3617
         },
         {
           "region": "kill-ribbon",
@@ -2396,7 +2739,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.4767
+          "rgb_mae": 0.5297
         },
         {
           "region": "preview-stage",
@@ -2865,7 +3208,7 @@
         872.0,
         490.5
       ],
-      "unmasked_rgb_mae": 8.188,
+      "unmasked_rgb_mae": 9.605,
       "regions": [
         {
           "region": "header",
@@ -2885,11 +3228,11 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 10.0139
+          "rgb_mae": 11.7864
         },
         {
           "region": "scene-list",
-          "rgb_mae": 13.5392
+          "rgb_mae": 14.1522
         },
         {
           "region": "scene-card-0",
@@ -2917,7 +3260,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.831
+          "rgb_mae": 0.8865
         },
         {
           "region": "preview-stage",
@@ -2929,11 +3272,11 @@
         },
         {
           "region": "inspector",
-          "rgb_mae": 0.2054
+          "rgb_mae": 9.2401
         },
         {
           "region": "camera-modes",
-          "rgb_mae": 0.1482
+          "rgb_mae": 27.4202
         },
         {
           "region": "slider-third_dist",
@@ -3513,7 +3856,7 @@
         932.4444444444445,
         524.5
       ],
-      "unmasked_rgb_mae": 0.406,
+      "unmasked_rgb_mae": 0.4213,
       "regions": [
         {
           "region": "header",
@@ -3529,7 +3872,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 0.2719
+          "rgb_mae": 0.2912
         },
         {
           "region": "flow-rail",
@@ -3537,7 +3880,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.47
+          "rgb_mae": 0.5373
         },
         {
           "region": "preview-stage",
@@ -3891,7 +4234,7 @@
         840.0,
         472.5
       ],
-      "unmasked_rgb_mae": 4.7227,
+      "unmasked_rgb_mae": 4.7928,
       "regions": [
         {
           "region": "header",
@@ -3911,11 +4254,11 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 5.6698
+          "rgb_mae": 5.7571
         },
         {
           "region": "scene-list",
-          "rgb_mae": 26.3795
+          "rgb_mae": 26.8405
         },
         {
           "region": "scene-card-0",
@@ -3943,7 +4286,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.8846
+          "rgb_mae": 0.9415
         },
         {
           "region": "preview-stage",
@@ -4593,7 +4936,7 @@
         808.0,
         454.5
       ],
-      "unmasked_rgb_mae": 3.5286,
+      "unmasked_rgb_mae": 3.5416,
       "regions": [
         {
           "region": "header",
@@ -4613,7 +4956,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 4.1688
+          "rgb_mae": 4.1849
         },
         {
           "region": "material-library",
@@ -4621,11 +4964,11 @@
         },
         {
           "region": "material-card-0",
-          "rgb_mae": 7.9782
+          "rgb_mae": 7.978
         },
         {
           "region": "material-card-1",
-          "rgb_mae": 6.719
+          "rgb_mae": 6.7191
         },
         {
           "region": "material-card-2",
@@ -4637,7 +4980,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.6143
+          "rgb_mae": 0.6554
         },
         {
           "region": "preview-stage",
@@ -5052,7 +5395,7 @@
         840.0,
         472.5
       ],
-      "unmasked_rgb_mae": 4.2912,
+      "unmasked_rgb_mae": 5.7241,
       "regions": [
         {
           "region": "header",
@@ -5072,11 +5415,11 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 5.1322
+          "rgb_mae": 6.9164
         },
         {
           "region": "scene-list",
-          "rgb_mae": 26.3795
+          "rgb_mae": 26.8405
         },
         {
           "region": "scene-card-0",
@@ -5104,7 +5447,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.8846
+          "rgb_mae": 0.9415
         },
         {
           "region": "preview-stage",
@@ -5116,11 +5459,11 @@
         },
         {
           "region": "inspector",
-          "rgb_mae": 0.1781
+          "rgb_mae": 5.1955
         },
         {
           "region": "camera-modes",
-          "rgb_mae": 0.1231
+          "rgb_mae": 19.7898
         },
         {
           "region": "slider-third_dist",
@@ -5700,7 +6043,7 @@
         808.0,
         454.5
       ],
-      "unmasked_rgb_mae": 3.5288,
+      "unmasked_rgb_mae": 3.5418,
       "regions": [
         {
           "region": "header",
@@ -5720,7 +6063,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 4.1688
+          "rgb_mae": 4.1849
         },
         {
           "region": "material-library",
@@ -5744,7 +6087,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.6143
+          "rgb_mae": 0.6554
         },
         {
           "region": "preview-stage",
@@ -6159,7 +6502,7 @@
         597.3333333333334,
         336.0
       ],
-      "unmasked_rgb_mae": 3.7992,
+      "unmasked_rgb_mae": 5.846,
       "regions": [
         {
           "region": "header",
@@ -6179,11 +6522,11 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 4.5475
+          "rgb_mae": 7.2344
         },
         {
           "region": "scene-list",
-          "rgb_mae": 19.9863
+          "rgb_mae": 21.033
         },
         {
           "region": "scene-card-0",
@@ -6211,7 +6554,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.9776
+          "rgb_mae": 1.0842
         },
         {
           "region": "preview-stage",
@@ -6223,11 +6566,11 @@
         },
         {
           "region": "inspector",
-          "rgb_mae": 0.1459
+          "rgb_mae": 12.3559
         },
         {
           "region": "camera-modes",
-          "rgb_mae": 0.2019
+          "rgb_mae": 23.1086
         },
         {
           "region": "slider-third_dist",
@@ -6807,7 +7150,7 @@
         583.1111111111111,
         328.0
       ],
-      "unmasked_rgb_mae": 1.1127,
+      "unmasked_rgb_mae": 1.1387,
       "regions": [
         {
           "region": "header",
@@ -6827,7 +7170,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 1.0218
+          "rgb_mae": 1.0558
         },
         {
           "region": "preset-library",
@@ -6851,7 +7194,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.7908
+          "rgb_mae": 0.9021
         },
         {
           "region": "preview-stage",
@@ -7239,7 +7582,7 @@
         490.6666666666667,
         276.0
       ],
-      "unmasked_rgb_mae": 0.7225,
+      "unmasked_rgb_mae": 2.7029,
       "regions": [
         {
           "region": "header",
@@ -7259,11 +7602,11 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 0.528
+          "rgb_mae": 3.0713
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 1.1198
+          "rgb_mae": 1.2198
         },
         {
           "region": "preview-stage",
@@ -7275,11 +7618,11 @@
         },
         {
           "region": "inspector",
-          "rgb_mae": 0.2422
+          "rgb_mae": 8.3003
         },
         {
           "region": "camera-modes",
-          "rgb_mae": 0.1736
+          "rgb_mae": 21.8495
         },
         {
           "region": "slider-motion_arc",
@@ -7671,7 +8014,7 @@
         529.7777777777778,
         298.0
       ],
-      "unmasked_rgb_mae": 0.933,
+      "unmasked_rgb_mae": 1.2067,
       "regions": [
         {
           "region": "header",
@@ -7691,7 +8034,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 0.7934
+          "rgb_mae": 1.1474
         },
         {
           "region": "scene-wall",
@@ -7699,7 +8042,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.2428
+          "rgb_mae": 0.4734
         },
         {
           "region": "preview-stage",
@@ -7711,11 +8054,11 @@
         },
         {
           "region": "highlight-filter",
-          "rgb_mae": 0.0553
+          "rgb_mae": 1.6394
         },
         {
           "region": "output-queue",
-          "rgb_mae": 0.0567
+          "rgb_mae": 0.2711
         },
         {
           "region": "footer-11",
@@ -8022,7 +8365,7 @@
         597.3333333333334,
         336.0
       ],
-      "unmasked_rgb_mae": 0.5753,
+      "unmasked_rgb_mae": 0.6021,
       "regions": [
         {
           "region": "header",
@@ -8038,7 +8381,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 0.3154
+          "rgb_mae": 0.3506
         },
         {
           "region": "flow-rail",
@@ -8046,7 +8389,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.6918
+          "rgb_mae": 0.8315
         },
         {
           "region": "preview-stage",
@@ -8400,7 +8743,7 @@
         618.6666666666666,
         348.0
       ],
-      "unmasked_rgb_mae": 3.7609,
+      "unmasked_rgb_mae": 3.7881,
       "regions": [
         {
           "region": "header",
@@ -8420,7 +8763,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 4.5145
+          "rgb_mae": 4.5505
         },
         {
           "region": "kill-ribbon",
@@ -8444,7 +8787,7 @@
         },
         {
           "region": "preview-panel",
-          "rgb_mae": 0.7954
+          "rgb_mae": 0.896
         },
         {
           "region": "preview-stage",

@@ -16,10 +16,11 @@ import secrets
 import threading
 from urllib.parse import parse_qs, unquote, urlparse
 
-from ui.audit29_runtime import Audit29Runtime, SCREENS
+from ui.audit29_runtime import Audit29Runtime, SCREENS, LEGACY_RECONSTRUCTIONS
 
 
 DESIGN = Path(__file__).resolve().parents[1] / "design" / "ui" / "ui_rethink_20261021"
+LEGACY_DESIGN = Path(__file__).resolve().parents[1] / "design" / "ui" / "ui29_legacy"
 CLIENT = Path(__file__).with_name("audit29_client.js")
 
 
@@ -63,7 +64,9 @@ class UI29Server:
     @property
     def url(self):
         route = (f"/ui/{self.runtime.screen_id}"
-                 if self.runtime.screen_id and "html" in SCREENS[self.runtime.screen_id] else "/choose")
+                 if self.runtime.screen_id and ("html" in SCREENS[self.runtime.screen_id]
+                                                or self.runtime.screen_id in LEGACY_RECONSTRUCTIONS)
+                 else "/choose")
         return f"http://127.0.0.1:{self.http.server_port}{route}?token={self.token}"
 
     def close(self):
@@ -108,9 +111,9 @@ class UI29Server:
                     for row in SCREENS.values():
                         families.setdefault(row["family"], row)
                     buttons = "".join(
-                        f'<button data-id="{row["id"]}" {"" if "html" in row else "disabled"}>'
+                        f'<button data-id="{row["id"]}" {"" if "html" in row or row["id"] in LEGACY_RECONSTRUCTIONS else "disabled"}>'
                         f'{row["family_name"]} <small>{row["id"]}</small>'
-                        f'{"" if "html" in row else " — 再構成中"}</button>'
+                        f'{"" if "html" in row or row["id"] in LEGACY_RECONSTRUCTIONS else " — 再構成中"}</button>'
                         for row in families.values())
                     html = '''<!doctype html><html lang="ja"><meta charset="utf-8">
 <title>AutoCine UI候補を選ぶ</title><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -121,7 +124,7 @@ button{min-height:72px;padding:14px;border:1px solid #6c7d90;border-radius:8px;b
 button:hover:not(:disabled){border:2px solid #245fab;background:#d7e6fc}button:disabled{opacity:.6;cursor:not-allowed}
 small{display:block;color:#465a6f}#status{min-height:24px;color:#a33}</style>
 <main><h1>LoL AutoCine — UI比較候補</h1><p>12候補・29画面は未採用です。選択してもシーンやカメラ設定を初期化しません。</p>
-<p>旧11画面は原画像から再構成中。選択可能な新A〜Fは元HTMLを使用し、未接続機能を明示します。</p>
+<p>旧11画面は順次再構成中。旧テストAと新A〜Fは共通Appへ接続し、未接続機能を明示します。</p>
 <section>''' + buttons + '''</section><p id="status"></p></main><script>
 const token=''' + json.dumps(owner.token) + ''';
 document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>button.onclick=async()=>{
@@ -161,15 +164,17 @@ document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>butt
                     screen = SCREENS.get(screen_id)
                     if screen is None:
                         return self._json(404, {"error": "unknown screen"})
-                    if "html" not in screen:
+                    if "html" not in screen and screen_id not in LEGACY_RECONSTRUCTIONS:
                         return self._json(501, {"error": "旧画面の編集可能なHTMLは監査資料にありません。再構成は未完了です", "screen_id": screen_id})
-                    source = DESIGN / screen["html"]
+                    source = ((LEGACY_DESIGN / LEGACY_RECONSTRUCTIONS[screen_id])
+                              if screen_id in LEGACY_RECONSTRUCTIONS else DESIGN / screen["html"])
                     html = source.read_text(encoding="utf-8")
                     html = html.replace('<script src="ui.js"></script>',
                         f'<script>window.AUTOCINE_TOKEN={json.dumps(owner.token)};'
                         f'window.AUTOCINE_SCREEN={json.dumps(screen_id)};</script>'
                         '<script src="/runtime/client.js?token=' + owner.token + '"></script>')
                     html = html.replace('href="ui.css"', f'href="/static/ui.css?token={owner.token}"')
+                    html = html.replace('href="legacy.css"', f'href="/static/legacy/legacy.css?token={owner.token}"')
                     html = html.replace('src="assets/', f'src="/static/assets/')
                     if parse_qs(urlparse(self.path).query).get("measure") == ["1"]:
                         # Read-only DOM bounds for reproducible offline layout QA.
@@ -191,8 +196,11 @@ result.textContent = JSON.stringify(boxes); document.body.append(result);
                         html = html.replace("</body>", measurement + "</body>")
                     return self._send(200, html.encode("utf-8"), "text/html; charset=utf-8")
                 if path.startswith("/static/"):
-                    source = (DESIGN / path[len("/static/"):]).resolve()
-                    if not source.is_relative_to(DESIGN.resolve()) or not source.is_file():
+                    static_path = path[len("/static/"):]
+                    base = LEGACY_DESIGN if static_path.startswith("legacy/") else DESIGN
+                    relative = static_path[len("legacy/"):] if base == LEGACY_DESIGN else static_path
+                    source = (base / relative).resolve()
+                    if not source.is_relative_to(base.resolve()) or not source.is_file():
                         return self._json(404, {"error": "missing asset"})
                     mime = mimetypes.guess_type(source.name)[0] or "application/octet-stream"
                     return self._send(200, source.read_bytes(), mime)

@@ -49,6 +49,7 @@ class App:
         self.players = [object()] * 10
         self.locked = None
         self.var_event_mode = Variable("キル")
+        self.var_edit_mode = Variable("easy")
         self.source = None
         self.var_camera_control_mode = Variable("固定視点＋自動構図補正")
         self.var_camera_side = Variable("BLUE")
@@ -123,6 +124,21 @@ class Audit29RuntimeTests(unittest.TestCase):
                 runtime.perform("scene_save")
             self.assertEqual(called, ["save", "undo", "redo"])
 
+    def test_edit_mode_reuses_native_workspace_state(self):
+        app = App()
+        called = []
+        app.root.deiconify = lambda: called.append("show")
+        app.root.lift = lambda: called.append("raise")
+        app._apply_edit_mode = lambda **_kwargs: called.append(app.var_edit_mode.get())
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            runtime = Audit29Runtime(app, Path(directory) / "workspace.json")
+            runtime.perform("edit_mode", {"value": "advanced"})
+            self.assertEqual(runtime.snapshot()["edit_mode"], "advanced")
+            runtime.perform("edit_mode", {"value": "easy"})
+            self.assertEqual(called, ["advanced", "show", "raise", "easy"])
+            with self.assertRaises(ValueError):
+                runtime.perform("edit_mode", {"value": "unknown"})
+
     def test_local_server_uses_editable_source_and_rejects_old_placeholder(self):
         with TemporaryDirectory(dir=ROOT / "qa") as directory:
             server = UI29Server(App(), Path(directory) / "workspace.json")
@@ -136,8 +152,16 @@ class Audit29RuntimeTests(unittest.TestCase):
                 self.assertIn('data-ui="preview-panel"', html)
                 self.assertIn('/runtime/client.js', html)
                 self.assertNotIn('<script src="ui.js"></script>', html)
+                server.runtime.select_screen("T-A-M")
+                with urlopen(server.url, timeout=5) as response:
+                    legacy_html = response.read().decode("utf-8")
+                self.assertIn('data-ui="prepare"', legacy_html)
+                self.assertIn('data-ui="scene-list"', legacy_html)
+                self.assertIn('/static/legacy/legacy.css', legacy_html)
+                screen_rows = server.runtime.snapshot()["workspace"]["screens"]
+                self.assertTrue(next(row for row in screen_rows if row["id"] == "T-A-M")["implemented"])
                 with self.assertRaises(HTTPError) as error:
-                    urlopen(server.url.replace("R-A-main", "L02-M"), timeout=5)
+                    urlopen(server.url.replace("T-A-M", "L02-M"), timeout=5)
                 self.assertEqual(error.exception.code, 501)
             finally:
                 server.close()

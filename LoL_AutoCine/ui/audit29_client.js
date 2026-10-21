@@ -110,12 +110,72 @@
       'LoLミラー未接続・静止イラストは表示しません';
     const footnote = document.querySelector('footer.footnote span');
     if (footnote) footnote.textContent = 'UI比較版・実際の操作は既存AutoCineに反映 / LoL未接続時は映像を表示しません';
-    const countLabel = document.querySelector('.scene-list .panel-head + button + p');
+    const scanStatus=document.querySelector('[data-ui="scan-status"]');
+    if (scanStatus) scanStatus.textContent=data.scan.status;
+    const sceneCount=document.querySelector('[data-ui="scene-count"]');
+    if (sceneCount) sceneCount.textContent=`全${data.scenes.length}件`;
+    const targetName=document.querySelector('[data-ui="target-name"]');
+    if (targetName) {
+      const target=data.replay.players.find(player=>player.slot===data.replay.target_slot);
+      targetName.textContent=target ? `TargetLock：${target.champion} / ${target.name}` : 'TargetLock：未選択';
+    }
+    const playerList=document.querySelector('[data-ui="player-list"]');
+    if (playerList) {
+      playerList.replaceChildren();
+      if (!data.replay.players.length) {
+        const placeholder=document.createElement('p');
+        placeholder.textContent='試合接続後にプレイヤーを表示します。';
+        playerList.append(placeholder);
+      }
+      for (const player of data.replay.players) {
+        const row=document.createElement('div');
+        row.className=`player-row${player.slot===data.replay.target_slot?' selected':''}`;
+        row.dataset.playerSlot=String(player.slot);
+        row.textContent=`${player.side}　${player.champion}　${player.name}`;
+        playerList.append(row);
+      }
+    }
+    document.querySelectorAll('.camera-card').forEach(card=>
+      card.classList.toggle('selected',card.textContent.includes(data.camera.mode)));
+    document.querySelectorAll('.target-side button').forEach(button=>{
+      const name=button.textContent.trim();
+      const active=name==='BLUE' ? data.camera.side.includes('ブルー') :
+        name==='RED' ? data.camera.side.includes('レッド') :
+        name==='自動' && data.camera.side.includes('自動');
+      button.classList.toggle('selected',active);
+    });
+    document.querySelectorAll('.edit-mode button').forEach(button=>{
+      const mode=button.textContent.includes('詳細')?'advanced':'easy';
+      button.classList.toggle('selected',data.edit_mode===mode);
+    });
+    const countLabel = document.querySelector('[data-ui="scene-list"] .panel-head + button + p');
     if (countLabel) {
       countLabel.textContent = `検出 ${data.scenes.length}件 / 出力チェック ${data.checked_count}件` +
         (data.scan.percent > 0 && data.scan.percent < 100 ? ` / スキャン ${Math.round(data.scan.percent)}%` : '');
       countLabel.title = data.scan.status;
     }
+    document.querySelectorAll('span, strong, button, p').forEach(label=>{
+      const value=label.textContent.trim();
+      if (value==='表示例：4 / 6件を選択' || label.dataset.liveCount==='selection') {
+        label.textContent=`選択：${data.checked_count} / ${data.scenes.length}件`;
+        label.dataset.liveCount='selection';
+      } else if (value==='チェックした4件' || label.dataset.liveCount==='checked') {
+        label.textContent=`チェックした${data.checked_count}件`;
+        label.dataset.liveCount='checked';
+      } else if (value==='4件から動画を作成' || label.dataset.liveCount==='export') {
+        label.textContent=`${data.checked_count}件から動画を作成`;
+        label.dataset.liveCount='export';
+      }
+    });
+    const selectedScene=data.scenes.find(scene=>scene.selected);
+    document.querySelectorAll('.preview-heading .row span:first-child').forEach(label=>{
+      if (/^\d{1,2}:\d{2}/.test(label.textContent.trim()) || label.dataset.liveTime) {
+        label.textContent=selectedScene ?
+          `${sceneTime(selectedScene.time)}.${String(Math.floor(selectedScene.time%1*100)).padStart(2,'0')}` :
+          '--:--';
+        label.dataset.liveTime='1';
+      }
+    });
     renderTimeline(data);
     const sampleCards = [...document.querySelectorAll('[data-ui^="scene-card-"]')];
     if (sampleCards.length && data.scenes.length > sampleCards.length) {
@@ -271,6 +331,11 @@
   }
   function operation(button) {
     const label = button.textContent.trim().replace(/\s+/g,' ');
+    if (button.closest('.bottom-panel .tabs')) {
+      const zones={'シーン':'scene','カメラ':'camera','色・FX':'fx','出力':'output'};
+      return zones[label] ? ['native_editor_zone',{zone:zones[label]}] :
+        label==='テスト結果' ? ['diagnostics'] : null;
+    }
     if (/リプレイを開く/.test(label)) return ['open_replay'];
     if (/準備/.test(label)) return ['prepare'];
     if (/試合全体.*スキャン|シーンを検出/.test(label)) return ['scan'];
@@ -279,6 +344,8 @@
     if (/演出を確認|演出プレビュー.*再生/.test(label)) return ['preview_play'];
     if (/^■?\s*停止$/.test(label)) return ['preview_stop'];
     if (/^基本設定$/.test(label)) return ['native_settings'];
+    if (/^簡単編集$/.test(label)) return ['edit_mode',{value:'easy'}];
+    if (/^詳細編集$/.test(label)) return ['edit_mode',{value:'advanced'}];
     if (/このシーンに保存/.test(label)) return ['scene_save'];
     if (/元に戻す/.test(label)) return ['scene_undo'];
     if (/やり直す/.test(label)) return ['scene_redo'];
@@ -298,6 +365,11 @@
     return null;
   }
   document.addEventListener('click', event => {
+    const player=event.target.closest('[data-player-slot]');
+    if (player) {
+      invoke('target_lock',{slot:Number(player.dataset.playerSlot)});
+      return;
+    }
     const timelineClip=event.target.closest('[data-ui="timeline"] .clip[data-scene-index]');
     if (timelineClip) {
       invoke('select_scene',{index:Number(timelineClip.dataset.sceneIndex)});
@@ -316,10 +388,11 @@
       if (Number.isInteger(index)) invoke('select_scene',{index});
       return;
     }
-    const filter = event.target.closest('.scene-filter button');
+    const filter = event.target.closest('.scene-filter button, .filters button');
     if (filter) {
       const label = filter.textContent.trim();
-      const value = label.includes('両方') ? 'both' : label.includes('アシスト') ? 'assist' : 'kill';
+      const value = /両方|すべて|キル\＋アシスト/.test(label) ? 'both' :
+        label.includes('アシスト') ? 'assist' : 'kill';
       invoke('event_mode',{value});
       return;
     }
@@ -375,8 +448,8 @@
   picker.style.cssText = 'position:fixed;top:6px;left:40%;z-index:2000;display:none;padding:10px';
   for (const [family,id] of familyStart) {
     const option=document.createElement('option');option.value=id;
-    option.textContent=family + (family.startsWith('research')?'':'（再構成中）');
-    option.disabled=!family.startsWith('research');
+    option.textContent=family + (family.startsWith('research') || family==='testA'?'':'（再構成中）');
+    option.disabled=!(family.startsWith('research') || family==='testA');
     picker.append(option);
   }
   picker.value='R-A-main';
@@ -410,8 +483,8 @@
     for (const row of state.value.workspace.screens) {
       const option=document.createElement('option');
       option.value=row.id;
-      option.textContent=`${row.id} — ${row.name}` + (row.id.startsWith('R-')?'':'（再構成中）');
-      option.disabled=!row.id.startsWith('R-');
+      option.textContent=`${row.id} — ${row.name}` + (row.implemented?'':'（再構成中）');
+      option.disabled=!row.implemented;
       viewPicker.append(option);
     }
     viewPicker.value=screenId;

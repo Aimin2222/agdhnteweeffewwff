@@ -53,6 +53,9 @@ def main():
             with urlopen(asset_url, timeout=15) as response:
                 assert response.read(8) == b"\x89PNG\r\n\x1a\n"
             request("screen", {"id": "R-E-main"})
+            request("screen", {"id": "T-A-M"})
+            with urlopen(server.url, timeout=5) as response:
+                assert b'data-ui="prepare"' in response.read()
             request("screen", {"id": "R-A-main"})
             state = request("theme", {"value": "dark"})
             assert state["workspace"]["screen_id"] == "R-A-main"
@@ -63,9 +66,11 @@ def main():
             assert state["frame"]["id"] == "083/a_simple_main"
             assert len(state["frame"]["cards"]) == 4
             assert not state["capabilities"]["engage"]
+            assert next(row for row in state["workspace"]["screens"]
+                        if row["id"] == "T-A-M")["implemented"]
             outcome["result"] = "PASS"
             outcome["screen"] = state["workspace"]["screen_id"]
-            outcome["candidate_roundtrip"] = ["R-A-main", "R-E-main", "R-A-main"]
+            outcome["candidate_roundtrip"] = ["R-A-main", "R-E-main", "T-A-M", "R-A-main"]
             outcome["tested"] = ["neutral_chooser", "candidate_state", "theme_state",
                                  "camera_side", "camera_number", "entrance_motion",
                                  "audited_frame_pair", "catalog_asset_route"]

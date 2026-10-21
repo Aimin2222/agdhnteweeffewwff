@@ -27,16 +27,16 @@ def main():
         "## 今回確認したこと",
         "",
         f"- 原画像・個別仕様・SHA-256・寸法：{len(screens)}画面を照合。",
-        "- 新18画面：既存AutoCine Appに接続したローカルUI経由で、LoL未接続のEdge画像・DOM矩形・50%重ね・差分を保存。",
+        "- 新18画面と再構成した旧テストA：既存AutoCine Appに接続したローカルUI経由で、LoL未接続のEdge画像・DOM矩形・50%重ね・差分を保存。",
         f"- Appブリッジ（候補切替、テーマ、カメラ側・距離、登場アニメ、監査済み素材）：{probe.get('result', 'NOT_RUN')}。",
         "- LoLリプレイ接続、WGCミラー、カメラ実映像、GPU/NVENC、ゲーム音、録画、MP4出力：**このブランチでは未実施**。",
-        "- 旧11画面：編集可能な原HTMLがないため、コードとしての忠実な再構成は未実装。原画像を押せるだけの画面として扱わない。",
+        "- 旧11画面：T-A-Mは原画像の配置から再構成を開始。残り10画面は編集可能な原HTMLがなく未実装。原画像を押せるだけの画面として扱わない。",
         "",
         "`MEASURED` は寸法比較を実行した意味。目視審査・機能合格ではない。`REVIEW` は矩形差が許容外。",
         "",
         "## 29画面一覧",
         "",
-        "| ID | 候補 | 実装 | オフライン視覚 | 映像外RGB差/255 | 矩形 ±2px | LoL実機 |",
+        "| ID | 候補 | 実装 | オフライン視覚 | 映像外RGB差/255 | 矩形許容内 | LoL実機 |",
         "|---|---|---|---|---:|---:|---|",
     ]
     for screen in screens:
@@ -44,7 +44,7 @@ def main():
         bounds = row.get("bounds") or []
         passed = sum(item["result"] == "PASS" for item in bounds)
         total = len(bounds)
-        implemented = "部分実装" if screen["group"] == "research" else "未実装"
+        implemented = "部分実装" if screen["group"] == "research" or screen["id"] == "T-A-M" else "未実装"
         visual = row.get("visual_result", "NOT_RUN")
         mae = row.get("unmasked_rgb_mae", "—")
         dimension = f"{passed}/{total}" if total else "—"
@@ -53,7 +53,7 @@ def main():
         "",
         "## 残る合格条件",
         "",
-        "1. 旧11画面を原画像の配置・操作順でコードから再構成し、12候補すべてを同じAppで切り替える。",
+        "1. 残る旧10画面を原画像の配置・操作順でコードから再構成し、12候補すべてを同じAppで切り替える。",
         "2. 新18画面を含む全操作部品を監査F01〜F25へ接続し、表示例を実データへ置換する。エンゲージは専用実装ができるまで未対応と表示する。",
         "3. 全29画面で実装画像・重ね合わせ・差分・寸法を審査し、表示倍率125%も確認する。",
         "4. 実際のLoLリプレイでスキャン、TargetLock、BLUE/RED、固定自動・フルオート、FX、WGC、GPU/NVENC、LoL音声、MP4出力を機能別に合否記録する。",
