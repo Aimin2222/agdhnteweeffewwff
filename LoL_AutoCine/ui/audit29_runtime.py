@@ -136,7 +136,8 @@ class Audit29Runtime:
             "selected_scene_index": selected[0] if selected else None,
             "checked_count": len(app.checked_kills),
             "scan": {"status": str(app.lbl_scan.cget("text")) if hasattr(app, "lbl_scan") else "未スキャン",
-                     "percent": float(app.pb_scan["value"]) if hasattr(app, "pb_scan") else 0.0},
+                     "percent": float(app.pb_scan["value"]) if hasattr(app, "pb_scan") else 0.0,
+                     "duration": float(getattr(getattr(app, "_match_scan_cache", None), "length", 0) or 0)},
             "event_mode": app.var_event_mode.get(),
             "camera": {"mode": app.var_camera_control_mode.get(),
                        "side": app.var_camera_side.get(), "style": app.var_style.get(),
@@ -301,6 +302,35 @@ class Audit29Runtime:
             app.on_stop()
         elif action == "output_folder":
             app.on_pick_out()
+        elif action == "scene_save":
+            if not app.lb_kills.curselection():
+                raise ValueError("先に保存するシーンを選択してください")
+            if app.busy:
+                raise ValueError("書き出し中はシーン設定を保存できません")
+            app.on_save_scene()
+        elif action == "scene_undo":
+            app.on_scene_undo()
+        elif action == "scene_redo":
+            app.on_scene_redo()
+        elif action == "project_export":
+            app.root.deiconify()
+            app.root.lift()
+            app.on_scene_export()
+        elif action == "project_import":
+            app.root.deiconify()
+            app.root.lift()
+            app.on_scene_import()
+        elif action == "native_settings":
+            app._focus_settings()
+            app.root.deiconify()
+            app.root.lift()
+        elif action == "native_editor_zone":
+            zone = str(data["zone"])
+            if zone not in ("scene", "camera", "color", "fx", "output"):
+                raise ValueError("unknown editor zone")
+            app._focus_editor_zone(zone)
+            app.root.deiconify()
+            app.root.lift()
         elif action == "diagnostics":
             app.on_show_diagnostics()
         elif action == "automatic_qa":

@@ -19,7 +19,7 @@
     872.0,
     490.5
   ],
-  "unmasked_rgb_mae": 1.8623,
+  "unmasked_rgb_mae": 8.188,
   "regions": [
     {
       "region": "header",
@@ -39,7 +39,7 @@
     },
     {
       "region": "workspace",
-      "rgb_mae": 2.1009
+      "rgb_mae": 10.0139
     },
     {
       "region": "scene-list",
@@ -67,7 +67,7 @@
     },
     {
       "region": "scene-card-5",
-      "rgb_mae": 0.076
+      "rgb_mae": 8.8374
     },
     {
       "region": "preview-panel",
@@ -103,11 +103,11 @@
     },
     {
       "region": "timeline",
-      "rgb_mae": 0.0307
+      "rgb_mae": 26.5216
     },
     {
       "region": "trim",
-      "rgb_mae": 0.0518
+      "rgb_mae": 69.7075
     },
     {
       "region": "footer-22",
@@ -600,7 +600,7 @@
     },
     {
       "region": "trim",
-      "result": "PASS",
+      "result": "FAIL",
       "expected": [
         45,
         954,
@@ -609,13 +609,13 @@
       ],
       "actual": [
         45,
-        954,
+        924,
         1830,
         36
       ],
       "delta": [
         0.0,
-        0.0,
+        -30.0,
         0.0,
         0.0
       ],

@@ -44,10 +44,10 @@ class TkDispatcher:
                 future.set_exception(exc)
         self.root.after(20, self._drain)
 
-    def call(self, fn):
+    def call(self, fn, *, timeout=30):
         future = Future()
         self.queue.put((fn, future))
-        return future.result(timeout=30)
+        return future.result(timeout=timeout)
 
 
 class UI29Server:
@@ -208,7 +208,11 @@ result.textContent = JSON.stringify(boxes); document.body.append(result);
                     body = json.loads(self.rfile.read(length))
                     action = str(body["action"])
                     payload = body.get("data") or {}
-                    result = owner.dispatcher.call(lambda: owner.runtime.perform(action, payload))
+                    # Native file dialogs legitimately stay open while a user chooses a path.
+                    # Do not report a false HTTP failure after the default 30-second wait.
+                    dialog_actions = {"open_replay", "project_export", "project_import", "output_folder"}
+                    result = owner.dispatcher.call(lambda: owner.runtime.perform(action, payload),
+                                                   timeout=None if action in dialog_actions else 30)
                     return self._json(200, result)
                 except (ValueError, KeyError, NotImplementedError) as exc:
                     return self._json(422, {"error": str(exc)})

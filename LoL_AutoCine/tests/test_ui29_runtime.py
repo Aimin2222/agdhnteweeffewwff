@@ -107,6 +107,22 @@ class Audit29RuntimeTests(unittest.TestCase):
             self.assertEqual(app.var_camera_side.get(), "レッド側基準")
             self.assertEqual(app.var_kill_icon_motion.get(), "左から登場")
 
+    def test_scene_edit_buttons_dispatch_to_existing_project(self):
+        app = App()
+        called = []
+        app.on_save_scene = lambda: called.append("save")
+        app.on_scene_undo = lambda: called.append("undo")
+        app.on_scene_redo = lambda: called.append("redo")
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            runtime = Audit29Runtime(app, Path(directory) / "workspace.json")
+            for action in ("scene_save", "scene_undo", "scene_redo"):
+                runtime.perform(action)
+            self.assertEqual(called, ["save", "undo", "redo"])
+            app.lb_kills.selected = ()
+            with self.assertRaisesRegex(ValueError, "シーンを選択"):
+                runtime.perform("scene_save")
+            self.assertEqual(called, ["save", "undo", "redo"])
+
     def test_local_server_uses_editable_source_and_rejects_old_placeholder(self):
         with TemporaryDirectory(dir=ROOT / "qa") as directory:
             server = UI29Server(App(), Path(directory) / "workspace.json")

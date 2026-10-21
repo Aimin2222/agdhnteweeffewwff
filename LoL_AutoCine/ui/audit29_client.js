@@ -52,6 +52,51 @@
     image.alt = '実LoLミラー映像は接続後に表示します';
     image.style.visibility = 'hidden';
   }
+  function sceneTime(seconds) {
+    return `${String(Math.floor(seconds/60)).padStart(2,'0')}:` +
+      String(Math.floor(seconds%60)).padStart(2,'0');
+  }
+  function renderTimeline(data) {
+    const timeline=document.querySelector('[data-ui="timeline"]');
+    if (!timeline) return;
+    const duration=Math.max(data.scan.duration || 0,
+      ...data.scenes.map(scene=>scene.time + 10),0);
+    const ruler=[...timeline.querySelectorAll('.ruler span')];
+    ruler.forEach((tick,index)=>{
+      tick.textContent=duration ? sceneTime(duration*index/Math.max(ruler.length-1,1)) : '—';
+    });
+    const lanes=[...timeline.querySelectorAll('.lane')];
+    lanes.forEach((lane,index)=>{
+      if (index>0) {
+        // The source mock draws sample camera/FX clips; no per-scene clip data is available here.
+        lane.style.display='none';
+        return;
+      }
+      const bar=lane.querySelector('.lane-bar');
+      if (!bar) return;
+      bar.querySelectorAll('.clip').forEach(clip=>clip.remove());
+      const marker=bar.querySelector('.kill-line');
+      const selected=data.scenes.find(scene=>scene.selected);
+      if (marker) {
+        marker.style.display=selected && duration ? '' : 'none';
+        if (selected && duration) marker.style.left=`${Math.min(100,100*selected.time/duration)}%`;
+      }
+      for (const scene of data.scenes) {
+        const clip=document.createElement('span');
+        clip.className=`clip${scene.selected?' active':''}`;
+        clip.dataset.sceneIndex=String(scene.index);
+        clip.textContent=sceneTime(scene.time);
+        clip.title=`${sceneTime(scene.time)} ${scene.role==='assist'?'アシスト':'キル'} ` +
+          `${scene.side || 'サイド不明'} / ${scene.checked?'出力対象':'出力対象外'}`;
+        clip.style.left=`${Math.min(97,100*scene.time/duration)}%`;
+        clip.style.width=`${Math.max(2.5,Math.min(12,800/duration))}%`;
+        clip.style.cursor='pointer';
+        bar.append(clip);
+      }
+      const label=lane.querySelector('.lane-label');
+      if (label) label.textContent=data.scenes.length ? `検出シーン ${data.scenes.length}件` : 'スキャン後に表示';
+    });
+  }
   function render() {
     const data = state.value;
     if (!data) return;
@@ -71,6 +116,7 @@
         (data.scan.percent > 0 && data.scan.percent < 100 ? ` / スキャン ${Math.round(data.scan.percent)}%` : '');
       countLabel.title = data.scan.status;
     }
+    renderTimeline(data);
     const sampleCards = [...document.querySelectorAll('[data-ui^="scene-card-"]')];
     if (sampleCards.length && data.scenes.length > sampleCards.length) {
       const parent = sampleCards[0].parentElement;
@@ -196,6 +242,33 @@
     cancel.addEventListener('click',event=>{event.stopPropagation();veil.remove()});
     panel.append(cancel);veil.append(panel);document.body.append(veil);
   }
+  function chooseProjectOperation() {
+    const veil=document.createElement('div');
+    veil.style.cssText='position:fixed;inset:0;background:#071321aa;z-index:3000;' +
+      'display:grid;place-items:center';
+    const panel=document.createElement('div');
+    panel.style.cssText='background:var(--panel);color:var(--ink);padding:24px;' +
+      'border:1px solid var(--line);border-radius:12px;min-width:330px;box-shadow:0 10px 30px #0006';
+    const heading=document.createElement('h2');
+    heading.textContent='シーン編集プロジェクト';
+    panel.append(heading);
+    for (const [name,label] of [
+      ['project_export','JSONファイルに保存'], ['project_import','JSONファイルから読み込む']
+    ]) {
+      const item=document.createElement('button');
+      item.textContent=label;
+      item.style.cssText='display:block;width:100%;margin:8px 0;padding:10px';
+      item.addEventListener('click',event=>{
+        event.stopPropagation();veil.remove();invoke(name);
+      });
+      panel.append(item);
+    }
+    const cancel=document.createElement('button');
+    cancel.textContent='キャンセル';
+    cancel.style.cssText='display:block;width:100%;margin-top:12px;padding:10px';
+    cancel.addEventListener('click',event=>{event.stopPropagation();veil.remove()});
+    panel.append(cancel);veil.append(panel);document.body.append(veil);
+  }
   function operation(button) {
     const label = button.textContent.trim().replace(/\s+/g,' ');
     if (/リプレイを開く/.test(label)) return ['open_replay'];
@@ -205,6 +278,12 @@
     if (/ミラー停止/.test(label)) return ['mirror_stop'];
     if (/演出を確認|演出プレビュー.*再生/.test(label)) return ['preview_play'];
     if (/^■?\s*停止$/.test(label)) return ['preview_stop'];
+    if (/^基本設定$/.test(label)) return ['native_settings'];
+    if (/このシーンに保存/.test(label)) return ['scene_save'];
+    if (/元に戻す/.test(label)) return ['scene_undo'];
+    if (/やり直す/.test(label)) return ['scene_redo'];
+    if (/キーフレーム・色・DOFを開く/.test(label)) return ['native_editor_zone',{zone:'scene'}];
+    if (/プロジェクト保存・読み込み/.test(label)) return ['project_menu'];
     if (/動画を作成|書き出す/.test(label)) return ['export_menu'];
     if (/ログ|診断/.test(label)) return ['diagnostics'];
     if (/選択シーンへ移動/.test(label)) return ['jump_selected'];
@@ -219,6 +298,11 @@
     return null;
   }
   document.addEventListener('click', event => {
+    const timelineClip=event.target.closest('[data-ui="timeline"] .clip[data-scene-index]');
+    if (timelineClip) {
+      invoke('select_scene',{index:Number(timelineClip.dataset.sceneIndex)});
+      return;
+    }
     const check = event.target.closest('.scene-card .check');
     if (check) {
       event.stopPropagation();
@@ -267,6 +351,7 @@
     if (!button) return;
     const found = operation(button);
     if (found?.[0] === 'export_menu') chooseExport();
+    else if (found?.[0] === 'project_menu') chooseProjectOperation();
     else if (found) invoke(found[0],found[1]);
     else message('この操作の実機接続は未完了です。動作済みとは扱いません。');
   });
