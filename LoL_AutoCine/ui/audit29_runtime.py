@@ -1,0 +1,215 @@
+"""UI-only state and operation adapter for the 29-screen comparison project.
+
+All methods are called on Tk's main thread. The adapter owns no replay,
+capture, camera, effect, encoder, or audio implementation. Screen/theme
+changes only alter presentation state; they never invoke render handlers.
+"""
+from __future__ import annotations
+
+import json
+import os
+from pathlib import Path
+
+from ui.director_work_controls import MODE_LABELS, select_frame_with_effect
+
+
+AUDIT = Path(__file__).resolve().parents[1] / "design" / "ui" / "implementation_audit_29_20261021"
+
+
+def _screens() -> dict[str, dict]:
+    rows = json.loads((AUDIT / "SCREENS_29.json").read_text(encoding="utf-8"))
+    if len(rows) != 29 or len({x["family"] for x in rows}) != 12:
+        raise ValueError("29画面または12候補グループが不足しています")
+    return {x["id"]: x for x in rows}
+
+
+SCREENS = _screens()
+DEFAULT_SCREEN = "R-A-main"
+THEMES = {"light", "dark", "system"}
+CAMERA_SIDES = {"auto": "自動（対象のチーム）", "BLUE": "BLUE", "RED": "RED"}
+CAMERA_KEYS = {"third_dist": (500.0, 1400.0), "cam_height": (0.0, 900.0),
+               "third_yaw": (-180.0, 180.0), "orbit_angle": (0.0, 45.0),
+               "dolly": (0.0, 15.0)}
+
+
+def default_preferences_path() -> Path:
+    base = Path(os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local")
+    return base / "LoL_AutoCine" / "ui29_workspace.json"
+
+
+class Audit29Runtime:
+    """A single App-backed comparison session. No candidate gets its own App."""
+
+    def __init__(self, app, preferences_path: Path | None = None):
+        self.app = app
+        self.preferences_path = preferences_path or default_preferences_path()
+        self.screen_id = DEFAULT_SCREEN
+        self.theme = "system"
+        self._restore_appearance()
+
+    def _restore_appearance(self):
+        try:
+            data = json.loads(self.preferences_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return
+        if data.get("screen_id") in SCREENS:
+            self.screen_id = data["screen_id"]
+        if data.get("theme") in THEMES:
+            self.theme = data["theme"]
+
+    def _save_appearance(self):
+        self.preferences_path.parent.mkdir(parents=True, exist_ok=True)
+        data = {"screen_id": self.screen_id, "theme": self.theme}
+        replacement = self.preferences_path.with_suffix(".tmp")
+        replacement.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        replacement.replace(self.preferences_path)
+
+    def select_screen(self, screen_id: str):
+        if screen_id not in SCREENS:
+            raise ValueError(f"unknown screen: {screen_id}")
+        self.screen_id = screen_id
+        self._save_appearance()
+        return self.snapshot()
+
+    def select_theme(self, theme: str):
+        if theme not in THEMES:
+            raise ValueError(f"unknown theme: {theme}")
+        self.theme = theme
+        self._save_appearance()
+        return self.snapshot()
+
+    def snapshot(self) -> dict:
+        app = self.app
+        scene_rows = []
+        selected = app.lb_kills.curselection()
+        for index, event in enumerate(app.kills):
+            scene_rows.append({
+                "index": index, "time": round(float(event.time), 2),
+                "side": str(getattr(event, "side", "")),
+                "victim": str(getattr(event, "victim", "")),
+                "multikill": int(getattr(event, "multikill", 1)),
+                "checked": index in app.checked_kills,
+                "selected": bool(selected and selected[0] == index),
+            })
+        camera_values = {key: float(app.sl[key].get()) for key in CAMERA_KEYS if key in app.sl}
+        return {
+            "workspace": {"screen_id": self.screen_id,
+                          "candidate_id": SCREENS[self.screen_id]["family"],
+                          "theme": self.theme,
+                          "screens": [{"id": x["id"], "family": x["family"],
+                                       "name": x["family_name"]} for x in SCREENS.values()]},
+            "replay": {"connected": bool(app.players),
+                       "player_count": len(app.players),
+                       "capture_running": bool(getattr(app, "source", None) and app.source.running)},
+            "scenes": scene_rows,
+            "selected_scene_index": selected[0] if selected else None,
+            "checked_count": len(app.checked_kills),
+            "camera": {"mode": app.var_camera_control_mode.get(),
+                       "side": app.var_camera_side.get(), "style": app.var_style.get(),
+                       "values": camera_values},
+            "frame": {"id": app.var_work_frame.get(), "effect_id": app.var_work_effect.get(),
+                      "review": bool(app.var_work_review.get()),
+                      "strength": app.var_work_strength.get(),
+                      "motion": app.var_kill_icon_motion.get()},
+            "preview": {"mirror_requested": bool(app.var_mirror.get()),
+                        "fx_enabled": bool(app.var_live.get()),
+                        "target_hz": app.var_preview_hz.get(),
+                        "measured_fps": round(app._mirror_present_rate.fps(), 1)},
+            "output": {"busy": bool(app.busy), "path": str(app.out_root)},
+            "capabilities": {"engage": False,
+                             "engage_reason": "エンゲージ専用検出・操作は未実装。キルとして扱いません"},
+        }
+
+    def perform(self, action: str, data: dict | None = None) -> dict:
+        """Dispatch whitelisted UI actions to the existing App on Tk's thread."""
+        app = self.app
+        data = data or {}
+        if action == "screen":
+            return self.select_screen(str(data["id"]))
+        if action == "theme":
+            return self.select_theme(str(data["value"]))
+        if action == "open_replay":
+            app.on_open_replay()
+        elif action == "prepare":
+            app.on_quick_prepare()
+        elif action == "scan":
+            app.on_scan()
+        elif action == "select_scene":
+            index = int(data["index"])
+            if not 0 <= index < len(app.kills):
+                raise ValueError("scene index out of range")
+            app.lb_kills.selection_clear(0, "end")
+            app.lb_kills.selection_set(index)
+            app.on_scene_selection()
+        elif action == "check_scene":
+            index = int(data["index"])
+            if not 0 <= index < len(app.kills):
+                raise ValueError("scene index out of range")
+            if bool(data["checked"]):
+                app.checked_kills.add(index)
+            else:
+                app.checked_kills.discard(index)
+            app._rebuild_kills_keep_position()
+        elif action == "check_all":
+            app.on_check_all()
+        elif action == "uncheck_all":
+            app.on_uncheck_all()
+        elif action == "mirror_start":
+            app.on_mirror_start()
+        elif action == "mirror_stop":
+            app.on_mirror_stop(reason="29画面UI停止")
+        elif action == "preview_play":
+            app.on_preview_play()
+        elif action == "preview_stop":
+            app.on_preview_stop()
+        elif action == "camera_mode":
+            mode = data.get("value")
+            if mode not in MODE_LABELS:
+                raise ValueError("unknown camera mode")
+            app.var_camera_control_mode.set(MODE_LABELS[mode])
+        elif action == "camera_side":
+            side = data.get("value")
+            if side not in CAMERA_SIDES:
+                raise ValueError("unknown side")
+            app.var_camera_side.set(CAMERA_SIDES[side])
+        elif action == "camera_style":
+            from core.camera import STYLES
+            style = str(data["value"])
+            if style not in STYLES:
+                raise ValueError("unknown camera style")
+            app.var_style.set(STYLES[style])
+        elif action == "camera_number":
+            key, value = str(data["key"]), float(data["value"])
+            if key not in CAMERA_KEYS or key not in app.sl:
+                raise ValueError("unknown camera setting")
+            low, high = CAMERA_KEYS[key]
+            if not low <= value <= high:
+                raise ValueError("camera value out of range")
+            app.sl[key].set(value)
+        elif action == "trim":
+            key, value = str(data["key"]), float(data["value"])
+            if key not in ("pre", "post") or not 1 <= value <= 15:
+                raise ValueError("invalid trim")
+            (app.var_pre if key == "pre" else app.var_post).set(value)
+        elif action == "frame":
+            select_frame_with_effect(app, str(data["id"]))
+        elif action == "effect_strength":
+            value = str(data["value"])
+            if value not in ("weak", "strong"):
+                raise ValueError("invalid effect strength")
+            app.var_work_strength.set(value)
+        elif action == "fx_enabled":
+            app.var_live.set(bool(data["value"]))
+        elif action == "export_checked":
+            app.on_make_checked()
+        elif action == "cancel_job":
+            app.on_stop()
+        elif action == "output_folder":
+            app.on_pick_out()
+        elif action == "diagnostics":
+            app.on_show_diagnostics()
+        elif action == "engage":
+            raise NotImplementedError("エンゲージ専用検出は未実装です")
+        else:
+            raise ValueError(f"unknown UI action: {action}")
+        return self.snapshot()

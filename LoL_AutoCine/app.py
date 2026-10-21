@@ -43,7 +43,15 @@ from legacy_app import App
 def main() -> None:
     root = tk.Tk()
     app = App(root)
-    if "--legacy-ui" not in sys.argv:
+    if "--ui29" in sys.argv:
+        # Development-only live research layouts. The existing Tk App stays
+        # open as the sole backend/controller; no camera or capture code is
+        # duplicated. Old raster screens are still awaiting reconstruction.
+        from ui.audit29_server import UI29Server
+        import webbrowser
+        app._ui29_server = UI29Server(app)
+        webbrowser.open(app._ui29_server.url)
+    elif "--legacy-ui" not in sys.argv:
         from ui.reference_studio import ReferenceStudio
         ReferenceStudio(app)
     root.mainloop()
