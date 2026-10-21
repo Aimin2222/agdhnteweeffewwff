@@ -11,6 +11,10 @@ import os
 from pathlib import Path
 
 from ui.director_work_controls import MODE_LABELS, select_frame_with_effect
+from core.camera import CAMERA_SIDE_CHOICES
+from core.kill_icons import MOTION_STYLES
+from ui.scene_project import scene_key
+from ui.hud_presets import HUD_MODES
 
 
 AUDIT = Path(__file__).resolve().parents[1] / "design" / "ui" / "implementation_audit_29_20261021"
@@ -26,10 +30,12 @@ def _screens() -> dict[str, dict]:
 SCREENS = _screens()
 DEFAULT_SCREEN = "R-A-main"
 THEMES = {"light", "dark", "system"}
-CAMERA_SIDES = {"auto": "自動（対象のチーム）", "BLUE": "BLUE", "RED": "RED"}
+CAMERA_SIDES = {"auto": CAMERA_SIDE_CHOICES["auto"],
+                "BLUE": CAMERA_SIDE_CHOICES["blue"],
+                "RED": CAMERA_SIDE_CHOICES["red"]}
 CAMERA_KEYS = {"third_dist": (500.0, 1400.0), "cam_height": (0.0, 900.0),
-               "third_yaw": (-180.0, 180.0), "orbit_angle": (0.0, 45.0),
-               "dolly": (0.0, 15.0)}
+               "third_yaw": (-180.0, 180.0), "motion_arc": (0.0, 45.0),
+               "motion_dolly": (0.0, 15.0)}
 
 
 def default_preferences_path() -> Path:
@@ -100,10 +106,12 @@ class Audit29Runtime:
                                        "name": x["family_name"]} for x in SCREENS.values()]},
             "replay": {"connected": bool(app.players),
                        "player_count": len(app.players),
-                       "capture_running": bool(getattr(app, "source", None) and app.source.running)},
+                       "capture_running": bool(getattr(app, "source", None) and app.source.running),
+                       "target_slot": getattr(getattr(app, "locked", None), "slot", None)},
             "scenes": scene_rows,
             "selected_scene_index": selected[0] if selected else None,
             "checked_count": len(app.checked_kills),
+            "event_mode": app.var_event_mode.get(),
             "camera": {"mode": app.var_camera_control_mode.get(),
                        "side": app.var_camera_side.get(), "style": app.var_style.get(),
                        "values": camera_values},
@@ -115,7 +123,9 @@ class Audit29Runtime:
                         "fx_enabled": bool(app.var_live.get()),
                         "target_hz": app.var_preview_hz.get(),
                         "measured_fps": round(app._mirror_present_rate.fps(), 1)},
-            "output": {"busy": bool(app.busy), "path": str(app.out_root)},
+            "output": {"busy": bool(app.busy), "path": str(app.out_root),
+                       "fps": app.var_fps_ui.get(), "encoder_policy": app.var_encoder_policy.get(),
+                       "game_audio": bool(app.var_gaudio.get()), "hud": app.var_hud_mode.get()},
             "capabilities": {"engage": False,
                              "engage_reason": "エンゲージ専用検出・操作は未実装。キルとして扱いません"},
         }
@@ -134,6 +144,29 @@ class Audit29Runtime:
             app.on_quick_prepare()
         elif action == "scan":
             app.on_scan()
+        elif action == "target_lock":
+            slot = int(data["slot"])
+            if slot not in {int(player.slot) for player in app.players}:
+                raise ValueError("target player not found")
+            app.tree.selection_set(str(slot))
+            app.on_lock()
+        elif action == "event_mode":
+            labels = {"kill": "キル", "assist": "アシスト", "both": "キル＋アシスト"}
+            mode = str(data["value"])
+            if mode not in labels:
+                raise ValueError("invalid event mode")
+            old_checked = {scene_key(app.kills[i]) for i in app.checked_kills if 0 <= i < len(app.kills)}
+            old_selected = app.lb_kills.curselection()
+            selected_key = scene_key(app.kills[old_selected[0]]) if old_selected and old_selected[0] < len(app.kills) else None
+            app.var_event_mode.set(labels[mode])
+            app.checked_kills = {i for i, event in enumerate(app.kills) if scene_key(event) in old_checked}
+            app._rebuild_kills_keep_position()
+            if selected_key is not None:
+                match = next((i for i, event in enumerate(app.kills) if scene_key(event) == selected_key), None)
+                if match is not None:
+                    app.lb_kills.selection_clear(0, "end")
+                    app.lb_kills.selection_set(match)
+                    app.on_scene_selection()
         elif action == "select_scene":
             index = int(data["index"])
             if not 0 <= index < len(app.kills):
@@ -198,16 +231,50 @@ class Audit29Runtime:
             if value not in ("weak", "strong"):
                 raise ValueError("invalid effect strength")
             app.var_work_strength.set(value)
+        elif action == "motion":
+            motion = str(data["value"])
+            if motion not in MOTION_STYLES:
+                raise ValueError("unknown entrance motion")
+            app.var_kill_icon_motion.set(MOTION_STYLES[motion])
         elif action == "fx_enabled":
             app.var_live.set(bool(data["value"]))
+        elif action == "output_fps":
+            fps = int(data["value"])
+            if fps not in (60, 144):
+                raise ValueError("unsupported output frame rate")
+            app.var_fps_ui.set(f"{fps} FPS")
+        elif action == "encoder_policy":
+            policies = {"auto": "自動（NVENC優先・失敗時CPU）", "gpu": "GPU優先（NVENC）",
+                        "cpu": "CPU優先（libx264）"}
+            policy = str(data["value"])
+            if policy not in policies:
+                raise ValueError("unknown encoder policy")
+            app.var_encoder_policy.set(policies[policy])
+        elif action == "game_audio":
+            app.var_gaudio.set(bool(data["value"]))
+        elif action == "hud":
+            mode = str(data["value"])
+            if mode not in HUD_MODES:
+                raise ValueError("unknown HUD mode")
+            app._set_hud_mode(mode, save=True)
         elif action == "export_checked":
             app.on_make_checked()
+        elif action == "export_selected":
+            app.on_make_selected()
+        elif action == "export_all":
+            app.on_make_clips()
+        elif action == "export_smart":
+            app.on_smart_one_click()
         elif action == "cancel_job":
             app.on_stop()
         elif action == "output_folder":
             app.on_pick_out()
         elif action == "diagnostics":
             app.on_show_diagnostics()
+        elif action == "automatic_qa":
+            app.on_automatic_qa()
+        elif action == "camera_qa":
+            app.on_dev_camera_qa()
         elif action == "engage":
             raise NotImplementedError("エンゲージ専用検出は未実装です")
         else:

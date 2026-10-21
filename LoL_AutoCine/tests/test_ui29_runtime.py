@@ -47,6 +47,8 @@ class App:
         self.lb_kills = Listbox()
         self.checked_kills = {0}
         self.players = [object()] * 10
+        self.locked = None
+        self.var_event_mode = Variable("キル")
         self.source = None
         self.var_camera_control_mode = Variable("固定視点＋自動構図補正")
         self.var_camera_side = Variable("BLUE")
@@ -63,6 +65,10 @@ class App:
         self._mirror_present_rate = type("Rate", (), {"fps": lambda self: 96.5})()
         self.busy = False
         self.out_root = Path("out")
+        self.var_fps_ui = Variable("60 FPS")
+        self.var_encoder_policy = Variable("自動（NVENC優先・失敗時CPU）")
+        self.var_gaudio = Variable(True)
+        self.var_hud_mode = Variable("hidden")
 
 
 class Audit29RuntimeTests(unittest.TestCase):
@@ -91,6 +97,15 @@ class Audit29RuntimeTests(unittest.TestCase):
             with self.assertRaises(NotImplementedError):
                 runtime.perform("engage")
             self.assertFalse(runtime.snapshot()["capabilities"]["engage"])
+
+    def test_camera_side_and_motion_use_existing_labels(self):
+        app = App()
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            runtime = Audit29Runtime(app, Path(directory) / "workspace.json")
+            runtime.perform("camera_side", {"value": "RED"})
+            runtime.perform("motion", {"value": "slide_left"})
+            self.assertEqual(app.var_camera_side.get(), "レッド側基準")
+            self.assertEqual(app.var_kill_icon_motion.get(), "左から登場")
 
     def test_local_server_uses_editable_source_and_rejects_old_placeholder(self):
         server = UI29Server(App())
