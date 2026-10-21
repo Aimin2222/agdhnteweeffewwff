@@ -15,6 +15,7 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from legacy_app import App
+from ui.audit29_runtime import SCREENS
 from ui.audit29_server import UI29Server
 
 
@@ -52,10 +53,17 @@ def main():
                          f"/api/asset/083/a_simple_main?token={server.token}")
             with urlopen(asset_url, timeout=15) as response:
                 assert response.read(8) == b"\x89PNG\r\n\x1a\n"
-            request("screen", {"id": "R-E-main"})
-            request("screen", {"id": "T-A-M"})
-            with urlopen(server.url, timeout=5) as response:
-                assert b'data-ui="prepare"' in response.read()
+            checked_screens = []
+            for candidate_id in SCREENS:
+                current = request("screen", {"id": candidate_id})
+                assert current["workspace"]["screen_id"] == candidate_id
+                page_url = (f"http://127.0.0.1:{server.http.server_port}"
+                            f"/ui/{candidate_id}?token={server.token}")
+                with urlopen(page_url, timeout=5) as response:
+                    page = response.read()
+                assert b'/runtime/client.js' in page
+                assert b'data-ui="preview-stage"' in page
+                checked_screens.append(candidate_id)
             request("screen", {"id": "R-A-main"})
             state = request("theme", {"value": "dark"})
             assert state["workspace"]["screen_id"] == "R-A-main"
@@ -70,10 +78,12 @@ def main():
                         if row["id"] == "T-A-M")["implemented"]
             outcome["result"] = "PASS"
             outcome["screen"] = state["workspace"]["screen_id"]
-            outcome["candidate_roundtrip"] = ["R-A-main", "R-E-main", "T-A-M", "R-A-main"]
+            outcome["candidate_roundtrip"] = checked_screens
+            outcome["candidate_roundtrip_count"] = len(checked_screens)
             outcome["tested"] = ["neutral_chooser", "candidate_state", "theme_state",
                                  "camera_side", "camera_number", "entrance_motion",
-                                 "audited_frame_pair", "catalog_asset_route"]
+                                 "audited_frame_pair", "catalog_asset_route",
+                                 "all_29_screen_routes_preserve_state"]
         except Exception as exc:
             outcome["result"] = "FAIL"
             outcome["error"] = repr(exc)
