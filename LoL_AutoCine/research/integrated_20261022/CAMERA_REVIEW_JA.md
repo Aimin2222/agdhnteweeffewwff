@@ -1,0 +1,50 @@
+# 新旧カメラ・BLUE/RED・TargetLock分析
+
+> 調査日：2026-10-22 JST。コード基準：`fb03e0390805125fc063f4599af6c2541a653abf`。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。
+
+## 結論
+
+旧カメラは自動カメラの実行基盤であり、削除対象ではない。固定自動は選択スタイルを保ち、フルオートはクリップ境界でside別承認済み候補を選ぶ。試合状況を映像認識してカメラを常時切り替える機能ではない。
+
+[core/smart_camera_director.py:27](https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/smart_camera_director.py#L27)、[core/camera.py:273](https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/camera.py#L273)、[core/camera_tuning.py:12](https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/camera_tuning.py#L12)。
+
+## 10スタイルを残す
+
+| style | 役割／検査上の注意 |
+| --- | --- |
+| third_cinema | 三人称の演出付き。距離・FOVとロックを同時確認 |
+| third | 安定追従の比較基準 |
+| geo_aim | 実験的。REDの右寄りに過去の指摘 |
+| cinema | キル前後のカメラ変化を確認 |
+| fps | 主観風。足元・空・過度な近接を確認 |
+| orbit | 実験的。0/90/180/270度を個別検査 |
+| lolnam_cinema | 独自スタイル名。他社実装一致を意味しない |
+| follow | 追従基準。向き・移動時の遅れ |
+| cinema_top | 広い構図の候補 |
+| top | 安全なトップダウン候補 |
+
+
+## 自動選択の実際
+
+manual/Noneは従来経路を保持。fixed_autoは選択スタイルを使用。full_autoはBLUE/RED別approvedからexcludedを引き、対象候補を絞る。複数キルは広い画角のスタイルを先に選び、単発は三人称系を優先する。候補なしでは`no_verified_candidate_for_side`等を残し、固定対象ロックへ代替する。全候補除外はValueError。フォールバック成功を「承認済みフルオート成功」と表示しない。
+
+## 座標・回転の監査
+
+side_yawの既定BLUE=0、RED=180だけで全モードを一律反転させない。thirdの初期プロファイルはORDER yaw−12/elev37/dist1060、CHAOS yaw192/elev42/dist1170。実距離は校正・倍率・モード別方針で変わる。`LIVE_FRAMING_POLICIES`はサイド×スタイルの独立設定で、RED fps/geo_aim等の受容済み経路を保持する。
+
+最新の`target_center_rotation`はコード上X=azimuth、Y=elevationとしてatan2から対象方向を計算し、roll=0、俯角14–72度へ制限する。一方`camera_geometry.inspect_rig`にはpitch_axis=yを確認事項とする診断が残る。過去の座標仮説を機械的な軸交換へ使わず、実際のrender応答と対象中心誤差で判断する。数学上の軸整合と人物が画面に見えることは別検査。
+
+FOVは32–100に制限され、full_autoの複数キルでは基準60以上を保持する処理がある。キーフレームは対象相対yaw/距離zoom/FOV差分。APIだけで敵全員の3D位置・壁深度・可視性が得られるとは仮定しない。
+
+## 歴史資料をどう読むか
+
+10/20 QA文書は固定自動好評、RED geo_aim #5右寄り、full_auto承認台帳が空で12/14代替などを記載。その後144Hz目標で改善、カメラに目立つ問題なしというユーザー報告がある。これだけで全20条件（10style×2side）を最新headで合格へ変更しない。文書の映像原本を今回は直接再生していない。
+
+## 追加開発案と合格条件
+
+1. A：camera approval ledgerにside/style/patch/画面比/clipID/審査者/根拠SHAを保存。古い承認を別patchへ自動継承しない。
+2. A：既存ロック経路に対象中心座標の計測を追加。対象検出なしはunknown、失敗と混同しない。画面外・回転急変の時刻を審査用に示す。
+3. B：同一10秒区間を2–3候補で録り、可視性・揺れ・遮蔽を人が比較。採点が信頼できるまで自動採用しない。
+4. C：短い先読みでベストショット選択。録画時間・ディスク増を評価し、固定自動へ常時戻せる。
+
+Windows試験はBLUE/RED×10style×単発/複数/ダッシュ/障害物を段階実施。パッチ・champion・開始秒・API readbackを固定し、対象ロスト、空、地面下、180度誤反転、急回転、FOV狭窄を目視と数値で審査。許容中心誤差等はベンチ文書の提案値を実映像で調整する。既存旧カメラの設定値を同時変更しない。
