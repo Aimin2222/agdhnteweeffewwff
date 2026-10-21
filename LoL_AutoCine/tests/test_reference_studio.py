@@ -23,6 +23,7 @@ def test_nine_reference_layouts_share_controller_and_fit_small_window(tmp_path, 
         app.var_camera_side.set(CAMERA_SIDE_CHOICES["red"])
         app.var_pre.set(6.5)
         app.var_work_frame.set("test/shared-id")
+        app.var_gaudio.set(False)
         app.kills = [Kill(1, 60, "A", "X", [], role="kill")]
         app.checked_kills = {0}
         app._fill_kills()
@@ -34,6 +35,7 @@ def test_nine_reference_layouts_share_controller_and_fit_small_window(tmp_path, 
             assert app.var_camera_side.get() == CAMERA_SIDE_CHOICES["red"]
             assert app.var_pre.get() == 6.5
             assert app.var_work_frame.get() == "test/shared-id"
+            assert "ゲーム音: OFF" in studio.runtime_status.cget("text")
             assert app.checked_kills == {0}
             assert app.lb_kills.curselection() == (0,)
             assert app.canvas.winfo_toplevel() is studio.window

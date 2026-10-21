@@ -184,12 +184,17 @@ class ReferenceStudio:
                 row.pack(side="bottom", fill="x", pady=(6, 0))
 
     def _header(self, index):
-        bar = tk.Frame(self.window, bg=WHITE, height=48,
+        header_bg = "#193858" if index == 7 else WHITE
+        header_fg = WHITE if index == 7 else INK
+        bar = tk.Frame(self.window, bg=header_bg, height=48,
                        highlightthickness=1, highlightbackground=LINE)
         bar.pack(fill="x")
         bar.pack_propagate(False)
-        self._label(bar, "LoL AutoCine", size=14, bold=True).pack(side="left", padx=(16, 12))
-        self._label(bar, LAYOUT_NAMES[index - 1], size=10, color=MUTED).pack(side="left")
+        self._label(bar, "LoL AutoCine", size=14, bold=True,
+                    color=header_fg, bg=header_bg).pack(side="left", padx=(16, 12))
+        self._label(bar, LAYOUT_NAMES[index - 1], size=10,
+                    color="#D5E5F8" if index == 7 else MUTED,
+                    bg=header_bg).pack(side="left")
         self._button(bar, "書き出し", self.app.on_make_checked, primary=True, small=True).pack(side="right", padx=7, pady=5)
         self._button(bar, "基本設定", self._show_legacy_settings, small=True).pack(side="right", padx=3)
         self._button(bar, "ログ", self.app.on_show_diagnostics, small=True).pack(side="right", padx=3)
@@ -206,8 +211,20 @@ class ReferenceStudio:
                            indicatoron=0, relief="flat", bg=WHITE, fg=BLUE,
                            selectcolor="#E9F2FF", padx=14, pady=3,
                            font=("Meiryo UI", 10, "bold")).pack(side="left", padx=3)
-        self._label(mode, "GPU / 音声 / HUD / TargetLock は基本設定で調整", size=9,
-                    color=MUTED).pack(side="right", padx=5)
+        self.runtime_status = self._label(mode, "", size=9, color=MUTED)
+        self.runtime_status.pack(side="right", padx=5)
+        self._refresh_runtime_status()
+
+    def _refresh_runtime_status(self):
+        """Read the real editor values; never claim hardware operation from policy."""
+        if not hasattr(self, "runtime_status") or not self.runtime_status.winfo_exists():
+            return
+        gpu = self.app.var_encoder_policy.get().split("（", 1)[0]
+        audio = "ON" if self.app.var_gaudio.get() else "OFF"
+        hud = {"hidden": "非表示", "keep_bars": "HPバー", "visible": "表示"}.get(
+            self.app.var_hud_mode.get(), self.app.var_hud_mode.get())
+        self.runtime_status.configure(
+            text=f"録画方針: {gpu}   ゲーム音: {audio}   HUD: {hud}   ミラー目標: {self.app.var_preview_hz.get()}")
 
     def _change_layout(self):
         self.app._apply_ui_layout()
@@ -840,8 +857,12 @@ class ReferenceStudio:
             self._render_scenes()
             self._draw_timeline()
         if hasattr(self, "preview_status") and self.preview_status.winfo_exists():
-            connected = bool(self.app.var_mirror.get())
-            self.preview_status.configure(text="● 接続中" if connected else "● 接続待ち",
-                                          fg="#13A66A" if connected else MUTED)
+            source = getattr(self.app, "source", None)
+            connected = bool(self.app.var_mirror.get() and source is not None and source.running)
+            waiting = bool(self.app.var_mirror.get() and not connected)
+            self.preview_status.configure(
+                text="● 接続中" if connected else ("● 接続を試行中" if waiting else "● 接続待ち"),
+                fg="#13A66A" if connected else MUTED)
+        self._refresh_runtime_status()
         self._offline_reference()
         self.window.after(350, self._sync)
