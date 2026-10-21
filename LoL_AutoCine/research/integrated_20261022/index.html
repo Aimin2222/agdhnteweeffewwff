@@ -29,7 +29,7 @@
 <p>最新UI比較版の読取スナップショット438ファイル、3,805,781 bytesを取得し、全件Git blob SHA-1一致を確認した。取得と原文精読は別であり、全行を精読したという意味ではない。coreの48 Pythonファイルを含み、重要経路は関数単位で原文を確認した。取得一覧はSOURCE_MANIFEST.json、実装棚卸しはFEATURE_STATUS.csv/JSONを参照。</p>
 <p>最新基準は<code>codex/ui-29-implementation-20261021</code>のfb03e0390805125fc063f4599af6c2541a653abf（2026-10-21 16:39:40 UTC）。カメラ基準<code>feb895491ca4bc780da4aab91990f25177cd35ab</code>とcore/legacy範囲のblobを比較すると差異は<code>core/capture_process.py</code>と<code>legacy_app.py</code>。UI29開発ブランチへの書込み・アプリ起動・設定操作は行わない。mainは古い別構成のため基準にしない。</p>
 <h2>状態の定義</h2>
-<p>1=実装かつ今回の実機テスト合格、2=実装確認・今回の実機未検証、3=部分実装、4=今回不具合再現。今回1と4は付けていない。過去の合格、不具合報告、静的な疑義は別欄で管理する。重複、改善、統合、隠す候補、廃止候補は独立の提案タグであり、削除決定ではない。</p>
+<p>1=実装かつ今回の実機テスト合格、2=実装確認・今回の実機未検証、3=部分実装、4=今回不具合再現、5=未実装（監査した経路に該当処理なし）。今回1と4は付けていない。過去の合格、不具合報告、静的な疑義は別欄で管理する。重複、改善、統合、隠す候補、廃止候補は独立の提案タグであり、削除決定ではない。</p>
 <h2>構造</h2>
 <pre><code>
 flowchart LR
@@ -74,7 +74,9 @@ flowchart LR
 <h2>原文の入口</h2>
 <p><a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/scanner.py#L41">core/scanner.py:41</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/jobs.py#L442">core/jobs.py:442</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/ui/highlight_director.py#L33">ui/highlight_director.py:33</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/ui/smart_montage.py#L29">ui/smart_montage.py:29</a>、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/blob/fb03e0390805125fc063f4599af6c2541a653abf/LoL_AutoCine/core/auto_qa.py#L19">core/auto_qa.py:19</a>。各機能への個別リンクはCSV/JSONに収録。</p>
 <h2>保存機能の境界</h2>
-<p>scene_projectはtemp書込み・fsync・os.replaceによるatomic保存とundo/redoを持つ。一方、録画工程全体の永続checkpointや失敗clipだけの再開とは別機能。既存のatomic project saveを新規未実装として重複提案しない。scene_keyはeventIDも含むため、eventIDが変わる再scanでの照合を追加検証する。</p></article><article id="doc3"><a class="download" href="CAMERA_REVIEW_JA.md">元のMarkdownを開く</a><h1>新旧カメラ・BLUE/RED・TargetLock分析</h1>
+<p>scene_projectはtemp書込み・fsync・os.replaceによるatomic保存とundo/redoを持つ。一方、録画工程全体の永続checkpointや失敗clipだけの再開とは別機能。既存のatomic project saveを新規未実装として重複提案しない。scene_keyはeventIDも含むため、eventIDが変わる再scanでの照合を追加検証する。</p>
+<h2>依頼の分類6〜9との対応</h2>
+<p>6=機能重複、7=改善、8=統合、9=将来廃止は状態1〜5と直交するタグ。focus/vr/sphere blurは類似経路のため6/7/8候補だが、既存IDと見た目を削除しない。カメラの将来廃止は依存と実機比較の証拠が不足するため9を提案しない。未実装と判定した項目はエンゲージ独立検出と画像品質によるベストショット。既存のmetadataベース選択を未実装と呼んでいるのではない。</p></article><article id="doc3"><a class="download" href="CAMERA_REVIEW_JA.md">元のMarkdownを開く</a><h1>新旧カメラ・BLUE/RED・TargetLock分析</h1>
 <aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
 <h2>結論</h2>
 <p>旧カメラは自動カメラの実行基盤であり、削除対象ではない。固定自動は選択スタイルを保ち、フルオートはクリップ境界でside別承認済み候補を選ぶ。試合状況を映像認識してカメラを常時切り替える機能ではない。</p>
@@ -105,7 +107,21 @@ flowchart LR
 <p class="item">2. A：既存ロック経路に対象中心座標の計測を追加。対象検出なしはunknown、失敗と混同しない。画面外・回転急変の時刻を審査用に示す。</p>
 <p class="item">3. B：同一10秒区間を2–3候補で録り、可視性・揺れ・遮蔽を人が比較。採点が信頼できるまで自動採用しない。</p>
 <p class="item">4. C：短い先読みでベストショット選択。録画時間・ディスク増を評価し、固定自動へ常時戻せる。</p>
-<p>Windows試験はBLUE/RED×10style×単発/複数/ダッシュ/障害物を段階実施。パッチ・champion・開始秒・API readbackを固定し、対象ロスト、空、地面下、180度誤反転、急回転、FOV狭窄を目視と数値で審査。許容中心誤差等はベンチ文書の提案値を実映像で調整する。既存旧カメラの設定値を同時変更しない。</p></article><article id="doc4"><a class="download" href="TOOLS_COMPARISON_JA.md">元のMarkdownを開く</a><h1>参考ツール比較とAutoCineへの応用</h1>
+<p>Windows試験はBLUE/RED×10style×単発/複数/ダッシュ/障害物を段階実施。パッチ・champion・開始秒・API readbackを固定し、対象ロスト、空、地面下、180度誤反転、急回転、FOV狭窄を目視と数値で審査。許容中心誤差等はベンチ文書の提案値を実映像で調整する。既存旧カメラの設定値を同時変更しない。</p>
+<h2>各旧カメラの整理提案</h2>
+<div class="table"><table><thead><tr><th>スタイル</th><th>今後の扱い案</th><th>理由</th></tr></thead><tbody>
+<tr><td>third_cinema</td><td>固定自動・フルオート内部候補・詳細編集を維持</td><td>既存保存IDとテスト・代替経路が依存。名称統合・削除はしない</td></tr>
+<tr><td>third</td><td>固定自動・フルオート内部候補・詳細編集を維持</td><td>既存保存IDとテスト・代替経路が依存。名称統合・削除はしない</td></tr>
+<tr><td>geo_aim</td><td>詳細編集で実験的と明示し、明示承認時のみ内部候補</td><td>既存保存IDとテスト・代替経路が依存。名称統合・削除はしない</td></tr>
+<tr><td>cinema</td><td>固定自動・フルオート内部候補・詳細編集を維持</td><td>既存保存IDとテスト・代替経路が依存。名称統合・削除はしない</td></tr>
+<tr><td>fps</td><td>固定自動・フルオート内部候補・詳細編集を維持</td><td>既存保存IDとテスト・代替経路が依存。名称統合・削除はしない</td></tr>
+<tr><td>orbit</td><td>詳細編集で実験的と明示し、明示承認時のみ内部候補</td><td>既存保存IDとテスト・代替経路が依存。名称統合・削除はしない</td></tr>
+<tr><td>lolnam_cinema</td><td>固定自動・フルオート内部候補・詳細編集を維持</td><td>既存保存IDとテスト・代替経路が依存。名称統合・削除はしない</td></tr>
+<tr><td>follow</td><td>固定自動・フルオート内部候補・詳細編集を維持</td><td>既存保存IDとテスト・代替経路が依存。名称統合・削除はしない</td></tr>
+<tr><td>cinema_top</td><td>固定自動・内部候補・安全な代替を維持</td><td>既存保存IDとテスト・代替経路が依存。名称統合・削除はしない</td></tr>
+<tr><td>top</td><td>固定自動・内部候補・安全な代替を維持</td><td>既存保存IDとテスト・代替経路が依存。名称統合・削除はしない</td></tr>
+</tbody></table></div>
+<p>manualなら未承認の特殊視点も明示選択して演出を作れる。full_autoの承認制約と手動編集の自由度は目的が違う。UIから隠す・将来廃止を今回決める根拠はなく、実験的表示も実装前の提案。</p></article><article id="doc4"><a class="download" href="TOOLS_COMPARISON_JA.md">元のMarkdownを開く</a><h1>参考ツール比較とAutoCineへの応用</h1>
 <aside>調査日：2026-10-22 JST。コード基準：<code>fb03e0390805125fc063f4599af6c2541a653abf</code>。今回の作業は調査・設計のみ。実装、LoL実機操作、録画、既存テストの再実行は行っていません。提案値は未実測です。</aside>
 <h2>調査方法</h2>
 <p>公式サイト・公式リポジトリ・操作資料を参照した。アプリ9本のインストール・実機比較はしていない。使い勝手と負荷評価は文書に基づく設計上の推論であり、実測ベンチではない。Lolnamのチュートリアルは約00:45のインストール設定画面のみ確認でき、編集全工程を視聴したとは扱わない。</p>
