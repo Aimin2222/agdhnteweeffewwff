@@ -28,7 +28,7 @@ def _screens() -> dict[str, dict]:
 
 
 SCREENS = _screens()
-DEFAULT_SCREEN = "R-A-main"
+DEFAULT_SCREEN = None  # The user has not adopted or selected a candidate yet.
 THEMES = {"light", "dark", "system"}
 CAMERA_SIDES = {"auto": CAMERA_SIDE_CHOICES["auto"],
                 "BLUE": CAMERA_SIDE_CHOICES["blue"],
@@ -100,7 +100,7 @@ class Audit29Runtime:
         camera_values = {key: float(app.sl[key].get()) for key in CAMERA_KEYS if key in app.sl}
         return {
             "workspace": {"screen_id": self.screen_id,
-                          "candidate_id": SCREENS[self.screen_id]["family"],
+                          "candidate_id": SCREENS[self.screen_id]["family"] if self.screen_id else None,
                           "theme": self.theme,
                           "screens": [{"id": x["id"], "family": x["family"],
                                        "name": x["family_name"]} for x in SCREENS.values()]},

@@ -103,6 +103,34 @@
     ['従来の手動カメラ','manual'], ['固定視点＋自動構図補正','fixed_auto'],
     ['フルオートシネマ','full_auto']
   ];
+  function chooseExport() {
+    const veil=document.createElement('div');
+    veil.style.cssText='position:fixed;inset:0;background:#071321aa;z-index:3000;' +
+      'display:grid;place-items:center';
+    const panel=document.createElement('div');
+    panel.style.cssText='background:var(--panel);color:var(--ink);padding:24px;' +
+      'border:1px solid var(--line);border-radius:12px;min-width:330px;box-shadow:0 10px 30px #0006';
+    const heading=document.createElement('h2');
+    heading.textContent='動画にする範囲を選択';
+    panel.append(heading);
+    for (const [name,label] of [
+      ['export_selected','現在のシーンだけ'], ['export_checked','チェックしたシーン'],
+      ['export_all','全検出シーン'], ['export_smart','スマート自動編集']
+    ]) {
+      const item=document.createElement('button');
+      item.textContent=label;
+      item.style.cssText='display:block;width:100%;margin:8px 0;padding:10px';
+      item.addEventListener('click',event=>{
+        event.stopPropagation();veil.remove();invoke(name);
+      });
+      panel.append(item);
+    }
+    const cancel=document.createElement('button');
+    cancel.textContent='キャンセル';
+    cancel.style.cssText='display:block;width:100%;margin-top:12px;padding:10px';
+    cancel.addEventListener('click',event=>{event.stopPropagation();veil.remove()});
+    panel.append(cancel);veil.append(panel);document.body.append(veil);
+  }
   function operation(button) {
     const label = button.textContent.trim().replace(/\s+/g,' ');
     if (/リプレイを開く/.test(label)) return ['open_replay'];
@@ -111,8 +139,8 @@
     if (/ミラー開始/.test(label)) return ['mirror_start'];
     if (/ミラー停止/.test(label)) return ['mirror_stop'];
     if (/演出を確認|演出プレビュー.*再生/.test(label)) return ['preview_play'];
-    if (/停止/.test(label)) return ['preview_stop'];
-    if (/動画を作成|書き出す/.test(label)) return ['export_checked'];
+    if (/^■?\s*停止$/.test(label)) return ['preview_stop'];
+    if (/動画を作成|書き出す/.test(label)) return ['export_menu'];
     if (/ログ|診断/.test(label)) return ['diagnostics'];
     if (/全選択/.test(label)) return ['check_all'];
     if (/全解除/.test(label)) return ['uncheck_all'];
@@ -144,7 +172,8 @@
     const button = event.target.closest('button');
     if (!button) return;
     const found = operation(button);
-    if (found) invoke(found[0],found[1]);
+    if (found?.[0] === 'export_menu') chooseExport();
+    else if (found) invoke(found[0],found[1]);
     else message('この操作の実機接続は未完了です。動作済みとは扱いません。');
   });
   document.querySelectorAll('[data-setting]').forEach(input => input.addEventListener('change', () => {

@@ -108,18 +108,23 @@ class Audit29RuntimeTests(unittest.TestCase):
             self.assertEqual(app.var_kill_icon_motion.get(), "左から登場")
 
     def test_local_server_uses_editable_source_and_rejects_old_placeholder(self):
-        server = UI29Server(App())
-        try:
-            with urlopen(server.url, timeout=5) as response:
-                html = response.read().decode("utf-8")
-            self.assertIn('data-ui="preview-panel"', html)
-            self.assertIn('/runtime/client.js', html)
-            self.assertNotIn('<script src="ui.js"></script>', html)
-            with self.assertRaises(HTTPError) as error:
-                urlopen(server.url.replace("R-A-main", "L02-M"), timeout=5)
-            self.assertEqual(error.exception.code, 501)
-        finally:
-            server.close()
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            server = UI29Server(App(), Path(directory) / "workspace.json")
+            try:
+                with urlopen(server.url, timeout=5) as response:
+                    chooser = response.read().decode("utf-8")
+                self.assertIn('12候補・29画面は未採用', chooser)
+                server.runtime.select_screen("R-A-main")
+                with urlopen(server.url, timeout=5) as response:
+                    html = response.read().decode("utf-8")
+                self.assertIn('data-ui="preview-panel"', html)
+                self.assertIn('/runtime/client.js', html)
+                self.assertNotIn('<script src="ui.js"></script>', html)
+                with self.assertRaises(HTTPError) as error:
+                    urlopen(server.url.replace("R-A-main", "L02-M"), timeout=5)
+                self.assertEqual(error.exception.code, 501)
+            finally:
+                server.close()
 
 
 if __name__ == "__main__":

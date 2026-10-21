@@ -16,7 +16,7 @@ import secrets
 import threading
 from urllib.parse import unquote, urlparse
 
-from ui.audit29_runtime import Audit29Runtime, DEFAULT_SCREEN, SCREENS
+from ui.audit29_runtime import Audit29Runtime, SCREENS
 
 
 DESIGN = Path(__file__).resolve().parents[1] / "design" / "ui" / "ui_rethink_20261021"
@@ -51,13 +51,9 @@ class TkDispatcher:
 
 
 class UI29Server:
-    def __init__(self, app):
+    def __init__(self, app, preferences_path: Path | None = None):
         self.app = app
-        self.runtime = Audit29Runtime(app)
-        if "html" not in SCREENS[self.runtime.screen_id]:
-            # Keep the last explicit choice on disk while the raster-only
-            # candidate is still being reconstructed in the browser UI.
-            self.runtime.screen_id = DEFAULT_SCREEN
+        self.runtime = Audit29Runtime(app, preferences_path)
         self.token = secrets.token_urlsafe(24)
         self.dispatcher = TkDispatcher(app.root)
         self.http = ThreadingHTTPServer(("127.0.0.1", 0), self._handler_type())
@@ -66,7 +62,9 @@ class UI29Server:
 
     @property
     def url(self):
-        return f"http://127.0.0.1:{self.http.server_port}/ui/{self.runtime.screen_id}?token={self.token}"
+        route = (f"/ui/{self.runtime.screen_id}"
+                 if self.runtime.screen_id and "html" in SCREENS[self.runtime.screen_id] else "/choose")
+        return f"http://127.0.0.1:{self.http.server_port}{route}?token={self.token}"
 
     def close(self):
         self.http.shutdown()
@@ -105,6 +103,36 @@ class UI29Server:
                         return self._json(200, owner.dispatcher.call(owner.runtime.snapshot))
                     except Exception as exc:
                         return self._json(500, {"error": str(exc)})
+                if path == "/choose":
+                    families = {}
+                    for row in SCREENS.values():
+                        families.setdefault(row["family"], row)
+                    buttons = "".join(
+                        f'<button data-id="{row["id"]}" {"" if "html" in row else "disabled"}>'
+                        f'{row["family_name"]} <small>{row["id"]}</small>'
+                        f'{"" if "html" in row else " — 再構成中"}</button>'
+                        for row in families.values())
+                    html = '''<!doctype html><html lang="ja"><meta charset="utf-8">
+<title>AutoCine UI候補を選ぶ</title><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>body{font:16px "Yu Gothic UI",Meiryo,sans-serif;background:#eef1f4;color:#172b3e;margin:0}
+main{max-width:980px;margin:5vh auto;padding:26px;background:#f8fafc;border-radius:12px}
+h1{margin:0 0 8px}p{color:#465a6f}section{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:22px}
+button{min-height:72px;padding:14px;border:1px solid #6c7d90;border-radius:8px;background:#fff;text-align:left;font:inherit;cursor:pointer}
+button:hover:not(:disabled){border:2px solid #245fab;background:#d7e6fc}button:disabled{opacity:.6;cursor:not-allowed}
+small{display:block;color:#465a6f}#status{min-height:24px;color:#a33}</style>
+<main><h1>LoL AutoCine — UI比較候補</h1><p>12候補・29画面は未採用です。選択してもシーンやカメラ設定を初期化しません。</p>
+<p>旧11画面は原画像から再構成中。選択可能な新A〜Fは元HTMLを使用し、未接続機能を明示します。</p>
+<section>''' + buttons + '''</section><p id="status"></p></main><script>
+const token=''' + json.dumps(owner.token) + ''';
+document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>button.onclick=async()=>{
+ const id=button.dataset.id;
+ try{const r=await fetch('/api/action?token='+encodeURIComponent(token),{method:'POST',
+ headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'screen',data:{id}})});
+ if(!r.ok)throw new Error((await r.json()).error||'画面切替失敗');
+ location.assign('/ui/'+encodeURIComponent(id)+'?token='+encodeURIComponent(token));
+ }catch(e){document.querySelector('#status').textContent=e.message}
+});</script></html>'''
+                    return self._send(200, html.encode("utf-8"), "text/html; charset=utf-8")
                 if path == "/api/frame.jpg":
                     def get_frame():
                         result = getattr(owner.app, "_preview_presented", None)
