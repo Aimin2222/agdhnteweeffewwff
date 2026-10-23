@@ -6,3 +6,5 @@
 - 検査: JavaScript構文チェック成功。UI29ランタイムとWebView2設定の対象テスト11件成功。ZIPビルダーのファイル検査、ZIP CRC、EXEバックエンドスモーク成功。
 - ZIP: `builds/ui29-switch-20261024-de87eb1/LoL_AutoCine_UI_Comparison_Portable.zip`（作業フォルダ直下）。2,068,497,521バイト、SHA-256 `94130B553DCCAD5D4351A533278941F90F8E750E9BE0BC5E978ED6F408F5A11D`。Microsoft WebView2 Fixed Version x64を同梱。
 - 残作業: 配置寸法の要修正9画面、旧11画面の外観、全29画面の目視受入、1366×768と125% DPIでの操作、LoL実機接続は未完了。このZIPは比較途中版であり、完成版ではない。
+
+追記（2026-10-24）：右端「UI比較」パネルに配色選択（ライト／ダーク／Windows追従）を追加。配置寸法の旧9画面は次の凍結EXE一括撮影で許容内となった。最新の比較途中版ZIPは `L02_TOOLBAR_20261024_JA.md` を参照。旧11画面の外観と操作は引き続き作業中。
