@@ -15,7 +15,7 @@
 - 凍結版UI29 EXEのバックエンド起動、29画面インベントリ読込、WebView2の12候補描画を確認。
 - 実Appブリッジで全29画面のURLを開き、画面切替を一周した後もカメラ側・距離・登場アニメ・素材・テーマ設定が保持されることを確認（`local_bridge_probe.json`）。LoL実機操作は含まない。
 - 2026-10-24の途中版EXE/ZIPを作成し、現行EXE、UI29バックエンド、Captureワーカー、非表示WebView2起動のスモークテストを通した。先行する29画面キャプチャは開発用Edgeで取得した。
-- WindowsのWebView2撮影APIを使い、ソース版と凍結EXEの両方で全29画面の画像とDOM寸法を取得した。凍結版は `qa/ui29/frozen_webview2_offline/` に撮影結果、`comparison_frozen_webview2/` に原画像との差分・50%重ね・寸法結果を保存。16画面は矩形許容内、13画面は要修正。矩形許容内は外観合格ではない。125% DPI確認は未実施。
+- WindowsのWebView2撮影APIを使い、ソース版と凍結EXEの両方で全29画面の画像とDOM寸法を取得した。凍結版は `qa/ui29/frozen_webview2_offline/` に撮影結果、`comparison_frozen_webview2/` に原画像との差分・50%重ね・寸法結果を保存。スクロールバー起因の幅ずれ修正後、20画面は矩形許容内、9画面は要修正。矩形許容内は外観合格ではない。125% DPI確認は未実施。
 - Microsoft公式ページからWebView2 Fixed Version 156.0.4314.42 x64 CABを取得し、CABのSHA-256 `CB4612CE79A62A0BE094301A72F73CF91BB250F5E83DC51886F66A083FC0694F` と展開した `msedgewebview2.exe` のMicrosoft署名を確認。Fixed Runtime同梱ZIPを制作し、展開後のウィンドウ起動が通った。実際のブラウザ子プロセスの実行パスがZIP同梱の `WebView2Fixed/msedgewebview2.exe` であることを確認。Runtime未導入PCでの起動は未検証。
 - ポータブルZIPのファイル検査、EXEのバックエンド起動、Captureワーカー起動はビルドスクリプトで確認する。
 - 29画面のうち新18画面と旧テストAの計19画面は部分実装。旧10画面は監査矩形に基づく編集可能なHTML/CSSとして再構成し、12候補すべてを選択可能にした。各候補は同じApp操作へ接続するが、外観と全操作は未合格。

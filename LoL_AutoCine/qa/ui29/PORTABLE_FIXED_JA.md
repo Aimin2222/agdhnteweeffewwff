@@ -1,10 +1,10 @@
 # UI29ポータブルZIP（WebView2 Fixed Version同梱）
 
 - 作成日: 2026-10-24
-- AutoCineソースコミット: `c7c506f05502213cfb41a88bf08401f189fac076`
+- AutoCineソースコミット: `94c95ca8ac7bcf39cef81b7b5a943913648d1428`
 - ローカルZIP: `builds/ui29-desktop-20261024-e9ab91f/LoL_AutoCine_UI_Comparison_Portable.zip`（このリポジトリの親作業フォルダ内）
-- ZIPサイズ: 2,061,502,309バイト
-- ZIP SHA-256: `AC34722C54D199C0EE548C0620EF43E3749EB50EDAB7CF2863FD96FA2D78D0E3`
+- ZIPサイズ: 2,068,707,938バイト
+- ZIP SHA-256: `155210FDFE9961D80F70958FD7B7CE66F4E39EFAFB6AAA276E5E5C556A986988`
 - ZIP内の `BUILD_INFO.json` にソースコミット、画面数、同梱Runtimeとネイティブ音声ヘルパーのハッシュを記録した。
 
 ## 同梱したMicrosoft Runtime
@@ -21,7 +21,7 @@
 - ビルドスクリプトのZIP CRC、必要ファイル検査、現行EXE・UI29バックエンド・キャプチャワーカーのスモーク: PASS。
 - ZIPを新規フォルダへ展開後、現行EXE、UI29の12候補選択ウィンドウ、キャプチャワーカーのスモーク: すべて終了コード0。
 - 同梱版でWebView2を起動し、子プロセスの実行パスが `WebView2Fixed/msedgewebview2.exe` であることを確認。
-- 凍結EXEの全29画面撮影・原画像との差分: `FROZEN_REVIEW_JA.md`。矩形許容内16、要修正13。外観合格0。
+- 凍結EXEの全29画面撮影・原画像との差分: `FROZEN_REVIEW_JA.md`。矩形許容内20、要修正9。外観合格0。
 - LoLリプレイ実接続、WGCミラー実測FPS、GPU/NVENC、ゲーム音声、MP4書き出し、およびWebView2 Runtime未導入PC: **未検証**。このZIPは完成合格版ではない。
 
 巨大なZIPとMicrosoftのCABはGitにはコミットしていない。コード・29画面の証跡・再現手順をUI専用ブランチへ保存し、PR #51はドラフトのまま維持する。

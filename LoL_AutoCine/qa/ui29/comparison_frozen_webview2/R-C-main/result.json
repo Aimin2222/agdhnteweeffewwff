@@ -11,7 +11,7 @@
     1080
   ],
   "size_result": "PASS",
-  "visual_result": "REVIEW",
+  "visual_result": "MEASURED",
   "functional_result": "NOT_RUN",
   "dynamic_image_mask": [
     328.22222222222223,
@@ -19,7 +19,7 @@
     747.5555555555555,
     420.5
   ],
-  "unmasked_rgb_mae": 2.8669,
+  "unmasked_rgb_mae": 2.6598,
   "regions": [
     {
       "region": "header",
@@ -39,7 +39,7 @@
     },
     {
       "region": "workspace",
-      "rgb_mae": 3.3459
+      "rgb_mae": 3.091
     },
     {
       "region": "preview-panel",
@@ -71,11 +71,11 @@
     },
     {
       "region": "director-dock",
-      "rgb_mae": 2.9725
+      "rgb_mae": 2.013
     },
     {
       "region": "motion-graph",
-      "rgb_mae": 2.3901
+      "rgb_mae": 0.0
     },
     {
       "region": "footer-14",
@@ -384,7 +384,7 @@
     },
     {
       "region": "motion-graph",
-      "result": "FAIL",
+      "result": "PASS",
       "expected": [
         45,
         844,
@@ -394,13 +394,13 @@
       "actual": [
         45,
         844,
-        1299,
+        1314,
         116
       ],
       "delta": [
         0.0,
         0.0,
-        -15.0,
+        0.0,
         0.0
       ],
       "tolerance_px": 2

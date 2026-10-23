@@ -11,7 +11,7 @@
     768
   ],
   "size_result": "PASS",
-  "visual_result": "REVIEW",
+  "visual_result": "MEASURED",
   "functional_result": "NOT_RUN",
   "dynamic_image_mask": [
     607.4444444444445,
@@ -19,7 +19,7 @@
     583.1111111111111,
     328.0
   ],
-  "unmasked_rgb_mae": 4.2216,
+  "unmasked_rgb_mae": 0.9863,
   "regions": [
     {
       "region": "header",
@@ -39,27 +39,27 @@
     },
     {
       "region": "workspace",
-      "rgb_mae": 5.1235
+      "rgb_mae": 0.8906
     },
     {
       "region": "preset-library",
-      "rgb_mae": 12.737
+      "rgb_mae": 1.6492
     },
     {
       "region": "preset-0",
-      "rgb_mae": 12.4621
+      "rgb_mae": 0.1725
     },
     {
       "region": "preset-1",
-      "rgb_mae": 25.2536
+      "rgb_mae": 0.0
     },
     {
       "region": "preset-2",
-      "rgb_mae": 11.01
+      "rgb_mae": 0.0
     },
     {
       "region": "preset-3",
-      "rgb_mae": 25.3541
+      "rgb_mae": 0.0
     },
     {
       "region": "preview-panel",
@@ -223,7 +223,7 @@
     },
     {
       "region": "preset-0",
-      "result": "FAIL",
+      "result": "PASS",
       "expected": [
         31,
         293,
@@ -233,20 +233,20 @@
       "actual": [
         31,
         293,
-        184,
+        189,
         196.5
       ],
       "delta": [
         0.0,
         0.0,
-        -5.0,
+        0.0,
         0.0
       ],
       "tolerance_px": 2
     },
     {
       "region": "preset-1",
-      "result": "FAIL",
+      "result": "PASS",
       "expected": [
         232,
         293,
@@ -254,22 +254,22 @@
         196.5
       ],
       "actual": [
-        227,
+        232,
         293,
-        184,
+        189,
         196.5
       ],
       "delta": [
-        -5.0,
         0.0,
-        -5.0,
+        0.0,
+        0.0,
         0.0
       ],
       "tolerance_px": 2
     },
     {
       "region": "preset-2",
-      "result": "FAIL",
+      "result": "PASS",
       "expected": [
         31,
         501.5,
@@ -279,20 +279,20 @@
       "actual": [
         31,
         501.5,
-        184,
+        189,
         194.5
       ],
       "delta": [
         0.0,
         0.0,
-        -5.0,
+        0.0,
         0.0
       ],
       "tolerance_px": 2
     },
     {
       "region": "preset-3",
-      "result": "FAIL",
+      "result": "PASS",
       "expected": [
         232,
         501.5,
@@ -300,15 +300,15 @@
         194.5
       ],
       "actual": [
-        227,
+        232,
         501.5,
-        184,
+        189,
         194.5
       ],
       "delta": [
-        -5.0,
         0.0,
-        -5.0,
+        0.0,
+        0.0,
         0.0
       ],
       "tolerance_px": 2

@@ -4875,7 +4875,7 @@
         1080
       ],
       "size_result": "PASS",
-      "visual_result": "REVIEW",
+      "visual_result": "MEASURED",
       "functional_result": "NOT_RUN",
       "dynamic_image_mask": [
         328.22222222222223,
@@ -4883,7 +4883,7 @@
         747.5555555555555,
         420.5
       ],
-      "unmasked_rgb_mae": 2.8669,
+      "unmasked_rgb_mae": 2.6598,
       "regions": [
         {
           "region": "header",
@@ -4903,7 +4903,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 3.3459
+          "rgb_mae": 3.091
         },
         {
           "region": "preview-panel",
@@ -4935,11 +4935,11 @@
         },
         {
           "region": "director-dock",
-          "rgb_mae": 2.9725
+          "rgb_mae": 2.013
         },
         {
           "region": "motion-graph",
-          "rgb_mae": 2.3901
+          "rgb_mae": 0.0
         },
         {
           "region": "footer-14",
@@ -5248,7 +5248,7 @@
         },
         {
           "region": "motion-graph",
-          "result": "FAIL",
+          "result": "PASS",
           "expected": [
             45,
             844,
@@ -5258,13 +5258,13 @@
           "actual": [
             45,
             844,
-            1299,
+            1314,
             116
           ],
           "delta": [
             0.0,
             0.0,
-            -15.0,
+            0.0,
             0.0
           ],
           "tolerance_px": 2
@@ -10491,7 +10491,7 @@
         768
       ],
       "size_result": "PASS",
-      "visual_result": "REVIEW",
+      "visual_result": "MEASURED",
       "functional_result": "NOT_RUN",
       "dynamic_image_mask": [
         607.4444444444445,
@@ -10499,7 +10499,7 @@
         583.1111111111111,
         328.0
       ],
-      "unmasked_rgb_mae": 4.2216,
+      "unmasked_rgb_mae": 0.9863,
       "regions": [
         {
           "region": "header",
@@ -10519,27 +10519,27 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 5.1235
+          "rgb_mae": 0.8906
         },
         {
           "region": "preset-library",
-          "rgb_mae": 12.737
+          "rgb_mae": 1.6492
         },
         {
           "region": "preset-0",
-          "rgb_mae": 12.4621
+          "rgb_mae": 0.1725
         },
         {
           "region": "preset-1",
-          "rgb_mae": 25.2536
+          "rgb_mae": 0.0
         },
         {
           "region": "preset-2",
-          "rgb_mae": 11.01
+          "rgb_mae": 0.0
         },
         {
           "region": "preset-3",
-          "rgb_mae": 25.3541
+          "rgb_mae": 0.0
         },
         {
           "region": "preview-panel",
@@ -10703,7 +10703,7 @@
         },
         {
           "region": "preset-0",
-          "result": "FAIL",
+          "result": "PASS",
           "expected": [
             31,
             293,
@@ -10713,20 +10713,20 @@
           "actual": [
             31,
             293,
-            184,
+            189,
             196.5
           ],
           "delta": [
             0.0,
             0.0,
-            -5.0,
+            0.0,
             0.0
           ],
           "tolerance_px": 2
         },
         {
           "region": "preset-1",
-          "result": "FAIL",
+          "result": "PASS",
           "expected": [
             232,
             293,
@@ -10734,22 +10734,22 @@
             196.5
           ],
           "actual": [
-            227,
+            232,
             293,
-            184,
+            189,
             196.5
           ],
           "delta": [
-            -5.0,
             0.0,
-            -5.0,
+            0.0,
+            0.0,
             0.0
           ],
           "tolerance_px": 2
         },
         {
           "region": "preset-2",
-          "result": "FAIL",
+          "result": "PASS",
           "expected": [
             31,
             501.5,
@@ -10759,20 +10759,20 @@
           "actual": [
             31,
             501.5,
-            184,
+            189,
             194.5
           ],
           "delta": [
             0.0,
             0.0,
-            -5.0,
+            0.0,
             0.0
           ],
           "tolerance_px": 2
         },
         {
           "region": "preset-3",
-          "result": "FAIL",
+          "result": "PASS",
           "expected": [
             232,
             501.5,
@@ -10780,15 +10780,15 @@
             194.5
           ],
           "actual": [
-            227,
+            232,
             501.5,
-            184,
+            189,
             194.5
           ],
           "delta": [
-            -5.0,
             0.0,
-            -5.0,
+            0.0,
+            0.0,
             0.0
           ],
           "tolerance_px": 2
@@ -10923,7 +10923,7 @@
         768
       ],
       "size_result": "PASS",
-      "visual_result": "REVIEW",
+      "visual_result": "MEASURED",
       "functional_result": "NOT_RUN",
       "dynamic_image_mask": [
         245.66666666666666,
@@ -10931,7 +10931,7 @@
         490.6666666666667,
         276.0
       ],
-      "unmasked_rgb_mae": 4.3299,
+      "unmasked_rgb_mae": 3.8487,
       "regions": [
         {
           "region": "header",
@@ -10951,7 +10951,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 5.1919
+          "rgb_mae": 4.574
         },
         {
           "region": "preview-panel",
@@ -10967,27 +10967,27 @@
         },
         {
           "region": "inspector",
-          "rgb_mae": 12.0684
+          "rgb_mae": 11.7099
         },
         {
           "region": "camera-modes",
-          "rgb_mae": 16.9655
+          "rgb_mae": 16.3876
         },
         {
           "region": "slider-motion_arc",
-          "rgb_mae": 15.867
+          "rgb_mae": 14.8459
         },
         {
           "region": "slider-motion_dolly",
-          "rgb_mae": 15.2902
+          "rgb_mae": 14.1498
         },
         {
           "region": "director-dock",
-          "rgb_mae": 3.9288
+          "rgb_mae": 2.0524
         },
         {
           "region": "motion-graph",
-          "rgb_mae": 3.411
+          "rgb_mae": 0.0369
         },
         {
           "region": "footer-14",
@@ -11204,7 +11204,7 @@
         },
         {
           "region": "camera-modes",
-          "result": "FAIL",
+          "result": "PASS",
           "expected": [
             993,
             239,
@@ -11214,20 +11214,20 @@
           "actual": [
             993,
             239,
-            332,
+            342,
             239
           ],
           "delta": [
             0.0,
             0.0,
-            -10.0,
+            0.0,
             -2.0
           ],
           "tolerance_px": 2
         },
         {
           "region": "slider-motion_arc",
-          "result": "FAIL",
+          "result": "PASS",
           "expected": [
             993,
             496,
@@ -11237,20 +11237,20 @@
           "actual": [
             993,
             494,
-            332,
+            342,
             36
           ],
           "delta": [
             0.0,
             -2.0,
-            -10.0,
+            0.0,
             0.0
           ],
           "tolerance_px": 2
         },
         {
           "region": "slider-motion_dolly",
-          "result": "FAIL",
+          "result": "PASS",
           "expected": [
             993,
             548,
@@ -11260,13 +11260,13 @@
           "actual": [
             993,
             546,
-            332,
+            342,
             36
           ],
           "delta": [
             0.0,
             -2.0,
-            -10.0,
+            0.0,
             0.0
           ],
           "tolerance_px": 2
@@ -11296,7 +11296,7 @@
         },
         {
           "region": "motion-graph",
-          "result": "FAIL",
+          "result": "PASS",
           "expected": [
             31,
             608,
@@ -11306,13 +11306,13 @@
           "actual": [
             31,
             608,
-            905,
+            920,
             116
           ],
           "delta": [
             0.0,
             0.0,
-            -15.0,
+            0.0,
             0.0
           ],
           "tolerance_px": 2
@@ -11706,7 +11706,7 @@
         768
       ],
       "size_result": "PASS",
-      "visual_result": "REVIEW",
+      "visual_result": "MEASURED",
       "functional_result": "NOT_RUN",
       "dynamic_image_mask": [
         336.3333333333333,
@@ -11714,7 +11714,7 @@
         597.3333333333334,
         336.0
       ],
-      "unmasked_rgb_mae": 2.1503,
+      "unmasked_rgb_mae": 1.8311,
       "regions": [
         {
           "region": "header",
@@ -11730,7 +11730,7 @@
         },
         {
           "region": "workspace",
-          "rgb_mae": 2.4173
+          "rgb_mae": 1.9983
         },
         {
           "region": "flow-rail",
@@ -11750,11 +11750,11 @@
         },
         {
           "region": "ready-panel",
-          "rgb_mae": 8.2737
+          "rgb_mae": 6.7175
         },
         {
           "region": "one-click",
-          "rgb_mae": 17.1331
+          "rgb_mae": 0.0
         },
         {
           "region": "choice-dock",
@@ -11979,7 +11979,7 @@
         },
         {
           "region": "one-click",
-          "result": "FAIL",
+          "result": "PASS",
           "expected": [
             1073,
             572.5,
@@ -11989,13 +11989,13 @@
           "actual": [
             1073,
             572.5,
-            252,
+            262,
             60
           ],
           "delta": [
             0.0,
             0.0,
-            -10.0,
+            0.0,
             0.0
           ],
           "tolerance_px": 2

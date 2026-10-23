@@ -11,7 +11,7 @@
     768
   ],
   "size_result": "PASS",
-  "visual_result": "REVIEW",
+  "visual_result": "MEASURED",
   "functional_result": "NOT_RUN",
   "dynamic_image_mask": [
     245.66666666666666,
@@ -19,7 +19,7 @@
     490.6666666666667,
     276.0
   ],
-  "unmasked_rgb_mae": 4.3299,
+  "unmasked_rgb_mae": 3.8487,
   "regions": [
     {
       "region": "header",
@@ -39,7 +39,7 @@
     },
     {
       "region": "workspace",
-      "rgb_mae": 5.1919
+      "rgb_mae": 4.574
     },
     {
       "region": "preview-panel",
@@ -55,27 +55,27 @@
     },
     {
       "region": "inspector",
-      "rgb_mae": 12.0684
+      "rgb_mae": 11.7099
     },
     {
       "region": "camera-modes",
-      "rgb_mae": 16.9655
+      "rgb_mae": 16.3876
     },
     {
       "region": "slider-motion_arc",
-      "rgb_mae": 15.867
+      "rgb_mae": 14.8459
     },
     {
       "region": "slider-motion_dolly",
-      "rgb_mae": 15.2902
+      "rgb_mae": 14.1498
     },
     {
       "region": "director-dock",
-      "rgb_mae": 3.9288
+      "rgb_mae": 2.0524
     },
     {
       "region": "motion-graph",
-      "rgb_mae": 3.411
+      "rgb_mae": 0.0369
     },
     {
       "region": "footer-14",
@@ -292,7 +292,7 @@
     },
     {
       "region": "camera-modes",
-      "result": "FAIL",
+      "result": "PASS",
       "expected": [
         993,
         239,
@@ -302,20 +302,20 @@
       "actual": [
         993,
         239,
-        332,
+        342,
         239
       ],
       "delta": [
         0.0,
         0.0,
-        -10.0,
+        0.0,
         -2.0
       ],
       "tolerance_px": 2
     },
     {
       "region": "slider-motion_arc",
-      "result": "FAIL",
+      "result": "PASS",
       "expected": [
         993,
         496,
@@ -325,20 +325,20 @@
       "actual": [
         993,
         494,
-        332,
+        342,
         36
       ],
       "delta": [
         0.0,
         -2.0,
-        -10.0,
+        0.0,
         0.0
       ],
       "tolerance_px": 2
     },
     {
       "region": "slider-motion_dolly",
-      "result": "FAIL",
+      "result": "PASS",
       "expected": [
         993,
         548,
@@ -348,13 +348,13 @@
       "actual": [
         993,
         546,
-        332,
+        342,
         36
       ],
       "delta": [
         0.0,
         -2.0,
-        -10.0,
+        0.0,
         0.0
       ],
       "tolerance_px": 2
@@ -384,7 +384,7 @@
     },
     {
       "region": "motion-graph",
-      "result": "FAIL",
+      "result": "PASS",
       "expected": [
         31,
         608,
@@ -394,13 +394,13 @@
       "actual": [
         31,
         608,
-        905,
+        920,
         116
       ],
       "delta": [
         0.0,
         0.0,
-        -15.0,
+        0.0,
         0.0
       ],
       "tolerance_px": 2
