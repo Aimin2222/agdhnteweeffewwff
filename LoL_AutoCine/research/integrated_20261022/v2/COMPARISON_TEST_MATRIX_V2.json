@@ -1,0 +1,89 @@
+{
+  "status": "specification_only_not_executed",
+  "tests": [
+    {
+      "id": "T01",
+      "input": "BLUE/RED各2シーン・左右入替",
+      "focus": "既存camera/TargetLockのside判定、相手を含むwide",
+      "acceptance": "同一replay時刻/対象/設定のbaseline比較。陣営逆転、対象外へ固定、未申告API失敗0"
+    },
+    {
+      "id": "T02",
+      "input": "単発kill/assist/engage各1とkillなし1",
+      "focus": "イベントanchorと前後文脈",
+      "acceptance": "ChampionKillのAPI/replay時刻とwall/ClipTake写像を保存。候補beamだけでkill生成しない"
+    },
+    {
+      "id": "T03",
+      "input": "multi kill 3件以上・間隔短/長",
+      "focus": "連続戦闘groupとpulse抑制",
+      "acceptance": "通知を3回読めてもtransitionを3重にしない。最終killのみの演出ログと出力を一致"
+    },
+    {
+      "id": "T04",
+      "input": "dash・壁際・ジャングル・地形外を含む低角度",
+      "focus": "通常cameraと任意cutaway",
+      "acceptance": "通常域の未申告対象喪失0。transition域のintentional roll/occlusionは別ラベル。既知不足は要確認へ"
+    },
+    {
+      "id": "T05",
+      "input": "死亡灰色/低体力赤縁/teleport/recall",
+      "focus": "文脈付きQAの誤警告",
+      "acceptance": "ゲーム固有状態を追加FXや色故障にしない。分類不能は自動修正せず要確認"
+    },
+    {
+      "id": "T06",
+      "input": "652frame+35FX・明/暗/複雑ゲーム背景",
+      "focus": "素材静止の合成とsafe area",
+      "acceptance": "catalog hash不変、意図しない切断/顔隠しなし。thumb passで承認を進めない。レビュー担当の記録必須"
+    },
+    {
+      "id": "T07",
+      "input": "適用素材×6motions、30/60fps",
+      "focus": "動的見切れ・位置・一貫性",
+      "acceptance": "実装した既存motion式と一致。slide/popの全途中frame確認。承認済み静止を動画承認としない"
+    },
+    {
+      "id": "T08",
+      "input": "同一clipで軽量preview/exact still/final動画",
+      "focus": "時間FXと最終結果の関係",
+      "acceptance": "比較modeを表示。静止一致だけでflash/temporal blur合格不可。時刻写像・output frameを記録"
+    },
+    {
+      "id": "T09",
+      "input": "scene先頭/中間/末尾の3kill、retimeあり/なし",
+      "focus": "複数kill flash式と時間変換",
+      "acceptance": "各pulseの中心/幅をframeから実測。CPU式疑義は再現した時だけ不具合確定"
+    },
+    {
+      "id": "T10",
+      "input": "CPU FXと可能なGPU FX、NVENC/CPU encode",
+      "focus": "性能・品質・fallback",
+      "acceptance": "1080p60で設定とdevice/driver、fps、encode時間、メモリを実測。低負荷の効果未測定を埋める"
+    },
+    {
+      "id": "T11",
+      "input": "LoLプロセス音声・無音・capture失敗",
+      "focus": "音声範囲",
+      "acceptance": "LoL以外のdesktop音が混入しない。失敗を明示、無断desktop fallbackなし"
+    },
+    {
+      "id": "T12",
+      "input": "同一replay/takeのbaselineと新recipe",
+      "focus": "色・映像の客観比較",
+      "acceptance": "同一frameに限りSSIM/差分を補助。別動画同士のpixel一致を合格条件にしない"
+    },
+    {
+      "id": "T13",
+      "input": "研究用候補と正式承認1件",
+      "focus": "素材状態の保護",
+      "acceptance": "review/approvedの元catalogが変わらない。未承認採用はユーザー決定待ち"
+    },
+    {
+      "id": "T14",
+      "input": "長尺・cancel/resume・最終mux",
+      "focus": "実動画作成の安定性",
+      "acceptance": "ファイルdecode/尺/音声と映像、job statusを一致。atomic project保存とjob checkpointを混同しない"
+    }
+  ]
+}

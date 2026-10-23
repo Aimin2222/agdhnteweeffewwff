@@ -1,0 +1,566 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>AutoCine 第2版 研究報告</title><style>body{margin:0;background:#f3f5f7;color:#1e2c3c;font:17px/1.8 "Yu Gothic UI",sans-serif}header{padding:32px 5%;background:#e6edf5}main{max-width:1200px;margin:auto;padding:24px}nav{display:flex;flex-wrap:wrap;gap:12px}a{color:#154f8d}section{background:#fff;padding:28px;margin:28px 0;border:1px solid #c8d2dd;border-radius:8px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}h2{overflow-wrap:anywhere;font-size:22px}img{max-width:100%;height:auto}figure{margin:24px 0}small{font-size:15px}@media(max-width:700px){section{padding:14px}}table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:1px solid #b8c5d5;padding:10px;text-align:left;vertical-align:top}th{background:#e6edf5}.table{overflow:auto}article h1{font-size:26px}article h2{margin-top:32px}code{overflow-wrap:anywhere}nav a{font-size:14px}table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:1px solid #b8c5d5;padding:10px;text-align:left;vertical-align:top}th{background:#e6edf5}.table{overflow:auto}article h1{font-size:26px}article h2{margin-top:32px}code{overflow-wrap:anywhere}nav a{font-size:14px}</style><header><h1>LoL AutoCine 総合研究 第2版</h1><p>2026年10月24日｜ゲームプレイ20作品の区間観察｜687素材の全件機械検査</p><p>全編視聴0・2件以上の明示kill UI確認9作品。実装/採用/正式承認の変更なし。</p></header><main><nav><a href="#CHATGPT_REPORT_V2_JA">CHATGPT_REPORT_V2_JA.md</a><a href="#CINEMATIC_RECIPES_V2_JA">CINEMATIC_RECIPES_V2_JA.md</a><a href="#KILL_ASSET_QA_V2_JA">KILL_ASSET_QA_V2_JA.md</a><a href="#MONTAGE_VIDEO_ANALYSIS_V2_JA">MONTAGE_VIDEO_ANALYSIS_V2_JA.md</a><a href="#PHASE2_REPORT_JA">PHASE2_REPORT_JA.md</a><a href="#PRIORITY_IMPROVEMENTS_V2_JA">PRIORITY_IMPROVEMENTS_V2_JA.md</a><a href="#README">README.md</a><a href="#REFERENCE_OUTPUT_COMPARISON_SPEC_V2_JA">REFERENCE_OUTPUT_COMPARISON_SPEC_V2_JA.md</a><a href="#V1_V2_CHANGELOG_JA">V1_V2_CHANGELOG_JA.md</a></nav><section id="CHATGPT_REPORT_V2_JA"><h2>CHATGPT_REPORT_V2_JA.md</h2><a href="CHATGPT_REPORT_V2_JA.md">原文を開く</a><article><p>LoL AutoCine総合研究の第2版を作成しました。採用判断・本体実装は行っていません。</p>
+<p>・実再生でゲームプレイ20作品の区間を観察し、別の映画/実写5資料を分離しました。全編視聴は0本、明示kill UIを2件以上確認できたのは保守的9作品です。残りはbeam等の候補やkill同期未確定を明記しています。</p>
+<p>・652frame+35FXの全687件をhash/decode/寸法/透過検査。機械的失敗0。端接触solid11/soft63は見切れ確定ではありません。</p>
+<p>・白/暗背景の目視はframe93、FX35。未目視frame559。原寸合成と6motion/実LoL試験は未実施です。正式承認は変更していません。</p>
+<p>・6レシピを動画ID根拠で改訂し、既存でできる範囲/新規実装/未検証を分離。比較用14試験を具体化しました。</p>
+<p>・優先案は「連続kill中はwide、最後に演出」「死亡灰色/低体力赤/teleportを誤判定しないQA」「素材端の原本比較」です。</p>
+<p>・V1を保持して研究フォルダv2/へ追加。AutoCine本体、UI29、素材原本、承認、自動テストは変更していません。</p>
+<p>GitHub保存先・最終commit SHAは同梱の保存記録と納品メッセージを参照してください。実機性能・音楽/BPM・正確な速度/LUT/FOVは未検証で、Work全体のクレジット削減も測定していません。</p></article></section><section id="CINEMATIC_RECIPES_V2_JA"><h2>CINEMATIC_RECIPES_V2_JA.md</h2><a href="CINEMATIC_RECIPES_V2_JA.md">原文を開く</a><article><h1>実映像根拠による6レシピ改訂</h1>
+<p>全パラメータは実装検討用の提案。参考映像から正確なFOV/LUT/速度/秒数を逆算したものではない。AutoCineへ実装していない。既存対応はV1コード基準に依る。</p>
+<h2>Cinematic</h2>
+<p>目的：戦闘の意味を残し、決着後に映画的な人物shot。根拠：V06, V08, V21（<a href="MONTAGE_VIDEO_ANALYSIS_V2_JA.md">観察詳細</a>）。</p>
+<p class="item">- 前：−4〜0秒は相手/進路を含むwide、通常cameraを保持</p>
+<p class="item">- 瞬間：kill中はwideを維持。multi中は寄りを抑制</p>
+<p class="item">- 後：最後のkill後0.4〜2秒に任意cutaway。次戦闘が続く場合は入れない</p>
+<p class="item">- 既存の土台：top/cinema_top/follow、相対camera key、控えめgrade、HUD選択、hard cut/fade</p>
+<p class="item">- 新規実装/追加検証：複数take収録・shot planner・次戦闘判定・選手名plate</p>
+<p class="item">- 注意：低角度のmap外/遮蔽。既存full_autoはclip境界のstyle選択でありshot plannerではない</p>
+<h2>Impact</h2>
+<p>目的：連続kill全てを潰さずclimaxを強調。根拠：V15, V22（<a href="MONTAGE_VIDEO_ANALYSIS_V2_JA.md">観察詳細</a>）。</p>
+<p class="item">- 前：接近を広く残し、killアンカーを先に確定</p>
+<p class="item">- 瞬間：単発または最後のmulti killのみ短いpulse候補（80〜160msは提案値）</p>
+<p class="item">- 後：明暗を復帰し次の位置関係を表示。black移行はtransition扱い</p>
+<p class="item">- 既存の土台：flash/brightness系CPU FX、kill/multikillイベント、zoom key、fade</p>
+<p class="item">- 新規実装/追加検証：重複pulse抑制・最後のkill判定・図形impact layer・正確な時間再配置</p>
+<p class="item">- 注意：V15はkill同期未確定。pulse時間は参考動画の実測値ではない。CPU flash複数イベント時の中心式は原文上の疑義、未再現</p>
+<h2>Elegant</h2>
+<p>目的：控えめな色と余白、cutawayで焦点を絞る。根拠：V08, V03（<a href="MONTAGE_VIDEO_ANALYSIS_V2_JA.md">観察詳細</a>）。</p>
+<p class="item">- 前：広い戦闘と低強度grade</p>
+<p class="item">- 瞬間：強い全面blur/flashを既定off。badgeを小さく抑える</p>
+<p class="item">- 後：任意の人物/小物shotでDOF。次sceneへ落ち着いて接続</p>
+<p class="item">- 既存の土台：grade、Replay DOF、follow、frame/FX強度、fade</p>
+<p class="item">- 新規実装/追加検証：小物/人物shot targetの選択・shot list・明暗背景のサムネイル</p>
+<p class="item">- 注意：Replay DOFと2D中心blurは別物。白背景で淡いFXが消えるためテーマ表示と映像の合成を分ける</p>
+<h2>Competitive</h2>
+<p>目的：プレイとHUDの読みやすさ優先。根拠：V04, V07, V11, V12, V13, V20（<a href="MONTAGE_VIDEO_ANALYSIS_V2_JA.md">観察詳細</a>）。</p>
+<p class="item">- 前：−4秒程度から接近/相手/ミニオンを残す</p>
+<p class="item">- 瞬間：HUD on、広いcamera、FX offを既定。試験速度1.0x</p>
+<p class="item">- 後：1〜3秒の結果/退路を残してcut</p>
+<p class="item">- 既存の土台：scene scan/選択、top/follow、HUD保持、FX off、cut、出力設定</p>
+<p class="item">- 新規実装/追加検証：通知/顔/HUDの重なりを避けるsafe area検査（既存保証なし）</p>
+<p class="item">- 注意：低体力の赤縁と死亡灰色を画質異常と誤判定しない。参考動画全てが厳密1xとは未検証</p>
+<h2>Montage</h2>
+<p>目的：戦闘のまとまりごとに表情の違うshotを接続。根拠：V02, V16, V22, V24, V25（<a href="MONTAGE_VIDEO_ANALYSIS_V2_JA.md">観察詳細</a>）。</p>
+<p class="item">- 前：同じ戦闘内では位置関係を保つ</p>
+<p class="item">- 瞬間：multi群を一つの編集単位にし、各killへ同じtransitionを重複させない</p>
+<p class="item">- 後：fade/hard cutを基準。任意の光/blur/roll移行とintroは別layer</p>
+<p class="item">- 既存の土台：scene cut、fade、基本title、相対key、grade</p>
+<p class="item">- 新規実装/追加検証：真の2映像dissolve・空間wipe/blur・複数take・任意intro・遷移域のQA注釈</p>
+<p class="item">- 注意：softの明るさdip、panel/stretchのfadeは見た目が別。V24のrollを通常camera挙動へ混ぜない。長いintroを既定にしない</p>
+<h2>Low-load Cinema</h2>
+<p>目的：処理負荷を抑えた候補として安定した戦闘映像。根拠：V04, V07, V20（<a href="MONTAGE_VIDEO_ANALYSIS_V2_JA.md">観察詳細</a>）。</p>
+<p class="item">- 前：既存追従と広い画角</p>
+<p class="item">- 瞬間：軽いgrade/静止badgeのみ候補。重いblurや多段合成off</p>
+<p class="item">- 後：hard cutまたは単純fade</p>
+<p class="item">- 既存の土台：既存camera、CPU基本grade、static badge、cut、GPU/NVENC設定への導線</p>
+<p class="item">- 新規実装/追加検証：端末別の計測と適応（本研究で性能実測なし）</p>
+<p class="item">- 注意：低負荷は設計意図でありFPS改善の実証ではない。NVENC encoderとGPU FXを分離、1080p60品質を勝手に下げない</p>
+<h2>既存機能の意味を保つ</h2>
+<p>既存10 styles、fixed_auto、full_auto、TargetLock、37asset badge、89原本、652候補、35FX、6登場動作を削除/統合しない。full_autoの選択はclip境界の承認側style群を使う設計で、未設定時fallbackを「常に最良shot」と呼ばない。</p>
+<p>6motionsはinstant/slide_left/right/up/down/pop。既存slideは0.260秒smoothstep、popは横16pxの減衰振動であり、拡大bounce/alpha animationではない。V13の幾何学plateと同じものだと扱わない。CPU radial=tmix、zoom=scale/crop+tmix、glint=unsharp+eq、focus/vr/sphere系blur等は名称より実際のgraphを基準に比較する。</p>
+<p>preview軽量近似・exact still・最終動画を区別する。exact stillだけではtemporal FXを検証できない。killイベント時刻はreplayとwall/ClipTake双方に写像し、retime追加時は合成写像を必要とする。GPU/NVENCはencodeとFXを分け、LoLプロセス音声をdesktop音声へfallbackしない。</p></article></section><section id="KILL_ASSET_QA_V2_JA"><h2>KILL_ASSET_QA_V2_JA.md</h2><a href="KILL_ASSET_QA_V2_JA.md">原文を開く</a><article><h1>キルフレーム・FX 全件品質審査 第2版</h1>
+<h2>機械検査</h2>
+<p>ソース基準 fb03e0390805125fc063f4599af6c2541a653abf のカタログを固定。catalog SHA256: 80caca563edcb782d1faec95653f39bb503c851e706667cabcae8fe245a0c879。</p>
+<div class="table"><table><thead><tr><th>項目</th><th>対象/結果</th><th>解釈</th></tr></thead><tbody>
+<tr><td>元ファイル取得・SHA256・decode・寸法/モード照合</td><td>652 frame+35 FX、687/687一致</td><td>美術合格ではない</td></tr>
+<tr><td>取得bytes</td><td>1,032,714,605</td><td>ローカル作業cache、GitHubへ重複保存しない</td></tr>
+<tr><td>全く同じSHA256のgroup</td><td>0</td><td>類似テーマや見た目の重複は別の目視課題</td></tr>
+<tr><td>透過/可視部分</td><td>全687件に存在</td><td>顔の穴や意匠の妥当性を保証しない</td></tr>
+<tr><td>alpha≥128で端に接触</td><td>11 frame、FX0</td><td>solid-edge確認待ち</td></tr>
+<tr><td>上記を除くalpha&gt;8で端に接触</td><td>63 frame、FX0</td><td>soft-edge確認待ち</td></tr>
+<tr><td>正式状態</td><td>frame approved1/review651、FX review35</td><td>変更なし</td></tr>
+</tbody></table></div>
+<p>全行の計測値・bbox・透明pixel下のRGB・flagsは <a href="ASSET_FULL_QA_V2.json">JSON</a> と <a href="ASSET_FULL_QA_V2.csv">CSV</a>。透明pixelのRGBは情報項目で、見た目の色漏れを自動確定しない。</p>
+<h2>実際に目視した範囲</h2>
+<p>89番号から各1候補と35FXの124点を7枚の白/暗背景contact sheetで確認。さらにsolid-edge11の全体縮小図と端の64×64 patch拡大を確認。重複を除いてframe93/652、未559。FX35/35サムネイル確認、未0。原寸全体の検査済み0、実LoL顔/背景合成0、6motion動画0。サムネイル確認を原寸品質承認と同一視しない。</p>
+<p>淡いweak FXは白背景で輪郭が弱い。暗背景では発光/粒が見える。A/star_guardian/faerie_court/dawnbringer/winter_festival系を実ゲームの明暗双方で優先。丸型と角型の顔開口を保ち、一律円maskで削らない。装飾密度が高い38/46/66/73/74系は最終表示サイズで顔とHUDへの被りを確認。039の単色は意図の可能性があるため自動却下しない。083/a_simple_mainの既存静止承認は他候補・motionへ拡張しない。</p>
+<h2>solid-edge11の拡大確認</h2>
+<p>004/dragon_world_frame、011/strong_03、016/strong_02、029/weak_02、032/main、065/strong_02、065/strong_03、068/main、071/strong_01、081/main、084/shurima_variant_1。</p>
+<p>端のsolid pixelは1〜24個だが、alpha&gt;8・4近傍の連結成分は全て10,000pixelを超えた（打ち切り計数10001/10002は総面積ではない）。孤立した1pixelゴミとは言えない。装飾先端/花/房/発光が端に届く形を観察したが、原本比較なしで「欠落した平面」を確定できない。縮小や切り直しは行わない。<a href="ASSET_EDGE_DETAILS_V2.jpg">拡大資料</a>・<a href="ASSET_EDGE_DETAILS_V2.json">個別所見</a>。</p>
+<h2>残件と順序</h2>
+<p class="item">1. P1：approved静止1件の回帰基準を保持し、solid-edge11件を原本とmargin比較。承認済みでも動作は未承認。</p>
+<p class="item">2. P2：soft-edge63件の余白、35FXの実LoL明暗背景・顔・文字との合成、淡色/高密度themeを確認。</p>
+<p class="item">3. P3：まだ未目視の559 frameを番号/theme/intensity別に埋める。93件も原寸/最終縮小で再審査。</p>
+<p class="item">4. 全687件のうち適用される素材について6motionと動画時間軸の審査。静止PNGのalpha検査だけでpop/slideの見切れを判断しない。</p>
+<p>全687件の優先順位・thumb確認有無・正式状態を <a href="ASSET_REMAINING_QUEUE_V2.json">残件queue</a> に収録。合否を変更するqueueではない。</p></article></section><section id="MONTAGE_VIDEO_ANALYSIS_V2_JA"><h2>MONTAGE_VIDEO_ANALYSIS_V2_JA.md</h2><a href="MONTAGE_VIDEO_ANALYSIS_V2_JA.md">原文を開く</a><article><h1>モンタージュ実映像 区間分析 第2版</h1>
+<p>25資料を実際のブラウザー再生で点列観察し、ゲームプレイ区間のある20作品と補助5資料を分離。全編視聴0。約0.7〜1秒ごとのsampleの間も再生しているが、連続した全フレームを記録/検査したわけではない。0.1秒以下のFXや正確な速度は検証できない。音声は評価していない。</p>
+<p>以下の時刻はプレイヤー時刻の概数。kill候補窓は死亡beam/通知等を含む観察用アンカーで、実際のChampionKill時刻や独立kill数ではない。teleport・味方死亡・ゲーム内skillを区別し、曖昧なものは別欄に置く。明示的kill UI 2件以上の保守的な確認は9作品。残る11作品について条件を満たしたと扱わない。異なる2区間を観察したことと2kill前後を確定したことを分ける。</p>
+<p>時刻列・ready状態・buffering同一時刻・最大gap・広告中断は <a href="VIDEO_OBSERVATIONS_V2.json">機械可読記録</a> に収録。初期seek古画、loading中の静止、広告を映像演出と見なさない。原動画はダウンロードせず、第三者映像のcontact sheetを公開成果物へ複製しない。ローカル記録のSHA256と元動画URLで追試可能性を残した。</p>
+<h2>V01 史上最強。全米が震えた神プレイ TOP 30</h2>
+<p>作者：롤읽남 LOLNAM。<a href="https://www.youtube.com/watch?v=NolHvXjZA4A">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V01_A: [80.252, 101.199]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：斜め俯瞰から被写体を追う緩いパン。90秒前後で低めの角度となり背景の空が見える。</p>
+<p class="item">- 色/FX：暖かい空と緑の地面。下部に選手名plate。派手な全面FXを足さずゲーム内発光を見せる。</p>
+<p class="item">- カット：87秒前後に構図・行動の切替。厳密な同一戦闘のリプレイ再掲かは未確定。</p>
+<p class="item">- kill前：間合いと草むらを含む広さを保持。</p>
+<p class="item">- kill付近：95秒台の死亡beam付近でも極端な寄りはない。</p>
+<p class="item">- kill後：97〜101秒は味方と敵の残り位置を含め追従。</p>
+<p class="item">- 視覚アンカー候補窓：[[94.29, 96.59]]。曖昧な窓：[[85.86, 87.4]]。</p>
+<p class="item">- 速度：速度曲線の数値は不明。観測だけでスロー/高速化を確定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>既存top/cinema_top/follow系で基準を作れる。選手名lower-thirdはkill badgeとは別機能。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V02 &#x27;Don&#x27;t you just have to avoid it?&#x27; | LOLNAM Cinematic Montage #16</h2>
+<p>作者：근육쩌는응애 ᆞ LOLNAM。<a href="https://www.youtube.com/watch?v=d-r2kgeFfus">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V02_A: [20.02, 46.662] / V02_B: [52.055, 74.652]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：20〜42秒は中〜広い斜め俯瞰で複数キャラを残す。52〜65秒は追走に合わせ緩くパン。69秒台に低い導入shot、その後俯瞰へ。</p>
+<p class="item">- 色/FX：暗めの周辺、ゲーム内発光を中心に見せる。65〜69秒に暗転→橙色の光点→拡大発光→橙のblur→別shot。</p>
+<p class="item">- カット：42〜44秒に別sceneへhard cut。65〜69秒は光を使う移行。</p>
+<p class="item">- kill前：複数人と進路を見せ、kill直前まで文脈を保つ。</p>
+<p class="item">- kill付近：死亡beamの付近でゲーム内光が強い。編集由来かは分離不能。</p>
+<p class="item">- kill後：直後まで同じ構図を保ち、次sceneへ。52秒の戦闘は決着後に光の移行を挿入。</p>
+<p class="item">- 視覚アンカー候補窓：[[36.83, 38.84], [40.81, 42.78], [63.9, 65.87]]。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：明確な正確倍率は測定していない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>追従・広角・控えめgrade・fadeは既存。光点拡大/空間blur/別視点接続は既存panel_wipeのfadeだけでは一致しない。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V03 Mind-blowing plays that take it all the way to the grave | LOLNAM Cinematic Montage #15</h2>
+<p>作者：근육쩌는응애 ᆞ LOLNAM。<a href="https://www.youtube.com/watch?v=CDzfUgZHdME">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V03_A: [25.994, 49.909] / V03_B: [80.015, 97.495]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：ジャングルの壁・通路を含む俯瞰。主役の移動に合わせ左右/上下へパンし、対戦相手も残す。80〜97秒は縦のlane、後半に低い角度。</p>
+<p class="item">- 色/FX：周辺は暗め、skill色は鮮明。26〜32秒および80秒台冒頭に選手名plate。</p>
+<p class="item">- カット：今回の観測窓は長い戦闘を保つ傾向。80秒台以降の小さな構図変化が連続cameraかcutかはsample間で未確定。</p>
+<p class="item">- kill前：追走と壁越えの経路を先に見せる。</p>
+<p class="item">- kill付近：41秒台の死亡beam付近でも広さを維持。</p>
+<p class="item">- kill後：退路・残った相手を引き続き見せる。</p>
+<p class="item">- 視覚アンカー候補窓：[[40.8, 42.3]]。曖昧な窓：[[94.44, 96.74]]。</p>
+<p class="item">- 速度：sampleから再生速度の正確な変化は確定できない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>既存追従/広角とscene長の保持。地形に沿った自動パンや遮蔽判断は追加の画面解析を要する。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V04 ジャーヴァンIVモンタージュ2025 - パーフェクト</h2>
+<p>作者：LOL TIME。<a href="https://www.youtube.com/watch?v=eYopd5Ynq8o">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：確認。</p>
+<p>再生sample範囲：V04_A: [25.002, 43.208] / V04_B: [80.017, 97.623]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：通常の俯瞰と対象に追従するパン。HUD、minimap、chat、item表示を残す。</p>
+<p class="item">- 色/FX：ゲーム本来の色とskill発光。Jarvanの円形攻撃を後処理FXと誤認しない。</p>
+<p class="item">- カット：32〜34秒付近および80秒台にプレイ区間の切替。</p>
+<p class="item">- kill前：戦闘の接近から見せ、minimapとhealth情報が残る。</p>
+<p class="item">- kill付近：kill通知/報酬の直後も画角とHUDを維持。</p>
+<p class="item">- kill後：敵を倒した後の移動も短く見せる。</p>
+<p class="item">- 視覚アンカー候補窓：[[40.19, 41.7], [88.48, 90.75]]。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確なspeed rampの証拠なし。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>Competitive/Low-loadの比較基準。既存top/follow、FXoff、HUD保持、hard cutで基本構成を作れる。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V05 OUTPLAYS WORLDWIDE that will HYPE you up for SEASON 13 | League of Legends Cinematic Montage</h2>
+<p>作者：GMYugi。<a href="https://www.youtube.com/watch?v=vvjTv5VJzQQ">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V05_A: [35, 53.098] / V05_B: [80, 97.678]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：35〜53秒は岩場を見上げる低めの角度。42〜43秒に狭い岩場へ視点が変化。80〜97秒は広いlane俯瞰を維持。</p>
+<p class="item">- 色/FX：最初の区間は橙の空・暖色が強い。51〜53秒に赤黒い飛沫状画面overlay。80秒以降の黒い円はゲームskillの可能性が高く追加FXと断定しない。</p>
+<p class="item">- カット：35秒台のintro後に戦闘。42秒付近の視点切替と52秒付近の短い名前plate。</p>
+<p class="item">- kill前：岩・草むらと相手を含める。</p>
+<p class="item">- kill付近：48秒台にkill feed icon。顔の寄りより戦闘の全体を維持。</p>
+<p class="item">- kill後：短い飛沫overlayと選手名plate。</p>
+<p class="item">- 視覚アンカー候補窓：[[47.81, 49.31]]。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確な倍率は未測定。岩場の視点変更をspeed rampと同一視しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>暖色grade/広角/名前表示は既存と小追加。空間的な飛沫textureや戦闘中の複数take切替は新規設計が必要。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V06 Yone - League of Legends Montage</h2>
+<p>作者：diyyo。<a href="https://www.youtube.com/watch?v=Y1MGS-wlxrM">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：確認。</p>
+<p>再生sample範囲：V06_A: [25.018, 42.64] / V06_B: [80, 100.956]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：25〜28秒は俯瞰戦闘。29〜33秒は低い近接人物shotを複数cut。80〜98秒の連続killは広い画角を保つ。99〜101秒は人物寄りへ。</p>
+<p class="item">- 色/FX：letterbox、29秒台に浅い被写界深度の人物、40〜42秒に白い斜線で区切る別映像の合成。80秒台以降は明るい光・花びら状粒子。粒子の元映像由来は未確定。</p>
+<p class="item">- カット：戦闘→人物寄り→戦闘の構造。82秒台に短いキャラクターcut-in。</p>
+<p class="item">- kill前：敵と味方の配置を残す。</p>
+<p class="item">- kill付近：DOUBLE/TRIPLE/QUADRA表示を見せ、毎回狭くzoomしない。</p>
+<p class="item">- kill後：連続kill完了後に人物shotを追加する。</p>
+<p class="item">- 視覚アンカー候補窓：[[85.42, 86.94], [91.72, 93.26], [97.08, 98.63]]。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：戦闘と人物shotで動きの密度は異なるが、正確なretime倍率は未確定。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>既存kill/multikill、wide、title、相対キーを利用。斜め2映像合成、複数take planner、任意cut-inは新規。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V07 SHEN MONTAGE 2026 - BEST PLAYS</h2>
+<p>作者：LOL TIME。<a href="https://www.youtube.com/watch?v=U_E00b3jKbg">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V07_A: [40, 60.909] / V07_B: [100.016, 117.57]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：通常俯瞰を保ち対象にパン。HUD/minimap/chatを残す。</p>
+<p class="item">- 色/FX：skill/health表示を優先。111秒以降の赤い周辺は低healthのゲーム表示の可能性があり、追加vignetteと断定しない。</p>
+<p class="item">- カット：40〜46秒のロード/区間切替は初期sampleに不連続あり。実際の編集かbufferingか未確定。</p>
+<p class="item">- kill前：laneのミニオンとtowerを残して間合いを見せる。</p>
+<p class="item">- kill付近：114秒台にkill feedとchampion消失。</p>
+<p class="item">- kill後：healthが少ない状態での生還と移動を残す。</p>
+<p class="item">- 視覚アンカー候補窓：[[113.04, 115.3]]。曖昧な窓：[[58.64, 60.91]]。</p>
+<p class="item">- 速度：倍率未確定。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>Competitive案の根拠。既存HUD保持/FXoff/topで基本再現。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V08 &quot;Defiant&quot; - Challenger Irelia Montage ft. Rate</h2>
+<p>作者：Luviana。<a href="https://www.youtube.com/watch?v=FgqHOT9YeSo">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V08_A: [25.015, 45.491] / V08_B: [80.02, 97.543]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：25〜38秒は人物の顔・武器・背面を近接、浅い焦点。38秒以降と80秒以降は戦闘俯瞰。87〜90秒に小物close-up。</p>
+<p class="item">- 色/FX：青い夜色、letterbox、背景blur、人物眼光。追加合成と元のゲーム表現を断定しない。</p>
+<p class="item">- カット：人物/武器の短いshot→戦闘→小物→別戦闘。近接で情報を絞るのはkill直前でなく主にcutaway。</p>
+<p class="item">- kill前：複数相手と進路を示す。</p>
+<p class="item">- kill付近：82/85秒台の死亡beam付近では戦闘俯瞰を維持。</p>
+<p class="item">- kill後：87秒以降に小物shotへ移行。</p>
+<p class="item">- 視覚アンカー候補窓：[[81.6, 83.16], [84.68, 86.19]]。曖昧な窓：[[43.2, 45.49]]。</p>
+<p class="item">- 速度：camera移動とclip速度の分離は未測定。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>既存DOF/grade/追従を土台。任意小物を狙うcamera keyとshot listの自動生成は新規。中心マスクblurだけで人物DOF一致とは言えない。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V09 YASUO-WIND NEVER DIES | CINEMATIC MONTAGE</h2>
+<p>作者：Markeloffs。<a href="https://www.youtube.com/watch?v=p6J1CkhYt3M">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：確認。</p>
+<p>再生sample範囲：V09_A: [25.501, 43.216] / V09_B: [80, 97.966]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：lane斜め俯瞰。80〜98秒は対決を広く追い、94秒前後に大きい近接構図が入る。</p>
+<p class="item">- 色/FX：letterbox、鮮やかなskill色。95〜97秒の光線はゲーム内攻撃の可能性がある。</p>
+<p class="item">- カット：38秒台/85秒台に別場面へ。94秒台は近接insertの後wideへ戻る。</p>
+<p class="item">- kill前：相手との距離と壁際を示す。</p>
+<p class="item">- kill付近：kill通知と死亡beamが見え、直後も余白を保つ。</p>
+<p class="item">- kill後：退路や別の相手へつなぎ、その後cut。</p>
+<p class="item">- 視覚アンカー候補窓：[[30.4, 31.93], [33.48, 34.98], [83.89, 85.46]]。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確なspeed curveは不明。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>既存追従/相対zoom/kill検出/scene cutが基礎。任意の短い別camera insertは追加planner。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V10 Against The Sun - League Of Legends Cinematic Montage</h2>
+<p>作者：ThePeacePigeon。<a href="https://www.youtube.com/watch?v=g1DxiJqctkI">元動画</a></p>
+<p>対象：補助資料のみ・20作品に含めない。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V10_A: [25, 43.681]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：ゲームプレイではなく、列車内の人物寄り、目の極端なclose-up、複数キャラクターの短い映画shot。</p>
+<p class="item">- 色/FX：緑/青の光、黒へ落とすcut、縦方向の強いblurを伴う切替。</p>
+<p class="item">- カット：28秒台に球体/目、32秒台に別人物、35〜43秒は複数shotを短く連結。</p>
+<p class="item">- kill前：Replayのkill前後は対象外。</p>
+<p class="item">- kill付近：ChampionKillの分析には数えない。</p>
+<p class="item">- kill後：編集構成の補助資料としてのみ扱う。</p>
+<p class="item">- 視覚アンカー候補窓：確定なし。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確な速度は未確定。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>色・明暗・cutの考え方は参考になるが、映画素材のcameraや人物animationはReplay APIで同じものを作れない。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V11 LEE SIN MONTAGE 2025 - GOD PLAYS</h2>
+<p>作者：LOL TIME。<a href="https://www.youtube.com/watch?v=aFks00ErSDA">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V11_A: [25.02, 45.675] / V11_B: [100, 117.493]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：通常の俯瞰を維持し主役を追従。両区間ともHUD・minimapを残す。</p>
+<p class="item">- 色/FX：スキル発光と低体力時の赤い周辺。後処理の追加FXとは確定しない。</p>
+<p class="item">- カット：39秒付近で別の集団戦へ。</p>
+<p class="item">- kill前：接近・ミニオン・相手の位置を残す。</p>
+<p class="item">- kill付近：34秒台に通知、37秒台にもfeed。105/112/114秒台にbeamがあるが陣営と死亡をすべて確定していない。</p>
+<p class="item">- kill後：同じ広さで残った戦闘・移動を見せる。</p>
+<p class="item">- 視覚アンカー候補窓：[[33.42, 35.76]]。曖昧な窓：[[104.46, 106.74], [113.66, 115.18]]。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>Competitive/Low-load。既存HUD保持、top/follow、FX offが基礎。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V12 LOLプレイヤーがとてつもなく頭脳明晰…IQ200のプレイモンタージュ（リーグ・オブ・レジェンド）</h2>
+<p>作者：Protatomonster。<a href="https://www.youtube.com/watch?v=0m3O1TYzJE0">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：確認。</p>
+<p>再生sample範囲：V12_A: [30, 47.875] / V12_B: [100, 117.645]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：HUDと配信者カメラを含む通常ゲーム画面。広く追従。</p>
+<p class="item">- 色/FX：赤い周辺は体力表示と整合する。配信者の顔はAutoCineが生成する素材ではない。</p>
+<p class="item">- カット：複数プレイの連結。</p>
+<p class="item">- kill前：集団の位置と進路を残す。</p>
+<p class="item">- kill付近：103秒台DOUBLE、106秒台TRIPLEの通知。Aの42/46秒台はbeam候補。</p>
+<p class="item">- kill後：毎キルに極端な寄りを入れず進行を保つ。</p>
+<p class="item">- 視覚アンカー候補窓：[[102.2, 104.6], [105.2, 107.5]]。曖昧な窓：[[41.7, 43.3], [45.5, 47.2]]。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>Competitive。リプレイ由来でない配信映像の任意カメラ再構成は不可。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V13 50 ULTRA SATISFYING MOMENTS IN LEAGUE OF LEGENDS</h2>
+<p>作者：Protatomonster。<a href="https://www.youtube.com/watch?v=_JWJgS00hfk">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：確認。</p>
+<p>再生sample範囲：V13_A: [25.006, 43.388] / V13_B: [100.011, 117.67]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：HUDを残した俯瞰。</p>
+<p class="item">- 色/FX：25〜30秒、103〜108秒に青・橙の図形付き選手名plate。36.55秒付近はプレイヤー死亡後にワールドが灰色、HUDは有色。これをgrade失敗と判定しない。</p>
+<p class="item">- カット：plateの入退場の後に戦闘を続ける。</p>
+<p class="item">- kill前：109秒付近から集団戦。</p>
+<p class="item">- kill付近：113秒台Shutdown、116秒台TRIPLE。</p>
+<p class="item">- kill後：広い画角で次の行動へ。</p>
+<p class="item">- 視覚アンカー候補窓：[[112.3, 114.2], [115.2, 117.2]]。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>HUD保持は既存。幾何学plateと任意選手名アニメーションはkill badgeの6動作だけでは一致しない。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V14 Frame of Mind - Cinematic League Montage</h2>
+<p>作者：ThePeacePigeon。<a href="https://www.youtube.com/watch?v=lsiWSeWySMU">元動画</a></p>
+<p>対象：補助資料のみ・20作品に含めない。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V14_A: [20, 38.137] / V14_B: [70.017, 87.386]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：公式映画的なキャラクター寄りの連結。Replayの戦闘ではない。</p>
+<p class="item">- 色/FX：歌詞文字、暖色と青の対比。29.9/76.1秒付近に白いflash、32.9秒付近に短い黒。</p>
+<p class="item">- カット：短い人物shotと文字を連結。</p>
+<p class="item">- kill前：Replay kill前は対象外。</p>
+<p class="item">- kill付近：ChampionKill分析には数えない。</p>
+<p class="item">- kill後：補助資料。</p>
+<p class="item">- 視覚アンカー候補窓：確定なし。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>タイポグラフィと明暗の設計参考。ゲームのカメラAPIで映画人物演技は生成できない。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V15 Skills of an expert you don&#x27;t want to miss | LOLNAM Cinematic Montage #24</h2>
+<p>作者：근육쩌는응애 ᆞ LOLNAM。<a href="https://www.youtube.com/watch?v=Vv6ykcYJXrE">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V15_A: [25.343, 46.857] / V15_B: [100, 105.053]（広告中断）。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：低めの視点と広い戦闘俯瞰。橙の空・地形外の背景が目立つ。</p>
+<p class="item">- 色/FX：38秒台にViperのportrait plate。101秒台zoom/blur、102秒台強い白黒、102.89秒付近に黒地と白線、103秒台に映像へ戻る。</p>
+<p class="item">- カット：Bは105秒台以降広告に移り中断。Aは25→30秒の初期gapがあり、その間を解析済みとしない。</p>
+<p class="item">- kill前：広い位置関係を保持。</p>
+<p class="item">- kill付近：観測した強いimpact編集と正確なkill時刻との対応は未確定。</p>
+<p class="item">- kill後：短い図形フレーム後に広い戦闘へ。</p>
+<p class="item">- 視覚アンカー候補窓：確定なし。曖昧な窓：[[37, 40], [100.5, 104.8]]。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>明暗pulseの基礎は既存。線形図形合成、別take、impactと正確なkill同期は追加検証/実装が必要。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V16 &#x27;a thin line, a fine line&#x27; | LOLNAM Cinematic Montage #23</h2>
+<p>作者：근육쩌는응애 ᆞ LOLNAM。<a href="https://www.youtube.com/watch?v=53CXTEC17oU">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V16_A: [25.893, 44.014] / V16_B: [80, 97.92]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：川の対決を広く追い、暖色・落ち着いた色。</p>
+<p class="item">- 色/FX：35〜40秒と91〜97秒に名前plate。31.55秒の白いburstがkill由来かは未確定。</p>
+<p class="item">- カット：81.54〜84.67秒付近は強い移動/zoom/blurと前景横切りの後に別lane。</p>
+<p class="item">- kill前：追走・壁と距離を保持。</p>
+<p class="item">- kill付近：明瞭なkill通知2件は今回未確認。</p>
+<p class="item">- kill後：次の場面へ移る途中では対象が一時隠れる。</p>
+<p class="item">- 視覚アンカー候補窓：確定なし。曖昧な窓：[[30.8, 32.3]]。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>追従/gradeは既存。明示したtransition内の一時遮蔽と通常カメラの追跡失敗をQAで分ける。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V17 ► League of Legends cinematic montage - my demons } full video</h2>
+<p>作者：Lunaris。<a href="https://www.youtube.com/watch?v=l7-ArPoCKn4">元動画</a></p>
+<p>対象：補助資料のみ・20作品に含めない。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V17_A: [25.013, 43.28]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：映画人物shot、Replayではない。</p>
+<p class="item">- 色/FX：歌詞、単語の反復、全面色、短いcut。</p>
+<p class="item">- カット：25〜43秒の映画編集を観察。</p>
+<p class="item">- kill前：対象外。</p>
+<p class="item">- kill付近：kill分析対象外。</p>
+<p class="item">- kill後：補助資料。</p>
+<p class="item">- 視覚アンカー候補窓：確定なし。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>文字/色の着想のみ。映画素材の再利用許諾は本調査では判断しない。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V18 League of Legends Cinematic Montage Trailer</h2>
+<p>作者：BestOutplays Ever。<a href="https://www.youtube.com/watch?v=a43uvdm22_I">元動画</a></p>
+<p>対象：補助資料のみ・20作品に含めない。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V18_A: [10.018, 28.65]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：青い森から橙の砂時計、Jinxと列車、紫の魔法など映画shot。</p>
+<p class="item">- 色/FX：青・橙・紫の大きな色変化。</p>
+<p class="item">- カット：10〜28秒の短いshot接続。</p>
+<p class="item">- kill前：対象外。</p>
+<p class="item">- kill付近：Replay killではない。</p>
+<p class="item">- kill後：補助資料。</p>
+<p class="item">- 視覚アンカー候補窓：確定なし。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>異なるshot間の色設計参考。AutoCine既存Replay機能で映画演技を再現するものではない。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V19 League of Legends | It&#x27;s Just A Game</h2>
+<p>作者：Silvxs。<a href="https://www.youtube.com/watch?v=YHstBNb5_7g">元動画</a></p>
+<p>対象：補助資料のみ・20作品に含めない。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V19_A: [25.133, 43.873]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：観測した25〜44秒は選手・インタビュー等の実写。</p>
+<p class="item">- 色/FX：実写の人物映像。</p>
+<p class="item">- カット：観測区間はReplayの連続killではない。</p>
+<p class="item">- kill前：未確認。</p>
+<p class="item">- kill付近：ゲームプレイ部分を確認するまでkill対象数に含めない。</p>
+<p class="item">- kill後：動画全体にゲームプレイがないとは断定しない。</p>
+<p class="item">- 視覚アンカー候補窓：確定なし。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>実写編集の補助資料。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V20 ADC MONTAGE 2026 - INSANE PLAYS</h2>
+<p>作者：LOL TIME。<a href="https://www.youtube.com/watch?v=3c_AK62eY8k">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：確認。</p>
+<p>再生sample範囲：V20_A: [25.017, 45.018] / V20_B: [100.012, 118.434]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：雪景色のmapを通常俯瞰しHUDを保持。</p>
+<p class="item">- 色/FX：紫/赤のスキルと低体力の周辺赤。雪mapを一律にgrade差としない。</p>
+<p class="item">- カット：110.49秒付近にblurを伴う次の戦闘への切替。</p>
+<p class="item">- kill前：Aは接近から、Bは既に連続戦闘の終盤から。</p>
+<p class="item">- kill付近：A34秒台に報酬/feed、B102秒台にPENTAKILL表示。Bのそれ以前の5キル全部を観察したわけではない。</p>
+<p class="item">- kill後：climax後もHUDを残してから次へ。</p>
+<p class="item">- 視覚アンカー候補窓：[[33.85, 35.4], [101.58, 103.18]]。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>Competitive。既存HUD保持、scene選択、kill検出。空間blur transitionは追加。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V21 Udyr, But Every Fight Feels Like a Movie 🔥 | Cinematic League Montage</h2>
+<p>作者：J。<a href="https://www.youtube.com/watch?v=Yov4icmIYhI">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V21_A: [25.419, 43.568] / V21_B: [65.017, 83.179]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：AはHUD付き俯瞰戦闘後、36〜39秒に人物の前後を低く寄る。B68〜71秒はジャングル移動を低く見せ、72秒から広く戦闘、76〜80秒は倒れた相手と主役を低く見せる。</p>
+<p class="item">- 色/FX：ゲーム由来の鮮やかな色。低い画角でmapの平面/外側が見え得る。</p>
+<p class="item">- カット：戦闘→人物shot→戦闘。80.97秒付近に別の対決。</p>
+<p class="item">- kill前：間合いと相手を含む広さ。</p>
+<p class="item">- kill付近：35秒台に赤い死亡beam、75秒台に相手の倒れ/消失。32秒台の青beamを主役の敵killと同一視しない。</p>
+<p class="item">- kill後：低い人物shotへ移し締める。</p>
+<p class="item">- 視覚アンカー候補窓：[[34.33, 35.89], [74.6, 76.73]]。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>既存カメラの別take収録を土台に、shot planner/切替・地形外露出QAが必要。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V22 High Elo Yasuo [Cinematic Montage] 야스오 매드무비</h2>
+<p>作者：Nicetryian。<a href="https://www.youtube.com/watch?v=RvuvS7bDPlw">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：確認。</p>
+<p>再生sample範囲：V22_A: [25.765, 43.567] / V22_B: [100, 117.469]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：Aはシアンのviewport枠と背面ワールドの複製的表現。BはHUD非表示の広い戦闘とletterbox。</p>
+<p class="item">- 色/FX：A39〜40秒に淡い白wash、41〜43秒に縦の人物banner。B109秒台から暗転、110.55秒付近黒、111秒台別戦闘。</p>
+<p class="item">- カット：連続kill中は広い構図を保ち、最後に演出/切替。</p>
+<p class="item">- kill前：相手を複数残す。</p>
+<p class="item">- kill付近：A28/34/39秒台、B101/105/108秒台にTRIPLE/QUADRA/PENTA通知。</p>
+<p class="item">- kill後：最終kill後に白/黒の移行と次shot。</p>
+<p class="item">- 視覚アンカー候補窓：[[27.2, 29.0], [33.3, 35.0], [38.2, 39.7], [100.7, 102.2], [104.4, 106.0], [107.5, 109.1]]。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>fade/明暗/広角は既存。複製ワールド枠、縦banner、複数take plannerは新規。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V23 Last Lee Sin’s Montage - Gameplay and Cinematic League of Legends!</h2>
+<p>作者：Magneto91。<a href="https://www.youtube.com/watch?v=Uxw53vd0qYg">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：確認。</p>
+<p>再生sample範囲：V23_A: [25.914, 43.382] / V23_B: [80.019, 97.5]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：HUD付きReplayとLee Sinの映画的CG close-upを交互に見せる。</p>
+<p class="item">- 色/FX：CGとゲームの質感が異なる。</p>
+<p class="item">- カット：A30〜32秒CG→32.81〜39.62ゲーム→40〜42CG→43秒ゲーム。B80〜82CG→83.11〜91.49ゲーム→92〜96CG→97秒ゲーム。</p>
+<p class="item">- kill前：対決を通常俯瞰で残す。</p>
+<p class="item">- kill付近：A38.85秒台に連続kill系通知、B90.74秒台kill通知。</p>
+<p class="item">- kill後：人物CGへcutawayする。</p>
+<p class="item">- 視覚アンカー候補窓：[[38.0, 39.62], [89.9, 91.49]]。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>Replay内人物takeを代替案にする。外部CGの生成/使用権は別問題。任意外部cutaway合成は新機能。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V24 This is really &quot;Montage&quot; | LOLNAM Cinematic Montage #18</h2>
+<p>作者：근육쩌는응애 ᆞ LOLNAM。<a href="https://www.youtube.com/watch?v=s6mn5nydV8I">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：条件未充足/保留。</p>
+<p>再生sample範囲：V24_A: [25.003, 43.182] / V24_B: [100, 116.382]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：Aは広い戦闘と地形外の白い空間。B100〜102秒は大きくrollし地形の裏と白い空間、103秒台別laneへ落ち着く。</p>
+<p class="item">- 色/FX：35〜43秒名前plate。白beamはteleportの可能性があり死亡に即断しない。</p>
+<p class="item">- カット：33秒台にlaneの追走へcut。Bは大きな回転を伴う移行。</p>
+<p class="item">- kill前：戦闘の位置関係を保持。</p>
+<p class="item">- kill付近：A31秒青beamは候補。B105.79秒の白beamと110.34秒の到着はteleportとして読む方が整合的。109秒の青光もkill確定不可。</p>
+<p class="item">- kill後：場面切替と追走。</p>
+<p class="item">- 視覚アンカー候補窓：確定なし。曖昧な窓：[[30.2, 31.9]]。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>transition指定域の演出rollと通常カメラの軸反転事故を分離。既存full_autoのclip境界選択だけでは同じ回転移行にならない。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p>
+<h2>V25 Snipe &quot;Cinematic&quot; Montage | League of Legends</h2>
+<p>作者：Life is GG。<a href="https://www.youtube.com/watch?v=M8VOe0cKEEw">元動画</a></p>
+<p>対象：ゲームプレイ20作品に含む。明示的kill UI 2件以上：確認。</p>
+<p>再生sample範囲：V25_A: [20.313, 38.075] / V25_B: [100, 111.957] / V25_C: [200, 214.422] / V25_D: [214.675, 235.163]。範囲内のgap/loadingは検査済みフレームに数えない。</p>
+<p><strong>実際の観察</strong></p>
+<p class="item">- カメラ：20〜38秒はAshe/Jinx/Jayceのintro。100秒以降はHUDを残す対決・集団戦の俯瞰。</p>
+<p class="item">- 色/FX：introはsplash/分割panel/slide blur。102秒付近は前後映像が重なるように見えるdissolve。</p>
+<p class="item">- カット：B/C最初の同一時刻反復はbuffering。C212.91秒通知後fade→213秒lane。D229〜235秒に連続したkill通知。</p>
+<p class="item">- kill前：Cはドラゴン周辺、Dは対決と退路/シールドを見せる。</p>
+<p class="item">- kill付近：C212.91秒にenemy slain。D229.89秒slain、232秒killing spree、235秒double。</p>
+<p class="item">- kill後：短いfade/cutで次へ。長いintroは初心者の既定に強制しない。</p>
+<p class="item">- 視覚アンカー候補窓：[[212.1, 213.7], [229.1, 230.7], [231.4, 233.0], [234.4, 235.3]]。曖昧な窓：なし/別記不要。</p>
+<p class="item">- 速度：正確な速度倍率・速度曲線・音楽同期は未測定。カメラ移動と映像のretimeを区別できない箇所は断定しない。</p>
+<p><strong>推測する実装・未検証</strong></p>
+<p>hard cut/fade/基本titleは既存。真の2映像dissolve、任意分割introは新規。 実装手法は映像からの推定で、制作者のprojectやcamera値を確認したものではない。</p></article></section><section id="PHASE2_REPORT_JA"><h2>PHASE2_REPORT_JA.md</h2><a href="PHASE2_REPORT_JA.md">原文を開く</a><article><h1>LoL AutoCine 総合研究 第2版</h1>
+<p>更新日：2026年10月24日。調査期間：10月22〜24日。</p>
+<p>実再生からゲームプレイを含む20作品の区間観察を追加した。別の5作品/観測区間は映画・実写の補助資料として分離した。全編を観終えた動画は0本。20本すべてで「2キルの前後を確定した」という意味ではない。明示的なkill通知を2件以上確認した作品は保守的に9本、残りは死亡beam・消失などの候補、またはkill時刻未確定を個別に記録した。</p>
+<p>動画再生中に約0.7〜1秒間隔で画面を採取し、前後の構図と編集を確認した。フレーム精度の閃光、正確な速度倍率、音楽/BPM、厳密な色変換は未検証。広告・buffering・seek直後の古い画は演出に数えていない。V15の2区間目は広告で中断、V01の追加区間は再生準備失敗として分析対象外。</p>
+<p>652フレームと35FXは全687件の元ファイルを取得し、1,032,714,605 bytesを検査。カタログSHA256一致・画像decode・寸法/モード一致は687/687、機械的失敗0、同一SHA256の重複group0。キャンバス端への接触はsolid 11件、soft 63件で全てframe。これは見切れの確定ではない。</p>
+<p>白/暗背景のサムネイル目視はframe93/652（未559）、FX35/35（未0）。solid-edge11件は端の拡大patchも確認した。原寸全体と実LoL背景への合成、6登場動作、最終動画での審査は未実施。正式状態はframe approved1/review651、FX review35のまま維持した。</p>
+<h2>追加発見と優先案</h2>
+<p class="item">1. V06/V22では連続killの最中も広い戦闘画角を保つ。毎killの強いzoomより、連続戦闘の最後に短い演出/人物shotを置くレシピを優先する。</p>
+<p class="item">2. V21/V23では戦闘と近接cutawayの役割が分かれる。単一追従カメラのパラメータ増加だけではなく、任意採用の複数takeとshot listが必要。</p>
+<p class="item">3. V13の死亡後グレースケール、V07等の低体力の赤縁、V24のteleport beamを、画質事故・追加FX・killと誤判定しないQAが必要。</p>
+<p class="item">4. 素材の端接触と見切れを分ける。11件のsolid端は10,000pixel超の連結成分に続き、孤立dustではないが、欠落を断定する根拠も不足する。</p>
+<p class="item">5. 既存のpanel/stretch系がfade、soft transitionが明るさdipに留まる点を、空間wipeや真の2映像dissolveと区別する。名称だけの一致を合格にしない。</p>
+<h2>範囲と保護</h2>
+<p>本版は第1版の機能70件監査を置換せず、動画根拠・素材全件QA・レシピ・比較仕様を追加する。機能・素材のコード基準はV1と同じ fb03e0390805125fc063f4599af6c2541a653abf。10月24日の開発最新版を全面再監査したと主張しない。実LoL接続、BLUE/REDカメラ再現、GPU/音声、Windows実行ベンチは未実施。</p>
+<p>AutoCine本体・UI29・素材原本・正式承認・自動テストを変更しない。実装/採用判断はユーザーとChatGPTに残す。RTKの自動hookや設定変更は行わず、Work全体のクレジット削減は測定していない。</p>
+<h2>資料</h2>
+<p class="item">- <a href="MONTAGE_VIDEO_ANALYSIS_V2_JA.md">動画25資料・20ゲームプレイ区間の詳細</a></p>
+<p class="item">- <a href="KILL_ASSET_QA_V2_JA.md">素材QAと残件</a></p>
+<p class="item">- <a href="CINEMATIC_RECIPES_V2_JA.md">6レシピ改訂</a></p>
+<p class="item">- <a href="REFERENCE_OUTPUT_COMPARISON_SPEC_V2_JA.md">比較テスト仕様</a></p>
+<p class="item">- <a href="PRIORITY_IMPROVEMENTS_V2_JA.md">改善優先順位</a></p>
+<p class="item">- <a href="V1_V2_CHANGELOG_JA.md">第1版との差分</a></p>
+<p class="item">- <a href="index.html">閲覧ページ</a></p></article></section><section id="PRIORITY_IMPROVEMENTS_V2_JA"><h2>PRIORITY_IMPROVEMENTS_V2_JA.md</h2><a href="PRIORITY_IMPROVEMENTS_V2_JA.md">原文を開く</a><article><h1>優先改善案 — 採用未決定</h1>
+<div class="table"><table><thead><tr><th>順</th><th>案</th><th>根拠</th><th>既存/新規</th><th>先に必要な検証</th></tr></thead><tbody>
+<tr><td>1</td><td>広い戦闘と最後のkill後の演出を分ける</td><td>V06/V21/V22</td><td>既存wide/イベント、新規group/shot planner</td><td>T01〜04、T09</td></tr>
+<tr><td>2</td><td>文脈付きQAとkill誤判定抑制</td><td>V13死亡灰色、V24teleport</td><td>新規状態/不明ラベル。既存画像QAの補完</td><td>T02/T05</td></tr>
+<tr><td>3</td><td>素材端接触と見切れの審査を分ける</td><td>solid11/soft63、FX淡色</td><td>研究記録は完成、原寸/実合成は未実施</td><td>T06/T07</td></tr>
+<tr><td>4</td><td>名称と見た目のFX一致を確認</td><td>V02/V16/V22とCPU graph</td><td>既存fade/eq、新規2入力/空間移行</td><td>T08/T09/T12</td></tr>
+<tr><td>5</td><td>任意cutawayと短いintro</td><td>V08/V21/V23/V25</td><td>新規複数take/外部素材/shot list</td><td>T04/T11/T14</td></tr>
+<tr><td>6</td><td>低負荷presetの測定</td><td>HUD重視作品と既存pipeline</td><td>既存設定、新規端末計測</td><td>T10。推定FPSを宣伝しない</td></tr>
+</tbody></table></div>
+<p>コード監査上のCPU flash複数kill式・preview近似差・GPU encoder/FXの混同はV1の原文に基づく課題を維持。実機再現がないものを「修正済み」「確定バグ」としない。パラメータの採用と実装は別依頼。</p></article></section><section id="README"><h2>README.md</h2><a href="README.md">原文を開く</a><article><h1>LoL AutoCine 総合研究 第2版</h1>
+<p>2026-10-24。実装なし。ユーザーの採用判断は未決定。</p>
+<p>まず <a href="PHASE2_REPORT_JA.md">総合報告</a>、またはオフライン対応の <a href="index.html">index.html</a> を参照。</p>
+<p>ゲームプレイ20作品の区間観察（全編0、2明示kill UIの保守的確認9作品）と補助5資料。652frame+35FXの全件機械検査、frame93/FX35のサムネイル目視。原寸/実LoL合成/6motions/実機性能は未実施。</p>
+<p>元のV1資料、AutoCineコード、UI29、素材承認を変更しない。全て同じ研究専用ブランチ内v2/への追加。</p>
+<p class="item">- PHASE2_REPORT_JA.md：成果/限界</p>
+<p class="item">- MONTAGE_VIDEO_ANALYSIS_V2_JA.md / VIDEO_OBSERVATIONS_V2.json / VIDEO_COVERAGE_V2.csv：25資料の観察・時刻・推定の分離</p>
+<p class="item">- KILL_ASSET_QA_V2_JA.md / ASSET_FULL_QA_V2.json/.csv：687件の検査</p>
+<p class="item">- ASSET_REVIEW_PAGE_01〜07.jpg / ASSET_EDGE_DETAILS_V2.jpg/.json：自分の素材の目視資料</p>
+<p class="item">- ASSET_VISUAL_REVIEW_V2.json / ASSET_VISUAL_QUEUE_V2.json / ASSET_REMAINING_QUEUE_V2.json：実検査範囲と残件</p>
+<p class="item">- CINEMATIC_RECIPES_V2_JA.md / RECIPE_PLANS_V2.json：6レシピ</p>
+<p class="item">- REFERENCE_OUTPUT_COMPARISON_SPEC_V2_JA.md / COMPARISON_TEST_MATRIX_V2.json：14試験仕様（未実行）</p>
+<p class="item">- PRIORITY_IMPROVEMENTS_V2_JA.md / V1_V2_CHANGELOG_JA.md：優先案と差分</p>
+<p class="item">- CONTENT_MANIFEST_V2.json / SAVE_VERIFICATION_V2.json：内容hashとGitHub読戻し記録</p>
+<p>ZIP展開後にindex.htmlをダブルクリックすると閲覧できる。第三者動画は元YouTubeへリンクし動画の複製を含めない。素材原本の1GB cacheも含めない。</p></article></section><section id="REFERENCE_OUTPUT_COMPARISON_SPEC_V2_JA"><h2>REFERENCE_OUTPUT_COMPARISON_SPEC_V2_JA.md</h2><a href="REFERENCE_OUTPUT_COMPARISON_SPEC_V2_JA.md">原文を開く</a><article><h1>参考映像とAutoCine出力の比較試験仕様</h1>
+<p>本書は今後の実機試験の仕様。実LoL・Windows録画・NVENC・音声試験を実施した記録ではない。参考映像の0.7〜1秒sampleから厳密frame数の正解を作らない。</p>
+<h2>二種類の比較</h2>
+<p>参考作品とAutoCineでは内容/patch/対象が違うため、SSIM等のpixel一致を要求しない。参考は「前に相手と進路が見える」「連続kill中wide」「最後にcutaway」「HUDを隠さない」等の意味・時間構造を人が比較する。</p>
+<p>内部の旧出力と新出力は同じreplay、同じtake、同じ時刻・解像度を固定し、そこで初めて差分/SSIMを補助利用する。差分が大きいだけで不合格にしない。intentional grade/overlayをmask/別layerに分ける。</p>
+<h2>1試験の保存単位</h2>
+<p>匿名試験ID、replay patch、BLUE/RED、対象ID、camera style、全recipe値、HUD、素材ID/SHA256/承認状態、6motion、CPU/GPU FX、encoder/driver、API応答要約、入力/出力尺、frame rate、ログ、実行日時、結果・担当を保存。個人の診断情報/音声を公開repoへcommitしない。</p>
+<p>referenceの時刻は視覚アンカー候補として持つ。AutoCineはreplay ChampionKill/assist/engageとwall/ClipTake時刻を写像し、retime時は逆変換も記録する。基本観察窓−4〜+3秒は提案で、動画参考の測定値ではない。multi群は最初の前〜最後の後でひとまとまりにし、重なる窓を独立killとして水増ししない。</p>
+<h2>テスト一覧</h2>
+<h3>T01</h3>
+<p>入力：BLUE/RED各2シーン・左右入替。検査：既存camera/TargetLockのside判定、相手を含むwide。合格条件：同一replay時刻/対象/設定のbaseline比較。陣営逆転、対象外へ固定、未申告API失敗0。</p>
+<h3>T02</h3>
+<p>入力：単発kill/assist/engage各1とkillなし1。検査：イベントanchorと前後文脈。合格条件：ChampionKillのAPI/replay時刻とwall/ClipTake写像を保存。候補beamだけでkill生成しない。</p>
+<h3>T03</h3>
+<p>入力：multi kill 3件以上・間隔短/長。検査：連続戦闘groupとpulse抑制。合格条件：通知を3回読めてもtransitionを3重にしない。最終killのみの演出ログと出力を一致。</p>
+<h3>T04</h3>
+<p>入力：dash・壁際・ジャングル・地形外を含む低角度。検査：通常cameraと任意cutaway。合格条件：通常域の未申告対象喪失0。transition域のintentional roll/occlusionは別ラベル。既知不足は要確認へ。</p>
+<h3>T05</h3>
+<p>入力：死亡灰色/低体力赤縁/teleport/recall。検査：文脈付きQAの誤警告。合格条件：ゲーム固有状態を追加FXや色故障にしない。分類不能は自動修正せず要確認。</p>
+<h3>T06</h3>
+<p>入力：652frame+35FX・明/暗/複雑ゲーム背景。検査：素材静止の合成とsafe area。合格条件：catalog hash不変、意図しない切断/顔隠しなし。thumb passで承認を進めない。レビュー担当の記録必須。</p>
+<h3>T07</h3>
+<p>入力：適用素材×6motions、30/60fps。検査：動的見切れ・位置・一貫性。合格条件：実装した既存motion式と一致。slide/popの全途中frame確認。承認済み静止を動画承認としない。</p>
+<h3>T08</h3>
+<p>入力：同一clipで軽量preview/exact still/final動画。検査：時間FXと最終結果の関係。合格条件：比較modeを表示。静止一致だけでflash/temporal blur合格不可。時刻写像・output frameを記録。</p>
+<h3>T09</h3>
+<p>入力：scene先頭/中間/末尾の3kill、retimeあり/なし。検査：複数kill flash式と時間変換。合格条件：各pulseの中心/幅をframeから実測。CPU式疑義は再現した時だけ不具合確定。</p>
+<h3>T10</h3>
+<p>入力：CPU FXと可能なGPU FX、NVENC/CPU encode。検査：性能・品質・fallback。合格条件：1080p60で設定とdevice/driver、fps、encode時間、メモリを実測。低負荷の効果未測定を埋める。</p>
+<h3>T11</h3>
+<p>入力：LoLプロセス音声・無音・capture失敗。検査：音声範囲。合格条件：LoL以外のdesktop音が混入しない。失敗を明示、無断desktop fallbackなし。</p>
+<h3>T12</h3>
+<p>入力：同一replay/takeのbaselineと新recipe。検査：色・映像の客観比較。合格条件：同一frameに限りSSIM/差分を補助。別動画同士のpixel一致を合格条件にしない。</p>
+<h3>T13</h3>
+<p>入力：研究用候補と正式承認1件。検査：素材状態の保護。合格条件：review/approvedの元catalogが変わらない。未承認採用はユーザー決定待ち。</p>
+<h3>T14</h3>
+<p>入力：長尺・cancel/resume・最終mux。検査：実動画作成の安定性。合格条件：ファイルdecode/尺/音声と映像、job statusを一致。atomic project保存とjob checkpointを混同しない。</p>
+<h2>レビュー手順と判定</h2>
+<p class="item">1. 正規の接続/対象/陣営/イベントをログと元Replayで確定。beamだけの推測を正解にしない。</p>
+<p class="item">2. FX off/HUD onのbaselineを作り、camera/素材/FXを一つずつ足す。前後の同じframeと短い動画を見比べる。</p>
+<p class="item">3. 0.1秒程度のflash/slideはframe steppingまたは高fpsで確認し、sample点列から継続時間を断定しない。</p>
+<p class="item">4. camera通常域と明示transition/cutaway域を区別。死亡灰色、低体力赤、teleportを含むnegative fixtureを先に通す。</p>
+<p class="item">5. 結果は合格/不合格/要確認/実行不能。未対応deviceやAPI失敗を見た目合格に埋めない。見切れ、TargetLock、情報の読みやすさ、素材承認、性能を個別欄で判定。</p>
+<p class="item">6. 演出採用はユーザーとChatGPTが決める。研究QAは正式承認を変更しない。</p>
+<h2>未検証を残す条件</h2>
+<p>20作品は全編未視聴、9作品以外は明示kill UIを2件以上確定した条件未達。V15/16/24のkill同期、V01追加区間、音楽/BPM、厳密速度/色/FOV、全素材原寸合成と全motion、実LoL実行・性能が残る。これを完了扱いにしない。</p></article></section><section id="V1_V2_CHANGELOG_JA"><h2>V1_V2_CHANGELOG_JA.md</h2><a href="V1_V2_CHANGELOG_JA.md">原文を開く</a><article><h1>第1版 → 第2版の差分</h1>
+<p>第1版は同じ研究フォルダ直下にそのまま保持。第2版はv2/への追加のみ。V1保存commit: 87f005635f6687f0c5b4a28fc8bef6847b4aee29。コード/素材基準commit: fb03e0390805125fc063f4599af6c2541a653abf。</p>
+<div class="table"><table><thead><tr><th>項目</th><th>V1</th><th>V2</th></tr></thead><tbody>
+<tr><td>動画候補</td><td>20</td><td>既存20を保持し5追加、計25</td></tr>
+<tr><td>ゲームプレイの実再生区間観察</td><td>2の点観測、連続区間0</td><td>20作品の再生sample区間。全編0、明示kill UI 2件以上は保守的9</td></tr>
+<tr><td>映画/実写補助</td><td>分類は候補情報中心</td><td>5を別枠、kill20本に数えない</td></tr>
+<tr><td>素材機械検査</td><td>18sample</td><td>全687、全hash/decode/寸法照合</td></tr>
+<tr><td>素材目視</td><td>限定sample</td><td>frame93、FX35サムネイル、端拡大11。原寸/動画未</td></tr>
+<tr><td>6レシピ</td><td>設計仮説</td><td>動画ID根拠、前/瞬間/後、既存/新規、未検証を追記</td></tr>
+<tr><td>比較試験</td><td>概念</td><td>14具体fixture、時間写像、negative条件、実行未を明示</td></tr>
+<tr><td>70機能監査</td><td>V1作成</td><td>再カウント/全面更新せず引き継ぐ</td></tr>
+<tr><td>採用・本体変更</td><td>未採用/変更なし</td><td>未採用/変更なし</td></tr>
+</tbody></table></div>
+<p>補正：死亡後灰色/低体力赤はゲーム表示の場合があり単純色QAの不合格とは限らない。beamはteleport/味方死亡の場合もありkillの確定根拠に不足。大きなroll/前景遮蔽は明示transition域では意図の可能性がある。V1の一般的な画質提案を文脈付き判定へ狭める。</p></article></section><section><h2>素材確認資料</h2><p>自分のrepo素材から作成。第三者動画の画像・動画複製は含めません。</p><figure><img loading="lazy" src="ASSET_EDGE_DETAILS_V2.jpg" alt="ASSET_EDGE_DETAILS_V2"><figcaption>ASSET_EDGE_DETAILS_V2.jpg</figcaption></figure><figure><img loading="lazy" src="ASSET_REVIEW_PAGE_01.jpg" alt="ASSET_REVIEW_PAGE_01"><figcaption>ASSET_REVIEW_PAGE_01.jpg</figcaption></figure><figure><img loading="lazy" src="ASSET_REVIEW_PAGE_02.jpg" alt="ASSET_REVIEW_PAGE_02"><figcaption>ASSET_REVIEW_PAGE_02.jpg</figcaption></figure><figure><img loading="lazy" src="ASSET_REVIEW_PAGE_03.jpg" alt="ASSET_REVIEW_PAGE_03"><figcaption>ASSET_REVIEW_PAGE_03.jpg</figcaption></figure><figure><img loading="lazy" src="ASSET_REVIEW_PAGE_04.jpg" alt="ASSET_REVIEW_PAGE_04"><figcaption>ASSET_REVIEW_PAGE_04.jpg</figcaption></figure><figure><img loading="lazy" src="ASSET_REVIEW_PAGE_05.jpg" alt="ASSET_REVIEW_PAGE_05"><figcaption>ASSET_REVIEW_PAGE_05.jpg</figcaption></figure><figure><img loading="lazy" src="ASSET_REVIEW_PAGE_06.jpg" alt="ASSET_REVIEW_PAGE_06"><figcaption>ASSET_REVIEW_PAGE_06.jpg</figcaption></figure><figure><img loading="lazy" src="ASSET_REVIEW_PAGE_07.jpg" alt="ASSET_REVIEW_PAGE_07"><figcaption>ASSET_REVIEW_PAGE_07.jpg</figcaption></figure></section></main></html>

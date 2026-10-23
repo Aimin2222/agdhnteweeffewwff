@@ -1,0 +1,99 @@
+{
+  "parameters_are_proposals_not_reference_measurements": true,
+  "implementation_performed": false,
+  "recipes": [
+    {
+      "id": "Cinematic",
+      "refs": [
+        "V06",
+        "V08",
+        "V21"
+      ],
+      "goal": "戦闘の意味を残し、決着後に映画的な人物shot",
+      "pre": "−4〜0秒は相手/進路を含むwide、通常cameraを保持",
+      "at": "kill中はwideを維持。multi中は寄りを抑制",
+      "post": "最後のkill後0.4〜2秒に任意cutaway。次戦闘が続く場合は入れない",
+      "existing": "top/cinema_top/follow、相対camera key、控えめgrade、HUD選択、hard cut/fade",
+      "new": "複数take収録・shot planner・次戦闘判定・選手名plate",
+      "risk": "低角度のmap外/遮蔽。既存full_autoはclip境界のstyle選択でありshot plannerではない"
+    },
+    {
+      "id": "Impact",
+      "refs": [
+        "V15",
+        "V22"
+      ],
+      "goal": "連続kill全てを潰さずclimaxを強調",
+      "pre": "接近を広く残し、killアンカーを先に確定",
+      "at": "単発または最後のmulti killのみ短いpulse候補（80〜160msは提案値）",
+      "post": "明暗を復帰し次の位置関係を表示。black移行はtransition扱い",
+      "existing": "flash/brightness系CPU FX、kill/multikillイベント、zoom key、fade",
+      "new": "重複pulse抑制・最後のkill判定・図形impact layer・正確な時間再配置",
+      "risk": "V15はkill同期未確定。pulse時間は参考動画の実測値ではない。CPU flash複数イベント時の中心式は原文上の疑義、未再現"
+    },
+    {
+      "id": "Elegant",
+      "refs": [
+        "V08",
+        "V03"
+      ],
+      "goal": "控えめな色と余白、cutawayで焦点を絞る",
+      "pre": "広い戦闘と低強度grade",
+      "at": "強い全面blur/flashを既定off。badgeを小さく抑える",
+      "post": "任意の人物/小物shotでDOF。次sceneへ落ち着いて接続",
+      "existing": "grade、Replay DOF、follow、frame/FX強度、fade",
+      "new": "小物/人物shot targetの選択・shot list・明暗背景のサムネイル",
+      "risk": "Replay DOFと2D中心blurは別物。白背景で淡いFXが消えるためテーマ表示と映像の合成を分ける"
+    },
+    {
+      "id": "Competitive",
+      "refs": [
+        "V04",
+        "V07",
+        "V11",
+        "V12",
+        "V13",
+        "V20"
+      ],
+      "goal": "プレイとHUDの読みやすさ優先",
+      "pre": "−4秒程度から接近/相手/ミニオンを残す",
+      "at": "HUD on、広いcamera、FX offを既定。試験速度1.0x",
+      "post": "1〜3秒の結果/退路を残してcut",
+      "existing": "scene scan/選択、top/follow、HUD保持、FX off、cut、出力設定",
+      "new": "通知/顔/HUDの重なりを避けるsafe area検査（既存保証なし）",
+      "risk": "低体力の赤縁と死亡灰色を画質異常と誤判定しない。参考動画全てが厳密1xとは未検証"
+    },
+    {
+      "id": "Montage",
+      "refs": [
+        "V02",
+        "V16",
+        "V22",
+        "V24",
+        "V25"
+      ],
+      "goal": "戦闘のまとまりごとに表情の違うshotを接続",
+      "pre": "同じ戦闘内では位置関係を保つ",
+      "at": "multi群を一つの編集単位にし、各killへ同じtransitionを重複させない",
+      "post": "fade/hard cutを基準。任意の光/blur/roll移行とintroは別layer",
+      "existing": "scene cut、fade、基本title、相対key、grade",
+      "new": "真の2映像dissolve・空間wipe/blur・複数take・任意intro・遷移域のQA注釈",
+      "risk": "softの明るさdip、panel/stretchのfadeは見た目が別。V24のrollを通常camera挙動へ混ぜない。長いintroを既定にしない"
+    },
+    {
+      "id": "Low-load Cinema",
+      "refs": [
+        "V04",
+        "V07",
+        "V20"
+      ],
+      "goal": "処理負荷を抑えた候補として安定した戦闘映像",
+      "pre": "既存追従と広い画角",
+      "at": "軽いgrade/静止badgeのみ候補。重いblurや多段合成off",
+      "post": "hard cutまたは単純fade",
+      "existing": "既存camera、CPU基本grade、static badge、cut、GPU/NVENC設定への導線",
+      "new": "端末別の計測と適応（本研究で性能実測なし）",
+      "risk": "低負荷は設計意図でありFPS改善の実証ではない。NVENC encoderとGPU FXを分離、1080p60品質を勝手に下げない"
+    }
+  ]
+}
