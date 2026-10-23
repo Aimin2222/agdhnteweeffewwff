@@ -15,3 +15,17 @@
 .layout-C .director-dock{overflow-x:hidden}.layout-C .director-dock .graph{width:calc(100% + 15px)}
 @media(max-width:1450px){.layout-E .ready.scroll{overflow-x:hidden;overflow-y:auto}.layout-E .ready.scroll .cta-large{width:calc(100% + 10px)}}
 @media(max-width:1450px){.layout-C .inspector.scroll{overflow-x:hidden;overflow-y:auto}.layout-C .inspector.scroll [data-ui="camera-modes"],.layout-C .inspector.scroll [data-ui="slider-motion_arc"],.layout-C .inspector.scroll [data-ui="slider-motion_dolly"]{width:calc(100% + 10px)}}
+
+/* Preserve authored control widths when the right inspector has a vertical scrollbar. */
+.layout-A .inspector.scroll,.layout-detail .inspector.scroll,.layout-F .phases.scroll,.layout-materials .materials.scroll{overflow-x:hidden;overflow-y:auto}
+.layout-A .inspector.scroll [data-ui="camera-modes"],.layout-detail .inspector.scroll [data-ui="camera-modes"],
+.layout-A .inspector.scroll [data-ui^="slider-"],.layout-detail .inspector.scroll [data-ui^="slider-"],
+.layout-F .phases.scroll [data-ui^="phase-"]{width:calc(100% + 10px)}
+.layout-materials .materials.scroll .gallery-six{width:calc(100% + 10px)}
+.layout-materials .selection-summary [data-ui="motion-grid"]{margin-left:5px;width:calc(100% + 10px)}
+.layout-detail .inspector.scroll [data-ui="style-tiles"]{width:calc(100% + 10px)}
+.layout-A .scenes.scroll .scene-card,.layout-detail .scenes.scroll .scene-card{width:calc(100% + 10px)}
+.layout-A .scenes.scroll .empty-scene .row,.layout-detail .scenes.scroll .empty-scene .row{display:none}
+.layout-A .scenes.scroll .empty-scene strong,.layout-detail .scenes.scroll .empty-scene strong{font-size:13px;white-space:nowrap}
+.layout-detail .scenes.scroll .empty-scene[data-ui="scene-card-0"]{min-height:98px}
+.layout-A .scenes.scroll,.layout-detail .scenes.scroll{overflow-x:hidden;overflow-y:auto}

@@ -73,8 +73,12 @@
     const lanes=[...timeline.querySelectorAll('.lane')];
     lanes.forEach((lane,index)=>{
       if (index>0) {
-        // The source mock draws sample camera/FX clips; no per-scene clip data is available here.
-        lane.style.display='none';
+        // Keep the authored lane layout, but remove illustrative clips until real scene data exists.
+        lane.style.display='';
+        lane.querySelectorAll('.clip').forEach(clip=>clip.remove());
+        const marker=lane.querySelector('.kill-line');
+        if (marker) marker.style.display='none';
+        lane.title='このトラックは実際のシーンを選択した後に編集します';
         return;
       }
       const bar=lane.querySelector('.lane-bar');
@@ -207,8 +211,32 @@
     }
     document.querySelectorAll('[data-ui^="scene-card-"]').forEach((card, position) => {
       const scene = data.scenes[position];
-      if (!scene) { card.style.display = 'none'; return; }
+      if (!scene) {
+        // Empty slots preserve each candidate's layout without pretending a replay was scanned.
+        card.style.display = '';
+        card.style.opacity = '0.55';
+        card.style.cursor = 'default';
+        card.title = '未スキャン：リプレイ接続後にシーンが表示されます';
+        card.classList.add('empty-scene');
+        delete card.dataset.sceneIndex;
+        card.classList.remove('selected');
+        const time = card.querySelector('.time');
+        if (time) time.textContent = '--:--';
+        const side = card.querySelector('.side');
+        if (side) { side.textContent = '—'; side.classList.remove('blue', 'red'); }
+        const title = card.querySelector('strong');
+        if (title) title.textContent = card.closest('.layout-A, .layout-detail') ? '未接続' : '未スキャン';
+        const thumbnail = card.querySelector('img.scene-thumb');
+        if (thumbnail) { thumbnail.style.visibility = 'hidden'; thumbnail.alt = ''; }
+        const check = card.querySelector('.check');
+        if (check) { check.textContent = ''; check.classList.remove('checked'); }
+        return;
+      }
       card.style.display = '';
+      card.style.opacity = '';
+      card.style.cursor = '';
+      card.title = '';
+      card.classList.remove('empty-scene');
       card.dataset.sceneIndex = scene.index;
       card.classList.toggle('selected',scene.selected);
       const time = card.querySelector('.time');
@@ -238,7 +266,16 @@
       card.dataset.frameId = entry.id;
       card.classList.toggle('selected', data.frame.id === entry.id);
       const label = card.querySelector('h3');
-      if (label) label.textContent = entry.label;
+      if (label) {
+        const referenceNames = {
+          '083/a_simple_main': 'No.083 A',
+          '004/demacia_frame': 'No.004 デマーシア',
+          '004/noxus_frame': 'No.004 ノクサス',
+          '004/bilgewater_frame': 'No.004 ビルジウォーター'
+        };
+        label.textContent = referenceNames[entry.id] || entry.label;
+        label.title = entry.label;
+      }
       const badge = card.querySelector('.badge');
       if (badge) {
         badge.textContent = entry.status === 'approved' ? '✓ 枠のみ正式合格' : '△ 確認用';
