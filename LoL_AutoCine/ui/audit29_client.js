@@ -45,6 +45,11 @@
   }
   function invoke(name, data) { action(name,data).catch(error => message(error.message)); }
   const image = document.querySelector('.preview-stage img.game-image');
+  let frameTag = null;
+  let lastFrameRequest = 0;
+  const displayedFrameTimes = [];
+  let displayedFps = 0;
+  let lastDisplayedFrame = 0;
   const decorativeFrame = document.querySelector('.preview-stage img.frame-overlay');
   if (decorativeFrame) decorativeFrame.style.display = 'none';
   if (image) {
@@ -106,7 +111,7 @@
     picker.value = familyStart.get(data.workspace.candidate_id) || 'R-A-main';
     const tag = document.querySelector('.preview-tag');
     if (tag) tag.textContent = data.preview.mirror_requested ?
-      `ミラー実測 ${data.preview.measured_fps} fps / 目標 ${data.preview.target_hz}` :
+      `UI映像更新 ${displayedFps.toFixed(1)} fps / 合成表示 ${data.preview.measured_fps} fps / 目標 ${data.preview.target_hz}` :
       'LoLミラー未接続・静止イラストは表示しません';
     document.querySelectorAll('.connection-state').forEach(label=>{
       label.textContent=data.replay.connected?'接続中':'LoL未接続';
@@ -258,21 +263,55 @@
     if (image && !data.preview.mirror_requested) image.style.visibility = 'hidden';
   }
   async function refreshFrame() {
-    if (image && state.value?.preview.mirror_requested) {
+    if (image && state.value?.preview.mirror_requested && !document.hidden) {
+      const targetHz = Math.max(1, Math.min(144, Number.parseInt(state.value.preview.target_hz, 10) || 60));
+      const remaining = 1000 / targetHz - (performance.now() - lastFrameRequest);
+      if (remaining > 1) {
+        setTimeout(() => requestAnimationFrame(refreshFrame), remaining);
+        return;
+      }
+      lastFrameRequest = performance.now();
       try {
-        const response = await fetch(endpoint('/api/frame.jpg') + `&n=${++state.frameNumber}`, {cache:'no-store'});
-        if (response.ok) {
+        const response = await fetch(endpoint('/api/frame.jpg') + `&n=${++state.frameNumber}`,
+          {cache:'no-store', headers:frameTag ? {'If-None-Match':frameTag} : {}});
+        if (response.status === 304) {
+          // Native mirror has not presented a new frame; avoid a redundant decode.
+          if (performance.now() - lastDisplayedFrame > 1000) displayedFps = 0;
+        } else if (response.ok) {
           const blob = await response.blob();
           const next = URL.createObjectURL(blob);
           const previous = image.dataset.blob;
           image.src = next;
           image.dataset.blob = next;
+          await image.decode();
           image.style.visibility = 'visible';
           if (previous) URL.revokeObjectURL(previous);
-        } else image.style.visibility = 'hidden';
-      } catch (_) { image.style.visibility = 'hidden'; }
+          frameTag = response.headers.get('ETag');
+          const now = performance.now();
+          lastDisplayedFrame = now;
+          displayedFrameTimes.push(now);
+          while (displayedFrameTimes.length && displayedFrameTimes[0] < now - 1000) displayedFrameTimes.shift();
+          displayedFps = displayedFrameTimes.length > 1 ?
+            1000 * (displayedFrameTimes.length - 1) / (now - displayedFrameTimes[0]) : 0;
+        } else {
+          image.style.visibility = 'hidden';
+          frameTag = null;
+          displayedFps = 0;
+          displayedFrameTimes.length = 0;
+        }
+      } catch (_) {
+        image.style.visibility = 'hidden';
+        displayedFps = 0;
+      }
+      requestAnimationFrame(refreshFrame);
+    } else {
+      if (!state.value?.preview.mirror_requested) {
+        frameTag = null;
+        displayedFps = 0;
+        displayedFrameTimes.length = 0;
+      }
+      setTimeout(refreshFrame, 200);
     }
-    setTimeout(refreshFrame, 100);
   }
   const modeLabels = [
     ['従来の手動カメラ','manual'], ['固定視点＋自動構図補正','fixed_auto'],

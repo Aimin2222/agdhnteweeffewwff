@@ -91,11 +91,14 @@ class UI29Server:
                 parsed = urlparse(self.path)
                 return parse_qs(parsed.query).get("token", [None])[0] == owner.token
 
-            def _send(self, code, data: bytes, content_type="application/json; charset=utf-8"):
+            def _send(self, code, data: bytes, content_type="application/json; charset=utf-8",
+                      etag: str | None = None):
                 self.send_response(code)
                 self.send_header("Content-Type", content_type)
                 self.send_header("Cache-Control", "no-store")
                 self.send_header("X-Content-Type-Options", "nosniff")
+                if etag:
+                    self.send_header("ETag", etag)
                 self.send_header("Content-Length", str(len(data)))
                 self.end_headers()
                 self.wfile.write(data)
@@ -146,16 +149,28 @@ document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>butt
                     def get_frame():
                         result = getattr(owner.app, "_preview_presented", None)
                         if result is None or not owner.app.var_mirror.get():
+                            owner._jpeg_frame_cache = None
                             return None
-                        image = result[1][0]
-                        stream = io.BytesIO()
-                        image.convert("RGB").save(stream, format="JPEG", quality=86)
-                        return stream.getvalue()
+                        cached = getattr(owner, "_jpeg_frame_cache", None)
+                        if cached is None or cached[0] is not result:
+                            image = result[1][0]
+                            stream = io.BytesIO()
+                            image.convert("RGB").save(stream, format="JPEG", quality=92)
+                            serial = getattr(owner, "_jpeg_frame_serial", 0) + 1
+                            owner._jpeg_frame_serial = serial
+                            cached = (result, f'"ui29-{serial}"', stream.getvalue())
+                            owner._jpeg_frame_cache = cached
+                        return cached[1:]
                     try:
-                        content = owner.dispatcher.call(get_frame)
+                        frame = owner.dispatcher.call(get_frame)
                     except Exception:
-                        content = None
-                    return self._send(200, content, "image/jpeg") if content else self._send(404, b"")
+                        frame = None
+                    if frame is None:
+                        return self._send(404, b"")
+                    tag, content = frame
+                    if self.headers.get("If-None-Match") == tag:
+                        return self._send(304, b"", etag=tag)
+                    return self._send(200, content, "image/jpeg", etag=tag)
                 if path.startswith("/api/asset/"):
                     try:
                         from core.work_kill_assets import resolve_asset

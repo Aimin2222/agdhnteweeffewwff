@@ -5,7 +5,10 @@ from pathlib import Path
 import sys
 from tempfile import TemporaryDirectory
 import unittest
-from urllib.request import urlopen
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
+
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -145,6 +148,31 @@ class Audit29RuntimeTests(unittest.TestCase):
         with TemporaryDirectory(dir=ROOT / "qa") as directory:
             Audit29Runtime(app, Path(directory) / "workspace.json").perform("connect")
         self.assertEqual(called, ["connect"])
+
+    def test_mirror_route_reuses_jpeg_and_reports_new_frames(self):
+        app = App()
+        app._preview_presented = (1, (Image.new("RGB", (16, 9), "red"), None))
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            server = UI29Server(app, Path(directory) / "workspace.json")
+            # This fake App has no Tk event loop. The route's read-only image
+            # callback can be dispatched directly for a deterministic test.
+            server.dispatcher.call = lambda fn, **_kwargs: fn()
+            url = f"http://127.0.0.1:{server.http.server_port}/api/frame.jpg?token={server.token}"
+            try:
+                with urlopen(url, timeout=5) as response:
+                    self.assertEqual(response.status, 200)
+                    self.assertEqual(response.headers["Content-Type"], "image/jpeg")
+                    first_tag = response.headers["ETag"]
+                    self.assertTrue(response.read().startswith(b"\xff\xd8"))
+                with self.assertRaises(HTTPError) as unchanged:
+                    urlopen(Request(url, headers={"If-None-Match": first_tag}), timeout=5)
+                self.assertEqual(unchanged.exception.code, 304)
+                app._preview_presented = (2, (Image.new("RGB", (16, 9), "blue"), None))
+                with urlopen(Request(url, headers={"If-None-Match": first_tag}), timeout=5) as response:
+                    self.assertEqual(response.status, 200)
+                    self.assertNotEqual(response.headers["ETag"], first_tag)
+            finally:
+                server.close()
 
     def test_local_server_uses_editable_source_and_reconstructs_old_screens(self):
         with TemporaryDirectory(dir=ROOT / "qa") as directory:
