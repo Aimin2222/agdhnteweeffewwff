@@ -1,0 +1,8 @@
+# UI29候補切替の導線（2026-10-24）
+
+- 変更コード: `de87eb1`。29画面の各画面の右端に「UI比較」タブを設置。押すと12候補グループ、全29個別画面、12候補一覧への入口が開く。従来の `Ctrl+Shift+U` も使える。候補変更は既存の単一AutoCine Appへの `screen` 操作であり、カメラ・シーンの再初期化処理は加えていない。
+- 入口: 配布ZIPを展開し `LoL_AutoCine_UI29.exe` を起動。初回は12候補一覧が表示される。従来の `LoL_AutoCine.exe` は別の9案入口で、UI29の切替には使わない。
+- Windows EXE実画面: `switching_webview2/R-B-main.png`。1920×1080、LoL未接続。右端タブが既存の上部メニューを隠さないことを画像で確認。画面操作の全項目およびLoL実接続は未検証。
+- 検査: JavaScript構文チェック成功。UI29ランタイムとWebView2設定の対象テスト11件成功。ZIPビルダーのファイル検査、ZIP CRC、EXEバックエンドスモーク成功。
+- ZIP: `builds/ui29-switch-20261024-de87eb1/LoL_AutoCine_UI_Comparison_Portable.zip`（作業フォルダ直下）。2,068,497,521バイト、SHA-256 `94130B553DCCAD5D4351A533278941F90F8E750E9BE0BC5E978ED6F408F5A11D`。Microsoft WebView2 Fixed Version x64を同梱。
+- 残作業: 配置寸法の要修正9画面、旧11画面の外観、全29画面の目視受入、1366×768と125% DPIでの操作、LoL実機接続は未完了。このZIPは比較途中版であり、完成版ではない。
