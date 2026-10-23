@@ -104,6 +104,21 @@ def _view_switcher(screen_id: str) -> str:
 def _component(screen_id: str, region: str) -> str:
     is_test = screen_id.startswith('T-')
     if region == 'header':
+        if screen_id == 'L02-M':
+            return ('<div class="legacy2-brand"><strong>LoL AutoCine</strong>'
+                    '<span>リプレイ未接続</span></div>'
+                    '<div class="legacy2-topnav">'
+                    + _button('▣ 素材', 'work_gallery')
+                    + _button('▣ 編集', 'edit_mode', 'advanced', 'active')
+                    + _button('▤ 書き出し', 'export_menu') + '</div>'
+                    '<nav class="legacy2-settings">'
+                    + _button('⚙ 基本設定', 'native_settings')
+                    + _button('GPU', 'native_settings')
+                    + _button('音声', 'native_settings')
+                    + _button('HUD', 'native_settings')
+                    + _button('TargetLock', 'native_settings')
+                    + _button('37キルバッジ', 'work_gallery')
+                    + _button('書き出し', 'export_menu', cls='primary') + '</nav>')
         title = {'L02-M':'動画編集ソフト標準型','L03-N':'ハイブリッド固定プレビュー型',
                  'L03-D':'ハイブリッド固定プレビュー型・詳細','L05-M':'ステップウィザード型',
                  'L06-L':'ライブラリ＋編集分離型','L06-E':'ライブラリ＋編集分離型・編集',

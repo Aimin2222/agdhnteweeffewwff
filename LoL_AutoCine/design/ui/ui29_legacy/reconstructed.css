@@ -18,3 +18,15 @@ button.blue{background:#086af1;color:#fff}button.red{background:#f3424b;color:#f
 .region-edit-tabs,.region-bottom-tabs,.region-step-tabs,.region-step-actions,.region-edit-links,.region-proceed{display:flex;align-items:center;gap:9px}.region-step-tabs h2{width:100%;text-align:center;display:block;margin:0}.region-edit-tabs .edit-mode,.region-bottom-tabs .edit-mode{display:flex;gap:5px}.region-side-buttons .target-side{justify-content:space-around}.region-side-buttons .target-side button{flex:1}.region-side-buttons p,.region-target-side p{margin:5px}.region-motion-grid .motion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.region-motion-grid .motion{font-size:11px;min-height:42px}.region-test-results,.region-side-qa,.region-scene-detail{font-size:12px}
 body[data-plan^=test] .region-header{background:linear-gradient(90deg,#eff5fb,#fff)}body[data-plan^=test] .region{border-radius:3px}body[data-plan^=test] .region-preview-stage{background:#152332}body[data-plan^=test] .region-preview-controls{background:#f1f5fa}
 html[data-theme=dark] .scene-rows,html[data-theme=dark] .region-preview-controls,html[data-theme=dark] .camera-card,html[data-theme=dark] .material-card{background:var(--panel)}
+
+/* L02 uses the source mock's three-part editor toolbar while retaining live actions. */
+body[data-screen="L02-M"] .region-header{background:linear-gradient(90deg,#f4f8fd,#fff);border-color:#e2eaf5}
+.legacy2-brand{position:absolute;left:21px;top:10px;display:flex;align-items:center;gap:24px;white-space:nowrap}
+.legacy2-brand strong{font-size:20px;letter-spacing:-.3px}
+.legacy2-brand span{padding-left:22px;border-left:1px solid #d2dfed;font-weight:600}
+.legacy2-topnav{position:absolute;left:568px;top:5px;width:469px;height:40px;display:grid;grid-template-columns:repeat(3,1fr);background:#fff;border:1px solid #e5edf7;border-radius:10px;overflow:hidden}
+.legacy2-topnav button{border:0;border-radius:0;min-height:38px;font-weight:700}
+.legacy2-topnav button.active{color:#086af1;border-bottom:3px solid #086af1;background:#f8fbff}
+body[data-screen="L02-M"] .region-header .legacy2-settings{position:absolute;right:12px;top:6px;display:flex;align-items:center;gap:5px}
+body[data-screen="L02-M"] .legacy2-settings button{white-space:nowrap;min-height:34px;padding:4px 8px;font-size:12px;font-weight:700}
+body[data-screen="L02-M"] .legacy2-settings button.primary{padding:4px 16px}

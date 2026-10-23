@@ -603,6 +603,17 @@
   viewLabel.textContent = '個別画面（全29画面）';
   viewLabel.append(viewPicker);
   switchPanel.append(viewLabel);
+  const themePicker = document.createElement('select');
+  themePicker.setAttribute('aria-label','比較画面の配色');
+  themePicker.style.cssText = 'display:block;width:100%;box-sizing:border-box;padding:8px;margin:4px 0 12px';
+  for (const [value,label] of [['system','Windowsに合わせる'],['light','ライト'],['dark','ダーク']]) {
+    const option=document.createElement('option');option.value=value;option.textContent=label;
+    themePicker.append(option);
+  }
+  themePicker.addEventListener('change',()=>action('theme',{value:themePicker.value})
+    .then(()=>snapshot()).catch(e=>message(e.message)));
+  const themeLabel=document.createElement('label');
+  themeLabel.textContent='配色';themeLabel.append(themePicker);switchPanel.append(themeLabel);
   const chooserButton = document.createElement('button');
   chooserButton.type = 'button';
   chooserButton.textContent = '12候補の一覧を開く';
@@ -639,6 +650,7 @@
       viewPicker.append(option);
     }
     viewPicker.value=screenId;
+    themePicker.value=state.value.workspace.theme;
   }).catch(error=>message(error.message));
   setInterval(()=>snapshot().catch(()=>{}), 1200);
   refreshFrame();
