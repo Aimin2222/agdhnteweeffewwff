@@ -1,0 +1,398 @@
+[
+  {
+    "motion": "instant",
+    "numeric_samples": [
+      {
+        "output": [
+          1920,
+          1080
+        ],
+        "offset_at_0": [
+          0,
+          0
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      },
+      {
+        "output": [
+          1366,
+          768
+        ],
+        "offset_at_0": [
+          0,
+          0
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      },
+      {
+        "output": [
+          1280,
+          720
+        ],
+        "offset_at_0": [
+          0,
+          0
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      }
+    ],
+    "source_ffmpeg_expression": [
+      "W-w-32",
+      "62"
+    ],
+    "alpha_animation": false,
+    "exit_animation_in_helper": false,
+    "scope": "Analytic source-equation reconstruction, representative PNG; not final product video per 687 assets."
+  },
+  {
+    "motion": "slide_left",
+    "numeric_samples": [
+      {
+        "output": [
+          1920,
+          1080
+        ],
+        "offset_at_0": [
+          -1940,
+          0
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      },
+      {
+        "output": [
+          1366,
+          768
+        ],
+        "offset_at_0": [
+          -1386,
+          0
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      },
+      {
+        "output": [
+          1280,
+          720
+        ],
+        "offset_at_0": [
+          -1300,
+          0
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      }
+    ],
+    "source_ffmpeg_expression": [
+      "(W-w-32)-(W+20)*(max(0,min(1,1-(t-0.000)/0.260))*max(0,min(1,1-(t-0.000)/0.260))*(3-2*max(0,min(1,1-(t-0.000)/0.260))))",
+      "62"
+    ],
+    "alpha_animation": false,
+    "exit_animation_in_helper": false,
+    "scope": "Analytic source-equation reconstruction, representative PNG; not final product video per 687 assets."
+  },
+  {
+    "motion": "slide_right",
+    "numeric_samples": [
+      {
+        "output": [
+          1920,
+          1080
+        ],
+        "offset_at_0": [
+          1940,
+          0
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      },
+      {
+        "output": [
+          1366,
+          768
+        ],
+        "offset_at_0": [
+          1386,
+          0
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      },
+      {
+        "output": [
+          1280,
+          720
+        ],
+        "offset_at_0": [
+          1300,
+          0
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      }
+    ],
+    "source_ffmpeg_expression": [
+      "(W-w-32)+(W+20)*(max(0,min(1,1-(t-0.000)/0.260))*max(0,min(1,1-(t-0.000)/0.260))*(3-2*max(0,min(1,1-(t-0.000)/0.260))))",
+      "62"
+    ],
+    "alpha_animation": false,
+    "exit_animation_in_helper": false,
+    "scope": "Analytic source-equation reconstruction, representative PNG; not final product video per 687 assets."
+  },
+  {
+    "motion": "slide_up",
+    "numeric_samples": [
+      {
+        "output": [
+          1920,
+          1080
+        ],
+        "offset_at_0": [
+          0,
+          1100
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      },
+      {
+        "output": [
+          1366,
+          768
+        ],
+        "offset_at_0": [
+          0,
+          788
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      },
+      {
+        "output": [
+          1280,
+          720
+        ],
+        "offset_at_0": [
+          0,
+          740
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      }
+    ],
+    "source_ffmpeg_expression": [
+      "W-w-32",
+      "(62)+(H+20)*(max(0,min(1,1-(t-0.000)/0.260))*max(0,min(1,1-(t-0.000)/0.260))*(3-2*max(0,min(1,1-(t-0.000)/0.260))))"
+    ],
+    "alpha_animation": false,
+    "exit_animation_in_helper": false,
+    "scope": "Analytic source-equation reconstruction, representative PNG; not final product video per 687 assets."
+  },
+  {
+    "motion": "slide_down",
+    "numeric_samples": [
+      {
+        "output": [
+          1920,
+          1080
+        ],
+        "offset_at_0": [
+          0,
+          -1100
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      },
+      {
+        "output": [
+          1366,
+          768
+        ],
+        "offset_at_0": [
+          0,
+          -788
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      },
+      {
+        "output": [
+          1280,
+          720
+        ],
+        "offset_at_0": [
+          0,
+          -740
+        ],
+        "offset_at_260ms": [
+          0,
+          0
+        ],
+        "offset_at_1s": [
+          0,
+          0
+        ]
+      }
+    ],
+    "source_ffmpeg_expression": [
+      "W-w-32",
+      "(62)-(H+20)*(max(0,min(1,1-(t-0.000)/0.260))*max(0,min(1,1-(t-0.000)/0.260))*(3-2*max(0,min(1,1-(t-0.000)/0.260))))"
+    ],
+    "alpha_animation": false,
+    "exit_animation_in_helper": false,
+    "scope": "Analytic source-equation reconstruction, representative PNG; not final product video per 687 assets."
+  },
+  {
+    "motion": "pop",
+    "numeric_samples": [
+      {
+        "output": [
+          1920,
+          1080
+        ],
+        "offset_at_0": [
+          16.0,
+          0
+        ],
+        "offset_at_260ms": [
+          0.08061308909963404,
+          0
+        ],
+        "offset_at_1s": [
+          -2.3456748553755477e-07,
+          0
+        ]
+      },
+      {
+        "output": [
+          1366,
+          768
+        ],
+        "offset_at_0": [
+          16.0,
+          0
+        ],
+        "offset_at_260ms": [
+          0.08061308909963404,
+          0
+        ],
+        "offset_at_1s": [
+          -2.3456748553755477e-07,
+          0
+        ]
+      },
+      {
+        "output": [
+          1280,
+          720
+        ],
+        "offset_at_0": [
+          16.0,
+          0
+        ],
+        "offset_at_260ms": [
+          0.08061308909963404,
+          0
+        ],
+        "offset_at_1s": [
+          -2.3456748553755477e-07,
+          0
+        ]
+      }
+    ],
+    "source_ffmpeg_expression": [
+      "(W-w-32)+16*exp(-18*max(0,t-0.000))*cos(28*max(0,t-0.000))",
+      "62"
+    ],
+    "alpha_animation": false,
+    "exit_animation_in_helper": false,
+    "scope": "Analytic source-equation reconstruction, representative PNG; not final product video per 687 assets."
+  }
+]

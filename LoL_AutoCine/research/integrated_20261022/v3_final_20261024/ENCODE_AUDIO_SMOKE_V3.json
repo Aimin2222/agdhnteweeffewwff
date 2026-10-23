@@ -1,0 +1,26 @@
+{
+  "gpu": {
+    "test": "single 1s artificial 1080p60 encode",
+    "encoder": "h264_nvenc",
+    "return_code": 0,
+    "result": "ENCODE_EXECUTED",
+    "stderr": "",
+    "not_tested": [
+      "GPU FX",
+      "product capture",
+      "LoL rendering contention",
+      "long-run performance",
+      "audio capture"
+    ]
+  },
+  "av": {
+    "created_return_code": 0,
+    "stderr": "",
+    "retime_return_code": 0,
+    "video_flash_start": 0.9833333333333333,
+    "audio_pulse_start": 0.959125,
+    "video_frames": 239,
+    "audio_samples": 190464,
+    "scope": "Artificial AAC/retime smoke only. Encoder delay/atempo transients measured, not actual LoL process audio or an end-to-end sync guarantee."
+  }
+}

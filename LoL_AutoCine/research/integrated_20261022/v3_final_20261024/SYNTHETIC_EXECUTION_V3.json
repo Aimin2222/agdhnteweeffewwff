@@ -1,0 +1,189 @@
+{
+  "scope": "Isolated AST functions from immutable source and artificial input; no product imports/edits, no LoL, no GPU runtime.",
+  "source_commit": "fb03e0390805125fc063f4599af6c2541a653abf",
+  "ffmpeg_version": "ffmpeg version 7.1-essentials_build-www.gyan.dev Copyright (c) 2000-2024 the FFmpeg developers",
+  "cases": [
+    {
+      "id": "FX-FLASH-MULTI",
+      "execution": "EXECUTED",
+      "result": "REPRODUCED_ISOLATED_FIRST_EVENT_ONLY",
+      "graph": [
+        "eq=brightness='0.635*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,0.650)+between(t,1.500,1.650)+between(t,2.500,2.650)'"
+      ],
+      "peaks": [
+        {
+          "event_seconds": 0.5,
+          "frame": 30,
+          "mean_gray_at_event": 255.0,
+          "local_peak": 255.0
+        },
+        {
+          "event_seconds": 1.5,
+          "frame": 90,
+          "mean_gray_at_event": 127.0,
+          "local_peak": 128.0
+        },
+        {
+          "event_seconds": 2.5,
+          "frame": 150,
+          "mean_gray_at_event": 127.0,
+          "local_peak": 128.0
+        }
+      ],
+      "note": "Enable covers all three events, brightness envelope centers only events[0][0]. End-to-end application impact still requires current-branch/live test."
+    },
+    {
+      "id": "FX-FLASH-EMPTY",
+      "execution": "EXECUTED",
+      "result": "IndexError",
+      "note": "Isolated helper only. Caller event generation and product exposure need confirmation."
+    },
+    {
+      "id": "FX-radial_blur-0.4",
+      "execution": "EXECUTED",
+      "result": "GRAPH_EXECUTES",
+      "return_code": 0,
+      "graph": [
+        "tmix=frames=3:weights='1 2 1'"
+      ],
+      "stderr": "",
+      "note": "Graph execution is not perceptual equivalence to reference videos or GPU."
+    },
+    {
+      "id": "FX-radial_blur-0.8",
+      "execution": "EXECUTED",
+      "result": "GRAPH_EXECUTES",
+      "return_code": 0,
+      "graph": [
+        "tmix=frames=5:weights='1 2 1'"
+      ],
+      "stderr": "",
+      "note": "Graph execution is not perceptual equivalence to reference videos or GPU."
+    },
+    {
+      "id": "FX-zoom_blur-0.4",
+      "execution": "EXECUTED",
+      "result": "GRAPH_EXECUTES",
+      "return_code": 0,
+      "graph": [
+        "scale=w='1920*(1+0.0650*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0650*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4"
+      ],
+      "stderr": "",
+      "note": "Graph execution is not perceptual equivalence to reference videos or GPU."
+    },
+    {
+      "id": "FX-glint-0.5",
+      "execution": "EXECUTED",
+      "result": "GRAPH_EXECUTES",
+      "return_code": 0,
+      "graph": [
+        "unsharp=lx=5:ly=5:la=0.45",
+        "eq=contrast=1.125:brightness=0.060"
+      ],
+      "stderr": "",
+      "note": "Graph execution is not perceptual equivalence to reference videos or GPU."
+    },
+    {
+      "id": "FX-panel_wipe-0.5",
+      "execution": "EXECUTED",
+      "result": "GRAPH_EXECUTES",
+      "return_code": 0,
+      "graph": [
+        "fade=t=in:st=0:d=0.575:alpha=0"
+      ],
+      "stderr": "",
+      "note": "Graph execution is not perceptual equivalence to reference videos or GPU."
+    },
+    {
+      "id": "FX-stretch_wipe-0.5",
+      "execution": "EXECUTED",
+      "result": "GRAPH_EXECUTES",
+      "return_code": 0,
+      "graph": [
+        "fade=t=in:st=0:d=0.475"
+      ],
+      "stderr": "",
+      "note": "Graph execution is not perceptual equivalence to reference videos or GPU."
+    },
+    {
+      "id": "MOTION-instant",
+      "execution": "EXECUTED",
+      "result": "VIDEO_RENDERED",
+      "graph": "[0:v][1:v]overlay=x='W-w-32':y='62':enable='between(t,0.4,1.8)'[v]",
+      "stderr": ""
+    },
+    {
+      "id": "MOTION-slide_left",
+      "execution": "EXECUTED",
+      "result": "VIDEO_RENDERED",
+      "graph": "[0:v][1:v]overlay=x='(W-w-32)-(W+20)*(max(0,min(1,1-(t-0.400)/0.260))*max(0,min(1,1-(t-0.400)/0.260))*(3-2*max(0,min(1,1-(t-0.400)/0.260))))':y='62':enable='between(t,0.4,1.8)'[v]",
+      "stderr": ""
+    },
+    {
+      "id": "MOTION-slide_right",
+      "execution": "EXECUTED",
+      "result": "VIDEO_RENDERED",
+      "graph": "[0:v][1:v]overlay=x='(W-w-32)+(W+20)*(max(0,min(1,1-(t-0.400)/0.260))*max(0,min(1,1-(t-0.400)/0.260))*(3-2*max(0,min(1,1-(t-0.400)/0.260))))':y='62':enable='between(t,0.4,1.8)'[v]",
+      "stderr": ""
+    },
+    {
+      "id": "MOTION-slide_up",
+      "execution": "EXECUTED",
+      "result": "VIDEO_RENDERED",
+      "graph": "[0:v][1:v]overlay=x='W-w-32':y='(62)+(H+20)*(max(0,min(1,1-(t-0.400)/0.260))*max(0,min(1,1-(t-0.400)/0.260))*(3-2*max(0,min(1,1-(t-0.400)/0.260))))':enable='between(t,0.4,1.8)'[v]",
+      "stderr": ""
+    },
+    {
+      "id": "MOTION-slide_down",
+      "execution": "EXECUTED",
+      "result": "VIDEO_RENDERED",
+      "graph": "[0:v][1:v]overlay=x='W-w-32':y='(62)-(H+20)*(max(0,min(1,1-(t-0.400)/0.260))*max(0,min(1,1-(t-0.400)/0.260))*(3-2*max(0,min(1,1-(t-0.400)/0.260))))':enable='between(t,0.4,1.8)'[v]",
+      "stderr": ""
+    },
+    {
+      "id": "MOTION-pop",
+      "execution": "EXECUTED",
+      "result": "VIDEO_RENDERED",
+      "graph": "[0:v][1:v]overlay=x='(W-w-32)+16*exp(-18*max(0,t-0.400))*cos(28*max(0,t-0.400))':y='62':enable='between(t,0.4,1.8)'[v]",
+      "stderr": ""
+    }
+  ],
+  "badge_plan_overlap": [
+    {
+      "index": 0,
+      "time": 0.5,
+      "start": 0.4,
+      "end": 0.6900000000000001,
+      "row": 0
+    },
+    {
+      "index": 1,
+      "time": 0.6,
+      "start": 0.5,
+      "end": 0.89,
+      "row": 1
+    },
+    {
+      "index": 2,
+      "time": 0.7,
+      "start": 0.6,
+      "end": 2.25,
+      "row": 2
+    },
+    {
+      "index": 3,
+      "time": 0.8,
+      "start": 0.7000000000000001,
+      "end": 2.35,
+      "row": 0
+    },
+    {
+      "index": 4,
+      "time": 1.0,
+      "start": 0.9,
+      "end": 2.55,
+      "row": 1
+    }
+  ],
+  "badge_plan_max_active": 3
+}
