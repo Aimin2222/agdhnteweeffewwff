@@ -507,9 +507,43 @@
     ['researchD','R-D-main'],['researchE','R-E-main'],['researchF','R-F-main']
   ]);
   function openScreen(id) { location.assign(endpoint(`/ui/${encodeURIComponent(id)}`)); }
+  const switchButton = document.createElement('button');
+  switchButton.type = 'button';
+  switchButton.textContent = 'UI比較を切り替える';
+  switchButton.setAttribute('aria-controls', 'ui29-switch-panel');
+  switchButton.setAttribute('aria-expanded', 'false');
+  switchButton.style.cssText = 'position:fixed;right:12px;top:54px;z-index:2001;' +
+    'padding:8px 12px;border:2px solid #075fe0;border-radius:8px;' +
+    'background:#fff;color:#0746a7;font:600 14px Yu Gothic UI,Meiryo,sans-serif;' +
+    'box-shadow:0 3px 12px #0004;cursor:pointer';
+  document.body.append(switchButton);
+  const switchPanel = document.createElement('div');
+  switchPanel.id = 'ui29-switch-panel';
+  switchPanel.setAttribute('role', 'group');
+  switchPanel.setAttribute('aria-label', 'UI比較画面の切替');
+  switchPanel.style.cssText = 'position:fixed;right:12px;top:98px;z-index:2001;' +
+    'width:min(370px,calc(100vw - 24px));max-height:calc(100vh - 110px);' +
+    'overflow:auto;display:none;box-sizing:border-box;padding:16px;border:1px solid #8da9ce;' +
+    'border-radius:10px;background:#fff;color:#172b3e;' +
+    'font:14px Yu Gothic UI,Meiryo,sans-serif;box-shadow:0 6px 24px #0005';
+  const panelTitle = document.createElement('strong');
+  panelTitle.textContent = '12候補・29画面を比較';
+  panelTitle.style.cssText = 'display:block;margin-bottom:12px;font-size:16px';
+  switchPanel.append(panelTitle);
+  function showSwitchPanel(visible) {
+    switchPanel.style.display = visible ? 'block' : 'none';
+    switchButton.setAttribute('aria-expanded', String(visible));
+    if (visible) picker.focus();
+    else switchButton.focus();
+  }
+  switchButton.addEventListener('click', event => {
+    event.stopPropagation();
+    showSwitchPanel(switchPanel.style.display === 'none');
+  });
+  switchPanel.addEventListener('click', event => event.stopPropagation());
   const picker = document.createElement('select');
   picker.setAttribute('aria-label','12候補を切り替える');
-  picker.style.cssText = 'position:fixed;top:6px;left:40%;z-index:2000;display:none;padding:10px';
+  picker.style.cssText = 'display:block;width:100%;box-sizing:border-box;padding:8px;margin:4px 0 12px';
   for (const [family,id] of familyStart) {
     const option=document.createElement('option');option.value=id;
     option.textContent=family + (family.startsWith('research') || family==='testA'?'':'（再構成中）');
@@ -517,20 +551,33 @@
   }
   picker.value='R-A-main';
   picker.addEventListener('change',()=> action('screen',{id:picker.value}).then(()=>openScreen(picker.value)).catch(e=>message(e.message)));
-  document.body.append(picker);
+  const familyLabel = document.createElement('label');
+  familyLabel.textContent = '候補グループ';
+  familyLabel.append(picker);
+  switchPanel.append(familyLabel);
   const viewPicker = document.createElement('select');
   viewPicker.setAttribute('aria-label','29画面IDを選択');
-  viewPicker.style.cssText = 'position:fixed;top:54px;left:40%;z-index:2000;display:none;padding:10px';
+  viewPicker.style.cssText = 'display:block;width:100%;box-sizing:border-box;padding:8px;margin:4px 0 12px';
   viewPicker.addEventListener('change',()=>action('screen',{id:viewPicker.value})
     .then(()=>openScreen(viewPicker.value)).catch(e=>message(e.message)));
-  document.body.append(viewPicker);
+  const viewLabel = document.createElement('label');
+  viewLabel.textContent = '個別画面（全29画面）';
+  viewLabel.append(viewPicker);
+  switchPanel.append(viewLabel);
+  const chooserButton = document.createElement('button');
+  chooserButton.type = 'button';
+  chooserButton.textContent = '12候補の一覧を開く';
+  chooserButton.style.cssText = 'padding:8px 12px;border:1px solid #075fe0;' +
+    'border-radius:6px;background:#eef5ff;color:#0746a7;cursor:pointer';
+  chooserButton.addEventListener('click', () => location.assign(endpoint('/choose')));
+  switchPanel.append(chooserButton);
+  document.body.append(switchPanel);
   document.addEventListener('keydown',event=>{
     if (event.ctrlKey && event.shiftKey && event.key.toLowerCase()==='u') {
       event.preventDefault();
-      const visible=picker.style.display==='none';
-      picker.style.display=visible?'block':'none';
-      viewPicker.style.display=visible?'block':'none';
+      showSwitchPanel(switchPanel.style.display === 'none');
     }
+    if (event.key === 'Escape' && switchPanel.style.display !== 'none') showSwitchPanel(false);
   });
   document.querySelectorAll('a[href$=".html"]').forEach(link=>link.addEventListener('click',event=>{
     event.preventDefault();
@@ -544,6 +591,8 @@
   }));
   snapshot().then(()=>{
     for (const row of state.value.workspace.screens) {
+      const familyOption = [...picker.options].find(option => option.value === familyStart.get(row.family));
+      if (familyOption) familyOption.textContent = row.name;
       const option=document.createElement('option');
       option.value=row.id;
       option.textContent=`${row.id} — ${row.name}` + (row.implemented?'':'（再構成中）');
