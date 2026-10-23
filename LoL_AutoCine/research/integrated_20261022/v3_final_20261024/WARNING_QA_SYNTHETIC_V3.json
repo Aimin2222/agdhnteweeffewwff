@@ -1,0 +1,177 @@
+{
+  "cases": [
+    {
+      "id": "Q01_black_capture",
+      "context": {},
+      "warnings": [
+        "BLACK_OR_CAPTURE_EMPTY"
+      ],
+      "expected": [
+        "BLACK_OR_CAPTURE_EMPTY"
+      ],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    },
+    {
+      "id": "Q02_intentional_black",
+      "context": {
+        "intentional_black": true
+      },
+      "warnings": [],
+      "expected": [],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    },
+    {
+      "id": "Q03_gray_death",
+      "context": {
+        "death_event": true
+      },
+      "warnings": [],
+      "expected": [],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    },
+    {
+      "id": "Q04_low_hp_red",
+      "context": {
+        "low_hp": true
+      },
+      "warnings": [],
+      "expected": [],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    },
+    {
+      "id": "Q05_teleport_bright",
+      "context": {
+        "teleport": true
+      },
+      "warnings": [],
+      "expected": [],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    },
+    {
+      "id": "Q06_freeze_expected_motion",
+      "context": {
+        "expected_motion": true
+      },
+      "warnings": [
+        "POSSIBLE_FREEZE"
+      ],
+      "expected": [
+        "POSSIBLE_FREEZE"
+      ],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    },
+    {
+      "id": "Q07_intentional_still",
+      "context": {},
+      "warnings": [],
+      "expected": [],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    },
+    {
+      "id": "Q08_audio_missing",
+      "context": {
+        "audio_expected": true,
+        "audio_stream": false
+      },
+      "warnings": [
+        "MISSING_AUDIO_STREAM"
+      ],
+      "expected": [
+        "MISSING_AUDIO_STREAM"
+      ],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    },
+    {
+      "id": "Q09_audio_optional",
+      "context": {
+        "audio_expected": false,
+        "audio_stream": false
+      },
+      "warnings": [],
+      "expected": [],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    },
+    {
+      "id": "Q10_audio_silence",
+      "context": {
+        "audio_expected": true,
+        "audio_stream": true,
+        "rms": 0
+      },
+      "warnings": [
+        "POSSIBLE_SILENCE"
+      ],
+      "expected": [
+        "POSSIBLE_SILENCE"
+      ],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    },
+    {
+      "id": "Q11_dropped_count",
+      "context": {
+        "expected_frames": 120,
+        "decoded_frames": 117
+      },
+      "warnings": [
+        "FRAME_COUNT_MISMATCH"
+      ],
+      "expected": [
+        "FRAME_COUNT_MISMATCH"
+      ],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    },
+    {
+      "id": "Q12_sync_anchor",
+      "context": {
+        "event_offset_ms": 90
+      },
+      "warnings": [
+        "EVENT_SYNC_REVIEW"
+      ],
+      "expected": [
+        "EVENT_SYNC_REVIEW"
+      ],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    },
+    {
+      "id": "Q13_slide_intended_clip",
+      "context": {
+        "safe_area_breach": true,
+        "entrance_interval": true
+      },
+      "warnings": [],
+      "expected": [],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    },
+    {
+      "id": "Q14_static_overlay_clip",
+      "context": {
+        "safe_area_breach": true
+      },
+      "warnings": [
+        "OVERLAY_CLIP_REVIEW"
+      ],
+      "expected": [
+        "OVERLAY_CLIP_REVIEW"
+      ],
+      "fixture_expectation_met": true,
+      "scope": "proposed isolated array/metadata rules; no LoL validation"
+    }
+  ],
+  "executed": 14,
+  "fixture_expectations_met": 14,
+  "claims": "14 designed fixtures only; no empirical LoL false-positive rate; thresholds proposals; warning only; no automatic repair or blocking"
+}

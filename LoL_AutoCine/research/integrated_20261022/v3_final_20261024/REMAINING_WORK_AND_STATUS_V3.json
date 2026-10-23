@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-24 JST",
+  "all_requested_runtime_work_complete": false,
+  "research_handoff_package_complete": true,
+  "items": [
+    {
+      "area": "映像20作品再確認",
+      "status": "検査済み",
+      "done": "20/20追加実再生、2通知10/20、全編/音声0",
+      "remaining": "未確定10作品は通知/kill同期を特定できる素材と追加原映像/音声観察が必要"
+    },
+    {
+      "area": "687機械検査",
+      "status": "検査済み",
+      "done": "687全件、V2immutable台帳継承",
+      "remaining": "原寸の美術評価とは別"
+    },
+    {
+      "area": "687白暗thumb",
+      "status": "検査済み",
+      "done": "687/687",
+      "remaining": "652frame全体原寸・実顔/HUD・動的合成は要確認"
+    },
+    {
+      "area": "FX原寸/140合成",
+      "status": "検査済み",
+      "done": "35/35、083との140/140",
+      "remaining": "他frame/HUD/3stack/実動画は未実施"
+    },
+    {
+      "area": "端接触74",
+      "status": "要確認",
+      "done": "74原寸部分＋74原本crop比較",
+      "remaining": "欠け/光/意図と原本ROIを全体原寸で審査"
+    },
+    {
+      "area": "原本/旧badge保護",
+      "status": "検査済み",
+      "done": "89/89hash、37/37hash+thumb、652ID対応",
+      "remaining": "原本全体の美術検査ではない"
+    },
+    {
+      "area": "6motion",
+      "status": "一部検査済み",
+      "done": "6本人工1080p60、全decode、3size式",
+      "remaining": "全素材/30fps/他size実出力/LoL背景未実行"
+    },
+    {
+      "area": "CPUflash",
+      "status": "独立再現済み",
+      "done": "255/127/127とgraph一致",
+      "remaining": "製品job追試と修正は未実施"
+    },
+    {
+      "area": "NVENC/AV",
+      "status": "一部検査済み",
+      "done": "人工1秒NVENC、人工retime AV",
+      "remaining": "LoL音/GPUFX/長尺/製品同期/配布は未実行"
+    },
+    {
+      "area": "warning QA",
+      "status": "設計・人工検査済み",
+      "done": "14fixture期待一致",
+      "remaining": "独立LoL負例/誤警告率を実測"
+    },
+    {
+      "area": "次世代camera/6recipe/UI接続",
+      "status": "仕様完成・未実装",
+      "done": "contract/70行/14tests/19提案",
+      "remaining": "ユーザー採用後に実装"
+    },
+    {
+      "area": "Windows製品T01〜14",
+      "status": "要実機検証",
+      "done": "完全PASS0",
+      "remaining": "対応Replay/利用者の実機操作・clean PC・長尺試験が必要"
+    }
+  ],
+  "formal_approval_changes": 0,
+  "product_code_changes": 0,
+  "ui_branch_changes": 0,
+  "new_feature_implementation": false,
+  "ui_selected": false
+}

@@ -1,0 +1,147 @@
+{
+  "scope": "scaled source crop vs scaled extracted full candidate; native edge patches separate; not native fidelity approval",
+  "pages": [
+    {
+      "file": "SOURCE_EDGE_COMPARE_01.jpg",
+      "ids": [
+        "002/winter_festival_variant_1",
+        "002/beast_kingdom_variant_1",
+        "002/beast_kingdom_variant_2",
+        "003/zaun_variant_1",
+        "003/void_variant_1",
+        "003/spirit_blossom_variant_1",
+        "004/freljord_frame",
+        "004/shurima_frame"
+      ],
+      "viewed": true
+    },
+    {
+      "file": "SOURCE_EDGE_COMPARE_02.jpg",
+      "ids": [
+        "004/targon_partial",
+        "004/heartsteel_frame",
+        "004/warring_kingdoms_partial",
+        "004/empyrean_frame",
+        "004/beast_kingdom_partial",
+        "004/dragon_world_frame",
+        "004/sun_crown_frame",
+        "005/frame_02"
+      ],
+      "viewed": true
+    },
+    {
+      "file": "SOURCE_EDGE_COMPARE_03.jpg",
+      "ids": [
+        "007/strong_03",
+        "008/main",
+        "009/weak_01",
+        "009/weak_03",
+        "010/weak_03",
+        "010/strong_03",
+        "011/strong_03",
+        "015/weak_01"
+      ],
+      "viewed": true
+    },
+    {
+      "file": "SOURCE_EDGE_COMPARE_04.jpg",
+      "ids": [
+        "016/strong_02",
+        "016/strong_03",
+        "020/effect_02",
+        "023/main",
+        "024/strong_02",
+        "025/weak_03",
+        "025/strong_03",
+        "029/weak_02"
+      ],
+      "viewed": true
+    },
+    {
+      "file": "SOURCE_EDGE_COMPARE_05.jpg",
+      "ids": [
+        "029/weak_03",
+        "032/main",
+        "035/weak_02",
+        "039/palette_reference_03",
+        "040/strong_02",
+        "041/strong_03",
+        "042/strong_01",
+        "044/strong_01"
+      ],
+      "viewed": true
+    },
+    {
+      "file": "SOURCE_EDGE_COMPARE_06.jpg",
+      "ids": [
+        "045/weak_01",
+        "048/weak_02",
+        "048/weak_03",
+        "048/strong_03",
+        "049/strong_01",
+        "049/strong_02",
+        "051/role_frame_melee",
+        "052/strong_01"
+      ],
+      "viewed": true
+    },
+    {
+      "file": "SOURCE_EDGE_COMPARE_07.jpg",
+      "ids": [
+        "055/weak_02",
+        "061/main",
+        "065/weak_03",
+        "065/strong_01",
+        "065/strong_02",
+        "065/strong_03",
+        "068/main",
+        "069/strong_03"
+      ],
+      "viewed": true
+    },
+    {
+      "file": "SOURCE_EDGE_COMPARE_08.jpg",
+      "ids": [
+        "070/weak_01",
+        "070/weak_02",
+        "070/weak_03",
+        "070/strong_02",
+        "071/strong_01",
+        "072/weak_01",
+        "072/weak_03",
+        "072/strong_03"
+      ],
+      "viewed": true
+    },
+    {
+      "file": "SOURCE_EDGE_COMPARE_09.jpg",
+      "ids": [
+        "075/weak_02",
+        "078/strong_03",
+        "081/main",
+        "084/demacia_variant_1",
+        "084/zaun_variant_1",
+        "084/shurima_variant_1",
+        "085/zaun_variant_2",
+        "085/shurima_variant_2"
+      ],
+      "viewed": true
+    },
+    {
+      "file": "SOURCE_EDGE_COMPARE_10.jpg",
+      "ids": [
+        "087/broken_covenant_weak",
+        "088/cosmic_strong"
+      ],
+      "viewed": true
+    }
+  ],
+  "reviewed_assets": 74,
+  "findings": [
+    "004 partial sources cannot certify reconstructed missing contours",
+    "039 palette reference insufficient for shape authority",
+    "source crop can include neighboring rows in 069/070/075; raw pixel differences not a fidelity verdict",
+    "072 color/central detail similarity requires isolated original mask and native comparison",
+    "edge contact alone not crop proof"
+  ]
+}

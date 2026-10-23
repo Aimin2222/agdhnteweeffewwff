@@ -1,0 +1,11 @@
+# 研究検証の再現
+
+research_scripts/は実行に使用した研究コードの共有用コピー。本体moduleをimportして起動せず、固定snapshotから必要関数だけAST抽出する。製品へ取り込むコードではない。private絶対pathは${FFMPEG_EXE}/${READONLY_ORIGINAL_REPOSITORY}等へ置換したため、利用者が研究専用コピーで解決する必要がある。元のwork/asset cacheを同梱しないため、このZIPだけの無設定再実行には対応しない。
+
+1. source commit fb03e0390805125fc063f4599af6c2541a653abfを読取専用source_readonlyへ配置。台帳hash/素材hashと一致するか確認する。
+2. 研究workspaceにwork/autocine_integrated_research_20261022とoutputs/autocine_final_research_v3_20261024を用意。source_readonly/asset_samples/source_ledger_cache_v3は元素材と台帳から同じ相対構造で準備する。
+3. Python/Pillow/numpyとFFmpeg7.1が必要。実行前にscript内のPath設定を自分の研究領域へ向け、本体/原本folderを出力先にしない。Windowsフォントmeiryo.ttcは環境に応じて指定。
+4. synthetic_v3.py→synthetic_decode_v3.pyでsource式/FFmpeg graphとdecode検証。fx_combinations_v3.pyで人工顔+083合成。finish_inspections_v3.pyでsourcecrop比較/類似候補/14warning fixture。command return codeと出力JSONを比較する。
+5. ffmpegの版/codec/driverでencode byte hashは変わり得る。期待frame数/時刻/位置/輝度を比較し、実行成功と見た目合格を分ける。GPUFXとLoL録音はこのscriptの対象外。
+
+UI browserによる元動画再生はダウンロードせず、元URLを開き、標本時刻と観察メモを照合する。第三者映像/スクリーンショットはこのZIPに含めない。音声を実際に聞ける環境でない限り音/BPMを分析済みにしない。
