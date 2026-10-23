@@ -148,7 +148,7 @@ def main() -> None:
         "LoL AutoCine UI比較テスト版（実動作・検証用）\n"
         "LoL_AutoCine.exe は現行の配置1～9です。従来のBAT起動もこの経路です。\n"
         "LoL_AutoCine_UI29.exe はWebView2内蔵のUI29比較版です。ブラウザ操作は不要です。\n"
-        "UI29初回起動時は12候補の一覧から選びます。画面を開いた後は右上の『UI比較を切り替える』から12候補・全29画面を選べます（Ctrl+Shift+Uでも開閉）。\n"
+        "UI29初回起動時は12候補の一覧から選びます。画面を開いた後は画面右端の『UI比較』タブから12候補・全29画面を選べます（Ctrl+Shift+Uでも開閉）。\n"
         "UI29は29画面を操作できる途中版ですが、外観と全操作の合格は未完了です。\n"
         "LoL実機検証は未完了です。\n"
         + ("Microsoft WebView2 Fixed Runtime x64を同梱しています。別途Runtimeのインストールは不要です。\n"

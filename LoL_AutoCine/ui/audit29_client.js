@@ -509,11 +509,13 @@
   function openScreen(id) { location.assign(endpoint(`/ui/${encodeURIComponent(id)}`)); }
   const switchButton = document.createElement('button');
   switchButton.type = 'button';
-  switchButton.textContent = 'UI比較を切り替える';
+  switchButton.textContent = 'UI比較';
+  switchButton.title = '12候補・29画面を切り替える';
   switchButton.setAttribute('aria-controls', 'ui29-switch-panel');
   switchButton.setAttribute('aria-expanded', 'false');
-  switchButton.style.cssText = 'position:fixed;right:12px;top:54px;z-index:2001;' +
-    'padding:8px 12px;border:2px solid #075fe0;border-radius:8px;' +
+  switchButton.style.cssText = 'position:fixed;right:0;top:50%;z-index:2001;' +
+    'transform:translateY(-50%);writing-mode:vertical-rl;padding:12px 7px;' +
+    'border:2px solid #075fe0;border-right:0;border-radius:8px 0 0 8px;' +
     'background:#fff;color:#0746a7;font:600 14px Yu Gothic UI,Meiryo,sans-serif;' +
     'box-shadow:0 3px 12px #0004;cursor:pointer';
   document.body.append(switchButton);
@@ -521,8 +523,8 @@
   switchPanel.id = 'ui29-switch-panel';
   switchPanel.setAttribute('role', 'group');
   switchPanel.setAttribute('aria-label', 'UI比較画面の切替');
-  switchPanel.style.cssText = 'position:fixed;right:12px;top:98px;z-index:2001;' +
-    'width:min(370px,calc(100vw - 24px));max-height:calc(100vh - 110px);' +
+  switchPanel.style.cssText = 'position:fixed;right:38px;top:10vh;z-index:2001;' +
+    'width:min(370px,calc(100vw - 50px));max-height:80vh;' +
     'overflow:auto;display:none;box-sizing:border-box;padding:16px;border:1px solid #8da9ce;' +
     'border-radius:10px;background:#fff;color:#172b3e;' +
     'font:14px Yu Gothic UI,Meiryo,sans-serif;box-shadow:0 6px 24px #0005';
