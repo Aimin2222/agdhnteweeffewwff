@@ -9,3 +9,9 @@
 
 .frame-overlay{position:absolute;left:25%;bottom:9%;width:50%;height:26%;object-fit:contain;filter:none;opacity:1}.kill-ribbon .scene-card{min-height:58px;padding:7px}.kill-ribbon .scene-thumb{height:40px}.kill-ribbon .scene-card strong{font-size:15px}
 .selection-summary,.director-dock{overflow-y:auto}@media(max-height:850px){.layout-F{grid-template-rows:130px minmax(0,1fr)}}
+/* Keep Creator preset widths when the 1366px vertical scrollbar consumes space. */
+@media(max-width:1450px){.layout-B .library.scroll{overflow-x:hidden;overflow-y:auto}.layout-B .library.scroll .tiles{width:calc(100% + 10px)}}
+/* Keep audited graph and CTA widths while retaining vertical scrolling. */
+.layout-C .director-dock{overflow-x:hidden}.layout-C .director-dock .graph{width:calc(100% + 15px)}
+@media(max-width:1450px){.layout-E .ready.scroll{overflow-x:hidden;overflow-y:auto}.layout-E .ready.scroll .cta-large{width:calc(100% + 10px)}}
+@media(max-width:1450px){.layout-C .inspector.scroll{overflow-x:hidden;overflow-y:auto}.layout-C .inspector.scroll [data-ui="camera-modes"],.layout-C .inspector.scroll [data-ui="slider-motion_arc"],.layout-C .inspector.scroll [data-ui="slider-motion_dolly"]{width:calc(100% + 10px)}}
