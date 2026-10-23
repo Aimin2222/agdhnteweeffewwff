@@ -19,7 +19,8 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from ui.audit29_desktop import _child_command, _stop_backend, _wait_for_backend
+from ui.audit29_desktop import (_child_command, _configure_webview2_runtime,
+                                _stop_backend, _wait_for_backend)
 
 
 def _activate(url: str, action: str, data: dict) -> dict:
@@ -62,11 +63,11 @@ def _capture_webview(window, path: Path, size: tuple[int, int]) -> None:
             raise RuntimeError(f"WebView2 screenshot is {image.size}; expected {size}")
 
 
-def main() -> int:
+def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT / "qa" / "ui29" / "windows_webview2_offline")
     parser.add_argument("--screen", help="capture one audited screen")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     args.output = args.output.resolve()
     args.output.mkdir(parents=True, exist_ok=True)
     inventory = json.loads((ROOT / "design" / "ui" / "implementation_audit_29_20261021" /
@@ -74,8 +75,11 @@ def main() -> int:
     screens = [screen for screen in inventory if not args.screen or screen["id"] == args.screen]
     if not screens:
         parser.error(f"unknown audited screen: {args.screen}")
+    frozen = bool(getattr(sys, "frozen", False))
+    capture_result = "CAPTURED_FROZEN_EXE_OFFLINE" if frozen else "CAPTURED_SOURCE_HOST_OFFLINE"
 
     import webview
+    _configure_webview2_runtime(webview)
     webview.settings["OPEN_EXTERNAL_LINKS_IN_BROWSER"] = False
     results = []
     with tempfile.TemporaryDirectory(prefix="ui29-webview-", dir=args.output) as temp:
@@ -132,7 +136,7 @@ def main() -> int:
                                 bounds_dir.mkdir(exist_ok=True)
                                 (bounds_dir / f"{sid}.json").write_text(
                                     json.dumps(bounds, ensure_ascii=False, indent=2), encoding="utf-8")
-                                results.append({"id": sid, "result": "CAPTURED_SOURCE_HOST_OFFLINE",
+                                results.append({"id": sid, "result": capture_result,
                                                 "capture": path.name, "size": size,
                                                 "bounds": f"bounds/{sid}.json"})
                             except Exception as exc:
@@ -144,7 +148,8 @@ def main() -> int:
                 webview.start(worker, gui="edgechromium", private_mode=True, debug=False)
             finally:
                 _stop_backend(child, url)
-    report = {"kind": "WINDOWS_WEBVIEW2_SOURCE_HOST_OFFLINE", "lol_replay": "NOT_RUN",
+    report = {"kind": "WINDOWS_WEBVIEW2_FROZEN_EXE_OFFLINE" if frozen else
+              "WINDOWS_WEBVIEW2_SOURCE_HOST_OFFLINE", "lol_replay": "NOT_RUN",
               "gpu_record_audio_export": "NOT_RUN", "screens": results}
     (args.output / "index.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     return 0 if len(results) == len(screens) and all(row["result"].startswith("CAPTURED") for row in results) else 1

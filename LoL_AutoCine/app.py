@@ -48,6 +48,9 @@ def main() -> None:
         from ui.audit29_desktop import run_desktop, smoke_backend
         if "--ui29-smoke" in sys.argv:
             smoke_backend()
+        elif "--ui29-capture-all" in sys.argv:
+            from tools.ui29_windows_webview_capture import main as capture_webview
+            raise SystemExit(capture_webview(sys.argv[sys.argv.index("--ui29-capture-all") + 1:]))
         else:
             run_desktop(window_smoke="--ui29-window-smoke" in sys.argv)
         return
