@@ -1,0 +1,378 @@
+{
+  "screen_id": "R-E-main-1366x768",
+  "family": "researchE",
+  "reference_sha256": "8c035857c96729f11b4684d8f11f5b0d545e3c89033b8daf2efc76e3c2dd43c1",
+  "reference_size": [
+    1366,
+    768
+  ],
+  "capture_size": [
+    1366,
+    768
+  ],
+  "size_result": "PASS",
+  "visual_result": "REVIEW",
+  "functional_result": "NOT_RUN",
+  "dynamic_image_mask": [
+    336.3333333333333,
+    171.0,
+    597.3333333333334,
+    336.0
+  ],
+  "unmasked_rgb_mae": 2.1503,
+  "regions": [
+    {
+      "region": "header",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "theme-switch",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "subbar",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "workspace",
+      "rgb_mae": 2.4173
+    },
+    {
+      "region": "flow-rail",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "preview-panel",
+      "rgb_mae": 0.7529
+    },
+    {
+      "region": "preview-stage",
+      "rgb_mae": 1.459
+    },
+    {
+      "region": "preview-controls",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "ready-panel",
+      "rgb_mae": 8.2737
+    },
+    {
+      "region": "one-click",
+      "rgb_mae": 17.1331
+    },
+    {
+      "region": "choice-dock",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "camera-choice",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "footer-12",
+      "rgb_mae": 5.9964
+    }
+  ],
+  "bounds": [
+    {
+      "region": "header",
+      "result": "PASS",
+      "expected": [
+        0,
+        0,
+        1366,
+        64
+      ],
+      "actual": [
+        0,
+        0,
+        1366,
+        64
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "theme-switch",
+      "result": "PASS",
+      "expected": [
+        885.109375,
+        11.5,
+        149,
+        40
+      ],
+      "actual": [
+        885.109375,
+        11.5,
+        149,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "subbar",
+      "result": "PASS",
+      "expected": [
+        0,
+        64,
+        1366,
+        52
+      ],
+      "actual": [
+        0,
+        64,
+        1366,
+        52
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "workspace",
+      "result": "PASS",
+      "expected": [
+        0,
+        116,
+        1366,
+        620
+      ],
+      "actual": [
+        0,
+        116,
+        1366,
+        620
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "flow-rail",
+      "result": "PASS",
+      "expected": [
+        16,
+        128,
+        196,
+        596
+      ],
+      "actual": [
+        16,
+        128,
+        196,
+        596
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-panel",
+      "result": "PASS",
+      "expected": [
+        224,
+        128,
+        822,
+        442
+      ],
+      "actual": [
+        224,
+        128,
+        822,
+        442
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-stage",
+      "result": "PASS",
+      "expected": [
+        235,
+        171,
+        800,
+        336
+      ],
+      "actual": [
+        235,
+        171,
+        800,
+        336
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-controls",
+      "result": "PASS",
+      "expected": [
+        235,
+        515,
+        800,
+        44
+      ],
+      "actual": [
+        235,
+        515,
+        800,
+        44
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "ready-panel",
+      "result": "PASS",
+      "expected": [
+        1058,
+        128,
+        292,
+        596
+      ],
+      "actual": [
+        1058,
+        128,
+        292,
+        596
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "one-click",
+      "result": "FAIL",
+      "expected": [
+        1073,
+        572.5,
+        262,
+        60
+      ],
+      "actual": [
+        1073,
+        572.5,
+        252,
+        60
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        -10.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "choice-dock",
+      "result": "PASS",
+      "expected": [
+        224,
+        582,
+        822,
+        142
+      ],
+      "actual": [
+        224,
+        582,
+        822,
+        142
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "camera-choice",
+      "result": "PASS",
+      "expected": [
+        239,
+        641,
+        258.65625,
+        63.5
+      ],
+      "actual": [
+        239,
+        641,
+        258.65625,
+        63.5
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "footer-12",
+      "result": "PASS",
+      "expected": [
+        0,
+        736,
+        1366,
+        32
+      ],
+      "actual": [
+        0,
+        736,
+        1366,
+        32
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    }
+  ]
+}

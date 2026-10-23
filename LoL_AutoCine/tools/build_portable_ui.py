@@ -110,11 +110,20 @@ def main() -> None:
     shutil.copy2(APP / "ui" / "audit29_client.js", internal / "ui" / "audit29_client.js")
     (internal / "tools" / "bin").mkdir(parents=True, exist_ok=True)
     shutil.copy2(helper, internal / "tools" / "bin" / helper.name)
+    fixed_info = None
     if args.webview2_fixed_folder:
         fixed = args.webview2_fixed_folder.resolve()
         if not (fixed / "msedgewebview2.exe").is_file():
             parser.error("--webview2-fixed-folder must contain msedgewebview2.exe")
         copy_tree(fixed, bundle / "WebView2Fixed")
+        fixed_exe = fixed / "msedgewebview2.exe"
+        fixed_info = {
+            "folder": "WebView2Fixed",
+            "version": fixed.name.removeprefix("Microsoft.WebView2.FixedVersionRuntime.").removesuffix(".x64"),
+            "architecture": "x64",
+            "msedgewebview2_sha256": hashlib.sha256(fixed_exe.read_bytes()).hexdigest(),
+            "official_download_page": "https://developer.microsoft.com/en-us/microsoft-edge/webview2/",
+        }
     guide = APP / "docs" / "ui_integration_20261020" / "TEST_GUIDE_JA.md"
     shutil.copy2(guide, bundle / "TEST_GUIDE_JA.md")
     for name in ("settings.json", "diagnostics"):
@@ -130,6 +139,7 @@ def main() -> None:
                 "ui29_partially_interactive_screens": 29,
                 "ui29_accepted_screens": 0,
                 "webview2_fixed_included": bool(args.webview2_fixed_folder),
+                "webview2_fixed": fixed_info,
                 "source_commit": commit,
                 "audio_helper_sha256": helper_hash,
                 "note": "LoL/WGC/NVENC/audio require Windows hardware validation."}
@@ -140,7 +150,11 @@ def main() -> None:
         "LoL_AutoCine_UI29.exe はWebView2内蔵のUI29比較版です。ブラウザ操作は不要です。\n"
         "UI29は29画面を操作できる途中版ですが、外観と全操作の合格は未完了です。\n"
         "LoL実機検証は未完了です。\n"
-        + ("WebView2 Fixed Runtimeを同梱しています。Windows 10のフォルダ権限要件も確認してください。\n"
+        + ("Microsoft WebView2 Fixed Runtime x64を同梱しています。別途Runtimeのインストールは不要です。\n"
+           "Windows 10では展開先フォルダの権限要件に注意してください。Fixed Runtimeは自動更新されません。\n"
+           "WebView2のMicrosoft Defender SmartScreenは、保護のため閲覧先などの情報をMicrosoftへ送信する場合があります。\n"
+           "WebView2の配布条件・プライバシー: https://developer.microsoft.com/en-us/microsoft-edge/webview2/\n"
+           "https://privacy.microsoft.com/privacystatement\n"
            if args.webview2_fixed_folder else
            "WindowsのMicrosoft Edge WebView2 Runtimeが必要です（このZIPには未同梱）。\n")
         + "同梱のLoL_AutoCine_Capture.exeはミラー用です。削除しないでください。\n"

@@ -15,8 +15,8 @@
 - 凍結版UI29 EXEのバックエンド起動、29画面インベントリ読込、WebView2の12候補描画を確認。
 - 実Appブリッジで全29画面のURLを開き、画面切替を一周した後もカメラ側・距離・登場アニメ・素材・テーマ設定が保持されることを確認（`local_bridge_probe.json`）。LoL実機操作は含まない。
 - 2026-10-24の途中版EXE/ZIPを作成し、現行EXE、UI29バックエンド、Captureワーカー、非表示WebView2起動のスモークテストを通した。先行する29画面キャプチャは開発用Edgeで取得した。
-- WindowsのWebView2撮影APIを使い、ソース版デスクトップホストで全29画面の画像とDOM寸法を取得した。`qa/ui29/windows_webview2_offline/` に撮影結果、`comparison_windows_webview2/` に原画像との差分・50%重ね・寸法結果を保存。16画面は矩形許容内、13画面は要修正。矩形許容内は外観合格ではない。凍結EXEそのものの全画面撮影と125% DPI確認は未実施。
-- WebView2 Fixed Versionを同梱した場合、pywebviewの `WEBVIEW2_RUNTIME_PATH` 設定へパスを渡すよう修正。設定選択の単体テストは通過したが、Fixed Version本体を同梱したZIPとRuntime未導入PCでの起動は未検証。
+- WindowsのWebView2撮影APIを使い、ソース版と凍結EXEの両方で全29画面の画像とDOM寸法を取得した。凍結版は `qa/ui29/frozen_webview2_offline/` に撮影結果、`comparison_frozen_webview2/` に原画像との差分・50%重ね・寸法結果を保存。16画面は矩形許容内、13画面は要修正。矩形許容内は外観合格ではない。125% DPI確認は未実施。
+- Microsoft公式ページからWebView2 Fixed Version 156.0.4314.42 x64 CABを取得し、CABのSHA-256 `CB4612CE79A62A0BE094301A72F73CF91BB250F5E83DC51886F66A083FC0694F` と展開した `msedgewebview2.exe` のMicrosoft署名を確認。pywebviewの `WEBVIEW2_RUNTIME_PATH` 設定へ同梱フォルダを渡す実装と単体テストは済み。Runtime未導入PCでの起動は未検証。
 - ポータブルZIPのファイル検査、EXEのバックエンド起動、Captureワーカー起動はビルドスクリプトで確認する。
 - 29画面のうち新18画面と旧テストAの計19画面は部分実装。旧10画面は監査矩形に基づく編集可能なHTML/CSSとして再構成し、12候補すべてを選択可能にした。各候補は同じApp操作へ接続するが、外観と全操作は未合格。
 - オフラインの原画像・実装画像・50%重ね・差分・寸法比較を29画面で取得。旧10画面はすべて矩形許容内だが、RGB差が大きい。`MEASURED` は画像合格ではない。
@@ -24,6 +24,6 @@
 
 ## 配布物
 
-ビルドコマンドは `tools/build_portable_ui.py --audio-helper <既存MSVC製ヘルパー> --output <出力先>`。ZIPに現行9画面のEXE、UI29比較EXE、キャプチャワーカー、アセット、UI29のHTML/CSS/JS、監査インベントリを入れる。Microsoft Edge WebView2 Runtimeを必要とする。公式Fixed Versionを展開済みなら `--webview2-fixed-folder <msedgewebview2.exeを含むフォルダ>` で同梱できるが、現時点ではランタイムを取得・同梱したビルドとRuntime未導入PCでの動作確認は未実施。Fixed Version v120以降のWindows 10ではフォルダのApp Container用読み取り・実行権限も要確認。WebView2がない友達のPCへのインストール不要性は未達。
+ビルドコマンドは `tools/build_portable_ui.py --audio-helper <既存MSVC製ヘルパー> --output <出力先>`。ZIPに現行9画面のEXE、UI29比較EXE、キャプチャワーカー、アセット、UI29のHTML/CSS/JS、監査インベントリを入れる。公式Fixed Versionを展開済みなら `--webview2-fixed-folder <msedgewebview2.exeを含むフォルダ>` で同梱する。Fixed Version v120以降のWindows 10ではフォルダのApp Container用読み取り・実行権限も要確認。Runtime未導入PCでのインストール不要性は未検証。
 
 監査の全29画面・12候補という目標、原画像の比較結果、未完成箇所は `STATUS_JA.md` に維持する。最終採用UIは未選定。
