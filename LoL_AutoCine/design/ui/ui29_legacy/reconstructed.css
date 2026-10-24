@@ -233,6 +233,58 @@ body[data-screen="T-B-C"] .region-side-qa>.full{font-size:10px;min-height:31px}
 .testb-results-table div{padding:7px 4px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
 .testb-results-table div:nth-child(-n+3){background:#eef5fd;font-weight:700}
 
+/* Test B frame/effect screen retains the reference's stacked catalog and six motion tiles. */
+body[data-screen="T-B-F"] .region-scene-list{padding:9px 11px;gap:5px}
+body[data-screen="T-B-F"] .region-scene-list>h2{font-size:17px;height:29px;margin:0}
+body[data-screen="T-B-F"] .region-scene-list h3{font-size:12px;margin:1px 0 0;flex:none}
+body[data-screen="T-B-F"] .region-scene-list .filters{height:30px;flex:none}
+body[data-screen="T-B-F"] .region-scene-list>[data-ui="scan-status"]{height:15px;margin:0;font-size:10px}
+body[data-screen="T-B-F"] .region-inspector{padding:0}
+body[data-screen="T-B-F"] .region-camera-modes{padding:3px 8px}
+body[data-screen="T-B-F"] .region-camera-modes>h2{height:18px;font-size:12px;margin:0}
+body[data-screen="T-B-F"] .testb-mode-list .camera-card{height:44px;min-height:44px}
+body[data-screen="T-B-F"] .region-side-buttons{padding:2px 7px}
+body[data-screen="T-B-F"] .region-side-buttons h2{display:none}
+body[data-screen="T-B-F"] .region-side-buttons .target-side{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+body[data-screen="T-B-F"] .region-side-buttons .target-side button{height:29px;min-height:29px;font-size:11px;font-weight:700}
+body[data-screen="T-B-F"] .region-side-buttons p{display:none}
+body[data-screen="T-B-F"] .region-material-library{padding:5px 8px;display:flex;flex-direction:column;gap:4px;overflow:auto}
+.testb-effect-head{display:flex;align-items:center;justify-content:space-between;min-height:31px}
+.testb-effect-head h2{margin:0;font-size:13px}
+.testb-effect-tabs{display:grid;grid-template-columns:1fr 1fr;gap:2px;width:244px}
+.testb-effect-tabs button{font-size:10px;min-height:27px;padding:3px}
+.testb-effect-tabs .selected{border-color:#086af1;color:#086af1;font-weight:700}
+body[data-screen="T-B-F"] .region-material-library>.subtle{font-size:10px;margin:0;line-height:15px}
+.testb-effect-filters{height:32px;flex:none}
+.testb-effect-filters button{height:29px;min-height:29px;font-size:11px;font-weight:700;color:#086af1}
+.testb-effect-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;height:141px;flex:none}
+.testb-effect-card{display:flex;flex-direction:column;text-align:left;overflow:hidden;padding:3px;min-height:0;background:var(--panel)}
+.testb-effect-card.selected{outline:2px solid #086af1}
+.testb-effect-card img{width:100%;height:85px;object-fit:contain;background:#101d2c;border-radius:3px}
+.testb-effect-card h3{font-size:10px;line-height:16px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.testb-effect-card .badge{font-size:9px;white-space:nowrap}
+.testb-effect-selection{font-size:11px;line-height:19px;min-height:40px;overflow:hidden}
+.testb-effect-selection span{font-weight:700;white-space:nowrap}
+.testb-effect-actions{display:grid;grid-template-columns:1fr 1fr;gap:5px;height:32px;flex:none}
+.testb-effect-actions button{font-size:11px;min-height:31px;padding:3px}
+body[data-screen="T-B-F"] .region-motion-grid{padding:5px 8px}
+body[data-screen="T-B-F"] .region-motion-grid>h2{font-size:13px;height:19px;margin:0 0 2px}
+body[data-screen="T-B-F"] .region-motion-grid .testb-motion-cards{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,59px);gap:4px}
+.testb-motion-cards .motion{display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px;min-height:0;height:58px}
+.testb-motion-cards .motion .testb-qa-shot{height:33px;width:100%}
+.testb-motion-cards .motion small{font-size:9px;color:var(--ink);line-height:12px}
+.testb-motion-cards .motion.selected{outline:2px solid #086af1}
+body[data-screen="T-B-F"] .region-timeline{padding:9px 11px}
+body[data-screen="T-B-F"] .region-timeline>h2{font-size:15px;height:27px;margin:0}
+body[data-screen="T-B-F"] .region-timeline .ruler{height:24px;padding-left:11%;font-size:11px}
+body[data-screen="T-B-F"] .region-timeline .lane{height:77px}
+body[data-screen="T-B-F"] .region-timeline .lane-label{width:99px;min-width:99px;align-self:flex-start;font-weight:700}
+body[data-screen="T-B-F"] .region-timeline .lane-bar{height:65px;background:#172b3c;overflow:hidden}
+body[data-screen="T-B-F"] .region-timeline .clip{height:63px;top:0;background:#2365a8;color:#fff;border-color:#7baadd;z-index:2}
+body[data-screen="T-B-F"] .region-timeline .trim{height:44px;margin-top:6px;gap:5px}
+body[data-screen="T-B-F"] .region-scene-detail{padding:8px}
+body[data-screen="T-B-F"] .region-scene-detail h2{font-size:14px}
+
 /* L02 uses the source mock's three-part editor toolbar while retaining live actions. */
 body[data-screen="L02-M"] .region-header{background:linear-gradient(90deg,#f4f8fd,#fff);border-color:#e2eaf5}
 .legacy2-brand{position:absolute;left:21px;top:10px;display:flex;align-items:center;gap:24px;white-space:nowrap}

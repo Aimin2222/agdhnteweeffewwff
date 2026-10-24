@@ -384,6 +384,39 @@ def _testb_results() -> str:
             '<p class="subtle">一括QA実行後の詳細は診断ログで確認してください。</p>')
 
 
+def _testb_effect_library() -> str:
+    cards = ''.join(
+        f'<button class="testb-effect-card" data-ui="material-card-{i}">'
+        '<img class="frame-thumb" alt="実素材"><h3>読み込み中</h3>'
+        '<span class="badge"></span></button>' for i in range(3))
+    return ('<div class="testb-effect-head"><h2>画像選択 <small>実カタログ</small></h2>'
+            '<div class="testb-effect-tabs">'
+            + _button('既存バッジ', 'work_gallery')
+            + _button('Work素材', 'work_gallery', cls='selected') + '</div></div>'
+            '<p class="subtle">素材を選ぶと同名FXがあれば一緒に適用します。</p>'
+            '<div class="testb-effect-filters">'
+            + _button('正式合格・確認用の全候補', 'work_gallery', cls='full')
+            + '</div><div class="testb-effect-grid">' + cards + '</div>'
+            '<div class="testb-effect-selection">① 枠を選択：'
+            '<span data-ui="selected-frame-name">未選択</span><br>② 同名FX：'
+            '<span data-ui="selected-effect-name">該当なし</span></div>'
+            '<div class="testb-effect-actions">'
+            + _button('枠と同名FXを適用', 'apply_selected_frame', cls='primary')
+            + _button('エフェクト詳細', 'work_settings') + '</div>'
+            '<p class="subtle">正式合格は枠のみ。FXは個別の確認状態です。</p>')
+
+
+def _testb_motion_grid() -> str:
+    labels = ('一気に表示', '左から登場', '右から登場',
+              '下から登場', '上から登場', 'パッと飛び出す')
+    return ('<h2>登場アニメ <small>6種類・過去QA画像</small></h2>'
+            '<div class="motion-grid testb-motion-cards">'
+            + ''.join(f'<button class="motion"><span class="testb-qa-shot testb-qa-{i+1}" '
+                      'title="過去QA画像・現在のプレビューではありません"></span>'
+                      f'<small>{escape(label)}</small></button>'
+                      for i, label in enumerate(labels)) + '</div>')
+
+
 def _testb_material_summary() -> str:
     return ('<h2>フレーム・エフェクト・モーション</h2><div class="testb-material-links">'
             + _button('キルフレーム図鑑', 'work_gallery')
@@ -503,7 +536,7 @@ def _component(screen_id: str, region: str) -> str:
                   '<option value="light">ライト</option><option value="dark">ダーク</option></select>'
                 + _button('動画を作成', 'export_menu', cls='primary') + '</nav>')
     if region == 'scene-list':
-        if screen_id in {'T-B-M', 'T-B-C'}:
+        if screen_id in {'T-B-M', 'T-B-C', 'T-B-F'}:
             return _testb_scene_list()
         if screen_id in {'L03-N', 'L03-D', 'L05-M'}:
             return _legacy03_scene_list(5 if screen_id == 'L05-M' else 3)
@@ -517,6 +550,7 @@ def _component(screen_id: str, region: str) -> str:
                 + _button('キルフレーム', 'work_gallery')
                 + _button('エフェクト', 'work_settings') + '</div>' + _scene_list())
     if region == 'material-library':
+        if screen_id == 'T-B-F': return _testb_effect_library()
         return _legacy06_library() if screen_id == 'L06-L' else _material_library()
     if region == 'preview-panel':
         return '<h2>ミラープレビュー <span class="connection-state">LoL未接続</span></h2>'
@@ -527,7 +561,7 @@ def _component(screen_id: str, region: str) -> str:
                 + _button('ミラー停止', 'mirror_stop')
                 + _button('演出プレビュー再生', 'preview_play')
                 + _button('プレビュー停止', 'preview_stop'))
-    if screen_id in {'T-B-M', 'T-B-C'} and region == 'camera-modes': return _testb_camera_modes()
+    if screen_id in {'T-B-M', 'T-B-C', 'T-B-F'} and region == 'camera-modes': return _testb_camera_modes()
     if screen_id == 'T-B-M' and region == 'camera-cards': return _testb_camera_cards()
     if screen_id == 'T-B-C' and region == 'camera-cards': return _testb_camera_settings_cards()
     if region in {'camera-cards','camera-modes'}: return _camera_modes()
@@ -536,7 +570,7 @@ def _component(screen_id: str, region: str) -> str:
     if region in {'frame-cards','materials','material-summary','applied-assets'}: return _frame_cards()
     if region == 'effect-cards':
         return '<h2>エフェクト</h2><p class="subtle">選択した枠と同名FXを適用</p>' + _button('FX設定', 'work_settings')
-    if screen_id == 'T-B-C' and region == 'side-buttons': return _side_buttons()
+    if screen_id in {'T-B-C', 'T-B-F'} and region == 'side-buttons': return _side_buttons()
     if screen_id == 'T-B-M' and region == 'side-buttons':
         return ('<div class="target-side testb-side-buttons">'
                 + _button('BLUE サイド', 'camera_side', 'BLUE', 'blue')
@@ -553,6 +587,10 @@ def _component(screen_id: str, region: str) -> str:
             return ('<div class="testb-inspector-tabs">'
                     + _button('カメラ', 'screen', 'T-B-C', 'selected')
                     + _button('キル演出', 'screen', 'T-B-F') + '</div>')
+        if screen_id == 'T-B-F':
+            return ('<div class="testb-inspector-tabs">'
+                    + _button('カメラ', 'screen', 'T-B-C')
+                    + _button('キル演出', 'screen', 'T-B-F', 'selected') + '</div>')
         if is_test and screen_id != 'T-B-S':
             return '<h2>設定 <small>独立スクロール</small></h2>'
         if screen_id in {'L03-N', 'L03-D'}:
@@ -578,7 +616,7 @@ def _component(screen_id: str, region: str) -> str:
                 '<span>1920 × 1080</span><span data-ui="output-fps">60 fps</span><span>MP4</span></div>'
                 + _button('出力先を選択', 'output_folder') + _button('動画を作成', 'export_menu', cls='primary'))
     if region == 'timeline':
-        if screen_id in {'T-B-M', 'T-B-C'}: return _testb_timeline()
+        if screen_id in {'T-B-M', 'T-B-C', 'T-B-F'}: return _testb_timeline()
         return (_legacy03_timeline(include_trim=screen_id in {'L03-N', 'L03-D'})
                 if screen_id in {'L03-N', 'L03-D', 'L05-M', 'L06-L', 'L06-E'}
                 else _timeline())
@@ -598,6 +636,7 @@ def _component(screen_id: str, region: str) -> str:
         return _button('簡単編集', 'edit_mode', 'easy') + _button('詳細編集', 'edit_mode', 'advanced')
     if region == 'proceed': return _button('編集へ進む', 'screen', 'L06-E', 'primary')
     if region == 'motion-grid':
+        if screen_id == 'T-B-F': return _testb_motion_grid()
         labels=['一気に表示','左から登場','右から登場','下から登場','上から登場','パッと飛び出す']
         return '<h2>登場アニメ</h2><div class="motion-grid">' + ''.join(
             f'<button class="motion">{label}</button>' for label in labels) + '</div>'

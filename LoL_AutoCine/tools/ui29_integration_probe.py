@@ -116,6 +116,20 @@ def main():
             assert camera_again["camera"]["values"]["motion_arc"] == 14
             assert camera_again["camera"]["values"]["motion_dolly"] == 5
             assert "俯瞰 追従のみ" in camera_again["camera"]["style"]
+            outcome["stage"] = "testb_frame_motion_controls"
+            effects = request("screen", {"id": "T-B-F"})
+            assert len(effects["frame"]["testb_cards"]) == 3, effects["frame"]["testb_cards"]
+            assert {item["id"] for item in effects["frame"]["testb_cards"]} == {
+                "083/a_simple_main", "004/freljord_frame", "063/weak_01"}
+            selected = request("frame", {"id": "063/weak_01"})
+            assert selected["frame"]["id"] == "063/weak_01"
+            for motion in ("instant", "slide_left", "slide_right", "slide_up", "slide_down", "pop"):
+                motion_state = request("motion", {"value": motion})
+                from core.kill_icons import MOTION_STYLES
+                assert motion_state["frame"]["motion"] == MOTION_STYLES[motion], motion_state["frame"]["motion"]
+            effects_again = request("screen", {"id": "T-B-C"})
+            assert effects_again["frame"]["id"] == "063/weak_01"
+            assert effects_again["frame"]["motion"] == MOTION_STYLES["pop"]
             outcome["result"] = "PASS"
             outcome["screen"] = state["workspace"]["screen_id"]
             outcome["candidate_roundtrip"] = checked_screens
@@ -127,7 +141,8 @@ def main():
                                  "legacy03_easy_preset_and_detail_switch",
                                  "legacy06_real_catalog_and_editor_state",
                                  "testb_camera_mode_style_side_roundtrip",
-                                 "testb_all_10_styles_and_numeric_roundtrip"]
+                                 "testb_all_10_styles_and_numeric_roundtrip",
+                                 "testb_real_frame_and_six_motion_roundtrip"]
         except Exception as exc:
             outcome["result"] = "FAIL"
             outcome["error"] = repr(exc)

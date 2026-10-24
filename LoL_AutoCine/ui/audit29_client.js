@@ -297,7 +297,7 @@
       if (check) { check.textContent = scene.checked ? '✓' : ''; check.classList.toggle('checked', scene.checked); }
     });
     document.querySelectorAll('[data-ui^="material-card-"]').forEach((card, index) => {
-      const entry = data.frame.cards[index];
+      const entry = screenId === 'T-B-F' ? data.frame.testb_cards[index] : data.frame.cards[index];
       if (!entry) { card.style.display = 'none'; return; }
       card.style.display = '';
       card.dataset.frameId = entry.id;
@@ -634,6 +634,11 @@
       .then(()=>openScreen(button.dataset.actionValue)).catch(e=>message(e.message));
     else if (found?.[0] === 'export_menu') chooseExport();
     else if (found?.[0] === 'project_menu') chooseProjectOperation();
+    else if (found?.[0] === 'apply_selected_frame') {
+      const id=state.value?.frame?.id;
+      if (id) invoke('frame',{id});
+      else message('先にキルフレームを選択してください');
+    }
     else if (found) invoke(found[0],found[1]);
     else message('この操作の実機接続は未完了です。動作済みとは扱いません。');
   });

@@ -239,6 +239,12 @@ class Audit29RuntimeTests(unittest.TestCase):
                             self.assertIn(f'data-setting="{key}"', reconstructed)
                         self.assertIn('data-action="camera_qa"', reconstructed)
                         self.assertIn('data-action-value="auto"', reconstructed)
+                    if old_id == "T-B-F":
+                        self.assertEqual(reconstructed.count('data-ui="scene-card-'), 6)
+                        self.assertEqual(reconstructed.count('data-ui="material-card-'), 3)
+                        self.assertEqual(reconstructed.count('class="motion"'), 6)
+                        self.assertIn('data-action="apply_selected_frame"', reconstructed)
+                        self.assertIn('data-action-value="T-B-C"', reconstructed)
                     if old_id.startswith("T-B-"):
                         for target in ("T-B-M", "T-B-S", "T-B-C", "T-B-F"):
                             self.assertIn(f'data-action-value="{target}"', reconstructed)
