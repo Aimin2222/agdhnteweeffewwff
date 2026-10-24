@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
@@ -109,6 +110,21 @@ class Audit29RuntimeTests(unittest.TestCase):
             runtime.perform("motion", {"value": "slide_left"})
             self.assertEqual(app.var_camera_side.get(), "レッド側基準")
             self.assertEqual(app.var_kill_icon_motion.get(), "左から登場")
+
+    def test_legacy_library_uses_real_catalog_and_shared_frame_action(self):
+        app = App()
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            runtime = Audit29Runtime(app, Path(directory) / "workspace.json")
+            frame = runtime.snapshot()["frame"]
+            self.assertEqual(len(frame["cards"]), 4)
+            self.assertEqual(len(frame["library_cards"]), 6)
+            self.assertEqual(len({card["id"] for card in frame["library_cards"]}), 6)
+            self.assertEqual({card["status"] for card in frame["library_cards"]},
+                             {"review", "approved"})
+            chosen = frame["library_cards"][1]["id"]
+            with patch("ui.audit29_runtime.select_frame_with_effect") as select:
+                runtime.perform("frame", {"id": chosen})
+            select.assert_called_once_with(app, chosen)
 
     def test_scene_edit_buttons_dispatch_to_existing_project(self):
         app = App()

@@ -195,6 +195,90 @@ def _material_library() -> str:
             + _frame_cards() + _button('図鑑の全候補を見る', 'work_gallery', cls='full') + '</div>')
 
 
+def _legacy06_library() -> str:
+    cards = ''.join(
+        f'<button class="legacy6-library-card" data-ui="library-card-{i}">'
+        '<img class="frame-thumb" alt="実素材"><span class="library-card-name">読み込み中</span>'
+        '<span class="badge"></span></button>' for i in range(6))
+    scenes = ''.join(
+        f'<button class="legacy6-scene scene-card" data-ui="scene-card-{i}">'
+        '<span class="check"></span><span class="scene-thumb-placeholder">映像未取得</span>'
+        '<strong>未スキャン</strong><span class="time">--:--</span><span class="side">—</span></button>'
+        for i in range(3))
+    return ('<h2>ライブラリ</h2><div class="legacy6-library-body">'
+            + _button('⌕ 試合全体スキャン', 'scan', cls='full legacy6-scan')
+            + '<div class="legacy6-library-tabs">' + _button('検出シーン', 'screen', 'L06-E')
+            + '<button class="selected" disabled aria-current="page">キルフレーム</button>'
+            + _button('エフェクト', 'work_settings') + '</div>'
+            '<input class="legacy6-search" type="search" placeholder="フレームを検索" aria-label="フレームを検索">'
+            '<div class="legacy6-library-filters">'
+            '<button data-library-filter="all" class="selected">すべて</button>'
+            '<button data-library-filter="approved">正式合格</button>'
+            '<button data-library-filter="review">確認用</button></div>'
+            '<div class="legacy6-library-grid">' + cards + '</div>'
+            + _button('図鑑の全候補を見る', 'work_gallery', cls='full legacy6-full-gallery')
+            + '<div class="legacy6-scene-strip"><h2>検出されたシーン <span data-ui="scene-count">全0件</span></h2>'
+            '<p data-ui="scan-status" class="subtle">未スキャン</p>'
+            '<div class="legacy6-scenes">' + scenes + '</div></div></div>')
+
+
+def _legacy06_scene_list() -> str:
+    scenes = ''.join(
+        f'<div class="scene-card" data-ui="scene-card-{i}">'
+        '<span class="check"></span><span class="scene-thumb-placeholder">映像未取得</span>'
+        '<strong>未スキャン</strong><span class="time">--:--</span><span class="side">—</span></div>'
+        for i in range(6))
+    return ('<h2>使用するシーン</h2><div class="legacy6-edit-scan">'
+            + _button('⌕ 試合全体スキャン', 'scan', cls='full') + '</div>'
+            '<p class="legacy6-scene-count">選択中のシーン：<span data-ui="scene-count">全0件</span></p>'
+            '<p class="subtle" data-ui="scan-status">未スキャン</p>'
+            '<div class="legacy6-edit-scenes">' + scenes + '</div>'
+            + _button('‹ ライブラリで選び直す', 'screen', 'L06-L', 'full legacy6-back'))
+
+
+def _legacy06_inspector(library: bool) -> str:
+    if library:
+        return ('<h2>選択中：<span data-ui="selected-frame-name">キルフレーム未選択</span></h2>'
+                '<div class="legacy6-selected-preview"><img class="selected-frame-thumb" alt="選択中の実素材">'
+                '<span class="selected-frame-empty">素材を選択してください</span></div>'
+                + _button('演出プレビューで確認', 'preview_play', cls='primary full')
+                + '<p class="subtle" data-ui="selected-frame-status">素材は未選択</p>'
+                '<h2>カメラ <small>プレビュー用</small></h2><div class="legacy6-choice-row">'
+                + _button('自動シネマ', 'camera_mode', 'full_auto')
+                + _button('固定自動', 'camera_mode', 'fixed_auto')
+                + _button('手動', 'camera_mode', 'manual') + '</div>'
+                '<h2>エフェクト <small>同名FXがあれば同期</small></h2>'
+                '<div class="legacy6-choice-row">'
+                + _button('弱', 'effect_strength', 'weak')
+                + _button('強', 'effect_strength', 'strong')
+                + _button('詳細', 'work_settings') + '</div>')
+    return ('<h2>編集設定</h2><div class="legacy6-edit-tabs">'
+            + _button('簡単編集', 'edit_mode', 'easy')
+            + _button('詳細編集', 'edit_mode', 'advanced', 'selected') + '</div>'
+            '<div class="legacy6-property-tabs">'
+            + _button('カメラ', 'native_editor_zone', 'camera', 'selected')
+            + _button('キルフレーム', 'work_gallery')
+            + _button('エフェクト', 'work_settings') + '</div>'
+            '<h2>カメラの動き</h2><div class="legacy6-choice-row">'
+            + _button('自動シネマ', 'camera_mode', 'full_auto')
+            + _button('固定自動', 'camera_mode', 'fixed_auto')
+            + _button('手動', 'camera_mode', 'manual') + '</div>'
+            + _camera_numbers()
+            + '<label class="legacy6-hud"><input type="checkbox" data-hud-visible>HUDを表示する</label>'
+            + _button('TargetLockを設定', 'native_settings', cls='full'))
+
+
+def _legacy06_applied() -> str:
+    return ('<h2>適用中のアセット</h2><div class="legacy6-applied-row">'
+            '<button data-action="native_settings"><strong>カメラ</strong><span data-ui="selected-camera-mode">現在の設定</span></button>'
+            '<button data-action="work_gallery"><strong>キルフレーム</strong>'
+            '<img class="selected-frame-thumb" alt="選択中の実素材">'
+            '<span data-ui="selected-frame-name">未選択</span></button>'
+            '<button data-action="work_settings"><strong>エフェクト</strong>'
+            '<span data-ui="selected-effect-name">未選択</span></button>'
+            + _button('ライブラリを開く', 'screen', 'L06-L') + '</div>')
+
+
 def _view_switcher(screen_id: str) -> str:
     groups = {
         'L03-N': [('通常', 'L03-N'), ('詳細', 'L03-D')],
@@ -245,6 +329,18 @@ def _component(screen_id: str, region: str) -> str:
                     + _button('TargetLock', 'native_settings')
                     + _button('37キルバッジ', 'work_gallery')
                     + _button('書き出し', 'export_menu', cls='primary') + '</nav>')
+        if screen_id in {'L06-L', 'L06-E'}:
+            return ('<div class="legacy6-brand"><strong>LoL AutoCine</strong>'
+                    '<span data-ui="replay-header">リプレイ未接続</span></div>'
+                    '<div class="legacy6-topnav">' + _view_switcher(screen_id) + '</div>'
+                    '<nav class="legacy6-settings">'
+                    + _button('⚙ 基本設定', 'native_settings')
+                    + _button('GPU', 'native_settings')
+                    + _button('音声', 'native_settings')
+                    + _button('HUD', 'native_settings')
+                    + _button('TargetLock', 'native_settings')
+                    + _button('37キルバッジ', 'work_gallery')
+                    + _button('書き出し', 'export_menu', cls='primary') + '</nav>')
         if screen_id == 'L05-M':
             return ('<div class="legacy3-brand"><strong>LoL AutoCine</strong>'
                     '<span data-ui="replay-header">リプレイ未接続</span></div>'
@@ -271,6 +367,8 @@ def _component(screen_id: str, region: str) -> str:
     if region == 'scene-list':
         if screen_id in {'L03-N', 'L03-D', 'L05-M'}:
             return _legacy03_scene_list(5 if screen_id == 'L05-M' else 3)
+        if screen_id == 'L06-E':
+            return _legacy06_scene_list()
         return _scene_list()
     if region == 'library':
         if screen_id == 'L02-M':
@@ -278,7 +376,8 @@ def _component(screen_id: str, region: str) -> str:
         return ('<div class="row tabs">' + _button('シーン', 'scan')
                 + _button('キルフレーム', 'work_gallery')
                 + _button('エフェクト', 'work_settings') + '</div>' + _scene_list())
-    if region == 'material-library': return _material_library()
+    if region == 'material-library':
+        return _legacy06_library() if screen_id == 'L06-L' else _material_library()
     if region == 'preview-panel':
         return '<h2>ミラープレビュー <span class="connection-state">LoL未接続</span></h2>'
     if region == 'preview-stage':
@@ -289,6 +388,7 @@ def _component(screen_id: str, region: str) -> str:
                 + _button('演出プレビュー再生', 'preview_play')
                 + _button('プレビュー停止', 'preview_stop'))
     if region in {'camera-cards','camera-modes'}: return _camera_modes()
+    if region == 'applied-assets' and screen_id == 'L06-E': return _legacy06_applied()
     if region in {'frame-cards','materials','material-summary','applied-assets'}: return _frame_cards()
     if region == 'effect-cards':
         return '<h2>エフェクト</h2><p class="subtle">選択した枠と同名FXを適用</p>' + _button('FX設定', 'work_settings')
@@ -301,6 +401,8 @@ def _component(screen_id: str, region: str) -> str:
             return _legacy03_inspector(screen_id == 'L03-D')
         if screen_id == 'L05-M':
             return _legacy05_inspector()
+        if screen_id in {'L06-L', 'L06-E'}:
+            return _legacy06_inspector(screen_id == 'L06-L')
         if screen_id == 'L02-M':
             return ('<h2>プロパティ</h2><div class="legacy2-property-tabs">'
                     + _button('カメラ', 'native_settings', cls='selected')
@@ -318,8 +420,9 @@ def _component(screen_id: str, region: str) -> str:
                 '<span>1920 × 1080</span><span data-ui="output-fps">60 fps</span><span>MP4</span></div>'
                 + _button('出力先を選択', 'output_folder') + _button('動画を作成', 'export_menu', cls='primary'))
     if region == 'timeline':
-        return (_legacy03_timeline(include_trim=screen_id != 'L05-M')
-                if screen_id in {'L03-N', 'L03-D', 'L05-M'} else _timeline())
+        return (_legacy03_timeline(include_trim=screen_id in {'L03-N', 'L03-D'})
+                if screen_id in {'L03-N', 'L03-D', 'L05-M', 'L06-L', 'L06-E'}
+                else _timeline())
     if region in {'edit-tabs','bottom-tabs'}:
         return ('<div class="edit-mode row">' + _button('簡単編集', 'edit_mode', 'easy')
                 + _button('詳細編集', 'edit_mode', 'advanced') + '</div>')
@@ -328,6 +431,11 @@ def _component(screen_id: str, region: str) -> str:
     if region == 'step-actions':
         return _button('戻る', 'focus_scene') + _button('次へ：書き出す', 'export_menu', cls='primary')
     if region == 'edit-links':
+        if screen_id == 'L06-L':
+            return ('<div class="legacy6-edit-links">'
+                    + _button('簡単編集', 'edit_mode', 'easy', 'selected')
+                    + _button('詳細編集', 'edit_mode', 'advanced')
+                    + _button('編集画面で調整 →', 'screen', 'L06-E') + '</div>')
         return _button('簡単編集', 'edit_mode', 'easy') + _button('詳細編集', 'edit_mode', 'advanced')
     if region == 'proceed': return _button('編集へ進む', 'screen', 'L06-E', 'primary')
     if region == 'motion-grid':

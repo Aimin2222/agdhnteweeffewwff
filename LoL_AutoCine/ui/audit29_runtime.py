@@ -44,6 +44,10 @@ RESEARCH_FRAME_CARDS = (
     "083/a_simple_main", "004/demacia_frame", "004/noxus_frame",
     "004/bilgewater_frame",
 )
+LIBRARY_FRAME_CARDS = (
+    "004/demacia_frame", "004/freljord_frame", "004/noxus_frame",
+    "004/bilgewater_frame", "004/heartsteel_frame", "083/a_simple_main",
+)
 
 
 def default_preferences_path() -> Path:
@@ -112,18 +116,23 @@ class Audit29Runtime:
                 "selected": bool(selected and selected[0] == index),
             })
         camera_values = {key: float(app.sl[key].get()) for key in CAMERA_KEYS if key in app.sl}
+        wanted_frames = set(RESEARCH_FRAME_CARDS) | set(LIBRARY_FRAME_CARDS)
         frame_catalog = {item["id"]: item for item in list_assets("frames", review=True)
-                         if item["id"] in RESEARCH_FRAME_CARDS}
-        frame_cards = []
-        for frame_id in RESEARCH_FRAME_CARDS:
-            item = frame_catalog.get(frame_id)
-            if item is None:
-                continue
-            effect = paired_effect_for_frame(frame_id)
-            frame_cards.append({"id": frame_id, "label": item["label"],
-                                "status": item["status"],
-                                "paired_effect_id": effect["id"] if effect else None,
-                                "paired_effect_status": effect["status"] if effect else None})
+                         if item["id"] in wanted_frames}
+        def cards(ids):
+            result = []
+            for frame_id in ids:
+                item = frame_catalog.get(frame_id)
+                if item is None:
+                    continue
+                effect = paired_effect_for_frame(frame_id)
+                result.append({"id": frame_id, "label": item["label"],
+                               "status": item["status"],
+                               "paired_effect_id": effect["id"] if effect else None,
+                               "paired_effect_status": effect["status"] if effect else None})
+            return result
+        frame_cards = cards(RESEARCH_FRAME_CARDS)
+        library_cards = cards(LIBRARY_FRAME_CARDS)
         return {
             "workspace": {"screen_id": self.screen_id,
                           "candidate_id": SCREENS[self.screen_id]["family"] if self.screen_id else None,
@@ -157,7 +166,8 @@ class Audit29Runtime:
             "frame": {"id": app.var_work_frame.get(), "effect_id": app.var_work_effect.get(),
                       "review": bool(app.var_work_review.get()),
                       "strength": app.var_work_strength.get(),
-                      "motion": app.var_kill_icon_motion.get(), "cards": frame_cards},
+                      "motion": app.var_kill_icon_motion.get(), "cards": frame_cards,
+                      "library_cards": library_cards},
             "preview": {"mirror_requested": bool(app.var_mirror.get()),
                         "fx_enabled": bool(app.var_live.get()),
                         "target_hz": app.var_preview_hz.get(),

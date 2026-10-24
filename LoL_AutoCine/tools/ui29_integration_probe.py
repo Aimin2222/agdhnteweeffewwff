@@ -82,6 +82,20 @@ def main():
             detail_state = request("screen", {"id": "L03-D"})
             assert detail_state["easy_preset"] == preset_state["easy_preset"]
             assert detail_state["workspace"]["screen_id"] == "L03-D"
+            outcome["stage"] = "legacy06_library"
+            library = request("screen", {"id": "L06-L"})
+            assert len(library["frame"]["library_cards"]) == 6
+            assert {item["status"] for item in library["frame"]["library_cards"]} == {"approved", "review"}
+            frame_id = "004/freljord_frame"
+            assert frame_id in {item["id"] for item in library["frame"]["library_cards"]}
+            outcome["stage"] = "legacy06_frame"
+            applied = request("frame", {"id": frame_id})
+            assert applied["frame"]["id"] == frame_id
+            assert applied["frame"]["effect_id"] == ""
+            outcome["stage"] = "legacy06_editor"
+            editor = request("screen", {"id": "L06-E"})
+            assert editor["frame"]["id"] == frame_id
+            assert editor["camera"]["values"]["third_dist"] == detail_state["camera"]["values"]["third_dist"]
             outcome["result"] = "PASS"
             outcome["screen"] = state["workspace"]["screen_id"]
             outcome["candidate_roundtrip"] = checked_screens
@@ -90,7 +104,8 @@ def main():
                                  "camera_side", "camera_number", "entrance_motion",
                                  "audited_frame_pair", "catalog_asset_route",
                                  "all_29_screen_routes_preserve_state",
-                                 "legacy03_easy_preset_and_detail_switch"]
+                                 "legacy03_easy_preset_and_detail_switch",
+                                 "legacy06_real_catalog_and_editor_state"]
         except Exception as exc:
             outcome["result"] = "FAIL"
             outcome["error"] = repr(exc)

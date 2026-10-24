@@ -106,6 +106,16 @@
       if (label) label.textContent=data.scenes.length ? `検出シーン ${data.scenes.length}件` : 'スキャン後に表示';
     });
   }
+  function filterLibrary() {
+    const query = (document.querySelector('.legacy6-search')?.value || '').trim().toLowerCase();
+    const filter = document.querySelector('[data-library-filter].selected')?.dataset.libraryFilter || 'all';
+    document.querySelectorAll('[data-ui^="library-card-"]').forEach(card => {
+      if (!card.dataset.frameId) return;
+      const matchesText = !query || `${card.dataset.frameId} ${card.querySelector('.library-card-name')?.textContent || ''}`
+        .toLowerCase().includes(query);
+      card.style.display = matchesText && (filter === 'all' || card.dataset.status === filter) ? '' : 'none';
+    });
+  }
   function render() {
     const data = state.value;
     if (!data) return;
@@ -300,6 +310,52 @@
         thumbnail.dataset.frameId = entry.id;
       }
     });
+    const libraryCards = data.frame.library_cards || [];
+    document.querySelectorAll('[data-ui^="library-card-"]').forEach((card, index) => {
+      const entry = libraryCards[index];
+      if (!entry) { card.style.display = 'none'; return; }
+      card.style.display = '';
+      card.dataset.frameId = entry.id;
+      card.dataset.status = entry.status;
+      card.classList.toggle('selected', data.frame.id === entry.id);
+      const name = card.querySelector('.library-card-name');
+      if (name) name.textContent = entry.label.replace(/^No\.\d+\s*/, '').replace(/_frame$/, '').replaceAll('_',' ');
+      const badge = card.querySelector('.badge');
+      if (badge) badge.textContent = entry.status === 'approved' ? '枠のみ正式合格' : '確認用';
+      const thumb = card.querySelector('img.frame-thumb');
+      if (thumb && thumb.dataset.frameId !== entry.id) {
+        thumb.src = endpoint(`/api/asset/${encodeURIComponent(entry.id)}`);
+        thumb.dataset.frameId = entry.id;
+        thumb.alt = `${entry.label} の実素材`;
+      }
+    });
+    const selectedLibraryFrame = libraryCards.find(entry => entry.id === data.frame.id);
+    document.querySelectorAll('[data-ui="selected-frame-name"]').forEach(node => {
+      node.textContent = selectedLibraryFrame?.label || data.frame.id || 'キルフレーム未選択';
+    });
+    document.querySelectorAll('.selected-frame-thumb').forEach(thumb => {
+      const chosen = data.frame.id;
+      thumb.style.display = chosen ? '' : 'none';
+      if (chosen && thumb.dataset.frameId !== chosen) {
+        thumb.src = endpoint(`/api/asset/${encodeURIComponent(chosen)}`);
+        thumb.dataset.frameId = chosen;
+      }
+    });
+    document.querySelectorAll('.selected-frame-empty').forEach(node =>
+      node.style.display = data.frame.id ? 'none' : '');
+    document.querySelectorAll('[data-ui="selected-frame-status"]').forEach(node => {
+      node.textContent = selectedLibraryFrame?.status === 'approved' ?
+        '枠のみ正式合格。FXの品質合格は別判定です。' :
+        selectedLibraryFrame ? '確認用素材。品質合格は未判定です。' :
+        data.frame.id ? '別ページの選択素材です。品質状態は図鑑で確認してください。' : '素材は未選択';
+    });
+    document.querySelectorAll('[data-ui="selected-effect-name"]').forEach(node => {
+      node.textContent = data.frame.effect_id || 'エフェクト未選択';
+    });
+    document.querySelectorAll('[data-ui="selected-camera-mode"]').forEach(node => {
+      node.textContent = data.camera.mode || '現在の設定';
+    });
+    filterLibrary();
     document.querySelectorAll('.motion-grid .motion').forEach(card =>
       card.classList.toggle('selected',card.textContent.trim().includes(data.frame.motion)));
     document.querySelectorAll('[data-setting]').forEach(input => {
@@ -526,6 +582,18 @@
       invoke('frame',{id:frameCard.dataset.frameId});
       return;
     }
+    const libraryCard = event.target.closest('[data-ui^="library-card-"]');
+    if (libraryCard?.dataset.frameId) {
+      invoke('frame',{id:libraryCard.dataset.frameId});
+      return;
+    }
+    const libraryFilter = event.target.closest('[data-library-filter]');
+    if (libraryFilter) {
+      document.querySelectorAll('[data-library-filter]').forEach(button =>
+        button.classList.toggle('selected',button===libraryFilter));
+      filterLibrary();
+      return;
+    }
     const preset = event.target.closest('.style-tiles .preset');
     if (preset) {
       const found=[...cameraStyles].find(([label])=>preset.textContent.trim()===label);
@@ -559,6 +627,7 @@
     if (key === 'pre' || key === 'post') invoke('trim',{key,value});
     else invoke('camera_number',{key,value});
   }));
+  document.querySelector('.legacy6-search')?.addEventListener('input', filterLibrary);
   const hudToggle=document.querySelector('[data-hud-toggle]');
   if (hudToggle) hudToggle.addEventListener('change',()=>invoke('hud',
     {value:hudToggle.checked?'hidden':'full'}));

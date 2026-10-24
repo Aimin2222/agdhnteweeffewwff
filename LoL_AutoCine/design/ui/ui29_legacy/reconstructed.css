@@ -19,6 +19,94 @@ button.blue{background:#086af1;color:#fff}button.red{background:#f3424b;color:#f
 body[data-plan^=test] .region-header{background:linear-gradient(90deg,#eff5fb,#fff)}body[data-plan^=test] .region{border-radius:3px}body[data-plan^=test] .region-preview-stage{background:#152332}body[data-plan^=test] .region-preview-controls{background:#f1f5fa}
 html[data-theme=dark] .scene-rows,html[data-theme=dark] .region-preview-controls,html[data-theme=dark] .camera-card,html[data-theme=dark] .material-card{background:var(--panel)}
 
+/* L06 keeps the reference's separate library and editor instead of a generic asset row. */
+body[data-screen^="L06-"] .region-header{background:linear-gradient(90deg,#f4f8fd,#fff);border-color:#e2eaf5}
+.legacy6-brand{position:absolute;left:22px;top:9px;display:flex;align-items:center;gap:24px;white-space:nowrap}
+.legacy6-brand strong{font-size:20px;letter-spacing:-.3px}
+.legacy6-brand span{padding-left:22px;border-left:1px solid #d2dfed;font-weight:600}
+.legacy6-topnav{position:absolute;left:604px;top:5px;width:298px;height:40px}
+.legacy6-topnav .view-switcher{height:40px;display:grid;grid-template-columns:1fr 1fr;padding:1px;border-color:#e5edf7;border-radius:10px}
+.legacy6-topnav .view-switcher button{height:36px;font-weight:700}
+.legacy6-topnav .view-switcher button.active{color:#086af1;background:#f8fbff;border-bottom:3px solid #086af1;border-radius:0}
+body[data-screen^="L06-"] .region-header .legacy6-settings{position:absolute;right:12px;top:6px;display:flex;align-items:center;gap:5px}
+.legacy6-settings button{white-space:nowrap;min-height:34px;padding:4px 8px;font-size:12px;font-weight:700}
+.legacy6-settings button.primary{padding:4px 17px}
+body[data-screen="L06-L"] .region-material-library{padding:10px 15px;gap:4px}
+body[data-screen="L06-L"] .region-material-library>h2{font-size:19px;height:26px;margin:0}
+.legacy6-library-body{display:flex;flex-direction:column;flex:1;min-height:0;gap:6px;overflow:hidden}
+.legacy6-scan{height:43px;flex:none;border:2px solid #086af1;color:#086af1;background:#fff;font-size:16px;font-weight:700}
+.legacy6-library-tabs,.legacy6-library-filters{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;flex:none}
+.legacy6-library-tabs{height:39px;background:#f3f7fc;border-radius:5px;overflow:hidden}
+.legacy6-library-tabs button,.legacy6-library-filters button{font-weight:700;border-color:transparent;background:transparent}
+.legacy6-library-tabs button.selected,.legacy6-library-filters button.selected{background:#086af1;color:white;border-color:#086af1}
+.legacy6-search{height:35px;flex:none;border:1px solid var(--line);border-radius:5px;padding:6px 10px;background:var(--panel);color:var(--ink)}
+.legacy6-library-filters{height:34px}
+.legacy6-library-filters button{background:#f8fbff;border:1px solid var(--line);font-size:12px;padding:3px}
+.legacy6-library-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,98px);gap:7px;min-height:0;overflow:auto;flex:1;align-content:start;padding:2px}
+.legacy6-library-card{position:relative;display:flex;flex-direction:column;text-align:left;overflow:hidden;padding:3px;border:1px solid var(--line);border-radius:6px;background:#fff;min-width:0;min-height:98px}
+.legacy6-library-card.selected{outline:2px solid #086af1}
+.legacy6-library-card img{display:block;width:100%;height:65px;object-fit:contain;background:#091b2b;border-radius:3px}
+.legacy6-library-card .library-card-name{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.legacy6-library-card .badge{position:absolute;right:5px;bottom:3px;font-size:9px;background:#edf6ff;padding:1px 2px}
+.legacy6-full-gallery{height:26px;min-height:26px;flex:none;color:#086af1;font-size:11px}
+.legacy6-scene-strip{height:99px;flex:none;border-top:1px solid var(--line);padding-top:2px}
+.legacy6-scene-strip h2{font-size:13px!important;height:17px!important;margin:0!important}
+.legacy6-scene-strip>[data-ui="scan-status"]{height:13px;margin:0;font-size:10px}
+.legacy6-scenes{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;height:61px}
+.legacy6-scenes .scene-card{display:flex;flex-direction:column;align-items:stretch;justify-content:center;height:60px;border:1px solid var(--line);border-radius:4px;background:#f6faff;position:relative;padding:3px;font-size:10px;overflow:hidden}
+.legacy6-scenes .scene-card .check{position:absolute;top:4px;left:4px;z-index:2;background:white}
+.legacy6-scenes .scene-thumb-placeholder{background:#dbe8f7;color:#526c8d;text-align:center;padding:7px 0;border-radius:3px}
+.legacy6-scenes .scene-card strong,.legacy6-scenes .scene-card .side{display:none}
+.legacy6-scenes .scene-card .time{font-size:10px;color:var(--muted)}
+body[data-screen^="L06-"] .region-inspector{padding:10px 14px}
+body[data-screen^="L06-"] .region-inspector>h2{font-size:17px;min-height:26px;margin:2px 0 8px}
+body[data-screen="L06-L"] .legacy6-selected-preview{height:144px;border:1px solid var(--line);border-radius:6px;background:#071c2d;display:flex;align-items:center;justify-content:center;color:#d6e5f3;overflow:hidden}
+.legacy6-selected-preview img{width:100%;height:100%;object-fit:contain}
+body[data-screen="L06-L"] .region-inspector>.primary{height:38px;margin-top:9px}
+body[data-screen="L06-L"] .region-inspector>.subtle{min-height:26px;margin:5px 0 10px}
+.legacy6-choice-row{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:8px 0 15px}
+.legacy6-choice-row button{min-height:55px;font-size:11px;font-weight:700;padding:3px}
+body[data-screen^="L06-"] .region-timeline{padding:8px 14px}
+body[data-screen^="L06-"] .region-timeline>h2{font-size:17px;height:20px;margin-bottom:0}
+body[data-screen^="L06-"] .region-timeline .ruler{height:21px;padding:2px 1%}
+body[data-screen^="L06-"] .region-timeline .lane{height:30px}
+body[data-screen^="L06-"] .region-timeline .lane-bar{height:25px;background:#dbeaff}
+body[data-screen^="L06-"] .region-timeline .lane:nth-of-type(4) .lane-bar{background:#fff0c7}
+body[data-screen^="L06-"] .region-timeline .lane:nth-of-type(5) .lane-bar{background:#fbd8e7}
+body[data-screen="L06-L"] .region-edit-links{display:flex;justify-content:center}
+.legacy6-edit-links{display:flex;align-items:center;gap:0;height:100%}
+.legacy6-edit-links button{height:42px;min-width:135px;font-weight:700}
+.legacy6-edit-links button.selected{background:#086af1;color:#fff}
+.legacy6-edit-links button:last-child{margin-left:22px;color:#086af1;border:0}
+body[data-screen="L06-L"] .region-proceed{z-index:3;justify-content:center;background:transparent;border:0}
+body[data-screen="L06-L"] .region-proceed button{width:100%;height:57px;font-size:15px}
+body[data-screen="L06-E"] .region-applied-assets{padding:9px 12px}
+body[data-screen="L06-E"] .region-scene-list{display:flex;flex-direction:column;padding:12px 13px;gap:4px}
+body[data-screen="L06-E"] .region-scene-list>h2{font-size:17px;height:27px;margin:0}
+.legacy6-edit-scan{height:48px;flex:none}
+.legacy6-edit-scan button{height:44px;color:#086af1;border:2px solid #086af1;font-weight:700;font-size:15px}
+.legacy6-scene-count{margin:8px 0 0;color:var(--muted);font-size:12px;font-weight:700}
+body[data-screen="L06-E"] .region-scene-list>[data-ui="scan-status"]{margin:0;min-height:16px}
+.legacy6-edit-scenes{display:flex;flex-direction:column;gap:5px;overflow:auto;flex:1;min-height:0}
+.legacy6-edit-scenes .scene-card{height:72px;min-height:72px;display:grid;grid-template-columns:24px 104px 1fr;grid-template-rows:1fr 1fr;column-gap:7px;position:relative;background:#f4f8fd;border:0;border-radius:5px;padding:5px}
+.legacy6-edit-scenes .scene-card .check{grid-row:1/3;align-self:center;background:#fff}
+.legacy6-edit-scenes .scene-thumb-placeholder{grid-row:1/3;display:flex;align-items:center;justify-content:center;background:#dce8f6;color:#526c8d;border-radius:3px;font-size:10px}
+.legacy6-edit-scenes .scene-card strong{align-self:end;font-size:12px}
+.legacy6-edit-scenes .scene-card .time{align-self:start;font-size:11px;color:var(--muted);font-weight:400}
+.legacy6-edit-scenes .scene-card .side{position:absolute;right:5px;bottom:5px}
+.legacy6-back{height:42px;flex:none;color:#086af1;font-weight:700}
+.legacy6-applied-row{display:grid;grid-template-columns:repeat(3,1fr) 180px;gap:8px;height:94px}
+.legacy6-applied-row button{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;min-width:0;overflow:hidden;text-align:left;font-size:12px}
+.legacy6-applied-row button:last-child{align-items:center;color:#086af1;font-weight:700}
+.legacy6-applied-row button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.legacy6-applied-row img{width:100%;height:42px;object-fit:contain}
+.legacy6-edit-tabs,.legacy6-property-tabs{display:flex;gap:5px;margin-bottom:8px}
+.legacy6-edit-tabs button,.legacy6-property-tabs button{flex:1;font-weight:700}
+.legacy6-edit-tabs button.selected,.legacy6-property-tabs button.selected{background:#086af1;color:#fff}
+body[data-screen="L06-E"] .region-inspector .number-row{height:51px;margin:0;font-weight:700}
+.legacy6-hud{display:flex;align-items:center;gap:7px;margin:9px 0;font-weight:700}
+html[data-theme=dark] .legacy6-library-card,html[data-theme=dark] .legacy6-scan,html[data-theme=dark] .legacy6-library-filters button{background:var(--panel);color:var(--ink)}
+
 /* L02 uses the source mock's three-part editor toolbar while retaining live actions. */
 body[data-screen="L02-M"] .region-header{background:linear-gradient(90deg,#f4f8fd,#fff);border-color:#e2eaf5}
 .legacy2-brand{position:absolute;left:21px;top:10px;display:flex;align-items:center;gap:24px;white-space:nowrap}
