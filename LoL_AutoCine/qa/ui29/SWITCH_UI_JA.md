@@ -10,3 +10,5 @@
 追記（2026-10-24）：右端「UI比較」パネルに配色選択（ライト／ダーク／Windows追従）を追加。配置寸法の旧9画面は次の凍結EXE一括撮影で許容内となった。最新の比較途中版ZIPは `L02_TOOLBAR_20261024_JA.md` を参照。旧11画面の外観と操作は引き続き作業中。
 
 最新追記（`423e7a5`）：上記ZIPは履歴。現在の比較途中版は `builds/ui29-layout-20261024-423e7a5/LoL_AutoCine_UI_Comparison_Portable.zip`。Windows EXEで29画面を再撮影し、監査矩形は29/29許容内。外観合格・LoL実機合格ではない。詳細とSHA-256は `FROZEN_INCREMENT_423e7a5_JA.md` を参照。
+
+現在の比較途中版は `builds/ui29-layout-20261024-c5ae7e1/LoL_AutoCine_UI_Comparison_Portable.zip`。Windows EXEで29画面を再撮影。旧案3を更新。詳細とSHA-256は `L03_FROZEN_20261024_JA.md`。右端「UI比較」から12候補／29画面を選ぶ操作は同じ。
