@@ -297,6 +297,8 @@
       const value = key === 'pre' || key === 'post' ? null : data.camera.values[key];
       if (value !== null && value !== undefined) input.value = value;
     });
+    const hudToggle=document.querySelector('[data-hud-toggle]');
+    if (hudToggle) hudToggle.checked = data.output.hud !== 'full';
     if (image && !data.preview.mirror_requested) image.style.visibility = 'hidden';
   }
   async function refreshFrame() {
@@ -535,6 +537,9 @@
     if (key === 'pre' || key === 'post') invoke('trim',{key,value});
     else invoke('camera_number',{key,value});
   }));
+  const hudToggle=document.querySelector('[data-hud-toggle]');
+  if (hudToggle) hudToggle.addEventListener('change',()=>invoke('hud',
+    {value:hudToggle.checked?'hidden':'full'}));
   const theme = document.querySelector('#theme');
   if (theme) theme.addEventListener('change', () => invoke('theme',{value:theme.value}));
   const familyStart = new Map([

@@ -32,6 +32,25 @@ def _scene_list() -> str:
             + '</div>')
 
 
+def _legacy02_library() -> str:
+    slots = ''.join(
+        f'<div class="scene-card" data-ui="scene-card-{i}">'
+        '<span class="check"></span><span class="scene-thumb-placeholder">映像未取得</span>'
+        '<strong>未スキャン</strong><span class="time">--:--</span><span class="side">—</span></div>'
+        for i in range(6))
+    return ('<div class="row tabs">' + _button('▣ シーン', 'scan', cls='selected')
+            + _button('♜ キルフレーム', 'work_gallery')
+            + _button('✧ エフェクト', 'work_settings') + '</div>'
+            '<div class="legacy2-scan">' + _button('⌕ 試合全体スキャン', 'scan', cls='full') + '</div>'
+            '<h2>検出シーン <span data-ui="scene-count">全0件</span></h2>'
+            '<p class="subtle" data-ui="scan-status">未スキャン</p>'
+            '<div class="legacy2-scene-grid">' + slots + '</div>'
+            '<div class="legacy2-selected-scene"><strong>選択中のシーン：</strong>'
+            '<span data-ui="selected-scene-label">シーン未選択</span>'
+            '<div class="row">' + _button('全選択', 'check_all')
+            + _button('全解除', 'uncheck_all') + '</div></div>')
+
+
 def _frame_cards() -> str:
     cards = ''.join(f'<div class="material-card" data-ui="material-card-{i}">'
                     '<img class="frame-thumb" alt="監査済み素材"><h3>読み込み中</h3><span class="badge"></span>'
@@ -133,6 +152,8 @@ def _component(screen_id: str, region: str) -> str:
                 + _button('動画を作成', 'export_menu', cls='primary') + '</nav>')
     if region == 'scene-list': return _scene_list()
     if region == 'library':
+        if screen_id == 'L02-M':
+            return _legacy02_library()
         return ('<div class="row tabs">' + _button('シーン', 'scan')
                 + _button('キルフレーム', 'work_gallery')
                 + _button('エフェクト', 'work_settings') + '</div>' + _scene_list())
@@ -155,6 +176,14 @@ def _component(screen_id: str, region: str) -> str:
     if region == 'inspector':
         if is_test and screen_id != 'T-B-S':
             return '<h2>設定 <small>独立スクロール</small></h2>'
+        if screen_id == 'L02-M':
+            return ('<h2>プロパティ</h2><div class="legacy2-property-tabs">'
+                    + _button('カメラ', 'native_settings', cls='selected')
+                    + _button('キルフレーム', 'work_gallery')
+                    + _button('エフェクト', 'work_settings') + '</div>'
+                    + _camera_numbers()
+                    + '<div class="legacy2-hud"><label><input type="checkbox" data-hud-toggle>'
+                      'HUDを隠す</label></div>')
         return ('<h2>かんたん設定</h2><div class="region-pad">'
                 + _camera_numbers() + '<h2>プレビュー用</h2>'
                 + _button('基本設定', 'native_settings') + _button('詳細編集', 'edit_mode', 'advanced')
