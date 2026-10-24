@@ -16,3 +16,5 @@
 最新の比較途中版は `builds/ui29-layout-20261024-3966401/LoL_AutoCine_UI_Comparison_Portable.zip`。旧案5を更新。詳細とSHA-256は `L05_FROZEN_20261024_JA.md`。初回の12候補一覧、右端「UI比較」、`Ctrl+Shift+U` の操作は維持。
 
 現在の比較途中版は `builds/ui29-layout-20261024-47dbc95/LoL_AutoCine_UI_Comparison_Portable.zip`。旧案6のライブラリ／編集を更新し、実素材を選択したまま切替可能。Windows EXE全29画面の新しい検査とSHA-256は `L06_FROZEN_20261024_JA.md`。上記ZIPは履歴。
+
+最新の比較途中版は `builds/ui29-layout-20261024-027b000/LoL_AutoCine_UI_Comparison_Portable.zip`。旧テストB主画面を更新。初回の12候補一覧、右端「UI比較」、`Ctrl+Shift+U` は同じ。検証証拠とSHA-256は `TEST_B_FROZEN_20261024_JA.md`。
