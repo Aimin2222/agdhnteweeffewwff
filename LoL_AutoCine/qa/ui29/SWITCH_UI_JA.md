@@ -12,3 +12,5 @@
 最新追記（`423e7a5`）：上記ZIPは履歴。現在の比較途中版は `builds/ui29-layout-20261024-423e7a5/LoL_AutoCine_UI_Comparison_Portable.zip`。Windows EXEで29画面を再撮影し、監査矩形は29/29許容内。外観合格・LoL実機合格ではない。詳細とSHA-256は `FROZEN_INCREMENT_423e7a5_JA.md` を参照。
 
 現在の比較途中版は `builds/ui29-layout-20261024-c5ae7e1/LoL_AutoCine_UI_Comparison_Portable.zip`。Windows EXEで29画面を再撮影。旧案3を更新。詳細とSHA-256は `L03_FROZEN_20261024_JA.md`。右端「UI比較」から12候補／29画面を選ぶ操作は同じ。
+
+最新の比較途中版は `builds/ui29-layout-20261024-3966401/LoL_AutoCine_UI_Comparison_Portable.zip`。旧案5を更新。詳細とSHA-256は `L05_FROZEN_20261024_JA.md`。初回の12候補一覧、右端「UI比較」、`Ctrl+Shift+U` の操作は維持。
