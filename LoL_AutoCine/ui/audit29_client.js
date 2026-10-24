@@ -537,6 +537,15 @@
     if (!button) return;
     const found = operation(button);
     if (found?.[0] === 'choose_screen') location.assign(endpoint('/choose'));
+    else if (found?.[0] === 'focus_scene') {
+      const panel=document.querySelector('[data-ui="scene-list"]');
+      if (panel) {
+        panel.setAttribute('tabindex','-1');
+        panel.focus();
+        panel.classList.add('attention');
+        setTimeout(()=>panel.classList.remove('attention'),1200);
+      }
+    }
     else if (found?.[0] === 'screen') action('screen',{id:button.dataset.actionValue})
       .then(()=>openScreen(button.dataset.actionValue)).catch(e=>message(e.message));
     else if (found?.[0] === 'export_menu') chooseExport();

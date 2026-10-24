@@ -51,12 +51,12 @@ def _legacy02_library() -> str:
             + _button('全解除', 'uncheck_all') + '</div></div>')
 
 
-def _legacy03_scene_list() -> str:
+def _legacy03_scene_list(count: int = 3) -> str:
     slots = ''.join(
         f'<div class="scene-card" data-ui="scene-card-{i}">'
         '<span class="check"></span><span class="scene-thumb-placeholder">映像未取得</span>'
         '<strong>未スキャン</strong><span class="time">--:--</span><span class="side">—</span></div>'
-        for i in range(3))
+        for i in range(count))
     return ('<h2>検出シーン</h2><div class="legacy3-scan">'
             + _button('⌕ 試合全体スキャン', 'scan', cls='full') + '</div>'
             '<p class="legacy3-count">検出されたシーン <span data-ui="scene-count">全0件</span></p>'
@@ -94,6 +94,40 @@ def _legacy03_inspector(detailed: bool) -> str:
             + '<div class="legacy3-checks"><label><input type="checkbox" data-hud-visible>HUDを表示する</label>'
             + _button('TargetLockを設定', 'native_settings')
             + _button('37キルバッジの設定', 'work_gallery') + '</div>')
+
+
+def _legacy05_inspector() -> str:
+    presets = (('✦ おすすめ', 'Lolnam風スムーズ', 'バランスの取れた定番の演出'),
+               ('◆ 落ち着いた演出', '三人称 自然め', 'シンプルで見やすい仕上がり'),
+               ('♨ 迫力ある演出', 'Lolnam風ダイナミック', 'ダイナミックで印象的な仕上がり'))
+    return ('<div class="legacy5-inspector-head"><h2>見た目を整える</h2>'
+            + _button('簡単編集', 'edit_mode', 'easy', 'selected')
+            + _button('詳細編集', 'edit_mode', 'advanced') + '</div>'
+            '<h2>おすすめ設定から始めましょう</h2>'
+            '<p class="subtle">シーンに合わせた演出で、魅力的なハイライトに仕上げます。</p>'
+            '<div class="legacy5-presets">'
+            + ''.join(f'<button class="legacy3-preset" data-action="easy_preset" '
+                      f'data-action-value="{escape(value)}"><strong>{escape(label)}</strong>'
+                      f'<small>{escape(note)}</small></button>'
+                      for label, value, note in presets) + '</div>'
+            '<p class="subtle">現在：<span data-ui="easy-preset-name">—</span></p>'
+            '<div class="legacy5-control">カメラ移動量 <small>速度の独立設定は未対応</small>'
+            '<input data-setting="motion_dolly" type="range" min="0" max="15" step="0.5" value="3">'
+            '<input data-setting="motion_dolly" type="number" min="0" max="15" step="0.5" value="3"></div>'
+            '<div class="legacy5-control">エフェクトの強さ'
+            + _button('弱', 'effect_strength', 'weak')
+            + _button('強', 'effect_strength', 'strong') + '</div>'
+            + _button('詳細設定を開く', 'native_settings', cls='legacy5-details'))
+
+
+def _legacy05_steps() -> str:
+    steps = (('1', '試合を選ぶ', 'open_replay'), ('2', 'シーンを探す', 'focus_scene'),
+             ('3', '見た目を整える', ''), ('4', '書き出す', 'export_menu'))
+    return '<div class="legacy5-steps">' + ''.join(
+        f'<button class="{"selected" if number == "3" else ""}"'
+        + (f' data-action="{action}"' if action else ' disabled')
+        + f'><b>{number}</b><span>{escape(label)}</span></button>'
+        for number, label, action in steps) + '</div>'
 
 
 def _frame_cards() -> str:
@@ -139,7 +173,7 @@ def _timeline() -> str:
             'キル後 <input type="number" data-setting="post" value="3" min="1" max="15" step="0.5"> 秒</div>')
 
 
-def _legacy03_timeline() -> str:
+def _legacy03_timeline(include_trim: bool = True) -> str:
     lanes = ('検出シーン', 'カメラ', 'キルフレーム', 'エフェクト')
     return ('<h2>タイムライン <span data-ui="selected-scene-label">シーン未選択</span></h2>'
             '<div class="ruler"><span>—</span><span>—</span><span>—</span><span>—</span>'
@@ -147,8 +181,9 @@ def _legacy03_timeline() -> str:
             + ''.join('<div class="lane"><span class="lane-label">' + label +
                       '</span><div class="lane-bar"><span class="kill-line"></span></div></div>'
                       for label in lanes)
-            + '<div class="trim">キル前 <input type="number" data-setting="pre" value="5" min="1" max="15" step="0.5"> 秒　'
-              'キル後 <input type="number" data-setting="post" value="3" min="1" max="15" step="0.5"> 秒</div>')
+            + ('<div class="trim">キル前 <input type="number" data-setting="pre" value="5" min="1" max="15" step="0.5"> 秒　'
+               'キル後 <input type="number" data-setting="post" value="3" min="1" max="15" step="0.5"> 秒</div>'
+               if include_trim else ''))
 
 
 def _material_library() -> str:
@@ -210,6 +245,17 @@ def _component(screen_id: str, region: str) -> str:
                     + _button('TargetLock', 'native_settings')
                     + _button('37キルバッジ', 'work_gallery')
                     + _button('書き出し', 'export_menu', cls='primary') + '</nav>')
+        if screen_id == 'L05-M':
+            return ('<div class="legacy3-brand"><strong>LoL AutoCine</strong>'
+                    '<span data-ui="replay-header">リプレイ未接続</span></div>'
+                    '<nav class="legacy3-settings">'
+                    + _button('⚙ 基本設定', 'native_settings')
+                    + _button('GPU', 'native_settings')
+                    + _button('音声', 'native_settings')
+                    + _button('HUD', 'native_settings')
+                    + _button('TargetLock', 'native_settings')
+                    + _button('37キルバッジ', 'work_gallery')
+                    + _button('書き出し', 'export_menu', cls='primary') + '</nav>')
         title = {'L02-M':'動画編集ソフト標準型','L03-N':'ハイブリッド固定プレビュー型',
                  'L03-D':'ハイブリッド固定プレビュー型・詳細','L05-M':'ステップウィザード型',
                  'L06-L':'ライブラリ＋編集分離型','L06-E':'ライブラリ＋編集分離型・編集',
@@ -223,7 +269,9 @@ def _component(screen_id: str, region: str) -> str:
                   '<option value="light">ライト</option><option value="dark">ダーク</option></select>'
                 + _button('動画を作成', 'export_menu', cls='primary') + '</nav>')
     if region == 'scene-list':
-        return _legacy03_scene_list() if screen_id in {'L03-N', 'L03-D'} else _scene_list()
+        if screen_id in {'L03-N', 'L03-D', 'L05-M'}:
+            return _legacy03_scene_list(5 if screen_id == 'L05-M' else 3)
+        return _scene_list()
     if region == 'library':
         if screen_id == 'L02-M':
             return _legacy02_library()
@@ -251,6 +299,8 @@ def _component(screen_id: str, region: str) -> str:
             return '<h2>設定 <small>独立スクロール</small></h2>'
         if screen_id in {'L03-N', 'L03-D'}:
             return _legacy03_inspector(screen_id == 'L03-D')
+        if screen_id == 'L05-M':
+            return _legacy05_inspector()
         if screen_id == 'L02-M':
             return ('<h2>プロパティ</h2><div class="legacy2-property-tabs">'
                     + _button('カメラ', 'native_settings', cls='selected')
@@ -268,14 +318,15 @@ def _component(screen_id: str, region: str) -> str:
                 '<span>1920 × 1080</span><span data-ui="output-fps">60 fps</span><span>MP4</span></div>'
                 + _button('出力先を選択', 'output_folder') + _button('動画を作成', 'export_menu', cls='primary'))
     if region == 'timeline':
-        return _legacy03_timeline() if screen_id in {'L03-N', 'L03-D'} else _timeline()
+        return (_legacy03_timeline(include_trim=screen_id != 'L05-M')
+                if screen_id in {'L03-N', 'L03-D', 'L05-M'} else _timeline())
     if region in {'edit-tabs','bottom-tabs'}:
         return ('<div class="edit-mode row">' + _button('簡単編集', 'edit_mode', 'easy')
                 + _button('詳細編集', 'edit_mode', 'advanced') + '</div>')
     if region == 'step-tabs':
-        return '<h2>① 試合を選ぶ　　② シーンを探す　　③ 見た目を整える　　④ 書き出す</h2>'
+        return _legacy05_steps()
     if region == 'step-actions':
-        return _button('戻る', 'choose_screen') + _button('次へ：書き出す', 'export_menu', cls='primary')
+        return _button('戻る', 'focus_scene') + _button('次へ：書き出す', 'export_menu', cls='primary')
     if region == 'edit-links':
         return _button('簡単編集', 'edit_mode', 'easy') + _button('詳細編集', 'edit_mode', 'advanced')
     if region == 'proceed': return _button('編集へ進む', 'screen', 'L06-E', 'primary')
