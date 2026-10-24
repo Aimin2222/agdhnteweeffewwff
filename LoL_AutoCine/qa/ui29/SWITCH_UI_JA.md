@@ -20,3 +20,5 @@
 最新の比較途中版は `builds/ui29-layout-20261024-027b000/LoL_AutoCine_UI_Comparison_Portable.zip`。旧テストB主画面を更新。初回の12候補一覧、右端「UI比較」、`Ctrl+Shift+U` は同じ。検証証拠とSHA-256は `TEST_B_FROZEN_20261024_JA.md`。
 
 現在の比較途中版は `builds/ui29-layout-20261024-46c4dbe/LoL_AutoCine_UI_Comparison_Portable.zip`。旧テストBカメラ設定画面を更新。初回の12候補一覧、右端「UI比較」、`Ctrl+Shift+U` は同じ。検証証拠とSHA-256は `TEST_B_CAMERA_FROZEN_20261024_JA.md`。上記ZIPは履歴。
+
+最新の比較途中版は `builds/ui29-layout-20261024-c13500a/LoL_AutoCine_UI_Comparison_Portable.zip`。旧テストBキル演出画面を更新。初回の12候補一覧、右端「UI比較」、`Ctrl+Shift+U` は同じ。実カタログ素材とmotionを操作可能だが、LoL実機での合成は未検証。検証証拠とSHA-256は `TEST_B_EFFECT_FROZEN_20261024_JA.md`。上記ZIPは履歴。
