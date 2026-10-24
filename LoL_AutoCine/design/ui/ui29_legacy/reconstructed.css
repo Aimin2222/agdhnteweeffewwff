@@ -185,6 +185,51 @@ body[data-screen="T-B-M"] .region-timeline .trim [data-ui="selected-scene-label"
 body[data-screen="T-B-M"] .region-timeline .trim button{min-width:150px;color:#086af1;font-weight:700}
 html[data-theme=dark] .testb-scenes .scene-card,html[data-theme=dark] .testb-mode-list .camera-card{background:var(--panel)}
 
+/* Test B 1366 layout: compact scene list and stacked controls within its measured regions. */
+body[data-screen="T-B-S"] .region-scene-list{padding:8px 11px;gap:5px}
+body[data-screen="T-B-S"] .region-scene-list>h2{font-size:16px;height:27px;margin:0}
+body[data-screen="T-B-S"] .region-scene-list h3{font-size:12px;margin:0}
+body[data-screen="T-B-S"] .region-scene-list .filters{display:flex;flex-wrap:wrap;height:57px;align-content:start}
+body[data-screen="T-B-S"] .region-scene-list .filters button{flex:none;width:48%;height:25px;min-height:25px}
+body[data-screen="T-B-S"] .region-scene-list>[data-ui="scan-status"]{height:15px;margin:0;font-size:10px}
+body[data-screen="T-B-S"] .region-scene-list .testb-scenes .scene-card{height:74px;min-height:74px;grid-template-columns:23px 76px 1fr 45px}
+body[data-screen="T-B-S"] .region-scene-list .scene-thumb-placeholder{font-size:10px}
+body[data-screen="T-B-S"] .region-inspector{padding:8px}
+body[data-screen="T-B-S"] .region-inspector>h2{font-size:15px;margin:0}
+body[data-screen="T-B-S"] .region-camera-modes{padding:4px 7px}
+body[data-screen="T-B-S"] .region-camera-modes>h2{font-size:13px;height:19px;margin:0}
+body[data-screen="T-B-S"] .testb-mode-list .camera-card{height:53px;min-height:53px}
+body[data-screen="T-B-S"] .region-side-buttons{padding:2px 6px}
+body[data-screen="T-B-S"] .region-side-buttons h2{display:none}
+body[data-screen="T-B-S"] .region-side-buttons .target-side{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+body[data-screen="T-B-S"] .region-side-buttons .target-side button{min-height:32px;font-size:11px;font-weight:700}
+body[data-screen="T-B-S"] .region-side-buttons p{display:none}
+body[data-screen="T-B-S"] .region-camera-numeric{padding:5px 7px}
+body[data-screen="T-B-S"] .region-camera-numeric>h2{font-size:13px;margin:0 0 3px}
+.testb-compact-numbers .number-row{height:34px;margin:0;gap:4px}
+.testb-compact-numbers .number-row span{min-width:78px;font-size:10px}
+.testb-compact-numbers .number-row input[type=number]{width:48px;font-size:11px;padding:2px}
+body[data-screen="T-B-S"] .region-materials{padding:5px 7px}
+body[data-screen="T-B-S"] .region-materials>h2{font-size:13px;margin:0;height:19px}
+.testb-compact-materials{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;height:82px}
+.testb-compact-frame{display:flex;flex-direction:column;text-align:left;overflow:hidden;min-width:0;min-height:0;padding:2px}
+.testb-compact-frame img{width:100%;height:48px;object-fit:contain;background:#101d2c}
+.testb-compact-frame h3{font-size:9px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.testb-compact-frame .badge{font-size:8px;white-space:nowrap}
+body[data-screen="T-B-S"] .region-materials>.full{font-size:9px;min-height:24px;height:24px;margin-top:3px}
+body[data-screen="T-B-S"] .region-bottom-tabs{padding:3px 7px}
+.testb-bottom-tabs{display:flex;gap:5px;align-items:center;height:100%}
+.testb-bottom-tabs button{font-size:11px;font-weight:700;min-height:32px}
+.testb-bottom-tabs button.selected{color:#086af1;border-bottom:2px solid #086af1}
+body[data-screen="T-B-S"] .region-timeline{padding:3px 10px}
+body[data-screen="T-B-S"] .region-timeline>h2{font-size:13px;height:18px;margin:0}
+body[data-screen="T-B-S"] .region-timeline .ruler{height:16px;font-size:9px;padding:0 1% 0 10%}
+body[data-screen="T-B-S"] .region-timeline .lane{height:39px}
+body[data-screen="T-B-S"] .region-timeline .lane-label{min-width:103px}
+body[data-screen="T-B-S"] .region-timeline .lane-bar{height:35px;overflow:hidden}
+body[data-screen="T-B-S"] .region-timeline .clip{height:33px;top:0}
+body[data-screen="T-B-S"] .region-timeline .trim{margin:2px 0 0;height:30px}
+
 /* Test B camera settings: the original has a stacked mode list and a 5x2 camera catalog. */
 body[data-screen="T-B-C"] .region-scene-list{padding:9px 11px;gap:5px}
 body[data-screen="T-B-C"] .region-scene-list>h2{font-size:17px;height:29px;margin:0}

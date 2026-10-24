@@ -279,12 +279,12 @@ def _legacy06_applied() -> str:
             + _button('ライブラリを開く', 'screen', 'L06-L') + '</div>')
 
 
-def _testb_scene_list() -> str:
+def _testb_scene_list(count: int = 6) -> str:
     scenes = ''.join(
         f'<div class="scene-card" data-ui="scene-card-{i}">'
         '<span class="check"></span><span class="scene-thumb-placeholder">映像未取得</span>'
         '<strong>未スキャン</strong><span class="time">--:--</span><span class="side">—</span></div>'
-        for i in range(6))
+        for i in range(count))
     return ('<h2>シーンリスト</h2><div class="testb-scan">'
             + _button('試合全体スキャン', 'scan', cls='primary full') + '</div>'
             '<h3>キル・アシストフィルター</h3><div class="filters">'
@@ -362,6 +362,30 @@ def _testb_camera_numbers() -> str:
         f'<input data-setting="{key}" type="number" min="{minimum}" max="{maximum}" '
         f'step="{step}" value="{value}" aria-label="{label}"></label>'
         for key, label, value, minimum, maximum, step in fields) + '</div>'
+
+
+def _testb_compact_numbers() -> str:
+    fields = (
+        ('third_dist', '三人称 距離', '900', '500', '1400'),
+        ('cam_height', '高さ', '420', '0', '900'),
+        ('third_yaw', '回転角', '0', '-180', '180'),
+    )
+    return '<h2>カメラ設定 <small>他の値はカメラ画面で調整</small></h2><div class="testb-compact-numbers">' + ''.join(
+        f'<label class="number-row"><span>{label}</span>'
+        f'<input data-setting="{key}" type="range" min="{minimum}" max="{maximum}" value="{value}">'
+        f'<input data-setting="{key}" type="number" min="{minimum}" max="{maximum}" '
+        f'value="{value}" aria-label="{label}"></label>'
+        for key, label, value, minimum, maximum in fields) + '</div>'
+
+
+def _testb_compact_materials() -> str:
+    cards = ''.join(
+        f'<button class="testb-compact-frame" data-ui="material-card-{i}">'
+        '<img class="frame-thumb" alt="実素材"><h3>読み込み中</h3>'
+        '<span class="badge"></span></button>' for i in range(4))
+    return ('<h2>素材 <small>実カタログ・状態を表示</small></h2>'
+            '<div class="testb-compact-materials">' + cards + '</div>'
+            + _button('キル演出画面で詳しく選ぶ', 'screen', 'T-B-F', 'full'))
 
 
 def _testb_camera_qa() -> str:
@@ -538,6 +562,8 @@ def _component(screen_id: str, region: str) -> str:
     if region == 'scene-list':
         if screen_id in {'T-B-M', 'T-B-C', 'T-B-F'}:
             return _testb_scene_list()
+        if screen_id == 'T-B-S':
+            return _testb_scene_list(4)
         if screen_id in {'L03-N', 'L03-D', 'L05-M'}:
             return _legacy03_scene_list(5 if screen_id == 'L05-M' else 3)
         if screen_id == 'L06-E':
@@ -561,12 +587,13 @@ def _component(screen_id: str, region: str) -> str:
                 + _button('ミラー停止', 'mirror_stop')
                 + _button('演出プレビュー再生', 'preview_play')
                 + _button('プレビュー停止', 'preview_stop'))
-    if screen_id in {'T-B-M', 'T-B-C', 'T-B-F'} and region == 'camera-modes': return _testb_camera_modes()
+    if screen_id.startswith('T-B-') and region == 'camera-modes': return _testb_camera_modes()
     if screen_id == 'T-B-M' and region == 'camera-cards': return _testb_camera_cards()
     if screen_id == 'T-B-C' and region == 'camera-cards': return _testb_camera_settings_cards()
     if region in {'camera-cards','camera-modes'}: return _camera_modes()
     if screen_id == 'T-B-M' and region == 'material-summary': return _testb_material_summary()
     if region == 'applied-assets' and screen_id == 'L06-E': return _legacy06_applied()
+    if screen_id == 'T-B-S' and region == 'materials': return _testb_compact_materials()
     if region in {'frame-cards','materials','material-summary','applied-assets'}: return _frame_cards()
     if region == 'effect-cards':
         return '<h2>エフェクト</h2><p class="subtle">選択した枠と同名FXを適用</p>' + _button('FX設定', 'work_settings')
@@ -577,7 +604,8 @@ def _component(screen_id: str, region: str) -> str:
                 + _button('RED サイド', 'camera_side', 'RED', 'red') + '</div>')
     if region in {'side-buttons','target-side'}: return _side_buttons()
     if region in {'camera-numeric'}:
-        return _testb_camera_numbers() if screen_id == 'T-B-C' else _camera_numbers()
+        return (_testb_camera_numbers() if screen_id == 'T-B-C' else
+                _testb_compact_numbers() if screen_id == 'T-B-S' else _camera_numbers())
     if region == 'inspector':
         if screen_id == 'T-B-M':
             return ('<div class="testb-inspector-tabs">'
@@ -621,6 +649,11 @@ def _component(screen_id: str, region: str) -> str:
                 if screen_id in {'L03-N', 'L03-D', 'L05-M', 'L06-L', 'L06-E'}
                 else _timeline())
     if region in {'edit-tabs','bottom-tabs'}:
+        if screen_id == 'T-B-S' and region == 'bottom-tabs':
+            return ('<div class="testb-bottom-tabs">'
+                    + _button('キル選択タイムライン', 'screen', 'T-B-S', 'selected')
+                    + _button('詳細編集', 'screen', 'T-B-C')
+                    + _button('テスト結果', 'diagnostics') + '</div>')
         return ('<div class="edit-mode row">' + _button('簡単編集', 'edit_mode', 'easy')
                 + _button('詳細編集', 'edit_mode', 'advanced') + '</div>')
     if region == 'step-tabs':

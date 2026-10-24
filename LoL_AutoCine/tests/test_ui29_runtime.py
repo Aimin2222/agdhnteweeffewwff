@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from ui.audit29_runtime import Audit29Runtime, SCREENS
 from ui.audit29_server import UI29Server
+from ui.legacy_reconstruct import render_legacy
 
 
 class Variable:
@@ -79,6 +80,14 @@ class Audit29RuntimeTests(unittest.TestCase):
     def test_all_candidates_remain_distinct(self):
         self.assertEqual(len(SCREENS), 29)
         self.assertEqual(len({screen["family"] for screen in SCREENS.values()}), 12)
+
+    def test_compact_test_b_screen_keeps_real_controls(self):
+        html = render_legacy(SCREENS["T-B-S"])
+        self.assertEqual(html.count('class="testb-compact-frame"'), 4)
+        self.assertIn('data-action="camera_mode" data-action-value="fixed_auto"', html)
+        self.assertIn('data-setting="third_yaw" type="number"', html)
+        self.assertIn('data-action="screen" data-action-value="T-B-F"', html)
+        self.assertIn('キル選択タイムライン', html)
 
     def test_switch_and_theme_preserve_model(self):
         app = App()
