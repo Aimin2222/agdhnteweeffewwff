@@ -1,0 +1,432 @@
+{
+  "screen_id": "R-C-main-1366x768",
+  "family": "researchC",
+  "reference_sha256": "5ebdce1529f9a958358c3df1f705f08a89d233950ae7fee7b758b0b509ec39b1",
+  "reference_size": [
+    1366,
+    768
+  ],
+  "capture_size": [
+    1366,
+    768
+  ],
+  "size_result": "PASS",
+  "visual_result": "MEASURED",
+  "functional_result": "NOT_RUN",
+  "dynamic_image_mask": [
+    245.66666666666666,
+    171.0,
+    490.6666666666667,
+    276.0
+  ],
+  "unmasked_rgb_mae": 3.8487,
+  "regions": [
+    {
+      "region": "header",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "theme-switch",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "export",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "subbar",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "workspace",
+      "rgb_mae": 4.574
+    },
+    {
+      "region": "preview-panel",
+      "rgb_mae": 1.1606
+    },
+    {
+      "region": "preview-stage",
+      "rgb_mae": 1.9973
+    },
+    {
+      "region": "preview-controls",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "inspector",
+      "rgb_mae": 11.7099
+    },
+    {
+      "region": "camera-modes",
+      "rgb_mae": 16.3876
+    },
+    {
+      "region": "slider-motion_arc",
+      "rgb_mae": 14.8459
+    },
+    {
+      "region": "slider-motion_dolly",
+      "rgb_mae": 14.1498
+    },
+    {
+      "region": "director-dock",
+      "rgb_mae": 2.0524
+    },
+    {
+      "region": "motion-graph",
+      "rgb_mae": 0.0369
+    },
+    {
+      "region": "footer-14",
+      "rgb_mae": 5.9964
+    }
+  ],
+  "bounds": [
+    {
+      "region": "header",
+      "result": "PASS",
+      "expected": [
+        0,
+        0,
+        1366,
+        64
+      ],
+      "actual": [
+        0,
+        0,
+        1366,
+        64
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "theme-switch",
+      "result": "PASS",
+      "expected": [
+        893.625,
+        11.5,
+        149,
+        40
+      ],
+      "actual": [
+        893.625,
+        11.5,
+        149,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "export",
+      "result": "PASS",
+      "expected": [
+        1267.9375,
+        11.5,
+        82.0625,
+        40
+      ],
+      "actual": [
+        1267.9375,
+        11.5,
+        82.0625,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "subbar",
+      "result": "PASS",
+      "expected": [
+        0,
+        64,
+        1366,
+        52
+      ],
+      "actual": [
+        0,
+        64,
+        1366,
+        52
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "workspace",
+      "result": "PASS",
+      "expected": [
+        0,
+        116,
+        1366,
+        620
+      ],
+      "actual": [
+        0,
+        116,
+        1366,
+        620
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-panel",
+      "result": "PASS",
+      "expected": [
+        16,
+        128,
+        950,
+        382
+      ],
+      "actual": [
+        16,
+        128,
+        950,
+        382
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-stage",
+      "result": "PASS",
+      "expected": [
+        27,
+        171,
+        928,
+        276
+      ],
+      "actual": [
+        27,
+        171,
+        928,
+        276
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-controls",
+      "result": "PASS",
+      "expected": [
+        27,
+        455,
+        928,
+        44
+      ],
+      "actual": [
+        27,
+        455,
+        928,
+        44
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "inspector",
+      "result": "PASS",
+      "expected": [
+        978,
+        128,
+        372,
+        596
+      ],
+      "actual": [
+        978,
+        128,
+        372,
+        596
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "camera-modes",
+      "result": "PASS",
+      "expected": [
+        993,
+        239,
+        342,
+        241
+      ],
+      "actual": [
+        993,
+        239,
+        342,
+        239
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        -2.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "slider-motion_arc",
+      "result": "PASS",
+      "expected": [
+        993,
+        496,
+        342,
+        36
+      ],
+      "actual": [
+        993,
+        494,
+        342,
+        36
+      ],
+      "delta": [
+        0.0,
+        -2.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "slider-motion_dolly",
+      "result": "PASS",
+      "expected": [
+        993,
+        548,
+        342,
+        36
+      ],
+      "actual": [
+        993,
+        546,
+        342,
+        36
+      ],
+      "delta": [
+        0.0,
+        -2.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "director-dock",
+      "result": "PASS",
+      "expected": [
+        16,
+        522,
+        950,
+        202
+      ],
+      "actual": [
+        16,
+        522,
+        950,
+        202
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "motion-graph",
+      "result": "PASS",
+      "expected": [
+        31,
+        608,
+        920,
+        116
+      ],
+      "actual": [
+        31,
+        608,
+        920,
+        116
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "footer-14",
+      "result": "PASS",
+      "expected": [
+        0,
+        736,
+        1366,
+        32
+      ],
+      "actual": [
+        0,
+        736,
+        1366,
+        32
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    }
+  ]
+}

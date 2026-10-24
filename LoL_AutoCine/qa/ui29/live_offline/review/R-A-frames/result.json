@@ -1,0 +1,459 @@
+{
+  "screen_id": "R-A-frames",
+  "family": "researchA",
+  "reference_sha256": "a66eac162cceaddd14dc03d9e9ab638375c93b3742f63f77da4bdecd75e8c304",
+  "reference_size": [
+    1920,
+    1080
+  ],
+  "capture_size": [
+    1920,
+    1080
+  ],
+  "size_result": "PASS",
+  "visual_result": "REVIEW",
+  "functional_result": "NOT_RUN",
+  "dynamic_image_mask": [
+    754.0,
+    215.0,
+    808.0,
+    454.5
+  ],
+  "unmasked_rgb_mae": 3.5416,
+  "regions": [
+    {
+      "region": "header",
+      "rgb_mae": 0.0696
+    },
+    {
+      "region": "theme-switch",
+      "rgb_mae": 0.2483
+    },
+    {
+      "region": "export",
+      "rgb_mae": 0.3957
+    },
+    {
+      "region": "subbar",
+      "rgb_mae": 0.0401
+    },
+    {
+      "region": "workspace",
+      "rgb_mae": 4.1849
+    },
+    {
+      "region": "material-library",
+      "rgb_mae": 15.211
+    },
+    {
+      "region": "material-card-0",
+      "rgb_mae": 7.978
+    },
+    {
+      "region": "material-card-1",
+      "rgb_mae": 6.7191
+    },
+    {
+      "region": "material-card-2",
+      "rgb_mae": 45.2633
+    },
+    {
+      "region": "material-card-3",
+      "rgb_mae": 44.0248
+    },
+    {
+      "region": "preview-panel",
+      "rgb_mae": 0.6554
+    },
+    {
+      "region": "preview-stage",
+      "rgb_mae": 1.0563
+    },
+    {
+      "region": "preview-controls",
+      "rgb_mae": 0.0862
+    },
+    {
+      "region": "material-summary",
+      "rgb_mae": 0.7234
+    },
+    {
+      "region": "motion-grid",
+      "rgb_mae": 1.5805
+    },
+    {
+      "region": "footer-15",
+      "rgb_mae": 4.3778
+    }
+  ],
+  "bounds": [
+    {
+      "region": "header",
+      "result": "PASS",
+      "expected": [
+        0,
+        0,
+        1920,
+        76
+      ],
+      "actual": [
+        0,
+        0,
+        1920,
+        76
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "theme-switch",
+      "result": "PASS",
+      "expected": [
+        1207.578125,
+        17.5,
+        163,
+        40
+      ],
+      "actual": [
+        1207.578125,
+        17.5,
+        163,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "export",
+      "result": "PASS",
+      "expected": [
+        1640.765625,
+        17.5,
+        92.828125,
+        40
+      ],
+      "actual": [
+        1640.765625,
+        17.5,
+        92.828125,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "subbar",
+      "result": "PASS",
+      "expected": [
+        0,
+        76,
+        1920,
+        64
+      ],
+      "actual": [
+        0,
+        76,
+        1920,
+        64
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "workspace",
+      "result": "PASS",
+      "expected": [
+        0,
+        140,
+        1920,
+        908
+      ],
+      "actual": [
+        0,
+        140,
+        1920,
+        908
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "material-library",
+      "result": "PASS",
+      "expected": [
+        24,
+        156,
+        380,
+        876
+      ],
+      "actual": [
+        24,
+        156,
+        380,
+        876
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "material-card-0",
+      "result": "FAIL",
+      "expected": [
+        45,
+        387,
+        163,
+        200.5
+      ],
+      "actual": [
+        45,
+        387,
+        158,
+        223
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        -5.0,
+        22.5
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "material-card-1",
+      "result": "FAIL",
+      "expected": [
+        220,
+        387,
+        163,
+        200.5
+      ],
+      "actual": [
+        215,
+        387,
+        158,
+        223
+      ],
+      "delta": [
+        -5.0,
+        0.0,
+        -5.0,
+        22.5
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "material-card-2",
+      "result": "FAIL",
+      "expected": [
+        45,
+        599.5,
+        163,
+        221
+      ],
+      "actual": [
+        45,
+        622,
+        158,
+        221
+      ],
+      "delta": [
+        0.0,
+        22.5,
+        -5.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "material-card-3",
+      "result": "FAIL",
+      "expected": [
+        220,
+        599.5,
+        163,
+        221
+      ],
+      "actual": [
+        215,
+        622,
+        158,
+        221
+      ],
+      "delta": [
+        -5.0,
+        22.5,
+        -5.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-panel",
+      "result": "PASS",
+      "expected": [
+        420,
+        156,
+        1476,
+        614
+      ],
+      "actual": [
+        420,
+        156,
+        1476,
+        614
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-stage",
+      "result": "PASS",
+      "expected": [
+        437,
+        215,
+        1442,
+        454.5
+      ],
+      "actual": [
+        437,
+        215,
+        1442,
+        454.5
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-controls",
+      "result": "PASS",
+      "expected": [
+        437,
+        681.5,
+        1442,
+        44
+      ],
+      "actual": [
+        437,
+        681.5,
+        1442,
+        44
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "material-summary",
+      "result": "PASS",
+      "expected": [
+        420,
+        786,
+        1476,
+        246
+      ],
+      "actual": [
+        420,
+        786,
+        1476,
+        246
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "motion-grid",
+      "result": "FAIL",
+      "expected": [
+        940.546875,
+        847,
+        934.453125,
+        171
+      ],
+      "actual": [
+        935.453125,
+        847,
+        924.546875,
+        171
+      ],
+      "delta": [
+        -5.094,
+        0.0,
+        -9.906,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "footer-15",
+      "result": "PASS",
+      "expected": [
+        0,
+        1048,
+        1920,
+        32
+      ],
+      "actual": [
+        0,
+        1048,
+        1920,
+        32
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    }
+  ]
+}

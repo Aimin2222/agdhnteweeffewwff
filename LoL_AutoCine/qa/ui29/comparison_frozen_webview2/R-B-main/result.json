@@ -1,0 +1,432 @@
+{
+  "screen_id": "R-B-main",
+  "family": "researchB",
+  "reference_sha256": "d0fe65528203be2b74afad6466ed6fad3a6d03aab3e3017ed5e8c7a33e134e61",
+  "reference_size": [
+    1920,
+    1080
+  ],
+  "capture_size": [
+    1920,
+    1080
+  ],
+  "size_result": "PASS",
+  "visual_result": "MEASURED",
+  "functional_result": "NOT_RUN",
+  "dynamic_image_mask": [
+    812.8888888888889,
+    215.0,
+    918.2222222222222,
+    516.5
+  ],
+  "unmasked_rgb_mae": 0.2963,
+  "regions": [
+    {
+      "region": "header",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "theme-switch",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "output-settings",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "subbar",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "workspace",
+      "rgb_mae": 0.1565
+    },
+    {
+      "region": "preset-library",
+      "rgb_mae": 0.012
+    },
+    {
+      "region": "preset-0",
+      "rgb_mae": 0.103
+    },
+    {
+      "region": "preset-1",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "preset-2",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "preset-3",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "preview-panel",
+      "rgb_mae": 0.5198
+    },
+    {
+      "region": "preview-stage",
+      "rgb_mae": 0.9661
+    },
+    {
+      "region": "preview-controls",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "choice-dock",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "footer-14",
+      "rgb_mae": 4.481
+    }
+  ],
+  "bounds": [
+    {
+      "region": "header",
+      "result": "PASS",
+      "expected": [
+        0,
+        0,
+        1920,
+        76
+      ],
+      "actual": [
+        0,
+        0,
+        1920,
+        76
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "theme-switch",
+      "result": "PASS",
+      "expected": [
+        1218.40625,
+        17.5,
+        163,
+        40
+      ],
+      "actual": [
+        1218.40625,
+        17.5,
+        163,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "output-settings",
+      "result": "PASS",
+      "expected": [
+        1651.59375,
+        17.5,
+        82,
+        40
+      ],
+      "actual": [
+        1651.59375,
+        17.5,
+        82,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "subbar",
+      "result": "PASS",
+      "expected": [
+        0,
+        76,
+        1920,
+        64
+      ],
+      "actual": [
+        0,
+        76,
+        1920,
+        64
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "workspace",
+      "result": "PASS",
+      "expected": [
+        0,
+        140,
+        1920,
+        908
+      ],
+      "actual": [
+        0,
+        140,
+        1920,
+        908
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preset-library",
+      "result": "PASS",
+      "expected": [
+        24,
+        156,
+        608,
+        876
+      ],
+      "actual": [
+        24,
+        156,
+        608,
+        876
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preset-0",
+      "result": "PASS",
+      "expected": [
+        45,
+        327,
+        277,
+        224.5
+      ],
+      "actual": [
+        45,
+        327,
+        277,
+        224.5
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preset-1",
+      "result": "PASS",
+      "expected": [
+        334,
+        327,
+        277,
+        224.5
+      ],
+      "actual": [
+        334,
+        327,
+        277,
+        224.5
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preset-2",
+      "result": "PASS",
+      "expected": [
+        45,
+        563.5,
+        277,
+        222.5
+      ],
+      "actual": [
+        45,
+        563.5,
+        277,
+        222.5
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preset-3",
+      "result": "PASS",
+      "expected": [
+        334,
+        563.5,
+        277,
+        222.5
+      ],
+      "actual": [
+        334,
+        563.5,
+        277,
+        222.5
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-panel",
+      "result": "PASS",
+      "expected": [
+        648,
+        156,
+        1248,
+        676
+      ],
+      "actual": [
+        648,
+        156,
+        1248,
+        676
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-stage",
+      "result": "PASS",
+      "expected": [
+        665,
+        215,
+        1214,
+        516.5
+      ],
+      "actual": [
+        665,
+        215,
+        1214,
+        516.5
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-controls",
+      "result": "PASS",
+      "expected": [
+        665,
+        743.5,
+        1214,
+        44
+      ],
+      "actual": [
+        665,
+        743.5,
+        1214,
+        44
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "choice-dock",
+      "result": "PASS",
+      "expected": [
+        648,
+        848,
+        1248,
+        184
+      ],
+      "actual": [
+        648,
+        848,
+        1248,
+        184
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "footer-14",
+      "result": "PASS",
+      "expected": [
+        0,
+        1048,
+        1920,
+        32
+      ],
+      "actual": [
+        0,
+        1048,
+        1920,
+        32
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    }
+  ]
+}
