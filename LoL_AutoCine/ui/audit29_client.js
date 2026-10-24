@@ -173,13 +173,19 @@
         playerList.append(row);
       }
     }
-    document.querySelectorAll('.camera-card').forEach(card=>
-      card.classList.toggle('selected',card.textContent.includes(data.camera.mode)));
+    const modeNames={manual:'従来の手動カメラ',fixed_auto:'固定視点＋自動構図補正',
+      full_auto:'フルオートシネマ'};
+    document.querySelectorAll('.camera-card[data-action-value]').forEach(card=>
+      card.classList.toggle('selected',modeNames[card.dataset.actionValue]===data.camera.mode));
     const styleNames = {
       third:'三人称 追従のみ',
       third_cinema:'三人称シネマ (斜め後ろ・寄り＋ローアングル＋スロー)',
-      fps:'FPS視点 (高さ補正)',
-      lolnam_cinema:'Lolnam風シネマ (自動カメラ移動)'
+      geo_aim:'座標で主役を追う（実験用）',
+      cinema:'FPS風シネマ (標準視点でドリーイン＋スロー)',
+      fps:'FPS視点 (高さ補正)',orbit:'オービット (実験的)',
+      lolnam_cinema:'Lolnam風シネマ (自動カメラ移動)',
+      follow:'FPS風 追従のみ',cinema_top:'俯瞰シネマ (ズーム＋スロー・安全)',
+      top:'俯瞰 追従のみ (安全)'
     };
     document.querySelectorAll('.testb-style-cards [data-action-value]').forEach(card =>
       card.classList.toggle('selected',styleNames[card.dataset.actionValue] === data.camera.style));

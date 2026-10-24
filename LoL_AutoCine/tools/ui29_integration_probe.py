@@ -105,6 +105,17 @@ def main():
             assert testb_settings["camera"]["side"] == "レッド側基準"
             assert "三人称シネマ" in testb_settings["camera"]["style"]
             assert "フルオート" in testb_settings["camera"]["mode"]
+            for style in ("third_cinema", "third", "geo_aim", "cinema", "fps",
+                          "orbit", "lolnam_cinema", "follow", "cinema_top", "top"):
+                style_state = request("camera_style", {"value": style})
+                assert style_state["camera"]["style"]
+            request("camera_number", {"key": "motion_arc", "value": 14})
+            request("camera_number", {"key": "motion_dolly", "value": 5})
+            request("screen", {"id": "T-B-F"})
+            camera_again = request("screen", {"id": "T-B-C"})
+            assert camera_again["camera"]["values"]["motion_arc"] == 14
+            assert camera_again["camera"]["values"]["motion_dolly"] == 5
+            assert "俯瞰 追従のみ" in camera_again["camera"]["style"]
             outcome["result"] = "PASS"
             outcome["screen"] = state["workspace"]["screen_id"]
             outcome["candidate_roundtrip"] = checked_screens
@@ -115,7 +126,8 @@ def main():
                                  "all_29_screen_routes_preserve_state",
                                  "legacy03_easy_preset_and_detail_switch",
                                  "legacy06_real_catalog_and_editor_state",
-                                 "testb_camera_mode_style_side_roundtrip"]
+                                 "testb_camera_mode_style_side_roundtrip",
+                                 "testb_all_10_styles_and_numeric_roundtrip"]
         except Exception as exc:
             outcome["result"] = "FAIL"
             outcome["error"] = repr(exc)

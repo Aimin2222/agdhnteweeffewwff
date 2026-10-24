@@ -324,6 +324,66 @@ def _testb_camera_cards() -> str:
                       for label, value, shot in cards) + '</div>')
 
 
+def _testb_camera_settings_cards() -> str:
+    """The camera test reference shows ten choices in two rows of five."""
+    cards = (
+        ('三人称シネマ', 'third_cinema', 'testb-qa-7'),
+        ('三人称', 'third', 'testb-qa-6'),
+        ('Geo Aim', 'geo_aim', 'testb-qa-9'),
+        ('シネマ', 'cinema', 'testb-qa-3'),
+        ('FPS風', 'fps', 'testb-qa-8'),
+        ('Orbit', 'orbit', 'testb-qa-1'),
+        ('Lolnamシネマ', 'lolnam_cinema', 'testb-qa-9'),
+        ('Follow', 'follow', 'testb-qa-6'),
+        ('俯瞰シネマ', 'cinema_top', 'testb-qa-3'),
+        ('俯瞰', 'top', 'testb-qa-1'),
+    )
+    return ('<h2>カメラスタイル <small>10種・過去QA画像</small></h2>'
+            '<div class="testb-style-cards testb-style-grid">'
+            + ''.join(f'<button data-action="camera_style" data-action-value="{value}">'
+                      f'<span class="testb-qa-shot {shot}" '
+                      'title="過去QA画像・現在のプレビューではありません"></span>'
+                      f'<small>{escape(label)}</small></button>'
+                      for label, value, shot in cards) + '</div>')
+
+
+def _testb_camera_numbers() -> str:
+    fields = (
+        ('third_dist', '距離', '900', '500', '1400', '1'),
+        ('cam_height', '高さ', '420', '0', '900', '1'),
+        ('third_yaw', '回転角', '0', '-180', '180', '1'),
+        ('motion_arc', '回り込み', '14', '0', '45', '0.5'),
+        ('motion_dolly', '接近量', '5', '0', '15', '0.5'),
+    )
+    return '<h2>カメラパラメータ</h2><div class="testb-number-grid">' + ''.join(
+        f'<label class="number-row"><span>{label}</span>'
+        f'<input data-setting="{key}" type="range" min="{minimum}" max="{maximum}" '
+        f'step="{step}" value="{value}">'
+        f'<input data-setting="{key}" type="number" min="{minimum}" max="{maximum}" '
+        f'step="{step}" value="{value}" aria-label="{label}"></label>'
+        for key, label, value, minimum, maximum, step in fields) + '</div>'
+
+
+def _testb_camera_qa() -> str:
+    return ('<h2>BLUE / RED の確認済み候補</h2>'
+            '<div class="testb-qa-side">'
+            + _button('BLUE', 'camera_side', 'BLUE', 'blue')
+            + '<span>確認済み：<b data-ui="blue-qa-count">未取得</b></span>'
+            + _button('RED', 'camera_side', 'RED', 'red')
+            + '<span>確認済み：<b data-ui="red-qa-count">未取得</b></span></div>'
+            '<p class="subtle">候補の詳細は一括QA実行後に確認できます。</p>'
+            + _button('カメラ＋Work素材一括QA', 'camera_qa', cls='full'))
+
+
+def _testb_results() -> str:
+    return ('<div class="testb-results-head"><h2>テスト結果 <small>画面への結果同期は未対応</small></h2>'
+            + _button('診断ログ', 'diagnostics') + '</div>'
+            '<div class="testb-results-table"><div>サイド</div><div>実行結果</div>'
+            '<div>確認済み候補</div><div>BLUE</div><div>ログで確認</div><div>未取得</div>'
+            '<div>RED</div><div>ログで確認</div><div>未取得</div></div>'
+            '<p class="subtle">一括QA実行後の詳細は診断ログで確認してください。</p>')
+
+
 def _testb_material_summary() -> str:
     return ('<h2>フレーム・エフェクト・モーション</h2><div class="testb-material-links">'
             + _button('キルフレーム図鑑', 'work_gallery')
@@ -443,7 +503,7 @@ def _component(screen_id: str, region: str) -> str:
                   '<option value="light">ライト</option><option value="dark">ダーク</option></select>'
                 + _button('動画を作成', 'export_menu', cls='primary') + '</nav>')
     if region == 'scene-list':
-        if screen_id == 'T-B-M':
+        if screen_id in {'T-B-M', 'T-B-C'}:
             return _testb_scene_list()
         if screen_id in {'L03-N', 'L03-D', 'L05-M'}:
             return _legacy03_scene_list(5 if screen_id == 'L05-M' else 3)
@@ -467,22 +527,29 @@ def _component(screen_id: str, region: str) -> str:
                 + _button('ミラー停止', 'mirror_stop')
                 + _button('演出プレビュー再生', 'preview_play')
                 + _button('プレビュー停止', 'preview_stop'))
-    if screen_id == 'T-B-M' and region == 'camera-modes': return _testb_camera_modes()
+    if screen_id in {'T-B-M', 'T-B-C'} and region == 'camera-modes': return _testb_camera_modes()
     if screen_id == 'T-B-M' and region == 'camera-cards': return _testb_camera_cards()
+    if screen_id == 'T-B-C' and region == 'camera-cards': return _testb_camera_settings_cards()
     if region in {'camera-cards','camera-modes'}: return _camera_modes()
     if screen_id == 'T-B-M' and region == 'material-summary': return _testb_material_summary()
     if region == 'applied-assets' and screen_id == 'L06-E': return _legacy06_applied()
     if region in {'frame-cards','materials','material-summary','applied-assets'}: return _frame_cards()
     if region == 'effect-cards':
         return '<h2>エフェクト</h2><p class="subtle">選択した枠と同名FXを適用</p>' + _button('FX設定', 'work_settings')
+    if screen_id == 'T-B-C' and region == 'side-buttons': return _side_buttons()
     if screen_id == 'T-B-M' and region == 'side-buttons':
         return ('<div class="target-side testb-side-buttons">'
                 + _button('BLUE サイド', 'camera_side', 'BLUE', 'blue')
                 + _button('RED サイド', 'camera_side', 'RED', 'red') + '</div>')
     if region in {'side-buttons','target-side'}: return _side_buttons()
-    if region in {'camera-numeric'}: return _camera_numbers()
+    if region in {'camera-numeric'}:
+        return _testb_camera_numbers() if screen_id == 'T-B-C' else _camera_numbers()
     if region == 'inspector':
         if screen_id == 'T-B-M':
+            return ('<div class="testb-inspector-tabs">'
+                    + _button('カメラ', 'screen', 'T-B-C', 'selected')
+                    + _button('キル演出', 'screen', 'T-B-F') + '</div>')
+        if screen_id == 'T-B-C':
             return ('<div class="testb-inspector-tabs">'
                     + _button('カメラ', 'screen', 'T-B-C', 'selected')
                     + _button('キル演出', 'screen', 'T-B-F') + '</div>')
@@ -511,7 +578,7 @@ def _component(screen_id: str, region: str) -> str:
                 '<span>1920 × 1080</span><span data-ui="output-fps">60 fps</span><span>MP4</span></div>'
                 + _button('出力先を選択', 'output_folder') + _button('動画を作成', 'export_menu', cls='primary'))
     if region == 'timeline':
-        if screen_id == 'T-B-M': return _testb_timeline()
+        if screen_id in {'T-B-M', 'T-B-C'}: return _testb_timeline()
         return (_legacy03_timeline(include_trim=screen_id in {'L03-N', 'L03-D'})
                 if screen_id in {'L03-N', 'L03-D', 'L05-M', 'L06-L', 'L06-E'}
                 else _timeline())
@@ -535,6 +602,8 @@ def _component(screen_id: str, region: str) -> str:
         return '<h2>登場アニメ</h2><div class="motion-grid">' + ''.join(
             f'<button class="motion">{label}</button>' for label in labels) + '</div>'
     if region in {'side-qa','test-results'}:
+        if screen_id == 'T-B-C':
+            return _testb_camera_qa() if region == 'side-qa' else _testb_results()
         return ('<h2>' + ('BLUE / RED カメラQA' if region=='side-qa' else 'テスト結果') + '</h2>'
                 '<p class="subtle">実行後に結果とログを表示します。</p>'
                 + _button('カメラ＋Work素材一括QA', 'camera_qa') + _button('ログ', 'diagnostics'))
