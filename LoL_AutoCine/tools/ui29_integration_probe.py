@@ -96,6 +96,15 @@ def main():
             editor = request("screen", {"id": "L06-E"})
             assert editor["frame"]["id"] == frame_id
             assert editor["camera"]["values"]["third_dist"] == detail_state["camera"]["values"]["third_dist"]
+            outcome["stage"] = "testb_camera_controls"
+            request("screen", {"id": "T-B-M"})
+            request("camera_mode", {"value": "full_auto"})
+            request("camera_style", {"value": "third_cinema"})
+            request("camera_side", {"value": "RED"})
+            testb_settings = request("screen", {"id": "T-B-C"})
+            assert testb_settings["camera"]["side"] == "レッド側基準"
+            assert "三人称シネマ" in testb_settings["camera"]["style"]
+            assert "フルオート" in testb_settings["camera"]["mode"]
             outcome["result"] = "PASS"
             outcome["screen"] = state["workspace"]["screen_id"]
             outcome["candidate_roundtrip"] = checked_screens
@@ -105,7 +114,8 @@ def main():
                                  "audited_frame_pair", "catalog_asset_route",
                                  "all_29_screen_routes_preserve_state",
                                  "legacy03_easy_preset_and_detail_switch",
-                                 "legacy06_real_catalog_and_editor_state"]
+                                 "legacy06_real_catalog_and_editor_state",
+                                 "testb_camera_mode_style_side_roundtrip"]
         except Exception as exc:
             outcome["result"] = "FAIL"
             outcome["error"] = repr(exc)

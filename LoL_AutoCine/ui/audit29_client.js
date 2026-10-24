@@ -64,6 +64,8 @@
   function renderTimeline(data) {
     const timeline=document.querySelector('[data-ui="timeline"]');
     if (!timeline) return;
+    timeline.querySelectorAll('.film-placeholder').forEach(slot =>
+      slot.style.display = data.scenes.length ? 'none' : '');
     const duration=Math.max(data.scan.duration || 0,
       ...data.scenes.map(scene=>scene.time + 10),0);
     const ruler=[...timeline.querySelectorAll('.ruler span')];
@@ -173,6 +175,14 @@
     }
     document.querySelectorAll('.camera-card').forEach(card=>
       card.classList.toggle('selected',card.textContent.includes(data.camera.mode)));
+    const styleNames = {
+      third:'三人称 追従のみ',
+      third_cinema:'三人称シネマ (斜め後ろ・寄り＋ローアングル＋スロー)',
+      fps:'FPS視点 (高さ補正)',
+      lolnam_cinema:'Lolnam風シネマ (自動カメラ移動)'
+    };
+    document.querySelectorAll('.testb-style-cards [data-action-value]').forEach(card =>
+      card.classList.toggle('selected',styleNames[card.dataset.actionValue] === data.camera.style));
     document.querySelectorAll('.target-side button').forEach(button=>{
       const name=button.textContent.trim();
       const active=name==='BLUE' ? data.camera.side.includes('ブルー') :

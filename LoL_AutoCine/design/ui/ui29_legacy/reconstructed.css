@@ -107,6 +107,84 @@ body[data-screen="L06-E"] .region-inspector .number-row{height:51px;margin:0;fon
 .legacy6-hud{display:flex;align-items:center;gap:7px;margin:9px 0;font-weight:700}
 html[data-theme=dark] .legacy6-library-card,html[data-theme=dark] .legacy6-scan,html[data-theme=dark] .legacy6-library-filters button{background:var(--panel);color:var(--ink)}
 
+/* Test B main keeps its dense camera/FX test controls and a fixed mirror. */
+body[data-screen^="T-B-"] .region-header{background:linear-gradient(90deg,#f5f8fc,#fff);border-color:#d9e4f2}
+.testb-brand{position:absolute;left:16px;top:7px;display:flex;align-items:center;gap:15px;white-space:nowrap}
+.testb-brand strong{font-size:20px}
+.testb-brand span{color:#49617b;font-size:12px}
+.testb-brand em{font-style:normal;color:#102e66;border-left:1px solid #a9c5e8;padding-left:14px;font-size:16px;font-weight:700}
+.testb-topnav{position:absolute;left:815px;top:9px}
+.testb-topnav .view-switcher button{font-size:11px;padding:3px 5px}
+body[data-screen^="T-B-"] .region-header .testb-settings{position:absolute;right:12px;top:6px;gap:4px}
+.testb-settings button{padding:4px 8px;font-weight:700;font-size:11px;white-space:nowrap}
+body[data-screen="T-B-M"] .region-scene-list{padding:9px 11px;gap:5px}
+body[data-screen="T-B-M"] .region-scene-list>h2{font-size:17px;height:29px;margin:0}
+.testb-scan{height:46px;flex:none}
+.testb-scan button{height:41px}
+body[data-screen="T-B-M"] .region-scene-list h3{font-size:12px;margin:1px 0 0;flex:none}
+body[data-screen="T-B-M"] .region-scene-list .filters{height:30px;flex:none}
+body[data-screen="T-B-M"] .region-scene-list .filters button{font-size:11px;padding:2px}
+body[data-screen="T-B-M"] .region-scene-list>[data-ui="scan-status"]{height:15px;margin:0;font-size:10px}
+.testb-scenes{display:flex;flex-direction:column;gap:5px;overflow:auto;flex:1;min-height:0}
+.testb-scenes .scene-card{height:59px;min-height:59px;display:grid;grid-template-columns:22px 56px 1fr 48px;grid-template-rows:1fr 1fr;gap:0 6px;position:relative;border:1px solid #dce7f4;border-radius:4px;background:#f5f9ff;padding:4px}
+.testb-scenes .scene-card .check{grid-row:1/3;align-self:center;background:#fff}
+.testb-scenes .scene-thumb-placeholder{grid-row:1/3;display:flex;align-items:center;justify-content:center;background:#dce8f6;color:#526c8d;border-radius:3px;font-size:9px;text-align:center}
+.testb-scenes .scene-card strong{grid-column:3;align-self:end;font-size:11px}
+.testb-scenes .scene-card .time{grid-column:3;grid-row:2;align-self:start;font-weight:400;font-size:10px;color:var(--muted)}
+.testb-scenes .scene-card .side{grid-column:4;grid-row:1/3;align-self:center;text-align:center}
+.testb-scene-actions{display:flex;gap:5px;height:31px;flex:none}
+.testb-scene-actions button{flex:1;min-height:30px}
+body[data-screen="T-B-M"] .region-inspector{padding:0}
+.testb-inspector-tabs{display:grid;grid-template-columns:1fr 1fr;height:40px;border-bottom:1px solid var(--line)}
+.testb-inspector-tabs button{border:0;border-radius:0;font-weight:700}
+.testb-inspector-tabs button.selected{color:#086af1;border-bottom:3px solid #086af1}
+body[data-screen="T-B-M"] .region-camera-modes{padding:5px 8px}
+body[data-screen="T-B-M"] .region-camera-modes>h2{height:20px;font-size:13px;margin:0}
+.testb-mode-list{display:flex;flex-direction:column;gap:4px;height:calc(100% - 21px)}
+.testb-mode-list .camera-card{width:100%;height:50px;min-height:50px;display:grid;grid-template-columns:20px 77px 1fr;grid-template-rows:1fr 1fr;align-items:center;gap:0 6px;text-align:left;background:#f9fbff;padding:2px 5px;border-color:#dce7f4}
+.testb-mode-list .camera-card::before{content:"";grid-row:1/3;width:15px;height:15px;border:1px solid #8293a9;border-radius:50%;background:#fff}
+.testb-mode-list .camera-card.selected::before{border:5px solid #086af1}
+.testb-mode-list .camera-card .testb-qa-shot{grid-row:1/3;width:77px;height:42px}
+.testb-mode-list .camera-card strong{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.testb-mode-list .camera-card small{font-size:9px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.testb-qa-shot{display:block;background-image:url('/static/assets/camera_qa_reference.jpg');background-size:400% 300%;background-color:#1a2a3a;background-repeat:no-repeat;border-radius:3px}
+.testb-qa-1{background-position:0% 4%}.testb-qa-3{background-position:66.67% 4%}.testb-qa-6{background-position:33.33% 49%}.testb-qa-7{background-position:66.67% 49%}.testb-qa-8{background-position:100% 49%}.testb-qa-9{background-position:0% 95%}
+body[data-screen="T-B-M"] .region-side-buttons{padding:3px 6px}
+.testb-side-buttons{display:grid;grid-template-columns:1fr 1fr;gap:7px;width:100%;height:100%}
+.testb-side-buttons button{min-height:32px;font-weight:700;color:#fff}
+.testb-side-buttons button.blue{background:#086af1}.testb-side-buttons button.red{background:#eb344a}
+.testb-side-buttons button.selected{outline:2px solid #1c3060;outline-offset:1px}
+body[data-screen="T-B-M"] .region-camera-cards{padding:2px 6px}
+body[data-screen="T-B-M"] .region-camera-cards>h2{font-size:11px;height:16px;margin:0}
+.testb-style-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;height:52px}
+.testb-style-cards button{display:flex;flex-direction:column;align-items:center;padding:2px;min-height:0;overflow:hidden;border-color:#dce7f4}
+.testb-style-cards .testb-qa-shot{width:100%;height:32px;flex:none}
+.testb-style-cards small{font-size:9px;color:var(--ink);white-space:nowrap}
+.testb-style-cards button.selected{outline:2px solid #086af1}
+body[data-screen="T-B-M"] .region-material-summary{padding:6px 8px}
+body[data-screen="T-B-M"] .region-material-summary>h2{font-size:12px;height:20px;margin:0}
+.testb-material-links{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.testb-material-links button{font-size:10px;padding:2px;min-height:37px}
+body[data-screen="T-B-M"] .region-material-summary>p{font-size:10px;margin:4px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-screen="T-B-M"] .region-edit-tabs{padding-left:6px}
+body[data-screen="T-B-M"] .region-edit-tabs button{font-weight:700;border:0}
+body[data-screen="T-B-M"] .region-edit-tabs button.selected{color:#086af1;border-bottom:3px solid #086af1}
+body[data-screen="T-B-M"] .region-preview-controls{justify-content:flex-start;padding-left:7px}
+body[data-screen="T-B-M"] .region-timeline{padding:9px 11px}
+body[data-screen="T-B-M"] .region-timeline>h2{font-size:15px;height:27px;margin:0}
+body[data-screen="T-B-M"] .region-timeline .ruler{height:24px;padding-left:11%;font-size:11px}
+body[data-screen="T-B-M"] .region-timeline .lane{height:77px}
+body[data-screen="T-B-M"] .region-timeline .lane-label{width:99px;min-width:99px;align-self:flex-start;font-weight:700}
+body[data-screen="T-B-M"] .region-timeline .lane-bar{height:65px;background:#172b3c;overflow:hidden}
+.testb-film-strip{position:absolute;inset:0;display:grid;grid-template-columns:repeat(13,1fr);gap:1px}
+.testb-film-strip .film-placeholder{display:flex;align-items:center;justify-content:center;min-width:0;background:linear-gradient(135deg,#193149,#325172);border:1px solid #516b84;color:#c9d7e5;font-size:8px;text-align:center}
+body[data-screen="T-B-M"] .region-timeline .clip{height:63px;top:0;background:#2365a8;color:#fff;border-color:#7baadd;z-index:2}
+body[data-screen="T-B-M"] .region-timeline .kill-line{height:78px;top:-5px}
+body[data-screen="T-B-M"] .region-timeline .trim{height:44px;margin-top:6px;gap:5px;justify-content:space-between}
+body[data-screen="T-B-M"] .region-timeline .trim [data-ui="selected-scene-label"]{margin-right:auto;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-screen="T-B-M"] .region-timeline .trim button{min-width:150px;color:#086af1;font-weight:700}
+html[data-theme=dark] .testb-scenes .scene-card,html[data-theme=dark] .testb-mode-list .camera-card{background:var(--panel)}
+
 /* L02 uses the source mock's three-part editor toolbar while retaining live actions. */
 body[data-screen="L02-M"] .region-header{background:linear-gradient(90deg,#f4f8fd,#fff);border-color:#e2eaf5}
 .legacy2-brand{position:absolute;left:21px;top:10px;display:flex;align-items:center;gap:24px;white-space:nowrap}

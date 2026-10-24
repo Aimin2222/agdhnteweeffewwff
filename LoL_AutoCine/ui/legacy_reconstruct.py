@@ -279,6 +279,74 @@ def _legacy06_applied() -> str:
             + _button('ライブラリを開く', 'screen', 'L06-L') + '</div>')
 
 
+def _testb_scene_list() -> str:
+    scenes = ''.join(
+        f'<div class="scene-card" data-ui="scene-card-{i}">'
+        '<span class="check"></span><span class="scene-thumb-placeholder">映像未取得</span>'
+        '<strong>未スキャン</strong><span class="time">--:--</span><span class="side">—</span></div>'
+        for i in range(6))
+    return ('<h2>シーンリスト</h2><div class="testb-scan">'
+            + _button('試合全体スキャン', 'scan', cls='primary full') + '</div>'
+            '<h3>キル・アシストフィルター</h3><div class="filters">'
+            + _button('キル', 'event_mode', 'kill')
+            + _button('アシスト', 'event_mode', 'assist')
+            + _button('キル＋アシスト', 'event_mode', 'both') + '</div>'
+            '<h3>検出シーン <span data-ui="scene-count">全0件</span></h3>'
+            '<p class="subtle" data-ui="scan-status">未スキャン</p>'
+            '<div class="testb-scenes">' + scenes + '</div>'
+            '<div class="testb-scene-actions">' + _button('全選択', 'check_all')
+            + _button('全解除', 'uncheck_all') + '</div>')
+
+
+def _testb_camera_modes() -> str:
+    modes = (
+        ('従来の手動カメラ', 'manual', 'プレイヤー操作に近いカメラワーク', 'testb-qa-1'),
+        ('固定視点＋自動構図補正', 'fixed_auto', '状況に応じて見やすい構図へ自動補正', 'testb-qa-3'),
+        ('フルオートシネマ', 'full_auto', 'キルシーンを自動で撮影', 'testb-qa-6'),
+    )
+    return '<h2>カメラモード</h2><div class="testb-mode-list">' + ''.join(
+        f'<button class="camera-card" data-action="camera_mode" data-action-value="{value}">'
+        f'<span class="testb-qa-shot {shot}" title="過去QA画像・現在のプレビューではありません"></span>'
+        f'<strong>{escape(label)}</strong><small>{escape(note)}</small></button>'
+        for label, value, note, shot in modes) + '</div>'
+
+
+def _testb_camera_cards() -> str:
+    cards = (
+        ('三人称', 'third', 'testb-qa-6'),
+        ('三人称シネマ', 'third_cinema', 'testb-qa-7'),
+        ('FPS風', 'fps', 'testb-qa-8'),
+        ('Lolnamシネマ', 'lolnam_cinema', 'testb-qa-9'),
+    )
+    return ('<h2>画像選択 <small>過去QA画像</small></h2><div class="testb-style-cards">'
+            + ''.join(f'<button data-action="camera_style" data-action-value="{value}">'
+                      f'<span class="testb-qa-shot {shot}"></span><small>{escape(label)}</small></button>'
+                      for label, value, shot in cards) + '</div>')
+
+
+def _testb_material_summary() -> str:
+    return ('<h2>フレーム・エフェクト・モーション</h2><div class="testb-material-links">'
+            + _button('キルフレーム図鑑', 'work_gallery')
+            + _button('同名FX設定', 'work_settings')
+            + _button('登場アニメ6種', 'screen', 'T-B-F') + '</div>'
+            '<p>枠：<span data-ui="selected-frame-name">未選択</span></p>'
+            '<p>FX：<span data-ui="selected-effect-name">未選択</span></p>')
+
+
+def _testb_timeline() -> str:
+    film = ''.join('<span class="film-placeholder">映像未取得</span>' for _ in range(13))
+    return ('<h2>キル選択タイムライン <small>検出後に実シーンを表示</small></h2>'
+            '<div class="ruler"><span>—</span><span>—</span><span>—</span><span>—</span>'
+            '<span>—</span><span>—</span><span>—</span></div>'
+            '<div class="lane"><span class="lane-label">試合全体</span>'
+            '<div class="lane-bar"><div class="testb-film-strip">' + film + '</div>'
+            '<span class="kill-line"></span></div></div>'
+            '<div class="trim"><span data-ui="selected-scene-label">シーン未選択</span>'
+            ' キル前 <input type="number" data-setting="pre" value="5" min="1" max="15" step="0.5"> 秒'
+            ' キル後 <input type="number" data-setting="post" value="3" min="1" max="15" step="0.5"> 秒'
+            + _button('この範囲をプレビュー', 'preview_play') + '</div>')
+
+
 def _view_switcher(screen_id: str) -> str:
     groups = {
         'L03-N': [('通常', 'L03-N'), ('詳細', 'L03-D')],
@@ -341,6 +409,16 @@ def _component(screen_id: str, region: str) -> str:
                     + _button('TargetLock', 'native_settings')
                     + _button('37キルバッジ', 'work_gallery')
                     + _button('書き出し', 'export_menu', cls='primary') + '</nav>')
+        if screen_id.startswith('T-B-'):
+            return ('<div class="testb-brand"><b class="app-icon">L</b><strong>LoL AutoCine</strong>'
+                    '<span>UI改善案・実動作比較</span><em>B案｜カメラ・エフェクトテスト</em></div>'
+                    '<div class="testb-topnav">' + _view_switcher(screen_id) + '</div>'
+                    '<nav class="testb-settings">'
+                    + _button('リプレイを開く', 'open_replay')
+                    + _button('準備', 'prepare')
+                    + _button('GPU・音声・HUD設定', 'native_settings')
+                    + _button('ログ', 'diagnostics')
+                    + _button('動画を作成', 'export_menu', cls='primary') + '</nav>')
         if screen_id == 'L05-M':
             return ('<div class="legacy3-brand"><strong>LoL AutoCine</strong>'
                     '<span data-ui="replay-header">リプレイ未接続</span></div>'
@@ -365,6 +443,8 @@ def _component(screen_id: str, region: str) -> str:
                   '<option value="light">ライト</option><option value="dark">ダーク</option></select>'
                 + _button('動画を作成', 'export_menu', cls='primary') + '</nav>')
     if region == 'scene-list':
+        if screen_id == 'T-B-M':
+            return _testb_scene_list()
         if screen_id in {'L03-N', 'L03-D', 'L05-M'}:
             return _legacy03_scene_list(5 if screen_id == 'L05-M' else 3)
         if screen_id == 'L06-E':
@@ -387,14 +467,25 @@ def _component(screen_id: str, region: str) -> str:
                 + _button('ミラー停止', 'mirror_stop')
                 + _button('演出プレビュー再生', 'preview_play')
                 + _button('プレビュー停止', 'preview_stop'))
+    if screen_id == 'T-B-M' and region == 'camera-modes': return _testb_camera_modes()
+    if screen_id == 'T-B-M' and region == 'camera-cards': return _testb_camera_cards()
     if region in {'camera-cards','camera-modes'}: return _camera_modes()
+    if screen_id == 'T-B-M' and region == 'material-summary': return _testb_material_summary()
     if region == 'applied-assets' and screen_id == 'L06-E': return _legacy06_applied()
     if region in {'frame-cards','materials','material-summary','applied-assets'}: return _frame_cards()
     if region == 'effect-cards':
         return '<h2>エフェクト</h2><p class="subtle">選択した枠と同名FXを適用</p>' + _button('FX設定', 'work_settings')
+    if screen_id == 'T-B-M' and region == 'side-buttons':
+        return ('<div class="target-side testb-side-buttons">'
+                + _button('BLUE サイド', 'camera_side', 'BLUE', 'blue')
+                + _button('RED サイド', 'camera_side', 'RED', 'red') + '</div>')
     if region in {'side-buttons','target-side'}: return _side_buttons()
     if region in {'camera-numeric'}: return _camera_numbers()
     if region == 'inspector':
+        if screen_id == 'T-B-M':
+            return ('<div class="testb-inspector-tabs">'
+                    + _button('カメラ', 'screen', 'T-B-C', 'selected')
+                    + _button('キル演出', 'screen', 'T-B-F') + '</div>')
         if is_test and screen_id != 'T-B-S':
             return '<h2>設定 <small>独立スクロール</small></h2>'
         if screen_id in {'L03-N', 'L03-D'}:
@@ -420,6 +511,7 @@ def _component(screen_id: str, region: str) -> str:
                 '<span>1920 × 1080</span><span data-ui="output-fps">60 fps</span><span>MP4</span></div>'
                 + _button('出力先を選択', 'output_folder') + _button('動画を作成', 'export_menu', cls='primary'))
     if region == 'timeline':
+        if screen_id == 'T-B-M': return _testb_timeline()
         return (_legacy03_timeline(include_trim=screen_id in {'L03-N', 'L03-D'})
                 if screen_id in {'L03-N', 'L03-D', 'L05-M', 'L06-L', 'L06-E'}
                 else _timeline())

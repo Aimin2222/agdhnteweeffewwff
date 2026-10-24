@@ -224,6 +224,13 @@ class Audit29RuntimeTests(unittest.TestCase):
                     if old_id in {"L03-N", "L03-D"}:
                         self.assertIn('data-action-value="L03-N"', reconstructed)
                         self.assertIn('data-action-value="L03-D"', reconstructed)
+                    if old_id == "T-B-M":
+                        self.assertEqual(reconstructed.count('data-ui="scene-card-'), 6)
+                        self.assertIn('data-action-value="fixed_auto"', reconstructed)
+                        self.assertIn('data-action-value="third_cinema"', reconstructed)
+                        self.assertIn('data-action-value="BLUE"', reconstructed)
+                        self.assertIn('data-action-value="RED"', reconstructed)
+                        self.assertIn('class="film-placeholder"', reconstructed)
                     if old_id.startswith("T-B-"):
                         for target in ("T-B-M", "T-B-S", "T-B-C", "T-B-F"):
                             self.assertIn(f'data-action-value="{target}"', reconstructed)
