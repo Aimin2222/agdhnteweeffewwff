@@ -150,6 +150,7 @@ class Audit29Runtime:
                      "duration": float(getattr(getattr(app, "_match_scan_cache", None), "length", 0) or 0)},
             "event_mode": app.var_event_mode.get(),
             "edit_mode": app.var_edit_mode.get() if hasattr(app, "var_edit_mode") else "easy",
+            "easy_preset": app.var_tpl.get() if hasattr(app, "var_tpl") else "",
             "camera": {"mode": app.var_camera_control_mode.get(),
                        "side": app.var_camera_side.get(), "style": app.var_style.get(),
                        "values": camera_values},
@@ -242,6 +243,13 @@ class Audit29Runtime:
             if mode not in MODE_LABELS:
                 raise ValueError("unknown camera mode")
             app.var_camera_control_mode.set(MODE_LABELS[mode])
+        elif action == "easy_preset":
+            name = str(data.get("value", ""))
+            if name not in ("Lolnam風スムーズ", "Lolnam風ダイナミック", "三人称 自然め"):
+                raise ValueError("unknown easy preset")
+            if name not in app.templates:
+                raise ValueError("この仕上がり設定は現在のアプリにありません")
+            app._choose_easy_preset(name)
         elif action == "camera_side":
             side = data.get("value")
             if side not in CAMERA_SIDES:
@@ -338,7 +346,7 @@ class Audit29Runtime:
             app.root.deiconify()
             app.root.lift()
         elif action == "native_editor_zone":
-            zone = str(data["zone"])
+            zone = str(data.get("zone", data.get("value", "")))
             if zone not in ("scene", "camera", "color", "fx", "output"):
                 raise ValueError("unknown editor zone")
             app._focus_editor_zone(zone)

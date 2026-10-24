@@ -51,6 +51,51 @@ def _legacy02_library() -> str:
             + _button('全解除', 'uncheck_all') + '</div></div>')
 
 
+def _legacy03_scene_list() -> str:
+    slots = ''.join(
+        f'<div class="scene-card" data-ui="scene-card-{i}">'
+        '<span class="check"></span><span class="scene-thumb-placeholder">映像未取得</span>'
+        '<strong>未スキャン</strong><span class="time">--:--</span><span class="side">—</span></div>'
+        for i in range(3))
+    return ('<h2>検出シーン</h2><div class="legacy3-scan">'
+            + _button('⌕ 試合全体スキャン', 'scan', cls='full') + '</div>'
+            '<p class="legacy3-count">検出されたシーン <span data-ui="scene-count">全0件</span></p>'
+            '<p class="subtle" data-ui="scan-status">未スキャン</p>'
+            '<div class="legacy3-scene-list">' + slots + '</div>')
+
+
+def _legacy03_inspector(detailed: bool) -> str:
+    header = ('<h2>かんたん設定</h2><div class="legacy3-edit-mode edit-mode">'
+              + _button('簡単編集', 'screen', 'L03-N', 'selected' if not detailed else '')
+              + _button('詳細編集', 'screen', 'L03-D', 'selected' if detailed else '')
+              + '</div>')
+    if detailed:
+        return (header + '<div class="legacy3-property-tabs">'
+                + _button('カメラ', 'native_editor_zone', 'camera', 'selected')
+                + _button('フレーム', 'work_gallery')
+                + _button('エフェクト', 'work_settings') + '</div>'
+                + '<h2>カメラショット</h2>' + _camera_modes() + _camera_numbers()
+                + '<div class="legacy3-detail-actions">'
+                + _button('TargetLockを設定', 'native_settings')
+                + _button('カメラをリセット', 'native_settings') + '</div>')
+    presets = (('おすすめ', 'Lolnam風スムーズ'),
+               ('迫力重視', 'Lolnam風ダイナミック'),
+               ('シンプル', '三人称 自然め'))
+    return (header + '<h2>プリセット</h2><div class="legacy3-presets">'
+            + ''.join(_button(label, 'easy_preset', preset, 'legacy3-preset')
+                      for label, preset in presets) + '</div>'
+            + '<p class="subtle">現在：<span data-ui="easy-preset-name">—</span></p>'
+            + '<div class="legacy3-control">カメラ移動量 <small>速度の独立設定は未対応</small>'
+            '<input data-setting="motion_dolly" type="range" min="0" max="15" step="0.5" value="3">'
+            '<input data-setting="motion_dolly" type="number" min="0" max="15" step="0.5" value="3"></div>'
+            + '<div class="legacy3-control">エフェクトの強さ'
+            + _button('弱', 'effect_strength', 'weak')
+            + _button('強', 'effect_strength', 'strong') + '</div>'
+            + '<div class="legacy3-checks"><label><input type="checkbox" data-hud-visible>HUDを表示する</label>'
+            + _button('TargetLockを設定', 'native_settings')
+            + _button('37キルバッジの設定', 'work_gallery') + '</div>')
+
+
 def _frame_cards() -> str:
     cards = ''.join(f'<div class="material-card" data-ui="material-card-{i}">'
                     '<img class="frame-thumb" alt="監査済み素材"><h3>読み込み中</h3><span class="badge"></span>'
@@ -94,6 +139,18 @@ def _timeline() -> str:
             'キル後 <input type="number" data-setting="post" value="3" min="1" max="15" step="0.5"> 秒</div>')
 
 
+def _legacy03_timeline() -> str:
+    lanes = ('検出シーン', 'カメラ', 'キルフレーム', 'エフェクト')
+    return ('<h2>タイムライン <span data-ui="selected-scene-label">シーン未選択</span></h2>'
+            '<div class="ruler"><span>—</span><span>—</span><span>—</span><span>—</span>'
+            '<span>—</span><span>—</span><span>—</span></div>'
+            + ''.join('<div class="lane"><span class="lane-label">' + label +
+                      '</span><div class="lane-bar"><span class="kill-line"></span></div></div>'
+                      for label in lanes)
+            + '<div class="trim">キル前 <input type="number" data-setting="pre" value="5" min="1" max="15" step="0.5"> 秒　'
+              'キル後 <input type="number" data-setting="post" value="3" min="1" max="15" step="0.5"> 秒</div>')
+
+
 def _material_library() -> str:
     return ('<h2>ライブラリ</h2><div class="region-pad">'
             + _button('試合全体スキャン', 'scan', cls='primary full')
@@ -125,12 +182,27 @@ def _component(screen_id: str, region: str) -> str:
     if region == 'header':
         if screen_id == 'L02-M':
             return ('<div class="legacy2-brand"><strong>LoL AutoCine</strong>'
-                    '<span>リプレイ未接続</span></div>'
+                    '<span data-ui="replay-header">リプレイ未接続</span></div>'
                     '<div class="legacy2-topnav">'
                     + _button('▣ 素材', 'work_gallery')
                     + _button('▣ 編集', 'edit_mode', 'advanced', 'active')
                     + _button('▤ 書き出し', 'export_menu') + '</div>'
                     '<nav class="legacy2-settings">'
+                    + _button('⚙ 基本設定', 'native_settings')
+                    + _button('GPU', 'native_settings')
+                    + _button('音声', 'native_settings')
+                    + _button('HUD', 'native_settings')
+                    + _button('TargetLock', 'native_settings')
+                    + _button('37キルバッジ', 'work_gallery')
+                    + _button('書き出し', 'export_menu', cls='primary') + '</nav>')
+        if screen_id in {'L03-N', 'L03-D'}:
+            return ('<div class="legacy3-brand"><strong>LoL AutoCine</strong>'
+                    '<span data-ui="replay-header">リプレイ未接続</span></div>'
+                    '<div class="legacy3-topnav">'
+                    + _button('試合', 'open_replay')
+                    + _button('編集', 'edit_mode', 'advanced' if screen_id == 'L03-D' else 'easy', 'active')
+                    + _button('書き出し', 'export_menu') + '</div>'
+                    '<nav class="legacy3-settings">'
                     + _button('⚙ 基本設定', 'native_settings')
                     + _button('GPU', 'native_settings')
                     + _button('音声', 'native_settings')
@@ -150,7 +222,8 @@ def _component(screen_id: str, region: str) -> str:
                 + '<select id="theme" aria-label="表示テーマ"><option value="system">Windows追従</option>'
                   '<option value="light">ライト</option><option value="dark">ダーク</option></select>'
                 + _button('動画を作成', 'export_menu', cls='primary') + '</nav>')
-    if region == 'scene-list': return _scene_list()
+    if region == 'scene-list':
+        return _legacy03_scene_list() if screen_id in {'L03-N', 'L03-D'} else _scene_list()
     if region == 'library':
         if screen_id == 'L02-M':
             return _legacy02_library()
@@ -176,6 +249,8 @@ def _component(screen_id: str, region: str) -> str:
     if region == 'inspector':
         if is_test and screen_id != 'T-B-S':
             return '<h2>設定 <small>独立スクロール</small></h2>'
+        if screen_id in {'L03-N', 'L03-D'}:
+            return _legacy03_inspector(screen_id == 'L03-D')
         if screen_id == 'L02-M':
             return ('<h2>プロパティ</h2><div class="legacy2-property-tabs">'
                     + _button('カメラ', 'native_settings', cls='selected')
@@ -192,7 +267,8 @@ def _component(screen_id: str, region: str) -> str:
         return ('<h2>出力設定</h2><div class="output-summary">'
                 '<span>1920 × 1080</span><span data-ui="output-fps">60 fps</span><span>MP4</span></div>'
                 + _button('出力先を選択', 'output_folder') + _button('動画を作成', 'export_menu', cls='primary'))
-    if region == 'timeline': return _timeline()
+    if region == 'timeline':
+        return _legacy03_timeline() if screen_id in {'L03-N', 'L03-D'} else _timeline()
     if region in {'edit-tabs','bottom-tabs'}:
         return ('<div class="edit-mode row">' + _button('簡単編集', 'edit_mode', 'easy')
                 + _button('詳細編集', 'edit_mode', 'advanced') + '</div>')

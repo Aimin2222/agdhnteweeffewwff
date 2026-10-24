@@ -76,6 +76,12 @@ def main():
             assert not state["capabilities"]["engage"]
             assert next(row for row in state["workspace"]["screens"]
                         if row["id"] == "T-A-M")["implemented"]
+            request("screen", {"id": "L03-N"})
+            preset_state = request("easy_preset", {"value": "Lolnam風スムーズ"})
+            assert preset_state["easy_preset"] == "Lolnam風スムーズ"
+            detail_state = request("screen", {"id": "L03-D"})
+            assert detail_state["easy_preset"] == preset_state["easy_preset"]
+            assert detail_state["workspace"]["screen_id"] == "L03-D"
             outcome["result"] = "PASS"
             outcome["screen"] = state["workspace"]["screen_id"]
             outcome["candidate_roundtrip"] = checked_screens
@@ -83,7 +89,8 @@ def main():
             outcome["tested"] = ["neutral_chooser", "candidate_state", "theme_state",
                                  "camera_side", "camera_number", "entrance_motion",
                                  "audited_frame_pair", "catalog_asset_route",
-                                 "all_29_screen_routes_preserve_state"]
+                                 "all_29_screen_routes_preserve_state",
+                                 "legacy03_easy_preset_and_detail_switch"]
         except Exception as exc:
             outcome["result"] = "FAIL"
             outcome["error"] = repr(exc)

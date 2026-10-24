@@ -120,6 +120,9 @@
     document.querySelectorAll('.connection-state').forEach(label=>{
       label.textContent=data.replay.connected?'接続中':'LoL未接続';
     });
+    document.querySelectorAll('[data-ui="replay-header"]').forEach(label=>{
+      label.textContent=data.replay.connected?'リプレイ接続中':'リプレイ未接続';
+    });
     document.querySelectorAll('[data-ui="output-fps"]').forEach(label=>{
       label.textContent=/fps/i.test(String(data.output.fps)) ?
         String(data.output.fps) : `${data.output.fps} fps`;
@@ -168,9 +171,17 @@
       button.classList.toggle('selected',active);
     });
     document.querySelectorAll('.edit-mode button').forEach(button=>{
+      if (button.closest('.legacy3-edit-mode')) {
+        button.classList.toggle('selected',button.dataset.actionValue===screenId);
+        return;
+      }
       const mode=button.textContent.includes('詳細')?'advanced':'easy';
       button.classList.toggle('selected',data.edit_mode===mode);
     });
+    document.querySelectorAll('.legacy3-preset').forEach(button=>
+      button.classList.toggle('selected',button.dataset.actionValue===data.easy_preset));
+    const presetName=document.querySelector('[data-ui="easy-preset-name"]');
+    if (presetName) presetName.textContent=data.easy_preset || '未選択';
     const countLabel = document.querySelector('[data-ui="scene-list"] .panel-head + button + p');
     if (countLabel) {
       countLabel.textContent = `検出 ${data.scenes.length}件 / 出力チェック ${data.checked_count}件` +
@@ -299,6 +310,8 @@
     });
     const hudToggle=document.querySelector('[data-hud-toggle]');
     if (hudToggle) hudToggle.checked = data.output.hud !== 'full';
+    const hudVisible=document.querySelector('[data-hud-visible]');
+    if (hudVisible) hudVisible.checked = data.output.hud === 'full';
     if (image && !data.preview.mirror_requested) image.style.visibility = 'hidden';
   }
   async function refreshFrame() {
@@ -540,6 +553,9 @@
   const hudToggle=document.querySelector('[data-hud-toggle]');
   if (hudToggle) hudToggle.addEventListener('change',()=>invoke('hud',
     {value:hudToggle.checked?'hidden':'full'}));
+  const hudVisible=document.querySelector('[data-hud-visible]');
+  if (hudVisible) hudVisible.addEventListener('change',()=>invoke('hud',
+    {value:hudVisible.checked?'full':'hidden'}));
   const theme = document.querySelector('#theme');
   if (theme) theme.addEventListener('change', () => invoke('theme',{value:theme.value}));
   const familyStart = new Map([
