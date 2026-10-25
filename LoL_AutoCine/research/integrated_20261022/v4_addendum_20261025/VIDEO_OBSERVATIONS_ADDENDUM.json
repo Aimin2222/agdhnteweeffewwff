@@ -1,0 +1,166 @@
+{
+  "V01": {
+    "url": "https://www.youtube.com/watch?v=NolHvXjZA4A",
+    "range": [
+      326.33103,
+      370.523681
+    ],
+    "observed": "midからジャングル追走、331〜358秒は低体力の人物と追手を広く追う。345.87秒に赤い縦光、349.5秒に金の像、351〜356秒の再戦後358秒に倒れたモデル。359.99秒に別midシーンへ。通知は確認できない。",
+    "inference": "金の像・縦光・人物消失だけではkillを確定しない。広い追走と終端cutの設計参考。",
+    "two_explicit_notifications": false
+  },
+  "V02": {
+    "url": "https://www.youtube.com/watch?v=d-r2kgeFfus",
+    "segments": [
+      {
+        "start": 0,
+        "end": 14,
+        "observed": "傾いた地形からmid対面へ。約5秒からプレイヤー紹介帯。8.96秒の接触後、12.52秒では片側が倒れたように見える。",
+        "evidence_tier": "通知なし・キル候補B",
+        "inference_or_limit": "紹介帯はキル通知ではない。画面から勝者/時刻を確定しない。"
+      },
+      {
+        "start": 14,
+        "end": 43,
+        "observed": "mid複数人戦を俯瞰追従。21.42秒に青い縦光、34.05秒に赤い縦光、39.40秒に橙の縦光。41.22秒は倒れたモデルが残る。",
+        "evidence_tier": "通知なし・複数キル候補B",
+        "inference_or_limit": "複数人物を広く残す構図。ビームの色からkill/victim/チームを確定しない。白い多角形は元映像にあるが由来未確定。"
+      },
+      {
+        "start": 44,
+        "end": 65,
+        "observed": "mid対面から川側へ追走、両者の距離に合わせてパン。接触中は上から両者を残す。",
+        "evidence_tier": "観測",
+        "inference_or_limit": "追走と戦闘終端のcutawayを分離する。"
+      },
+      {
+        "start": 66,
+        "end": 72,
+        "observed": "66.45秒は黒背景に人物、68.21秒は橙の強い発光、69.98秒は地形の大きなぼけ、71.75秒は別の集団戦。",
+        "evidence_tier": "演出観測",
+        "inference_or_limit": "人物切り出し・背景置換の実装方法は推測。意図的暗転候補で、AutoCineの黒画面不具合とはしない。"
+      },
+      {
+        "start": 72,
+        "end": 104,
+        "observed": "midからジャングルへ複数人物を追う。91.35秒付近の青い縦光、98〜102秒は残った対面を追う。",
+        "evidence_tier": "通知なし・キル候補B",
+        "inference_or_limit": "戦闘が続く限りワイドを維持するレシピ候補。"
+      },
+      {
+        "start": 104,
+        "end": 119,
+        "observed": "ジャングル通路の対面。111〜116秒の接触後、118.42秒にカメラが大きく傾き地形が外へ流れる。",
+        "evidence_tier": "観測",
+        "inference_or_limit": "終端カメラの地形外露出をQA候補へ。正確なFOV/速度は未測定。"
+      },
+      {
+        "start": 120,
+        "end": 135,
+        "observed": "midから基地側の複数人戦へ。カメラは戦闘の広がりを追う。",
+        "evidence_tier": "観測",
+        "inference_or_limit": "中央1人物だけの追従では周辺人物を落とし得る。"
+      },
+      {
+        "start": 135,
+        "end": 151,
+        "observed": "topの戦闘から川へ追走。150.47秒は川・地形を大きく傾けたショット。",
+        "evidence_tier": "観測",
+        "inference_or_limit": "戦闘終了検出とカメラ安全判定は別に扱う。"
+      },
+      {
+        "start": 152,
+        "end": 182,
+        "observed": "midのUzi紹介帯付き集団戦。複数人物が倒れたように見えても、残敵を画面に残して戦闘を続ける。182.48秒で地形外が大きく映る。",
+        "evidence_tier": "通知なし・キル候補B",
+        "inference_or_limit": "最後のkill直後と決めつけず、次のengage/可視性のガードが必要。"
+      },
+      {
+        "start": 184,
+        "end": 208,
+        "observed": "top対面からタワー方向へ追走。202〜205秒に接触・片側消失後、207.75秒で空・地形端を見せる。",
+        "evidence_tier": "通知なし・キル候補B",
+        "inference_or_limit": "キル後人物ショットの前にマップ境界チェックを提案。"
+      },
+      {
+        "start": 209,
+        "end": 234,
+        "observed": "topと川の往復・追走。232.59秒は青い縦光と倒れたモデル。234.36秒で黒。",
+        "evidence_tier": "通知なし・キル候補B",
+        "inference_or_limit": "暗転は前後の連続性から演出候補として記録。"
+      },
+      {
+        "start": 236,
+        "end": 259,
+        "observed": "黒背景の青緑人物ショットから基地戦へ。248.92秒は赤い縦光、256〜258秒は倒れたような人物が残る。",
+        "evidence_tier": "通知なし・キル候補B",
+        "inference_or_limit": "装備/人物を別に扱うショットは新規機能領域。"
+      },
+      {
+        "start": 259,
+        "end": 304,
+        "observed": "暗い青緑のmid対面・タワー追走。終端で別対面へ切り替える。",
+        "evidence_tier": "観測",
+        "inference_or_limit": "彩度/明度/ビネットの類似表現は既存処理候補。使用LUTは特定不可。"
+      },
+      {
+        "start": 304,
+        "end": 349,
+        "observed": "top対面の長い追走の後mid複数人戦、344.39秒に青い縦光。",
+        "evidence_tier": "通知なし・キル候補B",
+        "inference_or_limit": "長い追走を急な人物closeで中断しない案。"
+      },
+      {
+        "start": 349,
+        "end": 374,
+        "observed": "botの対面から4人程度の戦闘。365.78秒は倒れたモデルがあるが、369秒台まで残敵を追う。",
+        "evidence_tier": "通知なし・キル候補B",
+        "inference_or_limit": "単発の消失でグループを閉じない。"
+      },
+      {
+        "start": 374,
+        "end": 399,
+        "observed": "明るいmid複数人戦。392.16秒に青い縦光、397.93秒にも青い縦光と倒れたモデル。399.72秒で地形パンへ。",
+        "evidence_tier": "通知なし・キル候補B",
+        "inference_or_limit": "約5.8秒離れた2候補だけを根拠にgroup閾値を正式採用しない。"
+      },
+      {
+        "start": 400,
+        "end": 418,
+        "observed": "川からmidへ対面を追走し、壁際へ。残った対面を広く残す。",
+        "evidence_tier": "観測",
+        "inference_or_limit": "壁で人物を隠すカメラ候補は可視性未確認なら採用しない。"
+      },
+      {
+        "start": 419,
+        "end": 435,
+        "observed": "基地周辺の多数人物戦。広い画面で戦闘を追う。",
+        "evidence_tier": "観測",
+        "inference_or_limit": "密集戦で強い全画面FXを抑える案。"
+      },
+      {
+        "start": 435,
+        "end": 457,
+        "observed": "明るい黄系のmid対面。455.65秒で片側の倒れたようなモデル、457.45秒で基地の俯瞰に切り替わる。",
+        "evidence_tier": "通知なし・キル候補B",
+        "inference_or_limit": "カラーの全体構成は観測、数値/効果チェーンは推測。"
+      },
+      {
+        "start": 459,
+        "end": 493,
+        "observed": "基地の高い俯瞰から集団戦、487.99秒で泉周辺の俯瞰、移動する複数人物。",
+        "evidence_tier": "観測",
+        "inference_or_limit": "全体終端の確定はkill通知を根拠にしていない。"
+      },
+      {
+        "start": 493,
+        "end": 499.02,
+        "observed": "黒背景の終了カード、後半にYouTube推薦サムネイルが重なる。",
+        "evidence_tier": "エンドカード観測",
+        "inference_or_limit": "500.84秒ラベルのスクリーンショットは後付け広告へ切り替わっており、作品の画として除外。"
+      }
+    ],
+    "two_explicit_notifications": false,
+    "scope": "near-complete sampled visual observation; audio not heard; notification-confirmed count remains 13/20"
+  }
+}

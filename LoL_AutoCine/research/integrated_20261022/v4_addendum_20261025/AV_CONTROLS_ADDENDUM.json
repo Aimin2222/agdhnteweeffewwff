@@ -1,0 +1,2088 @@
+{
+  "cases": [
+    {
+      "id": "control_30_0.5_0.1_atempo_pcm",
+      "fps": 30,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_pcm",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.3,
+      "video_vs_ideal_ms": 49.999999999999986,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23668783333333332,
+          "offset_ms": -63.31216666666667,
+          "audio_vs_ideal_ms": -13.31216666666668
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.23920866666666665,
+          "offset_ms": -60.791333333333334,
+          "audio_vs_ideal_ms": -10.791333333333347
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.24120866666666665,
+          "offset_ms": -58.791333333333334,
+          "audio_vs_ideal_ms": -8.791333333333345
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24408366666666664,
+          "offset_ms": -55.91633333333335,
+          "audio_vs_ideal_ms": -5.916333333333357
+        }
+      ],
+      "decoded_frames": 31,
+      "sha256": "9a2df73247664909f2e466b35a4ed5203860a9f8f48500c9eebb4d88a9e4da9e",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.6)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.6)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "30",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.5_0.1_atempo_pcm.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.5_0.1_atempo_aac",
+      "fps": 30,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_aac",
+      "codec": "aac",
+      "video_marker_pts": 0.3,
+      "video_vs_ideal_ms": 49.999999999999986,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23685383333333332,
+          "offset_ms": -63.14616666666667,
+          "audio_vs_ideal_ms": -13.14616666666668
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.23937466666666665,
+          "offset_ms": -60.62533333333334,
+          "audio_vs_ideal_ms": -10.625333333333348
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.24137466666666665,
+          "offset_ms": -58.62533333333334,
+          "audio_vs_ideal_ms": -8.625333333333346
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24424966666666664,
+          "offset_ms": -55.750333333333344,
+          "audio_vs_ideal_ms": -5.750333333333357
+        }
+      ],
+      "decoded_frames": 31,
+      "sha256": "27c6e4238b828955e97f128073faa93cdae160c7d277f27787fe2e06736eb037",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.6)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.6)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "30",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "aac",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.5_0.1_atempo_aac.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.5_0.1_resample_pitch_control",
+      "fps": 30,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "resample_pitch_control",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.3,
+      "video_vs_ideal_ms": 49.999999999999986,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.25,
+          "offset_ms": -49.999999999999986,
+          "audio_vs_ideal_ms": 0.0
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2500208333333333,
+          "offset_ms": -49.979166666666686,
+          "audio_vs_ideal_ms": 0.020833333333303283
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2500208333333333,
+          "offset_ms": -49.979166666666686,
+          "audio_vs_ideal_ms": 0.020833333333303283
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.25004166666666666,
+          "offset_ms": -49.95833333333333,
+          "audio_vs_ideal_ms": 0.04166666666666208
+        }
+      ],
+      "decoded_frames": 31,
+      "sha256": "a0442840eba0bcc09e464b0808015f29d57ca827916b80be6254ff97546061b3",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.6)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.6)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]asetrate=96000,aresample=48000[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "30",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.5_0.1_resample_pitch_control.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.5_0.1_atempo_passthrough_pts",
+      "fps": 30,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_passthrough_pts",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.233,
+      "video_vs_ideal_ms": -16.999999999999986,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23668783333333332,
+          "offset_ms": 3.687833333333307,
+          "audio_vs_ideal_ms": -13.31216666666668
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.23920866666666665,
+          "offset_ms": 6.20866666666664,
+          "audio_vs_ideal_ms": -10.791333333333347
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.24120866666666665,
+          "offset_ms": 8.208666666666641,
+          "audio_vs_ideal_ms": -8.791333333333345
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24408366666666664,
+          "offset_ms": 11.08366666666663,
+          "audio_vs_ideal_ms": -5.916333333333357
+        }
+      ],
+      "decoded_frames": 60,
+      "sha256": "66def635fc7cdf0e45ba783326a5392b0b91852bfa48b6880783069cefbb307b",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.6)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.6)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-fps_mode",
+        "passthrough",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.5_0.1_atempo_passthrough_pts.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.5_0.1_atempo_explicit_fps",
+      "fps": 30,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_explicit_fps",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.233,
+      "video_vs_ideal_ms": -16.999999999999986,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23668783333333332,
+          "offset_ms": 3.687833333333307,
+          "audio_vs_ideal_ms": -13.31216666666668
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.23920866666666665,
+          "offset_ms": 6.20866666666664,
+          "audio_vs_ideal_ms": -10.791333333333347
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.24120866666666665,
+          "offset_ms": 8.208666666666641,
+          "audio_vs_ideal_ms": -8.791333333333345
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24408366666666664,
+          "offset_ms": 11.08366666666663,
+          "audio_vs_ideal_ms": -5.916333333333357
+        }
+      ],
+      "decoded_frames": 30,
+      "sha256": "d92bdc230905746399dbca7d027d499a423ba87bf1cf37939d5e36035e26ae46",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.6)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.6)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2,fps=30:start_time=0[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-fps_mode",
+        "passthrough",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.5_0.1_atempo_explicit_fps.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.5_0.3_atempo_pcm",
+      "fps": 30,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.3,
+      "rate": 2,
+      "mode": "atempo_pcm",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.3,
+      "video_vs_ideal_ms": 49.999999999999986,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23668783333333332,
+          "offset_ms": -63.31216666666667,
+          "audio_vs_ideal_ms": -13.31216666666668
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.23920866666666665,
+          "offset_ms": -60.791333333333334,
+          "audio_vs_ideal_ms": -10.791333333333347
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.24120866666666665,
+          "offset_ms": -58.791333333333334,
+          "audio_vs_ideal_ms": -8.791333333333345
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24408366666666664,
+          "offset_ms": -55.91633333333335,
+          "audio_vs_ideal_ms": -5.916333333333357
+        }
+      ],
+      "decoded_frames": 31,
+      "sha256": "5f6c37383cc2127a53441d93565cfa06b377301e1823a75499b126ddefbc4fa8",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.8)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.8)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "30",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.5_0.3_atempo_pcm.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.5_0.3_atempo_aac",
+      "fps": 30,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.3,
+      "rate": 2,
+      "mode": "atempo_aac",
+      "codec": "aac",
+      "video_marker_pts": 0.3,
+      "video_vs_ideal_ms": 49.999999999999986,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23685383333333332,
+          "offset_ms": -63.14616666666667,
+          "audio_vs_ideal_ms": -13.14616666666668
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.23937466666666665,
+          "offset_ms": -60.62533333333334,
+          "audio_vs_ideal_ms": -10.625333333333348
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.24137466666666665,
+          "offset_ms": -58.62533333333334,
+          "audio_vs_ideal_ms": -8.625333333333346
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24424966666666664,
+          "offset_ms": -55.750333333333344,
+          "audio_vs_ideal_ms": -5.750333333333357
+        }
+      ],
+      "decoded_frames": 31,
+      "sha256": "8da2b36d4932789e005dc4743ae70a46dfcf41dea5b031197962de3f836f937b",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.8)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.8)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "30",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "aac",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.5_0.3_atempo_aac.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.5_0.3_resample_pitch_control",
+      "fps": 30,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.3,
+      "rate": 2,
+      "mode": "resample_pitch_control",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.3,
+      "video_vs_ideal_ms": 49.999999999999986,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.25,
+          "offset_ms": -49.999999999999986,
+          "audio_vs_ideal_ms": 0.0
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2500208333333333,
+          "offset_ms": -49.979166666666686,
+          "audio_vs_ideal_ms": 0.020833333333303283
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2500208333333333,
+          "offset_ms": -49.979166666666686,
+          "audio_vs_ideal_ms": 0.020833333333303283
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.25004166666666666,
+          "offset_ms": -49.95833333333333,
+          "audio_vs_ideal_ms": 0.04166666666666208
+        }
+      ],
+      "decoded_frames": 31,
+      "sha256": "8888086aacb10d4d87ce6c4aea5c3876d85758269d791c2da998ba144dcd6a35",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.8)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.8)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]asetrate=96000,aresample=48000[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "30",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.5_0.3_resample_pitch_control.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.517_0.1_atempo_pcm",
+      "fps": 30,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_pcm",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.3,
+      "video_vs_ideal_ms": 41.49999999999998,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23970866666666665,
+          "offset_ms": -60.291333333333334,
+          "audio_vs_ideal_ms": -18.791333333333355
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2398128333333333,
+          "offset_ms": -60.187166666666684,
+          "audio_vs_ideal_ms": -18.6871666666667
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2413545,
+          "offset_ms": -58.64549999999999,
+          "audio_vs_ideal_ms": -17.14550000000001
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24437533333333333,
+          "offset_ms": -55.624666666666656,
+          "audio_vs_ideal_ms": -14.124666666666673
+        }
+      ],
+      "decoded_frames": 31,
+      "sha256": "102c998eef7be3196b7eec31ba768315e606e42092226569bd1eccd0e16e81a1",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.617)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.617)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "30",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.517_0.1_atempo_pcm.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.517_0.1_atempo_aac",
+      "fps": 30,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_aac",
+      "codec": "aac",
+      "video_marker_pts": 0.3,
+      "video_vs_ideal_ms": 41.49999999999998,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23987466666666665,
+          "offset_ms": -60.12533333333334,
+          "audio_vs_ideal_ms": -18.625333333333355
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2399788333333333,
+          "offset_ms": -60.02116666666668,
+          "audio_vs_ideal_ms": -18.5211666666667
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2415205,
+          "offset_ms": -58.47949999999999,
+          "audio_vs_ideal_ms": -16.97950000000001
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24454133333333333,
+          "offset_ms": -55.45866666666666,
+          "audio_vs_ideal_ms": -13.958666666666675
+        }
+      ],
+      "decoded_frames": 31,
+      "sha256": "92ea3b9c91fbfde1ae0d62775b6712462c647e32ffa4240ba5ba354721af9c3d",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.617)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.617)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "30",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "aac",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.517_0.1_atempo_aac.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.517_0.1_resample_pitch_control",
+      "fps": 30,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "resample_pitch_control",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.3,
+      "video_vs_ideal_ms": 41.49999999999998,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.25850033333333333,
+          "offset_ms": -41.499666666666656,
+          "audio_vs_ideal_ms": 0.00033333333332441484
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.25852116666666664,
+          "offset_ms": -41.478833333333355,
+          "audio_vs_ideal_ms": 0.021166666666627698
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.25852116666666664,
+          "offset_ms": -41.478833333333355,
+          "audio_vs_ideal_ms": 0.021166666666627698
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.258542,
+          "offset_ms": -41.458,
+          "audio_vs_ideal_ms": 0.04199999999998649
+        }
+      ],
+      "decoded_frames": 31,
+      "sha256": "9f0638715209cbd44dd7b823675238395db44af506f1925ed2b9351c9477ffed",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.617)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.617)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]asetrate=96000,aresample=48000[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "30",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.517_0.1_resample_pitch_control.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.517_0.1_atempo_passthrough_pts",
+      "fps": 30,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_passthrough_pts",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.267,
+      "video_vs_ideal_ms": 8.500000000000007,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23970866666666665,
+          "offset_ms": -27.291333333333363,
+          "audio_vs_ideal_ms": -18.791333333333355
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2398128333333333,
+          "offset_ms": -27.187166666666705,
+          "audio_vs_ideal_ms": -18.6871666666667
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2413545,
+          "offset_ms": -25.645500000000016,
+          "audio_vs_ideal_ms": -17.14550000000001
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24437533333333333,
+          "offset_ms": -22.62466666666668,
+          "audio_vs_ideal_ms": -14.124666666666673
+        }
+      ],
+      "decoded_frames": 60,
+      "sha256": "06de7879973c9c87263cac9128c3fe91626fc3f88ab9b5d33d93225718b71a28",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.617)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.617)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-fps_mode",
+        "passthrough",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.517_0.1_atempo_passthrough_pts.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.517_0.1_atempo_explicit_fps",
+      "fps": 30,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_explicit_fps",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.267,
+      "video_vs_ideal_ms": 8.500000000000007,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23970866666666665,
+          "offset_ms": -27.291333333333363,
+          "audio_vs_ideal_ms": -18.791333333333355
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2398128333333333,
+          "offset_ms": -27.187166666666705,
+          "audio_vs_ideal_ms": -18.6871666666667
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2413545,
+          "offset_ms": -25.645500000000016,
+          "audio_vs_ideal_ms": -17.14550000000001
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24437533333333333,
+          "offset_ms": -22.62466666666668,
+          "audio_vs_ideal_ms": -14.124666666666673
+        }
+      ],
+      "decoded_frames": 30,
+      "sha256": "8d189436736c01b556ee3d37027256b20d88a5cac9e7448e777f927a3a547047",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.617)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.617)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2,fps=30:start_time=0[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-fps_mode",
+        "passthrough",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.517_0.1_atempo_explicit_fps.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.517_0.3_atempo_pcm",
+      "fps": 30,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.3,
+      "rate": 2,
+      "mode": "atempo_pcm",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.3,
+      "video_vs_ideal_ms": 41.49999999999998,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23970866666666665,
+          "offset_ms": -60.291333333333334,
+          "audio_vs_ideal_ms": -18.791333333333355
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2398128333333333,
+          "offset_ms": -60.187166666666684,
+          "audio_vs_ideal_ms": -18.6871666666667
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2413545,
+          "offset_ms": -58.64549999999999,
+          "audio_vs_ideal_ms": -17.14550000000001
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24437533333333333,
+          "offset_ms": -55.624666666666656,
+          "audio_vs_ideal_ms": -14.124666666666673
+        }
+      ],
+      "decoded_frames": 31,
+      "sha256": "9d9288158c1a0b2cab860b8fb89298fc3e72d1fb63d668ff9f7b8851a5071346",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.817)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.817)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "30",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.517_0.3_atempo_pcm.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.517_0.3_atempo_aac",
+      "fps": 30,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.3,
+      "rate": 2,
+      "mode": "atempo_aac",
+      "codec": "aac",
+      "video_marker_pts": 0.3,
+      "video_vs_ideal_ms": 41.49999999999998,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23987466666666665,
+          "offset_ms": -60.12533333333334,
+          "audio_vs_ideal_ms": -18.625333333333355
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2399788333333333,
+          "offset_ms": -60.02116666666668,
+          "audio_vs_ideal_ms": -18.5211666666667
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2415205,
+          "offset_ms": -58.47949999999999,
+          "audio_vs_ideal_ms": -16.97950000000001
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24454133333333333,
+          "offset_ms": -55.45866666666666,
+          "audio_vs_ideal_ms": -13.958666666666675
+        }
+      ],
+      "decoded_frames": 31,
+      "sha256": "113648fe148b9a74e47d94a9c36df593c821a439474f88a8779171fe6d9f2fee",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.817)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.817)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "30",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "aac",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.517_0.3_atempo_aac.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_30_0.517_0.3_resample_pitch_control",
+      "fps": 30,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.3,
+      "rate": 2,
+      "mode": "resample_pitch_control",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.3,
+      "video_vs_ideal_ms": 41.49999999999998,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.25850033333333333,
+          "offset_ms": -41.499666666666656,
+          "audio_vs_ideal_ms": 0.00033333333332441484
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.25852116666666664,
+          "offset_ms": -41.478833333333355,
+          "audio_vs_ideal_ms": 0.021166666666627698
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.25852116666666664,
+          "offset_ms": -41.478833333333355,
+          "audio_vs_ideal_ms": 0.021166666666627698
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.258542,
+          "offset_ms": -41.458,
+          "audio_vs_ideal_ms": 0.04199999999998649
+        }
+      ],
+      "decoded_frames": 31,
+      "sha256": "e4d654b62f23e07226dd0ae345e9e5a74f8d14785ef6722dff648434f06e1b70",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=30:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.817)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.817)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]asetrate=96000,aresample=48000[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "30",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_30_0.517_0.3_resample_pitch_control.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.5_0.1_atempo_pcm",
+      "fps": 60,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_pcm",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.267,
+      "video_vs_ideal_ms": 17.000000000000014,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23668783333333332,
+          "offset_ms": -30.312166666666695,
+          "audio_vs_ideal_ms": -13.31216666666668
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.23920866666666665,
+          "offset_ms": -27.791333333333363,
+          "audio_vs_ideal_ms": -10.791333333333347
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.24120866666666665,
+          "offset_ms": -25.79133333333336,
+          "audio_vs_ideal_ms": -8.791333333333345
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24408366666666664,
+          "offset_ms": -22.916333333333373,
+          "audio_vs_ideal_ms": -5.916333333333357
+        }
+      ],
+      "decoded_frames": 61,
+      "sha256": "becead766a1646c07827ec7229087bfb676f275cad7bf61ac8ec66e34d9d81b7",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.6)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.6)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "60",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.5_0.1_atempo_pcm.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.5_0.1_atempo_aac",
+      "fps": 60,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_aac",
+      "codec": "aac",
+      "video_marker_pts": 0.267,
+      "video_vs_ideal_ms": 17.000000000000014,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23685383333333332,
+          "offset_ms": -30.146166666666694,
+          "audio_vs_ideal_ms": -13.14616666666668
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.23937466666666665,
+          "offset_ms": -27.625333333333362,
+          "audio_vs_ideal_ms": -10.625333333333348
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.24137466666666665,
+          "offset_ms": -25.625333333333362,
+          "audio_vs_ideal_ms": -8.625333333333346
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24424966666666664,
+          "offset_ms": -22.750333333333373,
+          "audio_vs_ideal_ms": -5.750333333333357
+        }
+      ],
+      "decoded_frames": 61,
+      "sha256": "27c6b241eb2489fb4ab93764c7bbfa7fcbbda76fefc8720742df9cf544a29cb7",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.6)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.6)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "60",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "aac",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.5_0.1_atempo_aac.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.5_0.1_resample_pitch_control",
+      "fps": 60,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "resample_pitch_control",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.267,
+      "video_vs_ideal_ms": 17.000000000000014,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.25,
+          "offset_ms": -17.000000000000014,
+          "audio_vs_ideal_ms": 0.0
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2500208333333333,
+          "offset_ms": -16.97916666666671,
+          "audio_vs_ideal_ms": 0.020833333333303283
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2500208333333333,
+          "offset_ms": -16.97916666666671,
+          "audio_vs_ideal_ms": 0.020833333333303283
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.25004166666666666,
+          "offset_ms": -16.958333333333353,
+          "audio_vs_ideal_ms": 0.04166666666666208
+        }
+      ],
+      "decoded_frames": 61,
+      "sha256": "b60f254b37222ceb0a11035a461b4fe9c6224879caf2466c1b6e9162b8580414",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.6)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.6)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]asetrate=96000,aresample=48000[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "60",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.5_0.1_resample_pitch_control.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.5_0.1_atempo_passthrough_pts",
+      "fps": 60,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_passthrough_pts",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.25,
+      "video_vs_ideal_ms": 0.0,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23668783333333332,
+          "offset_ms": -13.31216666666668,
+          "audio_vs_ideal_ms": -13.31216666666668
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.23920866666666665,
+          "offset_ms": -10.791333333333347,
+          "audio_vs_ideal_ms": -10.791333333333347
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.24120866666666665,
+          "offset_ms": -8.791333333333345,
+          "audio_vs_ideal_ms": -8.791333333333345
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24408366666666664,
+          "offset_ms": -5.916333333333357,
+          "audio_vs_ideal_ms": -5.916333333333357
+        }
+      ],
+      "decoded_frames": 120,
+      "sha256": "4fa52303ac03060dd49a63c4297fde818b9e403edbdbcd78899ad7bbac813e3e",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.6)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.6)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-fps_mode",
+        "passthrough",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.5_0.1_atempo_passthrough_pts.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.5_0.1_atempo_explicit_fps",
+      "fps": 60,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_explicit_fps",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.25,
+      "video_vs_ideal_ms": 0.0,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23668783333333332,
+          "offset_ms": -13.31216666666668,
+          "audio_vs_ideal_ms": -13.31216666666668
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.23920866666666665,
+          "offset_ms": -10.791333333333347,
+          "audio_vs_ideal_ms": -10.791333333333347
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.24120866666666665,
+          "offset_ms": -8.791333333333345,
+          "audio_vs_ideal_ms": -8.791333333333345
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24408366666666664,
+          "offset_ms": -5.916333333333357,
+          "audio_vs_ideal_ms": -5.916333333333357
+        }
+      ],
+      "decoded_frames": 60,
+      "sha256": "359f706302187b22d96173ee1a189a137800db91413959d8b491ca27b33082d6",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.6)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.6)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2,fps=60:start_time=0[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-fps_mode",
+        "passthrough",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.5_0.1_atempo_explicit_fps.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.5_0.3_atempo_pcm",
+      "fps": 60,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.3,
+      "rate": 2,
+      "mode": "atempo_pcm",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.267,
+      "video_vs_ideal_ms": 17.000000000000014,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23668783333333332,
+          "offset_ms": -30.312166666666695,
+          "audio_vs_ideal_ms": -13.31216666666668
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.23920866666666665,
+          "offset_ms": -27.791333333333363,
+          "audio_vs_ideal_ms": -10.791333333333347
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.24120866666666665,
+          "offset_ms": -25.79133333333336,
+          "audio_vs_ideal_ms": -8.791333333333345
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24408366666666664,
+          "offset_ms": -22.916333333333373,
+          "audio_vs_ideal_ms": -5.916333333333357
+        }
+      ],
+      "decoded_frames": 61,
+      "sha256": "e47d89766a58a199df7f3e3291ae09270f026f4d70b7998ec7945a747f92d3c3",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.8)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.8)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "60",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.5_0.3_atempo_pcm.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.5_0.3_atempo_aac",
+      "fps": 60,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.3,
+      "rate": 2,
+      "mode": "atempo_aac",
+      "codec": "aac",
+      "video_marker_pts": 0.267,
+      "video_vs_ideal_ms": 17.000000000000014,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23685383333333332,
+          "offset_ms": -30.146166666666694,
+          "audio_vs_ideal_ms": -13.14616666666668
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.23937466666666665,
+          "offset_ms": -27.625333333333362,
+          "audio_vs_ideal_ms": -10.625333333333348
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.24137466666666665,
+          "offset_ms": -25.625333333333362,
+          "audio_vs_ideal_ms": -8.625333333333346
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24424966666666664,
+          "offset_ms": -22.750333333333373,
+          "audio_vs_ideal_ms": -5.750333333333357
+        }
+      ],
+      "decoded_frames": 61,
+      "sha256": "00f102ec4ec87a360f0d8b1ce2cd855a2ca39ae239d75f3ef1aa434dc7b9d46e",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.8)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.8)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "60",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "aac",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.5_0.3_atempo_aac.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.5_0.3_resample_pitch_control",
+      "fps": 60,
+      "source_onset": 0.5,
+      "source_marker_duration": 0.3,
+      "rate": 2,
+      "mode": "resample_pitch_control",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.267,
+      "video_vs_ideal_ms": 17.000000000000014,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.25,
+          "offset_ms": -17.000000000000014,
+          "audio_vs_ideal_ms": 0.0
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2500208333333333,
+          "offset_ms": -16.97916666666671,
+          "audio_vs_ideal_ms": 0.020833333333303283
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2500208333333333,
+          "offset_ms": -16.97916666666671,
+          "audio_vs_ideal_ms": 0.020833333333303283
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.25004166666666666,
+          "offset_ms": -16.958333333333353,
+          "audio_vs_ideal_ms": 0.04166666666666208
+        }
+      ],
+      "decoded_frames": 61,
+      "sha256": "05b29c5c647c15ac25852cd291d627b90cf734205ef48d4e46370feac3e6c205",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.5,0.8)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.5\\,0.8)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]asetrate=96000,aresample=48000[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "60",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.5_0.3_resample_pitch_control.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.517_0.1_atempo_pcm",
+      "fps": 60,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_pcm",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.283,
+      "video_vs_ideal_ms": 24.499999999999964,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23970866666666665,
+          "offset_ms": -43.29133333333332,
+          "audio_vs_ideal_ms": -18.791333333333355
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2398128333333333,
+          "offset_ms": -43.18716666666666,
+          "audio_vs_ideal_ms": -18.6871666666667
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2413545,
+          "offset_ms": -41.64549999999998,
+          "audio_vs_ideal_ms": -17.14550000000001
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24437533333333333,
+          "offset_ms": -38.62466666666664,
+          "audio_vs_ideal_ms": -14.124666666666673
+        }
+      ],
+      "decoded_frames": 61,
+      "sha256": "62da4092a16d40195a1e033014077346b2732e557748089368902023f46bcaa3",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.617)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.617)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "60",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.517_0.1_atempo_pcm.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.517_0.1_atempo_aac",
+      "fps": 60,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_aac",
+      "codec": "aac",
+      "video_marker_pts": 0.283,
+      "video_vs_ideal_ms": 24.499999999999964,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23987466666666665,
+          "offset_ms": -43.12533333333332,
+          "audio_vs_ideal_ms": -18.625333333333355
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2399788333333333,
+          "offset_ms": -43.021166666666666,
+          "audio_vs_ideal_ms": -18.5211666666667
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2415205,
+          "offset_ms": -41.47949999999997,
+          "audio_vs_ideal_ms": -16.97950000000001
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24454133333333333,
+          "offset_ms": -38.458666666666645,
+          "audio_vs_ideal_ms": -13.958666666666675
+        }
+      ],
+      "decoded_frames": 61,
+      "sha256": "3a161d1d2b67c7f36893fe9dd5d01209797d18f0c12ccefaa3e77f30eb402bf0",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.617)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.617)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "60",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "aac",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.517_0.1_atempo_aac.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.517_0.1_resample_pitch_control",
+      "fps": 60,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "resample_pitch_control",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.283,
+      "video_vs_ideal_ms": 24.499999999999964,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.25850033333333333,
+          "offset_ms": -24.49966666666664,
+          "audio_vs_ideal_ms": 0.00033333333332441484
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.25852116666666664,
+          "offset_ms": -24.478833333333338,
+          "audio_vs_ideal_ms": 0.021166666666627698
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.25852116666666664,
+          "offset_ms": -24.478833333333338,
+          "audio_vs_ideal_ms": 0.021166666666627698
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.258542,
+          "offset_ms": -24.45799999999998,
+          "audio_vs_ideal_ms": 0.04199999999998649
+        }
+      ],
+      "decoded_frames": 61,
+      "sha256": "fefe6e1a40480e92f4f8354b55fb196da0f0f36ed888ae6f029306eb24abb90a",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.617)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.617)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]asetrate=96000,aresample=48000[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "60",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.517_0.1_resample_pitch_control.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.517_0.1_atempo_passthrough_pts",
+      "fps": 60,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_passthrough_pts",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.267,
+      "video_vs_ideal_ms": 8.500000000000007,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23970866666666665,
+          "offset_ms": -27.291333333333363,
+          "audio_vs_ideal_ms": -18.791333333333355
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2398128333333333,
+          "offset_ms": -27.187166666666705,
+          "audio_vs_ideal_ms": -18.6871666666667
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2413545,
+          "offset_ms": -25.645500000000016,
+          "audio_vs_ideal_ms": -17.14550000000001
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24437533333333333,
+          "offset_ms": -22.62466666666668,
+          "audio_vs_ideal_ms": -14.124666666666673
+        }
+      ],
+      "decoded_frames": 120,
+      "sha256": "e6317a0eb67cab4182d435de3ffa86eb26a88d73e334925a772fb62c2a10c854",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.617)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.617)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-fps_mode",
+        "passthrough",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.517_0.1_atempo_passthrough_pts.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.517_0.1_atempo_explicit_fps",
+      "fps": 60,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.1,
+      "rate": 2,
+      "mode": "atempo_explicit_fps",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.267,
+      "video_vs_ideal_ms": 8.500000000000007,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23970866666666665,
+          "offset_ms": -27.291333333333363,
+          "audio_vs_ideal_ms": -18.791333333333355
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2398128333333333,
+          "offset_ms": -27.187166666666705,
+          "audio_vs_ideal_ms": -18.6871666666667
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2413545,
+          "offset_ms": -25.645500000000016,
+          "audio_vs_ideal_ms": -17.14550000000001
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24437533333333333,
+          "offset_ms": -22.62466666666668,
+          "audio_vs_ideal_ms": -14.124666666666673
+        }
+      ],
+      "decoded_frames": 60,
+      "sha256": "2368214737cbc09136c1ec183fb970675285c98643cb8626645085d130404fbb",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.617)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.617)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2,fps=60:start_time=0[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-fps_mode",
+        "passthrough",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.517_0.1_atempo_explicit_fps.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.517_0.3_atempo_pcm",
+      "fps": 60,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.3,
+      "rate": 2,
+      "mode": "atempo_pcm",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.283,
+      "video_vs_ideal_ms": 24.499999999999964,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23970866666666665,
+          "offset_ms": -43.29133333333332,
+          "audio_vs_ideal_ms": -18.791333333333355
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2398128333333333,
+          "offset_ms": -43.18716666666666,
+          "audio_vs_ideal_ms": -18.6871666666667
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2413545,
+          "offset_ms": -41.64549999999998,
+          "audio_vs_ideal_ms": -17.14550000000001
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24437533333333333,
+          "offset_ms": -38.62466666666664,
+          "audio_vs_ideal_ms": -14.124666666666673
+        }
+      ],
+      "decoded_frames": 61,
+      "sha256": "8b439029e2cd3279b50402a29c02e8722753cd05ebb0d70af0ea0daee0fc334d",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.817)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.817)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "60",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.517_0.3_atempo_pcm.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.517_0.3_atempo_aac",
+      "fps": 60,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.3,
+      "rate": 2,
+      "mode": "atempo_aac",
+      "codec": "aac",
+      "video_marker_pts": 0.283,
+      "video_vs_ideal_ms": 24.499999999999964,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.23987466666666665,
+          "offset_ms": -43.12533333333332,
+          "audio_vs_ideal_ms": -18.625333333333355
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.2399788333333333,
+          "offset_ms": -43.021166666666666,
+          "audio_vs_ideal_ms": -18.5211666666667
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.2415205,
+          "offset_ms": -41.47949999999997,
+          "audio_vs_ideal_ms": -16.97950000000001
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.24454133333333333,
+          "offset_ms": -38.458666666666645,
+          "audio_vs_ideal_ms": -13.958666666666675
+        }
+      ],
+      "decoded_frames": 61,
+      "sha256": "a4cdfcab531803e7bf193ed0df79d97b2c16d7778d541313ffd38d5b9aa726c0",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.817)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.817)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]atempo=2[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "60",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "aac",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.517_0.3_atempo_aac.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    },
+    {
+      "id": "control_60_0.517_0.3_resample_pitch_control",
+      "fps": 60,
+      "source_onset": 0.517,
+      "source_marker_duration": 0.3,
+      "rate": 2,
+      "mode": "resample_pitch_control",
+      "codec": "pcm_s16le",
+      "video_marker_pts": 0.283,
+      "video_vs_ideal_ms": 24.499999999999964,
+      "thresholds": [
+        {
+          "threshold": 0.01,
+          "audio_pts": 0.25850033333333333,
+          "offset_ms": -24.49966666666664,
+          "audio_vs_ideal_ms": 0.00033333333332441484
+        },
+        {
+          "threshold": 0.05,
+          "audio_pts": 0.25852116666666664,
+          "offset_ms": -24.478833333333338,
+          "audio_vs_ideal_ms": 0.021166666666627698
+        },
+        {
+          "threshold": 0.1,
+          "audio_pts": 0.25852116666666664,
+          "offset_ms": -24.478833333333338,
+          "audio_vs_ideal_ms": 0.021166666666627698
+        },
+        {
+          "threshold": 0.2,
+          "audio_pts": 0.258542,
+          "offset_ms": -24.45799999999998,
+          "audio_vs_ideal_ms": 0.04199999999998649
+        }
+      ],
+      "decoded_frames": 61,
+      "sha256": "61e188f233e44ef4f9aabb070fb3eff3c4b8aafa6c8a3e1af53e43e23952b9a9",
+      "command": [
+        "-f",
+        "lavfi",
+        "-i",
+        "color=c=black:s=160x90:r=60:d=2,drawbox=color=white:t=fill:enable='between(t,0.517,0.817)'",
+        "-f",
+        "lavfi",
+        "-i",
+        "aevalsrc=if(between(t\\,0.517\\,0.817)\\,0.5*sin(2*PI*1000*t)\\,0):s=48000:d=2",
+        "-filter_complex",
+        "[0:v]setpts=PTS/2[v];[1:a]asetrate=96000,aresample=48000[a]",
+        "-map",
+        "[v]",
+        "-map",
+        "[a]",
+        "-r",
+        "60",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\saoan\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-lol\\outputs\\autocine_v4_addendum_20261025\\control_60_0.517_0.3_resample_pitch_control.mkv"
+      ],
+      "scope": "synthetic diagnostic; resampling changes pitch and is not a product fix"
+    }
+  ],
+  "executed": 32,
+  "product_or_LoL_pass": false,
+  "pts_accounting": "copyts; video showinfo; audio ashowinfo block PTS + sample index",
+  "resample_control_not_recommended_for_product": true
+}
