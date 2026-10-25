@@ -1,0 +1,69 @@
+{
+  "gpu_fx_probes": [
+    {
+      "test": "immutable_GPUFullStage_runtime_probe",
+      "status": "BLOCKED",
+      "observed": "Device creation failed: -12.\nFailed to set value 'opencl=ocl:,device_type=gpu' for option 'init_hw_device': Cannot allocate memory\nError parsing global options: Cannot allocate memory\n",
+      "scope": "real module isolated artificial 64x64/3frames; not LoL or all GPU FX"
+    },
+    {
+      "test": "ffmpeg_OpenCL_avgblur_alternative",
+      "status": "BLOCKED",
+      "return_code": 4294967284,
+      "observed": "Device creation failed: -12.\r\nFailed to set value 'opencl=ocl:,device_type=gpu' for option 'init_hw_device': Cannot allocate memory\r\nError parsing global options: Cannot allocate memory\r\n",
+      "scope": "3 artificial frames, not AutoCine CPU/GPU perceptual parity"
+    }
+  ],
+  "encodes": [
+    {
+      "encoder": "libx264",
+      "input_seconds": 2,
+      "expected_frames": 120,
+      "decoded_frames": 120,
+      "wall_seconds": 0.36157960000127787,
+      "return_code": 0,
+      "status": "PASS",
+      "stderr": "",
+      "quality_comparison": "CQ23 and CRF23 are not equivalent; no quality winner claimed"
+    },
+    {
+      "encoder": "libx264",
+      "input_seconds": 5,
+      "expected_frames": 300,
+      "decoded_frames": 300,
+      "wall_seconds": 0.747846499994921,
+      "return_code": 0,
+      "status": "PASS",
+      "stderr": "",
+      "quality_comparison": "CQ23 and CRF23 are not equivalent; no quality winner claimed"
+    },
+    {
+      "encoder": "h264_nvenc",
+      "input_seconds": 2,
+      "expected_frames": 120,
+      "decoded_frames": 120,
+      "wall_seconds": 0.8130348999984562,
+      "return_code": 0,
+      "status": "PASS",
+      "stderr": "",
+      "quality_comparison": "CQ23 and CRF23 are not equivalent; no quality winner claimed"
+    },
+    {
+      "encoder": "h264_nvenc",
+      "input_seconds": 5,
+      "expected_frames": 300,
+      "decoded_frames": 300,
+      "wall_seconds": 1.157135899993591,
+      "return_code": 0,
+      "status": "PASS",
+      "stderr": "",
+      "quality_comparison": "CQ23 and CRF23 are not equivalent; no quality winner claimed"
+    }
+  ],
+  "not_validated": [
+    "LoL rendering contention",
+    "long jobs",
+    "process audio capture",
+    "all22 CPU/GPU FX quality parity"
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "cases": [
+    {
+      "size": [
+        1920,
+        1080
+      ],
+      "rc": 0,
+      "decoded_frames": 20,
+      "export_visible_rgb_bbox": [
+        1527,
+        84,
+        1866,
+        200
+      ],
+      "mirror_alpha_bbox": [
+        1527,
+        84,
+        1866,
+        200
+      ],
+      "export_nominal_width": 384,
+      "mirror_nominal_width": 384,
+      "same_layout": true,
+      "scope": "isolated unchanged CPU export graph vs mirror with same source pair; RGB and alpha boxes not identical metrics"
+    },
+    {
+      "size": [
+        1366,
+        768
+      ],
+      "rc": 0,
+      "decoded_frames": 20,
+      "export_visible_rgb_bbox": [
+        973,
+        84,
+        1312,
+        200
+      ],
+      "mirror_alpha_bbox": [
+        1086,
+        60,
+        1328,
+        142
+      ],
+      "export_nominal_width": 384,
+      "mirror_nominal_width": 273,
+      "same_layout": false,
+      "scope": "isolated unchanged CPU export graph vs mirror with same source pair; RGB and alpha boxes not identical metrics"
+    },
+    {
+      "size": [
+        1280,
+        720
+      ],
+      "rc": 0,
+      "decoded_frames": 20,
+      "export_visible_rgb_bbox": [
+        887,
+        84,
+        1226,
+        200
+      ],
+      "mirror_alpha_bbox": [
+        1018,
+        56,
+        1245,
+        133
+      ],
+      "export_nominal_width": 384,
+      "mirror_nominal_width": 256,
+      "same_layout": false,
+      "scope": "isolated unchanged CPU export graph vs mirror with same source pair; RGB and alpha boxes not identical metrics"
+    }
+  ],
+  "live_LoL": false,
+  "proposal": "explicit reference coordinate space, preserve legacy revision, compare export at actual output resolution before changing scaling"
+}

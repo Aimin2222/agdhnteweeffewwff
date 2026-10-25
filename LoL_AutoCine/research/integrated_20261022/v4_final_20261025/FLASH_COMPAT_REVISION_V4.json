@@ -1,0 +1,537 @@
+{
+  "cases": [
+    {
+      "case": "single",
+      "strength": 0.15,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.277",
+      "events": [
+        1.0
+      ],
+      "graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-1.000))':eval=frame:enable='between(t,1.000,1.150)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": true,
+      "gray_at_events": [
+        207.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "single",
+      "strength": 0.45,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.473",
+      "events": [
+        1.0
+      ],
+      "graph": [
+        "eq=brightness='0.473*exp(-18*abs(t-1.000))':eval=frame:enable='between(t,1.000,1.150)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": true,
+      "gray_at_events": [
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "single",
+      "strength": 0.9,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.765",
+      "events": [
+        1.0
+      ],
+      "graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-1.000))':eval=frame:enable='between(t,1.000,1.150)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": true,
+      "gray_at_events": [
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "two_short",
+      "strength": 0.15,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.277",
+      "events": [
+        0.5,
+        0.6
+      ],
+      "graph": [
+        "eq=brightness='max(0.277*exp(-18*abs(t-0.500)),0.277*exp(-18*abs(t-0.600)))':eval=frame:enable='between(t,0.500,0.650)+between(t,0.600,0.750)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        207.0,
+        207.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "two_short",
+      "strength": 0.45,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.473",
+      "events": [
+        0.5,
+        0.6
+      ],
+      "graph": [
+        "eq=brightness='max(0.473*exp(-18*abs(t-0.500)),0.473*exp(-18*abs(t-0.600)))':eval=frame:enable='between(t,0.500,0.650)+between(t,0.600,0.750)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        255.0,
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "two_short",
+      "strength": 0.9,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.765",
+      "events": [
+        0.5,
+        0.6
+      ],
+      "graph": [
+        "eq=brightness='max(0.765*exp(-18*abs(t-0.500)),0.765*exp(-18*abs(t-0.600)))':eval=frame:enable='between(t,0.500,0.650)+between(t,0.600,0.750)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        255.0,
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "two_long",
+      "strength": 0.15,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.277",
+      "events": [
+        0.3,
+        2.2
+      ],
+      "graph": [
+        "eq=brightness='max(0.277*exp(-18*abs(t-0.300)),0.277*exp(-18*abs(t-2.200)))':eval=frame:enable='between(t,0.300,0.450)+between(t,2.200,2.350)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        207.0,
+        207.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "two_long",
+      "strength": 0.45,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.473",
+      "events": [
+        0.3,
+        2.2
+      ],
+      "graph": [
+        "eq=brightness='max(0.473*exp(-18*abs(t-0.300)),0.473*exp(-18*abs(t-2.200)))':eval=frame:enable='between(t,0.300,0.450)+between(t,2.200,2.350)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        255.0,
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "two_long",
+      "strength": 0.9,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.765",
+      "events": [
+        0.3,
+        2.2
+      ],
+      "graph": [
+        "eq=brightness='max(0.765*exp(-18*abs(t-0.300)),0.765*exp(-18*abs(t-2.200)))':eval=frame:enable='between(t,0.300,0.450)+between(t,2.200,2.350)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        255.0,
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "three",
+      "strength": 0.15,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.277",
+      "events": [
+        0.3,
+        1.4,
+        2.7
+      ],
+      "graph": [
+        "eq=brightness='max(max(0.277*exp(-18*abs(t-0.300)),0.277*exp(-18*abs(t-1.400))),0.277*exp(-18*abs(t-2.700)))':eval=frame:enable='between(t,0.300,0.450)+between(t,1.400,1.550)+between(t,2.700,2.850)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        207.0,
+        207.0,
+        207.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "three",
+      "strength": 0.45,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.473",
+      "events": [
+        0.3,
+        1.4,
+        2.7
+      ],
+      "graph": [
+        "eq=brightness='max(max(0.473*exp(-18*abs(t-0.300)),0.473*exp(-18*abs(t-1.400))),0.473*exp(-18*abs(t-2.700)))':eval=frame:enable='between(t,0.300,0.450)+between(t,1.400,1.550)+between(t,2.700,2.850)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "three",
+      "strength": 0.9,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.765",
+      "events": [
+        0.3,
+        1.4,
+        2.7
+      ],
+      "graph": [
+        "eq=brightness='max(max(0.765*exp(-18*abs(t-0.300)),0.765*exp(-18*abs(t-1.400))),0.765*exp(-18*abs(t-2.700)))':eval=frame:enable='between(t,0.300,0.450)+between(t,1.400,1.550)+between(t,2.700,2.850)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "dense",
+      "strength": 0.15,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.277",
+      "events": [
+        0.5,
+        0.55,
+        0.6,
+        0.65
+      ],
+      "graph": [
+        "eq=brightness='max(max(max(0.277*exp(-18*abs(t-0.500)),0.277*exp(-18*abs(t-0.550))),0.277*exp(-18*abs(t-0.600))),0.277*exp(-18*abs(t-0.650)))':eval=frame:enable='between(t,0.500,0.650)+between(t,0.550,0.700)+between(t,0.600,0.750)+between(t,0.650,0.800)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        207.0,
+        207.0,
+        207.0,
+        207.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "dense",
+      "strength": 0.45,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.473",
+      "events": [
+        0.5,
+        0.55,
+        0.6,
+        0.65
+      ],
+      "graph": [
+        "eq=brightness='max(max(max(0.473*exp(-18*abs(t-0.500)),0.473*exp(-18*abs(t-0.550))),0.473*exp(-18*abs(t-0.600))),0.473*exp(-18*abs(t-0.650)))':eval=frame:enable='between(t,0.500,0.650)+between(t,0.550,0.700)+between(t,0.600,0.750)+between(t,0.650,0.800)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        255.0,
+        255.0,
+        255.0,
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "dense",
+      "strength": 0.9,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.765",
+      "events": [
+        0.5,
+        0.55,
+        0.6,
+        0.65
+      ],
+      "graph": [
+        "eq=brightness='max(max(max(0.765*exp(-18*abs(t-0.500)),0.765*exp(-18*abs(t-0.550))),0.765*exp(-18*abs(t-0.600))),0.765*exp(-18*abs(t-0.650)))':eval=frame:enable='between(t,0.500,0.650)+between(t,0.550,0.700)+between(t,0.600,0.750)+between(t,0.650,0.800)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        255.0,
+        255.0,
+        255.0,
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "edges",
+      "strength": 0.15,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.277",
+      "events": [
+        0.0,
+        1.5,
+        2.95
+      ],
+      "graph": [
+        "eq=brightness='max(max(0.277*exp(-18*abs(t-0.000)),0.277*exp(-18*abs(t-1.500))),0.277*exp(-18*abs(t-2.950)))':eval=frame:enable='between(t,0.000,0.150)+between(t,1.500,1.650)+between(t,2.950,3.100)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        207.0,
+        207.0,
+        207.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "edges",
+      "strength": 0.45,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.473",
+      "events": [
+        0.0,
+        1.5,
+        2.95
+      ],
+      "graph": [
+        "eq=brightness='max(max(0.473*exp(-18*abs(t-0.000)),0.473*exp(-18*abs(t-1.500))),0.473*exp(-18*abs(t-2.950)))':eval=frame:enable='between(t,0.000,0.150)+between(t,1.500,1.650)+between(t,2.950,3.100)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "edges",
+      "strength": 0.9,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.765",
+      "events": [
+        0.0,
+        1.5,
+        2.95
+      ],
+      "graph": [
+        "eq=brightness='max(max(0.765*exp(-18*abs(t-0.000)),0.765*exp(-18*abs(t-1.500))),0.765*exp(-18*abs(t-2.950)))':eval=frame:enable='between(t,0.000,0.150)+between(t,1.500,1.650)+between(t,2.950,3.100)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "empty",
+      "strength": 0.15,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.277",
+      "events": [],
+      "graph": [],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "empty",
+      "strength": 0.45,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.473",
+      "events": [],
+      "graph": [],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "empty",
+      "strength": 0.9,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.765",
+      "events": [],
+      "graph": [],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "retimed",
+      "strength": 0.15,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.277",
+      "events": [
+        0.4,
+        1.6,
+        2.4
+      ],
+      "graph": [
+        "eq=brightness='max(max(0.277*exp(-18*abs(t-0.400)),0.277*exp(-18*abs(t-1.600))),0.277*exp(-18*abs(t-2.400)))':eval=frame:enable='between(t,0.400,0.550)+between(t,1.600,1.750)+between(t,2.400,2.550)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        207.0,
+        207.0,
+        207.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "retimed",
+      "strength": 0.45,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.473",
+      "events": [
+        0.4,
+        1.6,
+        2.4
+      ],
+      "graph": [
+        "eq=brightness='max(max(0.473*exp(-18*abs(t-0.400)),0.473*exp(-18*abs(t-1.600))),0.473*exp(-18*abs(t-2.400)))':eval=frame:enable='between(t,0.400,0.550)+between(t,1.600,1.750)+between(t,2.400,2.550)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    },
+    {
+      "case": "retimed",
+      "strength": 0.9,
+      "revision": "candidate_max_v3_legacy_amplitude",
+      "legacy_amplitude": "0.765",
+      "events": [
+        0.4,
+        1.6,
+        2.4
+      ],
+      "graph": [
+        "eq=brightness='max(max(0.765*exp(-18*abs(t-0.400)),0.765*exp(-18*abs(t-1.600))),0.765*exp(-18*abs(t-2.400)))':eval=frame:enable='between(t,0.400,0.550)+between(t,1.600,1.750)+between(t,2.400,2.550)'"
+      ],
+      "return_code": 0,
+      "decoded_frames": 180,
+      "single_event_bit_equal_legacy": null,
+      "gray_at_events": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "scope": "isolated artificial input; v2 amplitude changed so not compatibility-safe",
+      "empty_policy": "v3 no-op; legacy helper would IndexError; normal event caller not diagnosed"
+    }
+  ],
+  "executed": 24,
+  "single_event_comparisons": 3,
+  "single_event_bit_equal_count": 3,
+  "v2_rejected_for_compatibility": true,
+  "policy": "Missing processing_revision selects unchanged legacy_v1. Explicit max_v3 only on adoption; no automatic project upgrade."
+}

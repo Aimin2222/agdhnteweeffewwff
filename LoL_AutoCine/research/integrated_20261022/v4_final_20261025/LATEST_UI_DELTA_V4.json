@@ -1,0 +1,3829 @@
+{
+  "v3_observed_ui_head": "9bb15e15d8057237515cc9bcf7e061a6d15d3369",
+  "v4_observed_ui_head": "b32513ada0a5ada7585972e06716ff84829bcb23",
+  "full_tree": true,
+  "changed": [
+    {
+      "path": "LoL_AutoCine/design/ui/ui29_legacy/reconstructed.css",
+      "old": "b98ebc36eec5812f670c0f7f7cb2c739e6f0868c",
+      "new": "4d07eb49ec306fa12aac85d7b5d09c9ca6a8251d"
+    },
+    {
+      "path": "LoL_AutoCine/design/ui/ui_rethink_20261021/assets/camera_qa_reference.jpg",
+      "old": null,
+      "new": "9178f31cc7ef4ba15f3fe00987ac1fe6c272121a"
+    },
+    {
+      "path": "LoL_AutoCine/design/ui/ui_rethink_20261021/ui.css",
+      "old": "ef6d53774c8b0db8983e1d8a71c8ebf5679bace3",
+      "new": "303df567d7544f874936b95e584b67c7c5c59a84"
+    },
+    {
+      "path": "LoL_AutoCine/docs/ui_integration_20261020/TEST_GUIDE_JA.md",
+      "old": "d233bbb19636f5988d213e99a6e0db2e5fd560ab",
+      "new": "9cb2bc7dae18df4d91323ebe4b97d0bbfddc29dd"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/FROZEN_INCREMENT_423e7a5_JA.md",
+      "old": null,
+      "new": "5f3c944fad13c9699a835514e4b214e9a1cb2e84"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/FROZEN_LAYOUT_20261024_JA.md",
+      "old": null,
+      "new": "11d5cb9d84c8d755c8baa79a2562d05838c26a89"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/L02_TOOLBAR_20261024_JA.md",
+      "old": null,
+      "new": "347c47ed4ce236026c69d18cc68b4c35a5b4ebc2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/L03_FROZEN_20261024_JA.md",
+      "old": null,
+      "new": "c0378e11aacc13d967c09729c8cf8cf03cfa4108"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/L05_FROZEN_20261024_JA.md",
+      "old": null,
+      "new": "77c8ed9322dc9ea2b58e161988b332303042bc5e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/L06_FROZEN_20261024_JA.md",
+      "old": null,
+      "new": "380c81acd6e8cf7b7eccdb45df3eb9a788154e3d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/STATUS_JA.md",
+      "old": "1b10d9b3d8f975af1382e797cf8f47a59ba77bfa",
+      "new": "a1844c99f8a312a01daf56312827f619739fb39b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/SWITCH_UI_JA.md",
+      "old": null,
+      "new": "a9cdc5825c3e93d75a79f7b5289a54287975bc89"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/TEST_B_CAMERA_FROZEN_20261024_JA.md",
+      "old": null,
+      "new": "6f86afdf7bd80d5eacb12b11d493fc3b8a9cb563"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/TEST_B_COMPACT_FROZEN_20261025_JA.md",
+      "old": null,
+      "new": "f06b9b3e4fa4f68b39b14341791bedc2fddf8602"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/TEST_B_EFFECT_FROZEN_20261024_JA.md",
+      "old": null,
+      "new": "712cdf52f4f0132955e4b57ef47e2bcc3fc31a4b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/TEST_B_FROZEN_20261024_JA.md",
+      "old": null,
+      "new": "1747eea6c68f9191892ee351bfc34bc0e9919290"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L02-M/absolute_difference.png",
+      "old": null,
+      "new": "cbe10cac78babe5d844ec57c62aa3c21a5741129"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L02-M/implementation.png",
+      "old": null,
+      "new": "25794e819ba6b0b11fe8219ec81beb0cdecaf6e2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L02-M/original.png",
+      "old": null,
+      "new": "3c50a267824c5aea544d56a04e12f62020b95e24"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L02-M/overlay_50.png",
+      "old": null,
+      "new": "f9d04e3dd7e6a5f08c447d7b2702bd11c9a47f51"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L02-M/result.json",
+      "old": null,
+      "new": "729adb013bc039dae75d77c1f54c408d517ac403"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L03-D/absolute_difference.png",
+      "old": null,
+      "new": "8ba8d46bc59c814b1afb0612926686d781f918bd"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L03-D/implementation.png",
+      "old": null,
+      "new": "38b21ac10e9f3e13124acbe5bcadedf1493ffa6d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L03-D/original.png",
+      "old": null,
+      "new": "31265f03b7d77e7c20f628ce1e2656e72d19796b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L03-D/overlay_50.png",
+      "old": null,
+      "new": "1bfb0b4ae1adaed2e72077ca385db949a326f23e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L03-D/result.json",
+      "old": null,
+      "new": "5a7b3c1fe827cc7e8f0175c3b1c6de8f935a9a8c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L03-N/absolute_difference.png",
+      "old": null,
+      "new": "49061e2cfdac891b6dacc3596f748109782a559d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L03-N/implementation.png",
+      "old": null,
+      "new": "3ccfb7bc5e4bf74d5bacd8a2f4ff08f778461fc1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L03-N/original.png",
+      "old": null,
+      "new": "c5ccd408f2ab6de2c7947764e6c48db4600f9c59"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L03-N/overlay_50.png",
+      "old": null,
+      "new": "56051c6f0a4cd975934e34001028883f7715648d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L03-N/result.json",
+      "old": null,
+      "new": "3cd0c6bafac149a6ca8104e350605eb2ad389dca"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L05-M/absolute_difference.png",
+      "old": null,
+      "new": "41a8c23fdddcb199af28ef5c66b6ff82f740e183"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L05-M/implementation.png",
+      "old": null,
+      "new": "3f86a2e5a7095546e4236967da148d915ee0d63a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L05-M/original.png",
+      "old": null,
+      "new": "83da6862f81ecd3f6dcb1906f8a48eb0656c1afb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L05-M/overlay_50.png",
+      "old": null,
+      "new": "7bb21f597bc8dbc30e5a767145dd06c9da640826"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L05-M/result.json",
+      "old": null,
+      "new": "b23f7aca876e097e9607ed0b18ca4c89ac436ae6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L06-E/absolute_difference.png",
+      "old": null,
+      "new": "f0e30f4be8a401fd153d249657f11e607df4bf70"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L06-E/implementation.png",
+      "old": null,
+      "new": "6019f0a44ac9d62eba0422f395de83b4b3e74263"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L06-E/original.png",
+      "old": null,
+      "new": "40eaf4f8ff733e33e4397adc6e3950a74478f1c1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L06-E/overlay_50.png",
+      "old": null,
+      "new": "204c56f75bad6c7fda69524465c060765fc4e91f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L06-E/result.json",
+      "old": null,
+      "new": "59c15af0823e58d44e28dc8c08cc4843e991261a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L06-L/absolute_difference.png",
+      "old": null,
+      "new": "46f13e18f9063f155794756a3d74d766162b0450"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L06-L/implementation.png",
+      "old": null,
+      "new": "2acf082bee155e3ca745613494005c29108bb421"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L06-L/original.png",
+      "old": null,
+      "new": "271e7c35d99854ed4b53a81067cdfea1144a352c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L06-L/overlay_50.png",
+      "old": null,
+      "new": "59450bbb2fe2000c19b59b5e64d126e7b0291421"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/L06-L/result.json",
+      "old": null,
+      "new": "d5eae2aae1139fe60fd311af8c3f180d9313aee4"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-camera/absolute_difference.png",
+      "old": null,
+      "new": "d8d528591a70cc4332494c72f59383891b5b70ac"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-camera/implementation.png",
+      "old": null,
+      "new": "d335eeee7ac6e68226b39f5b9006d3de21b02c83"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-camera/original.png",
+      "old": null,
+      "new": "7f918f8da9037ddb815b7c9b69af48027163c1dc"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-camera/overlay_50.png",
+      "old": null,
+      "new": "994bc28eae46241f9c462a4693daec4f0415dc1b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-camera/result.json",
+      "old": null,
+      "new": "7dc9adb6d58b59e920987a9ad27372eda67b3a98"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-frames/absolute_difference.png",
+      "old": null,
+      "new": "74f1eef736b1f634e73f60466270d8acd9c31c1d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-frames/implementation.png",
+      "old": null,
+      "new": "7251044385db96211178eb4c95a3dea4e7a7e36d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-frames/original.png",
+      "old": null,
+      "new": "431ce2103c57ac5c2f53824f2761a52f7e74ad61"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-frames/overlay_50.png",
+      "old": null,
+      "new": "6f8d1207cce6596a7454440bbf20808495947029"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-frames/result.json",
+      "old": null,
+      "new": "fc5897c815ba65b66668c334edf8b146194580dd"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main-1366x768/absolute_difference.png",
+      "old": null,
+      "new": "68d24292879a167eb634dcd36458e1f7b01de4ef"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main-1366x768/implementation.png",
+      "old": null,
+      "new": "3f09af2a246efb91aa43d0a2e657c868c5b9acb7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main-1366x768/original.png",
+      "old": null,
+      "new": "54e024d283e51800c92c8bb414233989373ba6df"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main-1366x768/overlay_50.png",
+      "old": null,
+      "new": "637f05a073103ebc536d691802e1fe090264a697"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main-1366x768/result.json",
+      "old": null,
+      "new": "c641d0e2c3d0f34872bcf3f59d728ff334165587"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main-dark/absolute_difference.png",
+      "old": null,
+      "new": "4cd1be47312f1246fed475f05e3154f97727e4e3"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main-dark/implementation.png",
+      "old": null,
+      "new": "e88f87d076addf593508ad91de948079d7e2ca86"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main-dark/original.png",
+      "old": null,
+      "new": "70b7250ae8d9c4bce0f15091905e4f351a1cca12"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main-dark/overlay_50.png",
+      "old": null,
+      "new": "4dd4f3857f3d36cf6c7fcf550091e9e2b7e83b2d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main-dark/result.json",
+      "old": null,
+      "new": "f5ffae3a881be4ef7b854dba298c901d70577007"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main/absolute_difference.png",
+      "old": null,
+      "new": "566f7add5a50795c85e52872593af8186cc5267e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main/implementation.png",
+      "old": null,
+      "new": "ae5291559a15033c6387b70a6bff677b57ea3809"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main/original.png",
+      "old": null,
+      "new": "4711b804eeced9049bff5a3b347d246a3f5898b5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main/overlay_50.png",
+      "old": null,
+      "new": "60c3e7698bfd072db45ea1c47fc58762c8ef2ba1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-A-main/result.json",
+      "old": null,
+      "new": "0bddd9064d76527be3ec9b934242d411822447a3"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-B-main-1366x768/absolute_difference.png",
+      "old": null,
+      "new": "70e8aff01ebfd48b776680b0aae2eabda76c8ddb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-B-main-1366x768/implementation.png",
+      "old": null,
+      "new": "1ac7c9db14c508055494a54b7456286f8a11312f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-B-main-1366x768/original.png",
+      "old": null,
+      "new": "edafe48fbb4ccebb3f63cf2d4797aba92ea52b0e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-B-main-1366x768/overlay_50.png",
+      "old": null,
+      "new": "7fb0498ffcec2898777480bf01e21d9698c9fa0c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-B-main-1366x768/result.json",
+      "old": null,
+      "new": "04ea544827ee17eebcce8cdaece73c7104e2eee2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-B-main/absolute_difference.png",
+      "old": null,
+      "new": "845a45974ea06f791aa970fc5f900ff54d228f1e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-B-main/implementation.png",
+      "old": null,
+      "new": "1d1a153ecf3e16bce0386f06f3906a7a6a10144a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-B-main/original.png",
+      "old": null,
+      "new": "0dabe74fe42549a67a5bf369c7f6727c83c1e0c8"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-B-main/overlay_50.png",
+      "old": null,
+      "new": "2012ee6c3c53f726e76e564cbddbd428f61f9667"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-B-main/result.json",
+      "old": null,
+      "new": "aeaaa4c0ba318ea35a13ac8aa91def45e76b9d2e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-C-main-1366x768/absolute_difference.png",
+      "old": null,
+      "new": "f41b33546ec37375f416f991f98cbcd7cf525946"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-C-main-1366x768/implementation.png",
+      "old": null,
+      "new": "9f40f1bb2c9fbc9faa22e24f43e8d135cf15617c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-C-main-1366x768/original.png",
+      "old": null,
+      "new": "82dff1235059effc130376b019ab1be6440be519"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-C-main-1366x768/overlay_50.png",
+      "old": null,
+      "new": "e68b1cdce9ce2af3fe2b91b67ab91f0b91575ac3"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-C-main-1366x768/result.json",
+      "old": null,
+      "new": "34b33488c63d314b267af64002ff26295fbbb602"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-C-main/absolute_difference.png",
+      "old": null,
+      "new": "8bf398e3e9d9ae2d1b9377802215d3bc1d8df9bc"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-C-main/implementation.png",
+      "old": null,
+      "new": "4d106c53510305453abb6cdc1254d64426cc88a2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-C-main/original.png",
+      "old": null,
+      "new": "c0cf1e09f5b4f6ec8affee1955438d86ee72bb90"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-C-main/overlay_50.png",
+      "old": null,
+      "new": "7315aaba2142c12dfac2cf55519049fa401bbae6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-C-main/result.json",
+      "old": null,
+      "new": "20dc1e12aa718a6d7602352f7f35fe7cccce8a36"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-D-main-1366x768/absolute_difference.png",
+      "old": null,
+      "new": "f50f9d4d9e93b0a2a4237ddb1ecde932a4709d28"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-D-main-1366x768/implementation.png",
+      "old": null,
+      "new": "cf7ba3ab118e44499f04b3706f5055f6a7f84db7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-D-main-1366x768/original.png",
+      "old": null,
+      "new": "a08ac877a7e90db7f11ca36257f5e35c45dac82a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-D-main-1366x768/overlay_50.png",
+      "old": null,
+      "new": "d1f4d9f8ad2b8bc9087e449fe51a8a6c1abb26e0"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-D-main-1366x768/result.json",
+      "old": null,
+      "new": "ffe8e75ed25f8cc130b1c1d048085499abfc6bcd"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-D-main/absolute_difference.png",
+      "old": null,
+      "new": "9083dc6008dd91a472e79507c7780033125632d2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-D-main/implementation.png",
+      "old": null,
+      "new": "e2df8c78fabe46743377202a5b7e84eaa0919d7d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-D-main/original.png",
+      "old": null,
+      "new": "20334adaba802e3f004c5b5e33959fff441af584"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-D-main/overlay_50.png",
+      "old": null,
+      "new": "9add5989cb3de8d9591a3c2229ddd19d67c6b1ef"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-D-main/result.json",
+      "old": null,
+      "new": "8ef5584564271ac6f43f5973490e8d78e831d030"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-frames/absolute_difference.png",
+      "old": null,
+      "new": "74f1eef736b1f634e73f60466270d8acd9c31c1d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-frames/implementation.png",
+      "old": null,
+      "new": "10559916628e3894e89823c6a76a6f89345271e9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-frames/original.png",
+      "old": null,
+      "new": "38830fec9ef8d48a6cd45565d24f5b6fdfd210b5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-frames/overlay_50.png",
+      "old": null,
+      "new": "2e52fd99f8b2783e52b6e16d2bb98674877551f5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-frames/result.json",
+      "old": null,
+      "new": "3a979b933a5b76839b556a14e348e0ae98684fbe"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main-1366x768/absolute_difference.png",
+      "old": null,
+      "new": "c87080f04813f548ef285ab02ab5e661463ffba0"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main-1366x768/implementation.png",
+      "old": null,
+      "new": "4921de5c8a37fd0d298ea5a2c69c24affd502410"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main-1366x768/original.png",
+      "old": null,
+      "new": "44e47ce944ba06416c51e30af7975a6d10940a5f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main-1366x768/overlay_50.png",
+      "old": null,
+      "new": "f28fbff77148864c7dc1bb0d597e4273aade3a5d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main-1366x768/result.json",
+      "old": null,
+      "new": "fd3562e3549262e838aa4c6b4773fa8ea7a2e165"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main-dark/absolute_difference.png",
+      "old": null,
+      "new": "04b55b8c0827bad316e9c638ff082a13b525b712"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main-dark/implementation.png",
+      "old": null,
+      "new": "039a28288d359dd25880c59bd52a46ed32e9d49f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main-dark/original.png",
+      "old": null,
+      "new": "9752d93d450d5ce9f5ecb37be1b87392ec6b8ea0"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main-dark/overlay_50.png",
+      "old": null,
+      "new": "30c66047ab97749e9a462fc8a6b0ca899ea41fbd"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main-dark/result.json",
+      "old": null,
+      "new": "81adc36eebdd5563979a05707ed74ef1a5cf294a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main/absolute_difference.png",
+      "old": null,
+      "new": "3bb1f9e0d8e4c24f451cdffd9b672f29f1187f65"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main/implementation.png",
+      "old": null,
+      "new": "124c444aebd43bdd62b73babf2373b0c38e3e378"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main/original.png",
+      "old": null,
+      "new": "01fdee4a0a1438a78b7b6edb7f69ed6824c3fd09"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main/overlay_50.png",
+      "old": null,
+      "new": "9c98dfdd7707a9482db3717415d08e9f9de704bd"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-main/result.json",
+      "old": null,
+      "new": "296b1b1afe96a5163a8618c64943d7e67252db1f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-studio/absolute_difference.png",
+      "old": null,
+      "new": "b35820a4fb52bd21c9dad7bc47160a29dc7ceee2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-studio/implementation.png",
+      "old": null,
+      "new": "96dce63fa13f30ff35b77d34660bd940dd0d3886"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-studio/original.png",
+      "old": null,
+      "new": "ddfca109875c8732ec55252831fe36734fc008b1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-studio/overlay_50.png",
+      "old": null,
+      "new": "b333adffc5f4e4e9ad815f4da84c2c25c1e6396a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-E-studio/result.json",
+      "old": null,
+      "new": "06df5c842f318eddeda6812b8ed0c79b199ebf2a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-F-main-1366x768/absolute_difference.png",
+      "old": null,
+      "new": "bca9c608f4c4be73b10c8882f95252156d51c6f8"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-F-main-1366x768/implementation.png",
+      "old": null,
+      "new": "4e04ad34616033b4671e9d49f2a8a1e5a867ce93"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-F-main-1366x768/original.png",
+      "old": null,
+      "new": "c808226ab9bf9ad39890b4cefea0a3d06fc8c074"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-F-main-1366x768/overlay_50.png",
+      "old": null,
+      "new": "ceb4a01cea6d21774b5149befa93171eeedece4d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-F-main-1366x768/result.json",
+      "old": null,
+      "new": "95923f59f9d5b1d664f71e9e8a36dcb160f21213"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-F-main/absolute_difference.png",
+      "old": null,
+      "new": "9b95cc5522d168dbd25e09909b515bd26c0b67bf"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-F-main/implementation.png",
+      "old": null,
+      "new": "bca5911ff59ec4ff36a573a178c67fcfb324c08f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-F-main/original.png",
+      "old": null,
+      "new": "fc1e994ee010b7bcad58779daa1c7b1f86fc374c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-F-main/overlay_50.png",
+      "old": null,
+      "new": "2ae6326f9e92de7affa9abdbdcb73ba86c88ffe2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/R-F-main/result.json",
+      "old": null,
+      "new": "a887f0c6f71c1097ac5012779591fc516bed208c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-A-M/absolute_difference.png",
+      "old": null,
+      "new": "ea67e964be5a2e7d91b9d73723cf1ba1677bcac0"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-A-M/implementation.png",
+      "old": null,
+      "new": "22d5c1c92bffc11af07fa2543fafcf22cbfca50f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-A-M/original.png",
+      "old": null,
+      "new": "3a68a05c72f9f9c3c4f63e032cb6b227697938a0"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-A-M/overlay_50.png",
+      "old": null,
+      "new": "819a90693e4f434a8cb1f05514afffb700011039"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-A-M/result.json",
+      "old": null,
+      "new": "c78653f69946c1b25194a86282f737e2ab88bc52"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-C/absolute_difference.png",
+      "old": null,
+      "new": "00cd441850a887b9b539e61049482a73e92416fe"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-C/implementation.png",
+      "old": null,
+      "new": "ec1831079469e3c0def9571db3b2310be3c796a1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-C/original.png",
+      "old": null,
+      "new": "6439cdab421bef64a00d34de59ca54b913c7fb38"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-C/overlay_50.png",
+      "old": null,
+      "new": "8a5959c36f6ea00ae1d581c42cf2a0e9a267ca7a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-C/result.json",
+      "old": null,
+      "new": "9168609d72b4166e8c4713e2e4929f22659dfa40"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-F/absolute_difference.png",
+      "old": null,
+      "new": "0f31931c8bf8ced5eafa74b9264f930982a20736"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-F/implementation.png",
+      "old": null,
+      "new": "891e3f1246fc308a0c0ad1986af0cd284ed823a6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-F/original.png",
+      "old": null,
+      "new": "e63299cf407ecdea9be2b3898101d5154f9f76ba"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-F/overlay_50.png",
+      "old": null,
+      "new": "0d008efc3001df79d6d5bf7064ee7af55cc93987"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-F/result.json",
+      "old": null,
+      "new": "fc8b93d0008385fe6fc30f359496179d36c8fbe1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-M/absolute_difference.png",
+      "old": null,
+      "new": "20d3f4965e0d5ab9dce8a4253c86b60eddb094ea"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-M/implementation.png",
+      "old": null,
+      "new": "8a23cfbfc7b8abbc16402a9d763b3fd89db4af7e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-M/original.png",
+      "old": null,
+      "new": "1b6516bcacf8790e6be0a36f413b6eda3137e577"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-M/overlay_50.png",
+      "old": null,
+      "new": "7f781e39046553f971f101889e938d0225e3fd93"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-M/result.json",
+      "old": null,
+      "new": "b4af972cbc1b2a0fab355aaf75c9ea33111598d9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-S/absolute_difference.png",
+      "old": null,
+      "new": "c0382ad9faca472944ee4db1117205db80fd65e5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-S/implementation.png",
+      "old": null,
+      "new": "4b8debab5276516980c486dc58ef40dadc829944"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-S/original.png",
+      "old": null,
+      "new": "f7ff4acc7a919186472a09646b41698228b1fb03"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-S/overlay_50.png",
+      "old": null,
+      "new": "175c129aa632b751d869c2b31d76c03f214e4473"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/T-B-S/result.json",
+      "old": null,
+      "new": "d0cdc7f9757fdbfdea8117809f10fc7cd3e70e4b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_frozen_layout_20261024/index.json",
+      "old": null,
+      "new": "baedd82bf40e080638b4f3c6699b36a71cba48d3"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_027b000/T-B-M/absolute_difference.png",
+      "old": null,
+      "new": "74f3af02faf09b17748d0d997d05afac2214ce59"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_027b000/T-B-M/implementation.png",
+      "old": null,
+      "new": "0cc6702539d48488d52b22aa87466032cea4117c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_027b000/T-B-M/original.png",
+      "old": null,
+      "new": "1b6516bcacf8790e6be0a36f413b6eda3137e577"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_027b000/T-B-M/overlay_50.png",
+      "old": null,
+      "new": "62a85c2d6f9d5cc6b8fa55fd3e62f790280118a1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_027b000/T-B-M/result.json",
+      "old": null,
+      "new": "0aec4629ab238bd8eae7e9ac71cdb246cb7ec8ec"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_027b000/index.json",
+      "old": null,
+      "new": "0d7691356d130b30803d059be646aea571a34ad1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_3966401/L05-M/absolute_difference.png",
+      "old": null,
+      "new": "4f58c538b3212973fa2e0d581d5a103a82d51e8e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_3966401/L05-M/implementation.png",
+      "old": null,
+      "new": "2c5e44669607515f2c7952b1620e9e062683a584"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_3966401/L05-M/original.png",
+      "old": null,
+      "new": "83da6862f81ecd3f6dcb1906f8a48eb0656c1afb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_3966401/L05-M/overlay_50.png",
+      "old": null,
+      "new": "4685c7c8842c2a1767a79d5feae95d38d13027c5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_3966401/L05-M/result.json",
+      "old": null,
+      "new": "dc3360eb6ed24aaed7696c0f240a1219908afe9b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_3966401/index.json",
+      "old": null,
+      "new": "13958b6b92f5ea7695923b037bea62ea765b1306"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_423e7a5/L02-M/absolute_difference.png",
+      "old": null,
+      "new": "c97adceaee28570a4023b29e4cf13b2a3a7d2e51"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_423e7a5/L02-M/implementation.png",
+      "old": null,
+      "new": "3dcb674c86c790c8dfe66917032bb18abbe8d6a5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_423e7a5/L02-M/original.png",
+      "old": null,
+      "new": "3c50a267824c5aea544d56a04e12f62020b95e24"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_423e7a5/L02-M/overlay_50.png",
+      "old": null,
+      "new": "fdd89c312c79168f2b83874f32df5191683f8b89"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_423e7a5/L02-M/result.json",
+      "old": null,
+      "new": "ab7e0f22bbed0a6e420b29a46fcfc50ef84202bd"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_423e7a5/index.json",
+      "old": null,
+      "new": "8c3820b841c67c60acbaf689e6f4ca0b316b821c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_46c4dbe/T-B-C/absolute_difference.png",
+      "old": null,
+      "new": "142f328443a76ed5f2ca43ee0c3288cd21b62cce"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_46c4dbe/T-B-C/implementation.png",
+      "old": null,
+      "new": "fe96729c4860984c162dce66d8a2d4eca93bd748"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_46c4dbe/T-B-C/original.png",
+      "old": null,
+      "new": "6439cdab421bef64a00d34de59ca54b913c7fb38"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_46c4dbe/T-B-C/overlay_50.png",
+      "old": null,
+      "new": "a4e117861cf3a3d091f5dc489e219add58135fa0"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_46c4dbe/T-B-C/result.json",
+      "old": null,
+      "new": "b5a002608f7cce53152e8a6f31bd4043cb30efa1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_46c4dbe/index.json",
+      "old": null,
+      "new": "0466f9e776342169770bdfa940ee063a0587e6ad"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_47dbc95/L06-E/absolute_difference.png",
+      "old": null,
+      "new": "af804c7b289eb02b9714e91dce48735351669a74"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_47dbc95/L06-E/implementation.png",
+      "old": null,
+      "new": "14ecd807d74a9f4d19ebebf80002d164cacecbde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_47dbc95/L06-E/original.png",
+      "old": null,
+      "new": "40eaf4f8ff733e33e4397adc6e3950a74478f1c1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_47dbc95/L06-E/overlay_50.png",
+      "old": null,
+      "new": "e73369a621cca6c02a1daaa8fc36ab4914193fc2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_47dbc95/L06-E/result.json",
+      "old": null,
+      "new": "f28aa75c03d3c83b7359b54e0b084534cef39dd9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_47dbc95/L06-L/absolute_difference.png",
+      "old": null,
+      "new": "04a28aad22ce202a6a702e2d7f6bee0acc3fa638"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_47dbc95/L06-L/implementation.png",
+      "old": null,
+      "new": "1dc1be0b74eb70599965514dbedd908a5e309d9f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_47dbc95/L06-L/original.png",
+      "old": null,
+      "new": "271e7c35d99854ed4b53a81067cdfea1144a352c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_47dbc95/L06-L/overlay_50.png",
+      "old": null,
+      "new": "a8e2040fa362d249656d0be39c563943c41c29d9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_47dbc95/L06-L/result.json",
+      "old": null,
+      "new": "2119da824bb05eb43c0bb50adc3b07e6daa92e0f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_47dbc95/index.json",
+      "old": null,
+      "new": "0532591fff586041ade266f5e0bd84aabef5e8cc"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_5c40428/T-B-S/absolute_difference.png",
+      "old": null,
+      "new": "74c366c45c8d9fe3a3c73add4f93f4bc7fce688d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_5c40428/T-B-S/implementation.png",
+      "old": null,
+      "new": "105b527a05f65acf3de705510ad73e85a0160576"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_5c40428/T-B-S/original.png",
+      "old": null,
+      "new": "f7ff4acc7a919186472a09646b41698228b1fb03"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_5c40428/T-B-S/overlay_50.png",
+      "old": null,
+      "new": "2294713e7cc7c78a61f6ac9e94fdbc271c009063"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_5c40428/T-B-S/result.json",
+      "old": null,
+      "new": "d1069b632fe6e23fbe86f03b843b8b6144346d00"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_5c40428/index.json",
+      "old": null,
+      "new": "d593627d7efcec864cf60e4cc456a985cc49c5dd"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c13500a/T-B-F/absolute_difference.png",
+      "old": null,
+      "new": "33e31f952d79692a92c60f580378c50a8a874a2c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c13500a/T-B-F/implementation.png",
+      "old": null,
+      "new": "f7763d5ac42fef7f572451a11ea7aa865fe2a32f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c13500a/T-B-F/original.png",
+      "old": null,
+      "new": "e63299cf407ecdea9be2b3898101d5154f9f76ba"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c13500a/T-B-F/overlay_50.png",
+      "old": null,
+      "new": "17a885d397808aa142ada09ab98cd7434634c24d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c13500a/T-B-F/result.json",
+      "old": null,
+      "new": "e351e6b1bf94b99cfa706a3811baa122c340bf65"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c13500a/index.json",
+      "old": null,
+      "new": "898d47251fb40a6b3f368f9ce38fc5310ba89f57"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c5ae7e1/L03-D/absolute_difference.png",
+      "old": null,
+      "new": "63e2b3de0db4c7f24812c277d5670371da2e5b66"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c5ae7e1/L03-D/implementation.png",
+      "old": null,
+      "new": "a5e882f22b233352fc46ab1f2d9bee6516610029"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c5ae7e1/L03-D/original.png",
+      "old": null,
+      "new": "31265f03b7d77e7c20f628ce1e2656e72d19796b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c5ae7e1/L03-D/overlay_50.png",
+      "old": null,
+      "new": "3b7af83c22f3c322f2aa71eb240fddeee361b815"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c5ae7e1/L03-D/result.json",
+      "old": null,
+      "new": "c1089d2b925ee13a52dc1481e3ab9cac20b1cefd"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c5ae7e1/L03-N/absolute_difference.png",
+      "old": null,
+      "new": "de529688bb6455b35f1001221e8a5b4b63176d62"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c5ae7e1/L03-N/implementation.png",
+      "old": null,
+      "new": "f0b2f0be3f21676166854262a5941bdc5021480c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c5ae7e1/L03-N/original.png",
+      "old": null,
+      "new": "c5ccd408f2ab6de2c7947764e6c48db4600f9c59"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c5ae7e1/L03-N/overlay_50.png",
+      "old": null,
+      "new": "5c269b39607d9cf46d7d9685fcd46de86ba04368"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c5ae7e1/L03-N/result.json",
+      "old": null,
+      "new": "1b5ff4b512f87642bf6d21dab43f75e253e0e221"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/comparison_increment_c5ae7e1/index.json",
+      "old": null,
+      "new": "3228ca0af76ce2dc0e7f80cea0af1010c051f0a9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/L02-M.png",
+      "old": null,
+      "new": "3dcb674c86c790c8dfe66917032bb18abbe8d6a5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/L03-D.png",
+      "old": null,
+      "new": "a5e882f22b233352fc46ab1f2d9bee6516610029"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/L03-N.png",
+      "old": null,
+      "new": "f0b2f0be3f21676166854262a5941bdc5021480c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/L05-M.png",
+      "old": null,
+      "new": "2c5e44669607515f2c7952b1620e9e062683a584"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/L06-E.png",
+      "old": null,
+      "new": "14ecd807d74a9f4d19ebebf80002d164cacecbde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/L06-L.png",
+      "old": null,
+      "new": "1dc1be0b74eb70599965514dbedd908a5e309d9f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-A-camera.png",
+      "old": null,
+      "new": "d335eeee7ac6e68226b39f5b9006d3de21b02c83"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-A-frames.png",
+      "old": null,
+      "new": "7251044385db96211178eb4c95a3dea4e7a7e36d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-A-main-1366x768.png",
+      "old": null,
+      "new": "3f09af2a246efb91aa43d0a2e657c868c5b9acb7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-A-main-dark.png",
+      "old": null,
+      "new": "e88f87d076addf593508ad91de948079d7e2ca86"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-A-main.png",
+      "old": null,
+      "new": "ae5291559a15033c6387b70a6bff677b57ea3809"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-B-main-1366x768.png",
+      "old": null,
+      "new": "1ac7c9db14c508055494a54b7456286f8a11312f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-B-main.png",
+      "old": null,
+      "new": "1d1a153ecf3e16bce0386f06f3906a7a6a10144a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-C-main-1366x768.png",
+      "old": null,
+      "new": "9f40f1bb2c9fbc9faa22e24f43e8d135cf15617c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-C-main.png",
+      "old": null,
+      "new": "4d106c53510305453abb6cdc1254d64426cc88a2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-D-main-1366x768.png",
+      "old": null,
+      "new": "cf7ba3ab118e44499f04b3706f5055f6a7f84db7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-D-main.png",
+      "old": null,
+      "new": "e2df8c78fabe46743377202a5b7e84eaa0919d7d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-E-frames.png",
+      "old": null,
+      "new": "10559916628e3894e89823c6a76a6f89345271e9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-E-main-1366x768.png",
+      "old": null,
+      "new": "4921de5c8a37fd0d298ea5a2c69c24affd502410"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-E-main-dark.png",
+      "old": null,
+      "new": "039a28288d359dd25880c59bd52a46ed32e9d49f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-E-main.png",
+      "old": null,
+      "new": "124c444aebd43bdd62b73babf2373b0c38e3e378"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-E-studio.png",
+      "old": null,
+      "new": "96dce63fa13f30ff35b77d34660bd940dd0d3886"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-F-main-1366x768.png",
+      "old": null,
+      "new": "4e04ad34616033b4671e9d49f2a8a1e5a867ce93"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/R-F-main.png",
+      "old": null,
+      "new": "bca5911ff59ec4ff36a573a178c67fcfb324c08f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/T-A-M.png",
+      "old": null,
+      "new": "22d5c1c92bffc11af07fa2543fafcf22cbfca50f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/T-B-C.png",
+      "old": null,
+      "new": "3b1c308d59e71f7474305517fc582daaa1033c24"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/T-B-F.png",
+      "old": null,
+      "new": "76e3f7c0b0ebad2866320f267cdb298552ce6554"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/T-B-M.png",
+      "old": null,
+      "new": "0cc6702539d48488d52b22aa87466032cea4117c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/T-B-S.png",
+      "old": null,
+      "new": "60f765e1d01ed7e38c85ce38495cff3430f00780"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/L02-M.json",
+      "old": null,
+      "new": "ff263831f781a06ff5085735a0d0251633ac20cb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/L03-D.json",
+      "old": null,
+      "new": "98a8593a9b5fef55759bbfcc559490a7798a9f96"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/L03-N.json",
+      "old": null,
+      "new": "f0609901534ec2e688d631460f36d15b31e73a89"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/L05-M.json",
+      "old": null,
+      "new": "393e2ad2ec7645f397625eec516819f56c1b7eaa"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/L06-E.json",
+      "old": null,
+      "new": "d659cbcb81ed4422118f30718331dfbcd81941a6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/L06-L.json",
+      "old": null,
+      "new": "a8a17e02fca1c18cd2dcfaa2b1242e683e2c007a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-A-camera.json",
+      "old": null,
+      "new": "d2a2779ca472f9970a48f1c83e7a8a56c1afa190"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-A-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-A-main-1366x768.json",
+      "old": null,
+      "new": "74780c3a80c5dd6d396dac681eb5561c8ed233b6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-A-main-dark.json",
+      "old": null,
+      "new": "4e528d86aa4c98620ceda17cab33612798d7f451"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-A-main.json",
+      "old": null,
+      "new": "4e528d86aa4c98620ceda17cab33612798d7f451"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-B-main-1366x768.json",
+      "old": null,
+      "new": "2c4437dea358406afd5459e467e5f681742d4235"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-B-main.json",
+      "old": null,
+      "new": "72c5f27a1c88e7bc6a9ec751d4b9ccdf68087b0e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-C-main-1366x768.json",
+      "old": null,
+      "new": "c4bc673e2f0cc4ce76b87c27c18839b6063363d3"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-C-main.json",
+      "old": null,
+      "new": "74be2e813b673c7b7302013218eb6a8f7b9bf504"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-D-main-1366x768.json",
+      "old": null,
+      "new": "c3815cb19f8b2e6e01a8367e1da6adda5d342f56"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-D-main.json",
+      "old": null,
+      "new": "248cae00bbcf9a310365c082daffaf562d001d76"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-E-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-E-main-1366x768.json",
+      "old": null,
+      "new": "16f720a985ada9f26cd2490389dcc1b1e0a6dbf8"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-E-main-dark.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-E-main.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-E-studio.json",
+      "old": null,
+      "new": "704600304745a62ffcd4862a5f6bff46c9d340b4"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-F-main-1366x768.json",
+      "old": null,
+      "new": "7804f1bd8c1233e8f6d158e8477a3f5f78e09deb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/R-F-main.json",
+      "old": null,
+      "new": "4dd0fe8371c66479c0dfacf1abaa9dea462e4e71"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/T-A-M.json",
+      "old": null,
+      "new": "14e01fad2969dcf2cf5a1317350a8fe18ff532dc"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/T-B-C.json",
+      "old": null,
+      "new": "af0a56330443561c8aea1c29a2dde49f5334efe9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/T-B-F.json",
+      "old": null,
+      "new": "3684ff96cd6bae5d9048d4c87183e980c5815556"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/T-B-M.json",
+      "old": null,
+      "new": "16d53e6e6a7de172f857cbd20fc63a8755b0871b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/bounds/T-B-S.json",
+      "old": null,
+      "new": "d3e14d472a13b650882cde1233130004ab04abde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_027b000/index.json",
+      "old": null,
+      "new": "a6adda19f80b57ee51f2dea2bd247423fd711e68"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/L02-M.png",
+      "old": null,
+      "new": "3dcb674c86c790c8dfe66917032bb18abbe8d6a5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/L03-D.png",
+      "old": null,
+      "new": "a5e882f22b233352fc46ab1f2d9bee6516610029"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/L03-N.png",
+      "old": null,
+      "new": "f0b2f0be3f21676166854262a5941bdc5021480c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/L05-M.png",
+      "old": null,
+      "new": "2c5e44669607515f2c7952b1620e9e062683a584"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/L06-E.png",
+      "old": null,
+      "new": "6019f0a44ac9d62eba0422f395de83b4b3e74263"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/L06-L.png",
+      "old": null,
+      "new": "2acf082bee155e3ca745613494005c29108bb421"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-A-camera.png",
+      "old": null,
+      "new": "d335eeee7ac6e68226b39f5b9006d3de21b02c83"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-A-frames.png",
+      "old": null,
+      "new": "7251044385db96211178eb4c95a3dea4e7a7e36d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-A-main-1366x768.png",
+      "old": null,
+      "new": "3f09af2a246efb91aa43d0a2e657c868c5b9acb7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-A-main-dark.png",
+      "old": null,
+      "new": "e88f87d076addf593508ad91de948079d7e2ca86"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-A-main.png",
+      "old": null,
+      "new": "ae5291559a15033c6387b70a6bff677b57ea3809"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-B-main-1366x768.png",
+      "old": null,
+      "new": "1ac7c9db14c508055494a54b7456286f8a11312f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-B-main.png",
+      "old": null,
+      "new": "1d1a153ecf3e16bce0386f06f3906a7a6a10144a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-C-main-1366x768.png",
+      "old": null,
+      "new": "9f40f1bb2c9fbc9faa22e24f43e8d135cf15617c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-C-main.png",
+      "old": null,
+      "new": "4d106c53510305453abb6cdc1254d64426cc88a2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-D-main-1366x768.png",
+      "old": null,
+      "new": "cf7ba3ab118e44499f04b3706f5055f6a7f84db7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-D-main.png",
+      "old": null,
+      "new": "e2df8c78fabe46743377202a5b7e84eaa0919d7d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-E-frames.png",
+      "old": null,
+      "new": "10559916628e3894e89823c6a76a6f89345271e9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-E-main-1366x768.png",
+      "old": null,
+      "new": "4921de5c8a37fd0d298ea5a2c69c24affd502410"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-E-main-dark.png",
+      "old": null,
+      "new": "039a28288d359dd25880c59bd52a46ed32e9d49f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-E-main.png",
+      "old": null,
+      "new": "124c444aebd43bdd62b73babf2373b0c38e3e378"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-E-studio.png",
+      "old": null,
+      "new": "96dce63fa13f30ff35b77d34660bd940dd0d3886"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-F-main-1366x768.png",
+      "old": null,
+      "new": "4e04ad34616033b4671e9d49f2a8a1e5a867ce93"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/R-F-main.png",
+      "old": null,
+      "new": "bca5911ff59ec4ff36a573a178c67fcfb324c08f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/T-A-M.png",
+      "old": null,
+      "new": "22d5c1c92bffc11af07fa2543fafcf22cbfca50f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/T-B-C.png",
+      "old": null,
+      "new": "ec1831079469e3c0def9571db3b2310be3c796a1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/T-B-F.png",
+      "old": null,
+      "new": "891e3f1246fc308a0c0ad1986af0cd284ed823a6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/T-B-M.png",
+      "old": null,
+      "new": "8a23cfbfc7b8abbc16402a9d763b3fd89db4af7e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/T-B-S.png",
+      "old": null,
+      "new": "4b8debab5276516980c486dc58ef40dadc829944"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/L02-M.json",
+      "old": null,
+      "new": "ff263831f781a06ff5085735a0d0251633ac20cb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/L03-D.json",
+      "old": null,
+      "new": "98a8593a9b5fef55759bbfcc559490a7798a9f96"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/L03-N.json",
+      "old": null,
+      "new": "f0609901534ec2e688d631460f36d15b31e73a89"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/L05-M.json",
+      "old": null,
+      "new": "393e2ad2ec7645f397625eec516819f56c1b7eaa"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/L06-E.json",
+      "old": null,
+      "new": "4a077371215bb92f3033645de71b69ff5c879837"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/L06-L.json",
+      "old": null,
+      "new": "0d741267b40b1d761e871a1058ab2e3c6a0b1217"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-A-camera.json",
+      "old": null,
+      "new": "d2a2779ca472f9970a48f1c83e7a8a56c1afa190"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-A-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-A-main-1366x768.json",
+      "old": null,
+      "new": "74780c3a80c5dd6d396dac681eb5561c8ed233b6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-A-main-dark.json",
+      "old": null,
+      "new": "4e528d86aa4c98620ceda17cab33612798d7f451"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-A-main.json",
+      "old": null,
+      "new": "4e528d86aa4c98620ceda17cab33612798d7f451"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-B-main-1366x768.json",
+      "old": null,
+      "new": "2c4437dea358406afd5459e467e5f681742d4235"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-B-main.json",
+      "old": null,
+      "new": "72c5f27a1c88e7bc6a9ec751d4b9ccdf68087b0e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-C-main-1366x768.json",
+      "old": null,
+      "new": "c4bc673e2f0cc4ce76b87c27c18839b6063363d3"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-C-main.json",
+      "old": null,
+      "new": "74be2e813b673c7b7302013218eb6a8f7b9bf504"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-D-main-1366x768.json",
+      "old": null,
+      "new": "c3815cb19f8b2e6e01a8367e1da6adda5d342f56"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-D-main.json",
+      "old": null,
+      "new": "248cae00bbcf9a310365c082daffaf562d001d76"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-E-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-E-main-1366x768.json",
+      "old": null,
+      "new": "16f720a985ada9f26cd2490389dcc1b1e0a6dbf8"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-E-main-dark.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-E-main.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-E-studio.json",
+      "old": null,
+      "new": "704600304745a62ffcd4862a5f6bff46c9d340b4"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-F-main-1366x768.json",
+      "old": null,
+      "new": "7804f1bd8c1233e8f6d158e8477a3f5f78e09deb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/R-F-main.json",
+      "old": null,
+      "new": "4dd0fe8371c66479c0dfacf1abaa9dea462e4e71"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/T-A-M.json",
+      "old": null,
+      "new": "14e01fad2969dcf2cf5a1317350a8fe18ff532dc"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/T-B-C.json",
+      "old": null,
+      "new": "af0a56330443561c8aea1c29a2dde49f5334efe9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/T-B-F.json",
+      "old": null,
+      "new": "3684ff96cd6bae5d9048d4c87183e980c5815556"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/T-B-M.json",
+      "old": null,
+      "new": "d9448b8d9ea4627bd122891f019fc19bcf4feb53"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/bounds/T-B-S.json",
+      "old": null,
+      "new": "d3e14d472a13b650882cde1233130004ab04abde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_3966401/index.json",
+      "old": null,
+      "new": "a6adda19f80b57ee51f2dea2bd247423fd711e68"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/L02-M.png",
+      "old": null,
+      "new": "3dcb674c86c790c8dfe66917032bb18abbe8d6a5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/L03-D.png",
+      "old": null,
+      "new": "38b21ac10e9f3e13124acbe5bcadedf1493ffa6d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/L03-N.png",
+      "old": null,
+      "new": "3ccfb7bc5e4bf74d5bacd8a2f4ff08f778461fc1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/L05-M.png",
+      "old": null,
+      "new": "3f86a2e5a7095546e4236967da148d915ee0d63a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/L06-E.png",
+      "old": null,
+      "new": "6019f0a44ac9d62eba0422f395de83b4b3e74263"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/L06-L.png",
+      "old": null,
+      "new": "2acf082bee155e3ca745613494005c29108bb421"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-A-camera.png",
+      "old": null,
+      "new": "d335eeee7ac6e68226b39f5b9006d3de21b02c83"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-A-frames.png",
+      "old": null,
+      "new": "7251044385db96211178eb4c95a3dea4e7a7e36d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-A-main-1366x768.png",
+      "old": null,
+      "new": "3f09af2a246efb91aa43d0a2e657c868c5b9acb7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-A-main-dark.png",
+      "old": null,
+      "new": "e88f87d076addf593508ad91de948079d7e2ca86"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-A-main.png",
+      "old": null,
+      "new": "ae5291559a15033c6387b70a6bff677b57ea3809"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-B-main-1366x768.png",
+      "old": null,
+      "new": "1ac7c9db14c508055494a54b7456286f8a11312f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-B-main.png",
+      "old": null,
+      "new": "1d1a153ecf3e16bce0386f06f3906a7a6a10144a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-C-main-1366x768.png",
+      "old": null,
+      "new": "9f40f1bb2c9fbc9faa22e24f43e8d135cf15617c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-C-main.png",
+      "old": null,
+      "new": "4d106c53510305453abb6cdc1254d64426cc88a2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-D-main-1366x768.png",
+      "old": null,
+      "new": "cf7ba3ab118e44499f04b3706f5055f6a7f84db7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-D-main.png",
+      "old": null,
+      "new": "e2df8c78fabe46743377202a5b7e84eaa0919d7d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-E-frames.png",
+      "old": null,
+      "new": "10559916628e3894e89823c6a76a6f89345271e9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-E-main-1366x768.png",
+      "old": null,
+      "new": "4921de5c8a37fd0d298ea5a2c69c24affd502410"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-E-main-dark.png",
+      "old": null,
+      "new": "039a28288d359dd25880c59bd52a46ed32e9d49f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-E-main.png",
+      "old": null,
+      "new": "124c444aebd43bdd62b73babf2373b0c38e3e378"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-E-studio.png",
+      "old": null,
+      "new": "96dce63fa13f30ff35b77d34660bd940dd0d3886"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-F-main-1366x768.png",
+      "old": null,
+      "new": "4e04ad34616033b4671e9d49f2a8a1e5a867ce93"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/R-F-main.png",
+      "old": null,
+      "new": "bca5911ff59ec4ff36a573a178c67fcfb324c08f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/T-A-M.png",
+      "old": null,
+      "new": "22d5c1c92bffc11af07fa2543fafcf22cbfca50f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/T-B-C.png",
+      "old": null,
+      "new": "ec1831079469e3c0def9571db3b2310be3c796a1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/T-B-F.png",
+      "old": null,
+      "new": "891e3f1246fc308a0c0ad1986af0cd284ed823a6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/T-B-M.png",
+      "old": null,
+      "new": "8a23cfbfc7b8abbc16402a9d763b3fd89db4af7e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/T-B-S.png",
+      "old": null,
+      "new": "4b8debab5276516980c486dc58ef40dadc829944"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/L02-M.json",
+      "old": null,
+      "new": "deb46be7d7112e3ca061a41f1c4c6f35317c90d0"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/L03-D.json",
+      "old": null,
+      "new": "fd1c718a346f90dccfe42e5bfb7dfa094ab71772"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/L03-N.json",
+      "old": null,
+      "new": "bf817db72d1ee68fdb73e7f6db2d61834990b79a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/L05-M.json",
+      "old": null,
+      "new": "b1fa80c04aacbaf9bc5c211072cd8c794fc7477a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/L06-E.json",
+      "old": null,
+      "new": "4a077371215bb92f3033645de71b69ff5c879837"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/L06-L.json",
+      "old": null,
+      "new": "0d741267b40b1d761e871a1058ab2e3c6a0b1217"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-A-camera.json",
+      "old": null,
+      "new": "d2a2779ca472f9970a48f1c83e7a8a56c1afa190"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-A-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-A-main-1366x768.json",
+      "old": null,
+      "new": "74780c3a80c5dd6d396dac681eb5561c8ed233b6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-A-main-dark.json",
+      "old": null,
+      "new": "4e528d86aa4c98620ceda17cab33612798d7f451"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-A-main.json",
+      "old": null,
+      "new": "4e528d86aa4c98620ceda17cab33612798d7f451"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-B-main-1366x768.json",
+      "old": null,
+      "new": "2c4437dea358406afd5459e467e5f681742d4235"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-B-main.json",
+      "old": null,
+      "new": "72c5f27a1c88e7bc6a9ec751d4b9ccdf68087b0e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-C-main-1366x768.json",
+      "old": null,
+      "new": "c4bc673e2f0cc4ce76b87c27c18839b6063363d3"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-C-main.json",
+      "old": null,
+      "new": "74be2e813b673c7b7302013218eb6a8f7b9bf504"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-D-main-1366x768.json",
+      "old": null,
+      "new": "c3815cb19f8b2e6e01a8367e1da6adda5d342f56"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-D-main.json",
+      "old": null,
+      "new": "248cae00bbcf9a310365c082daffaf562d001d76"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-E-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-E-main-1366x768.json",
+      "old": null,
+      "new": "16f720a985ada9f26cd2490389dcc1b1e0a6dbf8"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-E-main-dark.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-E-main.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-E-studio.json",
+      "old": null,
+      "new": "704600304745a62ffcd4862a5f6bff46c9d340b4"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-F-main-1366x768.json",
+      "old": null,
+      "new": "7804f1bd8c1233e8f6d158e8477a3f5f78e09deb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/R-F-main.json",
+      "old": null,
+      "new": "4dd0fe8371c66479c0dfacf1abaa9dea462e4e71"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/T-A-M.json",
+      "old": null,
+      "new": "14e01fad2969dcf2cf5a1317350a8fe18ff532dc"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/T-B-C.json",
+      "old": null,
+      "new": "af0a56330443561c8aea1c29a2dde49f5334efe9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/T-B-F.json",
+      "old": null,
+      "new": "3684ff96cd6bae5d9048d4c87183e980c5815556"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/T-B-M.json",
+      "old": null,
+      "new": "d9448b8d9ea4627bd122891f019fc19bcf4feb53"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/bounds/T-B-S.json",
+      "old": null,
+      "new": "d3e14d472a13b650882cde1233130004ab04abde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_423e7a5/index.json",
+      "old": null,
+      "new": "a6adda19f80b57ee51f2dea2bd247423fd711e68"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/L02-M.png",
+      "old": null,
+      "new": "3dcb674c86c790c8dfe66917032bb18abbe8d6a5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/L03-D.png",
+      "old": null,
+      "new": "a5e882f22b233352fc46ab1f2d9bee6516610029"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/L03-N.png",
+      "old": null,
+      "new": "f0b2f0be3f21676166854262a5941bdc5021480c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/L05-M.png",
+      "old": null,
+      "new": "2c5e44669607515f2c7952b1620e9e062683a584"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/L06-E.png",
+      "old": null,
+      "new": "14ecd807d74a9f4d19ebebf80002d164cacecbde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/L06-L.png",
+      "old": null,
+      "new": "1dc1be0b74eb70599965514dbedd908a5e309d9f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-A-camera.png",
+      "old": null,
+      "new": "d335eeee7ac6e68226b39f5b9006d3de21b02c83"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-A-frames.png",
+      "old": null,
+      "new": "7251044385db96211178eb4c95a3dea4e7a7e36d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-A-main-1366x768.png",
+      "old": null,
+      "new": "504289a9dafa82845b04f248783553c6a9249f85"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-A-main-dark.png",
+      "old": null,
+      "new": "2bb8494e79e714ef37bbd050838d3d8a524dfb91"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-A-main.png",
+      "old": null,
+      "new": "35a031501764aba1ea774712e6343a3ebc8fb1e6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-B-main-1366x768.png",
+      "old": null,
+      "new": "1ac7c9db14c508055494a54b7456286f8a11312f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-B-main.png",
+      "old": null,
+      "new": "1d1a153ecf3e16bce0386f06f3906a7a6a10144a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-C-main-1366x768.png",
+      "old": null,
+      "new": "53143f0a85bc91cc79392e74c3aefab0c6185c31"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-C-main.png",
+      "old": null,
+      "new": "d86e4f333dffa9aa0236bd95b391dff5b81667a4"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-D-main-1366x768.png",
+      "old": null,
+      "new": "cf7ba3ab118e44499f04b3706f5055f6a7f84db7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-D-main.png",
+      "old": null,
+      "new": "e2df8c78fabe46743377202a5b7e84eaa0919d7d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-E-frames.png",
+      "old": null,
+      "new": "10559916628e3894e89823c6a76a6f89345271e9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-E-main-1366x768.png",
+      "old": null,
+      "new": "4921de5c8a37fd0d298ea5a2c69c24affd502410"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-E-main-dark.png",
+      "old": null,
+      "new": "039a28288d359dd25880c59bd52a46ed32e9d49f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-E-main.png",
+      "old": null,
+      "new": "124c444aebd43bdd62b73babf2373b0c38e3e378"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-E-studio.png",
+      "old": null,
+      "new": "ea54d3a0fdf8ef3dc2e3ac51d378aa06c12ec87e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-F-main-1366x768.png",
+      "old": null,
+      "new": "4e04ad34616033b4671e9d49f2a8a1e5a867ce93"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/R-F-main.png",
+      "old": null,
+      "new": "bca5911ff59ec4ff36a573a178c67fcfb324c08f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/T-A-M.png",
+      "old": null,
+      "new": "22d5c1c92bffc11af07fa2543fafcf22cbfca50f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/T-B-C.png",
+      "old": null,
+      "new": "fe96729c4860984c162dce66d8a2d4eca93bd748"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/T-B-F.png",
+      "old": null,
+      "new": "76e3f7c0b0ebad2866320f267cdb298552ce6554"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/T-B-M.png",
+      "old": null,
+      "new": "41eb2c62b5e9f253928c464c777afe4148f0c16c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/T-B-S.png",
+      "old": null,
+      "new": "60f765e1d01ed7e38c85ce38495cff3430f00780"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/L02-M.json",
+      "old": null,
+      "new": "ff263831f781a06ff5085735a0d0251633ac20cb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/L03-D.json",
+      "old": null,
+      "new": "98a8593a9b5fef55759bbfcc559490a7798a9f96"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/L03-N.json",
+      "old": null,
+      "new": "f0609901534ec2e688d631460f36d15b31e73a89"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/L05-M.json",
+      "old": null,
+      "new": "393e2ad2ec7645f397625eec516819f56c1b7eaa"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/L06-E.json",
+      "old": null,
+      "new": "d659cbcb81ed4422118f30718331dfbcd81941a6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/L06-L.json",
+      "old": null,
+      "new": "a8a17e02fca1c18cd2dcfaa2b1242e683e2c007a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-A-camera.json",
+      "old": null,
+      "new": "d2a2779ca472f9970a48f1c83e7a8a56c1afa190"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-A-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-A-main-1366x768.json",
+      "old": null,
+      "new": "3dfa8da3438424daa51b0ee40397a9d88036aab0"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-A-main-dark.json",
+      "old": null,
+      "new": "c23c0e11133e8180a2d461ca3f6290b5159d778b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-A-main.json",
+      "old": null,
+      "new": "c23c0e11133e8180a2d461ca3f6290b5159d778b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-B-main-1366x768.json",
+      "old": null,
+      "new": "2c4437dea358406afd5459e467e5f681742d4235"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-B-main.json",
+      "old": null,
+      "new": "72c5f27a1c88e7bc6a9ec751d4b9ccdf68087b0e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-C-main-1366x768.json",
+      "old": null,
+      "new": "96f7f38d1c4fc6f5a3ab64d8dda5bcc63f68ac8a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-C-main.json",
+      "old": null,
+      "new": "8bfd4cb692079b98c1aae8ac12850b9fd8937044"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-D-main-1366x768.json",
+      "old": null,
+      "new": "c3815cb19f8b2e6e01a8367e1da6adda5d342f56"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-D-main.json",
+      "old": null,
+      "new": "248cae00bbcf9a310365c082daffaf562d001d76"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-E-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-E-main-1366x768.json",
+      "old": null,
+      "new": "16f720a985ada9f26cd2490389dcc1b1e0a6dbf8"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-E-main-dark.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-E-main.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-E-studio.json",
+      "old": null,
+      "new": "16593a62519864b60119e92209315ba4d9ef3103"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-F-main-1366x768.json",
+      "old": null,
+      "new": "7804f1bd8c1233e8f6d158e8477a3f5f78e09deb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/R-F-main.json",
+      "old": null,
+      "new": "4dd0fe8371c66479c0dfacf1abaa9dea462e4e71"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/T-A-M.json",
+      "old": null,
+      "new": "14e01fad2969dcf2cf5a1317350a8fe18ff532dc"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/T-B-C.json",
+      "old": null,
+      "new": "cbe3959d6317741b857b70c6e7c2d30c7e1e3308"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/T-B-F.json",
+      "old": null,
+      "new": "3684ff96cd6bae5d9048d4c87183e980c5815556"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/T-B-M.json",
+      "old": null,
+      "new": "16d53e6e6a7de172f857cbd20fc63a8755b0871b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/bounds/T-B-S.json",
+      "old": null,
+      "new": "d3e14d472a13b650882cde1233130004ab04abde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_46c4dbe/index.json",
+      "old": null,
+      "new": "a6adda19f80b57ee51f2dea2bd247423fd711e68"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/L02-M.png",
+      "old": null,
+      "new": "3dcb674c86c790c8dfe66917032bb18abbe8d6a5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/L03-D.png",
+      "old": null,
+      "new": "a5e882f22b233352fc46ab1f2d9bee6516610029"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/L03-N.png",
+      "old": null,
+      "new": "f0b2f0be3f21676166854262a5941bdc5021480c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/L05-M.png",
+      "old": null,
+      "new": "2c5e44669607515f2c7952b1620e9e062683a584"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/L06-E.png",
+      "old": null,
+      "new": "14ecd807d74a9f4d19ebebf80002d164cacecbde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/L06-L.png",
+      "old": null,
+      "new": "1dc1be0b74eb70599965514dbedd908a5e309d9f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-A-camera.png",
+      "old": null,
+      "new": "d335eeee7ac6e68226b39f5b9006d3de21b02c83"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-A-frames.png",
+      "old": null,
+      "new": "7251044385db96211178eb4c95a3dea4e7a7e36d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-A-main-1366x768.png",
+      "old": null,
+      "new": "3f09af2a246efb91aa43d0a2e657c868c5b9acb7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-A-main-dark.png",
+      "old": null,
+      "new": "e88f87d076addf593508ad91de948079d7e2ca86"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-A-main.png",
+      "old": null,
+      "new": "ae5291559a15033c6387b70a6bff677b57ea3809"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-B-main-1366x768.png",
+      "old": null,
+      "new": "1ac7c9db14c508055494a54b7456286f8a11312f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-B-main.png",
+      "old": null,
+      "new": "1d1a153ecf3e16bce0386f06f3906a7a6a10144a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-C-main-1366x768.png",
+      "old": null,
+      "new": "9f40f1bb2c9fbc9faa22e24f43e8d135cf15617c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-C-main.png",
+      "old": null,
+      "new": "4d106c53510305453abb6cdc1254d64426cc88a2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-D-main-1366x768.png",
+      "old": null,
+      "new": "cf7ba3ab118e44499f04b3706f5055f6a7f84db7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-D-main.png",
+      "old": null,
+      "new": "e2df8c78fabe46743377202a5b7e84eaa0919d7d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-E-frames.png",
+      "old": null,
+      "new": "10559916628e3894e89823c6a76a6f89345271e9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-E-main-1366x768.png",
+      "old": null,
+      "new": "4921de5c8a37fd0d298ea5a2c69c24affd502410"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-E-main-dark.png",
+      "old": null,
+      "new": "039a28288d359dd25880c59bd52a46ed32e9d49f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-E-main.png",
+      "old": null,
+      "new": "124c444aebd43bdd62b73babf2373b0c38e3e378"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-E-studio.png",
+      "old": null,
+      "new": "96dce63fa13f30ff35b77d34660bd940dd0d3886"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-F-main-1366x768.png",
+      "old": null,
+      "new": "4e04ad34616033b4671e9d49f2a8a1e5a867ce93"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/R-F-main.png",
+      "old": null,
+      "new": "bca5911ff59ec4ff36a573a178c67fcfb324c08f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/T-A-M.png",
+      "old": null,
+      "new": "22d5c1c92bffc11af07fa2543fafcf22cbfca50f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/T-B-C.png",
+      "old": null,
+      "new": "ec1831079469e3c0def9571db3b2310be3c796a1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/T-B-F.png",
+      "old": null,
+      "new": "891e3f1246fc308a0c0ad1986af0cd284ed823a6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/T-B-M.png",
+      "old": null,
+      "new": "8a23cfbfc7b8abbc16402a9d763b3fd89db4af7e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/T-B-S.png",
+      "old": null,
+      "new": "4b8debab5276516980c486dc58ef40dadc829944"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/L02-M.json",
+      "old": null,
+      "new": "ff263831f781a06ff5085735a0d0251633ac20cb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/L03-D.json",
+      "old": null,
+      "new": "98a8593a9b5fef55759bbfcc559490a7798a9f96"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/L03-N.json",
+      "old": null,
+      "new": "f0609901534ec2e688d631460f36d15b31e73a89"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/L05-M.json",
+      "old": null,
+      "new": "393e2ad2ec7645f397625eec516819f56c1b7eaa"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/L06-E.json",
+      "old": null,
+      "new": "d659cbcb81ed4422118f30718331dfbcd81941a6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/L06-L.json",
+      "old": null,
+      "new": "a8a17e02fca1c18cd2dcfaa2b1242e683e2c007a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-A-camera.json",
+      "old": null,
+      "new": "d2a2779ca472f9970a48f1c83e7a8a56c1afa190"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-A-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-A-main-1366x768.json",
+      "old": null,
+      "new": "74780c3a80c5dd6d396dac681eb5561c8ed233b6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-A-main-dark.json",
+      "old": null,
+      "new": "4e528d86aa4c98620ceda17cab33612798d7f451"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-A-main.json",
+      "old": null,
+      "new": "4e528d86aa4c98620ceda17cab33612798d7f451"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-B-main-1366x768.json",
+      "old": null,
+      "new": "2c4437dea358406afd5459e467e5f681742d4235"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-B-main.json",
+      "old": null,
+      "new": "72c5f27a1c88e7bc6a9ec751d4b9ccdf68087b0e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-C-main-1366x768.json",
+      "old": null,
+      "new": "c4bc673e2f0cc4ce76b87c27c18839b6063363d3"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-C-main.json",
+      "old": null,
+      "new": "74be2e813b673c7b7302013218eb6a8f7b9bf504"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-D-main-1366x768.json",
+      "old": null,
+      "new": "c3815cb19f8b2e6e01a8367e1da6adda5d342f56"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-D-main.json",
+      "old": null,
+      "new": "248cae00bbcf9a310365c082daffaf562d001d76"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-E-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-E-main-1366x768.json",
+      "old": null,
+      "new": "16f720a985ada9f26cd2490389dcc1b1e0a6dbf8"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-E-main-dark.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-E-main.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-E-studio.json",
+      "old": null,
+      "new": "704600304745a62ffcd4862a5f6bff46c9d340b4"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-F-main-1366x768.json",
+      "old": null,
+      "new": "7804f1bd8c1233e8f6d158e8477a3f5f78e09deb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/R-F-main.json",
+      "old": null,
+      "new": "4dd0fe8371c66479c0dfacf1abaa9dea462e4e71"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/T-A-M.json",
+      "old": null,
+      "new": "14e01fad2969dcf2cf5a1317350a8fe18ff532dc"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/T-B-C.json",
+      "old": null,
+      "new": "af0a56330443561c8aea1c29a2dde49f5334efe9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/T-B-F.json",
+      "old": null,
+      "new": "3684ff96cd6bae5d9048d4c87183e980c5815556"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/T-B-M.json",
+      "old": null,
+      "new": "d9448b8d9ea4627bd122891f019fc19bcf4feb53"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/bounds/T-B-S.json",
+      "old": null,
+      "new": "d3e14d472a13b650882cde1233130004ab04abde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_47dbc95/index.json",
+      "old": null,
+      "new": "a6adda19f80b57ee51f2dea2bd247423fd711e68"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/L02-M.png",
+      "old": null,
+      "new": "3dcb674c86c790c8dfe66917032bb18abbe8d6a5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/L03-D.png",
+      "old": null,
+      "new": "a5e882f22b233352fc46ab1f2d9bee6516610029"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/L03-N.png",
+      "old": null,
+      "new": "f0b2f0be3f21676166854262a5941bdc5021480c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/L05-M.png",
+      "old": null,
+      "new": "2c5e44669607515f2c7952b1620e9e062683a584"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/L06-E.png",
+      "old": null,
+      "new": "14ecd807d74a9f4d19ebebf80002d164cacecbde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/L06-L.png",
+      "old": null,
+      "new": "1dc1be0b74eb70599965514dbedd908a5e309d9f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-A-camera.png",
+      "old": null,
+      "new": "d335eeee7ac6e68226b39f5b9006d3de21b02c83"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-A-frames.png",
+      "old": null,
+      "new": "7251044385db96211178eb4c95a3dea4e7a7e36d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-A-main-1366x768.png",
+      "old": null,
+      "new": "504289a9dafa82845b04f248783553c6a9249f85"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-A-main-dark.png",
+      "old": null,
+      "new": "2bb8494e79e714ef37bbd050838d3d8a524dfb91"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-A-main.png",
+      "old": null,
+      "new": "35a031501764aba1ea774712e6343a3ebc8fb1e6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-B-main-1366x768.png",
+      "old": null,
+      "new": "1ac7c9db14c508055494a54b7456286f8a11312f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-B-main.png",
+      "old": null,
+      "new": "1d1a153ecf3e16bce0386f06f3906a7a6a10144a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-C-main-1366x768.png",
+      "old": null,
+      "new": "53143f0a85bc91cc79392e74c3aefab0c6185c31"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-C-main.png",
+      "old": null,
+      "new": "d86e4f333dffa9aa0236bd95b391dff5b81667a4"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-D-main-1366x768.png",
+      "old": null,
+      "new": "cf7ba3ab118e44499f04b3706f5055f6a7f84db7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-D-main.png",
+      "old": null,
+      "new": "e2df8c78fabe46743377202a5b7e84eaa0919d7d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-E-frames.png",
+      "old": null,
+      "new": "10559916628e3894e89823c6a76a6f89345271e9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-E-main-1366x768.png",
+      "old": null,
+      "new": "4921de5c8a37fd0d298ea5a2c69c24affd502410"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-E-main-dark.png",
+      "old": null,
+      "new": "039a28288d359dd25880c59bd52a46ed32e9d49f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-E-main.png",
+      "old": null,
+      "new": "124c444aebd43bdd62b73babf2373b0c38e3e378"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-E-studio.png",
+      "old": null,
+      "new": "ea54d3a0fdf8ef3dc2e3ac51d378aa06c12ec87e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-F-main-1366x768.png",
+      "old": null,
+      "new": "4e04ad34616033b4671e9d49f2a8a1e5a867ce93"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/R-F-main.png",
+      "old": null,
+      "new": "bca5911ff59ec4ff36a573a178c67fcfb324c08f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/T-A-M.png",
+      "old": null,
+      "new": "22d5c1c92bffc11af07fa2543fafcf22cbfca50f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/T-B-C.png",
+      "old": null,
+      "new": "fe96729c4860984c162dce66d8a2d4eca93bd748"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/T-B-F.png",
+      "old": null,
+      "new": "f7763d5ac42fef7f572451a11ea7aa865fe2a32f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/T-B-M.png",
+      "old": null,
+      "new": "41eb2c62b5e9f253928c464c777afe4148f0c16c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/T-B-S.png",
+      "old": null,
+      "new": "105b527a05f65acf3de705510ad73e85a0160576"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/L02-M.json",
+      "old": null,
+      "new": "ff263831f781a06ff5085735a0d0251633ac20cb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/L03-D.json",
+      "old": null,
+      "new": "98a8593a9b5fef55759bbfcc559490a7798a9f96"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/L03-N.json",
+      "old": null,
+      "new": "f0609901534ec2e688d631460f36d15b31e73a89"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/L05-M.json",
+      "old": null,
+      "new": "393e2ad2ec7645f397625eec516819f56c1b7eaa"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/L06-E.json",
+      "old": null,
+      "new": "d659cbcb81ed4422118f30718331dfbcd81941a6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/L06-L.json",
+      "old": null,
+      "new": "a8a17e02fca1c18cd2dcfaa2b1242e683e2c007a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-A-camera.json",
+      "old": null,
+      "new": "d2a2779ca472f9970a48f1c83e7a8a56c1afa190"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-A-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-A-main-1366x768.json",
+      "old": null,
+      "new": "3dfa8da3438424daa51b0ee40397a9d88036aab0"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-A-main-dark.json",
+      "old": null,
+      "new": "c23c0e11133e8180a2d461ca3f6290b5159d778b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-A-main.json",
+      "old": null,
+      "new": "c23c0e11133e8180a2d461ca3f6290b5159d778b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-B-main-1366x768.json",
+      "old": null,
+      "new": "2c4437dea358406afd5459e467e5f681742d4235"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-B-main.json",
+      "old": null,
+      "new": "72c5f27a1c88e7bc6a9ec751d4b9ccdf68087b0e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-C-main-1366x768.json",
+      "old": null,
+      "new": "96f7f38d1c4fc6f5a3ab64d8dda5bcc63f68ac8a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-C-main.json",
+      "old": null,
+      "new": "8bfd4cb692079b98c1aae8ac12850b9fd8937044"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-D-main-1366x768.json",
+      "old": null,
+      "new": "c3815cb19f8b2e6e01a8367e1da6adda5d342f56"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-D-main.json",
+      "old": null,
+      "new": "248cae00bbcf9a310365c082daffaf562d001d76"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-E-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-E-main-1366x768.json",
+      "old": null,
+      "new": "16f720a985ada9f26cd2490389dcc1b1e0a6dbf8"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-E-main-dark.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-E-main.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-E-studio.json",
+      "old": null,
+      "new": "16593a62519864b60119e92209315ba4d9ef3103"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-F-main-1366x768.json",
+      "old": null,
+      "new": "7804f1bd8c1233e8f6d158e8477a3f5f78e09deb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/R-F-main.json",
+      "old": null,
+      "new": "4dd0fe8371c66479c0dfacf1abaa9dea462e4e71"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/T-A-M.json",
+      "old": null,
+      "new": "14e01fad2969dcf2cf5a1317350a8fe18ff532dc"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/T-B-C.json",
+      "old": null,
+      "new": "cbe3959d6317741b857b70c6e7c2d30c7e1e3308"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/T-B-F.json",
+      "old": null,
+      "new": "15d3307d1ab9725963d2b9795b6c8cd4ec0a88d4"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/T-B-M.json",
+      "old": null,
+      "new": "16d53e6e6a7de172f857cbd20fc63a8755b0871b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/bounds/T-B-S.json",
+      "old": null,
+      "new": "70e9c86d18caed2536b14b5386f7a2eafdcc11b3"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_5c40428/index.json",
+      "old": null,
+      "new": "a6adda19f80b57ee51f2dea2bd247423fd711e68"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/L02-M.png",
+      "old": null,
+      "new": "3dcb674c86c790c8dfe66917032bb18abbe8d6a5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/L03-D.png",
+      "old": null,
+      "new": "a5e882f22b233352fc46ab1f2d9bee6516610029"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/L03-N.png",
+      "old": null,
+      "new": "f0b2f0be3f21676166854262a5941bdc5021480c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/L05-M.png",
+      "old": null,
+      "new": "2c5e44669607515f2c7952b1620e9e062683a584"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/L06-E.png",
+      "old": null,
+      "new": "14ecd807d74a9f4d19ebebf80002d164cacecbde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/L06-L.png",
+      "old": null,
+      "new": "1dc1be0b74eb70599965514dbedd908a5e309d9f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-A-camera.png",
+      "old": null,
+      "new": "d335eeee7ac6e68226b39f5b9006d3de21b02c83"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-A-frames.png",
+      "old": null,
+      "new": "7251044385db96211178eb4c95a3dea4e7a7e36d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-A-main-1366x768.png",
+      "old": null,
+      "new": "504289a9dafa82845b04f248783553c6a9249f85"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-A-main-dark.png",
+      "old": null,
+      "new": "2bb8494e79e714ef37bbd050838d3d8a524dfb91"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-A-main.png",
+      "old": null,
+      "new": "35a031501764aba1ea774712e6343a3ebc8fb1e6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-B-main-1366x768.png",
+      "old": null,
+      "new": "1ac7c9db14c508055494a54b7456286f8a11312f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-B-main.png",
+      "old": null,
+      "new": "1d1a153ecf3e16bce0386f06f3906a7a6a10144a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-C-main-1366x768.png",
+      "old": null,
+      "new": "53143f0a85bc91cc79392e74c3aefab0c6185c31"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-C-main.png",
+      "old": null,
+      "new": "d86e4f333dffa9aa0236bd95b391dff5b81667a4"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-D-main-1366x768.png",
+      "old": null,
+      "new": "cf7ba3ab118e44499f04b3706f5055f6a7f84db7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-D-main.png",
+      "old": null,
+      "new": "e2df8c78fabe46743377202a5b7e84eaa0919d7d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-E-frames.png",
+      "old": null,
+      "new": "10559916628e3894e89823c6a76a6f89345271e9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-E-main-1366x768.png",
+      "old": null,
+      "new": "4921de5c8a37fd0d298ea5a2c69c24affd502410"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-E-main-dark.png",
+      "old": null,
+      "new": "039a28288d359dd25880c59bd52a46ed32e9d49f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-E-main.png",
+      "old": null,
+      "new": "124c444aebd43bdd62b73babf2373b0c38e3e378"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-E-studio.png",
+      "old": null,
+      "new": "ea54d3a0fdf8ef3dc2e3ac51d378aa06c12ec87e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-F-main-1366x768.png",
+      "old": null,
+      "new": "4e04ad34616033b4671e9d49f2a8a1e5a867ce93"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/R-F-main.png",
+      "old": null,
+      "new": "bca5911ff59ec4ff36a573a178c67fcfb324c08f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/T-A-M.png",
+      "old": null,
+      "new": "22d5c1c92bffc11af07fa2543fafcf22cbfca50f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/T-B-C.png",
+      "old": null,
+      "new": "fe96729c4860984c162dce66d8a2d4eca93bd748"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/T-B-F.png",
+      "old": null,
+      "new": "f7763d5ac42fef7f572451a11ea7aa865fe2a32f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/T-B-M.png",
+      "old": null,
+      "new": "41eb2c62b5e9f253928c464c777afe4148f0c16c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/T-B-S.png",
+      "old": null,
+      "new": "60f765e1d01ed7e38c85ce38495cff3430f00780"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/L02-M.json",
+      "old": null,
+      "new": "ff263831f781a06ff5085735a0d0251633ac20cb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/L03-D.json",
+      "old": null,
+      "new": "98a8593a9b5fef55759bbfcc559490a7798a9f96"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/L03-N.json",
+      "old": null,
+      "new": "f0609901534ec2e688d631460f36d15b31e73a89"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/L05-M.json",
+      "old": null,
+      "new": "393e2ad2ec7645f397625eec516819f56c1b7eaa"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/L06-E.json",
+      "old": null,
+      "new": "d659cbcb81ed4422118f30718331dfbcd81941a6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/L06-L.json",
+      "old": null,
+      "new": "a8a17e02fca1c18cd2dcfaa2b1242e683e2c007a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-A-camera.json",
+      "old": null,
+      "new": "d2a2779ca472f9970a48f1c83e7a8a56c1afa190"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-A-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-A-main-1366x768.json",
+      "old": null,
+      "new": "3dfa8da3438424daa51b0ee40397a9d88036aab0"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-A-main-dark.json",
+      "old": null,
+      "new": "c23c0e11133e8180a2d461ca3f6290b5159d778b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-A-main.json",
+      "old": null,
+      "new": "c23c0e11133e8180a2d461ca3f6290b5159d778b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-B-main-1366x768.json",
+      "old": null,
+      "new": "2c4437dea358406afd5459e467e5f681742d4235"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-B-main.json",
+      "old": null,
+      "new": "72c5f27a1c88e7bc6a9ec751d4b9ccdf68087b0e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-C-main-1366x768.json",
+      "old": null,
+      "new": "96f7f38d1c4fc6f5a3ab64d8dda5bcc63f68ac8a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-C-main.json",
+      "old": null,
+      "new": "8bfd4cb692079b98c1aae8ac12850b9fd8937044"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-D-main-1366x768.json",
+      "old": null,
+      "new": "c3815cb19f8b2e6e01a8367e1da6adda5d342f56"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-D-main.json",
+      "old": null,
+      "new": "248cae00bbcf9a310365c082daffaf562d001d76"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-E-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-E-main-1366x768.json",
+      "old": null,
+      "new": "16f720a985ada9f26cd2490389dcc1b1e0a6dbf8"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-E-main-dark.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-E-main.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-E-studio.json",
+      "old": null,
+      "new": "16593a62519864b60119e92209315ba4d9ef3103"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-F-main-1366x768.json",
+      "old": null,
+      "new": "7804f1bd8c1233e8f6d158e8477a3f5f78e09deb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/R-F-main.json",
+      "old": null,
+      "new": "4dd0fe8371c66479c0dfacf1abaa9dea462e4e71"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/T-A-M.json",
+      "old": null,
+      "new": "14e01fad2969dcf2cf5a1317350a8fe18ff532dc"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/T-B-C.json",
+      "old": null,
+      "new": "cbe3959d6317741b857b70c6e7c2d30c7e1e3308"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/T-B-F.json",
+      "old": null,
+      "new": "15d3307d1ab9725963d2b9795b6c8cd4ec0a88d4"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/T-B-M.json",
+      "old": null,
+      "new": "16d53e6e6a7de172f857cbd20fc63a8755b0871b"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/bounds/T-B-S.json",
+      "old": null,
+      "new": "d3e14d472a13b650882cde1233130004ab04abde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c13500a/index.json",
+      "old": null,
+      "new": "a6adda19f80b57ee51f2dea2bd247423fd711e68"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/L02-M.png",
+      "old": null,
+      "new": "3dcb674c86c790c8dfe66917032bb18abbe8d6a5"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/L03-D.png",
+      "old": null,
+      "new": "a5e882f22b233352fc46ab1f2d9bee6516610029"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/L03-N.png",
+      "old": null,
+      "new": "f0b2f0be3f21676166854262a5941bdc5021480c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/L05-M.png",
+      "old": null,
+      "new": "3f86a2e5a7095546e4236967da148d915ee0d63a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/L06-E.png",
+      "old": null,
+      "new": "6019f0a44ac9d62eba0422f395de83b4b3e74263"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/L06-L.png",
+      "old": null,
+      "new": "2acf082bee155e3ca745613494005c29108bb421"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-A-camera.png",
+      "old": null,
+      "new": "d335eeee7ac6e68226b39f5b9006d3de21b02c83"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-A-frames.png",
+      "old": null,
+      "new": "7251044385db96211178eb4c95a3dea4e7a7e36d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-A-main-1366x768.png",
+      "old": null,
+      "new": "3f09af2a246efb91aa43d0a2e657c868c5b9acb7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-A-main-dark.png",
+      "old": null,
+      "new": "e88f87d076addf593508ad91de948079d7e2ca86"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-A-main.png",
+      "old": null,
+      "new": "ae5291559a15033c6387b70a6bff677b57ea3809"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-B-main-1366x768.png",
+      "old": null,
+      "new": "1ac7c9db14c508055494a54b7456286f8a11312f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-B-main.png",
+      "old": null,
+      "new": "1d1a153ecf3e16bce0386f06f3906a7a6a10144a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-C-main-1366x768.png",
+      "old": null,
+      "new": "9f40f1bb2c9fbc9faa22e24f43e8d135cf15617c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-C-main.png",
+      "old": null,
+      "new": "4d106c53510305453abb6cdc1254d64426cc88a2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-D-main-1366x768.png",
+      "old": null,
+      "new": "cf7ba3ab118e44499f04b3706f5055f6a7f84db7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-D-main.png",
+      "old": null,
+      "new": "e2df8c78fabe46743377202a5b7e84eaa0919d7d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-E-frames.png",
+      "old": null,
+      "new": "10559916628e3894e89823c6a76a6f89345271e9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-E-main-1366x768.png",
+      "old": null,
+      "new": "4921de5c8a37fd0d298ea5a2c69c24affd502410"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-E-main-dark.png",
+      "old": null,
+      "new": "039a28288d359dd25880c59bd52a46ed32e9d49f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-E-main.png",
+      "old": null,
+      "new": "124c444aebd43bdd62b73babf2373b0c38e3e378"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-E-studio.png",
+      "old": null,
+      "new": "96dce63fa13f30ff35b77d34660bd940dd0d3886"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-F-main-1366x768.png",
+      "old": null,
+      "new": "4e04ad34616033b4671e9d49f2a8a1e5a867ce93"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/R-F-main.png",
+      "old": null,
+      "new": "bca5911ff59ec4ff36a573a178c67fcfb324c08f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/T-A-M.png",
+      "old": null,
+      "new": "22d5c1c92bffc11af07fa2543fafcf22cbfca50f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/T-B-C.png",
+      "old": null,
+      "new": "ec1831079469e3c0def9571db3b2310be3c796a1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/T-B-F.png",
+      "old": null,
+      "new": "891e3f1246fc308a0c0ad1986af0cd284ed823a6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/T-B-M.png",
+      "old": null,
+      "new": "8a23cfbfc7b8abbc16402a9d763b3fd89db4af7e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/T-B-S.png",
+      "old": null,
+      "new": "4b8debab5276516980c486dc58ef40dadc829944"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/L02-M.json",
+      "old": null,
+      "new": "ff263831f781a06ff5085735a0d0251633ac20cb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/L03-D.json",
+      "old": null,
+      "new": "98a8593a9b5fef55759bbfcc559490a7798a9f96"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/L03-N.json",
+      "old": null,
+      "new": "f0609901534ec2e688d631460f36d15b31e73a89"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/L05-M.json",
+      "old": null,
+      "new": "b1fa80c04aacbaf9bc5c211072cd8c794fc7477a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/L06-E.json",
+      "old": null,
+      "new": "4a077371215bb92f3033645de71b69ff5c879837"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/L06-L.json",
+      "old": null,
+      "new": "0d741267b40b1d761e871a1058ab2e3c6a0b1217"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-A-camera.json",
+      "old": null,
+      "new": "d2a2779ca472f9970a48f1c83e7a8a56c1afa190"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-A-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-A-main-1366x768.json",
+      "old": null,
+      "new": "74780c3a80c5dd6d396dac681eb5561c8ed233b6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-A-main-dark.json",
+      "old": null,
+      "new": "4e528d86aa4c98620ceda17cab33612798d7f451"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-A-main.json",
+      "old": null,
+      "new": "4e528d86aa4c98620ceda17cab33612798d7f451"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-B-main-1366x768.json",
+      "old": null,
+      "new": "2c4437dea358406afd5459e467e5f681742d4235"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-B-main.json",
+      "old": null,
+      "new": "72c5f27a1c88e7bc6a9ec751d4b9ccdf68087b0e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-C-main-1366x768.json",
+      "old": null,
+      "new": "c4bc673e2f0cc4ce76b87c27c18839b6063363d3"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-C-main.json",
+      "old": null,
+      "new": "74be2e813b673c7b7302013218eb6a8f7b9bf504"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-D-main-1366x768.json",
+      "old": null,
+      "new": "c3815cb19f8b2e6e01a8367e1da6adda5d342f56"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-D-main.json",
+      "old": null,
+      "new": "248cae00bbcf9a310365c082daffaf562d001d76"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-E-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-E-main-1366x768.json",
+      "old": null,
+      "new": "16f720a985ada9f26cd2490389dcc1b1e0a6dbf8"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-E-main-dark.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-E-main.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-E-studio.json",
+      "old": null,
+      "new": "704600304745a62ffcd4862a5f6bff46c9d340b4"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-F-main-1366x768.json",
+      "old": null,
+      "new": "7804f1bd8c1233e8f6d158e8477a3f5f78e09deb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/R-F-main.json",
+      "old": null,
+      "new": "4dd0fe8371c66479c0dfacf1abaa9dea462e4e71"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/T-A-M.json",
+      "old": null,
+      "new": "14e01fad2969dcf2cf5a1317350a8fe18ff532dc"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/T-B-C.json",
+      "old": null,
+      "new": "af0a56330443561c8aea1c29a2dde49f5334efe9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/T-B-F.json",
+      "old": null,
+      "new": "3684ff96cd6bae5d9048d4c87183e980c5815556"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/T-B-M.json",
+      "old": null,
+      "new": "d9448b8d9ea4627bd122891f019fc19bcf4feb53"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/bounds/T-B-S.json",
+      "old": null,
+      "new": "d3e14d472a13b650882cde1233130004ab04abde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_c5ae7e1/index.json",
+      "old": null,
+      "new": "a6adda19f80b57ee51f2dea2bd247423fd711e68"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/L02-M.png",
+      "old": null,
+      "new": "25794e819ba6b0b11fe8219ec81beb0cdecaf6e2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/L03-D.png",
+      "old": null,
+      "new": "38b21ac10e9f3e13124acbe5bcadedf1493ffa6d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/L03-N.png",
+      "old": null,
+      "new": "3ccfb7bc5e4bf74d5bacd8a2f4ff08f778461fc1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/L05-M.png",
+      "old": null,
+      "new": "3f86a2e5a7095546e4236967da148d915ee0d63a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/L06-E.png",
+      "old": null,
+      "new": "6019f0a44ac9d62eba0422f395de83b4b3e74263"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/L06-L.png",
+      "old": null,
+      "new": "2acf082bee155e3ca745613494005c29108bb421"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-A-camera.png",
+      "old": null,
+      "new": "d335eeee7ac6e68226b39f5b9006d3de21b02c83"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-A-frames.png",
+      "old": null,
+      "new": "7251044385db96211178eb4c95a3dea4e7a7e36d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-A-main-1366x768.png",
+      "old": null,
+      "new": "3f09af2a246efb91aa43d0a2e657c868c5b9acb7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-A-main-dark.png",
+      "old": null,
+      "new": "e88f87d076addf593508ad91de948079d7e2ca86"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-A-main.png",
+      "old": null,
+      "new": "ae5291559a15033c6387b70a6bff677b57ea3809"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-B-main-1366x768.png",
+      "old": null,
+      "new": "1ac7c9db14c508055494a54b7456286f8a11312f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-B-main.png",
+      "old": null,
+      "new": "1d1a153ecf3e16bce0386f06f3906a7a6a10144a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-C-main-1366x768.png",
+      "old": null,
+      "new": "9f40f1bb2c9fbc9faa22e24f43e8d135cf15617c"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-C-main.png",
+      "old": null,
+      "new": "4d106c53510305453abb6cdc1254d64426cc88a2"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-D-main-1366x768.png",
+      "old": null,
+      "new": "cf7ba3ab118e44499f04b3706f5055f6a7f84db7"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-D-main.png",
+      "old": null,
+      "new": "e2df8c78fabe46743377202a5b7e84eaa0919d7d"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-E-frames.png",
+      "old": null,
+      "new": "10559916628e3894e89823c6a76a6f89345271e9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-E-main-1366x768.png",
+      "old": null,
+      "new": "4921de5c8a37fd0d298ea5a2c69c24affd502410"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-E-main-dark.png",
+      "old": null,
+      "new": "039a28288d359dd25880c59bd52a46ed32e9d49f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-E-main.png",
+      "old": null,
+      "new": "124c444aebd43bdd62b73babf2373b0c38e3e378"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-E-studio.png",
+      "old": null,
+      "new": "96dce63fa13f30ff35b77d34660bd940dd0d3886"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-F-main-1366x768.png",
+      "old": null,
+      "new": "4e04ad34616033b4671e9d49f2a8a1e5a867ce93"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/R-F-main.png",
+      "old": null,
+      "new": "bca5911ff59ec4ff36a573a178c67fcfb324c08f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/T-A-M.png",
+      "old": null,
+      "new": "22d5c1c92bffc11af07fa2543fafcf22cbfca50f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/T-B-C.png",
+      "old": null,
+      "new": "ec1831079469e3c0def9571db3b2310be3c796a1"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/T-B-F.png",
+      "old": null,
+      "new": "891e3f1246fc308a0c0ad1986af0cd284ed823a6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/T-B-M.png",
+      "old": null,
+      "new": "8a23cfbfc7b8abbc16402a9d763b3fd89db4af7e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/T-B-S.png",
+      "old": null,
+      "new": "4b8debab5276516980c486dc58ef40dadc829944"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/L02-M.json",
+      "old": null,
+      "new": "e2bec65eb849a8d2465deb32e54a08fb185d4707"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/L03-D.json",
+      "old": null,
+      "new": "fd1c718a346f90dccfe42e5bfb7dfa094ab71772"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/L03-N.json",
+      "old": null,
+      "new": "bf817db72d1ee68fdb73e7f6db2d61834990b79a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/L05-M.json",
+      "old": null,
+      "new": "b1fa80c04aacbaf9bc5c211072cd8c794fc7477a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/L06-E.json",
+      "old": null,
+      "new": "4a077371215bb92f3033645de71b69ff5c879837"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/L06-L.json",
+      "old": null,
+      "new": "0d741267b40b1d761e871a1058ab2e3c6a0b1217"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-A-camera.json",
+      "old": null,
+      "new": "d2a2779ca472f9970a48f1c83e7a8a56c1afa190"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-A-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-A-main-1366x768.json",
+      "old": null,
+      "new": "74780c3a80c5dd6d396dac681eb5561c8ed233b6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-A-main-dark.json",
+      "old": null,
+      "new": "4e528d86aa4c98620ceda17cab33612798d7f451"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-A-main.json",
+      "old": null,
+      "new": "4e528d86aa4c98620ceda17cab33612798d7f451"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-B-main-1366x768.json",
+      "old": null,
+      "new": "2c4437dea358406afd5459e467e5f681742d4235"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-B-main.json",
+      "old": null,
+      "new": "72c5f27a1c88e7bc6a9ec751d4b9ccdf68087b0e"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-C-main-1366x768.json",
+      "old": null,
+      "new": "c4bc673e2f0cc4ce76b87c27c18839b6063363d3"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-C-main.json",
+      "old": null,
+      "new": "74be2e813b673c7b7302013218eb6a8f7b9bf504"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-D-main-1366x768.json",
+      "old": null,
+      "new": "c3815cb19f8b2e6e01a8367e1da6adda5d342f56"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-D-main.json",
+      "old": null,
+      "new": "248cae00bbcf9a310365c082daffaf562d001d76"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-E-frames.json",
+      "old": null,
+      "new": "833eb1a82ae06967a2855fc7981ddd5a10c1ccde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-E-main-1366x768.json",
+      "old": null,
+      "new": "16f720a985ada9f26cd2490389dcc1b1e0a6dbf8"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-E-main-dark.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-E-main.json",
+      "old": null,
+      "new": "2bd66798425f80df14875b8dc7c1f111ad4d997f"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-E-studio.json",
+      "old": null,
+      "new": "704600304745a62ffcd4862a5f6bff46c9d340b4"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-F-main-1366x768.json",
+      "old": null,
+      "new": "7804f1bd8c1233e8f6d158e8477a3f5f78e09deb"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/R-F-main.json",
+      "old": null,
+      "new": "4dd0fe8371c66479c0dfacf1abaa9dea462e4e71"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/T-A-M.json",
+      "old": null,
+      "new": "14e01fad2969dcf2cf5a1317350a8fe18ff532dc"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/T-B-C.json",
+      "old": null,
+      "new": "af0a56330443561c8aea1c29a2dde49f5334efe9"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/T-B-F.json",
+      "old": null,
+      "new": "3684ff96cd6bae5d9048d4c87183e980c5815556"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/T-B-M.json",
+      "old": null,
+      "new": "d9448b8d9ea4627bd122891f019fc19bcf4feb53"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/bounds/T-B-S.json",
+      "old": null,
+      "new": "d3e14d472a13b650882cde1233130004ab04abde"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/frozen_webview2_layout_20261024b/index.json",
+      "old": null,
+      "new": "a6adda19f80b57ee51f2dea2bd247423fd711e68"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/l02_toolbar_frozen_20261024/absolute_difference.png",
+      "old": null,
+      "new": "d6ba06f708afa87818bfbc9338dc4df179ce3d00"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/l02_toolbar_frozen_20261024/implementation.png",
+      "old": null,
+      "new": "cab1363169706a6f6d288a91e12e0949a39f0ec0"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/l02_toolbar_frozen_20261024/overlay_50.png",
+      "old": null,
+      "new": "8394f78620729fa9829fa8fc34a52ae4b0a34a34"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/l02_toolbar_frozen_20261024/result.json",
+      "old": null,
+      "new": "53d1d6f104b4dda0196446d0eeb328e1bce27e99"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/local_bridge_probe.json",
+      "old": "d9e87fe58d04824c95911d302fcf0e8d54291b66",
+      "new": "aff84c51786f22c0ef1b042328cf4acd12ffd8c6"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/switching_webview2/R-B-main.png",
+      "old": null,
+      "new": "1d1a153ecf3e16bce0386f06f3906a7a6a10144a"
+    },
+    {
+      "path": "LoL_AutoCine/qa/ui29/switching_webview2/index.json",
+      "old": null,
+      "new": "7cf5092c523686bfd11787b0a88b66ca5b2d74fc"
+    },
+    {
+      "path": "LoL_AutoCine/tests/test_ui29_runtime.py",
+      "old": "c960e00c2737ef4f4f4f64db8c436f8d95a6a4ef",
+      "new": "c65d7e4269f80c9556857fb4e6ba7bbb0d39e368"
+    },
+    {
+      "path": "LoL_AutoCine/tools/build_portable_ui.py",
+      "old": "9696c858fe14d790c695b36040a651b74452a006",
+      "new": "197e665217e84528c8184ba38d66b89722c583a5"
+    },
+    {
+      "path": "LoL_AutoCine/tools/ui29_integration_probe.py",
+      "old": "e4fbbeaf6ebcccb0a1f261c56e3ab629309a47bb",
+      "new": "ecd73fac0a4d3d7e4bd4afd6b3279689eb37a08f"
+    },
+    {
+      "path": "LoL_AutoCine/ui/audit29_client.js",
+      "old": "e36acf2cc088908daec8fa62170e58e9f6b5f3bf",
+      "new": "c0d96976319f2b8126bfbff658d2598fec6ecebf"
+    },
+    {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "old": "4a76047cdc76a4773ddf9b4ceafb9d2f963466dc",
+      "new": "e1cfc60e47fb46244cc91c40b18fb67fa31d7eeb"
+    },
+    {
+      "path": "LoL_AutoCine/ui/legacy_reconstruct.py",
+      "old": "c3064aaea6b3786611fe5b3c284f965797b52bee",
+      "new": "410999fc207f5fb90d45fd01a4454bd92ce80acf"
+    }
+  ],
+  "core": [],
+  "assets": []
+}

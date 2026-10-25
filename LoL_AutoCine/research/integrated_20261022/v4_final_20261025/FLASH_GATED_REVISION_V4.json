@@ -1,0 +1,509 @@
+{
+  "cases": [
+    {
+      "case": "single",
+      "strength": 0.15,
+      "events": [
+        1.0
+      ],
+      "graph": [
+        "eq=brightness='if(gte(t,1.000),0.277*exp(-18*abs(t-1.000)),0)':eval=frame:enable='between(t,1.000,1.150)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": true,
+      "event_gray": [
+        207.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "single",
+      "strength": 0.45,
+      "events": [
+        1.0
+      ],
+      "graph": [
+        "eq=brightness='if(gte(t,1.000),0.473*exp(-18*abs(t-1.000)),0)':eval=frame:enable='between(t,1.000,1.150)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": true,
+      "event_gray": [
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "single",
+      "strength": 0.9,
+      "events": [
+        1.0
+      ],
+      "graph": [
+        "eq=brightness='if(gte(t,1.000),0.765*exp(-18*abs(t-1.000)),0)':eval=frame:enable='between(t,1.000,1.150)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": true,
+      "event_gray": [
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "two_short",
+      "strength": 0.15,
+      "events": [
+        0.5,
+        0.6
+      ],
+      "graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.277*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,0.650)+between(t,0.600,0.750)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        207.0,
+        207.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption",
+      "pre_second_event_at_34_over60": {
+        "time": 0.5666666666666667,
+        "legacy": 150.0,
+        "v3_global_gate": 171.0,
+        "v4_event_start_gate": 150.0,
+        "v4_matches_legacy_before_second": true
+      }
+    },
+    {
+      "case": "two_short",
+      "strength": 0.45,
+      "events": [
+        0.5,
+        0.6
+      ],
+      "graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.473*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.473*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,0.650)+between(t,0.600,0.750)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        255.0,
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption",
+      "pre_second_event_at_34_over60": {
+        "time": 0.5666666666666667,
+        "legacy": 169.0,
+        "v3_global_gate": 201.0,
+        "v4_event_start_gate": 169.0,
+        "v4_matches_legacy_before_second": true
+      }
+    },
+    {
+      "case": "two_short",
+      "strength": 0.9,
+      "events": [
+        0.5,
+        0.6
+      ],
+      "graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.765*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,0.650)+between(t,0.600,0.750)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        255.0,
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption",
+      "pre_second_event_at_34_over60": {
+        "time": 0.5666666666666667,
+        "legacy": 196.0,
+        "v3_global_gate": 249.0,
+        "v4_event_start_gate": 196.0,
+        "v4_matches_legacy_before_second": true
+      }
+    },
+    {
+      "case": "two_long",
+      "strength": 0.15,
+      "events": [
+        0.3,
+        2.2
+      ],
+      "graph": [
+        "eq=brightness='max(if(gte(t,0.300),0.277*exp(-18*abs(t-0.300)),0),if(gte(t,2.200),0.277*exp(-18*abs(t-2.200)),0))':eval=frame:enable='between(t,0.300,0.450)+between(t,2.200,2.350)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        207.0,
+        207.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "two_long",
+      "strength": 0.45,
+      "events": [
+        0.3,
+        2.2
+      ],
+      "graph": [
+        "eq=brightness='max(if(gte(t,0.300),0.473*exp(-18*abs(t-0.300)),0),if(gte(t,2.200),0.473*exp(-18*abs(t-2.200)),0))':eval=frame:enable='between(t,0.300,0.450)+between(t,2.200,2.350)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        255.0,
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "two_long",
+      "strength": 0.9,
+      "events": [
+        0.3,
+        2.2
+      ],
+      "graph": [
+        "eq=brightness='max(if(gte(t,0.300),0.765*exp(-18*abs(t-0.300)),0),if(gte(t,2.200),0.765*exp(-18*abs(t-2.200)),0))':eval=frame:enable='between(t,0.300,0.450)+between(t,2.200,2.350)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        255.0,
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "three",
+      "strength": 0.15,
+      "events": [
+        0.3,
+        1.4,
+        2.7
+      ],
+      "graph": [
+        "eq=brightness='max(max(if(gte(t,0.300),0.277*exp(-18*abs(t-0.300)),0),if(gte(t,1.400),0.277*exp(-18*abs(t-1.400)),0)),if(gte(t,2.700),0.277*exp(-18*abs(t-2.700)),0))':eval=frame:enable='between(t,0.300,0.450)+between(t,1.400,1.550)+between(t,2.700,2.850)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        207.0,
+        207.0,
+        207.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "three",
+      "strength": 0.45,
+      "events": [
+        0.3,
+        1.4,
+        2.7
+      ],
+      "graph": [
+        "eq=brightness='max(max(if(gte(t,0.300),0.473*exp(-18*abs(t-0.300)),0),if(gte(t,1.400),0.473*exp(-18*abs(t-1.400)),0)),if(gte(t,2.700),0.473*exp(-18*abs(t-2.700)),0))':eval=frame:enable='between(t,0.300,0.450)+between(t,1.400,1.550)+between(t,2.700,2.850)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "three",
+      "strength": 0.9,
+      "events": [
+        0.3,
+        1.4,
+        2.7
+      ],
+      "graph": [
+        "eq=brightness='max(max(if(gte(t,0.300),0.765*exp(-18*abs(t-0.300)),0),if(gte(t,1.400),0.765*exp(-18*abs(t-1.400)),0)),if(gte(t,2.700),0.765*exp(-18*abs(t-2.700)),0))':eval=frame:enable='between(t,0.300,0.450)+between(t,1.400,1.550)+between(t,2.700,2.850)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "dense",
+      "strength": 0.15,
+      "events": [
+        0.5,
+        0.55,
+        0.6,
+        0.65
+      ],
+      "graph": [
+        "eq=brightness='max(max(max(if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0),if(gte(t,0.550),0.277*exp(-18*abs(t-0.550)),0)),if(gte(t,0.600),0.277*exp(-18*abs(t-0.600)),0)),if(gte(t,0.650),0.277*exp(-18*abs(t-0.650)),0))':eval=frame:enable='between(t,0.500,0.650)+between(t,0.550,0.700)+between(t,0.600,0.750)+between(t,0.650,0.800)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        207.0,
+        207.0,
+        207.0,
+        207.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "dense",
+      "strength": 0.45,
+      "events": [
+        0.5,
+        0.55,
+        0.6,
+        0.65
+      ],
+      "graph": [
+        "eq=brightness='max(max(max(if(gte(t,0.500),0.473*exp(-18*abs(t-0.500)),0),if(gte(t,0.550),0.473*exp(-18*abs(t-0.550)),0)),if(gte(t,0.600),0.473*exp(-18*abs(t-0.600)),0)),if(gte(t,0.650),0.473*exp(-18*abs(t-0.650)),0))':eval=frame:enable='between(t,0.500,0.650)+between(t,0.550,0.700)+between(t,0.600,0.750)+between(t,0.650,0.800)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        255.0,
+        255.0,
+        255.0,
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "dense",
+      "strength": 0.9,
+      "events": [
+        0.5,
+        0.55,
+        0.6,
+        0.65
+      ],
+      "graph": [
+        "eq=brightness='max(max(max(if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0),if(gte(t,0.550),0.765*exp(-18*abs(t-0.550)),0)),if(gte(t,0.600),0.765*exp(-18*abs(t-0.600)),0)),if(gte(t,0.650),0.765*exp(-18*abs(t-0.650)),0))':eval=frame:enable='between(t,0.500,0.650)+between(t,0.550,0.700)+between(t,0.600,0.750)+between(t,0.650,0.800)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        255.0,
+        255.0,
+        255.0,
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "edges",
+      "strength": 0.15,
+      "events": [
+        0.0,
+        1.5,
+        2.95
+      ],
+      "graph": [
+        "eq=brightness='max(max(if(gte(t,0.000),0.277*exp(-18*abs(t-0.000)),0),if(gte(t,1.500),0.277*exp(-18*abs(t-1.500)),0)),if(gte(t,2.950),0.277*exp(-18*abs(t-2.950)),0))':eval=frame:enable='between(t,0.000,0.150)+between(t,1.500,1.650)+between(t,2.950,3.100)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        207.0,
+        207.0,
+        207.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "edges",
+      "strength": 0.45,
+      "events": [
+        0.0,
+        1.5,
+        2.95
+      ],
+      "graph": [
+        "eq=brightness='max(max(if(gte(t,0.000),0.473*exp(-18*abs(t-0.000)),0),if(gte(t,1.500),0.473*exp(-18*abs(t-1.500)),0)),if(gte(t,2.950),0.473*exp(-18*abs(t-2.950)),0))':eval=frame:enable='between(t,0.000,0.150)+between(t,1.500,1.650)+between(t,2.950,3.100)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "edges",
+      "strength": 0.9,
+      "events": [
+        0.0,
+        1.5,
+        2.95
+      ],
+      "graph": [
+        "eq=brightness='max(max(if(gte(t,0.000),0.765*exp(-18*abs(t-0.000)),0),if(gte(t,1.500),0.765*exp(-18*abs(t-1.500)),0)),if(gte(t,2.950),0.765*exp(-18*abs(t-2.950)),0))':eval=frame:enable='between(t,0.000,0.150)+between(t,1.500,1.650)+between(t,2.950,3.100)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "empty",
+      "strength": 0.15,
+      "events": [],
+      "graph": [],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "empty",
+      "strength": 0.45,
+      "events": [],
+      "graph": [],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "empty",
+      "strength": 0.9,
+      "events": [],
+      "graph": [],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "retimed",
+      "strength": 0.15,
+      "events": [
+        0.4,
+        1.6,
+        2.4
+      ],
+      "graph": [
+        "eq=brightness='max(max(if(gte(t,0.400),0.277*exp(-18*abs(t-0.400)),0),if(gte(t,1.600),0.277*exp(-18*abs(t-1.600)),0)),if(gte(t,2.400),0.277*exp(-18*abs(t-2.400)),0))':eval=frame:enable='between(t,0.400,0.550)+between(t,1.600,1.750)+between(t,2.400,2.550)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        207.0,
+        207.0,
+        207.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "retimed",
+      "strength": 0.45,
+      "events": [
+        0.4,
+        1.6,
+        2.4
+      ],
+      "graph": [
+        "eq=brightness='max(max(if(gte(t,0.400),0.473*exp(-18*abs(t-0.400)),0),if(gte(t,1.600),0.473*exp(-18*abs(t-1.600)),0)),if(gte(t,2.400),0.473*exp(-18*abs(t-2.400)),0))':eval=frame:enable='between(t,0.400,0.550)+between(t,1.600,1.750)+between(t,2.400,2.550)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    },
+    {
+      "case": "retimed",
+      "strength": 0.9,
+      "events": [
+        0.4,
+        1.6,
+        2.4
+      ],
+      "graph": [
+        "eq=brightness='max(max(if(gte(t,0.400),0.765*exp(-18*abs(t-0.400)),0),if(gte(t,1.600),0.765*exp(-18*abs(t-1.600)),0)),if(gte(t,2.400),0.765*exp(-18*abs(t-2.400)),0))':eval=frame:enable='between(t,0.400,0.550)+between(t,1.600,1.750)+between(t,2.400,2.550)'"
+      ],
+      "frames": 180,
+      "rc": 0,
+      "single_event_bit_equal_legacy": null,
+      "event_gray": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "revision": "research_max_v4_causal_start_gate",
+      "scope": "research-only, not product revision adoption"
+    }
+  ],
+  "executed": 24,
+  "single_bit_equal": 3,
+  "finding": "v3 global union gate can expose a future event pulse early while a previous event window is active; v4 event-start gate suppresses this in short-overlap fixture",
+  "status": "additional research candidate; not product or adopted default"
+}

@@ -1,0 +1,869 @@
+{
+  "cases": [
+    {
+      "id": "black_abnormal_or_unexplained_30",
+      "category": "black",
+      "fps": 30,
+      "metadata": {
+        "black": true,
+        "fps": 30
+      },
+      "expected": [
+        "BLACK_REVIEW"
+      ],
+      "actual": [
+        "BLACK_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "black_normal_or_context_explained_30",
+      "category": "black",
+      "fps": 30,
+      "metadata": {
+        "black": true,
+        "intentional_black": true,
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "freeze_abnormal_or_unexplained_30",
+      "category": "freeze",
+      "fps": 30,
+      "metadata": {
+        "still": true,
+        "motion_expected": true,
+        "fps": 30
+      },
+      "expected": [
+        "FREEZE_REVIEW"
+      ],
+      "actual": [
+        "FREEZE_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "freeze_normal_or_context_explained_30",
+      "category": "freeze",
+      "fps": 30,
+      "metadata": {
+        "still": true,
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "orientation_abnormal_or_unexplained_30",
+      "category": "orientation",
+      "fps": 30,
+      "metadata": {
+        "orientation_reference": "inverted",
+        "fps": 30
+      },
+      "expected": [
+        "ORIENTATION_REVIEW"
+      ],
+      "actual": [
+        "ORIENTATION_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "orientation_normal_or_context_explained_30",
+      "category": "orientation",
+      "fps": 30,
+      "metadata": {
+        "orientation_reference": "upright",
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "drop_abnormal_or_unexplained_30",
+      "category": "drop",
+      "fps": 30,
+      "metadata": {
+        "fps": 30,
+        "max_pts_gap": 0.1
+      },
+      "expected": [
+        "FRAME_GAP_REVIEW"
+      ],
+      "actual": [
+        "FRAME_GAP_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "drop_normal_or_context_explained_30",
+      "category": "drop",
+      "fps": 30,
+      "metadata": {
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "audio_abnormal_or_unexplained_30",
+      "category": "audio",
+      "fps": 30,
+      "metadata": {
+        "audio_expected": true,
+        "audio_stream": false,
+        "fps": 30
+      },
+      "expected": [
+        "MISSING_AUDIO"
+      ],
+      "actual": [
+        "MISSING_AUDIO"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "audio_normal_or_context_explained_30",
+      "category": "audio",
+      "fps": 30,
+      "metadata": {
+        "audio_expected": false,
+        "audio_stream": false,
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "sync_abnormal_or_unexplained_30",
+      "category": "sync",
+      "fps": 30,
+      "metadata": {
+        "offset_ms": -80,
+        "fps": 30
+      },
+      "expected": [
+        "AV_SYNC_REVIEW"
+      ],
+      "actual": [
+        "AV_SYNC_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "sync_normal_or_context_explained_30",
+      "category": "sync",
+      "fps": 30,
+      "metadata": {
+        "offset_ms": 40,
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "flash_abnormal_or_unexplained_30",
+      "category": "flash",
+      "fps": 30,
+      "metadata": {
+        "white": true,
+        "fps": 30
+      },
+      "expected": [
+        "FLASH_REVIEW"
+      ],
+      "actual": [
+        "FLASH_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "flash_normal_or_context_explained_30",
+      "category": "flash",
+      "fps": 30,
+      "metadata": {
+        "white": true,
+        "intentional_flash": true,
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "occlusion_abnormal_or_unexplained_30",
+      "category": "occlusion",
+      "fps": 30,
+      "metadata": {
+        "critical_occlusion_fraction": 0.4,
+        "fps": 30
+      },
+      "expected": [
+        "OCCLUSION_REVIEW"
+      ],
+      "actual": [
+        "OCCLUSION_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "occlusion_normal_or_context_explained_30",
+      "category": "occlusion",
+      "fps": 30,
+      "metadata": {
+        "critical_occlusion_fraction": 0.05,
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "clipping_abnormal_or_unexplained_30",
+      "category": "clipping",
+      "fps": 30,
+      "metadata": {
+        "clipped_fraction": 0.2,
+        "fps": 30
+      },
+      "expected": [
+        "CLIPPING_REVIEW"
+      ],
+      "actual": [
+        "CLIPPING_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "clipping_normal_or_context_explained_30",
+      "category": "clipping",
+      "fps": 30,
+      "metadata": {
+        "clipped_fraction": 0.2,
+        "entrance": true,
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "death_gray_abnormal_or_unexplained_30",
+      "category": "death_gray",
+      "fps": 30,
+      "metadata": {
+        "grayscale": true,
+        "fps": 30
+      },
+      "expected": [
+        "GRAYSCALE_REVIEW"
+      ],
+      "actual": [
+        "GRAYSCALE_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "death_gray_normal_or_context_explained_30",
+      "category": "death_gray",
+      "fps": 30,
+      "metadata": {
+        "grayscale": true,
+        "dead": true,
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "low_hp_red_abnormal_or_unexplained_30",
+      "category": "low_hp_red",
+      "fps": 30,
+      "metadata": {
+        "red_border": true,
+        "fps": 30
+      },
+      "expected": [
+        "RED_BORDER_REVIEW"
+      ],
+      "actual": [
+        "RED_BORDER_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "low_hp_red_normal_or_context_explained_30",
+      "category": "low_hp_red",
+      "fps": 30,
+      "metadata": {
+        "red_border": true,
+        "low_hp": true,
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "teleport_abnormal_or_unexplained_30",
+      "category": "teleport",
+      "fps": 30,
+      "metadata": {
+        "white": true,
+        "fps": 30
+      },
+      "expected": [
+        "FLASH_REVIEW"
+      ],
+      "actual": [
+        "FLASH_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "teleport_normal_or_context_explained_30",
+      "category": "teleport",
+      "fps": 30,
+      "metadata": {
+        "white": true,
+        "teleport": true,
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "intentional_black_abnormal_or_unexplained_30",
+      "category": "intentional_black",
+      "fps": 30,
+      "metadata": {
+        "black": true,
+        "fps": 30
+      },
+      "expected": [
+        "BLACK_REVIEW"
+      ],
+      "actual": [
+        "BLACK_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "intentional_black_normal_or_context_explained_30",
+      "category": "intentional_black",
+      "fps": 30,
+      "metadata": {
+        "black": true,
+        "intentional_black": true,
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "normal_camera_abnormal_or_unexplained_30",
+      "category": "normal_camera",
+      "fps": 30,
+      "metadata": {
+        "orientation_reference": "inverted",
+        "fps": 30
+      },
+      "expected": [
+        "ORIENTATION_REVIEW"
+      ],
+      "actual": [
+        "ORIENTATION_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "normal_camera_normal_or_context_explained_30",
+      "category": "normal_camera",
+      "fps": 30,
+      "metadata": {
+        "orientation_reference": "upright",
+        "offset_ms": -20,
+        "fps": 30
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "black_abnormal_or_unexplained_60",
+      "category": "black",
+      "fps": 60,
+      "metadata": {
+        "black": true,
+        "fps": 60
+      },
+      "expected": [
+        "BLACK_REVIEW"
+      ],
+      "actual": [
+        "BLACK_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "black_normal_or_context_explained_60",
+      "category": "black",
+      "fps": 60,
+      "metadata": {
+        "black": true,
+        "intentional_black": true,
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "freeze_abnormal_or_unexplained_60",
+      "category": "freeze",
+      "fps": 60,
+      "metadata": {
+        "still": true,
+        "motion_expected": true,
+        "fps": 60
+      },
+      "expected": [
+        "FREEZE_REVIEW"
+      ],
+      "actual": [
+        "FREEZE_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "freeze_normal_or_context_explained_60",
+      "category": "freeze",
+      "fps": 60,
+      "metadata": {
+        "still": true,
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "orientation_abnormal_or_unexplained_60",
+      "category": "orientation",
+      "fps": 60,
+      "metadata": {
+        "orientation_reference": "inverted",
+        "fps": 60
+      },
+      "expected": [
+        "ORIENTATION_REVIEW"
+      ],
+      "actual": [
+        "ORIENTATION_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "orientation_normal_or_context_explained_60",
+      "category": "orientation",
+      "fps": 60,
+      "metadata": {
+        "orientation_reference": "upright",
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "drop_abnormal_or_unexplained_60",
+      "category": "drop",
+      "fps": 60,
+      "metadata": {
+        "fps": 60,
+        "max_pts_gap": 0.05
+      },
+      "expected": [
+        "FRAME_GAP_REVIEW"
+      ],
+      "actual": [
+        "FRAME_GAP_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "drop_normal_or_context_explained_60",
+      "category": "drop",
+      "fps": 60,
+      "metadata": {
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "audio_abnormal_or_unexplained_60",
+      "category": "audio",
+      "fps": 60,
+      "metadata": {
+        "audio_expected": true,
+        "audio_stream": false,
+        "fps": 60
+      },
+      "expected": [
+        "MISSING_AUDIO"
+      ],
+      "actual": [
+        "MISSING_AUDIO"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "audio_normal_or_context_explained_60",
+      "category": "audio",
+      "fps": 60,
+      "metadata": {
+        "audio_expected": false,
+        "audio_stream": false,
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "sync_abnormal_or_unexplained_60",
+      "category": "sync",
+      "fps": 60,
+      "metadata": {
+        "offset_ms": -80,
+        "fps": 60
+      },
+      "expected": [
+        "AV_SYNC_REVIEW"
+      ],
+      "actual": [
+        "AV_SYNC_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "sync_normal_or_context_explained_60",
+      "category": "sync",
+      "fps": 60,
+      "metadata": {
+        "offset_ms": 40,
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "flash_abnormal_or_unexplained_60",
+      "category": "flash",
+      "fps": 60,
+      "metadata": {
+        "white": true,
+        "fps": 60
+      },
+      "expected": [
+        "FLASH_REVIEW"
+      ],
+      "actual": [
+        "FLASH_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "flash_normal_or_context_explained_60",
+      "category": "flash",
+      "fps": 60,
+      "metadata": {
+        "white": true,
+        "intentional_flash": true,
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "occlusion_abnormal_or_unexplained_60",
+      "category": "occlusion",
+      "fps": 60,
+      "metadata": {
+        "critical_occlusion_fraction": 0.4,
+        "fps": 60
+      },
+      "expected": [
+        "OCCLUSION_REVIEW"
+      ],
+      "actual": [
+        "OCCLUSION_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "occlusion_normal_or_context_explained_60",
+      "category": "occlusion",
+      "fps": 60,
+      "metadata": {
+        "critical_occlusion_fraction": 0.05,
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "clipping_abnormal_or_unexplained_60",
+      "category": "clipping",
+      "fps": 60,
+      "metadata": {
+        "clipped_fraction": 0.2,
+        "fps": 60
+      },
+      "expected": [
+        "CLIPPING_REVIEW"
+      ],
+      "actual": [
+        "CLIPPING_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "clipping_normal_or_context_explained_60",
+      "category": "clipping",
+      "fps": 60,
+      "metadata": {
+        "clipped_fraction": 0.2,
+        "entrance": true,
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "death_gray_abnormal_or_unexplained_60",
+      "category": "death_gray",
+      "fps": 60,
+      "metadata": {
+        "grayscale": true,
+        "fps": 60
+      },
+      "expected": [
+        "GRAYSCALE_REVIEW"
+      ],
+      "actual": [
+        "GRAYSCALE_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "death_gray_normal_or_context_explained_60",
+      "category": "death_gray",
+      "fps": 60,
+      "metadata": {
+        "grayscale": true,
+        "dead": true,
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "low_hp_red_abnormal_or_unexplained_60",
+      "category": "low_hp_red",
+      "fps": 60,
+      "metadata": {
+        "red_border": true,
+        "fps": 60
+      },
+      "expected": [
+        "RED_BORDER_REVIEW"
+      ],
+      "actual": [
+        "RED_BORDER_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "low_hp_red_normal_or_context_explained_60",
+      "category": "low_hp_red",
+      "fps": 60,
+      "metadata": {
+        "red_border": true,
+        "low_hp": true,
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "teleport_abnormal_or_unexplained_60",
+      "category": "teleport",
+      "fps": 60,
+      "metadata": {
+        "white": true,
+        "fps": 60
+      },
+      "expected": [
+        "FLASH_REVIEW"
+      ],
+      "actual": [
+        "FLASH_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "teleport_normal_or_context_explained_60",
+      "category": "teleport",
+      "fps": 60,
+      "metadata": {
+        "white": true,
+        "teleport": true,
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "intentional_black_abnormal_or_unexplained_60",
+      "category": "intentional_black",
+      "fps": 60,
+      "metadata": {
+        "black": true,
+        "fps": 60
+      },
+      "expected": [
+        "BLACK_REVIEW"
+      ],
+      "actual": [
+        "BLACK_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "intentional_black_normal_or_context_explained_60",
+      "category": "intentional_black",
+      "fps": 60,
+      "metadata": {
+        "black": true,
+        "intentional_black": true,
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "normal_camera_abnormal_or_unexplained_60",
+      "category": "normal_camera",
+      "fps": 60,
+      "metadata": {
+        "orientation_reference": "inverted",
+        "fps": 60
+      },
+      "expected": [
+        "ORIENTATION_REVIEW"
+      ],
+      "actual": [
+        "ORIENTATION_REVIEW"
+      ],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    },
+    {
+      "id": "normal_camera_normal_or_context_explained_60",
+      "category": "normal_camera",
+      "fps": 60,
+      "metadata": {
+        "orientation_reference": "upright",
+        "offset_ms": -20,
+        "fps": 60
+      },
+      "expected": [],
+      "actual": [],
+      "status": "PASS",
+      "scope": "designed fixture only; orientation/semantic/occlusion/clipping supplied metadata, not learned pixel detection"
+    }
+  ],
+  "executed": 56,
+  "passed": 56,
+  "product_pass": false,
+  "thresholds": "research proposals; warning only; no auto-fix/delete/approval changes",
+  "unverified": "actual LoL false-positive/negative rates; unknown context should ask for review rather than silently suppress"
+}

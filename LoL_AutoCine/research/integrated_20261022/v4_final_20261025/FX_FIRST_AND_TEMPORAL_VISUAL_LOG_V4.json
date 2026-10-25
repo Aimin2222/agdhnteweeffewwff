@@ -1,0 +1,17 @@
+{
+  "first_sheets": 10,
+  "temporal_sheets": 10,
+  "flash_sheets": 5,
+  "preview_export_sheets": 3,
+  "observations": [
+    "panel/stretch are full-frame fade-in, first frame intentionally black",
+    "focus/VR/sphere blur whole frame",
+    "radial is temporal mix with motion trails, not radial convolution",
+    "zoom temporal output appears flat pink; isolate graph before calling production failure",
+    "flash/chroma event peaks not resolved by four-frame0/8/12/17 strip; expanded frame9/21 fixture required",
+    "candidate v2 Flash clips white unlike legacy amplitude; rejected. v3 preserves single event and repeats gray207 event peaks",
+    "preview/export bboxes exactly match at1080p for083; differ at1366/1280"
+  ],
+  "actual_LoL": false,
+  "strength_clarification": "Original v3 COMPAT sheet k=.15, old/v2 three sheets k=.45; compare new SAME_STRENGTH .15/.45 sheets for true side-by-side."
+}

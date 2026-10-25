@@ -1,0 +1,11 @@
+LoL AutoCine V4研究の実行結果です。UI未選定・採用未決定を維持。本体/UI29/承認状態は未変更。
+652/652フレームの原寸全体を目視し、native pixel/3人工背景も全件確認。12条件完全合格0、portrait geometry651は仮、原本19制約は追加探索で解消せず。
+35FX×4形状×2強度×3背景840＋Flash/grade840、動背景35本全decode。6motion144実描画条件全decode、652×6×3size×2fps=23,472幾何条件。
+動画元20作品を維持、未確定10作品を追加再生。2明確通知は10→13/20。V06/V08/V21はほぼ全編を粗くサンプリング、全作品全編ではない。音声聴取0。
+Flash旧/v2 48＋互換v3 24。v2は振幅非互換で却下、v3単発3/3bit一致。Zoom tmix scale4飽和、1366/1280mirror/export素材座標差も独立実描画で再現。
+Flash v3の短間隔重複で未来pulseが早く現れる点も追加確認し、event開始gate候補24条件を比較、旧単発3/3bit一致と先行上昇抑制を確認。v3をそのまま採用しないことを明記しました。
+既存FX追加90、カメラ数学48/48、独立ルール133/133、警告fixture56/56、CPU/NVENC4encode成功。GPUFXはOpenCL -12で不可。人工AV12の10は±50ms内、30fps2x2条件は約−58.7ms要確認。LoL音声/製品合格にはしていない。
+1251保護hash一致。70機能台帳/19提案/6recipe/ShotPlan/PR分割・合格rollback/実機パッケージを保存。製品全体T01–14 PASS0。
+既存camera参照背景にも35FXの560合成を追加して全35シート確認。Template90項目と既存操作50種を70機能へ対応付け、既存設定/SceneProject保存復元119試験も成功。これはGUI/LoL合格ではありません。
+順序：UI29完成→ユーザーUI選択→既存70統合→Windows/LoL検証→ユーザーとChatGPTが研究採用→採用新機能実装。
+保存先：研究ブランチwork/autocine-integrated-research-20261022、LoL_AutoCine/research/integrated_20261022/v4_final_20261025/。コミットとZIP照合はSAVE_RECEIPT/保存検証を参照。Work研究を全機能製品完成と解釈しないでください。

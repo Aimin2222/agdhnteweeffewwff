@@ -1,0 +1,929 @@
+{
+  "source_commit": "fb03e0390805125fc063f4599af6c2541a653abf",
+  "template_fields": [
+    {
+      "name": "name",
+      "type": "str",
+      "default_expression": "'カスタム'",
+      "source_line": 118,
+      "source_text": "name: str = \"カスタム\"",
+      "source": "LoL_AutoCine/core/effects.py#L118"
+    },
+    {
+      "name": "style",
+      "type": "str",
+      "default_expression": "'cinema'",
+      "source_line": 119,
+      "source_text": "style: str = \"cinema\"            # camera.STYLES",
+      "source": "LoL_AutoCine/core/effects.py#L119"
+    },
+    {
+      "name": "intensity",
+      "type": "str",
+      "default_expression": "'standard'",
+      "source_line": 120,
+      "source_text": "intensity: str = \"standard\"      # natural / standard / strong",
+      "source": "LoL_AutoCine/core/effects.py#L120"
+    },
+    {
+      "name": "grade",
+      "type": "str",
+      "default_expression": "'default'",
+      "source_line": 121,
+      "source_text": "grade: str = \"default\"",
+      "source": "LoL_AutoCine/core/effects.py#L121"
+    },
+    {
+      "name": "grade_strength",
+      "type": "float",
+      "default_expression": "0.8",
+      "source_line": 122,
+      "source_text": "grade_strength: float = 0.8      # 0-1.4",
+      "source": "LoL_AutoCine/core/effects.py#L122"
+    },
+    {
+      "name": "temperature",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 123,
+      "source_text": "temperature: float = 0.0         # -1..1 (暖色+)",
+      "source": "LoL_AutoCine/core/effects.py#L123"
+    },
+    {
+      "name": "contrast",
+      "type": "float",
+      "default_expression": "1.0",
+      "source_line": 124,
+      "source_text": "contrast: float = 1.0            # 0.6..1.6 (追加)",
+      "source": "LoL_AutoCine/core/effects.py#L124"
+    },
+    {
+      "name": "vignette",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 125,
+      "source_text": "vignette: float = 0.0            # 0-1; no forced dark corners before explicit preset",
+      "source": "LoL_AutoCine/core/effects.py#L125"
+    },
+    {
+      "name": "grain",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 126,
+      "source_text": "grain: float = 0.0               # 0-1; disabled until selected",
+      "source": "LoL_AutoCine/core/effects.py#L126"
+    },
+    {
+      "name": "bloom",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 127,
+      "source_text": "bloom: float = 0.0               # 0-1; disabled until selected",
+      "source": "LoL_AutoCine/core/effects.py#L127"
+    },
+    {
+      "name": "bars",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 128,
+      "source_text": "bars: float = 0.0                # 0-1 (シネマ枠 最大 約 12%)",
+      "source": "LoL_AutoCine/core/effects.py#L128"
+    },
+    {
+      "name": "transition",
+      "type": "str",
+      "default_expression": "'cut'",
+      "source_line": 129,
+      "source_text": "transition: str = \"cut\"          # cut/fade/flash, no auto flash",
+      "source": "LoL_AutoCine/core/effects.py#L129"
+    },
+    {
+      "name": "title_auto",
+      "type": "bool",
+      "default_expression": "False",
+      "source_line": 130,
+      "source_text": "title_auto: bool = False          # キル数/対戦相手を自動タイトル化",
+      "source": "LoL_AutoCine/core/effects.py#L130"
+    },
+    {
+      "name": "title_text",
+      "type": "str",
+      "default_expression": "''",
+      "source_line": 131,
+      "source_text": "title_text: str = \"\"             # 手入力タイトル (空なら文字なし)",
+      "source": "LoL_AutoCine/core/effects.py#L131"
+    },
+    {
+      "name": "bpm",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 132,
+      "source_text": "bpm: float = 0.0                 # >0 ならビートに合わせた明滅",
+      "source": "LoL_AutoCine/core/effects.py#L132"
+    },
+    {
+      "name": "bgm_path",
+      "type": "str",
+      "default_expression": "''",
+      "source_line": 133,
+      "source_text": "bgm_path: str = \"\"",
+      "source": "LoL_AutoCine/core/effects.py#L133"
+    },
+    {
+      "name": "pre",
+      "type": "float",
+      "default_expression": "4.0",
+      "source_line": 134,
+      "source_text": "pre: float = 4.0                 # キル前秒数",
+      "source": "LoL_AutoCine/core/effects.py#L134"
+    },
+    {
+      "name": "post",
+      "type": "float",
+      "default_expression": "3.0",
+      "source_line": 135,
+      "source_text": "post: float = 3.0                # キル後秒数",
+      "source": "LoL_AutoCine/core/effects.py#L135"
+    },
+    {
+      "name": "merge_multikill",
+      "type": "bool",
+      "default_expression": "True",
+      "source_line": 136,
+      "source_text": "merge_multikill: bool = True",
+      "source": "LoL_AutoCine/core/effects.py#L136"
+    },
+    {
+      "name": "lut_path",
+      "type": "str",
+      "default_expression": "''",
+      "source_line": 137,
+      "source_text": "lut_path: str = \"\"               # .cube",
+      "source": "LoL_AutoCine/core/effects.py#L137"
+    },
+    {
+      "name": "fps",
+      "type": "int",
+      "default_expression": "60",
+      "source_line": 138,
+      "source_text": "fps: int = 60                 # 最終出力FPS",
+      "source": "LoL_AutoCine/core/effects.py#L138"
+    },
+    {
+      "name": "capture_fps",
+      "type": "int",
+      "default_expression": "144",
+      "source_line": 139,
+      "source_text": "capture_fps: int = 144        # 内部キャプチャFPS（LoLミラー/カメラ制御は144Hz優先）",
+      "source": "LoL_AutoCine/core/effects.py#L139"
+    },
+    {
+      "name": "exposure",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 140,
+      "source_text": "exposure: float = 0.0            # -0.3..0.3 (露出)",
+      "source": "LoL_AutoCine/core/effects.py#L140"
+    },
+    {
+      "name": "vibrance",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 141,
+      "source_text": "vibrance: float = 0.0            # -1..1.5 (自然な彩度)",
+      "source": "LoL_AutoCine/core/effects.py#L141"
+    },
+    {
+      "name": "game_audio",
+      "type": "bool",
+      "default_expression": "True",
+      "source_line": 142,
+      "source_text": "game_audio: bool = True          # ゲーム音を録音して入れる",
+      "source": "LoL_AutoCine/core/effects.py#L142"
+    },
+    {
+      "name": "game_volume",
+      "type": "float",
+      "default_expression": "1.0",
+      "source_line": 143,
+      "source_text": "game_volume: float = 1.0",
+      "source": "LoL_AutoCine/core/effects.py#L143"
+    },
+    {
+      "name": "bgm_volume",
+      "type": "float",
+      "default_expression": "0.4",
+      "source_line": 144,
+      "source_text": "bgm_volume: float = 0.4            # BGMを足す時の音量 (ゲーム音が鳴る間は自動で下がる)",
+      "source": "LoL_AutoCine/core/effects.py#L144"
+    },
+    {
+      "name": "hide_hud",
+      "type": "bool",
+      "default_expression": "True",
+      "source_line": 145,
+      "source_text": "hide_hud: bool = True            # 録画時にHUDを全部隠す（v2.2安全ミラー経路）",
+      "source": "LoL_AutoCine/core/effects.py#L145"
+    },
+    {
+      "name": "keep_champion_bars",
+      "type": "bool",
+      "default_expression": "False",
+      "source_line": 146,
+      "source_text": "keep_champion_bars: bool = False # HUD非表示でもチャンピオンのHPバーだけ残す",
+      "source": "LoL_AutoCine/core/effects.py#L146"
+    },
+    {
+      "name": "cam_height",
+      "type": "float",
+      "default_expression": "170.0",
+      "source_line": 147,
+      "source_text": "cam_height: float = 170.0        # カメラの高さ補正 (地面に埋まる時は上げる)",
+      "source": "LoL_AutoCine/core/effects.py#L147"
+    },
+    {
+      "name": "dist_scale",
+      "type": "float",
+      "default_expression": "0.8",
+      "source_line": 148,
+      "source_text": "dist_scale: float = 0.8",
+      "source": "LoL_AutoCine/core/effects.py#L148"
+    },
+    {
+      "name": "third_elev",
+      "type": "float",
+      "default_expression": "28.0",
+      "source_line": 149,
+      "source_text": "third_elev: float = 28.0",
+      "source": "LoL_AutoCine/core/effects.py#L149"
+    },
+    {
+      "name": "third_dist",
+      "type": "float",
+      "default_expression": "950.0",
+      "source_line": 150,
+      "source_text": "third_dist: float = 950.0          # FPS風カメラの距離 (小さいほど寄る)",
+      "source": "LoL_AutoCine/core/effects.py#L150"
+    },
+    {
+      "name": "third_yaw",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 151,
+      "source_text": "third_yaw: float = 0.0             # 三人称の水平回転角（度）",
+      "source": "LoL_AutoCine/core/effects.py#L151"
+    },
+    {
+      "name": "motion_arc",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 152,
+      "source_text": "motion_arc: float = 0.0            # 自動カメラ回り込み角（度）",
+      "source": "LoL_AutoCine/core/effects.py#L152"
+    },
+    {
+      "name": "motion_dolly",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 153,
+      "source_text": "motion_dolly: float = 0.0           # 自動ドリー量（%）",
+      "source": "LoL_AutoCine/core/effects.py#L153"
+    },
+    {
+      "name": "motion_profile",
+      "type": "str",
+      "default_expression": "'cinematic'",
+      "source_line": 154,
+      "source_text": "motion_profile: str = \"cinematic\"   # smooth / cinematic / dynamic / auto",
+      "source": "LoL_AutoCine/core/effects.py#L154"
+    },
+    {
+      "name": "fog_enabled",
+      "type": "bool",
+      "default_expression": "False",
+      "source_line": 155,
+      "source_text": "fog_enabled: bool = False",
+      "source": "LoL_AutoCine/core/effects.py#L155"
+    },
+    {
+      "name": "fog_preset",
+      "type": "str",
+      "default_expression": "'teal'",
+      "source_line": 156,
+      "source_text": "fog_preset: str = \"teal\"",
+      "source": "LoL_AutoCine/core/effects.py#L156"
+    },
+    {
+      "name": "fog_strength",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 157,
+      "source_text": "fog_strength: float = 0.0",
+      "source": "LoL_AutoCine/core/effects.py#L157"
+    },
+    {
+      "name": "curve_enabled",
+      "type": "bool",
+      "default_expression": "False",
+      "source_line": 158,
+      "source_text": "curve_enabled: bool = False",
+      "source": "LoL_AutoCine/core/effects.py#L158"
+    },
+    {
+      "name": "curve_points",
+      "type": "str",
+      "default_expression": "'0/0 0.25/0.20 0.50/0.50 0.75/0.80 1/1'",
+      "source_line": 159,
+      "source_text": "curve_points: str = \"0/0 0.25/0.20 0.50/0.50 0.75/0.80 1/1\"",
+      "source": "LoL_AutoCine/core/effects.py#L159"
+    },
+    {
+      "name": "dof_enabled",
+      "type": "bool",
+      "default_expression": "False",
+      "source_line": 160,
+      "source_text": "dof_enabled: bool = False",
+      "source": "LoL_AutoCine/core/effects.py#L160"
+    },
+    {
+      "name": "dof_preview",
+      "type": "bool",
+      "default_expression": "False",
+      "source_line": 161,
+      "source_text": "dof_preview: bool = False",
+      "source": "LoL_AutoCine/core/effects.py#L161"
+    },
+    {
+      "name": "dof_blur",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 162,
+      "source_text": "dof_blur: float = 0.0",
+      "source": "LoL_AutoCine/core/effects.py#L162"
+    },
+    {
+      "name": "dof_focus_distance",
+      "type": "float",
+      "default_expression": "5510.0",
+      "source_line": 163,
+      "source_text": "dof_focus_distance: float = 5510.0",
+      "source": "LoL_AutoCine/core/effects.py#L163"
+    },
+    {
+      "name": "dof_near_distance",
+      "type": "float",
+      "default_expression": "10000.0",
+      "source_line": 164,
+      "source_text": "dof_near_distance: float = 10000.0",
+      "source": "LoL_AutoCine/core/effects.py#L164"
+    },
+    {
+      "name": "dof_far_distance",
+      "type": "float",
+      "default_expression": "10000.0",
+      "source_line": 165,
+      "source_text": "dof_far_distance: float = 10000.0",
+      "source": "LoL_AutoCine/core/effects.py#L165"
+    },
+    {
+      "name": "video_effects",
+      "type": "dict",
+      "default_expression": "field(default_factory=lambda: {k: 0.0 for k in VIDEO_EFFECT_DEFAULTS})",
+      "source_line": 167,
+      "source_text": "video_effects: dict = field(default_factory=lambda: {k: 0.0 for k in VIDEO_EFFECT_DEFAULTS})",
+      "source": "LoL_AutoCine/core/effects.py#L167"
+    },
+    {
+      "name": "effect_preset",
+      "type": "str",
+      "default_expression": "'なし'",
+      "source_line": 168,
+      "source_text": "effect_preset: str = \"なし\"",
+      "source": "LoL_AutoCine/core/effects.py#L168"
+    },
+    {
+      "name": "reference_dna",
+      "type": "dict",
+      "default_expression": "field(default_factory=dict)",
+      "source_line": 170,
+      "source_text": "reference_dna: dict = field(default_factory=dict)",
+      "source": "LoL_AutoCine/core/effects.py#L170"
+    },
+    {
+      "name": "reference_sources",
+      "type": "list",
+      "default_expression": "field(default_factory=list)",
+      "source_line": 171,
+      "source_text": "reference_sources: list = field(default_factory=list)",
+      "source": "LoL_AutoCine/core/effects.py#L171"
+    },
+    {
+      "name": "template_origin",
+      "type": "str",
+      "default_expression": "'builtin'",
+      "source_line": 172,
+      "source_text": "template_origin: str = \"builtin\"",
+      "source": "LoL_AutoCine/core/effects.py#L172"
+    },
+    {
+      "name": "scene_keyframes",
+      "type": "list",
+      "default_expression": "field(default_factory=list)",
+      "source_line": 173,
+      "source_text": "scene_keyframes: list = field(default_factory=list)  # append to preserve legacy positional fields",
+      "source": "LoL_AutoCine/core/effects.py#L173"
+    },
+    {
+      "name": "montage_fx",
+      "type": "str",
+      "default_expression": "'cut'",
+      "source_line": 174,
+      "source_text": "montage_fx: str = \"cut\"  # append; optional final montage effect, legacy defaults unchanged",
+      "source": "LoL_AutoCine/core/effects.py#L174"
+    },
+    {
+      "name": "smart_highlight_enabled",
+      "type": "bool",
+      "default_expression": "False",
+      "source_line": 175,
+      "source_text": "smart_highlight_enabled: bool = False  # explicit automatic planning only",
+      "source": "LoL_AutoCine/core/effects.py#L175"
+    },
+    {
+      "name": "smart_highlight_style",
+      "type": "str",
+      "default_expression": "'auto'",
+      "source_line": 176,
+      "source_text": "smart_highlight_style: str = \"auto\"",
+      "source": "LoL_AutoCine/core/effects.py#L176"
+    },
+    {
+      "name": "highlight_pulse",
+      "type": "float",
+      "default_expression": "0.0",
+      "source_line": 177,
+      "source_text": "highlight_pulse: float = 0.0  # kill-timed accent, legacy graph unchanged when zero",
+      "source": "LoL_AutoCine/core/effects.py#L177"
+    },
+    {
+      "name": "kill_icon_style",
+      "type": "str",
+      "default_expression": "'off'",
+      "source_line": 178,
+      "source_text": "kill_icon_style: str = \"off\"  # off/simple/cinema/neon/impact",
+      "source": "LoL_AutoCine/core/effects.py#L178"
+    },
+    {
+      "name": "kill_icon_position",
+      "type": "str",
+      "default_expression": "'right-top'",
+      "source_line": 179,
+      "source_text": "kill_icon_position: str = \"right-top\"",
+      "source": "LoL_AutoCine/core/effects.py#L179"
+    },
+    {
+      "name": "kill_icon_scale",
+      "type": "float",
+      "default_expression": "1.0",
+      "source_line": 180,
+      "source_text": "kill_icon_scale: float = 1.0",
+      "source": "LoL_AutoCine/core/effects.py#L180"
+    },
+    {
+      "name": "kill_icon_duration",
+      "type": "float",
+      "default_expression": "1.55",
+      "source_line": 181,
+      "source_text": "kill_icon_duration: float = 1.55",
+      "source": "LoL_AutoCine/core/effects.py#L181"
+    },
+    {
+      "name": "kill_icon_opacity",
+      "type": "float",
+      "default_expression": "1.0",
+      "source_line": 182,
+      "source_text": "kill_icon_opacity: float = 1.0",
+      "source": "LoL_AutoCine/core/effects.py#L182"
+    },
+    {
+      "name": "smart_composition",
+      "type": "bool",
+      "default_expression": "False",
+      "source_line": 183,
+      "source_text": "smart_composition: bool = False  # safer distance/elevation around the locked player",
+      "source": "LoL_AutoCine/core/effects.py#L183"
+    },
+    {
+      "name": "smart_montage",
+      "type": "bool",
+      "default_expression": "False",
+      "source_line": 184,
+      "source_text": "smart_montage: bool = False  # only smart auto-edit reorders unpinned scenes",
+      "source": "LoL_AutoCine/core/effects.py#L184"
+    },
+    {
+      "name": "kill_icon_players",
+      "type": "list",
+      "default_expression": "field(default_factory=list)",
+      "source_line": 185,
+      "source_text": "kill_icon_players: list = field(default_factory=list)  # transient replay roster for real champion portraits",
+      "source": "LoL_AutoCine/core/effects.py#L185"
+    },
+    {
+      "name": "encoder_policy",
+      "type": "str",
+      "default_expression": "'auto'",
+      "source_line": 187,
+      "source_text": "encoder_policy: str = 'auto'  # auto/gpu/cpu; GPU refers to *encoding*, not the FX graph",
+      "source": "LoL_AutoCine/core/effects.py#L187"
+    },
+    {
+      "name": "kill_frame_color",
+      "type": "str",
+      "default_expression": "''",
+      "source_line": 188,
+      "source_text": "kill_frame_color: str = ''",
+      "source": "LoL_AutoCine/core/effects.py#L188"
+    },
+    {
+      "name": "kill_glow_color",
+      "type": "str",
+      "default_expression": "''",
+      "source_line": 189,
+      "source_text": "kill_glow_color: str = ''",
+      "source": "LoL_AutoCine/core/effects.py#L189"
+    },
+    {
+      "name": "kill_glow_enabled",
+      "type": "bool",
+      "default_expression": "True",
+      "source_line": 190,
+      "source_text": "kill_glow_enabled: bool = True",
+      "source": "LoL_AutoCine/core/effects.py#L190"
+    },
+    {
+      "name": "kill_glow_strength",
+      "type": "float",
+      "default_expression": "0.65",
+      "source_line": 191,
+      "source_text": "kill_glow_strength: float = .65",
+      "source": "LoL_AutoCine/core/effects.py#L191"
+    },
+    {
+      "name": "kill_frame_width",
+      "type": "int",
+      "default_expression": "3",
+      "source_line": 192,
+      "source_text": "kill_frame_width: int = 3",
+      "source": "LoL_AutoCine/core/effects.py#L192"
+    },
+    {
+      "name": "kill_mark_style",
+      "type": "str",
+      "default_expression": "'auto'",
+      "source_line": 193,
+      "source_text": "kill_mark_style: str = 'auto'",
+      "source": "LoL_AutoCine/core/effects.py#L193"
+    },
+    {
+      "name": "dof_shape",
+      "type": "str",
+      "default_expression": "'circle'",
+      "source_line": 195,
+      "source_text": "dof_shape: str = 'circle'  # circle (default) or band (old height approximation)",
+      "source": "LoL_AutoCine/core/effects.py#L195"
+    },
+    {
+      "name": "dof_center_x",
+      "type": "float",
+      "default_expression": "0.5",
+      "source_line": 196,
+      "source_text": "dof_center_x: float = .50  # 0..1, approx TargetLock subject's screen position",
+      "source": "LoL_AutoCine/core/effects.py#L196"
+    },
+    {
+      "name": "dof_center_y",
+      "type": "float",
+      "default_expression": "0.54",
+      "source_line": 197,
+      "source_text": "dof_center_y: float = .54",
+      "source": "LoL_AutoCine/core/effects.py#L197"
+    },
+    {
+      "name": "dof_radius",
+      "type": "float",
+      "default_expression": "0.29",
+      "source_line": 198,
+      "source_text": "dof_radius: float = .29   # normalized by screen height, not screen width",
+      "source": "LoL_AutoCine/core/effects.py#L198"
+    },
+    {
+      "name": "dof_feather",
+      "type": "float",
+      "default_expression": "0.12",
+      "source_line": 199,
+      "source_text": "dof_feather: float = .12  # soft circular edge",
+      "source": "LoL_AutoCine/core/effects.py#L199"
+    },
+    {
+      "name": "camera_side",
+      "type": "str",
+      "default_expression": "'auto'",
+      "source_line": 200,
+      "source_text": "camera_side: str = \"auto\"  # v5.10.5: auto / blue / red (append: old positional templates safe)",
+      "source": "LoL_AutoCine/core/effects.py#L200"
+    },
+    {
+      "name": "kill_sparkle_intensity",
+      "type": "float",
+      "default_expression": "1.0",
+      "source_line": 201,
+      "source_text": "kill_sparkle_intensity: float = 1.0  # v5.10.8: corner rays/star flares",
+      "source": "LoL_AutoCine/core/effects.py#L201"
+    },
+    {
+      "name": "kill_stack_gap",
+      "type": "int",
+      "default_expression": "4",
+      "source_line": 202,
+      "source_text": "kill_stack_gap: int = 4  # v5.10.8: additional pixels between simultaneous kills",
+      "source": "LoL_AutoCine/core/effects.py#L202"
+    },
+    {
+      "name": "kill_icon_motion",
+      "type": "str",
+      "default_expression": "'instant'",
+      "source_line": 203,
+      "source_text": "kill_icon_motion: str = \"instant\"  # badge entrance, legacy behavior by default",
+      "source": "LoL_AutoCine/core/effects.py#L203"
+    },
+    {
+      "name": "auto_director_strength",
+      "type": "float | None",
+      "default_expression": "None",
+      "source_line": 205,
+      "source_text": "auto_director_strength: float | None = None  # appended; None preserves legacy camera motion",
+      "source": "LoL_AutoCine/core/effects.py#L205"
+    },
+    {
+      "name": "camera_control_mode",
+      "type": "str | None",
+      "default_expression": "None",
+      "source_line": 206,
+      "source_text": "camera_control_mode: str | None = None",
+      "source": "LoL_AutoCine/core/effects.py#L206"
+    },
+    {
+      "name": "camera_auto_excluded",
+      "type": "list",
+      "default_expression": "field(default_factory=list)",
+      "source_line": 207,
+      "source_text": "camera_auto_excluded: list = field(default_factory=list)",
+      "source": "LoL_AutoCine/core/effects.py#L207"
+    },
+    {
+      "name": "camera_auto_qa_approved",
+      "type": "dict",
+      "default_expression": "field(default_factory=dict)",
+      "source_line": 208,
+      "source_text": "camera_auto_qa_approved: dict = field(default_factory=dict)",
+      "source": "LoL_AutoCine/core/effects.py#L208"
+    },
+    {
+      "name": "work_kill_frame_id",
+      "type": "str",
+      "default_expression": "''",
+      "source_line": 209,
+      "source_text": "work_kill_frame_id: str = ''",
+      "source": "LoL_AutoCine/core/effects.py#L209"
+    },
+    {
+      "name": "work_kill_effect_id",
+      "type": "str",
+      "default_expression": "''",
+      "source_line": 210,
+      "source_text": "work_kill_effect_id: str = ''",
+      "source": "LoL_AutoCine/core/effects.py#L210"
+    },
+    {
+      "name": "work_kill_review",
+      "type": "bool",
+      "default_expression": "False",
+      "source_line": 211,
+      "source_text": "work_kill_review: bool = False",
+      "source": "LoL_AutoCine/core/effects.py#L211"
+    },
+    {
+      "name": "work_kill_strength",
+      "type": "str",
+      "default_expression": "'strong'",
+      "source_line": 212,
+      "source_text": "work_kill_strength: str = 'strong'",
+      "source": "LoL_AutoCine/core/effects.py#L212"
+    }
+  ],
+  "runtime_actions": [
+    {
+      "action": "screen",
+      "line": 172
+    },
+    {
+      "action": "theme",
+      "line": 174
+    },
+    {
+      "action": "open_replay",
+      "line": 176
+    },
+    {
+      "action": "connect",
+      "line": 178
+    },
+    {
+      "action": "prepare",
+      "line": 180
+    },
+    {
+      "action": "scan",
+      "line": 182
+    },
+    {
+      "action": "target_lock",
+      "line": 184
+    },
+    {
+      "action": "event_mode",
+      "line": 190
+    },
+    {
+      "action": "select_scene",
+      "line": 207
+    },
+    {
+      "action": "jump_selected",
+      "line": 214
+    },
+    {
+      "action": "check_scene",
+      "line": 216
+    },
+    {
+      "action": "check_all",
+      "line": 225
+    },
+    {
+      "action": "uncheck_all",
+      "line": 227
+    },
+    {
+      "action": "mirror_start",
+      "line": 229
+    },
+    {
+      "action": "mirror_stop",
+      "line": 231
+    },
+    {
+      "action": "preview_play",
+      "line": 233
+    },
+    {
+      "action": "preview_stop",
+      "line": 235
+    },
+    {
+      "action": "camera_mode",
+      "line": 237
+    },
+    {
+      "action": "camera_side",
+      "line": 242
+    },
+    {
+      "action": "camera_style",
+      "line": 247
+    },
+    {
+      "action": "camera_number",
+      "line": 253
+    },
+    {
+      "action": "trim",
+      "line": 261
+    },
+    {
+      "action": "frame",
+      "line": 266
+    },
+    {
+      "action": "work_gallery",
+      "line": 268
+    },
+    {
+      "action": "work_settings",
+      "line": 270
+    },
+    {
+      "action": "effect_strength",
+      "line": 272
+    },
+    {
+      "action": "motion",
+      "line": 277
+    },
+    {
+      "action": "fx_enabled",
+      "line": 282
+    },
+    {
+      "action": "output_fps",
+      "line": 284
+    },
+    {
+      "action": "encoder_policy",
+      "line": 289
+    },
+    {
+      "action": "game_audio",
+      "line": 296
+    },
+    {
+      "action": "hud",
+      "line": 298
+    },
+    {
+      "action": "export_checked",
+      "line": 303
+    },
+    {
+      "action": "export_selected",
+      "line": 305
+    },
+    {
+      "action": "export_all",
+      "line": 307
+    },
+    {
+      "action": "export_smart",
+      "line": 309
+    },
+    {
+      "action": "cancel_job",
+      "line": 311
+    },
+    {
+      "action": "output_folder",
+      "line": 313
+    },
+    {
+      "action": "scene_save",
+      "line": 315
+    },
+    {
+      "action": "scene_undo",
+      "line": 321
+    },
+    {
+      "action": "scene_redo",
+      "line": 323
+    },
+    {
+      "action": "project_export",
+      "line": 325
+    },
+    {
+      "action": "project_import",
+      "line": 329
+    },
+    {
+      "action": "native_settings",
+      "line": 333
+    },
+    {
+      "action": "native_editor_zone",
+      "line": 337
+    },
+    {
+      "action": "edit_mode",
+      "line": 344
+    },
+    {
+      "action": "diagnostics",
+      "line": 353
+    },
+    {
+      "action": "automatic_qa",
+      "line": 355
+    },
+    {
+      "action": "camera_qa",
+      "line": 357
+    },
+    {
+      "action": "engage",
+      "line": 359
+    }
+  ],
+  "scope": "AST original declaration/action names, not live UI pass",
+  "invalid_template_module_correction": "Template resides in core/effects.py, not core/templates.py; V3 proposal filenames are candidate locations, not verified paths"
+}

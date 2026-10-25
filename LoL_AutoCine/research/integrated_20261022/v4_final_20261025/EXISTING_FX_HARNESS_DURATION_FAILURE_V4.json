@@ -1,0 +1,730 @@
+{
+  "cases": [
+    {
+      "fx": "radial_blur",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "tmix=frames=3:weights='1 2 1'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 0000019a99b489c0] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 0000019a99b489c0] Error setting option d to value .6.\r\n[AVFilterGraph @ 0000019a99b44d80] Error processing filtergraph: Invalid argument\r\n[in#0 @ 0000019a99b44180] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1920x1080:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "radial_blur",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1366,
+        768
+      ],
+      "graph": [
+        "tmix=frames=3:weights='1 2 1'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 0000029016fc8a00] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 0000029016fc8a00] Error setting option d to value .6.\r\n[AVFilterGraph @ 0000029016fc4940] Error processing filtergraph: Invalid argument\r\n[in#0 @ 0000029016fc3d40] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1366x768:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "radial_blur",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1280,
+        720
+      ],
+      "graph": [
+        "tmix=frames=3:weights='1 2 1'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000001eabb9f8a00] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000001eabb9f8a00] Error setting option d to value .6.\r\n[AVFilterGraph @ 000001eabb9f4940] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000001eabb9f3d40] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1280x720:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "zoom_blur",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000001e8740b8e40] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000001e8740b8e40] Error setting option d to value .6.\r\n[AVFilterGraph @ 000001e8740b1240] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000001e8740afdc0] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1920x1080:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "zoom_blur",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000001cdc2fc8dc0] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000001cdc2fc8dc0] Error setting option d to value .6.\r\n[AVFilterGraph @ 000001cdc2fc4d80] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000001cdc2fc4180] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1366x768:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "zoom_blur",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000001f9e6248dc0] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000001f9e6248dc0] Error setting option d to value .6.\r\n[AVFilterGraph @ 000001f9e6244d80] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000001f9e6244180] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1280x720:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "glint",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "unsharp=lx=5:ly=5:la=0.45",
+        "eq=contrast=1.125:brightness=0.060"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000001745a908ac0] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000001745a908ac0] Error setting option d to value .6.\r\n[AVFilterGraph @ 000001745a904ec0] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000001745a904280] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1920x1080:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "glint",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1366,
+        768
+      ],
+      "graph": [
+        "unsharp=lx=5:ly=5:la=0.45",
+        "eq=contrast=1.125:brightness=0.060"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000001b74f138500] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000001b74f138500] Error setting option d to value .6.\r\n[AVFilterGraph @ 000001b74f134940] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000001b74f133d40] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1366x768:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "glint",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1280,
+        720
+      ],
+      "graph": [
+        "unsharp=lx=5:ly=5:la=0.45",
+        "eq=contrast=1.125:brightness=0.060"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 0000026ac07e8500] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 0000026ac07e8500] Error setting option d to value .6.\r\n[AVFilterGraph @ 0000026ac07e4940] Error processing filtergraph: Invalid argument\r\n[in#0 @ 0000026ac07e3d40] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1280x720:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "panel_wipe",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "fade=t=in:st=0:d=0.575:alpha=0"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000001cce79789c0] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000001cce79789c0] Error setting option d to value .6.\r\n[AVFilterGraph @ 000001cce7974d80] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000001cce7974180] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1920x1080:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "panel_wipe",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1366,
+        768
+      ],
+      "graph": [
+        "fade=t=in:st=0:d=0.575:alpha=0"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 0000019b101d8a00] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 0000019b101d8a00] Error setting option d to value .6.\r\n[AVFilterGraph @ 0000019b101d4940] Error processing filtergraph: Invalid argument\r\n[in#0 @ 0000019b101d3d40] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1366x768:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "panel_wipe",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1280,
+        720
+      ],
+      "graph": [
+        "fade=t=in:st=0:d=0.575:alpha=0"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 00000228321b8a00] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 00000228321b8a00] Error setting option d to value .6.\r\n[AVFilterGraph @ 00000228321b4940] Error processing filtergraph: Invalid argument\r\n[in#0 @ 00000228321b3d40] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1280x720:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "stretch_wipe",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "fade=t=in:st=0:d=0.475"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 00000279d9078ac0] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 00000279d9078ac0] Error setting option d to value .6.\r\n[AVFilterGraph @ 00000279d9074d80] Error processing filtergraph: Invalid argument\r\n[in#0 @ 00000279d9074140] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1920x1080:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "stretch_wipe",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1366,
+        768
+      ],
+      "graph": [
+        "fade=t=in:st=0:d=0.475"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 0000012cf9698ac0] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 0000012cf9698ac0] Error setting option d to value .6.\r\n[AVFilterGraph @ 0000012cf96948c0] Error processing filtergraph: Invalid argument\r\n[in#0 @ 0000012cf9693cc0] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1366x768:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "stretch_wipe",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1280,
+        720
+      ],
+      "graph": [
+        "fade=t=in:st=0:d=0.475"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 0000016a4c3d8ac0] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 0000016a4c3d8ac0] Error setting option d to value .6.\r\n[AVFilterGraph @ 0000016a4c3d48c0] Error processing filtergraph: Invalid argument\r\n[in#0 @ 0000016a4c3d3cc0] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1280x720:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "focus_blur",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=5.00:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000001f7faef89c0] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000001f7faef89c0] Error setting option d to value .6.\r\n[AVFilterGraph @ 000001f7faef4e00] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000001f7faef4200] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1920x1080:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "focus_blur",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=5.00:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000002751cd28a00] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000002751cd28a00] Error setting option d to value .6.\r\n[AVFilterGraph @ 000002751cd24a00] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000002751cd23dc0] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1366x768:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "focus_blur",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=5.00:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 00000253d5ab8a00] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 00000253d5ab8a00] Error setting option d to value .6.\r\n[AVFilterGraph @ 00000253d5ab4a00] Error processing filtergraph: Invalid argument\r\n[in#0 @ 00000253d5ab3dc0] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1280x720:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "vr_blur",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=4.50:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 0000028dab388a80] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 0000028dab388a80] Error setting option d to value .6.\r\n[AVFilterGraph @ 0000028dab384f00] Error processing filtergraph: Invalid argument\r\n[in#0 @ 0000028dab384280] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1920x1080:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "vr_blur",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=4.50:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 0000022dfe428a00] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 0000022dfe428a00] Error setting option d to value .6.\r\n[AVFilterGraph @ 0000022dfe424a00] Error processing filtergraph: Invalid argument\r\n[in#0 @ 0000022dfe423dc0] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1366x768:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "vr_blur",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=4.50:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000001db6bbd8a00] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000001db6bbd8a00] Error setting option d to value .6.\r\n[AVFilterGraph @ 000001db6bbd4a00] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000001db6bbd3dc0] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1280x720:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "sphere_blur",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=3.30:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000001ff3acc89c0] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000001ff3acc89c0] Error setting option d to value .6.\r\n[AVFilterGraph @ 000001ff3acc4e00] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000001ff3acc4200] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1920x1080:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "sphere_blur",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=3.30:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 00000266e4398a00] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 00000266e4398a00] Error setting option d to value .6.\r\n[AVFilterGraph @ 00000266e4394a00] Error processing filtergraph: Invalid argument\r\n[in#0 @ 00000266e4393dc0] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1366x768:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "sphere_blur",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=3.30:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000002621bda8a00] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000002621bda8a00] Error setting option d to value .6.\r\n[AVFilterGraph @ 000002621bda4a00] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000002621bda3dc0] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1280x720:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "chroma_leak",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "rgbashift=rh=20:bh=-20:enable='between(t,0.280,0.380)+between(t,0.680,0.780)'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 0000021be5b889c0] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 0000021be5b889c0] Error setting option d to value .6.\r\n[AVFilterGraph @ 0000021be5b84e00] Error processing filtergraph: Invalid argument\r\n[in#0 @ 0000021be5b84200] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1920x1080:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "chroma_leak",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1366,
+        768
+      ],
+      "graph": [
+        "rgbashift=rh=20:bh=-20:enable='between(t,0.280,0.380)+between(t,0.680,0.780)'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 00000133dcf98a00] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 00000133dcf98a00] Error setting option d to value .6.\r\n[AVFilterGraph @ 00000133dcf949c0] Error processing filtergraph: Invalid argument\r\n[in#0 @ 00000133dcf93dc0] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1366x768:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "chroma_leak",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1280,
+        720
+      ],
+      "graph": [
+        "rgbashift=rh=20:bh=-20:enable='between(t,0.280,0.380)+between(t,0.680,0.780)'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000001fd1f2a8a00] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000001fd1f2a8a00] Error setting option d to value .6.\r\n[AVFilterGraph @ 000001fd1f2a49c0] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000001fd1f2a3dc0] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1280x720:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "flash",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.300))':eval=frame:enable='between(t,0.300,0.450)+between(t,0.700,0.850)'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000001b8c5378e40] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000001b8c5378e40] Error setting option d to value .6.\r\n[AVFilterGraph @ 000001b8c5371200] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000001b8c536fd80] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1920x1080:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "flash",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1366,
+        768
+      ],
+      "graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.300))':eval=frame:enable='between(t,0.300,0.450)+between(t,0.700,0.850)'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 0000024d4ce58dc0] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 0000024d4ce58dc0] Error setting option d to value .6.\r\n[AVFilterGraph @ 0000024d4ce54c40] Error processing filtergraph: Invalid argument\r\n[in#0 @ 0000024d4ce540c0] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1366x768:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    },
+    {
+      "fx": "flash",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1280,
+        720
+      ],
+      "graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.300))':eval=frame:enable='between(t,0.300,0.450)+between(t,0.700,0.850)'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 4294967274,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": "[Parsed_testsrc2_0 @ 000001e7e6728dc0] Unable to parse option value \".6\" as duration\r\n[Parsed_testsrc2_0 @ 000001e7e6728dc0] Error setting option d to value .6.\r\n[AVFilterGraph @ 000001e7e6724c40] Error processing filtergraph: Invalid argument\r\n[in#0 @ 000001e7e67240c0] Error opening input: Invalid argument\r\nError opening input file testsrc2=s=1280x720:r=30:d=.6.\r\nError opening input files: Invalid argument\r\n"
+    }
+  ],
+  "executed": 30,
+  "not_product_pass": true,
+  "preview_mode_not_compared": true
+}

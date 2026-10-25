@@ -1,0 +1,79 @@
+{
+  "sampling": "continuous player playback between ~1.8s screenshots, not frame-accurate effects analysis",
+  "audio": "NOT_HEARD",
+  "originals_not_replaced": true,
+  "items": [
+    {
+      "id": "V01",
+      "url": "https://www.youtube.com/watch?v=NolHvXjZA4A",
+      "range": [
+        220.842226,
+        261.994424
+      ],
+      "observed": [
+        "220.8–228 base battle follows multiple actors in wide view; player identification card bottom left",
+        "229.9 cut to jungle then 231–255 extended pursuit / duel; 245.9 vertical blue beam, no kill notification",
+        "256.5 lowered side view with fallen figures; 258.3 teal/blur close then 260–261.8 weapon and character close on bright background"
+      ],
+      "inference": [
+        "hold wide while multiple actors active; defer close until activity ends",
+        "actor/weapon anchor, depth of field and background replacement need new verified implementation; exact FOV/rates unavailable"
+      ],
+      "two_explicit_notifications": false
+    },
+    {
+      "id": "V02",
+      "url": "https://www.youtube.com/watch?v=d-r2kgeFfus",
+      "range": [
+        247.515936,
+        288.541966
+      ],
+      "observed": [
+        "247–254 base exit duel and pan, 256.5 red/orange vertical beam and target gone, 258 lingering field/corpse",
+        "260 cut to mid pursuit, 270–277 tower dive kept wide; 279.5 blended transition to another mid confrontation",
+        "dark neutral/teal grading and corner darkening throughout; no readable kill notifications"
+      ],
+      "inference": [
+        "preserve group shot through tower combat; avoid repeated flash on every particle",
+        "longer pursuit requires event group/engage guard, not single kill-only cut"
+      ],
+      "two_explicit_notifications": false
+    },
+    {
+      "id": "V03",
+      "url": "https://www.youtube.com/watch?v=CDzfUgZHdME",
+      "range": [
+        232.496069,
+        273.806298
+      ],
+      "observed": [
+        "232.5 near white; 234 large character/cloud close; 236 white silhouette, 237.9 gold blast",
+        "239–250 base team fight, camera pans and rotates in wide frame; left outside map is exposed bright background",
+        "252 cut to mid duel, gradual follow until 271.9 low target; 273.6 vertical blue beam at bush, no readable kill notice"
+      ],
+      "inference": [
+        "silhouette/background-replacement/large gold blast are separate proposals, not current generic Flash",
+        "map-outside exposure needs candidate rejection guard; bright authored transition must not be auto-deleted"
+      ],
+      "two_explicit_notifications": false
+    },
+    {
+      "id": "V24",
+      "url": "https://www.youtube.com/watch?v=s6mn5nydV8I",
+      "range": [
+        245.999533,
+        287.395344
+      ],
+      "observed": [
+        "246 sword/character blur close; 247.8 cut to river wide then 251–265 chase along jungle wall",
+        "262 horizontal magenta slash and 265 target disappearance candidate; 267.6 settles on remaining actor",
+        "269 cut to other river group, wide chase through 287; edited player card, no readable kill notifications"
+      ],
+      "inference": [
+        "hold wide through wall pursuit, gate cutaway on next engagement",
+        "game skill slash cannot be labeled postproduction FX from screenshots alone"
+      ],
+      "two_explicit_notifications": false
+    }
+  ]
+}

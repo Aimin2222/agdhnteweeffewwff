@@ -1,0 +1,457 @@
+# 動画20作品の最終観察台帳
+
+20作品すべて既存IDを保持。V4は未確定10作品に追加区間、V06短編も追加確認。連続再生中の約1.6〜1.9秒間隔画面観測で、全フレーム解析・正確な速度/FOV・音声分析とは異なります。
+
+| ID | 作品 | 2通知 | V4追加観測範囲 | 全体 |
+| --- | --- | --- | --- | --- |
+| V01 | [史上最強。全米が震えた神プレイ TOP 30](https://www.youtube.com/watch?v=NolHvXjZA4A) | 未確定 | 220.84–261.83 | PARTIAL_RANGES |
+| V02 | ['Don't you just have to avoid it?' ／ LOLNAM Cinematic Montage #16](https://www.youtube.com/watch?v=d-r2kgeFfus) | 未確定 | 247.52–288.38 | PARTIAL_RANGES |
+| V03 | [Mind-blowing plays that take it all the way to the grave ／ LOLNAM Cinematic Montage #15](https://www.youtube.com/watch?v=CDzfUgZHdME) | 未確定 | 232.50–273.64 | PARTIAL_RANGES |
+| V04 | [ジャーヴァンIVモンタージュ2025 - パーフェクト](https://www.youtube.com/watch?v=eYopd5Ynq8o) | 確認 |  | PARTIAL_RANGES |
+| V05 | [OUTPLAYS WORLDWIDE that will HYPE you up for SEASON 13 ／ League of Legends Cinematic Montage](https://www.youtube.com/watch?v=vvjTv5VJzQQ) | 確認 |  | PARTIAL_RANGES |
+| V06 | [Yone - League of Legends Montage](https://www.youtube.com/watch?v=Y1MGS-wlxrM) | 確認 | 0.98–43.63; 54.07–95.83; 95.04–116.74; 40.02–56.42 | NEAR_COMPLETE_SAMPLED |
+| V07 | [SHEN MONTAGE 2026 - BEST PLAYS](https://www.youtube.com/watch?v=U_E00b3jKbg) | 確認 | 256.42–278.48 | PARTIAL_RANGES |
+| V08 | ["Defiant" - Challenger Irelia Montage ft. Rate](https://www.youtube.com/watch?v=FgqHOT9YeSo) | 未確定 | 0.90–40.63; 40.86–80.27; 80.50–120.13; 120.34–159.70; 159.90–188.88 | NEAR_COMPLETE_SAMPLED |
+| V09 | [YASUO-WIND NEVER DIES ／ CINEMATIC MONTAGE](https://www.youtube.com/watch?v=p6J1CkhYt3M) | 確認 |  | PARTIAL_RANGES |
+| V11 | [LEE SIN MONTAGE 2025 - GOD PLAYS](https://www.youtube.com/watch?v=aFks00ErSDA) | 確認 | 213.38–230.47; 230.65–247.60 | PARTIAL_RANGES |
+| V12 | [LOLプレイヤーがとてつもなく頭脳明晰…IQ200のプレイモンタージュ（リーグ・オブ・レジェンド）](https://www.youtube.com/watch?v=0m3O1TYzJE0) | 確認 |  | PARTIAL_RANGES |
+| V13 | [50 ULTRA SATISFYING MOMENTS IN LEAGUE OF LEGENDS](https://www.youtube.com/watch?v=_JWJgS00hfk) | 確認 |  | PARTIAL_RANGES |
+| V15 | [Skills of an expert you don't want to miss ／ LOLNAM Cinematic Montage #24](https://www.youtube.com/watch?v=Vv6ykcYJXrE) | 未確定 | 245.80–285.34 | PARTIAL_RANGES |
+| V16 | ['a thin line, a fine line' ／ LOLNAM Cinematic Montage #23](https://www.youtube.com/watch?v=53CXTEC17oU) | 未確定 | 265.92–307.14 | PARTIAL_RANGES |
+| V20 | [ADC MONTAGE 2026 - INSANE PLAYS](https://www.youtube.com/watch?v=3c_AK62eY8k) | 確認 |  | PARTIAL_RANGES |
+| V21 | [Udyr, But Every Fight Feels Like a Movie 🔥 ／ Cinematic League Montage](https://www.youtube.com/watch?v=Yov4icmIYhI) | 確認 | 11.96–52.08; 52.32–92.70; 93.02–133.51; 133.74–174.24; 174.52–207.83; 0.06–13.97 | NEAR_COMPLETE_SAMPLED |
+| V22 | [High Elo Yasuo [Cinematic Montage] 야스오 매드무비](https://www.youtube.com/watch?v=RvuvS7bDPlw) | 確認 |  | PARTIAL_RANGES |
+| V23 | [Last Lee Sin’s Montage - Gameplay and Cinematic League of Legends!](https://www.youtube.com/watch?v=Uxw53vd0qYg) | 確認 |  | PARTIAL_RANGES |
+| V24 | [This is really "Montage" ／ LOLNAM Cinematic Montage #18](https://www.youtube.com/watch?v=s6mn5nydV8I) | 未確定 | 246.00–287.20 | PARTIAL_RANGES |
+| V25 | [Snipe "Cinematic" Montage ／ League of Legends](https://www.youtube.com/watch?v=M8VOe0cKEEw) | 確認 |  | PARTIAL_RANGES |
+
+## V01 史上最強。全米が震えた神プレイ TOP 30
+
+観測（V3継承）：140〜157秒を追加。俯瞰lane/ジャングルの追走を保ち、156.8秒付近で基地の低いshotへ。最後は地形外の明るい空間が見える。kill通知2件の追加確定なし。先頭140秒の光画面はseek古画の可能性を排除できず演出測定に使わない。
+
+推測（V3継承）：戦闘wideと終端cutawayを分離。地形外の露出を品質警告へ。
+
+V4追記：
+
+{
+  "id": "V01",
+  "url": "https://www.youtube.com/watch?v=NolHvXjZA4A",
+  "range": [
+    220.842226,
+    261.994424
+  ],
+  "observed": [
+    "220.8–228 base battle follows multiple actors in wide view; player identification card bottom left",
+    "229.9 cut to jungle then 231–255 extended pursuit / duel; 245.9 vertical blue beam, no kill notification",
+    "256.5 lowered side view with fallen figures; 258.3 teal/blur close then 260–261.8 weapon and character close on bright background"
+  ],
+  "inference": [
+    "hold wide while multiple actors active; defer close until activity ends",
+    "actor/weapon anchor, depth of field and background replacement need new verified implementation; exact FOV/rates unavailable"
+  ],
+  "two_explicit_notifications": false
+}
+
+
+## V02 'Don't you just have to avoid it?' | LOLNAM Cinematic Montage #16
+
+観測（V3継承）：31.77〜49.53秒を追加。34/38/39秒台に赤い死亡beamと対象消失を観察。複数対象の位置を残した広いパンで、43秒台に別laneへ切替。白い吹き出し様の図形の由来は確定しない。明示kill通知2件の条件には繰り上げない。
+
+推測（V3継承）：multi群のwide維持、group後hard cut。beamだけの自動kill判定は不可。
+
+V4追記：
+
+{
+  "id": "V02",
+  "url": "https://www.youtube.com/watch?v=d-r2kgeFfus",
+  "range": [
+    247.515936,
+    288.541966
+  ],
+  "observed": [
+    "247–254 base exit duel and pan, 256.5 red/orange vertical beam and target gone, 258 lingering field/corpse",
+    "260 cut to mid pursuit, 270–277 tower dive kept wide; 279.5 blended transition to another mid confrontation",
+    "dark neutral/teal grading and corner darkening throughout; no readable kill notifications"
+  ],
+  "inference": [
+    "preserve group shot through tower combat; avoid repeated flash on every particle",
+    "longer pursuit requires event group/engage guard, not single kill-only cut"
+  ],
+  "two_explicit_notifications": false
+}
+
+
+## V03 Mind-blowing plays that take it all the way to the grave | LOLNAM Cinematic Montage #15
+
+観測（V3継承）：36.019〜52.761秒を追加確認。ジャングルの壁沿いの追走を広いパンで追い、41秒台の死亡beam後も残るduelを継続する。先頭seek直後の縮小古画を除外。紫の円・abilityを編集FXと断定しない。明示kill通知2件は追加確定せず。
+
+推測（V3継承）：戦闘継続中はwideを保ち、死亡beamだけで自動closeupへ切り替えない。正確なFOV/速度倍率は測定していない。
+
+V4追記：
+
+{
+  "id": "V03",
+  "url": "https://www.youtube.com/watch?v=CDzfUgZHdME",
+  "range": [
+    232.496069,
+    273.806298
+  ],
+  "observed": [
+    "232.5 near white; 234 large character/cloud close; 236 white silhouette, 237.9 gold blast",
+    "239–250 base team fight, camera pans and rotates in wide frame; left outside map is exposed bright background",
+    "252 cut to mid duel, gradual follow until 271.9 low target; 273.6 vertical blue beam at bush, no readable kill notice"
+  ],
+  "inference": [
+    "silhouette/background-replacement/large gold blast are separate proposals, not current generic Flash",
+    "map-outside exposure needs candidate rejection guard; bright authored transition must not be auto-deleted"
+  ],
+  "two_explicit_notifications": false
+}
+
+
+## V04 ジャーヴァンIVモンタージュ2025 - パーフェクト
+
+観測（V3継承）：37.28〜55.37秒。41秒台にslain通知、46秒台にDOUBLE KILL。俯瞰追従を保ち49.11秒付近に画面全体の回転/放射状のブラーを挟み別戦闘へ。拡大や細かいブラー長は未測定。
+
+推測（V3継承）：連続戦闘はwide、次clipへの短いtransitionを分離。実装は遷移層が必要。
+
+
+## V05 OUTPLAYS WORLDWIDE that will HYPE you up for SEASON 13 | League of Legends Cinematic Montage
+
+観測（V3継承）：44.88〜61.67秒。48秒台のkillアイコン対の後、53.71〜54.50秒に別の対が追加。俯瞰から斜めの寄りとゆるい追従。51〜53秒の赤い幾何領域はゲーム内abilityの可能性がありpostFXと断定しない。57秒台に別戦闘へ。
+
+推測（V3継承）：killfeed追加2件を確認。複数killの間は同じfightを保ち、カラー調整とゲーム内効果の識別を要する。
+
+
+## V06 Yone - League of Legends Montage
+
+観測（V3継承）：82.11〜100.06秒。82.88秒に短いchampion接写を挟み、86.93 DOUBLE、92.28 TRIPLE、97.62 QUADRAを広い構図で追う。99.16秒からchampion正面の低い接写。明暗やレンズ風ぼけは見えるが正確な倍率/深度処理は不明。
+
+推測（V3継承）：最終kill後のcutaway案を強く支持。ただし82秒の途中挿入もあるため常に戦闘中接写なしという普遍則にはしない。
+
+V4追記：
+
+{
+  "id": "V06",
+  "url": "https://www.youtube.com/watch?v=Y1MGS-wlxrM",
+  "duration": 118.581,
+  "coverage": "near-complete beginning0.978759 to116.74 displayed, player advanced to end; seek gap40–54 explicitly filled, no audio heard",
+  "ranges": [
+    "0.978759–43.826476",
+    "40.019846–56.584844",
+    "54.068643–96.012583",
+    "95.043159–118.581(end reached; last screenshot116.74)"
+  ],
+  "observed": [
+    "0–4 establishing map; 5–12 model/weapon close in red environment, black letterbox",
+    "14–27 wide gameplay intercut at16 with stylized close/speed-line scene; 29–32 low character/corpse close",
+    "34–42 mid duel then diagonal split transition41.8; 43–48 full white background character poses",
+    "49–54 jungle multi-actor gameplay,56 close,57–64 duel,64.9 character close,66–75 base multi-fight",
+    "77–107 extended mid fight kept wide; DOUBLE KILL86.85, TRIPLE KILL92.24, QUADRA KILL98.73, PENTAKILL107.71",
+    "102.33 blue turret destroyed is not a champion kill; 109–end branded character end card"
+  ],
+  "inference": [
+    "continuous multi-kill combat should keep wide rather than trigger close for every kill",
+    "independent model pose/background replacement and split-screen montage are new proposals; current camera+grade can only approximate mood",
+    "precise speed/FOV/sound beat unmeasured"
+  ],
+  "two_explicit_notifications": true,
+  "audio": "NOT_HEARD"
+}
+
+
+## V07 SHEN MONTAGE 2026 - BEST PLAYS
+
+観測（V3継承）：54.00〜70.99秒はtoplane追走と移動/スキル継続、killを確定できず。105.01〜120.11秒の追加では113.83秒台にkill通知/右feed増加、117秒台から別laneへ切替。1件のみ追加確定。
+
+推測（V3継承）：不確かなkillを2件扱いしない。wideの追従と次clip切替を分離。
+
+V4追記：
+
+{
+  "id": "V07",
+  "video": "U_E00b3jKbg",
+  "observed_interval": [
+    256.41548,
+    278.621225
+  ],
+  "label_is_requested_not_actual": true,
+  "kill_notification": [
+    277.71,
+    278.48
+  ],
+  "observed": "Shen versus Leona under bottom tower; camera stays overhead and follows lane. Tower destroyed banner at275.31 is not a champion kill. Champion feed appears277.71, rampage banner278.48 with KDA increment. Red screen border grows with low HP before kill; do not classify as editorial chroma/flash. No added cutaway in observed interval.",
+  "inferred": "Preserve game-health cues; optional after-kill cutaway only once next combat safety established.",
+  "audio_verified": false,
+  "full_video_viewed": false
+}
+
+
+## V08 "Defiant" - Challenger Irelia Montage ft. Rate
+
+観測（V3継承）：最初の観察開始はmain frame0件で失敗。再試行78.51〜96.09秒の24点は再生確認。82.39付近の対象消失/86.93付近の赤beamは見えるがkill通知の確定条件にはしない。87.68〜89.94秒に背面装備の接写、90秒台に別fight。
+
+推測（V3継承）：装備/背面cutawayも終端演出の候補。赤beamだけではkill件数を増やさない。
+
+V4追記：
+
+{
+  "video": "V08",
+  "youtube_id": "FgqHOT9YeSo",
+  "duration_s": 189.621,
+  "actual_interval_sampled": [
+    0.9,
+    188.88
+  ],
+  "near_full_playback": true,
+  "frame_exact_full_analysis": false,
+  "notification_count": 0,
+  "audio_heard": false,
+  "cadence_ms": 1600,
+  "notes": [
+    [
+      "0.9–38.9",
+      "黒導入→LUVIANA→環境・キャラクターの低位置ショット→顔・背面→俯瞰の戦闘。"
+    ],
+    [
+      "40.86–80.38",
+      "俯瞰の追従戦闘。44.33赤い死亡光らしい描写、47.79地面の武器クローズアップ。49.5次戦闘、66.6–68.32再び低い武器・倒れたモデルの挿入。"
+    ],
+    [
+      "80.5–120.24",
+      "82.29赤光、87.45–89.17背負う装置の近景。90.92次戦闘、99.53武器近景、101.26次戦闘、109.87低い武器、111.59ぼけを経て次戦闘。"
+    ],
+    [
+      "120.34–159.8",
+      "120.34–122倒れた装備/モデルの低位置ショット。123.72から137.46までレーン集団戦を追従し、画面内に複数対象を残す。139.18次のレーン戦、154.59緑の装備近景、157.99顔、159.7全身。"
+    ],
+    [
+      "159.9–188.88",
+      "161.59–166.75戦闘。168.46–171.86後頭部・肩の近景と背景ぼけ。173.57黒への切替、175.27–188.88制作クレジット。"
+    ]
+  ],
+  "observed": "俯瞰の戦闘と低位置の人物・残存装備の挿入、浅い被写界深度、黒・ぼけを使う切替、HUD非表示。各戦闘中の通知は確認できず。",
+  "inferred_implementation": "戦闘をイベント群にまとめ、次戦闘まで余裕があり安全な場合だけ最後の対象/装備への低位置カット。顔や倒れた装備の座標・モデル別焦点、深度ぼけは新規実装を要する。観察から編集ソフト/具体フィルタを断定しない。",
+  "limits": "約1.7秒の画面観察間隔では短いFlash、速度曲線、フレーム単位のカット点は未確定。区間の間で停止しており全編を完全に無停止で再生したとは扱わない。終端後に別コンテンツへ移ったためend.tは採用せず最終有効スクリーン時刻188.88を採用。",
+  "id": "V08"
+}
+
+
+## V09 YASUO-WIND NEVER DIES | CINEMATIC MONTAGE
+
+観測（V3継承）：27.01〜43.53秒。31.24秒と34.29秒に異なるslain通知を確認。俯瞰が壁際のduelを追従、37秒台から別構図/別fightへ。字幕/プレイヤーcontrolを編集効果と混同しない。
+
+推測（V3継承）：明示通知2件。連戦前後を残し、切替はfight境界へ。速度/ズームの厳密倍率は不明。
+
+
+## V11 LEE SIN MONTAGE 2025 - GOD PLAYS
+
+観測（V3継承）：29.02〜45.92秒。34秒台の右feed、37秒台の中央通知とfeed、41秒台に別fightの通知。これらの文字/イベント同一性を十分読めないため新たな2件確定とはしない。低HP時の赤い周縁が33〜37秒に継続。
+
+推測（V3継承）：低HP赤を色かぶり不良として自動修正しない。単純な短パルス/全画面flash検出と区別。
+
+V4追記：
+
+{
+  "id": "V11",
+  "video": "aFks00ErSDA",
+  "observed_intervals": [
+    [
+      213.382961,
+      230.586212
+    ],
+    [
+      230.648155,
+      247.706988
+    ]
+  ],
+  "kill_notifications": [
+    226.82,
+    236.53
+  ],
+  "observed": "River fight: first kill +360 and updated feed at226.82; second target duel continues without cut, DOUBLE KILL and KDA14/1/1 at236.53. Overhead camera follows champion through river. Blur/warp transition around237.27-238.00 into new top lane encounter; note tower notification247.60 is not champion kill. Gameplay spell bubbles and shields remain distinct from editorial effects.",
+  "inferred": "Event-group-aware fight continuity, then transition after final kill. Need new spatial transition for true warp; existing panel_wipe is fade only.",
+  "audio_verified": false,
+  "full_video_viewed": false
+}
+
+
+## V12 LOLプレイヤーがとてつもなく頭脳明晰…IQ200のプレイモンタージュ（リーグ・オブ・レジェンド）
+
+観測（V3継承）：99.76〜116.87秒。100秒台SHUT DOWN、103.16秒DOUBLE、106.29秒TRIPLE。広い俯瞰を維持し移動方向へパン。ゲームHUD/facecam付き、戦闘後は追走を続け、113〜114秒台に次fightへ。
+
+推測（V3継承）：読みやすいHUD付き実例。過剰なズームより対象の動線と連続性を優先するCompetitive案の根拠。
+
+
+## V13 50 ULTRA SATISFYING MOMENTS IN LEAGUE OF LEGENDS
+
+観測（V3継承）：108.02〜125.61秒。113.08 SHUT DOWN、115.45 TRIPLE、120.09 Enemy slain。俯瞰とHUDを保ち、カメラはfightの中心を追い、122秒台には別lane/構図へ。大きな紫円はゲーム内abilityと考えられるが編集との分離は未確定。
+
+推測（V3継承）：kill通知別2件以上再確認。Competitiveでは実HUDと戦闘理解を優先、グレー/赤/能力円を無条件修正しない。
+
+
+## V15 Skills of an expert you don't want to miss | LOLNAM Cinematic Montage #24
+
+観測（V3継承）：70.02〜88.51秒。ジャングルの複数actorを斜め俯瞰で追い、73秒台の赤beam後も戦闘/追走継続、79〜80秒に別laneへ。暖色の環境、暗めの周辺。HUD通知がなく2kill確定は不可。
+
+推測（V3継承）：色温度は環境/編集の由来を断定せず、ニュートラル出力との比較を仕様化。group終端後のcutを支持。
+
+V4追記：
+
+{
+  "id": "V15",
+  "video": "Vv6ykcYJXrE",
+  "range": [
+    245.799758,
+    285.447675
+  ],
+  "observation": "245秒基地集団戦から247.52秒被写界深度風の人物接写、249.24秒ぼけ/発光した戦闘、250–252秒明るい環境と雪粒へ。254秒riverへcutし、256–268秒逃走と弾を広く追う。269–278秒dragon周囲からjungle追跡、280秒別botlane。小さい主役と大きい余白で位置関係を残す。HUD通知なし。",
+  "two_explicit_kills": false,
+  "inference": "部位anchorと短いDOF挿入、全体の追走を保つwide plannerは新規。既存pan/zoom/blurで部分再現可能だが同一表現とはしない。"
+}
+
+
+## V16 'a thin line, a fine line' | LOLNAM Cinematic Montage #23
+
+観測（V3継承）：120.02〜138.62秒。midの複数actor、126.97秒にbeam、128.47秒にぼけを伴う明るいmap移動、129.23秒以降低い斜めカメラで別fight。137.71秒台に追走の対象を寄せる。通知なしでkill2件は未確定。
+
+推測（V3継承）：遷移中の明るさとblurをkill peakと分離。被写体の位置が推定しかない時に同じ3Dカメラ経路が再現できるとは断定しない。
+
+V4追記：
+
+{
+  "id": "V16",
+  "video": "53CXTEC17oU",
+  "range": [
+    265.918985,
+    307.304779
+  ],
+  "observation": "265–276秒topの近距離duelを俯瞰で追い、276.69秒倒れた対象候補。278秒暗い地形pan→280秒mid複数対決、283–285秒混戦後287秒広く引く。291.08秒map裏の黒い地形露出。292–301秒基地内をwideで保ち、299.98秒青い縦beam候補。303秒新しいlaneへcut。明示通知なし。",
+  "two_explicit_kills": false,
+  "inference": "kill断定は元event必要。地形裏露出を通常shotの不採用条件へ。意図transitionの暗転は別annotationにする。"
+}
+
+
+## V20 ADC MONTAGE 2026 - INSANE PLAYS
+
+観測（V3継承）：99.01〜116.13秒。開始時TRIPLEが残り、102.09秒PENTAKILLに更新。戦闘俯瞰のまま終了、110.58秒付近に回転/blurを伴って別fightへ。5killすべての瞬間を観察したわけではない。
+
+推測（V3継承）：PENTA表示だけで5件観察済みとしない。group終端とclip transitionの間に余韻区間を設ける。
+
+
+## V21 Udyr, But Every Fight Feels Like a Movie 🔥 | Cinematic League Montage
+
+観測（V3継承）：66.00〜84.27秒。68〜71秒に背面/スキルの低い接写、72.72秒から俯瞰duelへ戻る。74〜75秒に倒れた対象、76.56〜79.59秒に低い接写で勝者/倒れた対象を見せ、80秒台に別fight。明示通知2件は追加確定せず。
+
+推測（V3継承）：kill後の勝者cutawayと、戦闘前の挿入を分けて扱う。後者は高負荷/視界リスクが大きく既定off案。
+
+V4追記：
+
+{
+  "id": "V21",
+  "youtube": "Yov4icmIYhI",
+  "duration": 209.201,
+  "scope": "冒頭0.059秒から終端まで6区間を実再生し約1.7秒ごとの標本を目視。全フレーム審査・音声聴取ではない。",
+  "audio_heard": false,
+  "two_explicit_kills_confirmed": true,
+  "observations": [
+    {
+      "range": [
+        0.059,
+        14.094
+      ],
+      "observed": "暗転から基地の低角度、背面人物接写と傾いた空。12秒台にHUD付き俯瞰戦闘へ。"
+    },
+    {
+      "range": [
+        11.964,
+        52.206
+      ],
+      "observed": "17–22秒にHUDを隠す人物接写、24秒俯瞰。33.01と34.76秒slain通知、KDA2→3。連戦後36–41秒に背面/相手を低く見せる。43–48秒次戦闘、48.63rampageとKDA4。50秒低い移動挿入。"
+    },
+    {
+      "range": [
+        52.32,
+        92.902
+      ],
+      "observed": "54–66秒dragon周辺を広く見せる。68–71秒低い背面、73秒俯瞰duel、75秒対象消失と金、77–79秒倒れた相手と勝者の低いshot。80秒次戦闘、90.97Enemy slainは主役assistと読める。"
+    },
+    {
+      "range": [
+        93.02,
+        133.635
+      ],
+      "observed": "98秒tower通知をchampion killと混同しない。100/101秒Enemy slain、assist2→3。103–105秒地形pan。107–111秒mid戦闘、112秒river別戦闘。117–133秒Herald周囲、131.78legendaryとKDA8。"
+    },
+    {
+      "range": [
+        133.74,
+        174.409
+      ],
+      "observed": "Herald長い攻防を俯瞰で保つ。146秒Herald奪取通知、153–160秒topの低い横構図、162–167秒HUD付き俯瞰でslain/legendary。169秒別mid戦闘。"
+    },
+    {
+      "range": [
+        174.52,
+        209.201
+      ],
+      "observed": "174–188秒midからjungleの集団戦を追う。192.17Double kill、193.90Enemy slain。190秒以降YouTube終了カードが重なり右側の精密審査を妨げる。197–204秒低い地形panと対象接近、207秒暗転。"
+    }
+  ],
+  "inference": "戦闘中wide、最後のキル後のみ安全な人物cutawayという設計の参考。次戦闘開始でcutaway抑制。低角度でmap外/空や地形裏が露出するため候補gateが必要。モデルanchor/軌道/厳密FOVと速度倍率・BGM同期は未確定。",
+  "implementation_boundary": "俯瞰・既存camera別take・fadeは既存を活用可能。フレーム単位のshot planner/モデル部位anchor/地形露出QAは新規提案。"
+}
+
+
+## V22 High Elo Yasuo [Cinematic Montage] 야스오 매드무비
+
+観測（V3継承）：最初のコマ送りAは再生へ戻り、B〜DはreadyState1だったためフレーム精度の根拠から除外。停止とdecode完了を確認したE/F/G/Hの114点では、1/60秒刻みで38.50〜40.38秒を確認。39.37〜39.67秒前後に中央viewportがほぼ白いplateau、その前後は徐々に白へ/元映像へ戻る。約0.3秒の白plateauというプレイヤー刻みの概算であり、80〜160msの短いflashの実測例ではない。PENTAKILL表示とwide保持も再確認。
+
+推測（V3継承）：viewport内の明暗envelopeと次map shotへの遷移。flash pulseの提案値と参考の測定を混同しない。音/BPM未確認。
+
+
+## V23 Last Lee Sin’s Montage - Gameplay and Cinematic League of Legends!
+
+観測（V3継承）：84.57〜102.22秒。90.69秒slain通知、92.22〜96.77秒は別のCG/映像clipでchampion接写と引きのshot。97.52秒から別fight、100.55秒に別slain通知。
+
+推測（V3継承）：CG挿入はReplayカメラだけでは再現不可。外部映像素材の権利/提供と別編集層が必要。単にorbit設定で同等にできるとはしない。
+
+
+## V24 This is really "Montage" | LOLNAM Cinematic Montage #18
+
+観測（V3継承）：150.01〜168.39秒。midから基地へ複数actorを残す斜めwide、154〜159秒のattack後も追走し、162秒台から基地内の別構図。死亡beam/対象消失はあるが明示通知2件は確定しない。ピンク/霧状環境の色は編集由来と断定しない。
+
+推測（V3継承）：広い戦闘理解とcameraの連続性を支持。低いshotに寄せることだけを品質目標にしない。
+
+V4追記：
+
+{
+  "id": "V24",
+  "url": "https://www.youtube.com/watch?v=s6mn5nydV8I",
+  "range": [
+    245.999533,
+    287.395344
+  ],
+  "observed": [
+    "246 sword/character blur close; 247.8 cut to river wide then 251–265 chase along jungle wall",
+    "262 horizontal magenta slash and 265 target disappearance candidate; 267.6 settles on remaining actor",
+    "269 cut to other river group, wide chase through 287; edited player card, no readable kill notifications"
+  ],
+  "inference": [
+    "hold wide through wall pursuit, gate cutaway on next engagement",
+    "game skill slash cannot be labeled postproduction FX from screenshots alone"
+  ],
+  "two_explicit_notifications": false
+}
+
+
+## V25 Snipe "Cinematic" Montage | League of Legends
+
+観測（V3継承）：225.01〜243.68秒。229.83 You have slain、232.13 Killing spree、235.18 DOUBLE KILL。広い俯瞰追従と右feed、236〜238秒に別fightへ。killのたびの大きな接写なし。
+
+推測（V3継承）：multi group中のwide維持と後続fightを分ける。字幕とfeedを残すCompetitiveの比較fixtureに適する。
+
+
+## AutoCineへの対応
+
+既存top/cinema_top/follow、手動FOV/yaw/zoom、カラー、6motion、既存badge/FXは基準出力へ使用可能。戦闘group-awareのwide維持・最後だけcutaway・次engage抑制は提案。人物/武器anchor、自由なmodel pose、白背景置換、外部CG intro、正確なbeat同期、画像からのbest shot採点は未実装扱い。ゲーム内skill発光を後処理FXと断定しない。V06の86–107連戦とV21の長いHerald戦をrecipe比較の根拠にし、killごとの寄りの連発を避ける。

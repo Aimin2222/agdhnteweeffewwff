@@ -1,0 +1,135 @@
+{
+  "status": "proposed interfaces, not callable production API",
+  "ShotPlan": {
+    "schema_version": 1,
+    "group_id": "fixture-group-1",
+    "target_id": "anonymous-target",
+    "team": "BLUE",
+    "settings_hash": "required",
+    "segments": [
+      {
+        "kind": "wide",
+        "replay_in": 100,
+        "replay_out": 108,
+        "style": "top",
+        "decision": "approved_for_side_required"
+      },
+      {
+        "kind": "cutaway_optional",
+        "replay_in": 108.4,
+        "replay_out": 109.4,
+        "style": "cinema",
+        "guards": [
+          "no_next_engage",
+          "target_visible",
+          "side_approved",
+          "manual_not_locked"
+        ]
+      }
+    ],
+    "unknown_geometry": "no cutaway; retain baseline",
+    "time_maps": [
+      "replay_to_capture_segments",
+      "capture_to_output_segments"
+    ],
+    "required_fields_v4": [
+      "schema_version",
+      "processing_revision",
+      "source_patch",
+      "replay_hash",
+      "event_ids",
+      "team",
+      "target_id",
+      "legacy_camera_values",
+      "manual_overrides",
+      "settings_hash",
+      "asset_hashes",
+      "segments",
+      "time_maps",
+      "candidate_scores",
+      "rejection_reasons",
+      "confidence",
+      "fallback_reason"
+    ],
+    "score_contract": {
+      "unknown": "null, not zero",
+      "take_limit": 3,
+      "thresholds": "proposal only; no runtime default",
+      "retain": "all rejected scores/reasons and selected baseline",
+      "tie_break": "prefer verified baseline, then lower resource cost, stable ID"
+    }
+  },
+  "UiAdapter": {
+    "model": "ProjectState independent of active layout/theme",
+    "commands": [
+      "connectReplay",
+      "scanMatch",
+      "selectScenes",
+      "seekReplay",
+      "setCameraManual",
+      "setTargetLock",
+      "previewPlay",
+      "previewStop",
+      "renderSelected",
+      "cancelRender",
+      "readJobResults"
+    ],
+    "new_commands_not_existing": [
+      "planShots",
+      "scoreCandidates",
+      "applyRecipeDraft",
+      "resumeJobFromCheckpoint"
+    ],
+    "side_effect_policy": "previewPlay does not mean export; render/cancel carry immutable job_id; no silent desktop audio fallback",
+    "theme": "light|dark|system, persist view preferences only; do not reconstruct capture or project"
+  },
+  "TimeMap": {
+    "segment_fields": [
+      "replay_in",
+      "replay_out",
+      "capture_wall_in",
+      "capture_wall_out",
+      "clip_in",
+      "clip_out",
+      "output_in",
+      "output_out",
+      "rate",
+      "discontinuity_id"
+    ],
+    "invalid": "seek gaps cannot interpolate; non-monotonic maps rejected"
+  },
+  "JobCheckpoint": {
+    "version": 1,
+    "project_settings_hash": "required",
+    "source_patch": "required",
+    "asset_hashes": "required",
+    "clips": [
+      {
+        "id": "clip-1",
+        "status": "queued|capturing|captured|processing|validated|failed|cancelled",
+        "capture_path": "relative path in job folder",
+        "capture_hash": "required for reuse",
+        "output_hash": "required for validated",
+        "attempt": 0,
+        "error_code": null
+      }
+    ],
+    "resume_policy": "reuse validated only if identity/patch/settings/assets match; corrupt state requires review; no production implementation in this research"
+  },
+  "QaWarning": {
+    "rule_id": "required",
+    "time_range_output": "required",
+    "severity": "info|review|warning",
+    "confidence": "0..1 or unknown",
+    "context": [
+      "death",
+      "low_hp",
+      "teleport",
+      "intentional_transition",
+      "manual_camera"
+    ],
+    "automatic_repair": false,
+    "evidence": "metric and provenance, not just color label"
+  },
+  "v4_status": "proposal; no product API implemented"
+}

@@ -1,0 +1,730 @@
+{
+  "cases": [
+    {
+      "fx": "radial_blur",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "tmix=frames=3:weights='1 2 1'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "radial_blur",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1366,
+        768
+      ],
+      "graph": [
+        "tmix=frames=3:weights='1 2 1'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "radial_blur",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1280,
+        720
+      ],
+      "graph": [
+        "tmix=frames=3:weights='1 2 1'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "zoom_blur",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "zoom_blur",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "zoom_blur",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "glint",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "unsharp=lx=5:ly=5:la=0.45",
+        "eq=contrast=1.125:brightness=0.060"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "glint",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1366,
+        768
+      ],
+      "graph": [
+        "unsharp=lx=5:ly=5:la=0.45",
+        "eq=contrast=1.125:brightness=0.060"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "glint",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1280,
+        720
+      ],
+      "graph": [
+        "unsharp=lx=5:ly=5:la=0.45",
+        "eq=contrast=1.125:brightness=0.060"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "panel_wipe",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "fade=t=in:st=0:d=0.575:alpha=0"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "panel_wipe",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1366,
+        768
+      ],
+      "graph": [
+        "fade=t=in:st=0:d=0.575:alpha=0"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "panel_wipe",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1280,
+        720
+      ],
+      "graph": [
+        "fade=t=in:st=0:d=0.575:alpha=0"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "stretch_wipe",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "fade=t=in:st=0:d=0.475"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "stretch_wipe",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1366,
+        768
+      ],
+      "graph": [
+        "fade=t=in:st=0:d=0.475"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "stretch_wipe",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1280,
+        720
+      ],
+      "graph": [
+        "fade=t=in:st=0:d=0.475"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "focus_blur",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=5.00:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "focus_blur",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=5.00:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "focus_blur",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=5.00:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "vr_blur",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=4.50:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "vr_blur",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=4.50:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "vr_blur",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=4.50:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "sphere_blur",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=3.30:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "sphere_blur",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=3.30:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "sphere_blur",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "scale=960:540:flags=bilinear,gblur=sigma=3.30:steps=1,scale=1920:1080:flags=bilinear"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": false,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "chroma_leak",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "rgbashift=rh=20:bh=-20:enable='between(t,0.280,0.380)+between(t,0.680,0.780)'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "chroma_leak",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1366,
+        768
+      ],
+      "graph": [
+        "rgbashift=rh=20:bh=-20:enable='between(t,0.280,0.380)+between(t,0.680,0.780)'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "chroma_leak",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1280,
+        720
+      ],
+      "graph": [
+        "rgbashift=rh=20:bh=-20:enable='between(t,0.280,0.380)+between(t,0.680,0.780)'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "flash",
+      "strength": 0.5,
+      "input_size": [
+        1920,
+        1080
+      ],
+      "filter_output_size": [
+        1920,
+        1080
+      ],
+      "graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.300))':eval=frame:enable='between(t,0.300,0.450)+between(t,0.700,0.850)'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "flash",
+      "strength": 0.5,
+      "input_size": [
+        1366,
+        768
+      ],
+      "filter_output_size": [
+        1366,
+        768
+      ],
+      "graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.300))':eval=frame:enable='between(t,0.300,0.450)+between(t,0.700,0.850)'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    },
+    {
+      "fx": "flash",
+      "strength": 0.5,
+      "input_size": [
+        1280,
+        720
+      ],
+      "filter_output_size": [
+        1280,
+        720
+      ],
+      "graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.300))':eval=frame:enable='between(t,0.300,0.450)+between(t,0.700,0.850)'"
+      ],
+      "first_frame_return_code": 0,
+      "stderr": "",
+      "size_preserved": true,
+      "video_or_null_rc": 0,
+      "diagnostic_output_resize": [
+        640,
+        360
+      ],
+      "stderr_temporal": ""
+    }
+  ],
+  "executed": 30,
+  "not_product_pass": true,
+  "preview_mode_not_compared": true
+}

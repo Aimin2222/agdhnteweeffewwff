@@ -1,0 +1,17 @@
+{
+  "reason": "Sandbox OpenCL device initialization failed -12; retry outside managed sandbox without changing driver/settings",
+  "probes": [
+    {
+      "probe": "unchanged GPUFullStage",
+      "success": false,
+      "detail": "Device creation failed: -12.\nFailed to set value 'opencl=ocl:,device_type=gpu' for option 'init_hw_device': Cannot allocate memory\nError parsing global options: Cannot allocate memory\n"
+    },
+    {
+      "probe": "independent FFmpeg OpenCL avgblur",
+      "success": false,
+      "return_code": 4294967284,
+      "detail": "Device creation failed: -12.\r\nFailed to set value 'opencl=ocl:,device_type=gpu' for option 'init_hw_device': Cannot allocate memory\r\nError parsing global options: Cannot allocate memory\r\n"
+    }
+  ],
+  "LoL_or_all_FX_pass": false
+}

@@ -1,0 +1,951 @@
+{
+  "cases": [
+    {
+      "name": "default_field_name",
+      "actual": "カスタム",
+      "expected": "カスタム",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_style",
+      "actual": "cinema",
+      "expected": "cinema",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_intensity",
+      "actual": "standard",
+      "expected": "standard",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_grade",
+      "actual": "default",
+      "expected": "default",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_grade_strength",
+      "actual": 0.8,
+      "expected": 0.8,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_temperature",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_contrast",
+      "actual": 1.0,
+      "expected": 1.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_vignette",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_grain",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_bloom",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_bars",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_transition",
+      "actual": "cut",
+      "expected": "cut",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_title_auto",
+      "actual": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_title_text",
+      "actual": "",
+      "expected": "",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_bpm",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_bgm_path",
+      "actual": "",
+      "expected": "",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_pre",
+      "actual": 4.0,
+      "expected": 4.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_post",
+      "actual": 3.0,
+      "expected": 3.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_merge_multikill",
+      "actual": true,
+      "expected": true,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_lut_path",
+      "actual": "",
+      "expected": "",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_fps",
+      "actual": 60,
+      "expected": 60,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_capture_fps",
+      "actual": 144,
+      "expected": 144,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_exposure",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_vibrance",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_game_audio",
+      "actual": true,
+      "expected": true,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_game_volume",
+      "actual": 1.0,
+      "expected": 1.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_bgm_volume",
+      "actual": 0.4,
+      "expected": 0.4,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_hide_hud",
+      "actual": true,
+      "expected": true,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_keep_champion_bars",
+      "actual": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_cam_height",
+      "actual": 170.0,
+      "expected": 170.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_dist_scale",
+      "actual": 0.8,
+      "expected": 0.8,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_third_elev",
+      "actual": 28.0,
+      "expected": 28.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_third_dist",
+      "actual": 950.0,
+      "expected": 950.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_third_yaw",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_motion_arc",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_motion_dolly",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_motion_profile",
+      "actual": "cinematic",
+      "expected": "cinematic",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_fog_enabled",
+      "actual": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_fog_preset",
+      "actual": "teal",
+      "expected": "teal",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_fog_strength",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_curve_enabled",
+      "actual": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_curve_points",
+      "actual": "0/0 0.25/0.20 0.50/0.50 0.75/0.80 1/1",
+      "expected": "0/0 0.25/0.20 0.50/0.50 0.75/0.80 1/1",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_dof_enabled",
+      "actual": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_dof_preview",
+      "actual": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_dof_blur",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_dof_focus_distance",
+      "actual": 5510.0,
+      "expected": 5510.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_dof_near_distance",
+      "actual": 10000.0,
+      "expected": 10000.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_dof_far_distance",
+      "actual": 10000.0,
+      "expected": 10000.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_video_effects",
+      "actual": {
+        "motion_camera": 0.0,
+        "radial_blur": 0.0,
+        "zoom_blur": 0.0,
+        "glitch": 0.0,
+        "kaleidoscope": 0.0,
+        "vhs_damage": 0.0,
+        "block_motion": 0.0,
+        "spin_motion": 0.0,
+        "chroma_leak": 0.0,
+        "flash": 0.0,
+        "focus_blur": 0.0,
+        "vignette_fx": 0.0,
+        "glint": 0.0,
+        "camera_shake": 0.0,
+        "wiggle": 0.0,
+        "vr_blur": 0.0,
+        "vr_light_leak": 0.0,
+        "sphere_blur": 0.0,
+        "panel_wipe": 0.0,
+        "stretch_wipe": 0.0,
+        "mirror": 0.0,
+        "slice": 0.0
+      },
+      "expected": {
+        "motion_camera": 0.0,
+        "radial_blur": 0.0,
+        "zoom_blur": 0.0,
+        "glitch": 0.0,
+        "kaleidoscope": 0.0,
+        "vhs_damage": 0.0,
+        "block_motion": 0.0,
+        "spin_motion": 0.0,
+        "chroma_leak": 0.0,
+        "flash": 0.0,
+        "focus_blur": 0.0,
+        "vignette_fx": 0.0,
+        "glint": 0.0,
+        "camera_shake": 0.0,
+        "wiggle": 0.0,
+        "vr_blur": 0.0,
+        "vr_light_leak": 0.0,
+        "sphere_blur": 0.0,
+        "panel_wipe": 0.0,
+        "stretch_wipe": 0.0,
+        "mirror": 0.0,
+        "slice": 0.0
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_effect_preset",
+      "actual": "なし",
+      "expected": "なし",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_reference_dna",
+      "actual": {},
+      "expected": {},
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_reference_sources",
+      "actual": [],
+      "expected": [],
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_template_origin",
+      "actual": "builtin",
+      "expected": "builtin",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_scene_keyframes",
+      "actual": [],
+      "expected": [],
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_montage_fx",
+      "actual": "cut",
+      "expected": "cut",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_smart_highlight_enabled",
+      "actual": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_smart_highlight_style",
+      "actual": "auto",
+      "expected": "auto",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_highlight_pulse",
+      "actual": 0.0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_icon_style",
+      "actual": "off",
+      "expected": "off",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_icon_position",
+      "actual": "right-top",
+      "expected": "right-top",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_icon_scale",
+      "actual": 1.0,
+      "expected": 1.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_icon_duration",
+      "actual": 1.55,
+      "expected": 1.55,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_icon_opacity",
+      "actual": 1.0,
+      "expected": 1.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_smart_composition",
+      "actual": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_smart_montage",
+      "actual": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_icon_players",
+      "actual": [],
+      "expected": [],
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_encoder_policy",
+      "actual": "auto",
+      "expected": "auto",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_frame_color",
+      "actual": "",
+      "expected": "",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_glow_color",
+      "actual": "",
+      "expected": "",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_glow_enabled",
+      "actual": true,
+      "expected": true,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_glow_strength",
+      "actual": 0.65,
+      "expected": 0.65,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_frame_width",
+      "actual": 3,
+      "expected": 3,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_mark_style",
+      "actual": "auto",
+      "expected": "auto",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_dof_shape",
+      "actual": "circle",
+      "expected": "circle",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_dof_center_x",
+      "actual": 0.5,
+      "expected": 0.5,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_dof_center_y",
+      "actual": 0.54,
+      "expected": 0.54,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_dof_radius",
+      "actual": 0.29,
+      "expected": 0.29,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_dof_feather",
+      "actual": 0.12,
+      "expected": 0.12,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_camera_side",
+      "actual": "auto",
+      "expected": "auto",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_sparkle_intensity",
+      "actual": 1.0,
+      "expected": 1.0,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_stack_gap",
+      "actual": 4,
+      "expected": 4,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_kill_icon_motion",
+      "actual": "instant",
+      "expected": "instant",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_auto_director_strength",
+      "actual": null,
+      "expected": null,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_camera_control_mode",
+      "actual": null,
+      "expected": null,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_camera_auto_excluded",
+      "actual": [],
+      "expected": [],
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_camera_auto_qa_approved",
+      "actual": {},
+      "expected": {},
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_work_kill_frame_id",
+      "actual": "",
+      "expected": "",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_work_kill_effect_id",
+      "actual": "",
+      "expected": "",
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_work_kill_review",
+      "actual": false,
+      "expected": false,
+      "status": "PASS"
+    },
+    {
+      "name": "default_field_work_kill_strength",
+      "actual": "strong",
+      "expected": "strong",
+      "status": "PASS"
+    },
+    {
+      "name": "motion_normalize_instant",
+      "actual": "instant",
+      "expected": "instant",
+      "status": "PASS"
+    },
+    {
+      "name": "motion_normalize_slide_left",
+      "actual": "slide_left",
+      "expected": "slide_left",
+      "status": "PASS"
+    },
+    {
+      "name": "motion_normalize_slide_right",
+      "actual": "slide_right",
+      "expected": "slide_right",
+      "status": "PASS"
+    },
+    {
+      "name": "motion_normalize_slide_up",
+      "actual": "slide_up",
+      "expected": "slide_up",
+      "status": "PASS"
+    },
+    {
+      "name": "motion_normalize_slide_down",
+      "actual": "slide_down",
+      "expected": "slide_down",
+      "status": "PASS"
+    },
+    {
+      "name": "motion_normalize_pop",
+      "actual": "pop",
+      "expected": "pop",
+      "status": "PASS"
+    },
+    {
+      "name": "motion_normalize_unknown_motion",
+      "actual": "instant",
+      "expected": "instant",
+      "status": "PASS"
+    },
+    {
+      "name": "retired_center_mosaic_removed",
+      "actual": {
+        "flash": 0.4,
+        "center_mosaic": 1.0
+      },
+      "expected": {
+        "flash": 0.4
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "retired_not_serialized",
+      "actual": {
+        "flash": 0.4
+      },
+      "expected": {
+        "flash": 0.4
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "unknown_Template_constructor_field",
+      "actual": "TypeError",
+      "expected": "TypeError",
+      "status": "PASS"
+    },
+    {
+      "name": "project_atomic_save_load",
+      "actual": {
+        "schema_version": 3,
+        "application": "LoL AutoCine",
+        "shots": {
+          "fixture-A": {
+            "profile": "auto",
+            "arc": 10.0,
+            "dolly": 3.0,
+            "yaw": 20.0,
+            "pre": 4.0,
+            "post": 3.0,
+            "intensity": "standard",
+            "keyframes": [],
+            "fx_override": false,
+            "temperature": 0.0,
+            "bloom": 0.25,
+            "focus_blur": 0.0,
+            "dof_blur": 0.0,
+            "highlight_pulse": 0.0,
+            "kill_icon_style": "inherit"
+          },
+          "fixture-B": {
+            "profile": "auto",
+            "arc": 10.0,
+            "dolly": 3.0,
+            "yaw": 0.0,
+            "pre": 7.0,
+            "post": 3.0,
+            "intensity": "standard",
+            "keyframes": [],
+            "fx_override": false,
+            "temperature": 0.0,
+            "bloom": 0.25,
+            "focus_blur": 0.0,
+            "dof_blur": 0.0,
+            "highlight_pulse": 0.0,
+            "kill_icon_style": "inherit"
+          }
+        },
+        "sequence": []
+      },
+      "expected": {
+        "schema_version": 3,
+        "application": "LoL AutoCine",
+        "shots": {
+          "fixture-A": {
+            "profile": "auto",
+            "arc": 10.0,
+            "dolly": 3.0,
+            "yaw": 20.0,
+            "pre": 4.0,
+            "post": 3.0,
+            "intensity": "standard",
+            "keyframes": [],
+            "fx_override": false,
+            "temperature": 0.0,
+            "bloom": 0.25,
+            "focus_blur": 0.0,
+            "dof_blur": 0.0,
+            "highlight_pulse": 0.0,
+            "kill_icon_style": "inherit"
+          },
+          "fixture-B": {
+            "profile": "auto",
+            "arc": 10.0,
+            "dolly": 3.0,
+            "yaw": 0.0,
+            "pre": 7.0,
+            "post": 3.0,
+            "intensity": "standard",
+            "keyframes": [],
+            "fx_override": false,
+            "temperature": 0.0,
+            "bloom": 0.25,
+            "focus_blur": 0.0,
+            "dof_blur": 0.0,
+            "highlight_pulse": 0.0,
+            "kill_icon_style": "inherit"
+          }
+        },
+        "sequence": []
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "undo_available",
+      "actual": true,
+      "expected": true,
+      "status": "PASS"
+    },
+    {
+      "name": "undo_restores",
+      "actual": {
+        "schema_version": 3,
+        "application": "LoL AutoCine",
+        "shots": {
+          "fixture-A": {
+            "profile": "auto",
+            "arc": 10.0,
+            "dolly": 3.0,
+            "yaw": 20.0,
+            "pre": 4.0,
+            "post": 3.0,
+            "intensity": "standard",
+            "keyframes": [],
+            "fx_override": false,
+            "temperature": 0.0,
+            "bloom": 0.25,
+            "focus_blur": 0.0,
+            "dof_blur": 0.0,
+            "highlight_pulse": 0.0,
+            "kill_icon_style": "inherit"
+          },
+          "fixture-B": {
+            "profile": "auto",
+            "arc": 10.0,
+            "dolly": 3.0,
+            "yaw": 0.0,
+            "pre": 7.0,
+            "post": 3.0,
+            "intensity": "standard",
+            "keyframes": [],
+            "fx_override": false,
+            "temperature": 0.0,
+            "bloom": 0.25,
+            "focus_blur": 0.0,
+            "dof_blur": 0.0,
+            "highlight_pulse": 0.0,
+            "kill_icon_style": "inherit"
+          }
+        },
+        "sequence": []
+      },
+      "expected": {
+        "schema_version": 3,
+        "application": "LoL AutoCine",
+        "shots": {
+          "fixture-A": {
+            "profile": "auto",
+            "arc": 10.0,
+            "dolly": 3.0,
+            "yaw": 20.0,
+            "pre": 4.0,
+            "post": 3.0,
+            "intensity": "standard",
+            "keyframes": [],
+            "fx_override": false,
+            "temperature": 0.0,
+            "bloom": 0.25,
+            "focus_blur": 0.0,
+            "dof_blur": 0.0,
+            "highlight_pulse": 0.0,
+            "kill_icon_style": "inherit"
+          },
+          "fixture-B": {
+            "profile": "auto",
+            "arc": 10.0,
+            "dolly": 3.0,
+            "yaw": 0.0,
+            "pre": 7.0,
+            "post": 3.0,
+            "intensity": "standard",
+            "keyframes": [],
+            "fx_override": false,
+            "temperature": 0.0,
+            "bloom": 0.25,
+            "focus_blur": 0.0,
+            "dof_blur": 0.0,
+            "highlight_pulse": 0.0,
+            "kill_icon_style": "inherit"
+          }
+        },
+        "sequence": []
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "redo_available",
+      "actual": true,
+      "expected": true,
+      "status": "PASS"
+    },
+    {
+      "name": "redo_yaw",
+      "actual": 50.0,
+      "expected": 50,
+      "status": "PASS"
+    },
+    {
+      "name": "project_version_1",
+      "actual": 2,
+      "expected": 2,
+      "status": "PASS"
+    },
+    {
+      "name": "project_version_2",
+      "actual": 2,
+      "expected": 2,
+      "status": "PASS"
+    },
+    {
+      "name": "project_version_3",
+      "actual": 2,
+      "expected": 2,
+      "status": "PASS"
+    },
+    {
+      "name": "future_version",
+      "actual": "ValueError",
+      "expected": "ValueError",
+      "status": "PASS"
+    },
+    {
+      "name": "bad_shots",
+      "actual": "ValueError",
+      "expected": "ValueError",
+      "status": "PASS"
+    },
+    {
+      "name": "bad_sequence",
+      "actual": "ValueError",
+      "expected": "ValueError",
+      "status": "PASS"
+    },
+    {
+      "name": "nonfinite_yaw_nan",
+      "actual": 0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "nonfinite_yaw_inf",
+      "actual": 0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "nonfinite_yaw_-inf",
+      "actual": 0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "nonfinite_yaw_bad",
+      "actual": 0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "nonfinite_yaw_None",
+      "actual": 0,
+      "expected": 0.0,
+      "status": "PASS"
+    },
+    {
+      "name": "keyframe_limit41",
+      "actual": "ValueError",
+      "expected": "ValueError",
+      "status": "PASS"
+    },
+    {
+      "name": "keyframe_duplicate_time_last",
+      "actual": [
+        {
+          "time": 1.0,
+          "yaw": 3.0,
+          "zoom": 0,
+          "fov": 0
+        }
+      ],
+      "expected": [
+        {
+          "time": 1.0,
+          "yaw": 3.0,
+          "zoom": 0.0,
+          "fov": 0.0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "name": "unknown_project_metadata_currently_not_preserved",
+      "actual": false,
+      "expected": false,
+      "status": "PASS"
+    }
+  ],
+  "passed": 119,
+  "failed": 0,
+  "scope": "actual unchanged Template AST and scene_project module; independent files only, no GUI/LoL pass",
+  "unknown_field_policy": "existing Template rejects unknown kwargs, SceneProject ignores unknown top metadata; preservation in proposed new schema is not an existing verified property"
+}

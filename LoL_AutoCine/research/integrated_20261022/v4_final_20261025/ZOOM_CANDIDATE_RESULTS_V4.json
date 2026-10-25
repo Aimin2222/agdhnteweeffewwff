@@ -1,0 +1,133 @@
+{
+  "cases": [
+    {
+      "strength": 0.15,
+      "revision": "legacy_scale4",
+      "graph": "scale=w='1920*(1+0.0400*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0400*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+      "rc": 0,
+      "frames": 36,
+      "spatial_std_mean": 0.29912525708201765,
+      "mean_rgb": [
+        255.0,
+        124.1029972029321,
+        255.0
+      ],
+      "not_product_revision": true
+    },
+    {
+      "strength": 0.15,
+      "revision": "candidate_auto_normalize",
+      "graph": "scale=w='1920*(1+0.0400*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0400*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+      "rc": 0,
+      "frames": 36,
+      "spatial_std_mean": 122.49596865398854,
+      "mean_rgb": [
+        126.37753038194444,
+        127.31449411651235,
+        121.88981336805556
+      ],
+      "not_product_revision": true
+    },
+    {
+      "strength": 0.15,
+      "revision": "candidate_quarter",
+      "graph": "scale=w='1920*(1+0.0400*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0400*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0.25",
+      "rc": 0,
+      "frames": 36,
+      "spatial_std_mean": 122.49596865398854,
+      "mean_rgb": [
+        126.37753038194444,
+        127.31449411651235,
+        121.88981336805556
+      ],
+      "not_product_revision": true
+    },
+    {
+      "strength": 0.5,
+      "revision": "legacy_scale4",
+      "graph": "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+      "rc": 0,
+      "frames": 36,
+      "spatial_std_mean": 0.2788082761631246,
+      "mean_rgb": [
+        255.0,
+        124.09122058256173,
+        255.0
+      ],
+      "not_product_revision": true
+    },
+    {
+      "strength": 0.5,
+      "revision": "candidate_auto_normalize",
+      "graph": "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+      "rc": 0,
+      "frames": 36,
+      "spatial_std_mean": 122.00984778386974,
+      "mean_rgb": [
+        128.8010334683642,
+        124.87364679783951,
+        119.22699604552469
+      ],
+      "not_product_revision": true
+    },
+    {
+      "strength": 0.5,
+      "revision": "candidate_quarter",
+      "graph": "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0.25",
+      "rc": 0,
+      "frames": 36,
+      "spatial_std_mean": 122.00984778386974,
+      "mean_rgb": [
+        128.8010334683642,
+        124.87364679783951,
+        119.22699604552469
+      ],
+      "not_product_revision": true
+    },
+    {
+      "strength": 0.9,
+      "revision": "legacy_scale4",
+      "graph": "scale=w='1920*(1+0.1150*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.1150*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+      "rc": 0,
+      "frames": 36,
+      "spatial_std_mean": 0.24127955811217713,
+      "mean_rgb": [
+        255.0,
+        124.07280623070987,
+        255.0
+      ],
+      "not_product_revision": true
+    },
+    {
+      "strength": 0.9,
+      "revision": "candidate_auto_normalize",
+      "graph": "scale=w='1920*(1+0.1150*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.1150*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+      "rc": 0,
+      "frames": 36,
+      "spatial_std_mean": 121.33911649221858,
+      "mean_rgb": [
+        131.533917341821,
+        122.09706983024691,
+        116.19586178626543
+      ],
+      "not_product_revision": true
+    },
+    {
+      "strength": 0.9,
+      "revision": "candidate_quarter",
+      "graph": "scale=w='1920*(1+0.1150*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.1150*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0.25",
+      "rc": 0,
+      "frames": 36,
+      "spatial_std_mean": 121.33911649221858,
+      "mean_rgb": [
+        131.533917341821,
+        122.09706983024691,
+        116.19586178626543
+      ],
+      "not_product_revision": true
+    }
+  ],
+  "status": "isolated saturation reproduced; two research normalization candidates, existing project must keep old revision",
+  "documentation": "https://ffmpeg.org/ffmpeg-filters.html#tmix",
+  "actual_LoL": "NOT_RUN"
+}
