@@ -1,0 +1,513 @@
+{
+  "screen_id": "R-F-main-1366x768",
+  "family": "researchF",
+  "reference_sha256": "9f536f24128f97f8b85fa5a4ec3709111a5a2948555905952943eec766a2c15e",
+  "reference_size": [
+    1366,
+    768
+  ],
+  "capture_size": [
+    1366,
+    768
+  ],
+  "size_result": "PASS",
+  "visual_result": "MEASURED",
+  "functional_result": "NOT_RUN",
+  "dynamic_image_mask": [
+    192.66666666666669,
+    313.0,
+    618.6666666666666,
+    348.0
+  ],
+  "unmasked_rgb_mae": 4.2102,
+  "regions": [
+    {
+      "region": "header",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "theme-switch",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "export",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "subbar",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "workspace",
+      "rgb_mae": 5.1429
+    },
+    {
+      "region": "kill-ribbon",
+      "rgb_mae": 15.365
+    },
+    {
+      "region": "scene-card-0",
+      "rgb_mae": 49.7543
+    },
+    {
+      "region": "scene-card-1",
+      "rgb_mae": 27.8065
+    },
+    {
+      "region": "scene-card-2",
+      "rgb_mae": 27.9082
+    },
+    {
+      "region": "scene-card-3",
+      "rgb_mae": 28.4488
+    },
+    {
+      "region": "preview-panel",
+      "rgb_mae": 0.8371
+    },
+    {
+      "region": "preview-stage",
+      "rgb_mae": 1.4418
+    },
+    {
+      "region": "preview-controls",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "phase-inspector",
+      "rgb_mae": 2.23
+    },
+    {
+      "region": "phase-0",
+      "rgb_mae": 0.6021
+    },
+    {
+      "region": "phase-1",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "phase-2",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "footer-17",
+      "rgb_mae": 5.9964
+    }
+  ],
+  "bounds": [
+    {
+      "region": "header",
+      "result": "PASS",
+      "expected": [
+        0,
+        0,
+        1366,
+        64
+      ],
+      "actual": [
+        0,
+        0,
+        1366,
+        64
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "theme-switch",
+      "result": "PASS",
+      "expected": [
+        893.625,
+        11.5,
+        149,
+        40
+      ],
+      "actual": [
+        893.625,
+        11.5,
+        149,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "export",
+      "result": "PASS",
+      "expected": [
+        1267.9375,
+        11.5,
+        82.0625,
+        40
+      ],
+      "actual": [
+        1267.9375,
+        11.5,
+        82.0625,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "subbar",
+      "result": "PASS",
+      "expected": [
+        0,
+        64,
+        1366,
+        52
+      ],
+      "actual": [
+        0,
+        64,
+        1366,
+        52
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "workspace",
+      "result": "PASS",
+      "expected": [
+        0,
+        116,
+        1366,
+        620
+      ],
+      "actual": [
+        0,
+        116,
+        1366,
+        620
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "kill-ribbon",
+      "result": "PASS",
+      "expected": [
+        16,
+        128,
+        1334,
+        130
+      ],
+      "actual": [
+        16,
+        128,
+        1334,
+        130
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-0",
+      "result": "PASS",
+      "expected": [
+        37,
+        181,
+        315.5,
+        64
+      ],
+      "actual": [
+        37,
+        181,
+        314,
+        62
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        -1.5,
+        -2.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-1",
+      "result": "PASS",
+      "expected": [
+        364.5,
+        182,
+        313.5,
+        62
+      ],
+      "actual": [
+        363,
+        181,
+        314,
+        62
+      ],
+      "delta": [
+        -1.5,
+        -1.0,
+        0.5,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-2",
+      "result": "PASS",
+      "expected": [
+        690,
+        182,
+        313.5,
+        62
+      ],
+      "actual": [
+        689,
+        181,
+        314,
+        62
+      ],
+      "delta": [
+        -1.0,
+        -1.0,
+        0.5,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-3",
+      "result": "PASS",
+      "expected": [
+        1015.5,
+        182,
+        313.5,
+        62
+      ],
+      "actual": [
+        1015,
+        181,
+        314,
+        62
+      ],
+      "delta": [
+        -0.5,
+        -1.0,
+        0.5,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-panel",
+      "result": "PASS",
+      "expected": [
+        16,
+        270,
+        972,
+        454
+      ],
+      "actual": [
+        16,
+        270,
+        972,
+        454
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-stage",
+      "result": "PASS",
+      "expected": [
+        27,
+        313,
+        950,
+        348
+      ],
+      "actual": [
+        27,
+        313,
+        950,
+        348
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-controls",
+      "result": "PASS",
+      "expected": [
+        27,
+        669,
+        950,
+        44
+      ],
+      "actual": [
+        27,
+        669,
+        950,
+        44
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "phase-inspector",
+      "result": "PASS",
+      "expected": [
+        1000,
+        270,
+        350,
+        454
+      ],
+      "actual": [
+        1000,
+        270,
+        350,
+        454
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "phase-0",
+      "result": "PASS",
+      "expected": [
+        1015,
+        365,
+        320,
+        155
+      ],
+      "actual": [
+        1015,
+        365,
+        320,
+        155
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "phase-1",
+      "result": "PASS",
+      "expected": [
+        1015,
+        530,
+        320,
+        155
+      ],
+      "actual": [
+        1015,
+        530,
+        320,
+        155
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "phase-2",
+      "result": "PASS",
+      "expected": [
+        1015,
+        695,
+        320,
+        155
+      ],
+      "actual": [
+        1015,
+        695,
+        320,
+        155
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "footer-17",
+      "result": "PASS",
+      "expected": [
+        0,
+        736,
+        1366,
+        32
+      ],
+      "actual": [
+        0,
+        736,
+        1366,
+        32
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # 重点5案：Windows UI比較の進捗（2026-10-25）
 
+**この文書は途中版の記録です。最終の重点5案ZIP・EXE操作結果・29画面比較は [PRIORITY5_FINAL_JA.md](PRIORITY5_FINAL_JA.md) を参照してください。**
+
 方針の根拠：ユーザー指定の [PR #51 コメント #6391460332](https://github.com/Aimin2222/agdhnteweeffewwff/pull/51#issuecomment-6391460332)。重点を旧テストB、旧案3、旧テストA、旧案6、新Eに変更。他7候補・監査29画面・12候補の切替は残した。**最終採用UIは未選定。**
 
 ## 最新のWindows比較途中版
