@@ -1,0 +1,22 @@
+LoL AutoCine V4の追加研究結果を保存・再取得確認しました。
+
+原寸フレーム652/652と3人工背景を確認。35FXの基本840合成＋Flash/grade840、動背景35動画、既存camera参照背景560合成を追加。6motionは144実描画条件を全decode、全652×6×3size×2fpsの23,472幾何条件も評価しました。
+
+元20動画は保持し、未確定10作品すべてを追加再生。2件以上の明確なキル通知は10→13/20。V06/V08/V21はほぼ全編を粗くサンプリングしましたが、全作品全編や音声聴取を完了したわけではありません。
+
+CPU Flashの後続pulse、Zoomのtmix倍率による飽和、縮小解像度のmirror/export差を独立再現。Flash v3候補の未来pulse先行も発見し、event開始gate候補24条件を追加。採用・本体修正はしていません。
+
+camera数学48、独立ルール133、設定/SceneProject119、警告fixture56試験は期待値一致。CPU/NVENC4encode成功。人工AV12中2条件は約−58.7msで要確認、OpenCL GPUFXはdevice -12で不可。人工試験をLoL音声/実機の合格にしていません。
+
+残件：原本制約19、portrait geometry651、通知未確定7動画、音声未聴取、実LoL/HUD/GPU FX、製品T01–14完全PASS0。長編の追加観察や人工試験はWorkで継続可能ですが、元資料とLoL入力・製品統合が必要な部分は実機パッケージへ引き継ぎました。
+
+UI未選定・素材承認未変更。本体/UI29/カメラ/録画/GPU/音声は変更0。保護1251ファイルhash一致。
+順序はUI29完成→ユーザーUI選定→既存70統合→Windows/LoL検証→研究採用判断→採用新機能実装を維持します。
+
+内容コミット：040ca2afd1756ddc9c79f6f4cae7b1fc1bb83b16
+保存先：https://github.com/Aimin2222/agdhnteweeffewwff/tree/040ca2afd1756ddc9c79f6f4cae7b1fc1bb83b16/LoL_AutoCine/research/integrated_20261022/v4_final_20261025
+ダウンロード案内：https://github.com/Aimin2222/agdhnteweeffewwff/tree/040ca2afd1756ddc9c79f6f4cae7b1fc1bb83b16/LoL_AutoCine/research/integrated_20261022/v4_final_20261025/DOWNLOADS_V4.md
+ローカル全体ZIP：C:\Users\saoan\Documents\Codex\2026-10-19\files-pasted-by-the-user-lol\outputs\AutoCine_Research_V4_20261025.zip
+全体ZIP SHA256：1ee3a7315713915c788ef5e55cdeb24e9fb914b2deb82439c0b2406736ad4543
+GitHub再取得：203ファイル、8ZIP内477ファイル一致。V4外変更0、既存削除0。
+確認レシートは封印済みZIPの外にあります。研究結果の保存を製品全体完成と解釈しないでください。
