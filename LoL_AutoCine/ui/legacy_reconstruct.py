@@ -72,7 +72,7 @@ def _legacy03_inspector(detailed: bool) -> str:
     if detailed:
         return (header + '<div class="legacy3-property-tabs">'
                 + _button('カメラ', 'native_editor_zone', 'camera', 'selected')
-                + _button('フレーム', 'work_gallery')
+                + '<button data-compare="material">フレーム</button>'
                 + _button('エフェクト', 'work_settings') + '</div>'
                 + '<h2>カメラショット</h2>' + _camera_modes() + _camera_numbers()
                 + '<div class="legacy3-detail-actions">'

@@ -54,6 +54,9 @@ TEST_B_FRAME_CARDS = (
 
 
 def default_preferences_path() -> Path:
+    isolated = os.environ.get("AUTOCINE_UI_COMPARE_PREFS")
+    if isolated:
+        return Path(isolated)
     base = Path(os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local")
     return base / "LoL_AutoCine" / "ui29_workspace.json"
 

@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -230,8 +231,10 @@ def main(argv=None) -> int:
         handoff = Path(temp) / "backend.json"
         log_path = Path(temp) / "backend.log"
         with log_path.open("wb") as log:
+            child_env = os.environ.copy()
+            child_env["AUTOCINE_UI_COMPARE_PREFS"] = str(Path(temp) / "comparison_workspace.json")
             child = subprocess.Popen(_child_command(handoff), cwd=ROOT, stdout=log,
-                                     stderr=subprocess.STDOUT,
+                                     stderr=subprocess.STDOUT, env=child_env,
                                      creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
             url = None
             try:

@@ -13,7 +13,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from ui.audit29_runtime import Audit29Runtime, SCREENS
+from ui.audit29_runtime import Audit29Runtime, SCREENS, default_preferences_path
 from ui.audit29_server import UI29Server
 from ui.comparison_detail import DERIVED_DETAILS, render_detail, render_material
 from ui.legacy_reconstruct import render_legacy
@@ -126,6 +126,12 @@ class Audit29RuntimeTests(unittest.TestCase):
         self.assertEqual(len(SCREENS), 16)
         self.assertEqual(len({screen["family"] for screen in SCREENS.values()}), 7)
 
+    def test_gui_qa_uses_isolated_comparison_preference_file(self):
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            isolated = Path(directory) / "qa_preferences.json"
+            with patch.dict("os.environ", {"AUTOCINE_UI_COMPARE_PREFS": str(isolated)}):
+                self.assertEqual(default_preferences_path(), isolated)
+
     def test_compact_test_b_screen_keeps_real_controls(self):
         html = render_legacy(SCREENS["T-B-S"])
         self.assertEqual(html.count('class="testb-compact-frame"'), 4)
@@ -133,6 +139,10 @@ class Audit29RuntimeTests(unittest.TestCase):
         self.assertIn('data-setting="third_yaw" type="number"', html)
         self.assertIn('data-action="screen" data-action-value="T-B-F"', html)
         self.assertIn('キル選択タイムライン', html)
+
+    def test_hybrid_detail_frame_tab_opens_same_candidate_material(self):
+        html = render_legacy(SCREENS["L03-D"])
+        self.assertIn('<button data-compare="material">フレーム</button>', html)
 
     def test_switch_and_theme_preserve_model(self):
         app = App()
