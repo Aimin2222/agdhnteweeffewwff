@@ -19,7 +19,8 @@ APP = Path(__file__).resolve().parents[1]
 
 
 def run(*args: str) -> None:
-    subprocess.run([sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean", *args], cwd=APP, check=True)
+    subprocess.run([sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean", *args],
+                   cwd=APP, check=True, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
 
 
 def copy_tree(source: Path, destination: Path) -> None:
@@ -45,8 +46,8 @@ def validate_bundle(bundle: Path) -> None:
         "_internal/VERSION.txt",
         "_internal/assets/work_kill_assets/catalog.json",
         "_internal/tools/bin/lol_audio_helper.exe",
-        "_internal/design/ui/implementation_audit_29_20261021/SCREENS_29.json",
-        "_internal/design/ui/ui_rethink_20261021/ui.css",
+        "_internal/ui/comparison7_screens.json",
+        "_internal/design/ui/ui_rethink_20261021/ui7.css",
         "_internal/design/ui/ui29_legacy/legacy.css",
         "_internal/design/ui/ui29_legacy/reconstructed.css",
         "_internal/ui/audit29_client.js",
@@ -58,6 +59,11 @@ def validate_bundle(bundle: Path) -> None:
         missing.append("_internal/imageio_ffmpeg/binaries/ffmpeg-*.exe")
     if missing:
         raise RuntimeError("Portable bundle missing required files: " + ", ".join(missing))
+    design = bundle / "_internal" / "design" / "ui" / "ui_rethink_20261021"
+    excluded = [path.name for path in design.iterdir()
+                if path.name.startswith(("A_", "B_", "C_", "D_", "F_"))]
+    if excluded or (bundle / "_internal/design/ui/implementation_audit_29_20261021").exists():
+        raise RuntimeError("Excluded candidate data leaked into portable bundle: " + ", ".join(excluded))
 
 
 def main() -> None:
@@ -65,6 +71,8 @@ def main() -> None:
     parser.add_argument("--audio-helper", type=Path, required=True, help="MSVC-built lol_audio_helper.exe")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--package-only", action="store_true", help="Reuse already built EXEs")
+    parser.add_argument("--skip-exe-smoke", action="store_true",
+                        help="Do not launch Windows GUI executables on a shared desktop")
     parser.add_argument("--webview2-fixed-folder", type=Path,
                         help="Optional extracted official WebView2 Fixed Version folder")
     args = parser.parse_args()
@@ -92,7 +100,7 @@ def main() -> None:
     shutil.copy2(ui29_bundle / "LoL_AutoCine_UI29.exe", bundle / "LoL_AutoCine_UI29.exe")
     copy_tree(ui29_bundle / "_internal", internal)
     shutil.copy2(dist / "LoL_AutoCine_Capture.exe", bundle / "LoL_AutoCine_Capture.exe")
-    for name in ("assets", "qa", "templates"):
+    for name in ("assets", "templates"):
         copy_tree(APP / name, internal / name)
     shutil.copy2(APP / "VERSION.txt", internal / "VERSION.txt")
     # The Codex-bundled Python runtime adds a local CA exclusion file to
@@ -101,13 +109,15 @@ def main() -> None:
     rejected_cas = Path(ssl.__file__).with_name("codex-rejected-cas.pem")
     if rejected_cas.is_file():
         shutil.copy2(rejected_cas, internal / rejected_cas.name)
-    for name in ("ui_rethink_20261021", "ui29_legacy"):
-        copy_tree(APP / "design" / "ui" / name, internal / "design" / "ui" / name)
-    audit = internal / "design" / "ui" / "implementation_audit_29_20261021"
-    audit.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(APP / "design" / "ui" / "implementation_audit_29_20261021" / "SCREENS_29.json",
-                 audit / "SCREENS_29.json")
+    copy_tree(APP / "design" / "ui" / "ui29_legacy", internal / "design" / "ui" / "ui29_legacy")
+    flow = APP / "design" / "ui" / "ui_rethink_20261021"
+    flow_bundle = internal / "design" / "ui" / "ui_rethink_20261021"
+    flow_bundle.mkdir(parents=True, exist_ok=True)
+    for name in ("E_main.html", "E_main_dark.html", "E_studio.html", "E_frames.html", "ui7.css"):
+        shutil.copy2(flow / name, flow_bundle / name)
+    copy_tree(flow / "assets", flow_bundle / "assets")
     (internal / "ui").mkdir(parents=True, exist_ok=True)
+    shutil.copy2(APP / "ui" / "comparison7_screens.json", internal / "ui" / "comparison7_screens.json")
     shutil.copy2(APP / "ui" / "audit29_client.js", internal / "ui" / "audit29_client.js")
     shutil.copy2(APP / "ui" / "comparison_detail.css", internal / "ui" / "comparison_detail.css")
     (internal / "tools" / "bin").mkdir(parents=True, exist_ok=True)
@@ -126,7 +136,7 @@ def main() -> None:
             "msedgewebview2_sha256": hashlib.sha256(fixed_exe.read_bytes()).hexdigest(),
             "official_download_page": "https://developer.microsoft.com/en-us/microsoft-edge/webview2/",
         }
-    guide = APP / "docs" / "ui_integration_20261020" / "TEST_GUIDE_JA.md"
+    guide = APP / "docs" / "ui_comparison7" / "TEST_GUIDE_JA.md"
     shutil.copy2(guide, bundle / "TEST_GUIDE_JA.md")
     for name in ("settings.json", "diagnostics"):
         path = internal / name
@@ -136,13 +146,13 @@ def main() -> None:
             path.unlink()
     helper_hash = hashlib.sha256(helper.read_bytes()).hexdigest()
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=APP, text=True).strip()
-    manifest = {"kind": "working AutoCine UI comparison", "layouts": list(range(1, 10)),
-                "ui29_total_screens": 29, "ui29_groups": 12,
-                "priority_candidates": ["testB", "legacy03", "testA", "legacy06", "researchE"],
-                "ui29_partially_interactive_screens": 29,
-                "ui29_accepted_screens": 0,
+    manifest = {"kind": "working AutoCine seven-candidate UI comparison", "layouts": list(range(1, 10)),
+                "comparison_screens": 16, "comparison_groups": 7,
+                "candidates": ["testB", "legacy03", "testA", "legacy06", "researchE", "legacy02", "legacy05"],
+                "visual_accepted_screens": 0,
                 "webview2_fixed_included": bool(args.webview2_fixed_folder),
                 "webview2_fixed": fixed_info,
+                "exe_smoke": "NOT_RUN_SHARED_DESKTOP" if args.skip_exe_smoke else "PASS",
                 "source_commit": commit,
                 "audio_helper_sha256": helper_hash,
                 "note": "LoL/WGC/NVENC/audio require Windows hardware validation."}
@@ -150,12 +160,11 @@ def main() -> None:
     (bundle / "README_TEST_JA.txt").write_text(
         "LoL AutoCine UI比較テスト版（実動作・検証用）\n"
         "LoL_AutoCine.exe は現行の配置1～9です。従来のBAT起動もこの経路です。\n"
-        "LoL_AutoCine_UI29.exe はWebView2内蔵のUI29比較版です。ブラウザ操作は不要です。\n"
-        "UI29初回起動時は重点5案を先頭にした12候補の一覧から選びます。画面右端の『UI比較』タブから全29画面へ移れます（Ctrl+Shift+Uでも開閉）。\n"
-        "重点5案は旧テストB・旧案3・旧テストA・旧案6・新Eです。『詳細編集へ』と『メインへ戻る』で往復できます。\n"
-        "先行して作成した他の3案の詳細導線も保持しています。\n"
-        "新B・新C・旧テストAの詳細編集は原画像がないため、明示した比較用派生画面です。\n"
-        "UI29は29画面を操作できる途中版ですが、外観と全操作の合格は未完了です。\n"
+        "LoL_AutoCine_UI29.exe はWebView2を使う7案比較版です。ブラウザ操作は不要です。\n"
+        "初回起動・右端の『UI比較』・Ctrl+Shift+U は7候補だけを表示します。\n"
+        "対象は旧テストB・旧案3・旧テストA・旧案6・新E・旧案2・旧案5です。\n"
+        "旧テストA・旧案2・旧案5の詳細画面は原画像がないため補完と明示しています。\n"
+        "外観と全操作の合格は未完了です。LoL実機検証は未完了です。\n"
         "LoL実機検証は未完了です。\n"
         + ("Microsoft WebView2 Fixed Runtime x64を同梱しています。別途Runtimeのインストールは不要です。\n"
            "Windows 10では展開先フォルダの権限要件に注意してください。Fixed Runtimeは自動更新されません。\n"
@@ -166,17 +175,18 @@ def main() -> None:
            "WindowsのMicrosoft Edge WebView2 Runtimeが必要です（このZIPには未同梱）。\n")
         + "同梱のLoL_AutoCine_Capture.exeはミラー用です。削除しないでください。\n"
         "リプレイ接続・NVENC・ゲーム音声は各PCで実機確認が必要です。\n"
-        "操作順はGitHubのdocs/ui_integration_20261020/TEST_GUIDE_JA.mdを参照してください。\n",
+        "操作順は同梱のTEST_GUIDE_JA.mdを参照してください。\n",
         encoding="utf-8")
     validate_bundle(bundle)
     # A windowed PyInstaller process can stay open on an exception dialog;
     # explicitly test import/resources with a terminating non-GUI entry path.
-    subprocess.run([str(bundle / "LoL_AutoCine.exe"), "--smoke-test"],
-                   cwd=bundle, timeout=30, check=True)
-    subprocess.run([str(bundle / "LoL_AutoCine_UI29.exe"), "--ui29-smoke"],
-                   cwd=bundle, timeout=60, check=True)
-    subprocess.run([str(bundle / "LoL_AutoCine_Capture.exe"), "--help"],
-                   cwd=bundle, timeout=30, check=True, stdout=subprocess.DEVNULL)
+    if not args.skip_exe_smoke:
+        subprocess.run([str(bundle / "LoL_AutoCine.exe"), "--smoke-test"],
+                       cwd=bundle, timeout=30, check=True)
+        subprocess.run([str(bundle / "LoL_AutoCine_UI29.exe"), "--ui29-smoke"],
+                       cwd=bundle, timeout=60, check=True)
+        subprocess.run([str(bundle / "LoL_AutoCine_Capture.exe"), "--help"],
+                       cwd=bundle, timeout=30, check=True, stdout=subprocess.DEVNULL)
     target = output / "LoL_AutoCine_UI_Comparison_Portable.zip"
     make_zip(bundle, target)
     print(target)

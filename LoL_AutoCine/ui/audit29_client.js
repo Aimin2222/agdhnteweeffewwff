@@ -124,7 +124,7 @@
     applyTheme(data.workspace.theme);
     const themeChoice = document.querySelector('#theme');
     if (themeChoice && themeChoice.value !== data.workspace.theme) themeChoice.value = data.workspace.theme;
-    picker.value = familyStart.get(data.workspace.candidate_id) || 'R-A-main';
+    picker.value = familyStart.get(data.workspace.candidate_id) || 'T-B-M';
     const tag = document.querySelector('.preview-tag');
     if (tag) tag.textContent = data.preview.mirror_requested ?
       `UI映像更新 ${displayedFps.toFixed(1)} fps / 合成表示 ${data.preview.measured_fps} fps / 目標 ${data.preview.target_hz}` :
@@ -669,8 +669,14 @@
         setTimeout(()=>panel.classList.remove('attention'),1200);
       }
     }
-    else if (found?.[0] === 'screen') action('screen',{id:button.dataset.actionValue})
-      .then(()=>openScreen(button.dataset.actionValue)).catch(e=>message(e.message));
+    else if (found?.[0] === 'screen') {
+      const id=button.dataset.actionValue;
+      const route=id===currentViews?.main?'main':id===currentViews?.detail?'detail':null;
+      if(route) comparisonRoute(route);
+      else action('screen',{id}).then(()=>openScreen(id)).catch(e=>message(e.message));
+    }
+    else if (found?.[0] === 'edit_mode' && currentViews)
+      comparisonRoute(found[1].value==='easy'?'main':'detail');
     else if (found?.[0] === 'export_menu') chooseExport();
     else if (found?.[0] === 'project_menu') chooseProjectOperation();
     else if (found?.[0] === 'apply_selected_frame') {
@@ -699,33 +705,34 @@
   const familyStart = new Map([
     ['testB','T-B-M'],['legacy03','L03-N'],['testA','T-A-M'],
     ['legacy06','L06-L'],['researchE','R-E-main'],
-    ['legacy02','L02-M'],['legacy05','L05-M'],['researchA','R-A-main'],
-    ['researchB','R-B-main'],['researchC','R-C-main'],
-    ['researchD','R-D-main'],['researchF','R-F-main']
+    ['legacy02','L02-M'],['legacy05','L05-M']
   ]);
   function openScreen(id) { location.assign(endpoint(`/ui/${encodeURIComponent(id)}`)); }
-  const priority8 = new Map([
-    ['legacy03',{main:'L03-N',detail:'L03-D'}],
-    ['researchC',{main:'R-C-main',detail:'derived'}],
-    ['researchB',{main:'R-B-main',detail:'derived'}],
-    ['researchA',{main:'R-A-main',detail:'R-A-camera',material:'R-A-frames'}],
+  const candidateViews = new Map([
+    ['legacy03',{main:'L03-N',detail:'L03-D',material:'derived-material'}],
     ['testB',{main:'T-B-M',detail:'T-B-C',material:'T-B-F'}],
-    ['testA',{main:'T-A-M',detail:'derived'}],
-    ['legacy06',{main:'L06-L',detail:'L06-E'}],
-    ['researchE',{main:'R-E-main',detail:'R-E-studio',material:'R-E-frames'}]
+    ['testA',{main:'T-A-M',detail:'derived',material:'derived-material'}],
+    ['legacy06',{main:'L06-L',detail:'L06-E',material:'L06-L'}],
+    ['researchE',{main:'R-E-main',detail:'R-E-studio',material:'R-E-frames'}],
+    ['legacy02',{main:'L02-M',detail:'derived',material:'derived-material'}],
+    ['legacy05',{main:'L05-M',detail:'derived',material:'derived-material'}]
   ]);
   const currentFamily=window.AUTOCINE_DERIVED_DETAIL ||
-    [...priority8].find(([,views])=>Object.values(views).includes(screenId))?.[0];
-  const currentViews=priority8.get(currentFamily);
+    (screenId.startsWith('R-E-') ? 'researchE' :
+      [...candidateViews].find(([,views])=>Object.values(views).includes(screenId))?.[0]);
+  const currentViews=candidateViews.get(currentFamily);
   function comparisonRoute(kind) {
     if (!currentViews) return;
     const target=currentViews[kind] || currentViews.detail;
-    if (target==='derived') {
-      // A derivative has no audit image and remains outside the 29 audited routes.
+    const mode=kind==='main'?'easy':'advanced';
+    if (target==='derived' || target==='derived-material') {
+      // A derivative has no audit image and is labelled as a complement.
       const mainId=currentViews.main;
-      action('screen',{id:mainId}).then(()=>location.assign(
-        endpoint(`/compare/detail/${encodeURIComponent(currentFamily)}`))).catch(e=>message(e.message));
-    } else action('screen',{id:target}).then(()=>openScreen(target)).catch(e=>message(e.message));
+      const route=target==='derived' ? 'detail' : 'material';
+      action('comparison_edit_mode',{value:mode}).then(()=>action('screen',{id:mainId})).then(()=>location.assign(
+        endpoint(`/compare/${route}/${encodeURIComponent(currentFamily)}`))).catch(e=>message(e.message));
+    } else action('comparison_edit_mode',{value:mode}).then(()=>action('screen',{id:target}))
+      .then(()=>openScreen(target)).catch(e=>message(e.message));
   }
   document.querySelectorAll('[data-compare]').forEach(button=>
     button.addEventListener('click',event=>{event.stopPropagation();comparisonRoute(button.dataset.compare)}));
@@ -745,17 +752,10 @@
     });
     document.body.append(routeButton);
   }
-  if ((currentFamily==='researchB' || currentFamily==='researchC' ||
-       (currentFamily==='researchE' && screenId==='R-E-main')) &&
+  if (currentFamily==='researchE' && screenId==='R-E-main' &&
       !window.AUTOCINE_DERIVED_DETAIL && !document.querySelector('[data-ui="scene-list"]')) {
     // The source mock has no scene list. Keep a compact real-operation drawer on
     // the main view without changing the audited composition or inventing data.
-    const scenesButton=document.createElement('button');
-    scenesButton.type='button';scenesButton.textContent='シーン・スキャン';
-    scenesButton.style.cssText='position:fixed;left:0;top:27%;z-index:2000;padding:8px 10px;' +
-      'border:2px solid #075fe0;border-left:0;border-radius:0 7px 7px 0;' +
-      'background:#fff;color:#0746a7;font:600 13px Yu Gothic UI,Meiryo,sans-serif;' +
-      'box-shadow:0 3px 12px #0004;cursor:pointer';
     const drawer=document.createElement('section');
     drawer.dataset.ui='scene-list';
     drawer.setAttribute('aria-label','実シーン・スキャン操作');
@@ -771,29 +771,24 @@
     const toggleScenes=event=>{
       event.stopPropagation();drawer.style.display=drawer.style.display==='none'?'block':'none';
     };
-    if(currentFamily==='researchE'){
-      const findStep=[...document.querySelectorAll('.layout-E .step')]
-        .find(step=>step.querySelector('strong')?.textContent.trim()==='02');
-      if(findStep){
-        findStep.setAttribute('role','button');findStep.setAttribute('tabindex','0');
-        findStep.setAttribute('aria-label','見どころ：試合全体スキャンとシーン一覧');
-        findStep.title='クリックして試合全体スキャンとシーン一覧を開く';
-        findStep.style.cursor='pointer';
-        findStep.addEventListener('click',toggleScenes);
-        findStep.addEventListener('keydown',event=>{
-          if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleScenes(event)}
-        });
-      }
-    }else{
-      scenesButton.addEventListener('click',toggleScenes);
-      document.body.append(scenesButton);
+    const findStep=[...document.querySelectorAll('.layout-E .step')]
+      .find(step=>step.querySelector('strong')?.textContent.trim()==='02');
+    if(findStep){
+      findStep.setAttribute('role','button');findStep.setAttribute('tabindex','0');
+      findStep.setAttribute('aria-label','見どころ：試合全体スキャンとシーン一覧');
+      findStep.title='クリックして試合全体スキャンとシーン一覧を開く';
+      findStep.style.cursor='pointer';
+      findStep.addEventListener('click',toggleScenes);
+      findStep.addEventListener('keydown',event=>{
+        if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleScenes(event)}
+      });
     }
     document.body.append(drawer);
   }
   const switchButton = document.createElement('button');
   switchButton.type = 'button';
   switchButton.textContent = 'UI比較';
-  switchButton.title = '12候補・29画面を切り替える';
+  switchButton.title = '7候補を切り替える';
   switchButton.setAttribute('aria-controls', 'ui29-switch-panel');
   switchButton.setAttribute('aria-expanded', 'false');
   switchButton.style.cssText = 'position:fixed;right:0;top:50%;z-index:2001;' +
@@ -812,7 +807,7 @@
     'border-radius:10px;background:#fff;color:#172b3e;' +
     'font:14px Yu Gothic UI,Meiryo,sans-serif;box-shadow:0 6px 24px #0005';
   const panelTitle = document.createElement('strong');
-  panelTitle.textContent = '重点5案・全12候補／29画面を比較';
+  panelTitle.textContent = '7案のUIを比較';
   panelTitle.style.cssText = 'display:block;margin-bottom:12px;font-size:16px';
   switchPanel.append(panelTitle);
   function showSwitchPanel(visible) {
@@ -827,29 +822,19 @@
   });
   switchPanel.addEventListener('click', event => event.stopPropagation());
   const picker = document.createElement('select');
-  picker.setAttribute('aria-label','12候補を切り替える');
+  picker.setAttribute('aria-label','7候補を切り替える');
   picker.style.cssText = 'display:block;width:100%;box-sizing:border-box;padding:8px;margin:4px 0 12px';
   for (const [family,id] of familyStart) {
     const option=document.createElement('option');option.value=id;
-    option.textContent=(['testB','legacy03','testA','legacy06','researchE'].includes(family)?'★ ':'') +
-      family + (family.startsWith('research') || family==='testA'?'':'（再構成中）');
+    option.textContent=family;
     picker.append(option);
   }
-  picker.value='R-A-main';
+  picker.value='T-B-M';
   picker.addEventListener('change',()=> action('screen',{id:picker.value}).then(()=>openScreen(picker.value)).catch(e=>message(e.message)));
   const familyLabel = document.createElement('label');
   familyLabel.textContent = '候補グループ';
   familyLabel.append(picker);
   switchPanel.append(familyLabel);
-  const viewPicker = document.createElement('select');
-  viewPicker.setAttribute('aria-label','29画面IDを選択');
-  viewPicker.style.cssText = 'display:block;width:100%;box-sizing:border-box;padding:8px;margin:4px 0 12px';
-  viewPicker.addEventListener('change',()=>action('screen',{id:viewPicker.value})
-    .then(()=>openScreen(viewPicker.value)).catch(e=>message(e.message)));
-  const viewLabel = document.createElement('label');
-  viewLabel.textContent = '個別画面（全29画面）';
-  viewLabel.append(viewPicker);
-  switchPanel.append(viewLabel);
   if (currentViews) {
     const routes=document.createElement('div');
     routes.style.cssText='display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px';
@@ -873,7 +858,7 @@
   themeLabel.textContent='配色';themeLabel.append(themePicker);switchPanel.append(themeLabel);
   const chooserButton = document.createElement('button');
   chooserButton.type = 'button';
-  chooserButton.textContent = '12候補の一覧を開く';
+  chooserButton.textContent = '7候補の一覧を開く';
   chooserButton.style.cssText = 'padding:8px 12px;border:1px solid #075fe0;' +
     'border-radius:6px;background:#eef5ff;color:#0746a7;cursor:pointer';
   chooserButton.addEventListener('click', () => location.assign(endpoint('/choose')));
@@ -889,36 +874,22 @@
   document.querySelectorAll('a[href$=".html"]').forEach(link=>link.addEventListener('click',event=>{
     event.preventDefault();
     const filename=link.getAttribute('href').split('/').pop();
-    if (currentFamily==='researchB' || currentFamily==='researchC') {
-      // The mock links to E/A are placeholders. Keep the user within this candidate.
-      if (filename==='E_studio.html' || filename==='A_camera.html' || filename==='A_frames.html') {
-        comparisonRoute('detail');return;
-      }
-    }
-    if (currentFamily==='researchE' && filename==='A_camera.html') {
-      // E has no camera-only audit image; its own Studio screen contains the camera controls.
-      action('screen',{id:'R-E-studio'}).then(()=>openScreen('R-E-studio')).catch(e=>message(e.message));
-      return;
-    }
     const prefix=screenId.split('-')[1];
     const suffix=filename.replace('.html','').replace(/^A_|^E_/,'');
     const target=`R-${prefix}-${suffix.replaceAll('_','-')}`;
     if (state.value?.workspace.screens.some(row=>row.id===target)) {
-      action('screen',{id:target}).then(()=>openScreen(target)).catch(e=>message(e.message));
+      const kind=target===currentViews?.main?'main':
+        target===currentViews?.detail?'detail':target===currentViews?.material?'material':null;
+      if (kind) comparisonRoute(kind);
+      else action('screen',{id:target}).then(()=>openScreen(target)).catch(e=>message(e.message));
     } else message('この候補内の補助画面は原画未提供です。別候補へ自動切替しません。');
   }));
   snapshot().then(()=>{
     for (const row of state.value.workspace.screens) {
       const familyOption = [...picker.options].find(option => option.value === familyStart.get(row.family));
       if (familyOption) familyOption.textContent =
-        (['testB','legacy03','testA','legacy06','researchE'].includes(row.family)?'★ ':'') + row.name;
-      const option=document.createElement('option');
-      option.value=row.id;
-      option.textContent=`${row.id} — ${row.name}` + (row.implemented?'':'（再構成中）');
-      option.disabled=!row.implemented;
-      viewPicker.append(option);
+        row.name;
     }
-    viewPicker.value=screenId;
     themePicker.value=state.value.workspace.theme;
   }).catch(error=>message(error.message));
   setInterval(()=>snapshot().catch(()=>{}), 1200);

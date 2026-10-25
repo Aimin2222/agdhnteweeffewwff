@@ -1,6 +1,6 @@
 """Clearly labelled comparison detail views when the audit has no original image.
 
-These are additional routes, not entries in the 29-screen visual audit.
+These are additional routes, not entries in the original visual audit.
 They share the same runtime/client as the audited screens.
 """
 from __future__ import annotations
@@ -9,9 +9,13 @@ from html import escape
 
 
 DERIVED_DETAILS = {
-    "researchB": ("Creator", "プリセットから細部へ", "R-B-main", "creator"),
-    "researchC": ("Director", "ショットから細部へ", "R-C-main", "director"),
     "testA": ("現行整理", "従来の編集領域", "T-A-M", "classic"),
+    "legacy02": ("標準編集", "プロパティから細部へ", "L02-M", "standard"),
+    "legacy05": ("ウィザード", "手順3・見た目を整える", "L05-M", "wizard"),
+}
+DERIVED_MATERIALS = {
+    **DERIVED_DETAILS,
+    "legacy03": ("ハイブリッド", "素材選択", "L03-N", "standard"),
 }
 
 
@@ -80,12 +84,12 @@ def render_detail(family: str, token: str) -> str:
         <button data-action="preview_play">演出プレビュー再生</button>
         <button data-action="preview_stop">プレビュー停止</button></div>
     </section>'''
-    if layout == "creator":
-        body = f'<aside class="column">{scene}{controls.split("<section class=\"box asset-box\"")[0]}</aside><main class="column">{preview}<div class="controls">' + '<section class="box asset-box"' + controls.split('<section class="box asset-box"', 1)[1] + '</div></main>'
-    elif layout == "director":
+    if layout == "classic":
+        body = f'<aside class="column">{scene}{controls}</aside><main class="column">{preview}</main>'
+    elif layout == "wizard":
         body = f'<aside class="column">{scene}</aside><main class="column">{preview}<div class="controls">{controls}</div></main>'
     else:
-        body = f'<aside class="column">{scene}{controls}</aside><main class="column">{preview}</main>'
+        body = f'<aside class="column">{scene}</aside><main class="column">{preview}</main><aside class="column">{controls}</aside>'
     return f'''<!doctype html><html lang="ja" data-theme="light"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>AutoCine {escape(title)} 詳細比較</title>
 <link rel="stylesheet" href="/runtime/comparison-detail.css?token={escape(token)}"></head>
@@ -93,13 +97,48 @@ def render_detail(family: str, token: str) -> str:
   <span class="draft">原画像未提供・比較用派生詳細</span><button data-action="open_replay">リプレイを開く</button>
   <button data-action="native_settings">基本設定</button><button data-action="export_menu">動画を作成</button></header>
 <nav class="comparison-nav"><button data-compare="main">← メインに戻る</button>
-  <strong>詳細編集</strong><button data-action="edit_mode" data-action-value="advanced">既存の詳細編集も開く</button></nav>
+  <strong>詳細編集</strong><button data-compare="material">素材画面へ →</button>
+  <button data-action="native_editor_zone" data-action-value="scene">既存の詳細編集も開く</button></nav>
 <div class="workspace">{body}</div>
 <section class="box timeline" data-ui="timeline"><h2>タイムライン</h2><div class="ruler"><span>—</span><span>—</span><span>—</span></div>
   <div class="lane"><strong class="lane-label">スキャン後に表示</strong><div class="lane-bar"><span class="kill-line"></span></div></div>
   <div class="trim"><label>キル前 <input type="number" data-setting="pre" value="5" step="0.1">秒</label>
     <label>キル後 <input type="number" data-setting="post" value="3" step="0.1">秒</label></div></section>
-<footer>この派生詳細には監査原画像がありません。29画面の画像一致判定には含めません。LoL接続・書き出しは実機未検証です。</footer>
+<footer>この補完詳細には原画像がありません。元画像との一致判定には含めません。LoL接続・書き出しは実機未検証です。</footer>
+<script>window.AUTOCINE_TOKEN={token!r};window.AUTOCINE_SCREEN={main_id!r};
+window.AUTOCINE_DERIVED_DETAIL={family!r};</script>
+<script src="/runtime/client.js?token={escape(token)}"></script></body></html>'''
+
+
+def render_material(family: str, token: str) -> str:
+    title, _, main_id, layout = DERIVED_MATERIALS[family]
+    return f'''<!doctype html><html lang="ja" data-theme="light"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>AutoCine {escape(title)} 素材比較</title>
+<link rel="stylesheet" href="/runtime/comparison-detail.css?token={escape(token)}"></head>
+<body class="detail-{layout} material-workspace"><header><strong>LoL AutoCine</strong><span>{escape(title)} / キルフレーム・素材</span>
+<span class="draft">原画像未提供・比較用補完画面</span><button data-action="work_gallery">Work素材図鑑</button>
+<button data-action="export_menu">動画を作成</button></header>
+<nav class="comparison-nav"><button data-compare="main">← メイン</button><button data-compare="detail">← 詳細編集</button>
+<strong>キルフレーム・素材</strong></nav>
+<main class="material-content"><section class="box"><h2>素材を選択</h2>
+<p>選択中：<strong data-ui="selected-frame-name">未選択</strong></p>
+<p data-ui="selected-frame-status">品質状態を確認中</p>
+<div class="asset-grid">
+<button class="material-card" data-ui="material-card-0"><img class="frame-thumb" alt=""><h3>素材</h3><span class="badge">—</span></button>
+<button class="material-card" data-ui="material-card-1"><img class="frame-thumb" alt=""><h3>素材</h3><span class="badge">—</span></button>
+<button class="material-card" data-ui="material-card-2"><img class="frame-thumb" alt=""><h3>素材</h3><span class="badge">—</span></button>
+</div><button data-action="work_gallery">すべての素材を見る</button></section>
+<section class="box"><h2>同名FX・登場アニメ</h2><p>連動FX：<strong data-ui="selected-effect-name">未選択</strong></p>
+<div class="choice-row"><button data-action="effect_strength" data-action-value="weak">弱</button>
+<button data-action="effect_strength" data-action-value="strong">強</button></div>
+<div class="motion-grid"><button class="motion" data-action="motion" data-action-value="instant">一気に表示</button>
+<button class="motion" data-action="motion" data-action-value="slide_left">左から登場</button>
+<button class="motion" data-action="motion" data-action-value="slide_right">右から登場</button>
+<button class="motion" data-action="motion" data-action-value="slide_up">下から登場</button>
+<button class="motion" data-action="motion" data-action-value="slide_down">上から登場</button>
+<button class="motion" data-action="motion" data-action-value="pop">パッと飛び出す</button></div>
+<button data-action="native_editor_zone" data-action-value="fx">詳細FX設定</button></section></main>
+<footer>この素材画面は元画像がないため補完です。実際の素材選択は共通のAutoCine設定に反映します。</footer>
 <script>window.AUTOCINE_TOKEN={token!r};window.AUTOCINE_SCREEN={main_id!r};
 window.AUTOCINE_DERIVED_DETAIL={family!r};</script>
 <script src="/runtime/client.js?token={escape(token)}"></script></body></html>'''

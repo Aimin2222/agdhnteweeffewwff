@@ -141,8 +141,14 @@ def main(argv=None) -> int:
     parser.add_argument("--capture-dir", type=Path, action="append", help="<画面ID>.pngを置いた実装キャプチャフォルダ。複数指定可")
     parser.add_argument("--bounds-dir", type=Path, action="append", help="<画面ID>.jsonのDOM/Tk矩形実測フォルダ。複数指定可")
     parser.add_argument("--output", type=Path, default=ROOT / "qa" / "ui29" / "review")
+    parser.add_argument("--active-seven", action="store_true",
+                        help="review only the seven candidates shipped in the Windows comparison app")
     args = parser.parse_args(argv)
     screens = load_inventory()
+    if args.active_seven:
+        active = json.loads((ROOT / "ui/comparison7_screens.json").read_text(encoding="utf-8"))
+        wanted = {row["id"] for row in active}
+        screens = [row for row in screens if row["id"] in wanted]
     rows = []
     for entry in screens:
         capture = next((directory / f"{entry['id']}.png" for directory in args.capture_dir or []
@@ -156,10 +162,11 @@ def main(argv=None) -> int:
                          "reference_sha256": entry["sha256"], "visual_result": "NOT_RUN",
                          "functional_result": "NOT_RUN", "reason": "実装画面のキャプチャ未提出"})
     args.output.mkdir(parents=True, exist_ok=True)
-    report = {"expected_screens": 29, "candidate_groups": 12, "screens": rows,
+    report = {"expected_screens": len(screens),
+              "candidate_groups": len({row["family"] for row in screens}), "screens": rows,
               "note": "視覚判定とLoL/GPU/録画/音声/書き出しの機能判定は別管理"}
     (args.output / "index.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"29画面 / 12候補グループ。実装キャプチャ: {sum('capture_size' in row for row in rows)}件")
+    print(f"{len(screens)}画面 / {report['candidate_groups']}候補グループ。実装キャプチャ: {sum('capture_size' in row for row in rows)}件")
     return 0
 
 

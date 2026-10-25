@@ -43,8 +43,8 @@ def main():
         try:
             with urlopen(server.url, timeout=5) as response:
                 chooser = response.read().decode("utf-8")
-            assert "12候補・29画面は未採用" in chooser
-            request("screen", {"id": "R-A-main"})
+            assert "比較対象は7案です" in chooser
+            request("screen", {"id": "R-E-main"})
             request("camera_side", {"value": "BLUE"})
             request("camera_number", {"key": "third_dist", "value": 925})
             request("motion", {"value": "slide_left"})
@@ -64,9 +64,9 @@ def main():
                 assert b'/runtime/client.js' in page
                 assert b'data-ui="preview-stage"' in page
                 checked_screens.append(candidate_id)
-            request("screen", {"id": "R-A-main"})
+            request("screen", {"id": "R-E-main"})
             state = request("theme", {"value": "dark"})
-            assert state["workspace"]["screen_id"] == "R-A-main"
+            assert state["workspace"]["screen_id"] == "R-E-main"
             assert state["workspace"]["theme"] == "dark"
             assert state["camera"]["side"] == "ブルー側基準"
             assert state["camera"]["values"]["third_dist"] == 925
@@ -137,7 +137,7 @@ def main():
             outcome["tested"] = ["neutral_chooser", "candidate_state", "theme_state",
                                  "camera_side", "camera_number", "entrance_motion",
                                  "audited_frame_pair", "catalog_asset_route",
-                                 "all_29_screen_routes_preserve_state",
+                                 "all_16_comparison_routes_preserve_state",
                                  "legacy03_easy_preset_and_detail_switch",
                                  "legacy06_real_catalog_and_editor_state",
                                  "testb_camera_mode_style_side_roundtrip",

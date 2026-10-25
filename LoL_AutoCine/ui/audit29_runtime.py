@@ -1,4 +1,4 @@
-"""UI-only state and operation adapter for the 29-screen comparison project.
+"""UI-only state and operation adapter for the seven-candidate comparison.
 
 All methods are called on Tk's main thread. The adapter owns no replay,
 capture, camera, effect, encoder, or audio implementation. Screen/theme
@@ -20,13 +20,13 @@ from ui.hud_presets import HUD_MODES
 from ui.legacy_reconstruct import SCREEN_IDS as RECONSTRUCTED_SCREEN_IDS
 
 
-AUDIT = Path(__file__).resolve().parents[1] / "design" / "ui" / "implementation_audit_29_20261021"
+COMPARISON = Path(__file__).with_name("comparison7_screens.json")
 
 
 def _screens() -> dict[str, dict]:
-    rows = json.loads((AUDIT / "SCREENS_29.json").read_text(encoding="utf-8"))
-    if len(rows) != 29 or len({x["family"] for x in rows}) != 12:
-        raise ValueError("29画面または12候補グループが不足しています")
+    rows = json.loads(COMPARISON.read_text(encoding="utf-8"))
+    if len(rows) != 16 or len({x["family"] for x in rows}) != 7:
+        raise ValueError("比較版の16画面または7候補グループが不足しています")
     return {x["id"]: x for x in rows}
 
 
@@ -375,6 +375,12 @@ class Audit29Runtime:
             if mode == "advanced":
                 app.root.deiconify()
                 app.root.lift()
+        elif action == "comparison_edit_mode":
+            mode = str(data["value"])
+            if mode not in ("easy", "advanced"):
+                raise ValueError("unknown comparison edit mode")
+            app.var_edit_mode.set(mode)
+            app._apply_edit_mode(log=False)
         elif action == "diagnostics":
             app.on_show_diagnostics()
         elif action == "automatic_qa":

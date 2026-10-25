@@ -123,8 +123,8 @@ def _launch(*, smoke: bool, window_smoke: bool = False) -> None:
                     endpoint = f"{parsed.scheme}://{parsed.netloc}/api/state?{parsed.query}"
                     with urlopen(endpoint, timeout=5) as response:
                         state = json.load(response)
-                    if len(state["workspace"]["screens"]) != 29:
-                        raise RuntimeError("UI29 inventory missing in desktop backend")
+                    if len(state["workspace"]["screens"]) != 16:
+                        raise RuntimeError("seven-candidate inventory missing in desktop backend")
                     return
                 import webview
                 _configure_webview2_runtime(webview)
@@ -153,7 +153,7 @@ def _launch(*, smoke: bool, window_smoke: bool = False) -> None:
                                 except Exception:
                                     pass
                                 time.sleep(0.3)
-                            if result["count"] != 12:
+                            if result["count"] != 7:
                                 result["error"] = f"candidate chooser rendered {result['count']} groups"
                         finally:
                             window.destroy()

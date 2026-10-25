@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from ui.audit29_runtime import Audit29Runtime, SCREENS
 from ui.audit29_server import UI29Server
-from ui.comparison_detail import DERIVED_DETAILS, render_detail
+from ui.comparison_detail import DERIVED_DETAILS, render_detail, render_material
 from ui.legacy_reconstruct import render_legacy
 
 
@@ -78,9 +78,9 @@ class App:
 
 
 class Audit29RuntimeTests(unittest.TestCase):
-    def test_three_missing_detail_references_have_explicit_derived_views(self):
-        self.assertEqual(set(DERIVED_DETAILS), {"researchB", "researchC", "testA"})
-        self.assertEqual(len(SCREENS), 29)
+    def test_missing_detail_references_have_explicit_derived_views(self):
+        self.assertEqual(set(DERIVED_DETAILS), {"testA", "legacy02", "legacy05"})
+        self.assertEqual(len(SCREENS), 16)
         for family, (_, _, main_id, _) in DERIVED_DETAILS.items():
             html = render_detail(family, "test-token")
             self.assertIn("原画像未提供・比較用派生詳細", html)
@@ -92,6 +92,11 @@ class Audit29RuntimeTests(unittest.TestCase):
                 else:
                     self.assertIn(f'data-action="{action}"', html)
             self.assertIn('data-compare="main"', html)
+            self.assertIn('data-compare="material"', html)
+        for family in ("legacy02", "legacy03", "legacy05", "testA"):
+            material = render_material(family, "test-token")
+            self.assertIn('data-ui="material-card-0"', material)
+            self.assertIn('data-compare="detail"', material)
 
     def test_derived_detail_route_reuses_runtime_client_and_requires_token(self):
         with TemporaryDirectory(dir=ROOT / "qa") as directory:
@@ -103,15 +108,23 @@ class Audit29RuntimeTests(unittest.TestCase):
                         html = response.read().decode("utf-8")
                     self.assertIn(f"window.AUTOCINE_DERIVED_DETAIL='{family}'", html)
                     self.assertIn("/runtime/client.js", html)
+                for family in ("legacy02", "legacy03", "legacy05", "testA"):
+                    with urlopen(f"{root}/compare/material/{family}?token={server.token}", timeout=5) as response:
+                        self.assertIn("素材を選択", response.read().decode("utf-8"))
                 with self.assertRaises(HTTPError) as denied:
-                    urlopen(f"{root}/compare/detail/researchB", timeout=5)
+                    urlopen(f"{root}/compare/detail/legacy02", timeout=5)
                 self.assertEqual(denied.exception.code, 403)
+                for route in ("/compare/detail/researchB", "/compare/material/researchB",
+                              "/ui/R-A-main", "/static/A_main.png"):
+                    with self.assertRaises(HTTPError) as excluded:
+                        urlopen(f"{root}{route}?token={server.token}", timeout=5)
+                    self.assertEqual(excluded.exception.code, 404)
             finally:
                 server.close()
 
     def test_all_candidates_remain_distinct(self):
-        self.assertEqual(len(SCREENS), 29)
-        self.assertEqual(len({screen["family"] for screen in SCREENS.values()}), 12)
+        self.assertEqual(len(SCREENS), 16)
+        self.assertEqual(len({screen["family"] for screen in SCREENS.values()}), 7)
 
     def test_compact_test_b_screen_keeps_real_controls(self):
         html = render_legacy(SCREENS["T-B-S"])
@@ -198,6 +211,18 @@ class Audit29RuntimeTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 runtime.perform("edit_mode", {"value": "unknown"})
 
+    def test_comparison_navigation_does_not_raise_native_window(self):
+        app = App()
+        called = []
+        app.root.deiconify = lambda: called.append("show")
+        app.root.lift = lambda: called.append("raise")
+        app._apply_edit_mode = lambda **_kwargs: called.append(app.var_edit_mode.get())
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            runtime = Audit29Runtime(app, Path(directory) / "workspace.json")
+            runtime.perform("comparison_edit_mode", {"value": "advanced"})
+            runtime.perform("comparison_edit_mode", {"value": "easy"})
+        self.assertEqual(called, ["advanced", "easy"])
+
     def test_connect_uses_existing_replay_handler(self):
         app = App()
         called = []
@@ -237,9 +262,10 @@ class Audit29RuntimeTests(unittest.TestCase):
             try:
                 with urlopen(server.url, timeout=5) as response:
                     chooser = response.read().decode("utf-8")
-                self.assertIn('12候補・29画面はすべて未採用', chooser)
-                self.assertLess(chooser.index('T-B-M'), chooser.index('R-B-main'))
-                server.runtime.select_screen("R-A-main")
+                self.assertIn('比較対象は7案です', chooser)
+                self.assertLess(chooser.index('T-B-M'), chooser.index('L02-M'))
+                self.assertNotIn('R-A-main', chooser)
+                server.runtime.select_screen("R-E-main")
                 with urlopen(server.url, timeout=5) as response:
                     html = response.read().decode("utf-8")
                 self.assertIn('data-ui="preview-panel"', html)

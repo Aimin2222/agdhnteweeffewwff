@@ -21,15 +21,17 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from ui.audit29_desktop import (_child_command, _configure_webview2_runtime,
                                 _stop_backend, _wait_for_backend)
-from ui.comparison_detail import DERIVED_DETAILS
+from ui.comparison_detail import DERIVED_DETAILS, DERIVED_MATERIALS
 
 
-PRIORITY_FIVE = (
+PRIORITY_SEVEN = (
     ("T-B-M", "T-B-C", "T-B-F"),
-    ("L03-N", "L03-D", "L03-D"),
-    ("T-A-M", "derived-testA", "derived-testA"),
+    ("L03-N", "L03-D", "material-legacy03"),
+    ("T-A-M", "derived-testA", "material-testA"),
     ("L06-L", "L06-E", "L06-L"),
     ("R-E-main", "R-E-studio", "R-E-frames"),
+    ("L02-M", "derived-legacy02", "material-legacy02"),
+    ("L05-M", "derived-legacy05", "material-legacy05"),
 )
 
 
@@ -62,7 +64,7 @@ def _wait_path(window, path: str, timeout: float = 10) -> None:
 
 def _priority_flow(window, url: str, main_id: str) -> dict:
     """Offline UI click-through. Checks the shared App state, never starts LoL/recording."""
-    _, detail_id, material_id = next(row for row in PRIORITY_FIVE if row[0] == main_id)
+    _, detail_id, material_id = next(row for row in PRIORITY_SEVEN if row[0] == main_id)
     controls = window.evaluate_js('''(() => {
       const labels=[...document.querySelectorAll('button')].map(b=>b.textContent.trim());
       const has=s=>labels.some(label=>label.includes(s));
@@ -85,7 +87,8 @@ def _priority_flow(window, url: str, main_id: str) -> dict:
       if(!button)return false;button.click();return true})()''')
     if not clicked:
         raise AssertionError(f"{main_id}: detail entrance missing")
-    detail_path = ("/compare/detail/testA" if detail_id == "derived-testA" else f"/ui/{detail_id}")
+    detail_path = (f"/compare/detail/{detail_id.removeprefix('derived-')}"
+                   if detail_id.startswith("derived-") else f"/ui/{detail_id}")
     _wait_path(window, detail_path)
     distance = window.evaluate_js('''(() => {const input=document.querySelector('input[data-setting="third_dist"]');
       if(!input)return false;input.value='910';input.dispatchEvent(new Event('change',{bubbles:true}));
@@ -106,14 +109,17 @@ def _priority_flow(window, url: str, main_id: str) -> dict:
     if not all(detail_controls.values()):
         raise AssertionError(f"{detail_id}: missing detail controls: {detail_controls}")
     if material_id != detail_id:
-        selector = (f'[data-action="screen"][data-action-value="{material_id}"]'
-                    if material_id != "R-E-frames" else 'a[href="E_frames.html"]')
+        selector = ('[data-compare="material"]' if material_id.startswith("material-") else
+                    'a[href="E_frames.html"]' if material_id == "R-E-frames" else
+                    f'[data-action="screen"][data-action-value="{material_id}"]')
         clicked = window.evaluate_js('''(() => {const button=document.querySelector(''' +
                                      json.dumps(selector) + ''');if(!button)return false;
                                      button.click();return true})()''')
         if not clicked:
             raise AssertionError(f"{main_id}: in-candidate material entrance missing")
-        _wait_path(window, f"/ui/{material_id}")
+        material_path = (f"/compare/material/{material_id.removeprefix('material-')}"
+                         if material_id.startswith("material-") else f"/ui/{material_id}")
+        _wait_path(window, material_path)
     # The catalog arrives asynchronously after navigation, especially in a
     # frozen EXE. Wait for a real catalog id instead of racing its first render.
     frame_id = ''
@@ -182,26 +188,34 @@ def main(argv=None) -> int:
     parser.add_argument("--output", type=Path, default=ROOT / "qa" / "ui29" / "windows_webview2_offline")
     parser.add_argument("--screen", help="capture one audited screen")
     parser.add_argument("--detail-family", choices=tuple(DERIVED_DETAILS),
-                        help="capture one explicitly derived comparison detail (outside the 29 audited screens)")
-    parser.add_argument("--priority-five-flow", action="store_true",
-                        help="capture and click through the five priority candidates offline")
+                        help="capture one explicitly derived comparison detail")
+    parser.add_argument("--material-family", choices=("legacy02", "legacy03", "legacy05", "testA"),
+                        help="capture a complemented material view")
+    parser.add_argument("--priority-seven-flow", action="store_true",
+                        help="capture and click through the seven comparison candidates offline")
     args = parser.parse_args(argv)
     args.output = args.output.resolve()
     args.output.mkdir(parents=True, exist_ok=True)
-    inventory = json.loads((ROOT / "design" / "ui" / "implementation_audit_29_20261021" /
-                            "SCREENS_29.json").read_text(encoding="utf-8"))
+    inventory = json.loads((ROOT / "ui" / "comparison7_screens.json").read_text(encoding="utf-8"))
     screens = [screen for screen in inventory if not args.screen or screen["id"] == args.screen]
-    if args.priority_five_flow:
-        if args.screen or args.detail_family:
-            parser.error("--priority-five-flow cannot be combined with --screen or --detail-family")
-        wanted = {row[0] for row in PRIORITY_FIVE}
+    if args.priority_seven_flow:
+        if args.screen or args.detail_family or args.material_family:
+            parser.error("--priority-seven-flow cannot be combined with another selection")
+        wanted = {row[0] for row in PRIORITY_SEVEN}
         screens = [screen for screen in inventory if screen["id"] in wanted]
     if args.detail_family:
-        if args.screen:
-            parser.error("--screen and --detail-family cannot be combined")
+        if args.screen or args.material_family:
+            parser.error("choose exactly one screen/detail/material selector")
         main_id = DERIVED_DETAILS[args.detail_family][2]
         reference = next(screen for screen in inventory if screen["id"] == main_id)
         screens = [{"id": f"derived-{args.detail_family}", "family": args.detail_family,
+                    "main_id": main_id, "resolution": reference["resolution"], "theme": "light"}]
+    if args.material_family:
+        if args.screen:
+            parser.error("choose exactly one screen/detail/material selector")
+        main_id = DERIVED_MATERIALS[args.material_family][2]
+        reference = next(screen for screen in inventory if screen["id"] == main_id)
+        screens = [{"id": f"material-{args.material_family}", "family": args.material_family,
                     "main_id": main_id, "resolution": reference["resolution"], "theme": "light"}]
     if not screens:
         parser.error(f"unknown audited screen: {args.screen}")
@@ -233,7 +247,8 @@ def main(argv=None) -> int:
                                 _activate(url, "screen", {"id": screen.get("main_id", sid)})
                                 _activate(url, "theme", {"value": screen["theme"]})
                                 parsed = urlsplit(url)
-                                route_path = (f"/compare/detail/{screen['family']}" if args.detail_family
+                                route_path = (f"/compare/material/{screen['family']}" if args.material_family else
+                                              f"/compare/detail/{screen['family']}" if args.detail_family
                                               else f"/ui/{sid}")
                                 route = f"{parsed.scheme}://{parsed.netloc}{route_path}?{parsed.query}"
                                 window.load_url(route)
@@ -303,12 +318,12 @@ def main(argv=None) -> int:
                                         restored = json.load(response)
                                     if restored["camera"]["values"]["third_dist"] != 900:
                                         raise AssertionError("camera setting was lost during view switch")
-                                flow = _priority_flow(window, url, sid) if args.priority_five_flow else None
+                                flow = _priority_flow(window, url, sid) if args.priority_seven_flow else None
                                 results.append({"id": sid, "result": capture_result,
                                                 "capture": path.name, "size": size,
                                                 "bounds": f"bounds/{sid}.json",
                                                 "main_detail_roundtrip": ("PASS" if args.detail_family or flow else "NOT_RUN"),
-                                                **({"priority_five_flow": flow} if flow else {})})
+                                                **({"priority_seven_flow": flow} if flow else {})})
                             except Exception as exc:
                                 results.append({"id": sid, "result": "FAIL", "error": repr(exc)})
                             print(sid, results[-1]["result"], flush=True)

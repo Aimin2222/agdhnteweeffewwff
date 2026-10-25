@@ -13,4 +13,18 @@
 :root[data-theme=dark] body.detail-classic{background:#111b2b;color:#e2ebf7;--line:#435571;--soft:#273e5c}
 :root[data-theme=dark] .detail-classic .comparison-nav{background:#1b2b42}
 :root[data-theme=dark] .detail-classic .box h2{color:#e2ebf7}
+.detail-standard .workspace{grid-template-columns:minmax(260px,24%) minmax(0,1fr) minmax(300px,25%)}
+.detail-standard .preview-stage{height:min(56vh,640px)}
+.detail-standard .column:last-child{max-height:65vh;overflow:auto}
+.detail-standard .column:last-child .box{border-radius:5px}
+.detail-wizard .workspace{grid-template-columns:minmax(255px,19%) minmax(0,1fr)}
+.detail-wizard .column:last-child{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,38%);align-items:start}
+.detail-wizard .controls{grid-template-columns:1fr}
+.detail-wizard .preview-stage{height:min(53vh,600px)}
+.material-content{display:grid;grid-template-columns:minmax(0,3fr) minmax(280px,1fr);gap:14px;padding:14px;min-height:65vh}
+.material-content .asset-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.material-content .material-card{width:100%;min-height:180px}
+.material-content .material-card img{height:125px}
 @media(max-width:1150px){.workspace,.detail-creator .workspace,.detail-director .workspace,.detail-classic .workspace{grid-template-columns:1fr}.column:first-child{order:2}.column:last-child{order:1}.detail-classic .column:first-child{display:flex}.controls{grid-template-columns:1fr 1fr}.detail-director .column:last-child{display:flex}.detail-director .controls{grid-template-columns:1fr 1fr}}@media(max-width:700px){header{flex-wrap:wrap}.draft{order:3}.controls,.detail-director .controls{grid-template-columns:1fr}.comparison-nav{flex-wrap:wrap}}
+@media(max-width:1150px){.detail-standard .workspace,.detail-wizard .workspace{grid-template-columns:1fr}.detail-wizard .column:last-child{display:flex}.material-content{grid-template-columns:1fr}}
+@media(max-width:700px){.material-content .asset-grid{grid-template-columns:1fr 1fr}.material-content .material-card{min-height:145px}}

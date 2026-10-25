@@ -18,7 +18,7 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 from ui.audit29_runtime import Audit29Runtime, SCREENS, LEGACY_RECONSTRUCTIONS
 from ui.legacy_reconstruct import SCREEN_IDS as RECONSTRUCTED_SCREEN_IDS, render_legacy
-from ui.comparison_detail import DERIVED_DETAILS, render_detail
+from ui.comparison_detail import DERIVED_DETAILS, DERIVED_MATERIALS, render_detail, render_material
 
 
 DESIGN = Path(__file__).resolve().parents[1] / "design" / "ui" / "ui_rethink_20261021"
@@ -117,18 +117,15 @@ class UI29Server:
                     except Exception as exc:
                         return self._json(500, {"error": str(exc)})
                 if path == "/choose":
-                    families = {}
-                    for row in SCREENS.values():
-                        families.setdefault(row["family"], row)
                     priority_main = {"testB": "T-B-M", "legacy03": "L03-N",
                                      "testA": "T-A-M", "legacy06": "L06-L",
-                                     "researchE": "R-E-main"}
+                                     "researchE": "R-E-main", "legacy02": "L02-M",
+                                     "legacy05": "L05-M"}
                     priority = tuple(priority_main)
                     ordered = [SCREENS[priority_main[key]] for key in priority]
-                    ordered.extend(row for key, row in families.items() if key not in priority)
                     buttons = "".join(
                         f'<button data-id="{row["id"]}">'
-                        f'{"★ 重点5案：" if row["family"] in priority else "保存中："}'
+                        f'★ 比較候補：'
                         f'{row["family_name"]} <small>{row["id"]}</small>'
                         f'{" — 再構成中" if row["id"] in RECONSTRUCTED_SCREEN_IDS else " — 検証中"}</button>'
                         for row in ordered)
@@ -140,8 +137,8 @@ h1{margin:0 0 8px}p{color:#465a6f}section{display:grid;grid-template-columns:rep
 button{min-height:72px;padding:14px;border:1px solid #6c7d90;border-radius:8px;background:#fff;text-align:left;font:inherit;cursor:pointer}
 button:hover:not(:disabled){border:2px solid #245fab;background:#d7e6fc}button:disabled{opacity:.6;cursor:not-allowed}
 small{display:block;color:#465a6f}#status{min-height:24px;color:#a33}</style>
-<main><h1>LoL AutoCine — UI比較候補</h1><p>上から重点5案です。12候補・29画面はすべて未採用です。選択してもシーンやカメラ設定を初期化しません。</p>
-<p>旧10画面は原画像の領域から再構成中です。全候補が共通Appを使い、未接続機能は明示します。</p>
+<main><h1>LoL AutoCine — UI比較候補</h1><p>比較対象は7案です。選択してもシーンやカメラ設定を初期化しません。</p>
+<p>原画像のない詳細画面は「補完」と明示します。全候補が共通Appを使い、未接続機能は明示します。</p>
 <section>''' + buttons + '''</section><p id="status"></p></main><script>
 const token=''' + json.dumps(owner.token) + ''';
 document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>button.onclick=async()=>{
@@ -197,6 +194,12 @@ document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>butt
                         return self._json(404, {"error": "unknown comparison detail"})
                     return self._send(200, render_detail(family, owner.token).encode("utf-8"),
                                       "text/html; charset=utf-8")
+                if path.startswith("/compare/material/"):
+                    family = path.removeprefix("/compare/material/")
+                    if family not in DERIVED_MATERIALS:
+                        return self._json(404, {"error": "unknown comparison material"})
+                    return self._send(200, render_material(family, owner.token).encode("utf-8"),
+                                      "text/html; charset=utf-8")
                 if path.startswith("/ui/"):
                     screen_id = path[4:]
                     screen = SCREENS.get(screen_id)
@@ -216,6 +219,7 @@ document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>butt
                         f'window.AUTOCINE_SCREEN={json.dumps(screen_id)};</script>'
                         '<script src="/runtime/client.js?token=' + owner.token + '"></script>')
                     html = html.replace('href="ui.css"', f'href="/static/ui.css?token={owner.token}"')
+                    html = html.replace('href="ui7.css"', f'href="/static/ui7.css?token={owner.token}"')
                     html = html.replace('href="legacy.css"', f'href="/static/legacy/legacy.css?token={owner.token}"')
                     html = html.replace('href="reconstructed.css"', f'href="/static/legacy/reconstructed.css?token={owner.token}"')
                     html = html.replace('src="assets/', f'src="/static/assets/')
@@ -240,6 +244,11 @@ result.textContent = JSON.stringify(boxes); document.body.append(result);
                     return self._send(200, html.encode("utf-8"), "text/html; charset=utf-8")
                 if path.startswith("/static/"):
                     static_path = path[len("/static/"):]
+                    allowed = (static_path in {"ui7.css", "legacy/legacy.css", "legacy/reconstructed.css"}
+                               or (static_path.startswith("assets/") and
+                                   "/" not in static_path[len("assets/"):]))
+                    if not allowed:
+                        return self._json(404, {"error": "unlisted comparison asset"})
                     base = LEGACY_DESIGN if static_path.startswith("legacy/") else DESIGN
                     relative = static_path[len("legacy/"):] if base == LEGACY_DESIGN else static_path
                     source = (base / relative).resolve()
