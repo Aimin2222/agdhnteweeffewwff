@@ -77,7 +77,8 @@ def _legacy03_inspector(detailed: bool) -> str:
                 + '<h2>カメラショット</h2>' + _camera_modes() + _camera_numbers()
                 + '<div class="legacy3-detail-actions">'
                 + _button('TargetLockを設定', 'native_settings')
-                + _button('カメラをリセット', 'native_settings') + '</div>')
+                + _button('カメラをリセット', 'native_settings')
+                + _button('色・詳細設定', 'native_editor_zone', 'color') + '</div>')
     presets = (('おすすめ', 'Lolnam風スムーズ'),
                ('迫力重視', 'Lolnam風ダイナミック'),
                ('シンプル', '三人称 自然め'))
@@ -265,7 +266,8 @@ def _legacy06_inspector(library: bool) -> str:
             + _button('手動', 'camera_mode', 'manual') + '</div>'
             + _camera_numbers()
             + '<label class="legacy6-hud"><input type="checkbox" data-hud-visible>HUDを表示する</label>'
-            + _button('TargetLockを設定', 'native_settings', cls='full'))
+            + _button('TargetLockを設定', 'native_settings', cls='full')
+            + _button('色・詳細パラメータ', 'native_editor_zone', 'color', 'full'))
 
 
 def _legacy06_applied() -> str:
@@ -614,7 +616,8 @@ def _component(screen_id: str, region: str) -> str:
         if screen_id == 'T-B-C':
             return ('<div class="testb-inspector-tabs">'
                     + _button('カメラ', 'screen', 'T-B-C', 'selected')
-                    + _button('キル演出', 'screen', 'T-B-F') + '</div>')
+                    + _button('キル演出', 'screen', 'T-B-F')
+                    + _button('色・詳細', 'native_editor_zone', 'color') + '</div>')
         if screen_id == 'T-B-F':
             return ('<div class="testb-inspector-tabs">'
                     + _button('カメラ', 'screen', 'T-B-C')

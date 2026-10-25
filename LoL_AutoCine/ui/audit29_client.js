@@ -157,6 +157,36 @@
       const target=data.replay.players.find(player=>player.slot===data.replay.target_slot);
       targetName.textContent=target ? `TargetLock：${target.champion} / ${target.name}` : 'TargetLock：未選択';
     }
+    const flowReady=document.querySelector('.layout-E[data-ui="workspace"] [data-ui="ready-panel"]');
+    if (flowReady) {
+      const lines=[...flowReady.querySelectorAll('.stat-line')];
+      const target=data.replay.players.find(player=>player.slot===data.replay.target_slot);
+      const summaries=[
+        data.replay.connected ? (target ? `${target.champion} / ${target.name}` : '接続中・対象未選択') : 'LoL未接続',
+        `チェックした${data.checked_count}件`,
+        `1920×1080 / ${data.output.fps}`,
+        data.output.encoder_policy,
+        `${data.output.busy ? '書き出し中' : '書き出し未実行'} / ${data.preview.mirror_requested ? 'ミラー開始済み' : 'ミラー停止中'}`
+      ];
+      lines.forEach((line,index)=>{const value=line.querySelector('b');if(value && summaries[index])value.textContent=summaries[index]});
+      const choices=flowReady.parentElement.querySelectorAll('.choice-dock .choice');
+      const camera=choices[0]?.querySelector('p');
+      if(camera)camera.textContent={manual:'従来の手動カメラ',fixed_auto:'固定視点＋自動構図補正',
+        full_auto:'フルオートシネマ'}[data.camera.mode] || '既存の設定';
+      const frame=choices[1]?.querySelector('p');
+      if(frame)frame.textContent=data.frame.id || 'キルフレーム未選択';
+      const thumb=choices[1]?.querySelector('img.frame-thumb');
+      if(thumb){
+        thumb.style.visibility=data.frame.id ? 'visible' : 'hidden';
+        if(data.frame.id && thumb.dataset.frameId!==data.frame.id){
+          thumb.src=endpoint(`/api/asset/${encodeURIComponent(data.frame.id)}`);
+          thumb.dataset.frameId=data.frame.id;
+          thumb.alt='選択中の実キルフレーム';
+        }
+      }
+      const effect=choices[2]?.querySelector('p');
+      if(effect)effect.textContent=data.frame.effect_id || 'FX未選択';
+    }
     const playerList=document.querySelector('[data-ui="player-list"]');
     if (playerList) {
       playerList.replaceChildren();
@@ -518,6 +548,7 @@
         label==='テスト結果' ? ['diagnostics'] : null;
     }
     if (/リプレイを開く/.test(label)) return ['open_replay'];
+    if (/リプレイを変更/.test(label)) return ['open_replay'];
     if (/準備/.test(label)) return ['prepare'];
     if (/試合全体.*スキャン|シーンを検出/.test(label)) return ['scan'];
     if (/ミラー開始/.test(label)) return ['mirror_start'];
@@ -525,6 +556,8 @@
     if (/演出を確認|演出プレビュー.*再生/.test(label)) return ['preview_play'];
     if (/^■?\s*停止$/.test(label)) return ['preview_stop'];
     if (/^基本設定$/.test(label)) return ['native_settings'];
+    if (/GPU・音声・HUD/.test(label)) return ['native_settings'];
+    if (/^出力設定$/.test(label)) return ['native_editor_zone',{zone:'output'}];
     if (/^簡単編集$/.test(label)) return ['edit_mode',{value:'easy'}];
     if (/^詳細編集$/.test(label)) return ['edit_mode',{value:'advanced'}];
     if (/このシーンに保存/.test(label)) return ['scene_save'];
@@ -533,6 +566,7 @@
     if (/キーフレーム・色・DOFを開く/.test(label)) return ['native_editor_zone',{zone:'scene'}];
     if (/プロジェクト保存・読み込み/.test(label)) return ['project_menu'];
     if (/動画を作成|書き出す/.test(label)) return ['export_menu'];
+    if (/おすすめで自動作成/.test(label)) return ['export_smart'];
     if (/ログ|診断/.test(label)) return ['diagnostics'];
     if (/選択シーンへ移動/.test(label)) return ['jump_selected'];
     if (/図鑑の全候補を見る/.test(label)) return ['work_gallery'];
@@ -706,7 +740,8 @@
     });
     document.body.append(routeButton);
   }
-  if ((currentFamily==='researchB' || currentFamily==='researchC') &&
+  if ((currentFamily==='researchB' || currentFamily==='researchC' ||
+       (currentFamily==='researchE' && screenId==='R-E-main')) &&
       !window.AUTOCINE_DERIVED_DETAIL && !document.querySelector('[data-ui="scene-list"]')) {
     // The source mock has no scene list. Keep a compact real-operation drawer on
     // the main view without changing the audited composition or inventing data.
@@ -728,10 +763,27 @@
       '<div class="scene-card" data-ui="scene-card-0"><span class="check"></span>' +
       '<strong>未スキャン</strong><span class="time">--:--</span><span class="side">—</span></div>' +
       '<button data-action="native_editor_zone" data-action-value="scene">シーン編集・タイムライン</button>';
-    scenesButton.addEventListener('click',event=>{
+    const toggleScenes=event=>{
       event.stopPropagation();drawer.style.display=drawer.style.display==='none'?'block':'none';
-    });
-    document.body.append(scenesButton,drawer);
+    };
+    if(currentFamily==='researchE'){
+      const findStep=[...document.querySelectorAll('.layout-E .step')]
+        .find(step=>step.querySelector('strong')?.textContent.trim()==='02');
+      if(findStep){
+        findStep.setAttribute('role','button');findStep.setAttribute('tabindex','0');
+        findStep.setAttribute('aria-label','見どころ：試合全体スキャンとシーン一覧');
+        findStep.title='クリックして試合全体スキャンとシーン一覧を開く';
+        findStep.style.cursor='pointer';
+        findStep.addEventListener('click',toggleScenes);
+        findStep.addEventListener('keydown',event=>{
+          if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleScenes(event)}
+        });
+      }
+    }else{
+      scenesButton.addEventListener('click',toggleScenes);
+      document.body.append(scenesButton);
+    }
+    document.body.append(drawer);
   }
   const switchButton = document.createElement('button');
   switchButton.type = 'button';
@@ -837,6 +889,11 @@
       if (filename==='E_studio.html' || filename==='A_camera.html' || filename==='A_frames.html') {
         comparisonRoute('detail');return;
       }
+    }
+    if (currentFamily==='researchE' && filename==='A_camera.html') {
+      // E has no camera-only audit image; its own Studio screen contains the camera controls.
+      action('screen',{id:'R-E-studio'}).then(()=>openScreen('R-E-studio')).catch(e=>message(e.message));
+      return;
     }
     const prefix=screenId.split('-')[1];
     const suffix=filename.replace('.html','').replace(/^A_|^E_/,'');

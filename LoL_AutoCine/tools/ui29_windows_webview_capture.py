@@ -24,6 +24,15 @@ from ui.audit29_desktop import (_child_command, _configure_webview2_runtime,
 from ui.comparison_detail import DERIVED_DETAILS
 
 
+PRIORITY_FIVE = (
+    ("T-B-M", "T-B-C", "T-B-F"),
+    ("L03-N", "L03-D", "L03-D"),
+    ("T-A-M", "derived-testA", "derived-testA"),
+    ("L06-L", "L06-E", "L06-L"),
+    ("R-E-main", "R-E-studio", "R-E-frames"),
+)
+
+
 def _activate(url: str, action: str, data: dict) -> dict:
     parsed = urlsplit(url)
     endpoint = f"{parsed.scheme}://{parsed.netloc}/api/action?{parsed.query}"
@@ -31,6 +40,103 @@ def _activate(url: str, action: str, data: dict) -> dict:
     with urlopen(Request(endpoint, data=payload,
                          headers={"Content-Type": "application/json"}), timeout=30) as response:
         return json.load(response)
+
+
+def _state(url: str) -> dict:
+    parsed = urlsplit(url)
+    with urlopen(f"{parsed.scheme}://{parsed.netloc}/api/state?{parsed.query}", timeout=5) as response:
+        return json.load(response)
+
+
+def _wait_path(window, path: str, timeout: float = 10) -> None:
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        try:
+            if window.evaluate_js("location.pathname") == path:
+                return
+        except Exception:
+            pass
+        time.sleep(0.1)
+    raise TimeoutError(f"WebView2 navigation did not reach {path}")
+
+
+def _priority_flow(window, url: str, main_id: str) -> dict:
+    """Offline UI click-through. Checks the shared App state, never starts LoL/recording."""
+    _, detail_id, material_id = next(row for row in PRIORITY_FIVE if row[0] == main_id)
+    controls = window.evaluate_js('''(() => {
+      const labels=[...document.querySelectorAll('button')].map(b=>b.textContent.trim());
+      const has=s=>labels.some(label=>label.includes(s));
+      return {mirror:has('ミラー開始'),scan:has('スキャン')||!!document.querySelector('[data-ui="scene-list"]'),
+        scenes:!!document.querySelector('[data-ui="scene-list"], [data-ui^="scene-card-"]'),
+        export:has('動画を作成')||has('書き出')||has('自動作成'),
+        settings:has('基本設定')||has('GPU・音声・HUD設定'),
+        preview:!!document.querySelector('[data-ui="preview-stage"]')};
+    })()''')
+    if main_id == "R-E-main":
+        opened = window.evaluate_js('''(() => {const step=[...document.querySelectorAll('.step')]
+          .find(e=>e.querySelector('strong')?.textContent.trim()==='02');
+          if(!step)return false;step.click();
+          return document.querySelector('[data-ui="scene-list"]')?.style.display==='block'})()''')
+        controls["scan_scene_drawer_opened"] = bool(opened)
+    if not all(controls.values()):
+        raise AssertionError(f"{main_id}: missing main controls: {controls}")
+    clicked = window.evaluate_js('''(() => {const button=document.querySelector('[data-compare="detail"]')||
+      [...document.querySelectorAll('button')].find(b=>b.textContent.includes('詳細編集へ'));
+      if(!button)return false;button.click();return true})()''')
+    if not clicked:
+        raise AssertionError(f"{main_id}: detail entrance missing")
+    detail_path = ("/compare/detail/testA" if detail_id == "derived-testA" else f"/ui/{detail_id}")
+    _wait_path(window, detail_path)
+    distance = window.evaluate_js('''(() => {const input=document.querySelector('input[data-setting="third_dist"]');
+      if(!input)return false;input.value='910';input.dispatchEvent(new Event('change',{bubbles:true}));
+      return true})()''')
+    if not distance:
+        raise AssertionError(f"{main_id}: detailed camera distance input missing")
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline and _state(url)["camera"]["values"].get("third_dist") != 910:
+        time.sleep(0.1)
+    if _state(url)["camera"]["values"].get("third_dist") != 910:
+        raise AssertionError(f"{main_id}: camera input did not reach AutoCine App")
+    detail_controls = window.evaluate_js('''(() => {const text=document.body.innerText;
+      return {camera:!!document.querySelector('input[data-setting="third_dist"]'),
+        fx:text.includes('FX')||text.includes('エフェクト'),
+        material:text.includes('キルフレーム')||text.includes('素材'),
+        scene:text.includes('シーン'),timeline:text.includes('タイムライン')||!!document.querySelector('[data-ui="timeline"]'),
+        color:text.includes('色')||text.includes('DOF')};})()''')
+    if not all(detail_controls.values()):
+        raise AssertionError(f"{detail_id}: missing detail controls: {detail_controls}")
+    if material_id != detail_id:
+        selector = (f'[data-action="screen"][data-action-value="{material_id}"]'
+                    if material_id != "R-E-frames" else 'a[href="E_frames.html"]')
+        clicked = window.evaluate_js('''(() => {const button=document.querySelector(''' +
+                                     json.dumps(selector) + ''');if(!button)return false;
+                                     button.click();return true})()''')
+        if not clicked:
+            raise AssertionError(f"{main_id}: in-candidate material entrance missing")
+        _wait_path(window, f"/ui/{material_id}")
+    frame_id = window.evaluate_js('''(() => {const card=document.querySelector(
+      '[data-ui^="material-card-"], [data-ui^="library-card-"]');
+      if(!card||!card.dataset.frameId)return '';const id=card.dataset.frameId;card.click();return id})()''')
+    if not frame_id:
+        raise AssertionError(f"{main_id}: selectable real material card missing")
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline and _state(url)["frame"]["id"] != frame_id:
+        time.sleep(0.1)
+    if _state(url)["frame"]["id"] != frame_id:
+        raise AssertionError(f"{main_id}: frame selection did not reach AutoCine App")
+    if material_id != main_id:
+        back = window.evaluate_js('''(() => {const button=document.querySelector('[data-compare="main"]')||
+          [...document.querySelectorAll('button')].find(b=>b.textContent.includes('メインへ戻る'));
+          if(!button)return false;button.click();return true})()''')
+        if not back:
+            raise AssertionError(f"{main_id}: return to main missing")
+        _wait_path(window, f"/ui/{main_id}")
+    restored = _state(url)
+    if restored["camera"]["values"].get("third_dist") != 910 or restored["frame"]["id"] != frame_id:
+        raise AssertionError(f"{main_id}: shared settings lost on return to main")
+    return {"main_controls": controls, "detail_controls": detail_controls,
+            "camera_distance_input": "PASS", "frame_selection": {"result": "PASS", "id": frame_id},
+            "main_detail_main": "PASS", "shared_state_retained": "PASS"}
 
 
 def _capture_webview(window, path: Path, size: tuple[int, int]) -> None:
@@ -70,12 +176,19 @@ def main(argv=None) -> int:
     parser.add_argument("--screen", help="capture one audited screen")
     parser.add_argument("--detail-family", choices=tuple(DERIVED_DETAILS),
                         help="capture one explicitly derived comparison detail (outside the 29 audited screens)")
+    parser.add_argument("--priority-five-flow", action="store_true",
+                        help="capture and click through the five priority candidates offline")
     args = parser.parse_args(argv)
     args.output = args.output.resolve()
     args.output.mkdir(parents=True, exist_ok=True)
     inventory = json.loads((ROOT / "design" / "ui" / "implementation_audit_29_20261021" /
                             "SCREENS_29.json").read_text(encoding="utf-8"))
     screens = [screen for screen in inventory if not args.screen or screen["id"] == args.screen]
+    if args.priority_five_flow:
+        if args.screen or args.detail_family:
+            parser.error("--priority-five-flow cannot be combined with --screen or --detail-family")
+        wanted = {row[0] for row in PRIORITY_FIVE}
+        screens = [screen for screen in inventory if screen["id"] in wanted]
     if args.detail_family:
         if args.screen:
             parser.error("--screen and --detail-family cannot be combined")
@@ -183,10 +296,12 @@ def main(argv=None) -> int:
                                         restored = json.load(response)
                                     if restored["camera"]["values"]["third_dist"] != 900:
                                         raise AssertionError("camera setting was lost during view switch")
+                                flow = _priority_flow(window, url, sid) if args.priority_five_flow else None
                                 results.append({"id": sid, "result": capture_result,
                                                 "capture": path.name, "size": size,
                                                 "bounds": f"bounds/{sid}.json",
-                                                "main_detail_roundtrip": "PASS" if args.detail_family else "NOT_RUN"})
+                                                "main_detail_roundtrip": ("PASS" if args.detail_family or flow else "NOT_RUN"),
+                                                **({"priority_five_flow": flow} if flow else {})})
                             except Exception as exc:
                                 results.append({"id": sid, "result": "FAIL", "error": repr(exc)})
                             print(sid, results[-1]["result"], flush=True)
