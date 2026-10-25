@@ -2,6 +2,12 @@
 
 方針の根拠：ユーザー指定の [PR #51 コメント #6391460332](https://github.com/Aimin2222/agdhnteweeffewwff/pull/51#issuecomment-6391460332)。重点を旧テストB、旧案3、旧テストA、旧案6、新Eに変更。他7候補・監査29画面・12候補の切替は残した。**最終採用UIは未選定。**
 
+## 最新のWindows比較途中版
+
+- ソースコミット：`f989e3e`（UI専用ブランチ）。ZIP：`builds/ui29-priority5-20261025-f989e3e/LoL_AutoCine_UI_Comparison_Portable.zip`（作業ルートからの相対パス）。2,391,113,812 bytes、SHA-256 `04D3F45ED8C1DB7121DC34718B267B85D3355B508ECB114A5F2DA30C5994BC28`。
+- 同梱の `LoL_AutoCine_UI29.exe` をWindows上で起動し、全29画面を再撮影：29/29成功。`frozen_final_all/index.json` が撮影一覧、`frozen_final_review_index.json` が原画像との寸法・画像比較。監査矩形は29画面すべて許容内、視覚合格は0/29。最終ZIPの旧テストA補完詳細は `frozen_final_testA/index.json` に往復遷移PASSと記録。
+- このZIPは**比較途中版**。原画像への視覚的な忠実性、5候補すべての詳細操作、LoL実接続・録画・書き出しは未合格／未実施。実機テスト済み完成版とは呼ばない。
+
 初回の候補一覧と右端「UI比較」では重点5案を先頭に表示。重点5案はメインの「詳細編集へ」から詳細画面へ進み、「メインへ戻る」で戻る。設定値・選択シーンは共通AutoCine Appに保持する。旧テストAの詳細は原画像がなく、明示した補完画面である。
 
 | 重点案 | メイン | 詳細・カメラ | FX・素材 | Windows画像比較 | RGB平均差/255（メイン→詳細） |
