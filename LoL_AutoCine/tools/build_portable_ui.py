@@ -50,6 +50,7 @@ def validate_bundle(bundle: Path) -> None:
         "_internal/design/ui/ui29_legacy/legacy.css",
         "_internal/design/ui/ui29_legacy/reconstructed.css",
         "_internal/ui/audit29_client.js",
+        "_internal/ui/comparison_detail.css",
     )
     missing = [name for name in required if not (bundle / name).is_file()]
     ffmpeg = list((bundle / "_internal" / "imageio_ffmpeg" / "binaries").glob("ffmpeg-*.exe"))
@@ -137,6 +138,7 @@ def main() -> None:
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=APP, text=True).strip()
     manifest = {"kind": "working AutoCine UI comparison", "layouts": list(range(1, 10)),
                 "ui29_total_screens": 29, "ui29_groups": 12,
+                "priority_candidates": ["testB", "legacy03", "testA", "legacy06", "researchE"],
                 "ui29_partially_interactive_screens": 29,
                 "ui29_accepted_screens": 0,
                 "webview2_fixed_included": bool(args.webview2_fixed_folder),
