@@ -101,6 +101,17 @@ def _priority_flow(window, url: str, main_id: str) -> dict:
         time.sleep(0.1)
     if _state(url)["camera"]["values"].get("third_dist") != 910:
         raise AssertionError(f"{main_id}: camera input did not reach AutoCine App")
+    camera_mode_clicked = window.evaluate_js('''(() => {const button=
+      document.querySelector('[data-action="camera_mode"][data-action-value="fixed_auto"]')||
+      [...document.querySelectorAll('.camera-card')].find(b=>b.textContent.includes('固定視点'));
+      if(!button)return false;button.click();return true})()''')
+    if not camera_mode_clicked:
+        raise AssertionError(f"{main_id}: fixed-auto camera choice missing")
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline and "固定視点" not in _state(url)["camera"]["mode"]:
+        time.sleep(0.1)
+    if "固定視点" not in _state(url)["camera"]["mode"]:
+        raise AssertionError(f"{main_id}: camera mode click did not reach AutoCine App")
     detail_controls = window.evaluate_js('''(() => {const text=document.body.innerText;
       return {camera:!!document.querySelector('input[data-setting="third_dist"]'),
         fx:text.includes('FX')||text.includes('エフェクト'),
@@ -126,8 +137,9 @@ def _priority_flow(window, url: str, main_id: str) -> dict:
     frame_id = ''
     deadline = time.monotonic() + 8
     while time.monotonic() < deadline and not frame_id:
-        frame_id = window.evaluate_js('''(() => {const card=document.querySelector(
-          '[data-ui^="material-card-"], [data-ui^="library-card-"][data-frame-id]');
+        frame_id = window.evaluate_js('''(() => {const cards=[...document.querySelectorAll(
+          '[data-ui^="material-card-"][data-frame-id], [data-ui^="library-card-"][data-frame-id]')];
+          const card=cards.find(c=>c.dataset.frameId==='083/a_simple_main')||cards[0];
           if(!card||!card.dataset.frameId)return '';const id=card.dataset.frameId;card.click();return id})()''')
         if not frame_id:
             time.sleep(0.1)
@@ -138,6 +150,30 @@ def _priority_flow(window, url: str, main_id: str) -> dict:
         time.sleep(0.1)
     if _state(url)["frame"]["id"] != frame_id:
         raise AssertionError(f"{main_id}: frame selection did not reach AutoCine App")
+    effect_id = _state(url)["frame"]["effect_id"]
+    if not effect_id:
+        raise AssertionError(f"{main_id}: same-name FX did not follow selected frame")
+    fx_clicked = window.evaluate_js('''(() => {const button=
+      document.querySelector('[data-action="effect_strength"][data-action-value="weak"]')||
+      [...document.querySelectorAll('button')].find(b=>b.textContent.trim()==='弱');
+      if(!button)return false;button.click();return true})()''')
+    if fx_clicked:
+        deadline = time.monotonic() + 8
+        while time.monotonic() < deadline and _state(url)["frame"]["strength"] != "weak":
+            time.sleep(0.1)
+        if _state(url)["frame"]["strength"] != "weak":
+            raise AssertionError(f"{main_id}: FX strength click did not reach AutoCine App")
+    motion_clicked = window.evaluate_js('''(() => {const button=
+      document.querySelector('[data-action="motion"][data-action-value="slide_left"]')||
+      [...document.querySelectorAll('.motion-grid .motion')]
+        .find(b=>b.textContent.includes('左から登場'));
+      if(!button)return false;button.click();return true})()''')
+    if motion_clicked:
+        deadline = time.monotonic() + 8
+        while time.monotonic() < deadline and _state(url)["frame"]["motion"] != "左から登場":
+            time.sleep(0.1)
+        if _state(url)["frame"]["motion"] != "左から登場":
+            raise AssertionError(f"{main_id}: motion click did not reach AutoCine App")
     if material_id != main_id:
         back = window.evaluate_js('''(() => {const button=document.querySelector('[data-compare="main"]')||
           [...document.querySelectorAll('button')].find(b=>b.textContent.includes('メインへ戻る'));
@@ -146,10 +182,19 @@ def _priority_flow(window, url: str, main_id: str) -> dict:
             raise AssertionError(f"{main_id}: return to main missing")
         _wait_path(window, f"/ui/{main_id}")
     restored = _state(url)
-    if restored["camera"]["values"].get("third_dist") != 910 or restored["frame"]["id"] != frame_id:
+    if (restored["camera"]["values"].get("third_dist") != 910 or
+            "固定視点" not in restored["camera"]["mode"] or
+            restored["frame"]["id"] != frame_id or
+            restored["frame"]["effect_id"] != effect_id or
+            (fx_clicked and restored["frame"]["strength"] != "weak") or
+            (motion_clicked and restored["frame"]["motion"] != "左から登場")):
         raise AssertionError(f"{main_id}: shared settings lost on return to main")
     return {"main_controls": controls, "detail_controls": detail_controls,
-            "camera_distance_input": "PASS", "frame_selection": {"result": "PASS", "id": frame_id},
+            "camera_distance_input": "PASS", "camera_mode_choice": "PASS",
+            "same_name_fx": {"result": "PASS", "id": effect_id},
+            "fx_strength_choice": "PASS" if fx_clicked else "NOT_EXPOSED_IN_THIS_VIEW",
+            "entrance_motion_choice": "PASS" if motion_clicked else "NOT_EXPOSED_IN_THIS_VIEW",
+            "frame_selection": {"result": "PASS", "id": frame_id},
             "main_detail_main": "PASS", "shared_state_retained": "PASS"}
 
 
@@ -244,11 +289,20 @@ def main(argv=None) -> int:
 
                 def worker() -> None:
                     try:
+                        previous_candidate_state = None
                         for screen in screens:
                             sid = screen["id"]
                             try:
                                 _activate(url, "screen", {"id": screen.get("main_id", sid)})
                                 _activate(url, "theme", {"value": screen["theme"]})
+                                if previous_candidate_state is not None:
+                                    switched = _state(url)
+                                    if (switched["camera"]["values"].get("third_dist") !=
+                                            previous_candidate_state["camera"]["values"].get("third_dist") or
+                                            switched["frame"]["id"] != previous_candidate_state["frame"]["id"] or
+                                            switched["frame"]["effect_id"] !=
+                                            previous_candidate_state["frame"]["effect_id"]):
+                                        raise AssertionError(f"{sid}: settings lost when switching candidates")
                                 parsed = urlsplit(url)
                                 route_path = (f"/compare/material/{screen['family']}" if args.material_family else
                                               f"/compare/detail/{screen['family']}" if args.detail_family
@@ -322,11 +376,16 @@ def main(argv=None) -> int:
                                     if restored["camera"]["values"]["third_dist"] != 900:
                                         raise AssertionError("camera setting was lost during view switch")
                                 flow = _priority_flow(window, url, sid) if args.priority_seven_flow else None
+                                if flow:
+                                    previous_candidate_state = _state(url)
                                 results.append({"id": sid, "result": capture_result,
                                                 "capture": path.name, "size": size,
                                                 "bounds": f"bounds/{sid}.json",
                                                 "main_detail_roundtrip": ("PASS" if args.detail_family or flow else "NOT_RUN"),
-                                                **({"priority_seven_flow": flow} if flow else {})})
+                                                **({"priority_seven_flow": flow,
+                                                    "previous_candidate_state_retained":
+                                                        "PASS" if len(results) else "FIRST_CANDIDATE"}
+                                                   if flow else {})})
                             except Exception as exc:
                                 results.append({"id": sid, "result": "FAIL", "error": repr(exc)})
                             print(sid, results[-1]["result"], flush=True)
