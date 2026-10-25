@@ -237,7 +237,8 @@ class Audit29RuntimeTests(unittest.TestCase):
             try:
                 with urlopen(server.url, timeout=5) as response:
                     chooser = response.read().decode("utf-8")
-                self.assertIn('12候補・29画面は未採用', chooser)
+                self.assertIn('12候補・29画面はすべて未採用', chooser)
+                self.assertLess(chooser.index('T-B-M'), chooser.index('R-B-main'))
                 server.runtime.select_screen("R-A-main")
                 with urlopen(server.url, timeout=5) as response:
                     html = response.read().decode("utf-8")

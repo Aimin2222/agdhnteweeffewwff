@@ -120,11 +120,18 @@ class UI29Server:
                     families = {}
                     for row in SCREENS.values():
                         families.setdefault(row["family"], row)
+                    priority_main = {"testB": "T-B-M", "legacy03": "L03-N",
+                                     "testA": "T-A-M", "legacy06": "L06-L",
+                                     "researchE": "R-E-main"}
+                    priority = tuple(priority_main)
+                    ordered = [SCREENS[priority_main[key]] for key in priority]
+                    ordered.extend(row for key, row in families.items() if key not in priority)
                     buttons = "".join(
                         f'<button data-id="{row["id"]}">'
+                        f'{"★ 重点5案：" if row["family"] in priority else "保存中："}'
                         f'{row["family_name"]} <small>{row["id"]}</small>'
                         f'{" — 再構成中" if row["id"] in RECONSTRUCTED_SCREEN_IDS else " — 検証中"}</button>'
-                        for row in families.values())
+                        for row in ordered)
                     html = '''<!doctype html><html lang="ja"><meta charset="utf-8">
 <title>AutoCine UI候補を選ぶ</title><meta name="viewport" content="width=device-width,initial-scale=1">
 <style>body{font:16px "Yu Gothic UI",Meiryo,sans-serif;background:#eef1f4;color:#172b3e;margin:0}
@@ -133,7 +140,7 @@ h1{margin:0 0 8px}p{color:#465a6f}section{display:grid;grid-template-columns:rep
 button{min-height:72px;padding:14px;border:1px solid #6c7d90;border-radius:8px;background:#fff;text-align:left;font:inherit;cursor:pointer}
 button:hover:not(:disabled){border:2px solid #245fab;background:#d7e6fc}button:disabled{opacity:.6;cursor:not-allowed}
 small{display:block;color:#465a6f}#status{min-height:24px;color:#a33}</style>
-<main><h1>LoL AutoCine — UI比較候補</h1><p>12候補・29画面は未採用です。選択してもシーンやカメラ設定を初期化しません。</p>
+<main><h1>LoL AutoCine — UI比較候補</h1><p>上から重点5案です。12候補・29画面はすべて未採用です。選択してもシーンやカメラ設定を初期化しません。</p>
 <p>旧10画面は原画像の領域から再構成中です。全候補が共通Appを使い、未接続機能は明示します。</p>
 <section>''' + buttons + '''</section><p id="status"></p></main><script>
 const token=''' + json.dumps(owner.token) + ''';

@@ -658,10 +658,11 @@
   const theme = document.querySelector('#theme');
   if (theme) theme.addEventListener('change', () => invoke('theme',{value:theme.value}));
   const familyStart = new Map([
-    ['legacy02','L02-M'],['legacy03','L03-N'],['legacy05','L05-M'],
-    ['legacy06','L06-L'],['testA','T-A-M'],['testB','T-B-M'],
-    ['researchA','R-A-main'],['researchB','R-B-main'],['researchC','R-C-main'],
-    ['researchD','R-D-main'],['researchE','R-E-main'],['researchF','R-F-main']
+    ['testB','T-B-M'],['legacy03','L03-N'],['testA','T-A-M'],
+    ['legacy06','L06-L'],['researchE','R-E-main'],
+    ['legacy02','L02-M'],['legacy05','L05-M'],['researchA','R-A-main'],
+    ['researchB','R-B-main'],['researchC','R-C-main'],
+    ['researchD','R-D-main'],['researchF','R-F-main']
   ]);
   function openScreen(id) { location.assign(endpoint(`/ui/${encodeURIComponent(id)}`)); }
   const priority8 = new Map([
@@ -754,7 +755,7 @@
     'border-radius:10px;background:#fff;color:#172b3e;' +
     'font:14px Yu Gothic UI,Meiryo,sans-serif;box-shadow:0 6px 24px #0005';
   const panelTitle = document.createElement('strong');
-  panelTitle.textContent = '12候補・29画面を比較';
+  panelTitle.textContent = '重点5案・全12候補／29画面を比較';
   panelTitle.style.cssText = 'display:block;margin-bottom:12px;font-size:16px';
   switchPanel.append(panelTitle);
   function showSwitchPanel(visible) {
@@ -773,7 +774,8 @@
   picker.style.cssText = 'display:block;width:100%;box-sizing:border-box;padding:8px;margin:4px 0 12px';
   for (const [family,id] of familyStart) {
     const option=document.createElement('option');option.value=id;
-    option.textContent=family + (family.startsWith('research') || family==='testA'?'':'（再構成中）');
+    option.textContent=(['testB','legacy03','testA','legacy06','researchE'].includes(family)?'★ ':'') +
+      family + (family.startsWith('research') || family==='testA'?'':'（再構成中）');
     picker.append(option);
   }
   picker.value='R-A-main';
@@ -846,7 +848,8 @@
   snapshot().then(()=>{
     for (const row of state.value.workspace.screens) {
       const familyOption = [...picker.options].find(option => option.value === familyStart.get(row.family));
-      if (familyOption) familyOption.textContent = row.name;
+      if (familyOption) familyOption.textContent =
+        (['testB','legacy03','testA','legacy06','researchE'].includes(row.family)?'★ ':'') + row.name;
       const option=document.createElement('option');
       option.value=row.id;
       option.textContent=`${row.id} — ${row.name}` + (row.implemented?'':'（再構成中）');

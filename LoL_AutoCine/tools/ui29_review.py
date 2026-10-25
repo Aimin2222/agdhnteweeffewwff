@@ -72,6 +72,13 @@ def _region_review(entry: dict, measured: dict) -> list[dict]:
         rid = region["id"]
         expected = region["rect"]
         found = actual.get(rid)
+        if found is None and rid.startswith("footer-"):
+            # The suffix is the count of data-ui elements in a particular
+            # render. A comparison-only control can change that count without
+            # moving the actual footer.
+            footers = [value for key, value in actual.items() if key.startswith("footer-")]
+            if len(footers) == 1:
+                found = footers[0]
         if isinstance(found, dict):
             found = found.get("rect")
         if not isinstance(found, list) or len(found) != 4:
