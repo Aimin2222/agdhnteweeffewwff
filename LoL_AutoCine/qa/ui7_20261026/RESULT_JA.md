@@ -1,4 +1,6 @@
-# 7案限定 Windows UI比較版：実装・検証記録
+# 7案限定 Windows UI比較版：実機GUI検証結果
+
+**この途中版の記録は [RESULT_FINAL_JA.md](RESULT_FINAL_JA.md) に更新しました。以下のZIPと未実施項目は旧時点の情報です。**
 
 日付：2026-10-26。対象：PR #51、`codex/ui-29-implementation-20261021`。mainへのマージなし。
 
