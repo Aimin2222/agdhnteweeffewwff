@@ -114,9 +114,16 @@ def _priority_flow(window, url: str, main_id: str) -> dict:
         if not clicked:
             raise AssertionError(f"{main_id}: in-candidate material entrance missing")
         _wait_path(window, f"/ui/{material_id}")
-    frame_id = window.evaluate_js('''(() => {const card=document.querySelector(
-      '[data-ui^="material-card-"], [data-ui^="library-card-"]');
-      if(!card||!card.dataset.frameId)return '';const id=card.dataset.frameId;card.click();return id})()''')
+    # The catalog arrives asynchronously after navigation, especially in a
+    # frozen EXE. Wait for a real catalog id instead of racing its first render.
+    frame_id = ''
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline and not frame_id:
+        frame_id = window.evaluate_js('''(() => {const card=document.querySelector(
+          '[data-ui^="material-card-"], [data-ui^="library-card-"][data-frame-id]');
+          if(!card||!card.dataset.frameId)return '';const id=card.dataset.frameId;card.click();return id})()''')
+        if not frame_id:
+            time.sleep(0.1)
     if not frame_id:
         raise AssertionError(f"{main_id}: selectable real material card missing")
     deadline = time.monotonic() + 8

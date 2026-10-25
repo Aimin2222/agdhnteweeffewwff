@@ -161,14 +161,19 @@
     if (flowReady) {
       const lines=[...flowReady.querySelectorAll('.stat-line')];
       const target=data.replay.players.find(player=>player.slot===data.replay.target_slot);
+      const encoder=String(data.output.encoder_policy || '未設定');
+      const encoderShort=encoder.includes('NVENC') ? '自動 (NVENC優先)' : encoder;
       const summaries=[
         data.replay.connected ? (target ? `${target.champion} / ${target.name}` : '接続中・対象未選択') : 'LoL未接続',
-        `チェックした${data.checked_count}件`,
+        `${data.checked_count}件選択`,
         `1920×1080 / ${data.output.fps}`,
-        data.output.encoder_policy,
-        `${data.output.busy ? '書き出し中' : '書き出し未実行'} / ${data.preview.mirror_requested ? 'ミラー開始済み' : 'ミラー停止中'}`
+        encoderShort,
+        `${data.output.busy ? '処理中' : '未実行'} / ${data.preview.mirror_requested ? 'ミラー要求中' : '停止中'}`
       ];
-      lines.forEach((line,index)=>{const value=line.querySelector('b');if(value && summaries[index])value.textContent=summaries[index]});
+      lines.forEach((line,index)=>{const value=line.querySelector('b');if(value && summaries[index]){
+        value.textContent=summaries[index];
+        if(index===3)value.title=encoder;
+      }});
       const choices=flowReady.parentElement.querySelectorAll('.choice-dock .choice');
       const camera=choices[0]?.querySelector('p');
       if(camera)camera.textContent={manual:'従来の手動カメラ',fixed_auto:'固定視点＋自動構図補正',
