@@ -718,7 +718,7 @@
     ['legacy05',{main:'L05-M',detail:'derived',material:'derived-material'}]
   ]);
   const currentFamily=window.AUTOCINE_DERIVED_DETAIL ||
-    (screenId.startsWith('R-E-') ? 'researchE' :
+    (screenId.startsWith('R-E-') ? 'researchE' : screenId.startsWith('T-B-') ? 'testB' :
       [...candidateViews].find(([,views])=>Object.values(views).includes(screenId))?.[0]);
   const currentViews=candidateViews.get(currentFamily);
   function comparisonRoute(kind) {
