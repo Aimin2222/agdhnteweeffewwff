@@ -664,6 +664,74 @@
     ['researchD','R-D-main'],['researchE','R-E-main'],['researchF','R-F-main']
   ]);
   function openScreen(id) { location.assign(endpoint(`/ui/${encodeURIComponent(id)}`)); }
+  const priority8 = new Map([
+    ['legacy03',{main:'L03-N',detail:'L03-D'}],
+    ['researchC',{main:'R-C-main',detail:'derived'}],
+    ['researchB',{main:'R-B-main',detail:'derived'}],
+    ['researchA',{main:'R-A-main',detail:'R-A-camera',material:'R-A-frames'}],
+    ['testB',{main:'T-B-M',detail:'T-B-C',material:'T-B-F'}],
+    ['testA',{main:'T-A-M',detail:'derived'}],
+    ['legacy06',{main:'L06-L',detail:'L06-E'}],
+    ['researchE',{main:'R-E-main',detail:'R-E-studio',material:'R-E-frames'}]
+  ]);
+  const currentFamily=window.AUTOCINE_DERIVED_DETAIL ||
+    [...priority8].find(([,views])=>Object.values(views).includes(screenId))?.[0];
+  const currentViews=priority8.get(currentFamily);
+  function comparisonRoute(kind) {
+    if (!currentViews) return;
+    const target=currentViews[kind] || currentViews.detail;
+    if (target==='derived') {
+      // A derivative has no audit image and remains outside the 29 audited routes.
+      const mainId=currentViews.main;
+      action('screen',{id:mainId}).then(()=>location.assign(
+        endpoint(`/compare/detail/${encodeURIComponent(currentFamily)}`))).catch(e=>message(e.message));
+    } else action('screen',{id:target}).then(()=>openScreen(target)).catch(e=>message(e.message));
+  }
+  document.querySelectorAll('[data-compare]').forEach(button=>
+    button.addEventListener('click',event=>{event.stopPropagation();comparisonRoute(button.dataset.compare)}));
+  if (currentViews && !document.querySelector('[data-compare]')) {
+    const currentKind=window.AUTOCINE_DERIVED_DETAIL ? 'detail' :
+      screenId===currentViews.main ? 'main' : 'detail';
+    const routeButton=document.createElement('button');
+    routeButton.type='button';
+    routeButton.textContent=currentKind==='main' ? '詳細編集へ →' : '← メインへ戻る';
+    routeButton.title=`${currentFamily} の${currentKind==='main'?'詳細編集':'メイン'}へ移動。設定とシーンは保持`;
+    routeButton.style.cssText='position:fixed;right:0;top:27%;z-index:2000;' +
+      'padding:8px 10px;border:2px solid #075fe0;border-right:0;' +
+      'border-radius:7px 0 0 7px;background:#fff;color:#0746a7;' +
+      'font:600 13px Yu Gothic UI,Meiryo,sans-serif;box-shadow:0 3px 12px #0004;cursor:pointer';
+    routeButton.addEventListener('click',event=>{
+      event.stopPropagation();comparisonRoute(currentKind==='main'?'detail':'main');
+    });
+    document.body.append(routeButton);
+  }
+  if ((currentFamily==='researchB' || currentFamily==='researchC') &&
+      !window.AUTOCINE_DERIVED_DETAIL && !document.querySelector('[data-ui="scene-list"]')) {
+    // The source mock has no scene list. Keep a compact real-operation drawer on
+    // the main view without changing the audited composition or inventing data.
+    const scenesButton=document.createElement('button');
+    scenesButton.type='button';scenesButton.textContent='シーン・スキャン';
+    scenesButton.style.cssText='position:fixed;left:0;top:27%;z-index:2000;padding:8px 10px;' +
+      'border:2px solid #075fe0;border-left:0;border-radius:0 7px 7px 0;' +
+      'background:#fff;color:#0746a7;font:600 13px Yu Gothic UI,Meiryo,sans-serif;' +
+      'box-shadow:0 3px 12px #0004;cursor:pointer';
+    const drawer=document.createElement('section');
+    drawer.dataset.ui='scene-list';
+    drawer.setAttribute('aria-label','実シーン・スキャン操作');
+    drawer.style.cssText='display:none;position:fixed;left:8px;top:34%;z-index:2001;' +
+      'width:min(330px,calc(100vw - 20px));max-height:60vh;overflow:auto;padding:12px;' +
+      'border:1px solid #8da9ce;border-radius:9px;background:#fff;color:#172b3e;' +
+      'font:14px Yu Gothic UI,Meiryo,sans-serif;box-shadow:0 6px 24px #0005';
+    drawer.innerHTML='<h2 style="margin:0 0 8px">検出シーン</h2>' +
+      '<button data-action="scan">試合全体スキャン</button><p data-ui="scan-status">未スキャン</p>' +
+      '<div class="scene-card" data-ui="scene-card-0"><span class="check"></span>' +
+      '<strong>未スキャン</strong><span class="time">--:--</span><span class="side">—</span></div>' +
+      '<button data-action="native_editor_zone" data-action-value="scene">シーン編集・タイムライン</button>';
+    scenesButton.addEventListener('click',event=>{
+      event.stopPropagation();drawer.style.display=drawer.style.display==='none'?'block':'none';
+    });
+    document.body.append(scenesButton,drawer);
+  }
   const switchButton = document.createElement('button');
   switchButton.type = 'button';
   switchButton.textContent = 'UI比較';
@@ -723,6 +791,16 @@
   viewLabel.textContent = '個別画面（全29画面）';
   viewLabel.append(viewPicker);
   switchPanel.append(viewLabel);
+  if (currentViews) {
+    const routes=document.createElement('div');
+    routes.style.cssText='display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px';
+    for (const [kind,label] of [['main','メイン'],['detail','詳細編集'],['material','素材']]) {
+      if (kind==='material' && !currentViews.material) continue;
+      const button=document.createElement('button');button.type='button';button.textContent=label;
+      button.addEventListener('click',()=>comparisonRoute(kind));routes.append(button);
+    }
+    switchPanel.append(routes);
+  }
   const themePicker = document.createElement('select');
   themePicker.setAttribute('aria-label','比較画面の配色');
   themePicker.style.cssText = 'display:block;width:100%;box-sizing:border-box;padding:8px;margin:4px 0 12px';
@@ -752,6 +830,12 @@
   document.querySelectorAll('a[href$=".html"]').forEach(link=>link.addEventListener('click',event=>{
     event.preventDefault();
     const filename=link.getAttribute('href').split('/').pop();
+    if (currentFamily==='researchB' || currentFamily==='researchC') {
+      // The mock links to E/A are placeholders. Keep the user within this candidate.
+      if (filename==='E_studio.html' || filename==='A_camera.html' || filename==='A_frames.html') {
+        comparisonRoute('detail');return;
+      }
+    }
     const prefix=screenId.split('-')[1];
     const suffix=filename.replace('.html','').replace(/^A_|^E_/,'');
     const target=`R-${prefix}-${suffix.replaceAll('_','-')}`;

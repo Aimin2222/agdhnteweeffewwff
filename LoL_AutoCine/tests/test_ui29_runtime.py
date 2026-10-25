@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from ui.audit29_runtime import Audit29Runtime, SCREENS
 from ui.audit29_server import UI29Server
+from ui.comparison_detail import DERIVED_DETAILS, render_detail
 from ui.legacy_reconstruct import render_legacy
 
 
@@ -77,6 +78,37 @@ class App:
 
 
 class Audit29RuntimeTests(unittest.TestCase):
+    def test_three_missing_detail_references_have_explicit_derived_views(self):
+        self.assertEqual(set(DERIVED_DETAILS), {"researchB", "researchC", "testA"})
+        self.assertEqual(len(SCREENS), 29)
+        for family, (_, _, main_id, _) in DERIVED_DETAILS.items():
+            html = render_detail(family, "test-token")
+            self.assertIn("原画像未提供・比較用派生詳細", html)
+            self.assertIn(f"window.AUTOCINE_SCREEN='{main_id}'", html)
+            for action in ("scan", "camera_mode", "frame", "effect_strength",
+                           "motion", "native_editor_zone", "export_menu"):
+                if action == "frame":
+                    self.assertIn('data-ui="material-card-0"', html)
+                else:
+                    self.assertIn(f'data-action="{action}"', html)
+            self.assertIn('data-compare="main"', html)
+
+    def test_derived_detail_route_reuses_runtime_client_and_requires_token(self):
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            server = UI29Server(App(), Path(directory) / "workspace.json")
+            root = f"http://127.0.0.1:{server.http.server_port}"
+            try:
+                for family in DERIVED_DETAILS:
+                    with urlopen(f"{root}/compare/detail/{family}?token={server.token}", timeout=5) as response:
+                        html = response.read().decode("utf-8")
+                    self.assertIn(f"window.AUTOCINE_DERIVED_DETAIL='{family}'", html)
+                    self.assertIn("/runtime/client.js", html)
+                with self.assertRaises(HTTPError) as denied:
+                    urlopen(f"{root}/compare/detail/researchB", timeout=5)
+                self.assertEqual(denied.exception.code, 403)
+            finally:
+                server.close()
+
     def test_all_candidates_remain_distinct(self):
         self.assertEqual(len(SCREENS), 29)
         self.assertEqual(len({screen["family"] for screen in SCREENS.values()}), 12)

@@ -108,6 +108,7 @@ def main() -> None:
                  audit / "SCREENS_29.json")
     (internal / "ui").mkdir(parents=True, exist_ok=True)
     shutil.copy2(APP / "ui" / "audit29_client.js", internal / "ui" / "audit29_client.js")
+    shutil.copy2(APP / "ui" / "comparison_detail.css", internal / "ui" / "comparison_detail.css")
     (internal / "tools" / "bin").mkdir(parents=True, exist_ok=True)
     shutil.copy2(helper, internal / "tools" / "bin" / helper.name)
     fixed_info = None
@@ -149,6 +150,8 @@ def main() -> None:
         "LoL_AutoCine.exe は現行の配置1～9です。従来のBAT起動もこの経路です。\n"
         "LoL_AutoCine_UI29.exe はWebView2内蔵のUI29比較版です。ブラウザ操作は不要です。\n"
         "UI29初回起動時は12候補の一覧から選びます。画面を開いた後は画面右端の『UI比較』タブから12候補・全29画面を選べます（Ctrl+Shift+Uでも開閉）。\n"
+        "優先8候補では画面右上の『詳細編集へ』と『メインへ戻る』で往復できます。\n"
+        "新B・新C・旧テストAの詳細編集は原画像がないため、明示した比較用派生画面です。\n"
         "UI29は29画面を操作できる途中版ですが、外観と全操作の合格は未完了です。\n"
         "LoL実機検証は未完了です。\n"
         + ("Microsoft WebView2 Fixed Runtime x64を同梱しています。別途Runtimeのインストールは不要です。\n"

@@ -18,6 +18,7 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 from ui.audit29_runtime import Audit29Runtime, SCREENS, LEGACY_RECONSTRUCTIONS
 from ui.legacy_reconstruct import SCREEN_IDS as RECONSTRUCTED_SCREEN_IDS, render_legacy
+from ui.comparison_detail import DERIVED_DETAILS, render_detail
 
 
 DESIGN = Path(__file__).resolve().parents[1] / "design" / "ui" / "ui_rethink_20261021"
@@ -180,6 +181,15 @@ document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>butt
                         return self._json(404, {"error": "unknown audited asset"})
                 if path == "/runtime/client.js":
                     return self._send(200, CLIENT.read_bytes(), "text/javascript; charset=utf-8")
+                if path == "/runtime/comparison-detail.css":
+                    return self._send(200, Path(__file__).with_name("comparison_detail.css").read_bytes(),
+                                      "text/css; charset=utf-8")
+                if path.startswith("/compare/detail/"):
+                    family = path.removeprefix("/compare/detail/")
+                    if family not in DERIVED_DETAILS:
+                        return self._json(404, {"error": "unknown comparison detail"})
+                    return self._send(200, render_detail(family, owner.token).encode("utf-8"),
+                                      "text/html; charset=utf-8")
                 if path.startswith("/ui/"):
                     screen_id = path[4:]
                     screen = SCREENS.get(screen_id)

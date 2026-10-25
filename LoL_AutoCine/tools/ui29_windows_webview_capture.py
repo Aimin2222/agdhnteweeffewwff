@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from ui.audit29_desktop import (_child_command, _configure_webview2_runtime,
                                 _stop_backend, _wait_for_backend)
+from ui.comparison_detail import DERIVED_DETAILS
 
 
 def _activate(url: str, action: str, data: dict) -> dict:
@@ -67,12 +68,21 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT / "qa" / "ui29" / "windows_webview2_offline")
     parser.add_argument("--screen", help="capture one audited screen")
+    parser.add_argument("--detail-family", choices=tuple(DERIVED_DETAILS),
+                        help="capture one explicitly derived comparison detail (outside the 29 audited screens)")
     args = parser.parse_args(argv)
     args.output = args.output.resolve()
     args.output.mkdir(parents=True, exist_ok=True)
     inventory = json.loads((ROOT / "design" / "ui" / "implementation_audit_29_20261021" /
                             "SCREENS_29.json").read_text(encoding="utf-8"))
     screens = [screen for screen in inventory if not args.screen or screen["id"] == args.screen]
+    if args.detail_family:
+        if args.screen:
+            parser.error("--screen and --detail-family cannot be combined")
+        main_id = DERIVED_DETAILS[args.detail_family][2]
+        reference = next(screen for screen in inventory if screen["id"] == main_id)
+        screens = [{"id": f"derived-{args.detail_family}", "family": args.detail_family,
+                    "main_id": main_id, "resolution": reference["resolution"], "theme": "light"}]
     if not screens:
         parser.error(f"unknown audited screen: {args.screen}")
     frozen = bool(getattr(sys, "frozen", False))
@@ -100,17 +110,19 @@ def main(argv=None) -> int:
                         for screen in screens:
                             sid = screen["id"]
                             try:
-                                _activate(url, "screen", {"id": sid})
+                                _activate(url, "screen", {"id": screen.get("main_id", sid)})
                                 _activate(url, "theme", {"value": screen["theme"]})
                                 parsed = urlsplit(url)
-                                route = f"{parsed.scheme}://{parsed.netloc}/ui/{sid}?{parsed.query}"
+                                route_path = (f"/compare/detail/{screen['family']}" if args.detail_family
+                                              else f"/ui/{sid}")
+                                route = f"{parsed.scheme}://{parsed.netloc}{route_path}?{parsed.query}"
                                 window.load_url(route)
                                 deadline = time.monotonic() + 15
                                 while time.monotonic() < deadline:
                                     try:
                                         ready = window.evaluate_js(
                                             "document.readyState === 'complete' && "
-                                            f"location.pathname.endsWith('/ui/{sid}')")
+                                            f"location.pathname.endsWith({route_path!r})")
                                         if ready:
                                             break
                                     except Exception:
@@ -136,9 +148,45 @@ def main(argv=None) -> int:
                                 bounds_dir.mkdir(exist_ok=True)
                                 (bounds_dir / f"{sid}.json").write_text(
                                     json.dumps(bounds, ensure_ascii=False, indent=2), encoding="utf-8")
+                                if args.detail_family:
+                                    # Exercise the actual WebView navigation and shared Tk
+                                    # state, not only a direct HTTP request to the route.
+                                    _activate(url, "camera_number", {"key": "third_dist", "value": 900})
+                                    window.evaluate_js("document.querySelector('[data-compare=main]').click()")
+                                    deadline = time.monotonic() + 10
+                                    while time.monotonic() < deadline:
+                                        if window.evaluate_js("location.pathname") == f"/ui/{screen['main_id']}":
+                                            break
+                                        time.sleep(0.1)
+                                    else:
+                                        raise TimeoutError("detail → main navigation failed")
+                                    deadline = time.monotonic() + 10
+                                    while time.monotonic() < deadline:
+                                        if window.evaluate_js("!![...document.querySelectorAll('button')]"
+                                                              ".find(b=>b.textContent.includes('詳細編集へ'))"):
+                                            break
+                                        time.sleep(0.1)
+                                    else:
+                                        raise TimeoutError("main comparison button did not load")
+                                    window.evaluate_js("[...document.querySelectorAll('button')]"
+                                                       ".find(b=>b.textContent.includes('詳細編集へ')).click()")
+                                    deadline = time.monotonic() + 10
+                                    while time.monotonic() < deadline:
+                                        if window.evaluate_js("location.pathname") == route_path:
+                                            break
+                                        time.sleep(0.1)
+                                    else:
+                                        raise TimeoutError("main → detail navigation failed")
+                                    parsed = urlsplit(url)
+                                    state_url = f"{parsed.scheme}://{parsed.netloc}/api/state?{parsed.query}"
+                                    with urlopen(state_url, timeout=5) as response:
+                                        restored = json.load(response)
+                                    if restored["camera"]["values"]["third_dist"] != 900:
+                                        raise AssertionError("camera setting was lost during view switch")
                                 results.append({"id": sid, "result": capture_result,
                                                 "capture": path.name, "size": size,
-                                                "bounds": f"bounds/{sid}.json"})
+                                                "bounds": f"bounds/{sid}.json",
+                                                "main_detail_roundtrip": "PASS" if args.detail_family else "NOT_RUN"})
                             except Exception as exc:
                                 results.append({"id": sid, "result": "FAIL", "error": repr(exc)})
                             print(sid, results[-1]["result"], flush=True)
