@@ -1,0 +1,36 @@
+/* The research CSS owns all default layout and colors. Only transient feedback
+ * is styled here, so idle screenshots retain the Work source geometry. */
+.experience-toast:not([hidden]) {
+  position: fixed;
+  z-index: 500;
+  left: 50%;
+  bottom: 56px;
+  transform: translateX(-50%);
+  max-width: min(680px, calc(100vw - 32px));
+  padding: 10px 16px;
+  border: 1px solid #456481;
+  border-radius: 8px;
+  background: #17334e;
+  color: #fff;
+  box-shadow: 0 8px 28px #142b4259;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Reserve the Work header's original text slot while displaying only a
+ * neutral candidate number. WebView2 uses classic scrollbars on this PC;
+ * keep scrolling available but match the source screenshots' overlay bars. */
+body[data-layout="hybrid"] #variant { width: 200px; flex: none; }
+body[data-layout="flow"] #variant { width: 245px; flex: none; }
+body[data-layout="library"] #variant { width: 230px; flex: none; }
+#left, #right, #timeline, #drawer, dialog { scrollbar-width: none; }
+#left::-webkit-scrollbar, #right::-webkit-scrollbar,
+#timeline::-webkit-scrollbar, #drawer::-webkit-scrollbar,
+dialog::-webkit-scrollbar { width: 0; height: 0; }
+
+@media (max-width: 1500px) {
+  body[data-layout="hybrid"] #variant { width: 175px; }
+  body[data-layout="flow"] #variant { width: 212px; }
+  body[data-layout="library"] #variant { width: 190px; }
+}
