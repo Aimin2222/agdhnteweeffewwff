@@ -1,0 +1,324 @@
+{
+  "screen_id": "L03-N",
+  "family": "legacy03",
+  "reference_sha256": "5a393c69d75140a11498274b639bdcde6561954a8bb8da5de25c35c5af883cc6",
+  "reference_size": [
+    1672,
+    940
+  ],
+  "capture_size": [
+    1672,
+    940
+  ],
+  "size_result": "PASS",
+  "visual_result": "MEASURED",
+  "functional_result": "NOT_RUN",
+  "dynamic_image_mask": [
+    428.05555555555554,
+    91.0,
+    776.8888888888889,
+    437.0
+  ],
+  "unmasked_rgb_mae": 35.0223,
+  "regions": [
+    {
+      "region": "header",
+      "rgb_mae": 30.3484
+    },
+    {
+      "region": "scene-list",
+      "rgb_mae": 32.1515
+    },
+    {
+      "region": "preview-panel",
+      "rgb_mae": 59.6874
+    },
+    {
+      "region": "preview-stage",
+      "rgb_mae": 28.3278
+    },
+    {
+      "region": "preview-controls",
+      "rgb_mae": 184.3538
+    },
+    {
+      "region": "camera-cards",
+      "rgb_mae": 71.7217
+    },
+    {
+      "region": "frame-cards",
+      "rgb_mae": 86.2503
+    },
+    {
+      "region": "effect-cards",
+      "rgb_mae": 70.6745
+    },
+    {
+      "region": "inspector",
+      "rgb_mae": 22.3101
+    },
+    {
+      "region": "output",
+      "rgb_mae": 22.5626
+    },
+    {
+      "region": "timeline",
+      "rgb_mae": 23.3132
+    }
+  ],
+  "bounds": [
+    {
+      "region": "header",
+      "result": "PASS",
+      "expected": [
+        0,
+        0,
+        1672,
+        50
+      ],
+      "actual": [
+        0,
+        0,
+        1672,
+        50
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "scene-list",
+      "result": "PASS",
+      "expected": [
+        10,
+        52,
+        301,
+        666
+      ],
+      "actual": [
+        10,
+        52,
+        301,
+        666
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "preview-panel",
+      "result": "PASS",
+      "expected": [
+        320,
+        52,
+        995,
+        519
+      ],
+      "actual": [
+        320,
+        52,
+        995,
+        519
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "preview-stage",
+      "result": "PASS",
+      "expected": [
+        328,
+        91,
+        977,
+        437
+      ],
+      "actual": [
+        328,
+        91,
+        977,
+        437
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "preview-controls",
+      "result": "PASS",
+      "expected": [
+        328,
+        528,
+        977,
+        42
+      ],
+      "actual": [
+        328,
+        528,
+        977,
+        42
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "camera-cards",
+      "result": "PASS",
+      "expected": [
+        320,
+        578,
+        333,
+        140
+      ],
+      "actual": [
+        320,
+        578,
+        333,
+        140
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "frame-cards",
+      "result": "PASS",
+      "expected": [
+        660,
+        578,
+        353,
+        140
+      ],
+      "actual": [
+        660,
+        578,
+        353,
+        140
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "effect-cards",
+      "result": "PASS",
+      "expected": [
+        1020,
+        578,
+        295,
+        140
+      ],
+      "actual": [
+        1020,
+        578,
+        295,
+        140
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "inspector",
+      "result": "PASS",
+      "expected": [
+        1323,
+        52,
+        339,
+        514
+      ],
+      "actual": [
+        1323,
+        52,
+        339,
+        514
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "output",
+      "result": "PASS",
+      "expected": [
+        1323,
+        573,
+        339,
+        145
+      ],
+      "actual": [
+        1323,
+        573,
+        339,
+        145
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    },
+    {
+      "region": "timeline",
+      "result": "PASS",
+      "expected": [
+        10,
+        727,
+        1652,
+        202
+      ],
+      "actual": [
+        10,
+        727,
+        1652,
+        202
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 8
+    }
+  ]
+}

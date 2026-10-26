@@ -37,10 +37,24 @@ def _ensure_dependencies() -> None:
 
 import sys
 _ensure_dependencies()
-from legacy_app import App
 
 
 def main() -> None:
+    if "--ui29-backend" in sys.argv:
+        from ui.audit29_desktop import run_backend
+        run_backend(sys.argv[sys.argv.index("--ui29-backend") + 1])
+        return
+    if "--ui29" in sys.argv:
+        from ui.audit29_desktop import run_desktop, smoke_backend
+        if "--ui29-smoke" in sys.argv:
+            smoke_backend()
+        elif "--ui29-capture-all" in sys.argv:
+            from tools.ui29_windows_webview_capture import main as capture_webview
+            raise SystemExit(capture_webview(sys.argv[sys.argv.index("--ui29-capture-all") + 1:]))
+        else:
+            run_desktop(window_smoke="--ui29-window-smoke" in sys.argv)
+        return
+    from legacy_app import App
     root = tk.Tk()
     app = App(root)
     if "--legacy-ui" not in sys.argv:
