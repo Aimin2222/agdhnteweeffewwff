@@ -6,6 +6,7 @@ They share the same runtime/client as the audited screens.
 from __future__ import annotations
 
 from html import escape
+from ui.comparison_labels import public_label
 
 
 DERIVED_DETAILS = {
@@ -20,7 +21,8 @@ DERIVED_MATERIALS = {
 
 
 def render_detail(family: str, token: str) -> str:
-    title, subtitle, main_id, layout = DERIVED_DETAILS[family]
+    _, subtitle, main_id, layout = DERIVED_DETAILS[family]
+    title = public_label(family)
     controls = '''
       <section class="box camera-box" data-ui="camera-modes"><h2>カメラ設定</h2>
         <div class="choice-row">
@@ -111,7 +113,8 @@ window.AUTOCINE_DERIVED_DETAIL={family!r};</script>
 
 
 def render_material(family: str, token: str) -> str:
-    title, _, main_id, layout = DERIVED_MATERIALS[family]
+    _, _, main_id, layout = DERIVED_MATERIALS[family]
+    title = public_label(family)
     return f'''<!doctype html><html lang="ja" data-theme="light"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>AutoCine {escape(title)} 素材比較</title>
 <link rel="stylesheet" href="/runtime/comparison-detail.css?token={escape(token)}"></head>

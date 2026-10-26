@@ -7,6 +7,7 @@ the raster references are never used as an interactive background.
 from __future__ import annotations
 
 from html import escape
+from ui.comparison_labels import public_label
 
 
 SCREEN_IDS = frozenset({"L02-M", "L03-N", "L03-D", "L05-M", "L06-L", "L06-E",
@@ -530,7 +531,7 @@ def _component(screen_id: str, region: str) -> str:
                     + _button('書き出し', 'export_menu', cls='primary') + '</nav>')
         if screen_id.startswith('T-B-'):
             return ('<div class="testb-brand"><b class="app-icon">L</b><strong>LoL AutoCine</strong>'
-                    '<span>UI改善案・実動作比較</span><em>B案｜カメラ・エフェクトテスト</em></div>'
+                    '<span>UI比較版</span><em>候補1</em></div>'
                     '<div class="testb-topnav">' + _view_switcher(screen_id) + '</div>'
                     '<nav class="testb-settings">'
                     + _button('リプレイを開く', 'open_replay')
@@ -549,11 +550,10 @@ def _component(screen_id: str, region: str) -> str:
                     + _button('TargetLock', 'native_settings')
                     + _button('37キルバッジ', 'work_gallery')
                     + _button('書き出し', 'export_menu', cls='primary') + '</nav>')
-        title = {'L02-M':'動画編集ソフト標準型','L03-N':'ハイブリッド固定プレビュー型',
-                 'L03-D':'ハイブリッド固定プレビュー型・詳細','L05-M':'ステップウィザード型',
-                 'L06-L':'ライブラリ＋編集分離型','L06-E':'ライブラリ＋編集分離型・編集',
-                 'T-B-M':'カメラ・エフェクトテスト','T-B-S':'カメラテスト設定',
-                 'T-B-C':'カメラテスト設定','T-B-F':'キル演出設定'}[screen_id]
+        title = public_label('testB' if screen_id.startswith('T-B-') else
+                             {'L02-M': 'legacy02', 'L03-N': 'legacy03',
+                              'L03-D': 'legacy03', 'L05-M': 'legacy05',
+                              'L06-L': 'legacy06', 'L06-E': 'legacy06'}[screen_id])
         return ('<div class="brand"><b class="app-icon">L</b><strong>LoL AutoCine</strong>'
                 f'<span>{escape(title)}</span></div>' + _view_switcher(screen_id) + '<nav>'
                 + _button('UI候補', 'choose_screen') + _button('リプレイを開く', 'open_replay')
@@ -702,7 +702,7 @@ def render_legacy(screen: dict) -> str:
                      + _component(screen_id,name) + '</section>')
     return (f'<!doctype html><html lang="ja" data-theme="light"><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width,initial-scale=1">'
-            f'<title>LoL AutoCine — {escape(screen["family_name"])} {screen_id}</title>'
+            f'<title>LoL AutoCine — {public_label(screen["family"])}</title>'
             '<link rel="stylesheet" href="reconstructed.css">'
             f'<body data-screen="{screen_id}" data-plan="{escape(screen["family"])}">'
             f'<main id="legacy-canvas" style="width:{width}px;height:{height}px">'

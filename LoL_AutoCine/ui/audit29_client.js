@@ -707,6 +707,8 @@
     ['legacy06','L06-L'],['researchE','R-E-main'],
     ['legacy02','L02-M'],['legacy05','L05-M']
   ]);
+  const candidateNumbers = new Map(
+    [...familyStart.keys()].map((family,index)=>[family,`候補${index+1}`]));
   function openScreen(id) { location.assign(endpoint(`/ui/${encodeURIComponent(id)}`)); }
   const candidateViews = new Map([
     ['legacy03',{main:'L03-N',detail:'L03-D',material:'derived-material'}],
@@ -742,7 +744,7 @@
     const routeButton=document.createElement('button');
     routeButton.type='button';
     routeButton.textContent=currentKind==='main' ? '詳細編集へ →' : '← メインへ戻る';
-    routeButton.title=`${currentFamily} の${currentKind==='main'?'詳細編集':'メイン'}へ移動。設定とシーンは保持`;
+    routeButton.title=`${candidateNumbers.get(currentFamily)}の${currentKind==='main'?'詳細編集':'メイン'}へ移動。設定とシーンは保持`;
     routeButton.style.cssText='position:fixed;right:0;top:27%;z-index:2000;' +
       'padding:8px 10px;border:2px solid #075fe0;border-right:0;' +
       'border-radius:7px 0 0 7px;background:#fff;color:#0746a7;' +
@@ -787,8 +789,8 @@
   }
   const switchButton = document.createElement('button');
   switchButton.type = 'button';
-  switchButton.textContent = 'UI比較';
-  switchButton.title = '7候補を切り替える';
+  switchButton.textContent = candidateNumbers.get(currentFamily) || 'UI比較';
+  switchButton.title = 'UI比較：現在' + switchButton.textContent + '。クリックして7候補を切り替える';
   switchButton.setAttribute('aria-controls', 'ui29-switch-panel');
   switchButton.setAttribute('aria-expanded', 'false');
   switchButton.style.cssText = 'position:fixed;right:0;top:50%;z-index:2001;' +
@@ -826,10 +828,10 @@
   picker.style.cssText = 'display:block;width:100%;box-sizing:border-box;padding:8px;margin:4px 0 12px';
   for (const [family,id] of familyStart) {
     const option=document.createElement('option');option.value=id;
-    option.textContent=family;
+    option.textContent=candidateNumbers.get(family);
     picker.append(option);
   }
-  picker.value='T-B-M';
+  picker.value=familyStart.get(currentFamily) || 'T-B-M';
   picker.addEventListener('change',()=> action('screen',{id:picker.value}).then(()=>openScreen(picker.value)).catch(e=>message(e.message)));
   const familyLabel = document.createElement('label');
   familyLabel.textContent = '候補グループ';
@@ -887,8 +889,7 @@
   snapshot().then(()=>{
     for (const row of state.value.workspace.screens) {
       const familyOption = [...picker.options].find(option => option.value === familyStart.get(row.family));
-      if (familyOption) familyOption.textContent =
-        row.name;
+      if (familyOption) familyOption.textContent = candidateNumbers.get(row.family);
     }
     themePicker.value=state.value.workspace.theme;
   }).catch(error=>message(error.message));

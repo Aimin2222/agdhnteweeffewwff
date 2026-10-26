@@ -23,6 +23,7 @@ sys.path.insert(0, str(ROOT))
 from ui.audit29_desktop import (_child_command, _configure_webview2_runtime,
                                 _stop_backend, _wait_for_backend)
 from ui.comparison_detail import DERIVED_DETAILS, DERIVED_MATERIALS
+from ui.comparison_labels import CANDIDATE_ORDER, public_label
 
 
 PRIORITY_SEVEN = (
@@ -239,6 +240,8 @@ def main(argv=None) -> int:
                         help="capture a complemented material view")
     parser.add_argument("--priority-seven-flow", action="store_true",
                         help="capture and click through the seven comparison candidates offline")
+    parser.add_argument("--numbered-label-audit", action="store_true",
+                        help="capture chooser/switchers and reject old candidate names in Windows WebView2")
     args = parser.parse_args(argv)
     args.output = args.output.resolve()
     args.output.mkdir(parents=True, exist_ok=True)
@@ -286,9 +289,29 @@ def main(argv=None) -> int:
                 url = _wait_for_backend(child, handoff)
                 window = webview.create_window("LoL AutoCine UI29 Windows QA", "about:blank",
                                                width=640, height=480, frameless=True)
+                chooser_audit = None
 
                 def worker() -> None:
+                    nonlocal chooser_audit
                     try:
+                        if args.numbered_label_audit:
+                            parsed = urlsplit(url)
+                            window.load_url(f"{parsed.scheme}://{parsed.netloc}/choose?{parsed.query}")
+                            _wait_path(window, "/choose")
+                            time.sleep(0.2)
+                            chooser_audit = window.evaluate_js('''(() => ({
+                              labels:[...document.querySelectorAll('button[data-id]')]
+                                .map(button=>button.textContent.trim()),
+                              title:document.title,
+                              visible:document.body.innerText
+                            }))()''')
+                            expected = [public_label(family) for family, _ in CANDIDATE_ORDER]
+                            if chooser_audit["labels"] != expected:
+                                raise AssertionError(f"chooser labels are not numbered: {chooser_audit['labels']}")
+                            if any(name in chooser_audit["visible"] for name in
+                                   ("旧テスト", "旧案", "新E", "Flow", "ハイブリッド", "ウィザード")):
+                                raise AssertionError("old candidate name remains on chooser")
+                            _capture_webview(window, args.output / "chooser.png", (1280, 800))
                         previous_candidate_state = None
                         for screen in screens:
                             sid = screen["id"]
@@ -326,6 +349,34 @@ def main(argv=None) -> int:
                                 size = tuple(screen["resolution"])
                                 path = args.output / f"{sid}.png"
                                 _capture_webview(window, path, size)
+                                label_audit = None
+                                if args.numbered_label_audit:
+                                    label_audit = window.evaluate_js('''(() => {
+                                      const tab=document.querySelector('button[aria-controls="ui29-switch-panel"]');
+                                      const panel=document.querySelector('#ui29-switch-panel');
+                                      const picker=panel?.querySelector('select');
+                                      tab?.click();
+                                      return {tab:tab?.textContent.trim(),title:document.title,
+                                        labels:[...picker.options].map(option=>option.textContent.trim()),
+                                        selected:picker?.value,visible:document.body.innerText,
+                                        panel_open:panel?.style.display==='block'};
+                                    })()''')
+                                    expected = public_label(screen["family"])
+                                    if (label_audit["tab"] != expected or
+                                            label_audit["labels"] !=
+                                            [public_label(family) for family, _ in CANDIDATE_ORDER] or
+                                            label_audit["selected"] !=
+                                            dict(CANDIDATE_ORDER)[screen["family"]] or
+                                            not label_audit["panel_open"] or
+                                            expected not in label_audit["title"] or
+                                            any(name in label_audit["visible"] for name in
+                                                ("旧テスト", "旧案", "新E", "Flow", "ハイブリッド",
+                                                "現行UI整理型", "標準編集", "ウィザード",
+                                                 "A案", "B案", "E案"))):
+                                        raise AssertionError(f"{sid}: candidate name audit failed: {label_audit}")
+                                    _capture_webview(window, args.output / f"switch_{sid}.png", size)
+                                    window.evaluate_js(
+                                        'document.querySelector("button[aria-controls=ui29-switch-panel]").click()')
                                 bounds_json = window.evaluate_js(
                                     "JSON.stringify(Object.fromEntries([...document.querySelectorAll('[data-ui]')]"
                                     ".map(e=>{const r=e.getBoundingClientRect();"
@@ -382,6 +433,7 @@ def main(argv=None) -> int:
                                                 "capture": path.name, "size": size,
                                                 "bounds": f"bounds/{sid}.json",
                                                 "main_detail_roundtrip": ("PASS" if args.detail_family or flow else "NOT_RUN"),
+                                                **({"numbered_label_audit": label_audit} if label_audit else {}),
                                                 **({"priority_seven_flow": flow,
                                                     "previous_candidate_state_retained":
                                                         "PASS" if len(results) else "FIRST_CANDIDATE"}
@@ -397,7 +449,8 @@ def main(argv=None) -> int:
                 _stop_backend(child, url)
     report = {"kind": "WINDOWS_WEBVIEW2_FROZEN_EXE_OFFLINE" if frozen else
               "WINDOWS_WEBVIEW2_SOURCE_HOST_OFFLINE", "lol_replay": "NOT_RUN",
-              "gpu_record_audio_export": "NOT_RUN", "screens": results}
+              "gpu_record_audio_export": "NOT_RUN", "screens": results,
+              **({"chooser": chooser_audit} if args.numbered_label_audit else {})}
     (args.output / "index.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     return 0 if len(results) == len(screens) and all(row["result"].startswith("CAPTURED") for row in results) else 1
 

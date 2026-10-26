@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 import sys
 from tempfile import TemporaryDirectory
 import unittest
@@ -14,6 +15,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from ui.audit29_runtime import Audit29Runtime, SCREENS, default_preferences_path
+from ui.comparison_labels import CANDIDATE_ORDER, public_label
 from ui.audit29_server import UI29Server
 from ui.comparison_detail import DERIVED_DETAILS, render_detail, render_material
 from ui.legacy_reconstruct import render_legacy
@@ -78,6 +80,35 @@ class App:
 
 
 class Audit29RuntimeTests(unittest.TestCase):
+    def test_friend_facing_pages_use_only_numbered_candidate_names(self):
+        forbidden = ("旧テスト", "旧案", "新E", "Flow", "Studio", "ハイブリッド",
+                     "現行UI整理型", "標準編集", "ウィザード", "A案", "B案", "E案")
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            server = UI29Server(App(), Path(directory) / "workspace.json")
+            root = f"http://127.0.0.1:{server.http.server_port}"
+            try:
+                paths = ["/choose"] + [f"/ui/{screen_id}" for screen_id in SCREENS]
+                paths += [f"/compare/detail/{family}" for family in DERIVED_DETAILS]
+                paths += [f"/compare/material/{family}" for family in
+                          ("legacy02", "legacy03", "legacy05", "testA")]
+                for path in paths:
+                    with self.subTest(path=path):
+                        with urlopen(f"{root}{path}?token={server.token}", timeout=5) as response:
+                            html = response.read().decode("utf-8")
+                        visible = re.sub(r"<(script|style)\b[^>]*>.*?</\1>", "", html,
+                                         flags=re.DOTALL | re.IGNORECASE)
+                        visible = re.sub(r"<[^>]*>", "", visible)
+                        for name in forbidden:
+                            self.assertNotIn(name, visible)
+                with urlopen(f"{root}/choose?token={server.token}", timeout=5) as response:
+                    chooser = response.read().decode("utf-8")
+                for index, (_, screen_id) in enumerate(CANDIDATE_ORDER, 1):
+                    self.assertIn(f'data-id="{screen_id}">{public_label(CANDIDATE_ORDER[index-1][0])}',
+                                  chooser)
+                self.assertNotIn("<small>", chooser)
+            finally:
+                server.close()
+
     def test_missing_detail_references_have_explicit_derived_views(self):
         self.assertEqual(set(DERIVED_DETAILS), {"testA", "legacy02", "legacy05"})
         self.assertEqual(len(SCREENS), 16)

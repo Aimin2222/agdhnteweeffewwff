@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 
 from ui.director_work_controls import MODE_LABELS, select_frame_with_effect
+from ui.comparison_labels import public_label
 from core.work_kill_assets import list_assets, paired_effect_for_frame
 from core.camera import CAMERA_SIDE_CHOICES
 from core.kill_icons import MOTION_STYLES
@@ -145,7 +146,7 @@ class Audit29Runtime:
                           "candidate_id": SCREENS[self.screen_id]["family"] if self.screen_id else None,
                           "theme": self.theme,
                           "screens": [{"id": x["id"], "family": x["family"],
-                                       "name": x["family_name"],
+                                       "name": public_label(x["family"]),
                                        "implemented": "html" in x or x["id"] in LEGACY_RECONSTRUCTIONS
                                                       or x["id"] in RECONSTRUCTED_SCREEN_IDS,
                                        "implementation_status": "partial"}

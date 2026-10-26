@@ -19,6 +19,7 @@ from urllib.parse import parse_qs, unquote, urlparse
 from ui.audit29_runtime import Audit29Runtime, SCREENS, LEGACY_RECONSTRUCTIONS
 from ui.legacy_reconstruct import SCREEN_IDS as RECONSTRUCTED_SCREEN_IDS, render_legacy
 from ui.comparison_detail import DERIVED_DETAILS, DERIVED_MATERIALS, render_detail, render_material
+from ui.comparison_labels import CANDIDATE_ORDER, neutralize_reference_html, public_label
 
 
 DESIGN = Path(__file__).resolve().parents[1] / "design" / "ui" / "ui_rethink_20261021"
@@ -117,18 +118,9 @@ class UI29Server:
                     except Exception as exc:
                         return self._json(500, {"error": str(exc)})
                 if path == "/choose":
-                    priority_main = {"testB": "T-B-M", "legacy03": "L03-N",
-                                     "testA": "T-A-M", "legacy06": "L06-L",
-                                     "researchE": "R-E-main", "legacy02": "L02-M",
-                                     "legacy05": "L05-M"}
-                    priority = tuple(priority_main)
-                    ordered = [SCREENS[priority_main[key]] for key in priority]
                     buttons = "".join(
-                        f'<button data-id="{row["id"]}">'
-                        f'★ 比較候補：'
-                        f'{row["family_name"]} <small>{row["id"]}</small>'
-                        f'{" — 再構成中" if row["id"] in RECONSTRUCTED_SCREEN_IDS else " — 検証中"}</button>'
-                        for row in ordered)
+                        f'<button data-id="{screen_id}">{public_label(family)}</button>'
+                        for family, screen_id in CANDIDATE_ORDER)
                     html = '''<!doctype html><html lang="ja"><meta charset="utf-8">
 <title>AutoCine UI候補を選ぶ</title><meta name="viewport" content="width=device-width,initial-scale=1">
 <style>body{font:16px "Yu Gothic UI",Meiryo,sans-serif;background:#eef1f4;color:#172b3e;margin:0}
@@ -214,6 +206,7 @@ document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>butt
                         source = ((LEGACY_DESIGN / LEGACY_RECONSTRUCTIONS[screen_id])
                                   if screen_id in LEGACY_RECONSTRUCTIONS else DESIGN / screen["html"])
                         html = source.read_text(encoding="utf-8")
+                        html = neutralize_reference_html(screen_id, html)
                     html = html.replace('<script src="ui.js"></script>',
                         f'<script>window.AUTOCINE_TOKEN={json.dumps(owner.token)};'
                         f'window.AUTOCINE_SCREEN={json.dumps(screen_id)};</script>'
