@@ -10,6 +10,7 @@ import subprocess
 import sys
 import shutil
 from dataclasses import dataclass, field, replace, asdict
+import math
 from pathlib import Path
 from typing import Optional
 
@@ -434,7 +435,8 @@ def _build_video_effect_filters(t: Template, duration: float, events: list[tuple
         f.append(f"rotate='sin(2*PI*t/0.8)*{ang:.5f}':ow=iw:oh=ih:fillcolor=black")
     if e.get("zoom_blur"):
         k=e["zoom_blur"]; z=0.025+0.10*k
-        f.append(f"scale=w='1920*(1+{z:.4f}*abs(sin(2*PI*t/1.6)))':h='1080*(1+{z:.4f}*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4")
+        tmix_scale = "0.25" if getattr(t, "zoom_blur_revision", os.environ.get("AUTOCINE_RESEARCH_ZOOM", "legacy")) == "normalized_tmix_v1" else "4"
+        f.append(f"scale=w='1920*(1+{z:.4f}*abs(sin(2*PI*t/1.6)))':h='1080*(1+{z:.4f}*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale={tmix_scale}")
     if e.get("radial_blur"):
         k=e["radial_blur"]
         f.append(f"tmix=frames={3 if k<0.6 else 5}:weights='1 2 1'")
@@ -456,9 +458,26 @@ def _build_video_effect_filters(t: Template, duration: float, events: list[tuple
     if e.get("chroma_leak"):
         px=int(4+32*e["chroma_leak"])
         f.append(f"rgbashift=rh={px}:bh=-{px}:enable={expr}")
-    if e.get("flash"):
+    if e.get("flash") and events:
         amp=0.18+0.65*e["flash"]
-        f.append(f"eq=brightness='{amp:.3f}*exp(-18*abs(t-{events[0][0]:.3f}))':eval=frame:enable={_enable_expr(events, after=0.15)}")
+        if getattr(t, "flash_revision", os.environ.get("AUTOCINE_RESEARCH_FLASH", "legacy")) == "causal_pts_v1":
+            # Compare the unrounded event time with each frame's actual PTS.
+            # For CFR this starts at ceil(event_time*fps); for VFR it uses the
+            # first real PTS >= event. max keeps simultaneous events distinct
+            # without adding their brightness or letting future kills leak.
+            onset = []
+            for start, _end in events:
+                start = float(start)
+                if not math.isfinite(start) or start < 0:
+                    raise ValueError("Flash event time must be finite and nonnegative")
+                stamp = f"{start:.9f}"
+                onset.append(f"if(gte(t,{stamp}),{amp:.3f}*exp(-18*(t-{stamp})),0)")
+            expression = onset[0]
+            for pulse in onset[1:]:
+                expression = f"max({expression},{pulse})"
+            f.append(f"eq=brightness='{expression}':eval=frame")
+        else:
+            f.append(f"eq=brightness='{amp:.3f}*exp(-18*abs(t-{events[0][0]:.3f}))':eval=frame:enable={_enable_expr(events, after=0.15)}")
     # 全体系
     if e.get("focus_blur"):
         sigma=1.0+8.0*e["focus_blur"]
@@ -906,6 +925,8 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
         "gpu_effects_selected": sorted(consumed_gpu),
         "cpu_video_effects": sorted(k for k, value in original_effects.items()
                                     if float(value or 0) > 0.001 and k not in consumed_gpu),
+        "flash_revision": getattr(t, "flash_revision", os.environ.get("AUTOCINE_RESEARCH_FLASH", "legacy")),
+        "zoom_blur_revision": getattr(t, "zoom_blur_revision", os.environ.get("AUTOCINE_RESEARCH_ZOOM", "legacy")),
         "bloom_cpu_optimized": bool(t.bloom > 0 and 'bloom' not in consumed_gpu),
         "dof_mask_cpu_optimized": bool(t.dof_enabled and t.dof_blur > 0.01 and 'dof' not in consumed_gpu),
         "bloom_level": t.bloom,
