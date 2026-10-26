@@ -1,42 +1,16 @@
-# ダウンロード更新：ブラウザー体験版
+# 配布案内停止：AutoCine UI操作デモ
 
-元のWindows版ZIPは、このPCのWindows保護機能が「ウイルスまたは望ましくない可能性のあるソフトウェア」として読み取りをブロックしました。誤検知かどうかは未確認です。
+Windows Defenderが元のWindows版ZIPに加え、ブラウザー版のHTML/JavaScriptも検知し、起動用ファイルが利用不能になったことを確認しました。誤検知かどうかは未確認です。操作デモのダウンロード・起動案内を停止します。
 
-[EXE・DLLを含まないブラウザー体験版をダウンロード](AutoCine_UI_BrowserOnly_20261027.zip)
+「EXE/DLLを除いた版なら開ける」という以前の案内は撤回します。ファイルの改名・再圧縮・隔離復元・保護解除・除外登録で回避しないでください。コードの安全性を確認できるまで、操作版を開かないでください。
 
-すべて展開して `index.html` を通常のブラウザーで開いてください。R1/R2切替、設定、FOVキー、色の近似を試せます。WebView2ホスト専用の撮影は使えません。LoL/録画/GPU/音声/実動画出力は引き続き未接続です。
+以前のhash照合・起動・UIイベント試験は機能検証の記録であり、マルウェア安全性の保証ではありません。
 
-この版はネイティブEXE・DLL・CMD・BAT・PowerShell・インストーラーを含みません。元ZIPの改名や同一実行ファイルの再圧縮ではありません。保護設定の変更、除外登録、隔離ファイルの復元は行っていません。
+静止画像と日本語の研究資料は引き続き参照できます。
 
----
+- [R1 Track Desk 静止画像](screenshots/LD_main_light_1920x1080.png)
+- [R2 Shot Canvas 静止画像](screenshots/LN_main_light_1920x1080.png)
+- [実画面比較資料](research/実画面比較_JA.md)
+- [70機能比較](specs/70機能比較_JA.md)
 
-以下は初回研究納品時の記録です。元Windows版の起動案内は上記の更新を優先してください。
-
-# AutoCine｜League Director・Lolnam UI比較研究
-2026-10-27。比較対象はこの2ソフトのみ。研究提案と製品実装を分離する。
-
-## Windowsで試す
-ZIPをすべて展開し、`体験版を起動.cmd` または `windows/AutoCine_UI_Reference_v1.exe` をダブルクリックする。Pythonは不要。既存のWebView2 Runtimeと.NET Framework 4.6.2以降が必要。自動インストールは行わない。Windows x64の現在環境で実行確認した。別のクリーンPCでの配布試験は未実施。
-
-- R1 Track Desk：League Directorの数値・多段キーの俯瞰を参考に、固定3領域＋中央previewを設計。
-- R2 Shot Canvas：Lolnamの映像中心・timeline/curve切替を参考に、tool rail＋shotstripを設計。
-- 両案にメイン・かんたん・詳細・カメラ・カーブ・色・素材・出力を用意。ライト/ダーク/Windows追従。
-
-操作できるのは研究UIの状態編集。合成preview、FOV/回転の表示、数値、FOVキー/補間、scene選択、出力チェック、色のCSS近似、図形素材、Undo/Redo、JSON保存/読込。LoL/TargetLock/scan/GPU/ゲーム音/録画/実動画出力は未接続。ゲーム画面や他社素材をプレビューとして流用していない。
-
-## 成果物
-- `index.html`：自作画面20枚・比較図2枚・資料を閲覧するローカルギャラリー。
-- `research/実画面比較_JA.md` / `SOURCES.json`：公式画像4枚と原文の確認範囲・出典。第三者画像は公開物に含めない。
-- `specs/70機能比較_JA.md` / JSON：既存70機能との照合・各案の導線・不足/残件。
-- `specs/WINDOWS_IMPLEMENTATION_JA.md`：Windows/WebView2と既存処理を接続する仕様。
-- `specs/LAYOUT_TOKENS.json` / `COLOR_TOKENS.json`：寸法・色・配置の基準。
-- `tests/`：85モデル試験、19DOMイベント試験、10自己テスト、20画面の実測結果。
-- `demo/` / `windows/`：操作可能なHTML/CSS/JSとWindowsホスト、ソース、SDKのlicense/notice。
-
-## 現行候補を維持
-混合案A＝候補7メイン＋候補4詳細/素材/枠、簡単編集未決定。候補3/5/8も維持。今回のR1/R2は追加参考案であり、旧UI・UI29・比較アプリを置換しない。全候補の採点・順位付け・正式採用はしていない。
-
-## 検証の限界
-公式画面を確認したが参照2アプリは起動していない。デモは既存70機能を実行できる製品版ではない。テストには重複するモデルassertionがあり、総数を「114件の独立した実機E2E合格」としない。native pointer/keyboard/IME、OSファイルダイアログ、複数DPI、別PC、実バックエンドはNOT_RUN。P2残523、651暫定肖像形状、19原本制約と前工程の実LoL/GPU/音声/DPI残件はそのまま保持した。
-
-保存commitとZIP再取得・実展開・hashの結果は、封印後の `SAVE_RECEIPT.json` に記録する（ZIP外）。
+混合案7＋4、比較3/5/8、AutoCine本体・UI29・main・正式素材は変更していません。前工程のP2残523等も未完のままです。今回の読み取り確認でWindows保護設定は変更していません。
