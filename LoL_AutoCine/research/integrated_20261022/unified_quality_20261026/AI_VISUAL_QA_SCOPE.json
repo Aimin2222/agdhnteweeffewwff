@@ -1,0 +1,31 @@
+{
+  "additional_representative_images": [
+    "A4_parity/comparison_instant.png",
+    "A4_parity/comparison_pop.png",
+    "A4_parity/comparison_slide_left.png",
+    "A4_parity/comparison_slide_right.png",
+    "A4_parity/comparison_slide_up.png",
+    "A4_parity/comparison_slide_down.png",
+    "A3_fx/flash_VFR.png",
+    "A3_fx/flash_headroom_patch.png",
+    "A3_fx/zoom_center_tracking_compare.png",
+    "A3_fx/combo_zoom_blur_flash.png",
+    "A3_fx/combo_focus_blur_glint.png",
+    "B1_camera/methods_compare.png",
+    "B2_oneclick/plan_compare.png",
+    "B3_audio/video_pulse_frames.png"
+  ],
+  "pair_images_inspected": 38,
+  "new_P2_images_inspected": 24,
+  "human_temporal_approval": false,
+  "full_video_temporal_watching": false,
+  "observations": [
+    "旧位置画像の登場中に画面端切れ/並び差が見える。共有列の2合成は同じ見た目。",
+    "headroom3強度が上限で同色に見え、強弱の見せ方として未完成。",
+    "時間blurは過去位置の二重像、宣言対象中心の空間blurは周囲を伸ばす。",
+    "zoom+旧flashの明るさ上昇が大きい。正規化だけで演出安全性は承認しない。",
+    "カメラ速度制限は急跳びを減らす一方、対象枠への遅れが見える。",
+    "AV画像は合成flashの前/中/後を確認。ゲーム映像ではない。"
+  ],
+  "queue_file_note": "*_VISUAL_QUEUEは生成時NOT_RUNを保持する選定記録。実際の審査状態はAI_*REVIEWSを参照。"
+}

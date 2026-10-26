@@ -1,0 +1,135 @@
+{
+  "baseline": {
+    "project": {
+      "id": "研究のみ",
+      "scenes": [
+        {
+          "id": "s1",
+          "in": 6,
+          "out": 15.1,
+          "override": {
+            "style": "third"
+          }
+        }
+      ]
+    },
+    "camera": {
+      "style": "third",
+      "side": "RED",
+      "target": "P1",
+      "TargetLock": true
+    },
+    "selectedScene": "s1",
+    "checkedScenes": [
+      "s2"
+    ],
+    "preview": {
+      "timeUs": 150000,
+      "playing": false
+    },
+    "assets": {
+      "frame": "083/a_simple_main",
+      "reviewUse": false
+    },
+    "audio": {
+      "source": "lol_process_only",
+      "bgmEnabled": false
+    },
+    "encoder": "auto",
+    "HUD": "hidden"
+  },
+  "cases": [
+    {
+      "candidate": "7",
+      "theme": "light",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "7",
+      "theme": "dark",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "7",
+      "theme": "system",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "4",
+      "theme": "light",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "4",
+      "theme": "dark",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "4",
+      "theme": "system",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "3",
+      "theme": "light",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "3",
+      "theme": "dark",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "3",
+      "theme": "system",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "5",
+      "theme": "light",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "5",
+      "theme": "dark",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "5",
+      "theme": "system",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "8",
+      "theme": "light",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "8",
+      "theme": "dark",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    },
+    {
+      "candidate": "8",
+      "theme": "system",
+      "unchanged_project_camera_preview": true,
+      "status": "PASS"
+    }
+  ],
+  "scope": "independent data contract fixture; no real UI switch, theme implementation, or LoL session executed",
+  "native_UI_test": "NOT_RUN"
+}

@@ -1,0 +1,168 @@
+{
+  "cases": [
+    {
+      "clock_case": "VFR",
+      "clock_pts": [
+        "0",
+        "2/125",
+        "1/20",
+        "83/1000",
+        "1/10",
+        "1003/10000",
+        "63/625",
+        "133/1000",
+        "1/5",
+        "3/10",
+        "301/1000",
+        "1/2"
+      ],
+      "pre_event_max_delta": 0,
+      "status": "PASS",
+      "graph": "settb=1/1000000,setpts='if(eq(N,0),0,if(eq(N,1),16000,if(eq(N,2),50000,if(eq(N,3),83000,if(eq(N,4),100000,if(eq(N,5),100300,if(eq(N,6),100800,if(eq(N,7),133000,if(eq(N,8),200000,if(eq(N,9),300000,if(eq(N,10),301000,500000)))))))))))',eq=brightness='max(max(max(max(0,if(gte(t,0.100400000000),0.278*exp(-18*abs(t-0.100400000000)),0)),if(gte(t,0.108400000000),0.278*exp(-18*abs(t-0.108400000000)),0)),if(gte(t,0.108400000000),0.278*exp(-18*abs(t-0.108400000000)),0)),if(gte(t,0.300200000000),0.278*exp(-18*abs(t-0.300200000000)),0))':eval=frame",
+      "scope": "actual CPU filter clock, seek/pause simulated; no real seek API or VFR mux timestamps",
+      "patch_mean": [
+        80.0,
+        80.0,
+        80.0,
+        80.0,
+        80.0,
+        80.0,
+        160.0,
+        129.0,
+        94.0,
+        79.0,
+        160.0,
+        79.0
+      ]
+    },
+    {
+      "clock_case": "seek_back",
+      "clock_pts": [
+        "0",
+        "1/20",
+        "1/10",
+        "3/20",
+        "1/5",
+        "1/4",
+        "0",
+        "1/20",
+        "1/10",
+        "3/20",
+        "1/5"
+      ],
+      "pre_event_max_delta": 0,
+      "status": "PASS",
+      "graph": "settb=1/1000000,setpts='if(eq(N,0),0,if(eq(N,1),50000,if(eq(N,2),100000,if(eq(N,3),150000,if(eq(N,4),200000,if(eq(N,5),250000,if(eq(N,6),0,if(eq(N,7),50000,if(eq(N,8),100000,if(eq(N,9),150000,200000))))))))))',eq=brightness='max(max(max(max(0,if(gte(t,0.100400000000),0.278*exp(-18*abs(t-0.100400000000)),0)),if(gte(t,0.108400000000),0.278*exp(-18*abs(t-0.108400000000)),0)),if(gte(t,0.108400000000),0.278*exp(-18*abs(t-0.108400000000)),0)),if(gte(t,0.300200000000),0.278*exp(-18*abs(t-0.300200000000)),0))':eval=frame",
+      "scope": "actual CPU filter clock, seek/pause simulated; no real seek API or VFR mux timestamps",
+      "patch_mean": [
+        80.0,
+        80.0,
+        80.0,
+        118.0,
+        94.0,
+        85.0,
+        80.0,
+        80.0,
+        80.0,
+        118.0,
+        94.0
+      ]
+    },
+    {
+      "clock_case": "pause",
+      "clock_pts": [
+        "0",
+        "1/20",
+        "1/10",
+        "1/10",
+        "1/10",
+        "3/20",
+        "1/5",
+        "1/4"
+      ],
+      "pre_event_max_delta": 0,
+      "status": "PASS",
+      "graph": "settb=1/1000000,setpts='if(eq(N,0),0,if(eq(N,1),50000,if(eq(N,2),100000,if(eq(N,3),100000,if(eq(N,4),100000,if(eq(N,5),150000,if(eq(N,6),200000,250000)))))))',eq=brightness='max(max(max(max(0,if(gte(t,0.100400000000),0.278*exp(-18*abs(t-0.100400000000)),0)),if(gte(t,0.108400000000),0.278*exp(-18*abs(t-0.108400000000)),0)),if(gte(t,0.108400000000),0.278*exp(-18*abs(t-0.108400000000)),0)),if(gte(t,0.300200000000),0.278*exp(-18*abs(t-0.300200000000)),0))':eval=frame",
+      "scope": "actual CPU filter clock, seek/pause simulated; no real seek API or VFR mux timestamps",
+      "patch_mean": [
+        80.0,
+        80.0,
+        80.0,
+        80.0,
+        80.0,
+        118.0,
+        94.0,
+        85.0
+      ]
+    },
+    {
+      "clock_case": "speed_change",
+      "clock_pts": [
+        "0",
+        "33/1000",
+        "33/500",
+        "1/10",
+        "29/250",
+        "133/1000",
+        "3/20",
+        "27/125",
+        "283/1000",
+        "7/20"
+      ],
+      "pre_event_max_delta": 0,
+      "status": "PASS",
+      "graph": "settb=1/1000000,setpts='if(eq(N,0),0,if(eq(N,1),33000,if(eq(N,2),66000,if(eq(N,3),100000,if(eq(N,4),116000,if(eq(N,5),133000,if(eq(N,6),150000,if(eq(N,7),216000,if(eq(N,8),283000,350000)))))))))',eq=brightness='max(max(max(max(0,if(gte(t,0.100400000000),0.278*exp(-18*abs(t-0.100400000000)),0)),if(gte(t,0.108400000000),0.278*exp(-18*abs(t-0.108400000000)),0)),if(gte(t,0.108400000000),0.278*exp(-18*abs(t-0.108400000000)),0)),if(gte(t,0.300200000000),0.278*exp(-18*abs(t-0.300200000000)),0))':eval=frame",
+      "scope": "actual CPU filter clock, seek/pause simulated; no real seek API or VFR mux timestamps",
+      "patch_mean": [
+        80.0,
+        80.0,
+        80.0,
+        80.0,
+        150.0,
+        129.0,
+        118.0,
+        91.0,
+        83.0,
+        112.0
+      ]
+    }
+  ],
+  "strengths": [
+    {
+      "strength": 0.15,
+      "clip_channel_fraction": 0.013888888888888888,
+      "peak_rgb": [
+        255,
+        233,
+        179
+      ],
+      "status": "REVIEW",
+      "candidate": "luma/headroom limiter needed; causal gate alone does not preserve color"
+    },
+    {
+      "strength": 0.5,
+      "clip_channel_fraction": 0.05555555555555555,
+      "peak_rgb": [
+        255,
+        255,
+        220
+      ],
+      "status": "REVIEW",
+      "candidate": "luma/headroom limiter needed; causal gate alone does not preserve color"
+    },
+    {
+      "strength": 0.9,
+      "clip_channel_fraction": 0.1111111111111111,
+      "peak_rgb": [
+        255,
+        255,
+        220
+      ],
+      "status": "REVIEW",
+      "candidate": "luma/headroom limiter needed; causal gate alone does not preserve color"
+    }
+  ],
+  "real_replay_seek_pause": "NOT_RUN",
+  "VFR_container_roundtrip": "NOT_RUN",
+  "CFR_prior_48_tests": "inherited, not rerun"
+}

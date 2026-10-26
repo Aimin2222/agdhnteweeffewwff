@@ -1,0 +1,117 @@
+[
+  {
+    "fault": "none",
+    "error": null,
+    "journal": {
+      "completed": [
+        "c1",
+        "c2",
+        "c3"
+      ],
+      "failed": [],
+      "cancelled": false
+    },
+    "resume_only_missing": [],
+    "state_restored": true,
+    "journal_roundtrip": true,
+    "status": "PASS",
+    "scope": "independent research recovery state machine; errors injected, no real disk fill/disconnect/process stop"
+  },
+  {
+    "fault": "disk_full",
+    "error": "ENOSPC fixture",
+    "journal": {
+      "completed": [
+        "c1"
+      ],
+      "failed": [],
+      "cancelled": false
+    },
+    "resume_only_missing": [
+      "c2",
+      "c3"
+    ],
+    "state_restored": true,
+    "journal_roundtrip": true,
+    "status": "PASS",
+    "scope": "independent research recovery state machine; errors injected, no real disk fill/disconnect/process stop"
+  },
+  {
+    "fault": "lol_disconnect",
+    "error": "Replay disconnected fixture",
+    "journal": {
+      "completed": [
+        "c1"
+      ],
+      "failed": [],
+      "cancelled": false
+    },
+    "resume_only_missing": [
+      "c2",
+      "c3"
+    ],
+    "state_restored": true,
+    "journal_roundtrip": true,
+    "status": "PASS",
+    "scope": "independent research recovery state machine; errors injected, no real disk fill/disconnect/process stop"
+  },
+  {
+    "fault": "cancel",
+    "error": null,
+    "journal": {
+      "completed": [
+        "c1"
+      ],
+      "failed": [],
+      "cancelled": true
+    },
+    "resume_only_missing": [
+      "c2",
+      "c3"
+    ],
+    "state_restored": true,
+    "journal_roundtrip": true,
+    "status": "PASS",
+    "scope": "independent research recovery state machine; errors injected, no real disk fill/disconnect/process stop"
+  },
+  {
+    "fault": "clip_failure",
+    "error": null,
+    "journal": {
+      "completed": [
+        "c1",
+        "c3"
+      ],
+      "failed": [
+        "c2"
+      ],
+      "cancelled": false
+    },
+    "resume_only_missing": [
+      "c2"
+    ],
+    "state_restored": true,
+    "journal_roundtrip": true,
+    "status": "PASS",
+    "scope": "independent research recovery state machine; errors injected, no real disk fill/disconnect/process stop"
+  },
+  {
+    "fault": "write_failure",
+    "error": "EACCES fixture",
+    "journal": {
+      "completed": [
+        "c1"
+      ],
+      "failed": [],
+      "cancelled": false
+    },
+    "resume_only_missing": [
+      "c2",
+      "c3"
+    ],
+    "state_restored": true,
+    "journal_roundtrip": true,
+    "status": "PASS",
+    "scope": "independent research recovery state machine; errors injected, no real disk fill/disconnect/process stop"
+  }
+]

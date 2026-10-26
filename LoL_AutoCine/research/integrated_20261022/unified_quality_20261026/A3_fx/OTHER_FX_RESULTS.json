@@ -1,0 +1,274 @@
+[
+  {
+    "id": "motion_camera",
+    "strength": 0.15,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.7122062999987975,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/motion_camera_0.15.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "7216d6dddcee206b307b9055ea280a2a00a2394b84898dd8fb3369f8d412c610",
+      "decode": "PASS"
+    },
+    "graph": "crop=w=iw*0.94:h=ih*0.94:x='(iw-ow)/2+sin(2*PI*t/2.7)*5.70':y='(ih-oh)/2+cos(2*PI*t/3.1)*3.13',scale=1920:1080:flags=lanczos,scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "motion_camera",
+    "strength": 0.5,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.7075264999875799,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/motion_camera_0.5.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "d0ae81603ab17cd58cf8785b13c3d3033beb644b07c642be7228f4cc6fdf2131",
+      "decode": "PASS"
+    },
+    "graph": "crop=w=iw*0.94:h=ih*0.94:x='(iw-ow)/2+sin(2*PI*t/2.7)*12.00':y='(ih-oh)/2+cos(2*PI*t/3.1)*6.60',scale=1920:1080:flags=lanczos,scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "glitch",
+    "strength": 0.15,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.4042405000072904,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/glitch_0.15.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "3d99886ac00e61ed678fc559b49cc513b3368b7a6930c1127c8ab195496382a0",
+      "decode": "PASS"
+    },
+    "graph": "rgbashift=rh=4:bh=-4:enable='between(t,0,0.600)',noise=alls=9:allf=t+u:enable='between(t,0,0.600)',scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "glitch",
+    "strength": 0.5,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.40473839998594485,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/glitch_0.5.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "02733d1169fe8dabef66a954689316f6f5d478e2aaec3f0dc9d8e4a17fd5eae3",
+      "decode": "PASS"
+    },
+    "graph": "rgbashift=rh=11:bh=-11:enable='between(t,0,0.600)',noise=alls=16:allf=t+u:enable='between(t,0,0.600)',scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "focus_blur",
+    "strength": 0.15,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.5180334000033326,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/focus_blur_0.15.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "d8db79ae2666caefbe8a6e7243244105fdc2adc323074a7008f7e3a9f9eb64f7",
+      "decode": "PASS"
+    },
+    "graph": "scale=960:540:flags=bilinear,gblur=sigma=2.20:steps=1,scale=1920:1080:flags=bilinear,scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "focus_blur",
+    "strength": 0.5,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.5144310999894515,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/focus_blur_0.5.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "794f60dd79cc6620864a0f7730ab111f6384984894e52cfec387f80cbff490ec",
+      "decode": "PASS"
+    },
+    "graph": "scale=960:540:flags=bilinear,gblur=sigma=5.00:steps=1,scale=1920:1080:flags=bilinear,scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "camera_shake",
+    "strength": 0.15,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.7062424999894574,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/camera_shake_0.15.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "36a50a5787841e09b22d9bcc76d5a4b0c1f4339d9cf58a044c43456bb359e445",
+      "decode": "PASS"
+    },
+    "graph": "crop=w=iw*0.96:h=ih*0.96:x='(iw-ow)/2+sin(2*PI*t/0.12)*5.30':y='(ih-oh)/2+cos(2*PI*t/0.095)*3.71',scale=1920:1080:flags=lanczos,scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "camera_shake",
+    "strength": 0.5,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.712299200007692,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/camera_shake_0.5.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "39172e70e4b3bfd2efcf16c891ad0fb8d2de82e5c7092ca43f2a6a688ea9e176",
+      "decode": "PASS"
+    },
+    "graph": "crop=w=iw*0.96:h=ih*0.96:x='(iw-ow)/2+sin(2*PI*t/0.12)*13.00':y='(ih-oh)/2+cos(2*PI*t/0.095)*9.10',scale=1920:1080:flags=lanczos,scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "vignette_fx",
+    "strength": 0.15,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.6149098000023514,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/vignette_fx_0.15.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "9cf8fd0c18312387b681bc14abdc683db2bdc8e4985451fd41836049c404fdc7",
+      "decode": "PASS"
+    },
+    "graph": "vignette=angle=0.983,scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "vignette_fx",
+    "strength": 0.5,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.6144456000183709,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/vignette_fx_0.5.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "35e0cfdeb7b753ced086b8a698e1c56fed7b19c8ffe1afdc54ab5cfbaa69108c",
+      "decode": "PASS"
+    },
+    "graph": "vignette=angle=0.825,scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "glint",
+    "strength": 0.15,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.5912119999993593,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/glint_0.15.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "4d3f8a96aa91d222788ca67fd796522a8290d87292449bf841b6a952a6415d99",
+      "decode": "PASS"
+    },
+    "graph": "unsharp=lx=5:ly=5:la=0.45,eq=contrast=1.038:brightness=0.032,scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "glint",
+    "strength": 0.5,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.5843157000199426,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/glint_0.5.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "a9c56461405a56f2639b1dc747d9f69cc547893ea5869f1ebb7cba1b88f26478",
+      "decode": "PASS"
+    },
+    "graph": "unsharp=lx=5:ly=5:la=0.45,eq=contrast=1.125:brightness=0.060,scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "chroma_leak",
+    "strength": 0.15,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.3922885999782011,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/chroma_leak_0.15.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "6198afa0f379d122f4136a68ac0ec486f1c5673f25af226164aa72c744f95b9e",
+      "decode": "PASS"
+    },
+    "graph": "rgbashift=rh=8:bh=-8:enable='between(t,0.180,0.680)',scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "chroma_leak",
+    "strength": 0.5,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.38566470000660047,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/chroma_leak_0.5.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "6213c57e167584a1917ae0626067a61edaeddd1d4f6c3587ba46690c1b44d0e2",
+      "decode": "PASS"
+    },
+    "graph": "rgbashift=rh=20:bh=-20:enable='between(t,0.180,0.680)',scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "radial_blur",
+    "strength": 0.15,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 0.6846809000126086,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/radial_blur_0.15.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "01f6b76b7bd7464c3905d2953444dc162b39c023e64a8ffca12077236989e0ea",
+      "decode": "PASS"
+    },
+    "graph": "tmix=frames=3:weights='1 2 1',scale=640:360:flags=lanczos"
+  },
+  {
+    "id": "radial_blur",
+    "strength": 0.5,
+    "status": "REVIEW",
+    "render": "PASS",
+    "elapsed_seconds": 1.0129228000005241,
+    "scope": "18 native1920 CPU frames; one wall-clock run including process startup, not a performance benchmark",
+    "white_fraction": 0.0,
+    "video": {
+      "path": "A3_fx/samples/radial_blur_0.5.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "01f6b76b7bd7464c3905d2953444dc162b39c023e64a8ffca12077236989e0ea",
+      "decode": "PASS"
+    },
+    "graph": "tmix=frames=3:weights='1 2 1',scale=640:360:flags=lanczos"
+  }
+]

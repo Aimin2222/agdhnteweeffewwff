@@ -1,0 +1,166 @@
+{
+  "inputs": [
+    {
+      "event_id": "k1",
+      "time": 10.0,
+      "role": "kill",
+      "multikill": 1,
+      "actor": "P1",
+      "victim": "V1"
+    },
+    {
+      "event_id": "k2",
+      "time": 11.2,
+      "role": "kill",
+      "multikill": 2,
+      "actor": "P1",
+      "victim": "V2"
+    },
+    {
+      "event_id": "k3",
+      "time": 12.1,
+      "role": "kill",
+      "multikill": 3,
+      "actor": "P1",
+      "victim": "V3"
+    },
+    {
+      "event_id": "a1",
+      "time": 30.0,
+      "role": "assist",
+      "multikill": 1,
+      "actor": "P1",
+      "victim": "V4"
+    },
+    {
+      "event_id": "k4",
+      "time": 60.0,
+      "role": "kill",
+      "multikill": 1,
+      "actor": "P1",
+      "victim": "V5"
+    }
+  ],
+  "existing_smart_order": [
+    "a1",
+    "k1",
+    "k4",
+    "k2",
+    "k3"
+  ],
+  "candidate": {
+    "groups": [
+      {
+        "actor": "P1",
+        "in": 6.0,
+        "out": 15.1,
+        "events": [
+          {
+            "event_id": "k1",
+            "time": 10.0,
+            "role": "kill",
+            "multikill": 1,
+            "actor": "P1",
+            "victim": "V1"
+          },
+          {
+            "event_id": "k2",
+            "time": 11.2,
+            "role": "kill",
+            "multikill": 2,
+            "actor": "P1",
+            "victim": "V2"
+          },
+          {
+            "event_id": "k3",
+            "time": 12.1,
+            "role": "kill",
+            "multikill": 3,
+            "actor": "P1",
+            "victim": "V3"
+          }
+        ],
+        "fx_budget": {
+          "max_flash_concurrent": 1,
+          "max_peak_alpha": 0.35,
+          "source": "proposal, not perceptual optimum"
+        }
+      },
+      {
+        "actor": "P1",
+        "in": 26.0,
+        "out": 33.0,
+        "events": [
+          {
+            "event_id": "a1",
+            "time": 30.0,
+            "role": "assist",
+            "multikill": 1,
+            "actor": "P1",
+            "victim": "V4"
+          }
+        ],
+        "fx_budget": {
+          "max_flash_concurrent": 1,
+          "max_peak_alpha": 0.35,
+          "source": "proposal, not perceptual optimum"
+        }
+      },
+      {
+        "actor": "P1",
+        "in": 56.0,
+        "out": 63.0,
+        "events": [
+          {
+            "event_id": "k4",
+            "time": 60.0,
+            "role": "kill",
+            "multikill": 1,
+            "actor": "P1",
+            "victim": "V5"
+          }
+        ],
+        "fx_budget": {
+          "max_flash_concurrent": 1,
+          "max_peak_alpha": 0.35,
+          "source": "proposal, not perceptual optimum"
+        }
+      }
+    ],
+    "event_order": [
+      "k1",
+      "k2",
+      "k3",
+      "a1",
+      "k4"
+    ]
+  },
+  "tests": [
+    {
+      "id": "duplicate_same_event_id",
+      "pass": true
+    },
+    {
+      "id": "simultaneous_distinct_victim",
+      "pass": true
+    },
+    {
+      "id": "manual_priority",
+      "pass": true
+    },
+    {
+      "id": "same_fight_group",
+      "pass": true
+    }
+  ],
+  "video": {
+    "path": "B2_oneclick/plan_compare.mp4",
+    "frames": 120,
+    "fps": "30",
+    "sha256": "2150afc89a50db1726458f303016caf64d1bbb984b48c3a175e294a3fff53766",
+    "decode": "PASS"
+  },
+  "evidence": "latest PR49 pure choose_scenes executed; independent grouping candidate",
+  "real_battle_boundaries": "NOT_RUN",
+  "real_champion_skin_recognition": "NOT_RUN"
+}

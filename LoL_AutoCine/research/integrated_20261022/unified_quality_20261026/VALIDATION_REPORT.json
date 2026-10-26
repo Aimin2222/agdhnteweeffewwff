@@ -1,0 +1,128 @@
+{
+  "checks": [
+    {
+      "id": "A1-M",
+      "status": "PASS",
+      "result": "1464既存frame候補・595FX組・1047同族組の指標生成",
+      "limit": "一致素材の確定ではない"
+    },
+    {
+      "id": "A1-V",
+      "status": "REVIEW",
+      "result": "新規38組のAI比較画像審査",
+      "limit": "1464内1450組の新規目視は未実施。人間承認0"
+    },
+    {
+      "id": "A2-V",
+      "status": "REVIEW",
+      "result": "P2新規24、継承140、累計164/687",
+      "limit": "P2残523、全素材全時間の互換未完"
+    },
+    {
+      "id": "A2-G",
+      "status": "REVIEW",
+      "result": "652/652肖像穴候補数値を生成",
+      "limit": "651暫定・19原本制約は未解決"
+    },
+    {
+      "id": "A3-F",
+      "status": "PASS",
+      "result": "4合成clock列の先行RGB差分0",
+      "limit": "実Replay seek/VFR muxではない"
+    },
+    {
+      "id": "A3-H",
+      "status": "REVIEW",
+      "result": "3明色patchのheadroom候補で255clip0",
+      "limit": "上限に張り付き3強度の見た目差がない"
+    },
+    {
+      "id": "A3-O",
+      "status": "PASS",
+      "result": "16他FX+4組合せCPU描画",
+      "limit": "機械decode。全映像の品質/負荷承認ではない"
+    },
+    {
+      "id": "A3-Z",
+      "status": "REVIEW",
+      "result": "移動中心の時間/空間blur18frame比較",
+      "limit": "真の対象追跡/GPU成功ではない"
+    },
+    {
+      "id": "A4-L",
+      "status": "FAIL",
+      "result": "旧経路108条件中84条件にbbox差>2px",
+      "limit": "残24REVIEW、missingbbox48sampleは0px合格にしない"
+    },
+    {
+      "id": "A4-C",
+      "status": "PASS",
+      "result": "共通RGBA候補108条件3240frameでRGB最大差0",
+      "limit": "同じ準備rasterの2合成器比較限定"
+    },
+    {
+      "id": "B1-C",
+      "status": "REVIEW",
+      "result": "4カメラ切替方式120frame比較",
+      "limit": "滑らかさと追従遅れのtradeoff、LoL成功ではない"
+    },
+    {
+      "id": "B2-P",
+      "status": "PASS",
+      "result": "イベントgroup/ID/同時別victim/手動優先4assertion",
+      "limit": "映像理解/実戦闘境界検出ではない"
+    },
+    {
+      "id": "B3-D",
+      "status": "PASS",
+      "result": "合成AV4種の診断assertion",
+      "limit": "意図的な不良動画2種の検出を含む"
+    },
+    {
+      "id": "B3-S",
+      "status": "REVIEW",
+      "result": "actual PTS/合成pulseの同期を測定",
+      "limit": "slowの理想時刻差と10ms測定精度が残る"
+    },
+    {
+      "id": "B4-M",
+      "status": "PASS",
+      "result": "70機能ID対応漏れ/重複0、状態契約15件",
+      "limit": "製品GUI押下/遷移テストではない"
+    },
+    {
+      "id": "B5-R",
+      "status": "PASS",
+      "result": "注入異常6種のjournal/復元/再試行",
+      "limit": "実disk-full/LoL断/製品クラッシュではない"
+    },
+    {
+      "id": "LIVE",
+      "status": "NOT_RUN",
+      "result": "LoL/TargetLock/地形/長射程/実ゲーム音/GPU/NVENC/nativeDPI",
+      "limit": "この研究で実アプリを操作していない"
+    },
+    {
+      "id": "DIST",
+      "status": "NOT_RUN",
+      "result": "PythonなしPC・EXE・実concat/長尺drift",
+      "limit": "配布/実音源/実録画が必要"
+    },
+    {
+      "id": "UI-NEXT",
+      "status": "NOT_RUN",
+      "result": "League Director vs Lolnam Editor UI追加研究",
+      "limit": "現研究の保存・報告後の別工程、今回は未着手"
+    }
+  ],
+  "counts": {
+    "PASS": 8,
+    "REVIEW": 7,
+    "FAIL": 1,
+    "NOT_RUN": 3
+  },
+  "PASS_definition": "記載した限定assertionが通った。製品リリース合格ではない",
+  "formal_material_changes": 0,
+  "production_integration": false,
+  "live_game_success_claim": false
+}
