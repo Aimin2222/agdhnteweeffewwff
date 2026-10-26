@@ -1,0 +1,10 @@
+# 変更・作業記録
+変更したもの：本研究のwork/autocine_continuation_20261026、outputs/autocine_continuation_20261026、その新規配布ZIP。読み取り保護対象1251ファイルは同一ハッシュ、前の3ZIPも同一ハッシュ。
+動画は既存IABで1本ずつ、ミュート、非全画面、bulk downloadなし。Braveのユーザーウィンドウに触れていない。音声取得手段なしのため音量を上げていない。動画は各観測後pauseを確認。
+狭いプレイヤー操作のため一時viewport1280×900、UI指定画像のため1920×1080/1366×768を使用。これはブラウザー内描画範囲で、Windowsの表示/音量設定変更ではない。終了時reset。
+GitHubの最新UI画像7枚を読み取り取得。sandbox内HTTPはソケット権限/名前解決で失敗し、許可されたsandbox外の同じ読み取り取得が成功。Windowsネットワーク異常の根拠にはしない。設定変更やネットワークリセットなし。
+ローカル画像化用127.0.0.1限定HTTP helperを1つ起動。sandboxのソケット制約で失敗した自分のhelperは停止し、許可されたhelperで応答200を確認。Windowsサービス/Firewallを変更しない。一時表示であり常駐サービスの導入なし。
+通常screenshotが1248幅で切れたため、documentの1920幅をDOM確認し、正式APIのfullPage取得に変更。画像寸法と水平overflowを検証、切れた初期画像は納品対象外。
+RTKはこの追補で使用していない。原文ログ/コードを直接確認。クレジット削減量は測定していないし主張しない。
+
+Git公開準備：partial fetchでメタデータを取得後、write-treeがpromisor blobの追加取得を起こしたため中断。自分の一時pack 447,766,527 byteを確認、取得プロセスが残っていないことを確認した。製品ファイルへの変更ではない。GIT_NO_LAZY_FETCH=1とwrite-tree --missing-okで既存blob取得を防ぎ、新規164パスだけを含むツリーを検査した。main/他ブランチは変更しない。
