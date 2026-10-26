@@ -1,0 +1,84 @@
+# READ ONLY EXCERPT: fb03e0390805125fc063f4599af6c2541a653abf/core/effects.py
+# Full source SHA-256 cb517f7a44f59fbadbd17413f156d111db28141b7b2039406b6bc3236aab8d94
+
+def _enable_expr(events: list[tuple[float, float]], before: float = 0.0, after: float = 0.0) -> str:
+    parts = []
+    for a, b in events:
+        parts.append(f"between(t,{max(0.0,a-before):.3f},{min(99999.0,b+after):.3f})")
+    return "'" + "+".join(parts or ["0"]) + "'"
+
+def _build_video_effect_filters(t: Template, duration: float, events: list[tuple[float,float]], still: bool) -> list[str]:
+    """標準FFmpegだけで動く軽量版の映像演出。
+    キル瞬間系はevents、全体系はduration全体へ適用する。"""
+    if still or not getattr(t, "video_effects", None):
+        return []
+    e = {k: max(0.0, min(1.0, float(v))) for k, v in (t.video_effects or {}).items() if float(v) > 0.001}
+    f=[]
+    # 全体/カメラ系。crop→scaleで出力解像度を維持する。
+    if e.get("motion_camera"):
+        k=e["motion_camera"]; amp=3 + 18*k
+        f.append(f"crop=w=iw*0.94:h=ih*0.94:x='(iw-ow)/2+sin(2*PI*t/2.7)*{amp:.2f}':y='(ih-oh)/2+cos(2*PI*t/3.1)*{amp*0.55:.2f}',scale=1920:1080:flags=lanczos")
+    if e.get("camera_shake"):
+        k=e["camera_shake"]; amp=2 + 22*k
+        f.append(f"crop=w=iw*0.96:h=ih*0.96:x='(iw-ow)/2+sin(2*PI*t/0.12)*{amp:.2f}':y='(ih-oh)/2+cos(2*PI*t/0.095)*{amp*0.7:.2f}',scale=1920:1080:flags=lanczos")
+    if e.get("wiggle"):
+        k=e["wiggle"]; amp=1 + 10*k
+        f.append(f"crop=w=iw*0.98:h=ih*0.98:x='(iw-ow)/2+sin(2*PI*t/0.55)*{amp:.2f}':y='(ih-oh)/2+sin(2*PI*t/0.43)*{amp*0.7:.2f}',scale=1920:1080:flags=lanczos")
+    if e.get("spin_motion"):
+        k=e["spin_motion"]; ang=0.015+0.09*k
+        f.append(f"rotate='sin(2*PI*t/0.8)*{ang:.5f}':ow=iw:oh=ih:fillcolor=black")
+    if e.get("zoom_blur"):
+        k=e["zoom_blur"]; z=0.025+0.10*k
+        f.append(f"scale=w='1920*(1+{z:.4f}*abs(sin(2*PI*t/1.6)))':h='1080*(1+{z:.4f}*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4")
+    if e.get("radial_blur"):
+        k=e["radial_blur"]
+        f.append(f"tmix=frames={3 if k<0.6 else 5}:weights='1 2 1'")
+    if e.get("glitch"):
+        k=e["glitch"]; px=int(2+18*k)
+        f.append(f"rgbashift=rh={px}:bh=-{px}:enable='between(t,0,{duration:.3f})'")
+        f.append(f"noise=alls={int(6+20*k)}:allf=t+u:enable='between(t,0,{duration:.3f})'")
+    if e.get("kaleidoscope"):
+        op=0.12+0.35*e["kaleidoscope"]
+        f.append(f"split=2[k0][k1];[k1]hflip[k1f];[k0][k1f]blend=all_mode=screen:all_opacity={op:.3f}")
+    if e.get("vhs_damage"):
+        k=e["vhs_damage"]; px=int(1+7*k)
+        f.append(f"rgbashift=rh={px}:bh=-{px},noise=alls={int(10+25*k)}:allf=t+u")
+    if e.get("block_motion"):
+        k=e["block_motion"]; bs=int(12+44*k)
+        f.append(f"pixelize=width={bs}:height={bs}:enable='between(t,0,{duration:.3f})'")
+    # キル瞬間系
+    expr=_enable_expr(events, before=0.02, after=0.08)
+    if e.get("chroma_leak"):
+        px=int(4+32*e["chroma_leak"])
+        f.append(f"rgbashift=rh={px}:bh=-{px}:enable={expr}")
+    if e.get("flash"):
+        amp=0.18+0.65*e["flash"]
+        f.append(f"eq=brightness='{amp:.3f}*exp(-18*abs(t-{events[0][0]:.3f}))':eval=frame:enable={_enable_expr(events, after=0.15)}")
+    # 全体系
+    if e.get("focus_blur"):
+        sigma=1.0+8.0*e["focus_blur"]
+        f.append(f"scale=960:540:flags=bilinear,gblur=sigma={sigma:.2f}:steps=1,scale=1920:1080:flags=bilinear")
+    if e.get("vignette_fx"):
+        f.append(f"vignette=angle={1.05-0.45*e['vignette_fx']:.3f}")
+    if e.get("glint"):
+        f.append("unsharp=lx=5:ly=5:la=0.45")
+        f.append(f"eq=contrast={1.0+0.25*e['glint']:.3f}:brightness={0.02+0.08*e['glint']:.3f}")
+    if e.get("vr_blur"):
+        f.append(f"scale=960:540:flags=bilinear,gblur=sigma={1.0+7.0*e['vr_blur']:.2f}:steps=1,scale=1920:1080:flags=bilinear")
+    if e.get("vr_light_leak"):
+        f.append(f"colorize=hue=28:saturation=0.85:lightness=0.62:mix={0.10+0.28*e['vr_light_leak']:.3f}:enable={_enable_expr(events, before=0.10, after=0.28)}")
+    if e.get("sphere_blur"):
+        f.append(f"scale=960:540:flags=bilinear,gblur=sigma={0.8+5.0*e['sphere_blur']:.2f}:steps=1,scale=1920:1080:flags=bilinear")
+    # ワイプ：最初の0.55秒を黒から開く。1クリップ単位なので安全な単入力版。
+    if e.get("panel_wipe"):
+        p=0.45+0.25*e["panel_wipe"]
+        f.append(f"fade=t=in:st=0:d={p:.3f}:alpha=0")
+    if e.get("stretch_wipe"):
+        p=0.35+0.25*e["stretch_wipe"]
+        f.append(f"fade=t=in:st=0:d={p:.3f}")
+    if e.get("mirror"):
+        f.append("hflip")
+    if e.get("slice"):
+        k=e["slice"]
+        f.append(f"scroll=horizontal={0.02+0.18*k:.3f}:vertical=0")
+    return f

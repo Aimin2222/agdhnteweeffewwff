@@ -1,0 +1,110 @@
+[
+  {
+    "id": "CT01",
+    "scope": "単発・追走",
+    "references": "V01/V07",
+    "input_matrix": "同Replay/patch/targetのpre/postとverified event",
+    "acceptance_proposal": "全イベント含有、退路/対象可読、kill前後の切落としなし",
+    "production_status": "NOT_RUN",
+    "thresholds_adopted": false
+  },
+  {
+    "id": "CT02",
+    "scope": "多人数・複数kill",
+    "references": "V05/V06/V11/V20/V22",
+    "input_matrix": "BLUE/RED、2/3/5人、同時/短間隔/別actor",
+    "acceptance_proposal": "ID重複0、別victim保持、重要群可視率と遮蔽、余韻、手動優先",
+    "production_status": "NOT_RUN",
+    "thresholds_adopted": false
+  },
+  {
+    "id": "CT03",
+    "scope": "長射程",
+    "references": "V25",
+    "input_matrix": "発射/弾道/命中の関連と時刻・位置が既知",
+    "acceptance_proposal": "両端点の可視、発射/着弾のcut欠落0。不明ならbaseline",
+    "production_status": "NOT_RUN",
+    "thresholds_adopted": false
+  },
+  {
+    "id": "CT04",
+    "scope": "挿入と切替",
+    "references": "V02/V08/V21/V23/V25",
+    "input_matrix": "戦闘終了/next engage/別take/外部素材の区別",
+    "acceptance_proposal": "戦闘中cutawayなし、黒/CG誤判定なし、復帰先/時間map一致",
+    "production_status": "NOT_RUN",
+    "thresholds_adopted": false
+  },
+  {
+    "id": "CT05",
+    "scope": "Flash因果性",
+    "references": "V01/V20の視覚参考＋人工fixture",
+    "input_matrix": "30/60/60000÷1001、VFR、同時/0.5004秒、2回/密集kill",
+    "acceptance_proposal": "イベント前差分0、重複冪等、単発互換、revision比較。V4失敗6件を保持",
+    "production_status": "NOT_RUN",
+    "thresholds_adopted": false
+  },
+  {
+    "id": "CT06",
+    "scope": "Blur/カラー",
+    "references": "V03/V09/V15/V20",
+    "input_matrix": "固定gray/RGB/HDR-SDR/動き/scene seek",
+    "acceptance_proposal": "定数輝度、白飛び率、色metadata、履歴flush、ゲーム内発光と分離",
+    "production_status": "NOT_RUN",
+    "thresholds_adopted": false
+  },
+  {
+    "id": "CT07",
+    "scope": "全素材/肖像枠",
+    "references": "652/35/89/37",
+    "input_matrix": "hash/namespace/承認状態、実portrait形状、実LoL背景",
+    "acceptance_proposal": "見切れ/halo/目鼻/名前/左右/HUDの審査。暫定651/制約19は独立保留",
+    "production_status": "NOT_RUN",
+    "thresholds_adopted": false
+  },
+  {
+    "id": "CT08",
+    "scope": "6motion/位置一致",
+    "references": "既存V4 disparity",
+    "input_matrix": "3解像度×30/60fps×DPI/viewport×6motions×3stack",
+    "acceptance_proposal": "RGBA共通基準の端差<=1output px候補、overlay時刻差<=1frame候補。数理のみで合格しない",
+    "production_status": "NOT_RUN",
+    "thresholds_adopted": false
+  },
+  {
+    "id": "CT09",
+    "scope": "安全・失敗復旧",
+    "references": "全20の構図参考",
+    "input_matrix": "未知side/失lock/遮蔽/未接続/手動/新engage不明",
+    "acceptance_proposal": "状態不変、baselineと理由、勝手な反転/解除/無言fallback0",
+    "production_status": "NOT_RUN",
+    "thresholds_adopted": false
+  },
+  {
+    "id": "CT10",
+    "scope": "誤検出対照",
+    "references": "V04/V12/V13/V15/V24",
+    "input_matrix": "objective/低HP/死亡/teleport/ad/black/title/再提示",
+    "acceptance_proposal": "killへの誤昇格0を人手goldで判定。認識器の精度保証は別",
+    "production_status": "NOT_RUN",
+    "thresholds_adopted": false
+  },
+  {
+    "id": "CT11",
+    "scope": "AV同期",
+    "references": "実音源待ち",
+    "input_matrix": "48k/44.1k stereo、PCM/AAC、0.5/1/2x、seek境界、長時間",
+    "acceptance_proposal": "PTSでoffsetとdrift計測。±50msは暫定、固定補正で隠さない",
+    "production_status": "NOT_RUN",
+    "thresholds_adopted": false
+  },
+  {
+    "id": "CT12",
+    "scope": "実機・負荷",
+    "references": "実Replay待ち",
+    "input_matrix": "CPU/GPU FX/NVENC/LoL音/失敗fallback",
+    "acceptance_proposal": "drop/reorder/decoder/FPS/温度負荷/使用encoderを記録、NVENCのみでGPU合格にしない",
+    "production_status": "NOT_RUN",
+    "thresholds_adopted": false
+  }
+]

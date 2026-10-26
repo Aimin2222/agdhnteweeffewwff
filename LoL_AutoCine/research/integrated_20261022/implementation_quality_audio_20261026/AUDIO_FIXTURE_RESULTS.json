@@ -1,0 +1,289 @@
+{
+  "scope": "7 synthetic WAV fixtures, no reference montage audio and no listening",
+  "fixtures": [
+    {
+      "id": "silence",
+      "sr": 48000,
+      "channels": 2,
+      "sample_frames": 144000,
+      "sha256": "ec3650bd450cebe9985c1d4d4b59749debe34301f9f9e889171d0e49a316c89c",
+      "sample_peak": [
+        0.0,
+        0.0
+      ],
+      "rms": [
+        0.0,
+        0.0
+      ],
+      "rms_dbfs": [
+        null,
+        null
+      ],
+      "dc": [
+        0.0,
+        0.0
+      ],
+      "sample_near_fullscale_fraction": [
+        0.0,
+        0.0
+      ],
+      "mono_rms": 0.0,
+      "active_onset_10ms_candidates": [
+        [],
+        []
+      ],
+      "right_delay_seconds": null,
+      "loudness_summary": "Integrated loudness:\r\n    I:         -70.0 LUFS\r\n    Threshold:   0.0 LUFS\r\n\r\n  Loudness range:\r\n    LRA:         0.0 LU\r\n    Threshold:   0.0 LUFS\r\n    LRA low:     0.0 LUFS\r\n    LRA high:    0.0 LUFS\r\n\r\n  True peak:\r\n    Peak:       -inf dBFS\r\n[out#0/null @ 000001d9d5ff7cc0] video:0KiB audio:562KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown\r\nsize=N/A time=00:00:03.00 bitrate=N/A speed=55.5x",
+      "oracle_pass": true
+    },
+    {
+      "id": "tone_440",
+      "sr": 48000,
+      "channels": 2,
+      "sample_frames": 144000,
+      "sha256": "3d8cd6256c90604814575625167ae06bbf679ddc65d98ed34386e6c4e422e1cc",
+      "sample_peak": [
+        0.25,
+        0.125
+      ],
+      "rms": [
+        0.17677101674297044,
+        0.08838518982709048
+      ],
+      "rms_dbfs": [
+        -15.051778802345698,
+        -21.072410019925027
+      ],
+      "dc": [
+        0.0,
+        0.0
+      ],
+      "sample_near_fullscale_fraction": [
+        0.0,
+        0.0
+      ],
+      "mono_rms": 0.13257810304813789,
+      "active_onset_10ms_candidates": [
+        [
+          0.0
+        ],
+        [
+          0.0
+        ]
+      ],
+      "right_delay_seconds": null,
+      "loudness_summary": "Integrated loudness:\r\n    I:         -14.8 LUFS\r\n    Threshold: -24.8 LUFS\r\n\r\n  Loudness range:\r\n    LRA:        20.0 LU\r\n    Threshold: -34.8 LUFS\r\n    LRA low:   -34.8 LUFS\r\n    LRA high:  -14.8 LUFS\r\n\r\n  True peak:\r\n    Peak:      -12.0 dBFS\r\n[out#0/null @ 000001d407047cc0] video:0KiB audio:562KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown\r\nsize=N/A time=00:00:03.00 bitrate=N/A speed=58.7x",
+      "oracle_pass": true
+    },
+    {
+      "id": "anti_phase",
+      "sr": 48000,
+      "channels": 2,
+      "sample_frames": 144000,
+      "sha256": "ed0eff0a9bff7b8638057746cb5795b4d66a200b46cdda1792b2363bd37151ba",
+      "sample_peak": [
+        0.25,
+        0.25
+      ],
+      "rms": [
+        0.17677101674297044,
+        0.17677101674297044
+      ],
+      "rms_dbfs": [
+        -15.051778802345698,
+        -15.051778802345698
+      ],
+      "dc": [
+        0.0,
+        0.0
+      ],
+      "sample_near_fullscale_fraction": [
+        0.0,
+        0.0
+      ],
+      "mono_rms": 0.0,
+      "active_onset_10ms_candidates": [
+        [
+          0.0
+        ],
+        [
+          0.0
+        ]
+      ],
+      "right_delay_seconds": null,
+      "loudness_summary": "Integrated loudness:\r\n    I:         -12.7 LUFS\r\n    Threshold: -22.7 LUFS\r\n\r\n  Loudness range:\r\n    LRA:        20.0 LU\r\n    Threshold: -32.7 LUFS\r\n    LRA low:   -32.7 LUFS\r\n    LRA high:  -12.7 LUFS\r\n\r\n  True peak:\r\n    Peak:      -12.0 dBFS\r\n[out#0/null @ 0000012afda17cc0] video:0KiB audio:562KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown\r\nsize=N/A time=00:00:03.00 bitrate=N/A speed=57.5x",
+      "oracle_pass": true
+    },
+    {
+      "id": "clip_plateau",
+      "sr": 48000,
+      "channels": 2,
+      "sample_frames": 144000,
+      "sha256": "59944a85701408264108f05cdb4d2b56bba9c7290cc0fab93279fcfc53126761",
+      "sample_peak": [
+        0.999969482421875,
+        0.999969482421875
+      ],
+      "rms": [
+        0.8379407062833834,
+        0.8379407062833834
+      ],
+      "rms_dbfs": [
+        -1.5357342299004497,
+        -1.5357342299004497
+      ],
+      "dc": [
+        0.0,
+        0.0
+      ],
+      "sample_near_fullscale_fraction": [
+        0.535,
+        0.535
+      ],
+      "mono_rms": 0.8379407062833834,
+      "active_onset_10ms_candidates": [
+        [
+          0.0
+        ],
+        [
+          0.0
+        ]
+      ],
+      "right_delay_seconds": null,
+      "loudness_summary": "Integrated loudness:\r\n    I:           0.8 LUFS\r\n    Threshold:  -9.2 LUFS\r\n\r\n  Loudness range:\r\n    LRA:        20.0 LU\r\n    Threshold: -19.2 LUFS\r\n    LRA low:   -19.2 LUFS\r\n    LRA high:    0.8 LUFS\r\n\r\n  True peak:\r\n    Peak:        0.0 dBFS\r\n[out#0/null @ 000001585b897cc0] video:0KiB audio:562KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown\r\nsize=N/A time=00:00:03.00 bitrate=N/A speed=56.4x",
+      "oracle_pass": true
+    },
+    {
+      "id": "dc_offset",
+      "sr": 48000,
+      "channels": 2,
+      "sample_frames": 144000,
+      "sha256": "27b7d9f24abcf0cf37dcff84081e6bff6e5b6c6df18bc6ac73dea2544b45b1cd",
+      "sample_peak": [
+        0.199981689453125,
+        0.199981689453125
+      ],
+      "rms": [
+        0.12247078193789465,
+        0.12247078193789465
+      ],
+      "rms_dbfs": [
+        -18.239350186261795,
+        -18.239350186261795
+      ],
+      "dc": [
+        0.09999712626139323,
+        0.09999712626139323
+      ],
+      "sample_near_fullscale_fraction": [
+        0.0,
+        0.0
+      ],
+      "mono_rms": 0.12247078193789465,
+      "active_onset_10ms_candidates": [
+        [
+          0.0
+        ],
+        [
+          0.0
+        ]
+      ],
+      "right_delay_seconds": null,
+      "loudness_summary": "Integrated loudness:\r\n    I:         -20.7 LUFS\r\n    Threshold: -30.7 LUFS\r\n\r\n  Loudness range:\r\n    LRA:        20.0 LU\r\n    Threshold: -40.7 LUFS\r\n    LRA low:   -40.7 LUFS\r\n    LRA high:  -20.7 LUFS\r\n\r\n  True peak:\r\n    Peak:      -14.0 dBFS\r\n[out#0/null @ 000001fc3fa77cc0] video:0KiB audio:562KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown\r\nsize=N/A time=00:00:03.00 bitrate=N/A speed=48.9x",
+      "oracle_pass": true
+    },
+    {
+      "id": "pulses",
+      "sr": 48000,
+      "channels": 2,
+      "sample_frames": 144000,
+      "sha256": "3c461105e5da53cf11ce3e91896df1d40b3adcb67ead1b62d796f4aed98661b7",
+      "sample_peak": [
+        0.699920654296875,
+        0.699920654296875
+      ],
+      "rms": [
+        0.0661489701593036,
+        0.0661489701593036
+      ],
+      "rms_dbfs": [
+        -23.589538254809487,
+        -23.589538254809487
+      ],
+      "dc": [
+        -0.00033399920993381076,
+        -0.00033399920993381076
+      ],
+      "sample_near_fullscale_fraction": [
+        0.0,
+        0.0
+      ],
+      "mono_rms": 0.0661489701593036,
+      "active_onset_10ms_candidates": [
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ],
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ]
+      ],
+      "right_delay_seconds": null,
+      "loudness_summary": "Integrated loudness:\r\n    I:         -14.7 LUFS\r\n    Threshold: -24.7 LUFS\r\n\r\n  Loudness range:\r\n    LRA:        20.0 LU\r\n    Threshold: -37.5 LUFS\r\n    LRA low:   -37.5 LUFS\r\n    LRA high:  -17.5 LUFS\r\n\r\n  True peak:\r\n    Peak:        1.4 dBFS\r\n[out#0/null @ 000001e97fe17c80] video:0KiB audio:562KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown\r\nsize=N/A time=00:00:03.00 bitrate=N/A speed=27.3x",
+      "oracle_pass": true
+    },
+    {
+      "id": "stereo_delay",
+      "sr": 48000,
+      "channels": 2,
+      "sample_frames": 144000,
+      "sha256": "a2cf9826b3d55dd3d9e0b586e8b27f1567b3392c0db3dc5addf252f7cbf6ed2f",
+      "sample_peak": [
+        0.699920654296875,
+        0.699920654296875
+      ],
+      "rms": [
+        0.06715925879075216,
+        0.06715925879075216
+      ],
+      "rms_dbfs": [
+        -23.457882112759172,
+        -23.457882112759172
+      ],
+      "dc": [
+        0.00020529874165852864,
+        0.00020529874165852864
+      ],
+      "sample_near_fullscale_fraction": [
+        0.0,
+        0.0
+      ],
+      "mono_rms": 0.04748876731040311,
+      "active_onset_10ms_candidates": [
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ],
+        [
+          0.53,
+          1.03,
+          1.53,
+          2.0300000000000002
+        ]
+      ],
+      "right_delay_seconds": 0.03,
+      "loudness_summary": "Integrated loudness:\r\n    I:         -14.6 LUFS\r\n    Threshold: -24.6 LUFS\r\n\r\n  Loudness range:\r\n    LRA:        20.0 LU\r\n    Threshold: -37.3 LUFS\r\n    LRA low:   -37.3 LUFS\r\n    LRA high:  -17.3 LUFS\r\n\r\n  True peak:\r\n    Peak:        2.2 dBFS\r\n[out#0/null @ 000001c998bd7cc0] video:0KiB audio:562KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown\r\nsize=N/A time=00:00:03.00 bitrate=N/A speed=  32x",
+      "oracle_pass": true
+    }
+  ],
+  "all_oracles_pass": true,
+  "silence_dbfs_serialized_as_null": true,
+  "onset_is_not_a_verified_music_beat": true
+}

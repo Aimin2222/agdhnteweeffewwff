@@ -1,0 +1,56 @@
+{
+  "context": {
+    "control_mode": "full_auto",
+    "side": "BLUE",
+    "side_approved": true,
+    "target_lock_valid": true,
+    "target_id": "P1",
+    "fps": "60000/1001",
+    "time_map": [
+      {
+        "replay_in": 99,
+        "replay_out": 101,
+        "output_in": 0,
+        "rate": 1
+      }
+    ],
+    "geometry": {
+      "timestamp_verified": true,
+      "coverage": 0.99,
+      "occlusion": 0,
+      "participants": 4
+    },
+    "fight_finished": true,
+    "next_engage_clear": true,
+    "cutaway_take_validated": true
+  },
+  "events": [
+    {
+      "event_id": "K1",
+      "replay_time": 100,
+      "type": "kill",
+      "actor_id": "P1",
+      "victim_id": "P2",
+      "evidence": "replay_event_verified"
+    }
+  ],
+  "decision": {
+    "schema_version": 1,
+    "processing_revision": "research-plan-contract-v1",
+    "adopted": false,
+    "event_ids": [
+      "K1"
+    ],
+    "camera": "group_wide_proposal",
+    "reason": "verified_geometry_candidate",
+    "cutaway": true,
+    "fx_events": [
+      {
+        "event_id": "K1",
+        "output_time": "1",
+        "start_frame": 60
+      }
+    ],
+    "required_missing": []
+  }
+}

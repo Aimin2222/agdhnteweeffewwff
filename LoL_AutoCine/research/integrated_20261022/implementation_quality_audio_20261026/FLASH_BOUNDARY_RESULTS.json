@@ -1,0 +1,2303 @@
+{
+  "scope": "synthetic CPU only; causal v4 candidate unadopted",
+  "cases": [
+    {
+      "fps": 30,
+      "strength": 0.15,
+      "case": "single",
+      "events": [
+        0.5
+      ],
+      "candidate_graph": [
+        "eq=brightness='if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0)':eval=frame:enable='between(t,0.500,1.070)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true,
+        "single_bit_equal_legacy": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": []
+    },
+    {
+      "fps": 30,
+      "strength": 0.15,
+      "case": "two_short",
+      "events": [
+        0.5,
+        0.6
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.277*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 150.0,
+          "candidate": 150.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 139.0,
+          "candidate": 207.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 133.0,
+          "candidate": 171.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.15,
+      "case": "duplicates",
+      "events": [
+        0.5,
+        0.5
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0),if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.500,1.070)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.500,1.070)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": [
+        {
+          "t": 0.4666666666666667,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5,
+          "legacy": 207.0,
+          "candidate": 207.0
+        },
+        {
+          "t": 0.5333333333333333,
+          "legacy": 171.0,
+          "candidate": 171.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.15,
+      "case": "subframe",
+      "events": [
+        0.503,
+        0.511
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.503),0.277*exp(-18*abs(t-0.503)),0),if(gte(t,0.511),0.277*exp(-18*abs(t-0.511)),0))':eval=frame:enable='between(t,0.503,1.073)+between(t,0.511,1.081)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.503))':eval=frame:enable='between(t,0.503,1.073)+between(t,0.511,1.081)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 180,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 175,
+      "sample_around_second": [
+        {
+          "t": 0.5,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5333333333333333,
+          "legacy": 175.0,
+          "candidate": 180.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.15,
+      "case": "irregular",
+      "events": [
+        0.1,
+        0.43,
+        1.0,
+        1.89
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(max(max(if(gte(t,0.100),0.277*exp(-18*abs(t-0.100)),0),if(gte(t,0.430),0.277*exp(-18*abs(t-0.430)),0)),if(gte(t,1.000),0.277*exp(-18*abs(t-1.000)),0)),if(gte(t,1.890),0.277*exp(-18*abs(t-1.890)),0))':eval=frame:enable='between(t,0.100,0.670)+between(t,0.430,1.000)+between(t,1.000,1.570)+between(t,1.890,2.150)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.100))':eval=frame:enable='between(t,0.100,0.670)+between(t,0.430,1.000)+between(t,1.000,1.570)+between(t,1.890,2.150)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": [
+        {
+          "t": 0.4,
+          "legacy": 127.0,
+          "candidate": 127.0
+        },
+        {
+          "t": 0.43333333333333335,
+          "legacy": 127.0,
+          "candidate": 204.0
+        },
+        {
+          "t": 0.4666666666666667,
+          "legacy": 127.0,
+          "candidate": 169.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.15,
+      "case": "dense",
+      "events": [
+        0.4,
+        0.42000000000000004,
+        0.44,
+        0.46,
+        0.48000000000000004,
+        0.5,
+        0.52,
+        0.54
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(max(max(max(max(max(max(if(gte(t,0.400),0.277*exp(-18*abs(t-0.400)),0),if(gte(t,0.420),0.277*exp(-18*abs(t-0.420)),0)),if(gte(t,0.440),0.277*exp(-18*abs(t-0.440)),0)),if(gte(t,0.460),0.277*exp(-18*abs(t-0.460)),0)),if(gte(t,0.480),0.277*exp(-18*abs(t-0.480)),0)),if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0)),if(gte(t,0.520),0.277*exp(-18*abs(t-0.520)),0)),if(gte(t,0.540),0.277*exp(-18*abs(t-0.540)),0))':eval=frame:enable='between(t,0.400,0.970)+between(t,0.420,0.990)+between(t,0.440,1.010)+between(t,0.460,1.030)+between(t,0.480,1.050)+between(t,0.500,1.070)+between(t,0.520,1.090)+between(t,0.540,1.110)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.400))':eval=frame:enable='between(t,0.400,0.970)+between(t,0.420,0.990)+between(t,0.440,1.010)+between(t,0.460,1.030)+between(t,0.480,1.050)+between(t,0.500,1.070)+between(t,0.520,1.090)+between(t,0.540,1.110)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": [
+        {
+          "t": 0.4,
+          "legacy": 207.0,
+          "candidate": 207.0
+        },
+        {
+          "t": 0.43333333333333335,
+          "legacy": 171.0,
+          "candidate": 190.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.15,
+      "case": "millisecond_rounding",
+      "events": [
+        0.5004,
+        0.6004
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.277*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": false,
+        "no_future_event_influence": false,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": {
+        "revision": "research_v5_CFR_tick_gate_unadopted",
+        "graph": [
+          "eq=brightness='max(if(gte(n,16),0.277*exp(-18*max(0,t-0.500400000)),0),if(gte(n,19),0.277*exp(-18*max(0,t-0.600400000)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+        ],
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "event_start_frames": [
+          16,
+          19
+        ],
+        "requires_CFR_and_output_time_map": true
+      },
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 150.0,
+          "candidate": 150.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 139.0,
+          "candidate": 207.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 133.0,
+          "candidate": 171.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.5,
+      "case": "single",
+      "events": [
+        0.5
+      ],
+      "candidate_graph": [
+        "eq=brightness='if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0)':eval=frame:enable='between(t,0.500,1.070)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true,
+        "single_bit_equal_legacy": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.016666666666666666,
+      "legacy_peak_gray": 255,
+      "sample_around_second": []
+    },
+    {
+      "fps": 30,
+      "strength": 0.5,
+      "case": "two_short",
+      "events": [
+        0.5,
+        0.6
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.505*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.03333333333333333,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 171.0,
+          "candidate": 171.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 150.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 139.0,
+          "candidate": 207.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.5,
+      "case": "duplicates",
+      "events": [
+        0.5,
+        0.5
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0),if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.500,1.070)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.500,1.070)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.016666666666666666,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.4666666666666667,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5,
+          "legacy": 255.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.5333333333333333,
+          "legacy": 207.0,
+          "candidate": 207.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.5,
+      "case": "subframe",
+      "events": [
+        0.503,
+        0.511
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.503),0.505*exp(-18*abs(t-0.503)),0),if(gte(t,0.511),0.505*exp(-18*abs(t-0.511)),0))':eval=frame:enable='between(t,0.503,1.073)+between(t,0.511,1.081)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.503))':eval=frame:enable='between(t,0.503,1.073)+between(t,0.511,1.081)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 225,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 213,
+      "sample_around_second": [
+        {
+          "t": 0.5,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5333333333333333,
+          "legacy": 213.0,
+          "candidate": 225.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.5,
+      "case": "irregular",
+      "events": [
+        0.1,
+        0.43,
+        1.0,
+        1.89
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(max(max(if(gte(t,0.100),0.505*exp(-18*abs(t-0.100)),0),if(gte(t,0.430),0.505*exp(-18*abs(t-0.430)),0)),if(gte(t,1.000),0.505*exp(-18*abs(t-1.000)),0)),if(gte(t,1.890),0.505*exp(-18*abs(t-1.890)),0))':eval=frame:enable='between(t,0.100,0.670)+between(t,0.430,1.000)+between(t,1.000,1.570)+between(t,1.890,2.150)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.100))':eval=frame:enable='between(t,0.100,0.670)+between(t,0.430,1.000)+between(t,1.000,1.570)+between(t,1.890,2.150)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.05,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.4,
+          "legacy": 127.0,
+          "candidate": 127.0
+        },
+        {
+          "t": 0.43333333333333335,
+          "legacy": 127.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.4666666666666667,
+          "legacy": 127.0,
+          "candidate": 204.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.5,
+      "case": "dense",
+      "events": [
+        0.4,
+        0.42000000000000004,
+        0.44,
+        0.46,
+        0.48000000000000004,
+        0.5,
+        0.52,
+        0.54
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(max(max(max(max(max(max(if(gte(t,0.400),0.505*exp(-18*abs(t-0.400)),0),if(gte(t,0.420),0.505*exp(-18*abs(t-0.420)),0)),if(gte(t,0.440),0.505*exp(-18*abs(t-0.440)),0)),if(gte(t,0.460),0.505*exp(-18*abs(t-0.460)),0)),if(gte(t,0.480),0.505*exp(-18*abs(t-0.480)),0)),if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0)),if(gte(t,0.520),0.505*exp(-18*abs(t-0.520)),0)),if(gte(t,0.540),0.505*exp(-18*abs(t-0.540)),0))':eval=frame:enable='between(t,0.400,0.970)+between(t,0.420,0.990)+between(t,0.440,1.010)+between(t,0.460,1.030)+between(t,0.480,1.050)+between(t,0.500,1.070)+between(t,0.520,1.090)+between(t,0.540,1.110)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.400))':eval=frame:enable='between(t,0.400,0.970)+between(t,0.420,0.990)+between(t,0.440,1.010)+between(t,0.460,1.030)+between(t,0.480,1.050)+between(t,0.500,1.070)+between(t,0.520,1.090)+between(t,0.540,1.110)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.05,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.4,
+          "legacy": 255.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.43333333333333335,
+          "legacy": 207.0,
+          "candidate": 243.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.5,
+      "case": "millisecond_rounding",
+      "events": [
+        0.5004,
+        0.6004
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.505*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": false,
+        "no_future_event_influence": false,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": {
+        "revision": "research_v5_CFR_tick_gate_unadopted",
+        "graph": [
+          "eq=brightness='max(if(gte(n,16),0.505*exp(-18*max(0,t-0.500400000)),0),if(gte(n,19),0.505*exp(-18*max(0,t-0.600400000)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+        ],
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "event_start_frames": [
+          16,
+          19
+        ],
+        "requires_CFR_and_output_time_map": true
+      },
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.03333333333333333,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 171.0,
+          "candidate": 171.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 150.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 139.0,
+          "candidate": 207.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.9,
+      "case": "single",
+      "events": [
+        0.5
+      ],
+      "candidate_graph": [
+        "eq=brightness='if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0)':eval=frame:enable='between(t,0.500,1.070)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true,
+        "single_bit_equal_legacy": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.016666666666666666,
+      "legacy_peak_gray": 255,
+      "sample_around_second": []
+    },
+    {
+      "fps": 30,
+      "strength": 0.9,
+      "case": "two_short",
+      "events": [
+        0.5,
+        0.6
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.765*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.03333333333333333,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 196.0,
+          "candidate": 196.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 163.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 144.0,
+          "candidate": 249.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.9,
+      "case": "duplicates",
+      "events": [
+        0.5,
+        0.5
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0),if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.500,1.070)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.500,1.070)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.016666666666666666,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.4666666666666667,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5,
+          "legacy": 255.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.5333333333333333,
+          "legacy": 249.0,
+          "candidate": 249.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.9,
+      "case": "subframe",
+      "events": [
+        0.503,
+        0.511
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.503),0.765*exp(-18*abs(t-0.503)),0),if(gte(t,0.511),0.765*exp(-18*abs(t-0.511)),0))':eval=frame:enable='between(t,0.503,1.073)+between(t,0.511,1.081)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.503))':eval=frame:enable='between(t,0.503,1.073)+between(t,0.511,1.081)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.016666666666666666,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.5,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5333333333333333,
+          "legacy": 255.0,
+          "candidate": 255.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.9,
+      "case": "irregular",
+      "events": [
+        0.1,
+        0.43,
+        1.0,
+        1.89
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(max(max(if(gte(t,0.100),0.765*exp(-18*abs(t-0.100)),0),if(gte(t,0.430),0.765*exp(-18*abs(t-0.430)),0)),if(gte(t,1.000),0.765*exp(-18*abs(t-1.000)),0)),if(gte(t,1.890),0.765*exp(-18*abs(t-1.890)),0))':eval=frame:enable='between(t,0.100,0.670)+between(t,0.430,1.000)+between(t,1.000,1.570)+between(t,1.890,2.150)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.100))':eval=frame:enable='between(t,0.100,0.670)+between(t,0.430,1.000)+between(t,1.000,1.570)+between(t,1.890,2.150)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.06666666666666667,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.4,
+          "legacy": 127.0,
+          "candidate": 127.0
+        },
+        {
+          "t": 0.43333333333333335,
+          "legacy": 127.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.4666666666666667,
+          "legacy": 127.0,
+          "candidate": 243.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.9,
+      "case": "dense",
+      "events": [
+        0.4,
+        0.42000000000000004,
+        0.44,
+        0.46,
+        0.48000000000000004,
+        0.5,
+        0.52,
+        0.54
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(max(max(max(max(max(max(if(gte(t,0.400),0.765*exp(-18*abs(t-0.400)),0),if(gte(t,0.420),0.765*exp(-18*abs(t-0.420)),0)),if(gte(t,0.440),0.765*exp(-18*abs(t-0.440)),0)),if(gte(t,0.460),0.765*exp(-18*abs(t-0.460)),0)),if(gte(t,0.480),0.765*exp(-18*abs(t-0.480)),0)),if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0)),if(gte(t,0.520),0.765*exp(-18*abs(t-0.520)),0)),if(gte(t,0.540),0.765*exp(-18*abs(t-0.540)),0))':eval=frame:enable='between(t,0.400,0.970)+between(t,0.420,0.990)+between(t,0.440,1.010)+between(t,0.460,1.030)+between(t,0.480,1.050)+between(t,0.500,1.070)+between(t,0.520,1.090)+between(t,0.540,1.110)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.400))':eval=frame:enable='between(t,0.400,0.970)+between(t,0.420,0.990)+between(t,0.440,1.010)+between(t,0.460,1.030)+between(t,0.480,1.050)+between(t,0.500,1.070)+between(t,0.520,1.090)+between(t,0.540,1.110)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.1,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.4,
+          "legacy": 255.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.43333333333333335,
+          "legacy": 249.0,
+          "candidate": 255.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.9,
+      "case": "millisecond_rounding",
+      "events": [
+        0.5004,
+        0.6004
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.765*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": false,
+        "no_future_event_influence": false,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": {
+        "revision": "research_v5_CFR_tick_gate_unadopted",
+        "graph": [
+          "eq=brightness='max(if(gte(n,16),0.765*exp(-18*max(0,t-0.500400000)),0),if(gte(n,19),0.765*exp(-18*max(0,t-0.600400000)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+        ],
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "event_start_frames": [
+          16,
+          19
+        ],
+        "requires_CFR_and_output_time_map": true
+      },
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.03333333333333333,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 196.0,
+          "candidate": 196.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 163.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 144.0,
+          "candidate": 249.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.15,
+      "case": "single",
+      "events": [
+        0.5
+      ],
+      "candidate_graph": [
+        "eq=brightness='if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0)':eval=frame:enable='between(t,0.500,1.070)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true,
+        "single_bit_equal_legacy": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": []
+    },
+    {
+      "fps": 60,
+      "strength": 0.15,
+      "case": "two_short",
+      "events": [
+        0.5,
+        0.6
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.277*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 150.0,
+          "candidate": 150.0
+        },
+        {
+          "t": 0.5833333333333334,
+          "legacy": 144.0,
+          "candidate": 144.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 139.0,
+          "candidate": 207.0
+        },
+        {
+          "t": 0.6166666666666667,
+          "legacy": 136.0,
+          "candidate": 186.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 133.0,
+          "candidate": 171.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.15,
+      "case": "duplicates",
+      "events": [
+        0.5,
+        0.5
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0),if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.500,1.070)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.500,1.070)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": [
+        {
+          "t": 0.4666666666666667,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.48333333333333334,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5,
+          "legacy": 207.0,
+          "candidate": 207.0
+        },
+        {
+          "t": 0.5166666666666667,
+          "legacy": 186.0,
+          "candidate": 186.0
+        },
+        {
+          "t": 0.5333333333333333,
+          "legacy": 171.0,
+          "candidate": 171.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.15,
+      "case": "subframe",
+      "events": [
+        0.503,
+        0.511
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.503),0.277*exp(-18*abs(t-0.503)),0),if(gte(t,0.511),0.277*exp(-18*abs(t-0.511)),0))':eval=frame:enable='between(t,0.503,1.073)+between(t,0.511,1.081)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.503))':eval=frame:enable='between(t,0.503,1.073)+between(t,0.511,1.081)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 201,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 190,
+      "sample_around_second": [
+        {
+          "t": 0.48333333333333334,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5166666666666667,
+          "legacy": 190.0,
+          "candidate": 201.0
+        },
+        {
+          "t": 0.5333333333333333,
+          "legacy": 175.0,
+          "candidate": 180.0
+        },
+        {
+          "t": 0.55,
+          "legacy": 160.0,
+          "candidate": 165.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.15,
+      "case": "irregular",
+      "events": [
+        0.1,
+        0.43,
+        1.0,
+        1.89
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(max(max(if(gte(t,0.100),0.277*exp(-18*abs(t-0.100)),0),if(gte(t,0.430),0.277*exp(-18*abs(t-0.430)),0)),if(gte(t,1.000),0.277*exp(-18*abs(t-1.000)),0)),if(gte(t,1.890),0.277*exp(-18*abs(t-1.890)),0))':eval=frame:enable='between(t,0.100,0.670)+between(t,0.430,1.000)+between(t,1.000,1.570)+between(t,1.890,2.150)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.100))':eval=frame:enable='between(t,0.100,0.670)+between(t,0.430,1.000)+between(t,1.000,1.570)+between(t,1.890,2.150)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": [
+        {
+          "t": 0.4,
+          "legacy": 127.0,
+          "candidate": 127.0
+        },
+        {
+          "t": 0.4166666666666667,
+          "legacy": 127.0,
+          "candidate": 127.0
+        },
+        {
+          "t": 0.43333333333333335,
+          "legacy": 127.0,
+          "candidate": 204.0
+        },
+        {
+          "t": 0.45,
+          "legacy": 127.0,
+          "candidate": 184.0
+        },
+        {
+          "t": 0.4666666666666667,
+          "legacy": 127.0,
+          "candidate": 169.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.15,
+      "case": "dense",
+      "events": [
+        0.4,
+        0.42000000000000004,
+        0.44,
+        0.46,
+        0.48000000000000004,
+        0.5,
+        0.52,
+        0.54
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(max(max(max(max(max(max(if(gte(t,0.400),0.277*exp(-18*abs(t-0.400)),0),if(gte(t,0.420),0.277*exp(-18*abs(t-0.420)),0)),if(gte(t,0.440),0.277*exp(-18*abs(t-0.440)),0)),if(gte(t,0.460),0.277*exp(-18*abs(t-0.460)),0)),if(gte(t,0.480),0.277*exp(-18*abs(t-0.480)),0)),if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0)),if(gte(t,0.520),0.277*exp(-18*abs(t-0.520)),0)),if(gte(t,0.540),0.277*exp(-18*abs(t-0.540)),0))':eval=frame:enable='between(t,0.400,0.970)+between(t,0.420,0.990)+between(t,0.440,1.010)+between(t,0.460,1.030)+between(t,0.480,1.050)+between(t,0.500,1.070)+between(t,0.520,1.090)+between(t,0.540,1.110)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.400))':eval=frame:enable='between(t,0.400,0.970)+between(t,0.420,0.990)+between(t,0.440,1.010)+between(t,0.460,1.030)+between(t,0.480,1.050)+between(t,0.500,1.070)+between(t,0.520,1.090)+between(t,0.540,1.110)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": [
+        {
+          "t": 0.38333333333333336,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.4,
+          "legacy": 207.0,
+          "candidate": 207.0
+        },
+        {
+          "t": 0.4166666666666667,
+          "legacy": 186.0,
+          "candidate": 186.0
+        },
+        {
+          "t": 0.43333333333333335,
+          "legacy": 171.0,
+          "candidate": 190.0
+        },
+        {
+          "t": 0.45,
+          "legacy": 160.0,
+          "candidate": 196.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.15,
+      "case": "millisecond_rounding",
+      "events": [
+        0.5004,
+        0.6004
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.277*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": false,
+        "no_future_event_influence": false,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": {
+        "revision": "research_v5_CFR_tick_gate_unadopted",
+        "graph": [
+          "eq=brightness='max(if(gte(n,31),0.277*exp(-18*max(0,t-0.500400000)),0),if(gte(n,37),0.277*exp(-18*max(0,t-0.600400000)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+        ],
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "event_start_frames": [
+          31,
+          37
+        ],
+        "requires_CFR_and_output_time_map": true
+      },
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 150.0,
+          "candidate": 150.0
+        },
+        {
+          "t": 0.5833333333333334,
+          "legacy": 144.0,
+          "candidate": 144.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 139.0,
+          "candidate": 207.0
+        },
+        {
+          "t": 0.6166666666666667,
+          "legacy": 136.0,
+          "candidate": 186.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 133.0,
+          "candidate": 171.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.5,
+      "case": "single",
+      "events": [
+        0.5
+      ],
+      "candidate_graph": [
+        "eq=brightness='if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0)':eval=frame:enable='between(t,0.500,1.070)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true,
+        "single_bit_equal_legacy": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.008333333333333333,
+      "legacy_peak_gray": 255,
+      "sample_around_second": []
+    },
+    {
+      "fps": 60,
+      "strength": 0.5,
+      "case": "two_short",
+      "events": [
+        0.5,
+        0.6
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.505*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.016666666666666666,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 171.0,
+          "candidate": 171.0
+        },
+        {
+          "t": 0.5833333333333334,
+          "legacy": 160.0,
+          "candidate": 160.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 150.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6166666666666667,
+          "legacy": 144.0,
+          "candidate": 238.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 139.0,
+          "candidate": 207.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.5,
+      "case": "duplicates",
+      "events": [
+        0.5,
+        0.5
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0),if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.500,1.070)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.500,1.070)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.008333333333333333,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.4666666666666667,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.48333333333333334,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5,
+          "legacy": 255.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.5166666666666667,
+          "legacy": 238.0,
+          "candidate": 238.0
+        },
+        {
+          "t": 0.5333333333333333,
+          "legacy": 207.0,
+          "candidate": 207.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.5,
+      "case": "subframe",
+      "events": [
+        0.503,
+        0.511
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.503),0.505*exp(-18*abs(t-0.503)),0),if(gte(t,0.511),0.505*exp(-18*abs(t-0.511)),0))':eval=frame:enable='between(t,0.503,1.073)+between(t,0.511,1.081)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.503))':eval=frame:enable='between(t,0.503,1.073)+between(t,0.511,1.081)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.008333333333333333,
+      "legacy_peak_gray": 243,
+      "sample_around_second": [
+        {
+          "t": 0.48333333333333334,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5166666666666667,
+          "legacy": 243.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.5333333333333333,
+          "legacy": 213.0,
+          "candidate": 225.0
+        },
+        {
+          "t": 0.55,
+          "legacy": 190.0,
+          "candidate": 201.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.5,
+      "case": "irregular",
+      "events": [
+        0.1,
+        0.43,
+        1.0,
+        1.89
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(max(max(if(gte(t,0.100),0.505*exp(-18*abs(t-0.100)),0),if(gte(t,0.430),0.505*exp(-18*abs(t-0.430)),0)),if(gte(t,1.000),0.505*exp(-18*abs(t-1.000)),0)),if(gte(t,1.890),0.505*exp(-18*abs(t-1.890)),0))':eval=frame:enable='between(t,0.100,0.670)+between(t,0.430,1.000)+between(t,1.000,1.570)+between(t,1.890,2.150)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.100))':eval=frame:enable='between(t,0.100,0.670)+between(t,0.430,1.000)+between(t,1.000,1.570)+between(t,1.890,2.150)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.025,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.4,
+          "legacy": 127.0,
+          "candidate": 127.0
+        },
+        {
+          "t": 0.4166666666666667,
+          "legacy": 127.0,
+          "candidate": 127.0
+        },
+        {
+          "t": 0.43333333333333335,
+          "legacy": 127.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.45,
+          "legacy": 127.0,
+          "candidate": 231.0
+        },
+        {
+          "t": 0.4666666666666667,
+          "legacy": 127.0,
+          "candidate": 204.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.5,
+      "case": "dense",
+      "events": [
+        0.4,
+        0.42000000000000004,
+        0.44,
+        0.46,
+        0.48000000000000004,
+        0.5,
+        0.52,
+        0.54
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(max(max(max(max(max(max(if(gte(t,0.400),0.505*exp(-18*abs(t-0.400)),0),if(gte(t,0.420),0.505*exp(-18*abs(t-0.420)),0)),if(gte(t,0.440),0.505*exp(-18*abs(t-0.440)),0)),if(gte(t,0.460),0.505*exp(-18*abs(t-0.460)),0)),if(gte(t,0.480),0.505*exp(-18*abs(t-0.480)),0)),if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0)),if(gte(t,0.520),0.505*exp(-18*abs(t-0.520)),0)),if(gte(t,0.540),0.505*exp(-18*abs(t-0.540)),0))':eval=frame:enable='between(t,0.400,0.970)+between(t,0.420,0.990)+between(t,0.440,1.010)+between(t,0.460,1.030)+between(t,0.480,1.050)+between(t,0.500,1.070)+between(t,0.520,1.090)+between(t,0.540,1.110)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.400))':eval=frame:enable='between(t,0.400,0.970)+between(t,0.420,0.990)+between(t,0.440,1.010)+between(t,0.460,1.030)+between(t,0.480,1.050)+between(t,0.500,1.070)+between(t,0.520,1.090)+between(t,0.540,1.110)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.03333333333333333,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.38333333333333336,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.4,
+          "legacy": 255.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.4166666666666667,
+          "legacy": 238.0,
+          "candidate": 238.0
+        },
+        {
+          "t": 0.43333333333333335,
+          "legacy": 207.0,
+          "candidate": 243.0
+        },
+        {
+          "t": 0.45,
+          "legacy": 186.0,
+          "candidate": 252.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.5,
+      "case": "millisecond_rounding",
+      "events": [
+        0.5004,
+        0.6004
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.505*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": false,
+        "no_future_event_influence": false,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": {
+        "revision": "research_v5_CFR_tick_gate_unadopted",
+        "graph": [
+          "eq=brightness='max(if(gte(n,31),0.505*exp(-18*max(0,t-0.500400000)),0),if(gte(n,37),0.505*exp(-18*max(0,t-0.600400000)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+        ],
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "event_start_frames": [
+          31,
+          37
+        ],
+        "requires_CFR_and_output_time_map": true
+      },
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.016666666666666666,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 171.0,
+          "candidate": 171.0
+        },
+        {
+          "t": 0.5833333333333334,
+          "legacy": 160.0,
+          "candidate": 160.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 150.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6166666666666667,
+          "legacy": 144.0,
+          "candidate": 238.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 139.0,
+          "candidate": 207.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.9,
+      "case": "single",
+      "events": [
+        0.5
+      ],
+      "candidate_graph": [
+        "eq=brightness='if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0)':eval=frame:enable='between(t,0.500,1.070)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true,
+        "single_bit_equal_legacy": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.016666666666666666,
+      "legacy_peak_gray": 255,
+      "sample_around_second": []
+    },
+    {
+      "fps": 60,
+      "strength": 0.9,
+      "case": "two_short",
+      "events": [
+        0.5,
+        0.6
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.765*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.03333333333333333,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 196.0,
+          "candidate": 196.0
+        },
+        {
+          "t": 0.5833333333333334,
+          "legacy": 177.0,
+          "candidate": 177.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 163.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6166666666666667,
+          "legacy": 154.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 144.0,
+          "candidate": 249.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.9,
+      "case": "duplicates",
+      "events": [
+        0.5,
+        0.5
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0),if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.500,1.070)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.500,1.070)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.016666666666666666,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.4666666666666667,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.48333333333333334,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5,
+          "legacy": 255.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.5166666666666667,
+          "legacy": 255.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.5333333333333333,
+          "legacy": 249.0,
+          "candidate": 249.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.9,
+      "case": "subframe",
+      "events": [
+        0.503,
+        0.511
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.503),0.765*exp(-18*abs(t-0.503)),0),if(gte(t,0.511),0.765*exp(-18*abs(t-0.511)),0))':eval=frame:enable='between(t,0.503,1.073)+between(t,0.511,1.081)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.503))':eval=frame:enable='between(t,0.503,1.073)+between(t,0.511,1.081)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.016666666666666666,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.48333333333333334,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.5166666666666667,
+          "legacy": 255.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.5333333333333333,
+          "legacy": 255.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.55,
+          "legacy": 222.0,
+          "candidate": 238.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.9,
+      "case": "irregular",
+      "events": [
+        0.1,
+        0.43,
+        1.0,
+        1.89
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(max(max(if(gte(t,0.100),0.765*exp(-18*abs(t-0.100)),0),if(gte(t,0.430),0.765*exp(-18*abs(t-0.430)),0)),if(gte(t,1.000),0.765*exp(-18*abs(t-1.000)),0)),if(gte(t,1.890),0.765*exp(-18*abs(t-1.890)),0))':eval=frame:enable='between(t,0.100,0.670)+between(t,0.430,1.000)+between(t,1.000,1.570)+between(t,1.890,2.150)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.100))':eval=frame:enable='between(t,0.100,0.670)+between(t,0.430,1.000)+between(t,1.000,1.570)+between(t,1.890,2.150)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.06666666666666667,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.4,
+          "legacy": 127.0,
+          "candidate": 127.0
+        },
+        {
+          "t": 0.4166666666666667,
+          "legacy": 127.0,
+          "candidate": 127.0
+        },
+        {
+          "t": 0.43333333333333335,
+          "legacy": 127.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.45,
+          "legacy": 127.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.4666666666666667,
+          "legacy": 127.0,
+          "candidate": 243.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.9,
+      "case": "dense",
+      "events": [
+        0.4,
+        0.42000000000000004,
+        0.44,
+        0.46,
+        0.48000000000000004,
+        0.5,
+        0.52,
+        0.54
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(max(max(max(max(max(max(if(gte(t,0.400),0.765*exp(-18*abs(t-0.400)),0),if(gte(t,0.420),0.765*exp(-18*abs(t-0.420)),0)),if(gte(t,0.440),0.765*exp(-18*abs(t-0.440)),0)),if(gte(t,0.460),0.765*exp(-18*abs(t-0.460)),0)),if(gte(t,0.480),0.765*exp(-18*abs(t-0.480)),0)),if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0)),if(gte(t,0.520),0.765*exp(-18*abs(t-0.520)),0)),if(gte(t,0.540),0.765*exp(-18*abs(t-0.540)),0))':eval=frame:enable='between(t,0.400,0.970)+between(t,0.420,0.990)+between(t,0.440,1.010)+between(t,0.460,1.030)+between(t,0.480,1.050)+between(t,0.500,1.070)+between(t,0.520,1.090)+between(t,0.540,1.110)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.400))':eval=frame:enable='between(t,0.400,0.970)+between(t,0.420,0.990)+between(t,0.440,1.010)+between(t,0.460,1.030)+between(t,0.480,1.050)+between(t,0.500,1.070)+between(t,0.520,1.090)+between(t,0.540,1.110)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": null,
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.09166666666666666,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.38333333333333336,
+          "legacy": 128.0,
+          "candidate": 128.0
+        },
+        {
+          "t": 0.4,
+          "legacy": 255.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.4166666666666667,
+          "legacy": 255.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.43333333333333335,
+          "legacy": 249.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.45,
+          "legacy": 219.0,
+          "candidate": 255.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.9,
+      "case": "millisecond_rounding",
+      "events": [
+        0.5004,
+        0.6004
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.765*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": false,
+        "no_future_event_influence": false,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": {
+        "revision": "research_v5_CFR_tick_gate_unadopted",
+        "graph": [
+          "eq=brightness='max(if(gte(n,31),0.765*exp(-18*max(0,t-0.500400000)),0),if(gte(n,37),0.765*exp(-18*max(0,t-0.600400000)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+        ],
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "event_start_frames": [
+          31,
+          37
+        ],
+        "requires_CFR_and_output_time_map": true
+      },
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.03333333333333333,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 196.0,
+          "candidate": 196.0
+        },
+        {
+          "t": 0.5833333333333334,
+          "legacy": 177.0,
+          "candidate": 177.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 163.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6166666666666667,
+          "legacy": 154.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 144.0,
+          "candidate": 249.0
+        }
+      ]
+    }
+  ],
+  "cases_count": 42,
+  "assertions": 174,
+  "failures": [
+    {
+      "fps": 30,
+      "strength": 0.15,
+      "case": "millisecond_rounding",
+      "events": [
+        0.5004,
+        0.6004
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.277*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": false,
+        "no_future_event_influence": false,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": {
+        "revision": "research_v5_CFR_tick_gate_unadopted",
+        "graph": [
+          "eq=brightness='max(if(gte(n,16),0.277*exp(-18*max(0,t-0.500400000)),0),if(gte(n,19),0.277*exp(-18*max(0,t-0.600400000)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+        ],
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "event_start_frames": [
+          16,
+          19
+        ],
+        "requires_CFR_and_output_time_map": true
+      },
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 150.0,
+          "candidate": 150.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 139.0,
+          "candidate": 207.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 133.0,
+          "candidate": 171.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.5,
+      "case": "millisecond_rounding",
+      "events": [
+        0.5004,
+        0.6004
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.505*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": false,
+        "no_future_event_influence": false,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": {
+        "revision": "research_v5_CFR_tick_gate_unadopted",
+        "graph": [
+          "eq=brightness='max(if(gte(n,16),0.505*exp(-18*max(0,t-0.500400000)),0),if(gte(n,19),0.505*exp(-18*max(0,t-0.600400000)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+        ],
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "event_start_frames": [
+          16,
+          19
+        ],
+        "requires_CFR_and_output_time_map": true
+      },
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.03333333333333333,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 171.0,
+          "candidate": 171.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 150.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 139.0,
+          "candidate": 207.0
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "strength": 0.9,
+      "case": "millisecond_rounding",
+      "events": [
+        0.5004,
+        0.6004
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.765*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": false,
+        "no_future_event_influence": false,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": {
+        "revision": "research_v5_CFR_tick_gate_unadopted",
+        "graph": [
+          "eq=brightness='max(if(gte(n,16),0.765*exp(-18*max(0,t-0.500400000)),0),if(gte(n,19),0.765*exp(-18*max(0,t-0.600400000)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+        ],
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "event_start_frames": [
+          16,
+          19
+        ],
+        "requires_CFR_and_output_time_map": true
+      },
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.03333333333333333,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 196.0,
+          "candidate": 196.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 163.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 144.0,
+          "candidate": 249.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.15,
+      "case": "millisecond_rounding",
+      "events": [
+        0.5004,
+        0.6004
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.277*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.277*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.277*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": false,
+        "no_future_event_influence": false,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": {
+        "revision": "research_v5_CFR_tick_gate_unadopted",
+        "graph": [
+          "eq=brightness='max(if(gte(n,31),0.277*exp(-18*max(0,t-0.500400000)),0),if(gte(n,37),0.277*exp(-18*max(0,t-0.600400000)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+        ],
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "event_start_frames": [
+          31,
+          37
+        ],
+        "requires_CFR_and_output_time_map": true
+      },
+      "candidate_peak_gray": 207,
+      "candidate_white_fraction": 0.0,
+      "legacy_peak_gray": 207,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 150.0,
+          "candidate": 150.0
+        },
+        {
+          "t": 0.5833333333333334,
+          "legacy": 144.0,
+          "candidate": 144.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 139.0,
+          "candidate": 207.0
+        },
+        {
+          "t": 0.6166666666666667,
+          "legacy": 136.0,
+          "candidate": 186.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 133.0,
+          "candidate": 171.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.5,
+      "case": "millisecond_rounding",
+      "events": [
+        0.5004,
+        0.6004
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.505*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.505*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.505*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": false,
+        "no_future_event_influence": false,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": {
+        "revision": "research_v5_CFR_tick_gate_unadopted",
+        "graph": [
+          "eq=brightness='max(if(gte(n,31),0.505*exp(-18*max(0,t-0.500400000)),0),if(gte(n,37),0.505*exp(-18*max(0,t-0.600400000)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+        ],
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "event_start_frames": [
+          31,
+          37
+        ],
+        "requires_CFR_and_output_time_map": true
+      },
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.016666666666666666,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 171.0,
+          "candidate": 171.0
+        },
+        {
+          "t": 0.5833333333333334,
+          "legacy": 160.0,
+          "candidate": 160.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 150.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6166666666666667,
+          "legacy": 144.0,
+          "candidate": 238.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 139.0,
+          "candidate": 207.0
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "strength": 0.9,
+      "case": "millisecond_rounding",
+      "events": [
+        0.5004,
+        0.6004
+      ],
+      "candidate_graph": [
+        "eq=brightness='max(if(gte(t,0.500),0.765*exp(-18*abs(t-0.500)),0),if(gte(t,0.600),0.765*exp(-18*abs(t-0.600)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "legacy_graph": [
+        "eq=brightness='0.765*exp(-18*abs(t-0.500))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+      ],
+      "checks": {
+        "all_frames_decoded": true,
+        "no_pre_first_leak": false,
+        "no_future_event_influence": false,
+        "duplicate_idempotence": true
+      },
+      "v5_tick_gate_probe": {
+        "revision": "research_v5_CFR_tick_gate_unadopted",
+        "graph": [
+          "eq=brightness='max(if(gte(n,31),0.765*exp(-18*max(0,t-0.500400000)),0),if(gte(n,37),0.765*exp(-18*max(0,t-0.600400000)),0))':eval=frame:enable='between(t,0.500,1.070)+between(t,0.600,1.170)'"
+        ],
+        "no_pre_first_leak": true,
+        "no_future_event_influence": true,
+        "event_start_frames": [
+          31,
+          37
+        ],
+        "requires_CFR_and_output_time_map": true
+      },
+      "candidate_peak_gray": 255,
+      "candidate_white_fraction": 0.03333333333333333,
+      "legacy_peak_gray": 255,
+      "sample_around_second": [
+        {
+          "t": 0.5666666666666667,
+          "legacy": 196.0,
+          "candidate": 196.0
+        },
+        {
+          "t": 0.5833333333333334,
+          "legacy": 177.0,
+          "candidate": 177.0
+        },
+        {
+          "t": 0.6,
+          "legacy": 163.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6166666666666667,
+          "legacy": 154.0,
+          "candidate": 255.0
+        },
+        {
+          "t": 0.6333333333333333,
+          "legacy": 144.0,
+          "candidate": 249.0
+        }
+      ]
+    }
+  ],
+  "saturation_is_separate_quality_issue": true,
+  "source_sha256": "cb517f7a44f59fbadbd17413f156d111db28141b7b2039406b6bc3236aab8d94"
+}

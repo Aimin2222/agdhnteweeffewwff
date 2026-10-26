@@ -1,0 +1,259 @@
+{
+  "scope": "isolated tmix stage, not full Zoom Blur or GPU/LoL; transient smear remains after normalization",
+  "cases": [
+    {
+      "input": "flat32",
+      "scale": 4,
+      "graph": "format=gbrp,tmix=frames=3:weights='1 2 1':scale=4,format=rgb24",
+      "input_mean": 32.0,
+      "output_mean": 255.0,
+      "white_fraction": 1.0,
+      "all_frames_decoded": true,
+      "flat_max_absolute_error": 223,
+      "first_nonzero_frame": 0,
+      "frame_means": [
+        255.0,
+        255.0,
+        255.0,
+        255.0,
+        255.0,
+        255.0,
+        255.0,
+        255.0
+      ]
+    },
+    {
+      "input": "flat32",
+      "scale": 0,
+      "graph": "format=gbrp,tmix=frames=3:weights='1 2 1':scale=0,format=rgb24",
+      "input_mean": 32.0,
+      "output_mean": 32.0,
+      "white_fraction": 0.0,
+      "all_frames_decoded": true,
+      "flat_max_absolute_error": 0,
+      "first_nonzero_frame": 0,
+      "frame_means": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    {
+      "input": "flat32",
+      "scale": 0.25,
+      "graph": "format=gbrp,tmix=frames=3:weights='1 2 1':scale=0.25,format=rgb24",
+      "input_mean": 32.0,
+      "output_mean": 32.0,
+      "white_fraction": 0.0,
+      "all_frames_decoded": true,
+      "flat_max_absolute_error": 0,
+      "first_nonzero_frame": 0,
+      "frame_means": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ]
+    },
+    {
+      "input": "flat96",
+      "scale": 4,
+      "graph": "format=gbrp,tmix=frames=3:weights='1 2 1':scale=4,format=rgb24",
+      "input_mean": 96.0,
+      "output_mean": 255.0,
+      "white_fraction": 1.0,
+      "all_frames_decoded": true,
+      "flat_max_absolute_error": 159,
+      "first_nonzero_frame": 0,
+      "frame_means": [
+        255.0,
+        255.0,
+        255.0,
+        255.0,
+        255.0,
+        255.0,
+        255.0,
+        255.0
+      ]
+    },
+    {
+      "input": "flat96",
+      "scale": 0,
+      "graph": "format=gbrp,tmix=frames=3:weights='1 2 1':scale=0,format=rgb24",
+      "input_mean": 96.0,
+      "output_mean": 96.0,
+      "white_fraction": 0.0,
+      "all_frames_decoded": true,
+      "flat_max_absolute_error": 0,
+      "first_nonzero_frame": 0,
+      "frame_means": [
+        96.0,
+        96.0,
+        96.0,
+        96.0,
+        96.0,
+        96.0,
+        96.0,
+        96.0
+      ]
+    },
+    {
+      "input": "flat96",
+      "scale": 0.25,
+      "graph": "format=gbrp,tmix=frames=3:weights='1 2 1':scale=0.25,format=rgb24",
+      "input_mean": 96.0,
+      "output_mean": 96.0,
+      "white_fraction": 0.0,
+      "all_frames_decoded": true,
+      "flat_max_absolute_error": 0,
+      "first_nonzero_frame": 0,
+      "frame_means": [
+        96.0,
+        96.0,
+        96.0,
+        96.0,
+        96.0,
+        96.0,
+        96.0,
+        96.0
+      ]
+    },
+    {
+      "input": "flat180",
+      "scale": 4,
+      "graph": "format=gbrp,tmix=frames=3:weights='1 2 1':scale=4,format=rgb24",
+      "input_mean": 180.0,
+      "output_mean": 255.0,
+      "white_fraction": 1.0,
+      "all_frames_decoded": true,
+      "flat_max_absolute_error": 75,
+      "first_nonzero_frame": 0,
+      "frame_means": [
+        255.0,
+        255.0,
+        255.0,
+        255.0,
+        255.0,
+        255.0,
+        255.0,
+        255.0
+      ]
+    },
+    {
+      "input": "flat180",
+      "scale": 0,
+      "graph": "format=gbrp,tmix=frames=3:weights='1 2 1':scale=0,format=rgb24",
+      "input_mean": 180.0,
+      "output_mean": 180.0,
+      "white_fraction": 0.0,
+      "all_frames_decoded": true,
+      "flat_max_absolute_error": 0,
+      "first_nonzero_frame": 0,
+      "frame_means": [
+        180.0,
+        180.0,
+        180.0,
+        180.0,
+        180.0,
+        180.0,
+        180.0,
+        180.0
+      ]
+    },
+    {
+      "input": "flat180",
+      "scale": 0.25,
+      "graph": "format=gbrp,tmix=frames=3:weights='1 2 1':scale=0.25,format=rgb24",
+      "input_mean": 180.0,
+      "output_mean": 180.0,
+      "white_fraction": 0.0,
+      "all_frames_decoded": true,
+      "flat_max_absolute_error": 0,
+      "first_nonzero_frame": 0,
+      "frame_means": [
+        180.0,
+        180.0,
+        180.0,
+        180.0,
+        180.0,
+        180.0,
+        180.0,
+        180.0
+      ]
+    },
+    {
+      "input": "moving_step",
+      "scale": 4,
+      "graph": "format=gbrp,tmix=frames=3:weights='1 2 1':scale=4,format=rgb24",
+      "input_mean": 21.09375,
+      "output_mean": 50.80078125,
+      "white_fraction": 0.19921875,
+      "all_frames_decoded": true,
+      "flat_max_absolute_error": null,
+      "first_nonzero_frame": 3,
+      "frame_means": [
+        0.0,
+        0.0,
+        0.0,
+        47.8125,
+        71.71875,
+        95.625,
+        95.625,
+        95.625
+      ]
+    },
+    {
+      "input": "moving_step",
+      "scale": 0,
+      "graph": "format=gbrp,tmix=frames=3:weights='1 2 1':scale=0,format=rgb24",
+      "input_mean": 21.09375,
+      "output_mean": 16.875,
+      "white_fraction": 0.0,
+      "all_frames_decoded": true,
+      "flat_max_absolute_error": null,
+      "first_nonzero_frame": 3,
+      "frame_means": [
+        0.0,
+        0.0,
+        0.0,
+        8.4375,
+        25.3125,
+        33.75,
+        33.75,
+        33.75
+      ]
+    },
+    {
+      "input": "moving_step",
+      "scale": 0.25,
+      "graph": "format=gbrp,tmix=frames=3:weights='1 2 1':scale=0.25,format=rgb24",
+      "input_mean": 21.09375,
+      "output_mean": 16.875,
+      "white_fraction": 0.0,
+      "all_frames_decoded": true,
+      "flat_max_absolute_error": null,
+      "first_nonzero_frame": 3,
+      "frame_means": [
+        0.0,
+        0.0,
+        0.0,
+        8.4375,
+        25.3125,
+        33.75,
+        33.75,
+        33.75
+      ]
+    }
+  ],
+  "flat_normalized_identity_pass": true,
+  "moving_input_has_no_pre_step_energy": true
+}

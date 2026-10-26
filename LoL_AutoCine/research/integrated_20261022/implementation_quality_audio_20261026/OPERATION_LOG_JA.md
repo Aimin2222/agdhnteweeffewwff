@@ -1,0 +1,5 @@
+# 操作記録と制約
+変更先はwork/autocine_implementation_specs_20261026とoutputs/autocine_implementation_specs_20261026、新規配布ZIPのみ。元コードはASTで必要な2関数だけ独立scopeに読んだ。appのimport/実行・LoL起動・設定書換えなし。
+人工audioを生成しFFmpegのnull出力で解析。音声device/再生/Windows音量には接続せず、録音もしない。研究ディレクトリー2か所の120mediaだけをmetadata probe。参考動画のdownload/再生なし、私的フォルダー探索なし。
+既存FFmpeg/NumPy/Pillowを使用。新規install/RTK hook/OS・DNS/proxy/Firewall/Defender/hosts/services/browser security変更なし。ネットワークは公式資料の読み取りとGitHub成果物保存/検証のみ。
+人工Flashの失敗caseを保存、研究用の有理数parser修正と再実行も記録。研究コードの合格を製品合格に移さない。既存書き出し/テスト/素材承認/UI比較ファイルは更新しない。

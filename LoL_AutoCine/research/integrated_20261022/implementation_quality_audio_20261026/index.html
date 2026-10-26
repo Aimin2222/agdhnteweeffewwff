@@ -1,0 +1,273 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><title>AutoCine 実装仕様・品質・音声研究</title><style>body{max-width:1120px;margin:30px auto;background:#f1f3f5;color:#202d3c;font:17px/1.8 system-ui;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}section{padding:24px;background:#fafbfc;margin:20px 0;border-radius:12px}a{color:#185aa9}</style><h1>AutoCine 実装仕様・品質・音声研究</h1><p>UI評価は対象外。研究と正式実装は別。参考音声20本未実施、実機合格0/14。</p><section><a href="README_JA.md">README_JA.md</a><pre># AutoCine 映像演出実装仕様・品質研究・音声調査
+2026-10-26 / Work研究のみ / 正式採用・製品変更なし
+
+今回の3対象：20作品の観測を12実装ルールと入出力/処理/fallback/テストへ変換、素材687件の審査キューと6motion/Flash/Blur/位置の品質研究、音声信号解析の実行可能性調査。
+UI10比較・友人評価・採点・アンケート・順位付け・採用判断は除外。以前のUI成果物は履歴として保持し、今回編集しない。
+
+追加発見：Flashは小数3桁丸めで先行漏れ、V4候補42ケース中6ケース失敗。CFR frame開始で防ぐV5は限定6probeの研究候補。Zoomのtmix scale4は固定32/96/180を全て255に飽和、正規化では誤差0。popは原文では減衰横揺れ。1458条件の座標数理と37契約条件を確認。
+音声はFFmpeg/NumPyで人工7件を実解析できた。参考作品の音源は未取得で20本とも未分析。既存44音声streamは人工AV素材であり参照20本ではない。
+
+入口index.html。VIDEO20_TO_RULES/IMPLEMENTATION_RULES/VALIDATION_PLANは機械可読、6報告書はCodex引継ぎ用。研究コード・既知人工音源・実測ログを同梱。実LoL/GPU/AV合格・素材の承認・本体への修正は別工程。前の封印ZIPは変更しない。
+</pre></section><section><a href="01_VIDEO20_IMPLEMENTATION_JA.md">01_VIDEO20_IMPLEMENTATION_JA.md</a><pre># 20作品の観測から実装条件へ
+今回は再視聴やUI評価ではなく、前段の実映像観測を条件・入出力・処理・試験へ変換する工程。VIDEO20_TO_RULES.jsonに20作品を1件も省かず掲載し、URL/作品内秒数/事実/導出ルールを対応付けた。作品秒数はReplayゲーム時刻ではない。
+全体構成20/20は粗い断続観測。明示kill通知2件以上の根拠は14/20、保留6作品はV02/V03/V08/V15/V16/V24。音声20/20未実施。参照の見た目だけでカメラFOV、速度、FlashやBlurの処理方式、正確なキル時刻を確定しない。今回の人工/数理検証は参照映像の再現成功ではない。
+
+## 実行の分離
+1. 入力固定：Replay hash、patch、target player ID、verified kill/assist、ユーザーpre/post、cameraと素材のrevision/hashesを保存する。
+2. イベント整理：stable IDで重複排除、同時刻の別victimは保持。競合ID/NaN/Inf/負時刻は拒否。assist/engageをkill Flashへ流用しない。engage専用イベントがない現在は未対応と記録する。
+3. オフラインShotPlan：位置・遮蔽・続く戦闘が分かる場合だけ候補を生成。手動/未指定を優先し、BLUE/REDの安全性が未承認なら既存baselineを保持。候補は採用理由と拒否理由を両方残す。
+4. take収録：既存camera/TargetLockにadapterで接続。計画値を直接新しいカメラ計算へ置き換えない。同じイベントを複数takeで撮る場合はReplay時刻で照合し、シーク直後の安定確認を別に記録。
+5. 編集：確定TimeMapで速度、kill素材、FX、切替、音声をoutput時刻にそろえる。外部CG/人物切抜き/本当のdissolveは追加engineが必要。既存fadeを同等再現と呼ばない。
+6. QA：構図・見切れ・輝度・時刻・AV・デコード・実機負荷を別判定。失敗を自動で修復/承認せず、baseline比較とログを残す。
+
+## 12ルール
+### R01 安全な自動構図
+入力：verified replay ID/side/TargetLock、同時刻のgeometry
+処理：manual/未指定は維持。side/geometry不明時はbaseline。検証済み可視率と遮蔽で候補を拒否。
+既存/新規：旧10camera/制御3種/TargetLockをadapterから呼ぶ。geometry供給と候補検査は新規。
+検査：CT01/CT02/CT09
+
+### R02 複数キル・集団戦
+入力：kill event IDs/actor ID/participants/fight end
+処理：同一actorの重複IDを除外、別victimの同時killは保持。イベント列とfight推定を分離しwide候補を優先。
+既存/新規：既存kill/scene/trim。fight segmentation・複数対象包含は新規。
+検査：CT02/CT03
+
+### R03 長射程の射線
+入力：発射/命中ID・時刻/位置/遮蔽・capture時点
+処理：発射者だけへの寄りを抑える。発射/弾道/到達先を含むtakeを別収録。両側位置不明ならbaseline。
+既存/新規：既存camera収録を土台。projectile対応、2端点構図は新規。
+検査：CT03
+
+### R04 戦闘前後を残す
+入力：user pre/post・最後のkill・次engageの既知/不明
+処理：sceneは半開区間。user範囲を勝手に狭めない。次engage不明を安全な空白と解釈しない。
+既存/新規：既存前後trimとscene保存。auto境界延長は新規で未既定。
+検査：CT01/CT02
+
+### R05 人物・武器の挿入
+入力：fight終了確定/next-engage空白/take検査
+処理：3条件を満たす時だけ任意cutaway。戦闘へ戻る位置とplayheadを保存。外部CGは別素材として扱う。
+既存/新規：camera別takeは一部既存、planner/外部トラックは新規。
+検査：CT04
+
+### R06 FX・カラー
+入力：processing revision/asset hashes/実イベント/色空間
+処理：ゲーム発光・低HP縁・死亡灰色と編集FXを分離。入力→grade→FX→overlay→transitionの順をversion化。
+既存/新規：既存grade/video effects/35overlayFX。背景人物別maskは新規。
+検査：CT05/CT06
+
+### R07 Flashのイベント同期
+入力：replay→output TimeMap、CFR rateまたはVFR PTS
+処理：eventごとの因果ゲートとmax合成。小数3桁丸めの先行漏れを拒否。V5 CFR tickは別revision。
+既存/新規：legacy先頭event中心は保持。V4/V5は研究候補で未採用。
+検査：CT05
+
+### R08 Blurの輝度保持
+入力：weights/scale/input color metadata/clip境界
+処理：tmix正規化とズーム軌道を別検査。clip境界で履歴をリセット。正規化だけで空間radial blurとは呼ばない。
+既存/新規：旧zoom_blur ID維持。新revision選択・履歴flushは実装前条件。
+検査：CT06
+
+### R09 切替・暗転・再提示
+入力：scene boundary/transition kind/duration/前後take
+処理：hard cut/fadeと本当の2映像dissolveを分離。意図的黒と広告/未読込/不良を区別。二重効果を防ぐ。
+既存/新規：既存fade/cut。空間transition/任意split/逆再生は新規。
+検査：CT04/CT10
+
+### R10 素材・6登場
+入力：catalog namespace/asset hash/status/geometry revision
+処理：37/89/652/35を分離。6motion IDと既存pop横揺れを保存。確認用選択は承認ではない。
+既存/新規：既存素材renderer。肖像境界確定と新座標契約は別実装。
+検査：CT07/CT08
+
+### R11 共通時刻・座標
+入力：patch/replay hash、各段のPTS・viewport・DPI
+処理：有理数TimeMap、seek gap補間禁止、outputの確定時刻で全レイヤーを同期。roundは最終pixel端で1回。
+既存/新規：旧CPU/preview/GPUと比較して選択移行。rendererを本研究で変更しない。
+検査：CT07/CT08/CT11
+
+### R12 音声・負荷・合否
+入力：許可済み音声/PTS/解析metadata/実機性能
+処理：無音・飽和・左右差・AVdriftを分ける。音源なしはNOT_RUN。NVENC成功はGPU FX成功と別。
+既存/新規：既存game/BGM/encoderを保持。beat同期と負荷予算は新規。
+検査：CT11/CT12
+
+## 複数キルの具体条件
+eventの間隔だけをfight終了の根拠にしない。同一actor・既知combat IDを優先、combat IDなしのgap groupingは提案値をprojectへ明示して保持する。固定3秒を正式既定にしない。多人数/長射程なら広い構図候補、単体ならfollow候補を検査する。対象群・退路・弾道を検査できなければ既存wide/fixedへ戻す。
+可視率95%/遮蔽5%/画面safe margin8%は暫定検討値。元映像から測定した値ではなく、実機でユーザー/ChatGPTが採用を判断する。固定自動はpose維持を優先、full_autoも可視性が不明なら動かさない。TargetLock解除やBLUE/RED反転を演出に利用しない。
+
+## 6レシピの設定化
+Cinematic：戦闘wide＋条件付き人物take、外部CG別扱い。Impact：確定killのみFlash/キル素材、連打時maxと因果性。Elegant：控えめgradeと低頻度挿入、人物mask新規。Competitive：HUD/射程/退路を保持し強いFXを抑える候補。Montage：章/再提示/外部挿入は任意、beat未検証。Low-load Cinema：旧camera＋最小FXを候補とし、低負荷の保証には実機測定が必要。どれも正式既定値にはしていない。
+</pre></section><section><a href="02_TIME_COORDINATE_CONTRACT_JA.md">02_TIME_COORDINATE_CONTRACT_JA.md</a><pre># 時刻・座標・層の実装契約
+## 時刻の型
+Replay秒、capture wall clock、clip PTS、output PTS、音声sample indexを別フィールドにする。Float秒を小数3桁へ丸めて全段へ使わない。内部は整数ticks＋time_baseまたは有理数。可変速segmentはout=output_in+(replay_time−replay_in)/rate。区間は[replay_in,replay_out)、seek gap内イベントは無効・理由付き、外挿/補間禁止。rate&lt;=0、overlap、output逆行、非有限値を拒否。
+CFRでイベントの最初の可視フレームはceil(output_time×fps)。60000/1001等も有理数で計算。VFRは実際のPTS列で最初のPTS&gt;=eventを探す。n/fpsをVFRへ流用しない。元作品のスローを断定してrateを作らない。
+同一shot内で速度変更がある場合はcamera takeとbadge/FXをそれぞれ同じTimeMapで再標本化。音声は同じsource区間とoutput durationを使い、pitch変更とtempo変更を分離。pause/seek/取消で時計が飛んだらcontinuity_idを更新する。
+
+## 座標
+素材のnative canvas/alpha bbox/portrait hole、基準1920×1080、output video rect、preview viewport rect、DPI device pxを別管理。カメラ位置の3D座標とbadgeの2D pixelは混ぜない。
+contain係数k=min(W/Rw,H/Rh)、offset=((W−Rw*k)/2,(H−Rh*k)/2)。reference→output→previewのアフィン変換を合成し、辺座標を最終pixelでhalf-up丸め。出力画像に合わせたpreviewを縮小表示し、各段で素材を再スケールして丸め誤差を累積しない。letterboxをoverlay座標の原点と混同しない。
+RGBA合成のalpha型（straight/premultiplied）、transfer/primaries/range、resize filterを記録。RGB非ゼロ/alpha0だけで素材不良としないが、resample時の縁色は背景対照で調べる。形式変換でalpha二重適用を避ける。
+
+## 既存の不一致
+V4 CPU出力で1920のbboxは一致、1366でexport[973,84,1312,200]に対しmirror[1086,60,1328,142]、1280でも差があった。RGB/alphaのbboxは検出条件も異なり、完全な同一指標ではない。この結果は今回修正済みではない。
+今回のCOORDINATE_CONTRACT_RESULTSは3output×3viewport×3DPI×6motion×3phase×3rect=1458条件。数理上の合成変換だけの検査で、製品rendererは呼んでいない。基準alpha/色/実frame比較による実機試験を別に行う。
+
+## schema（提案）
+Event：event_id/type/actor_id/victim_id/replay_time/time_base/evidence/source_hash。
+ShotSegment：segment_id/replay_in/out/output_in/out/rate/continuity_id/camera_mode/style/side/target_id/manual_overrides/geometry_provenance/rejection_reasons。
+Overlay：asset_namespace/id/hash/catalog_status/portrait_geometry_revision/motion_id/processing_revision/output_event_pts/reference_rect/alpha_mode/color_metadata。
+QACase：case_id/input_hashes/commands/environment/expected/actual/status/evidence_paths。statusはPASS/FAIL/REVIEW/NOT_RUNを区別する。metadata不足は成功として扱わない。
+</pre></section><section><a href="03_QUALITY_AND_MOTION_JA.md">03_QUALITY_AND_MOTION_JA.md</a><pre># 素材・FX・登場アニメの品質仕様
+652フレーム、35の静止RGBA FX素材、アプリの映像全体FX（Flash/Zoom Blur等）を別カタログ/処理として扱う。例えば35FXのD_project/impact_rgba.pngとCPU Flash filterは別物。同名フレーム承認をFXへ伝播しない。
+
+## 全687件の次段階審査キュー
+ASSET_REVIEW_QUEUEに652+35全件を元hash/承認状態付きで整理した。今回の新規目視は0件で、過去の検査を再度実施済みとは数えない。機械検査全687合格/原寸・背景審査の既存記録はV2–V4から継承。全12条件合格0、承認1/確認用651、FX35確認用のまま。
+P0=50件（No004の原本制約確認またはsolid edge接触）、P1=90件（FXまたはsoft edge）、P2=547件。これは研究上の優先度で、不良認定や承認ではない。テーマ/種類別にはJSONのid/kind/reasonsで絞れる。edge接触は意図的発光か見切れかを原本と照合する。
+651の暫定肖像枠、19原本制約（見切れ8/パレット11）は未解消。穴形状を円として確定せず、作者原本/完全版か独立した境界審査が必要。原本89/既存37は不変。
+
+## 審査ゲート
+G0 provenance：catalog ID/hash/status、原本と派生を分離。
+G1 decode：画像全件decode、native寸法/色/alpha mode、hash一致。canvasサイズだけで1080p overlayの解像度を落第としない。実際の描画サイズと比べる。
+G2 alpha：transparent/partial/opaque、bbox、edge接触、alpha0のRGB、縮小時halo。明/暗/高彩度/実LoL/HUD背景で比較。
+G3 portrait：A/Bの穴/中心/枠形状、対象アイコンのトリミング・左右・名前/VSとの干渉。暫定651はgeometry_revision=provisional。
+G4 temporal：35FX×weak/strong×6motions×30/60fps×複数kill/3段stack。連打で明滅/消失/先行/残像/切断がないか全frame metric＋通常速度の人手確認。
+G5 position：実output/preview/GPUの同一RGBA基準に対する辺差、safe area/HUD遮蔽、stack overflowを検査。
+G6 art/readability：原本テーマ、形状、文字、portraitの表情/目鼻、隣接badgeの識別性。自動hash成功を代替にしない。
+G7 runtime：LoL・GPU・録画・AV・長時間・失敗fallback。承認はユーザー/既存正式工程でのみ変更。
+
+## 6登場の原文照合（訂正を含む）
+core/kill_icons.py:badge_motion_xyとcore/work_kill_assets.py:_render_preview_nativeを確認した。u=clamp(1−elapsed/0.260,0,1)、ease=u²(3−2u)。slide_left/rightは基準幅+20、slide_up/downは基準高さ+20だけ外から入る。up=下から、down=上から。instantは固定。
+**popは16*exp(−18*elapsed)*cos(28*elapsed)の横方向揺れ**。拡大bounceでもopacityだけでもない。以前の資料に異なる説明がある場合はこの原文照合を優先する。強い拡大を足すなら別ID/revisionで、既存popは変更しない。
+今回1458条件はこの軌道を使った座標変換の数理検査。実6motionの全画素/全動画/全素材を今回再審査したものではない。既存の144CPU clips/23472幾何条件は過去の結果として保持。
+
+## リリース判定
+機械PASS、視覚REVIEW、原本制約、実機NOT_RUNを別軸で保持。確認用使用チェックで正式承認を書き換えない。承認済み素材でも新renderer/revisionの互換性は別に検査する。
+</pre></section><section><a href="04_FLASH_BLUR_FINDINGS_JA.md">04_FLASH_BLUR_FINDINGS_JA.md</a><pre># Flash / Zoom Blur追加検証
+## CPU Flash（新たな失敗を明示）
+前候補V4 causal gateを30/60fps、3強度、単発/短間隔/重複/同frame/不規則/密集/小数丸めの42ケースで検査。174 assertion中12失敗、失敗caseは6。残りの通常36ケースは全条件成立。元コードは変更していない。
+新発見：時刻0.5004/0.6004を小数3桁へ丸めると0.500/0.600になり、30/60fps両方でイベント前のframeへ効果が漏れた。V4のno-pre-first/no-futureがともに失敗。元の「未来pulseにstart gateを置けば十分」という説明には時刻量子化条件が不足していた。
+V5研究probeは正確なoutput timeとfpsからceil(time*fps)を計算し、eqのnを開始条件にした。6追加probeで先行漏れ/未来影響の12条件が成立した。CFR前提の限定結果で、旧単発の全互換/可変速/VFR/GPU/LoLは未検証。正式採用せず別revisionへ隔離する。
+式候補：B(n)=max_i[A_i*exp(−18*max(0,t−t_i))*I(n&gt;=ceil(t_i*fps))]。Aは旧0.18+0.65*strengthの丸めも含め互換検査。重複IDは除去するが、別ID同時killは残す。add合成は白飛び増幅、latest上書きは順序依存となるため、この候補ではmaxを検討する。
+強度が高い場合の白飛びは因果性とは別の問題で、candidate_white_fractionを保存した。強度capを勝手に既定にせず、ユーザー設定/legacy再現/新revisionの3つを明示する。future guardに合格しても美術的合格とはしない。
+
+## Zoom Blur時間混合段
+tmixのみをRGB 64×36の固定値32/96/180と移動stepで分離し、scale=4/0/0.25の12ケースを実行した。旧scale4では固定入力3種が全て255へ飽和。scale0/.25では固定値を誤差0で保持、step前へのエネルギー漏れなし。時間的残像は残る。
+これはfull Zoom Blur/GPU/LoLの検証ではない。1920固定scale/crop、動的ズーム、色変換の影響は別。tmixのscaleは重み合計に対する係数で、weights 1/2/1の正規化と空間ズームの拡大率を混同しない。[FFmpeg公式tmix](https://ffmpeg.org/ffmpeg-filters.html#tmix)を参照。
+新仕様条件：①定数輝度を維持②scene/seekで履歴flush③一時停止/単frame previewにも同じ履歴契約④範囲/transferを固定⑤flatと動きの両方を計測⑥旧projectはlegacy revisionを維持。正規化で真の空間radial blurを再現したとは報告しない。
+
+生データ：FLASH_BOUNDARY_RESULTS.json / TMIX_NORMALIZATION_RESULTS.json。失敗は削除せず保存。
+</pre></section><section><a href="05_AUDIO_FEASIBILITY_JA.md">05_AUDIO_FEASIBILITY_JA.md</a><pre># 音声分析の実行可能性と今回の実行結果
+## 結論の修正
+聴取用ツールがないことと信号解析が不可能なことは別。既存FFmpegとNumPyのみで、音声fileのdecode/peak/RMS/DC/無音候補/左右相関/LUFS・true peak計測を実行できた。新しいソフトのinstallや音声再生、OS音量変更はしていない。
+現在のFFmpegの版・hash・filter可否はAUDIO_ENVIRONMENT。研究フォルダー2か所の既存media120件をprobeし、44件にaudio streamがあったが、すべて既存の人工AV試験素材。参考20作品の実音源は対象範囲で0件。PC全体の私的ファイルは探索していない。
+
+## 実行した解析
+48kHz/stereo/3秒の人工WAV7件（無音、440Hz左右音量差、逆相、clipped plateau、DC、4pulse、右30ms delay）を生成し、FFmpeg astats/ebur128/silencedetectとNumPyで測定。7件の既知入力oracleに合格。左右30msをFFT相関で検出。pulse候補は0.5/1.0/1.5/2.0秒を10ms窓で検出。逆相を単純monoへ足すと消えることも確認した。
+RMS dBFSはLUFSではなく、sample peakとtrue peakも別。無音の−∞はJSONでnull＋silence状態として表現。信号検出のonsetを音楽のbeat/小節/キル効果音と断定しない。ラウドネス値の0への自動正規化やmono合成は実施していない。
+公式：[astats](https://ffmpeg.org/ffmpeg-filters.html#astats-1)、[ebur128](https://ffmpeg.org/ffmpeg-filters.html#ebur128-1)。全実測ログはaudio_lab/*_ffmpeg.log、WAVの生成器とhash、数値結果を同梱。
+
+## 20作品の状態
+20件すべてNOT_RUNのまま。今回は映像を再生せず、新規の参照音声も取得していない。音楽/ゲーム音/声の内容や同期を聴いたと報告しない。字幕や映像Flashを音声の代用にしない。未観測のダウンロードURLや保護回避による取得はしない。
+
+## 必要条件と後続手順
+1. ユーザーが共有できる音声付き動画/音源、またはサービスが正規に提供する利用可能な取得手段。作品ID/URL、許可範囲、元sample rate/channels、全体のoffsetを付ける。
+2. 1本ずつsource hash/PTSをprobe。元音源を読み取り専用で保持し、解析用PCMを別に生成。可逆圧縮/低音量再生を使い、Windows全体音量は変えない。
+3. fullworkのpeak/RMS/LUFS/truepeak/無音区間、channel別onset/相関、短時間スペクトルの候補を測定。48kHzへのresampleやmonoの前後を区別する。
+4. 映像eventとの同期は通常速度・同一PTSで確認。倍速の印象で判定しない。冒頭だけでなく中盤/終端のdriftを分離。AAC delay/encoder priming/間欠frameを記録する。
+5. 音楽beat候補・sfx候補を人手で聴取確認。聴取手段がなければ信号候補まで。source separation/ASRは今回未導入で、音量の急変や音楽の意味は自動で確定しない。
+合格は実素材入力・手段・解析範囲を伴う場合のみ。人工7件の成功で20本の音声分析を完了にしない。
+</pre></section><section><a href="06_VALIDATION_AND_HANDOFF_JA.md">06_VALIDATION_AND_HANDOFF_JA.md</a><pre># 検証計画・Codex引継ぎ
+今回の成果物は設計と研究fixture。AutoCine本体へ適用していない。UI10案比較/友人評価/採点/アンケート/順位付け/採用判断は一切対象外。
+
+## 処理経路と変更の境界
+core/effects.pyの_build_video_effect_filters/_enable_exprがCPU FlashとZoom段の既存接続。core/kill_icons.pyのbadge_motion_xy、core/work_kill_assets.pyの_render_preview_nativeとCPU合成が6motion/素材位置の接続。camera/TargetLock/BLUE-REDは既存controllerへadapter接続し、数理plannerを直接実機camera計算と置換しない。
+素材承認はcatalog正本のまま。新revisionは明示選択・旧project保持・rollback可にし、研究候補を既定にしない。現開発branchへ取り込む前に最新code hashと今回のbaseline hashを比較し、異なれば再監査する。今回のbaselineはfb03e0390805125fc063f4599af6c2541a653abfの読み取りコピーで、最新実装で同じ不具合が残ることの証明ではない。
+
+## 分割実装の順序（工程案、採用決定ではない）
+S1: 共通TimeMap/座標/metadataだけを独立moduleへ。legacy経路は残す。
+S2: CPU Flash丸め対策とtmix正規化を別revisionとして検査。変更後の単発/連打/色/全backendを比較。
+S3: 素材/6motionを共通output-spaceへ接続し、preview/export/GPUの同一基準比較。
+S4: verified geometry/長射程関連イベントの入力を実装できた時点でplannerを接続。なければ既存baseline。
+S5: 実音源/実機でAV/GPU/長時間/失敗を試験。所定の正式審査後のみ採用。
+
+## 再現方法
+research_scripts/reference_contract.pyは提案のpure reference modelで、camera制御や検出器ではない。selftest()が既知の期待値と境界入力を検査する。research_scripts/research_lab.pyはFFmpeg/NumPyで人工Flash/Blur/音源/座標を再現する。Windows既定パスは元環境用で、別PCではR/FFのパスだけを研究領域へ合わせる。元アプリをimport/起動しない。FFmpegは公式/既設を使用し、新規installやhookは不要。
+reference model初版の有理数fps parserで60000/1001文字列を受けられなかった点を修正し、最終37条件を確認。これは研究用コードの修正で製品の修正ではない。
+
+## 受入ケース
+### CT01 単発・追走
+参照：V01/V07
+入力：同Replay/patch/targetのpre/postとverified event
+判定：全イベント含有、退路/対象可読、kill前後の切落としなし
+
+### CT02 多人数・複数kill
+参照：V05/V06/V11/V20/V22
+入力：BLUE/RED、2/3/5人、同時/短間隔/別actor
+判定：ID重複0、別victim保持、重要群可視率と遮蔽、余韻、手動優先
+
+### CT03 長射程
+参照：V25
+入力：発射/弾道/命中の関連と時刻・位置が既知
+判定：両端点の可視、発射/着弾のcut欠落0。不明ならbaseline
+
+### CT04 挿入と切替
+参照：V02/V08/V21/V23/V25
+入力：戦闘終了/next engage/別take/外部素材の区別
+判定：戦闘中cutawayなし、黒/CG誤判定なし、復帰先/時間map一致
+
+### CT05 Flash因果性
+参照：V01/V20の視覚参考＋人工fixture
+入力：30/60/60000÷1001、VFR、同時/0.5004秒、2回/密集kill
+判定：イベント前差分0、重複冪等、単発互換、revision比較。V4失敗6件を保持
+
+### CT06 Blur/カラー
+参照：V03/V09/V15/V20
+入力：固定gray/RGB/HDR-SDR/動き/scene seek
+判定：定数輝度、白飛び率、色metadata、履歴flush、ゲーム内発光と分離
+
+### CT07 全素材/肖像枠
+参照：652/35/89/37
+入力：hash/namespace/承認状態、実portrait形状、実LoL背景
+判定：見切れ/halo/目鼻/名前/左右/HUDの審査。暫定651/制約19は独立保留
+
+### CT08 6motion/位置一致
+参照：既存V4 disparity
+入力：3解像度×30/60fps×DPI/viewport×6motions×3stack
+判定：RGBA共通基準の端差&lt;=1output px候補、overlay時刻差&lt;=1frame候補。数理のみで合格しない
+
+### CT09 安全・失敗復旧
+参照：全20の構図参考
+入力：未知side/失lock/遮蔽/未接続/手動/新engage不明
+判定：状態不変、baselineと理由、勝手な反転/解除/無言fallback0
+
+### CT10 誤検出対照
+参照：V04/V12/V13/V15/V24
+入力：objective/低HP/死亡/teleport/ad/black/title/再提示
+判定：killへの誤昇格0を人手goldで判定。認識器の精度保証は別
+
+### CT11 AV同期
+参照：実音源待ち
+入力：48k/44.1k stereo、PCM/AAC、0.5/1/2x、seek境界、長時間
+判定：PTSでoffsetとdrift計測。±50msは暫定、固定補正で隠さない
+
+### CT12 実機・負荷
+参照：実Replay待ち
+入力：CPU/GPU FX/NVENC/LoL音/失敗fallback
+判定：drop/reorder/decoder/FPS/温度負荷/使用encoderを記録、NVENCのみでGPU合格にしない
+
+各caseにsource_hashes/commands/version/timebase/seed/expected/actual/raw_log/output_hash/判断者を残す。PASS、FAIL、REVIEW、NOT_RUNを併記。閾値は提案で正式採用していない。LoL実機T01–T14の全体合格は今回も0/14。数理・人工CPUのPASSを移し替えない。
+</pre></section><section><a href="OPERATION_LOG_JA.md">OPERATION_LOG_JA.md</a><pre># 操作記録と制約
+変更先はwork/autocine_implementation_specs_20261026とoutputs/autocine_implementation_specs_20261026、新規配布ZIPのみ。元コードはASTで必要な2関数だけ独立scopeに読んだ。appのimport/実行・LoL起動・設定書換えなし。
+人工audioを生成しFFmpegのnull出力で解析。音声device/再生/Windows音量には接続せず、録音もしない。研究ディレクトリー2か所の120mediaだけをmetadata probe。参考動画のdownload/再生なし、私的フォルダー探索なし。
+既存FFmpeg/NumPy/Pillowを使用。新規install/RTK hook/OS・DNS/proxy/Firewall/Defender/hosts/services/browser security変更なし。ネットワークは公式資料の読み取りとGitHub成果物保存/検証のみ。
+人工Flashの失敗caseを保存、研究用の有理数parser修正と再実行も記録。研究コードの合格を製品合格に移さない。既存書き出し/テスト/素材承認/UI比較ファイルは更新しない。
+</pre></section><section><a href="CHATGPT_COPY_REPORT.txt">CHATGPT_COPY_REPORT.txt</a><pre>LoL AutoCine Workの修正指示に従い、UI評価関連をすべて除外し、3分野の今回分をGitHub保存用に整理しました。
+1. 既存20本の実映像観測を12実装ルール・TimeMap/座標/データ契約・CT01〜12の検証計画へ変換。全20作品に参照時刻/観測事実/導出ルールを対応付けました。新たな再視聴や音声分析済み扱いはしていません。
+2. CPU Flashの42ケース/174条件中、V4候補に6ケース12条件の失敗を発見。0.5004秒の小数3桁丸めで先行/未来pulseが漏れます。CFRフレーム開始のV5研究probeは6件12条件成立ですが未採用。Zoom tmixの12人工条件、座標数理1458条件、契約37条件を実行しました。既存popは拡大ではなく減衰横揺れと原文で確認しました。
+3. 素材652＋FX35全687の審査キューをP0=50/P1=90/P2=547で整理。優先度は承認/不良判定ではありません。今回の新規目視0、651暫定肖像枠/原本制約19/正式承認状態は未変更です。
+4. 音声は既存FFmpeg＋NumPyで人工WAV7件を実解析し、既知入力oracleに合格。逆相、clipping、DC、左右30ms、pulse候補を測定。既存研究media120件中44音声streamは人工素材です。参照20本の実音源はなく、20本音声はNOT_RUN。聴取/音楽beat意味判定も未実施です。
+5. 本体・既存UI比較版・Codex開発アプリ・素材承認・mainを変更していません。Windows/network/security/全体音量変更なし。LoL実機T01〜14の全体PASSは0/14のままです。
+保存先・確定commit・ZIP hash・保護再検査結果は配布ZIP外のSAVE_RECEIPT.jsonに記録します。研究結果と正式実装/採用判断は別です。
+</pre></section><section><h2>機械可読データ</h2><p><a href="ASSET_REVIEW_QUEUE.json">ASSET_REVIEW_QUEUE.json</a></p><p><a href="AUDIO_ENVIRONMENT.json">AUDIO_ENVIRONMENT.json</a></p><p><a href="AUDIO_FIXTURE_RESULTS.json">AUDIO_FIXTURE_RESULTS.json</a></p><p><a href="COORDINATE_CONTRACT_RESULTS.json">COORDINATE_CONTRACT_RESULTS.json</a></p><p><a href="FLASH_BOUNDARY_RESULTS.json">FLASH_BOUNDARY_RESULTS.json</a></p><p><a href="IMPLEMENTATION_RULES.json">IMPLEMENTATION_RULES.json</a></p><p><a href="LOCAL_AUDIO_MEDIA_INVENTORY.json">LOCAL_AUDIO_MEDIA_INVENTORY.json</a></p><p><a href="PROTECTION.json">PROTECTION.json</a></p><p><a href="REFERENCE_CONTRACT_TESTS.json">REFERENCE_CONTRACT_TESTS.json</a></p><p><a href="SCOPE_AND_RESULTS.json">SCOPE_AND_RESULTS.json</a></p><p><a href="SEALED_PACKAGES.json">SEALED_PACKAGES.json</a></p><p><a href="SHOTPLAN_EXAMPLE.json">SHOTPLAN_EXAMPLE.json</a></p><p><a href="TMIX_NORMALIZATION_RESULTS.json">TMIX_NORMALIZATION_RESULTS.json</a></p><p><a href="VALIDATION_PLAN.json">VALIDATION_PLAN.json</a></p><p><a href="VIDEO20_TO_RULES.json">VIDEO20_TO_RULES.json</a></p><p>人工音源はaudio_lab/。自動再生しません。</p></section></html>

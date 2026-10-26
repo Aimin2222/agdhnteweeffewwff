@@ -1,0 +1,122 @@
+[
+  {
+    "id": "R01",
+    "name": "安全な自動構図",
+    "inputs": "verified replay ID/side/TargetLock、同時刻のgeometry",
+    "processing": "manual/未指定は維持。side/geometry不明時はbaseline。検証済み可視率と遮蔽で候補を拒否。",
+    "existing_and_new": "旧10camera/制御3種/TargetLockをadapterから呼ぶ。geometry供給と候補検査は新規。",
+    "tests": "CT01/CT02/CT09",
+    "status": "proposed; not adopted",
+    "fallback": "preserve verified baseline / explicit reason; never silently alter manual state"
+  },
+  {
+    "id": "R02",
+    "name": "複数キル・集団戦",
+    "inputs": "kill event IDs/actor ID/participants/fight end",
+    "processing": "同一actorの重複IDを除外、別victimの同時killは保持。イベント列とfight推定を分離しwide候補を優先。",
+    "existing_and_new": "既存kill/scene/trim。fight segmentation・複数対象包含は新規。",
+    "tests": "CT02/CT03",
+    "status": "proposed; not adopted",
+    "fallback": "preserve verified baseline / explicit reason; never silently alter manual state"
+  },
+  {
+    "id": "R03",
+    "name": "長射程の射線",
+    "inputs": "発射/命中ID・時刻/位置/遮蔽・capture時点",
+    "processing": "発射者だけへの寄りを抑える。発射/弾道/到達先を含むtakeを別収録。両側位置不明ならbaseline。",
+    "existing_and_new": "既存camera収録を土台。projectile対応、2端点構図は新規。",
+    "tests": "CT03",
+    "status": "proposed; not adopted",
+    "fallback": "preserve verified baseline / explicit reason; never silently alter manual state"
+  },
+  {
+    "id": "R04",
+    "name": "戦闘前後を残す",
+    "inputs": "user pre/post・最後のkill・次engageの既知/不明",
+    "processing": "sceneは半開区間。user範囲を勝手に狭めない。次engage不明を安全な空白と解釈しない。",
+    "existing_and_new": "既存前後trimとscene保存。auto境界延長は新規で未既定。",
+    "tests": "CT01/CT02",
+    "status": "proposed; not adopted",
+    "fallback": "preserve verified baseline / explicit reason; never silently alter manual state"
+  },
+  {
+    "id": "R05",
+    "name": "人物・武器の挿入",
+    "inputs": "fight終了確定/next-engage空白/take検査",
+    "processing": "3条件を満たす時だけ任意cutaway。戦闘へ戻る位置とplayheadを保存。外部CGは別素材として扱う。",
+    "existing_and_new": "camera別takeは一部既存、planner/外部トラックは新規。",
+    "tests": "CT04",
+    "status": "proposed; not adopted",
+    "fallback": "preserve verified baseline / explicit reason; never silently alter manual state"
+  },
+  {
+    "id": "R06",
+    "name": "FX・カラー",
+    "inputs": "processing revision/asset hashes/実イベント/色空間",
+    "processing": "ゲーム発光・低HP縁・死亡灰色と編集FXを分離。入力→grade→FX→overlay→transitionの順をversion化。",
+    "existing_and_new": "既存grade/video effects/35overlayFX。背景人物別maskは新規。",
+    "tests": "CT05/CT06",
+    "status": "proposed; not adopted",
+    "fallback": "preserve verified baseline / explicit reason; never silently alter manual state"
+  },
+  {
+    "id": "R07",
+    "name": "Flashのイベント同期",
+    "inputs": "replay→output TimeMap、CFR rateまたはVFR PTS",
+    "processing": "eventごとの因果ゲートとmax合成。小数3桁丸めの先行漏れを拒否。V5 CFR tickは別revision。",
+    "existing_and_new": "legacy先頭event中心は保持。V4/V5は研究候補で未採用。",
+    "tests": "CT05",
+    "status": "proposed; not adopted",
+    "fallback": "preserve verified baseline / explicit reason; never silently alter manual state"
+  },
+  {
+    "id": "R08",
+    "name": "Blurの輝度保持",
+    "inputs": "weights/scale/input color metadata/clip境界",
+    "processing": "tmix正規化とズーム軌道を別検査。clip境界で履歴をリセット。正規化だけで空間radial blurとは呼ばない。",
+    "existing_and_new": "旧zoom_blur ID維持。新revision選択・履歴flushは実装前条件。",
+    "tests": "CT06",
+    "status": "proposed; not adopted",
+    "fallback": "preserve verified baseline / explicit reason; never silently alter manual state"
+  },
+  {
+    "id": "R09",
+    "name": "切替・暗転・再提示",
+    "inputs": "scene boundary/transition kind/duration/前後take",
+    "processing": "hard cut/fadeと本当の2映像dissolveを分離。意図的黒と広告/未読込/不良を区別。二重効果を防ぐ。",
+    "existing_and_new": "既存fade/cut。空間transition/任意split/逆再生は新規。",
+    "tests": "CT04/CT10",
+    "status": "proposed; not adopted",
+    "fallback": "preserve verified baseline / explicit reason; never silently alter manual state"
+  },
+  {
+    "id": "R10",
+    "name": "素材・6登場",
+    "inputs": "catalog namespace/asset hash/status/geometry revision",
+    "processing": "37/89/652/35を分離。6motion IDと既存pop横揺れを保存。確認用選択は承認ではない。",
+    "existing_and_new": "既存素材renderer。肖像境界確定と新座標契約は別実装。",
+    "tests": "CT07/CT08",
+    "status": "proposed; not adopted",
+    "fallback": "preserve verified baseline / explicit reason; never silently alter manual state"
+  },
+  {
+    "id": "R11",
+    "name": "共通時刻・座標",
+    "inputs": "patch/replay hash、各段のPTS・viewport・DPI",
+    "processing": "有理数TimeMap、seek gap補間禁止、outputの確定時刻で全レイヤーを同期。roundは最終pixel端で1回。",
+    "existing_and_new": "旧CPU/preview/GPUと比較して選択移行。rendererを本研究で変更しない。",
+    "tests": "CT07/CT08/CT11",
+    "status": "proposed; not adopted",
+    "fallback": "preserve verified baseline / explicit reason; never silently alter manual state"
+  },
+  {
+    "id": "R12",
+    "name": "音声・負荷・合否",
+    "inputs": "許可済み音声/PTS/解析metadata/実機性能",
+    "processing": "無音・飽和・左右差・AVdriftを分ける。音源なしはNOT_RUN。NVENC成功はGPU FX成功と別。",
+    "existing_and_new": "既存game/BGM/encoderを保持。beat同期と負荷予算は新規。",
+    "tests": "CT11/CT12",
+    "status": "proposed; not adopted",
+    "fallback": "preserve verified baseline / explicit reason; never silently alter manual state"
+  }
+]

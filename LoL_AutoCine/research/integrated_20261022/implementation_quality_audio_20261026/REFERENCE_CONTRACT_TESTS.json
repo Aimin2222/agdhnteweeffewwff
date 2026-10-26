@@ -1,0 +1,155 @@
+{
+  "scope": "research reference model, not production acceptance",
+  "executed": 37,
+  "checks": [
+    {
+      "id": "wide_group",
+      "pass": true
+    },
+    {
+      "id": "explicit_cutaway_guards",
+      "pass": true
+    },
+    {
+      "id": "caller_state_not_mutated",
+      "pass": true
+    },
+    {
+      "id": "dedup",
+      "pass": true
+    },
+    {
+      "id": "legacy_unspecified_preserved",
+      "pass": true
+    },
+    {
+      "id": "manual",
+      "pass": true
+    },
+    {
+      "id": "override",
+      "pass": true
+    },
+    {
+      "id": "unknown_side",
+      "pass": true
+    },
+    {
+      "id": "unapproved_red",
+      "pass": true
+    },
+    {
+      "id": "lost_lock",
+      "pass": true
+    },
+    {
+      "id": "no_geometry",
+      "pass": true
+    },
+    {
+      "id": "no_long_range_impact",
+      "pass": true
+    },
+    {
+      "id": "unknown_coverage",
+      "pass": true
+    },
+    {
+      "id": "unknown_occlusion",
+      "pass": true
+    },
+    {
+      "id": "unsafe_target",
+      "pass": true
+    },
+    {
+      "id": "cutaway_missing_fight_finished",
+      "pass": true
+    },
+    {
+      "id": "cutaway_missing_next_engage_clear",
+      "pass": true
+    },
+    {
+      "id": "cutaway_missing_cutaway_take_validated",
+      "pass": true
+    },
+    {
+      "id": "assist_no_kill_fx",
+      "pass": true
+    },
+    {
+      "id": "other_actor_no_kill_fx",
+      "pass": true
+    },
+    {
+      "id": "same_time_distinct_event_ids",
+      "pass": true
+    },
+    {
+      "id": "order_independence",
+      "pass": true
+    },
+    {
+      "id": "slow_time_map",
+      "pass": true
+    },
+    {
+      "id": "fast_time_map",
+      "pass": true
+    },
+    {
+      "id": "seek_gap",
+      "pass": true
+    },
+    {
+      "id": "half_open_end",
+      "pass": true
+    },
+    {
+      "id": "millisecond_start_at_30",
+      "pass": true
+    },
+    {
+      "id": "millisecond_start_at_60",
+      "pass": true
+    },
+    {
+      "id": "fractional_fps",
+      "pass": true
+    },
+    {
+      "id": "reject_conflict",
+      "pass": true
+    },
+    {
+      "id": "reject_visual_not_event",
+      "pass": true
+    },
+    {
+      "id": "reject_nan",
+      "pass": true
+    },
+    {
+      "id": "reject_inf",
+      "pass": true
+    },
+    {
+      "id": "reject_negative",
+      "pass": true
+    },
+    {
+      "id": "reject_zero_rate",
+      "pass": true
+    },
+    {
+      "id": "reject_overlap",
+      "pass": true
+    },
+    {
+      "id": "reject_bool_time",
+      "pass": true
+    }
+  ],
+  "failures": []
+}
