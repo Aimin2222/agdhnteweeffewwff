@@ -1,0 +1,921 @@
+{
+  "groups": [
+    {
+      "id": "zoom_0.15_dark_static",
+      "strength": 0.15,
+      "background": "dark",
+      "moving": false,
+      "variants": [
+        {
+          "revision": "legacy",
+          "graph": "scale=w='1920*(1+0.0400*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0400*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+          "sampled_mean_rgb": [
+            254.98946662808643,
+            254.99965760030864,
+            254.99965543016975
+          ],
+          "sampled_white_fraction": 0.9993610146604939,
+          "sampled_primary_patches_rgb": [
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ]
+          ],
+          "status": "FAIL",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        },
+        {
+          "revision": "normalized",
+          "graph": "scale=w='1920*(1+0.0400*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0400*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+          "sampled_mean_rgb": [
+            31.860662374614197,
+            47.11853563850308,
+            58.01090398341049
+          ],
+          "sampled_white_fraction": 0.0,
+          "sampled_primary_patches_rgb": [
+            [
+              160.0,
+              32.0,
+              32.0
+            ],
+            [
+              32.0,
+              160.0,
+              32.0
+            ],
+            [
+              32.0,
+              32.0,
+              160.0
+            ]
+          ],
+          "status": "REVIEW",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        }
+      ],
+      "video": "zoom/zoom_0.15_dark_static.mp4",
+      "sheet": "zoom/zoom_0.15_dark_static.jpg"
+    },
+    {
+      "id": "zoom_0.15_dark_moving",
+      "strength": 0.15,
+      "background": "dark",
+      "moving": true,
+      "variants": [
+        {
+          "revision": "legacy",
+          "graph": "scale=w='1920*(1+0.0400*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0400*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+          "sampled_mean_rgb": [
+            254.99202425733026,
+            254.99966483410495,
+            254.99966266396606
+          ],
+          "sampled_white_fraction": 0.9994914641203704,
+          "sampled_primary_patches_rgb": [
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ]
+          ],
+          "status": "FAIL",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        },
+        {
+          "revision": "normalized",
+          "graph": "scale=w='1920*(1+0.0400*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0400*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+          "sampled_mean_rgb": [
+            31.785210021219136,
+            47.10951847029321,
+            57.924424189814815
+          ],
+          "sampled_white_fraction": 0.0,
+          "sampled_primary_patches_rgb": [
+            [
+              160.0,
+              32.0,
+              32.0
+            ],
+            [
+              32.0,
+              160.0,
+              32.0
+            ],
+            [
+              32.0,
+              32.0,
+              160.0
+            ]
+          ],
+          "status": "REVIEW",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        }
+      ],
+      "video": "zoom/zoom_0.15_dark_moving.mp4",
+      "sheet": "zoom/zoom_0.15_dark_moving.jpg"
+    },
+    {
+      "id": "zoom_0.15_light_static",
+      "strength": 0.15,
+      "background": "light",
+      "moving": false,
+      "variants": [
+        {
+          "revision": "legacy",
+          "graph": "scale=w='1920*(1+0.0400*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0400*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+          "sampled_mean_rgb": [
+            254.99999855324074,
+            254.99989824459877,
+            254.9997834683642
+          ],
+          "sampled_white_fraction": 0.9999809510030864,
+          "sampled_primary_patches_rgb": [
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ]
+          ],
+          "status": "FAIL",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        },
+        {
+          "revision": "normalized",
+          "graph": "scale=w='1920*(1+0.0400*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0400*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+          "sampled_mean_rgb": [
+            208.0341751060957,
+            210.43680555555557,
+            213.63144675925926
+          ],
+          "sampled_white_fraction": 0.0,
+          "sampled_primary_patches_rgb": [
+            [
+              160.0,
+              32.0,
+              32.0
+            ],
+            [
+              32.0,
+              160.0,
+              32.0
+            ],
+            [
+              32.0,
+              32.0,
+              160.0
+            ]
+          ],
+          "status": "REVIEW",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        }
+      ],
+      "video": "zoom/zoom_0.15_light_static.mp4",
+      "sheet": "zoom/zoom_0.15_light_static.jpg"
+    },
+    {
+      "id": "zoom_0.15_light_moving",
+      "strength": 0.15,
+      "background": "light",
+      "moving": true,
+      "variants": [
+        {
+          "revision": "legacy",
+          "graph": "scale=w='1920*(1+0.0400*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0400*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+          "sampled_mean_rgb": [
+            254.99999855324074,
+            254.99987967785495,
+            254.9997422357253
+          ],
+          "sampled_white_fraction": 0.9999770929783951,
+          "sampled_primary_patches_rgb": [
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ]
+          ],
+          "status": "FAIL",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        },
+        {
+          "revision": "normalized",
+          "graph": "scale=w='1920*(1+0.0400*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0400*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+          "sampled_mean_rgb": [
+            207.57413483796296,
+            210.07147617669753,
+            213.2052097800926
+          ],
+          "sampled_white_fraction": 0.0,
+          "sampled_primary_patches_rgb": [
+            [
+              160.0,
+              32.0,
+              32.0
+            ],
+            [
+              32.0,
+              160.0,
+              32.0
+            ],
+            [
+              32.0,
+              32.0,
+              160.0
+            ]
+          ],
+          "status": "REVIEW",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        }
+      ],
+      "video": "zoom/zoom_0.15_light_moving.mp4",
+      "sheet": "zoom/zoom_0.15_light_moving.jpg"
+    },
+    {
+      "id": "zoom_0.5_dark_static",
+      "strength": 0.5,
+      "background": "dark",
+      "moving": false,
+      "variants": [
+        {
+          "revision": "legacy",
+          "graph": "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+          "sampled_mean_rgb": [
+            254.99524450231482,
+            254.99990909529322,
+            254.99990764853396
+          ],
+          "sampled_white_fraction": 0.999616367669753,
+          "sampled_primary_patches_rgb": [
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ]
+          ],
+          "status": "FAIL",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        },
+        {
+          "revision": "normalized",
+          "graph": "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+          "sampled_mean_rgb": [
+            32.042740162037035,
+            47.232249469521605,
+            58.06374565972222
+          ],
+          "sampled_white_fraction": 0.0,
+          "sampled_primary_patches_rgb": [
+            [
+              160.0,
+              32.0,
+              32.0
+            ],
+            [
+              32.0,
+              160.0,
+              32.0
+            ],
+            [
+              31.98,
+              32.02,
+              159.7
+            ]
+          ],
+          "status": "REVIEW",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        }
+      ],
+      "video": "zoom/zoom_0.5_dark_static.mp4",
+      "sheet": "zoom/zoom_0.5_dark_static.jpg"
+    },
+    {
+      "id": "zoom_0.5_dark_moving",
+      "strength": 0.5,
+      "background": "dark",
+      "moving": true,
+      "variants": [
+        {
+          "revision": "legacy",
+          "graph": "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+          "sampled_mean_rgb": [
+            254.99547574266975,
+            254.99991391782407,
+            254.99991247106482
+          ],
+          "sampled_white_fraction": 0.9996269772376544,
+          "sampled_primary_patches_rgb": [
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ]
+          ],
+          "status": "FAIL",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        },
+        {
+          "revision": "normalized",
+          "graph": "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+          "sampled_mean_rgb": [
+            32.06493537808642,
+            47.30158275462963,
+            58.05188850308642
+          ],
+          "sampled_white_fraction": 0.0,
+          "sampled_primary_patches_rgb": [
+            [
+              160.0,
+              32.0,
+              32.0
+            ],
+            [
+              32.0,
+              160.0,
+              32.0
+            ],
+            [
+              31.98,
+              32.02,
+              159.7
+            ]
+          ],
+          "status": "REVIEW",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        }
+      ],
+      "video": "zoom/zoom_0.5_dark_moving.mp4",
+      "sheet": "zoom/zoom_0.5_dark_moving.jpg"
+    },
+    {
+      "id": "zoom_0.5_light_static",
+      "strength": 0.5,
+      "background": "light",
+      "moving": false,
+      "variants": [
+        {
+          "revision": "legacy",
+          "graph": "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+          "sampled_mean_rgb": [
+            254.99998046875,
+            254.99986472800927,
+            254.99956428433643
+          ],
+          "sampled_white_fraction": 0.9999233217592592,
+          "sampled_primary_patches_rgb": [
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ]
+          ],
+          "status": "FAIL",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        },
+        {
+          "revision": "normalized",
+          "graph": "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+          "sampled_mean_rgb": [
+            207.1176176697531,
+            209.53052276234567,
+            212.712578125
+          ],
+          "sampled_white_fraction": 0.0,
+          "sampled_primary_patches_rgb": [
+            [
+              160.0,
+              32.0,
+              32.0
+            ],
+            [
+              32.0,
+              160.0,
+              32.0
+            ],
+            [
+              32.56,
+              32.58,
+              160.2
+            ]
+          ],
+          "status": "REVIEW",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        }
+      ],
+      "video": "zoom/zoom_0.5_light_static.mp4",
+      "sheet": "zoom/zoom_0.5_light_static.jpg"
+    },
+    {
+      "id": "zoom_0.5_light_moving",
+      "strength": 0.5,
+      "background": "light",
+      "moving": true,
+      "variants": [
+        {
+          "revision": "legacy",
+          "graph": "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+          "sampled_mean_rgb": [
+            254.99998046875,
+            254.99986472800927,
+            254.99956428433643
+          ],
+          "sampled_white_fraction": 0.9999233217592592,
+          "sampled_primary_patches_rgb": [
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ]
+          ],
+          "status": "FAIL",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        },
+        {
+          "revision": "normalized",
+          "graph": "scale=w='1920*(1+0.0750*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.0750*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+          "sampled_mean_rgb": [
+            206.6110390142747,
+            209.1098946277006,
+            212.23359953703704
+          ],
+          "sampled_white_fraction": 0.0,
+          "sampled_primary_patches_rgb": [
+            [
+              160.0,
+              32.0,
+              32.0
+            ],
+            [
+              32.0,
+              160.0,
+              32.0
+            ],
+            [
+              32.56,
+              32.58,
+              160.2
+            ]
+          ],
+          "status": "REVIEW",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        }
+      ],
+      "video": "zoom/zoom_0.5_light_moving.mp4",
+      "sheet": "zoom/zoom_0.5_light_moving.jpg"
+    },
+    {
+      "id": "zoom_0.9_dark_static",
+      "strength": 0.9,
+      "background": "dark",
+      "moving": false,
+      "variants": [
+        {
+          "revision": "legacy",
+          "graph": "scale=w='1920*(1+0.1150*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.1150*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+          "sampled_mean_rgb": [
+            254.99540268132716,
+            254.99994622878086,
+            254.9999459876543
+          ],
+          "sampled_white_fraction": 0.9996559124228395,
+          "sampled_primary_patches_rgb": [
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ]
+          ],
+          "status": "FAIL",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        },
+        {
+          "revision": "normalized",
+          "graph": "scale=w='1920*(1+0.1150*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.1150*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+          "sampled_mean_rgb": [
+            32.30959997106481,
+            47.405515046296294,
+            58.16159360532407
+          ],
+          "sampled_white_fraction": 0.0,
+          "sampled_primary_patches_rgb": [
+            [
+              160.0,
+              32.0,
+              32.0
+            ],
+            [
+              32.0,
+              160.0,
+              32.0
+            ],
+            [
+              29.92,
+              34.1,
+              135.34
+            ]
+          ],
+          "status": "REVIEW",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        }
+      ],
+      "video": "zoom/zoom_0.9_dark_static.mp4",
+      "sheet": "zoom/zoom_0.9_dark_static.jpg"
+    },
+    {
+      "id": "zoom_0.9_dark_moving",
+      "strength": 0.9,
+      "background": "dark",
+      "moving": true,
+      "variants": [
+        {
+          "revision": "legacy",
+          "graph": "scale=w='1920*(1+0.1150*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.1150*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+          "sampled_mean_rgb": [
+            254.99534288194445,
+            254.99994622878086,
+            254.9999459876543
+          ],
+          "sampled_white_fraction": 0.9996551890432098,
+          "sampled_primary_patches_rgb": [
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ]
+          ],
+          "status": "FAIL",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        },
+        {
+          "revision": "normalized",
+          "graph": "scale=w='1920*(1+0.1150*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.1150*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+          "sampled_mean_rgb": [
+            32.35263695987654,
+            47.493107397762344,
+            58.1650602816358
+          ],
+          "sampled_white_fraction": 0.0,
+          "sampled_primary_patches_rgb": [
+            [
+              160.0,
+              32.0,
+              32.0
+            ],
+            [
+              32.0,
+              160.0,
+              32.0
+            ],
+            [
+              29.92,
+              34.1,
+              135.34
+            ]
+          ],
+          "status": "REVIEW",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        }
+      ],
+      "video": "zoom/zoom_0.9_dark_moving.mp4",
+      "sheet": "zoom/zoom_0.9_dark_moving.jpg"
+    },
+    {
+      "id": "zoom_0.9_light_static",
+      "strength": 0.9,
+      "background": "light",
+      "moving": false,
+      "variants": [
+        {
+          "revision": "legacy",
+          "graph": "scale=w='1920*(1+0.1150*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.1150*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+          "sampled_mean_rgb": [
+            255.0,
+            254.99999903549383,
+            254.9999987943673
+          ],
+          "sampled_white_fraction": 1.0,
+          "sampled_primary_patches_rgb": [
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ]
+          ],
+          "status": "FAIL",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        },
+        {
+          "revision": "normalized",
+          "graph": "scale=w='1920*(1+0.1150*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.1150*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+          "sampled_mean_rgb": [
+            206.03468677662036,
+            208.45404200424383,
+            211.61774522569445
+          ],
+          "sampled_white_fraction": 0.0,
+          "sampled_primary_patches_rgb": [
+            [
+              160.0,
+              32.0,
+              32.0
+            ],
+            [
+              32.02,
+              160.0,
+              32.02
+            ],
+            [
+              77.76,
+              78.44,
+              177.7
+            ]
+          ],
+          "status": "REVIEW",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        }
+      ],
+      "video": "zoom/zoom_0.9_light_static.mp4",
+      "sheet": "zoom/zoom_0.9_light_static.jpg"
+    },
+    {
+      "id": "zoom_0.9_light_moving",
+      "strength": 0.9,
+      "background": "light",
+      "moving": true,
+      "variants": [
+        {
+          "revision": "legacy",
+          "graph": "scale=w='1920*(1+0.1150*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.1150*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4",
+          "sampled_mean_rgb": [
+            255.0,
+            254.99999903549383,
+            254.9999987943673
+          ],
+          "sampled_white_fraction": 1.0,
+          "sampled_primary_patches_rgb": [
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ],
+            [
+              255.0,
+              255.0,
+              255.0
+            ]
+          ],
+          "status": "FAIL",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        },
+        {
+          "revision": "normalized",
+          "graph": "scale=w='1920*(1+0.1150*abs(sin(2*PI*t/1.6)))':h='1080*(1+0.1150*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=0",
+          "sampled_mean_rgb": [
+            205.50492838541666,
+            208.01065948109567,
+            211.11502917631174
+          ],
+          "sampled_white_fraction": 0.0,
+          "sampled_primary_patches_rgb": [
+            [
+              160.0,
+              32.0,
+              32.0
+            ],
+            [
+              32.0115,
+              160.0,
+              32.012
+            ],
+            [
+              77.76,
+              78.44,
+              177.7
+            ]
+          ],
+          "status": "REVIEW",
+          "scope": "full 1920 filter graph; metrics on 640x360 presentation frames"
+        }
+      ],
+      "video": "zoom/zoom_0.9_light_moving.mp4",
+      "sheet": "zoom/zoom_0.9_light_moving.jpg"
+    }
+  ],
+  "videos": [
+    {
+      "path": "zoom/zoom_0.15_dark_static.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "adcbe25025b9be487589c2fd28b1f772e2955c2dcb4212fa05c632c01f3b1e06",
+      "decode": "PASS"
+    },
+    {
+      "path": "zoom/zoom_0.15_dark_moving.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "9cf9495359e8f17a9ba332a9864f90ce04573b7efaf7afded88b7fc768b5ebee",
+      "decode": "PASS"
+    },
+    {
+      "path": "zoom/zoom_0.15_light_static.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "893c776417d77ef9cfde38a1af804dee54384a205482eb8a96ca52bd10d28fbb",
+      "decode": "PASS"
+    },
+    {
+      "path": "zoom/zoom_0.15_light_moving.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "fc1a8db67d8b581fe6ff6f4e9290f0a605df6651e9c56fd525df79c406358576",
+      "decode": "PASS"
+    },
+    {
+      "path": "zoom/zoom_0.5_dark_static.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "a577f9487669d02ae709ee9124957465e2c56a5cbe1f246e049b0fccac95d050",
+      "decode": "PASS"
+    },
+    {
+      "path": "zoom/zoom_0.5_dark_moving.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "669deff915c081f5cbc0877e26c6cb175866ed61d65c031f44d9236d8e8585c4",
+      "decode": "PASS"
+    },
+    {
+      "path": "zoom/zoom_0.5_light_static.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "c1dae5f0822e16e48e563b7405f60e538653d03cf87878eeb99d27d44efacbd0",
+      "decode": "PASS"
+    },
+    {
+      "path": "zoom/zoom_0.5_light_moving.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "d7456720e88d92479a05af00b7cac1afcba2c5cedccbcda8cd1e545625be74bd",
+      "decode": "PASS"
+    },
+    {
+      "path": "zoom/zoom_0.9_dark_static.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "94d3585da5d766d0569e4a21dbd8d8a4156f68eb7b534a9906ab69c2dbd4ffa7",
+      "decode": "PASS"
+    },
+    {
+      "path": "zoom/zoom_0.9_dark_moving.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "83fd1fefd910b0ea1c5e8502815f73831e2d7a5b96ed8bd8cfc1f46ee4e1ebe6",
+      "decode": "PASS"
+    },
+    {
+      "path": "zoom/zoom_0.9_light_static.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "8f3ffce04e94716d0c2457ffe1e2eb7b6abd226ded0e67e66af1d7bf2c994adc",
+      "decode": "PASS"
+    },
+    {
+      "path": "zoom/zoom_0.9_light_moving.mp4",
+      "frames": 18,
+      "fps": "30",
+      "sha256": "e0eec76fd7f6d2c83a2d2a35992bcc39660d9cbe699f1413435ea2814293ad72",
+      "decode": "PASS"
+    }
+  ],
+  "history_cut_frame": 6,
+  "history_continuous_frame6_rgb": [
+    128,
+    32,
+    64
+  ],
+  "history_reset_frame6_rgb": [
+    32,
+    32,
+    160
+  ],
+  "history_reset_matches_new_source": true,
+  "true_radial_blur_evaluated": false,
+  "GPU_actual_render": "NOT_RUN",
+  "scope": "synthetic full CPU graph and separate tmix history diagnostic; candidate unadopted"
+}

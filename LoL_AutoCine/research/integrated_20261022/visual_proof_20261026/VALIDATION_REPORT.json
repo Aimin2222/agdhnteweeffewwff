@@ -1,0 +1,162 @@
+{
+  "checks": [
+    {
+      "id": "F01",
+      "status": "FAIL",
+      "subject": "legacy pre-first-event light",
+      "actual": "12/24 conditions nonzero; slow 12 not reproduced"
+    },
+    {
+      "id": "F02",
+      "status": "FAIL",
+      "subject": "V4 rounded causal gate",
+      "actual": "12/24 nonzero"
+    },
+    {
+      "id": "F03",
+      "status": "PASS",
+      "subject": "V5 CFR gate",
+      "actual": "24/24 no pre-first-event RGB difference, correct positive onset"
+    },
+    {
+      "id": "F04",
+      "status": "PASS",
+      "subject": "V5 unique isolated events",
+      "actual": "24/24 no pre-event delta and correct positive onset; compound tails excluded"
+    },
+    {
+      "id": "Z01",
+      "status": "FAIL",
+      "subject": "legacy zoom graph brightness",
+      "actual": "12/12 full CPU graphs >99.9% white samples"
+    },
+    {
+      "id": "Z02",
+      "status": "PASS",
+      "subject": "normalized zoom gross saturation fixture",
+      "actual": "12/12 sampled white fraction=0; not full color fidelity approval"
+    },
+    {
+      "id": "Z03",
+      "status": "FAIL",
+      "subject": "tmix cut history without reset",
+      "actual": "cut n6 [128,32,64] instead of source [32,32,160]"
+    },
+    {
+      "id": "Z04",
+      "status": "PASS",
+      "subject": "split/filter reset cut fixture",
+      "actual": "cut n6 equals new source"
+    },
+    {
+      "id": "Z05",
+      "status": "NOT_RUN",
+      "subject": "true radial GPU blur",
+      "reason": "no new spatial radial implementation or GPU render validation"
+    },
+    {
+      "id": "P01",
+      "status": "FAIL",
+      "subject": "legacy CPU export/preview parity",
+      "actual": "72 cases/360 frames; n9 1366 error113–152px,1280 error131–175px"
+    },
+    {
+      "id": "P02",
+      "status": "FAIL",
+      "subject": "reference-only resize candidate during entrance",
+      "actual": "n9 lower-resolution0–1px, but all-phase maxima116/109px; 1920 max163px"
+    },
+    {
+      "id": "P03",
+      "status": "REVIEW",
+      "subject": "RGBA parity/appearance",
+      "reason": "interpolation, animation/row allocation differ; same bbox is insufficient"
+    },
+    {
+      "id": "P04",
+      "status": "NOT_RUN",
+      "subject": "native Windows DPI and live preview",
+      "reason": "only bitmap viewport transforms, no running product GUI"
+    },
+    {
+      "id": "A01",
+      "status": "PASS",
+      "subject": "687 decode/hash/alpha structural checks",
+      "actual": "687/687; not approval"
+    },
+    {
+      "id": "A02",
+      "status": "REVIEW",
+      "subject": "140 AI image reviews",
+      "actual": "P0 50/50 + P1 90/90; formal changes0"
+    },
+    {
+      "id": "A03",
+      "status": "NOT_RUN",
+      "subject": "P2 new image reviews",
+      "actual": "0/547"
+    },
+    {
+      "id": "A04",
+      "status": "NOT_RUN",
+      "subject": "full asset temporal/compatibility release gate",
+      "reason": "no full 652x35x6 matrix or human temporal/real LoL review"
+    },
+    {
+      "id": "C01",
+      "status": "PASS",
+      "subject": "pinned camera numeric fixtures",
+      "actual": "36/36 finite; input rig unchanged; not game calibration"
+    },
+    {
+      "id": "C02",
+      "status": "PASS",
+      "subject": "packet attachment fields",
+      "actual": "90/180 degree guard fixtures preserve name/attached; not physical TargetLock"
+    },
+    {
+      "id": "C03",
+      "status": "FAIL",
+      "subject": "independent raw group switch continuity",
+      "actual": "max center step 571.997320 fixture units/frame"
+    },
+    {
+      "id": "C04",
+      "status": "PASS",
+      "subject": "forced slow-API guard velocity bounds",
+      "actual": "offset<=14 and rotation<=1.4deg/frame within1e-9 tolerance"
+    },
+    {
+      "id": "C05",
+      "status": "PASS",
+      "subject": "declared 2D wall intersection fixtures",
+      "actual": "2/2; no terrain mesh or game visibility proof"
+    },
+    {
+      "id": "C06",
+      "status": "NOT_RUN",
+      "subject": "LoL Replay BLUE/RED/TargetLock/terrain/long range recording",
+      "reason": "no live Replay session operated; input geometry is synthetic"
+    },
+    {
+      "id": "AV01",
+      "status": "NOT_RUN",
+      "subject": "game audio/AV sync/NVENC/GPU FX",
+      "reason": "not captured or rendered via live hardware in this stage"
+    }
+  ],
+  "counts": {
+    "FAIL": 7,
+    "PASS": 9,
+    "NOT_RUN": 6,
+    "REVIEW": 2
+  },
+  "status_semantics": {
+    "PASS": "stated limited assertion passed",
+    "FAIL": "stated defect or insufficient candidate reproduced",
+    "REVIEW": "visual/incomplete-quality judgement pending",
+    "NOT_RUN": "not executed; not successful"
+  },
+  "product_release": "NOT_RUN",
+  "candidate_adoption": false
+}

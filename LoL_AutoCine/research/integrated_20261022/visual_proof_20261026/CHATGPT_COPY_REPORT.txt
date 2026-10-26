@@ -1,0 +1,8 @@
+LoL AutoCine 映像品質・素材・カメラの実証研究を納品します。本体の修正・正式採用・実LoL検証の完了ではありません。
+Flash：3fps×通常/スロー×4イベント系列=24条件、既存/V4/V5の72実CPU描画を比較。既存/V4は各12条件で先行発光、V5は24/24先行RGB差分0かつ開始frame一致。追加24単独event試験もPASS。
+Zoom：12条件の実1920CPU graphで旧の著しい白飛びを再現。正規化候補の提示画像白画素率0。ただし完全な色管理合格ではありません。cut履歴の残像は別試験で再現し、segment resetでは解消。空間radial/GPUはNOT_RUN。
+位置：既存CPU export/previewの実RGBA72条件・360frames。n9で1366は113–152px、1280は131–175px差。1920基準縮小はn9で0–1pxに改善するが登場中は最大116/109px差が残り、候補を不十分と判定。1920でも全phase最大163px。単純縮小を完成修正として渡していません。
+素材：687件の新規hash/decode/alpha構造チェック。P0 50件とP1 90件=140件のAI画像目視・明暗比較・個別所見を保存。P2の新規目視0/547。正式承認変更0。139派生元hash一致、004/spirit_blossom_frameは派生元不足。651暫定肖像と19原本制約は未解消。
+カメラ：既存third/third_cinemaを維持、BLUE/RED・90/180°を含む36fixture。独立広域候補の切替跳躍約572単位/frameを再現。既存slow-API制限を強制した比較は14単位/1.4°毎frameの上限に適合。物理TargetLock/実地形/実ゲーム録画の成功証拠ではありません。
+比較動画42本、位置/素材等の画像、全数値、PASS/FAIL/REVIEW/NOT_RUN表、具体的Codex修正指示を同梱。実LoL/GPU/NVENC/AV同期/nativeDPI/全素材全時間互換は未実施です。
+保護対象1251ファイル、既存sealed ZIP5点を照合。本体/UI29/main/承認状態/Windows設定の変更0。GitHub保存SHAとZIPの再取得・実展開・全件ハッシュ結果はZIP外のSAVE_RECEIPT.jsonを参照してください。

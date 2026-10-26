@@ -1,0 +1,269 @@
+{
+  "cases": [
+    {
+      "fps": "30",
+      "replay_rate": "1",
+      "replay_event": "251/2500",
+      "output_event": "251/2500",
+      "expected_onset": 4,
+      "actual_onset": 4,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,4),0.278*exp(-18*abs(t-0.100400000000)),0)':eval=frame"
+    },
+    {
+      "fps": "30",
+      "replay_rate": "1",
+      "replay_event": "271/2500",
+      "output_event": "271/2500",
+      "expected_onset": 4,
+      "actual_onset": 4,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,4),0.278*exp(-18*abs(t-0.108400000000)),0)':eval=frame"
+    },
+    {
+      "fps": "30",
+      "replay_rate": "1",
+      "replay_event": "1501/5000",
+      "output_event": "1501/5000",
+      "expected_onset": 10,
+      "actual_onset": 10,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,10),0.278*exp(-18*abs(t-0.300200000000)),0)':eval=frame"
+    },
+    {
+      "fps": "30",
+      "replay_rate": "1",
+      "replay_event": "1251/2500",
+      "output_event": "1251/2500",
+      "expected_onset": 16,
+      "actual_onset": 16,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,16),0.278*exp(-18*abs(t-0.500400000000)),0)':eval=frame"
+    },
+    {
+      "fps": "30",
+      "replay_rate": "1/2",
+      "replay_event": "251/2500",
+      "output_event": "251/1250",
+      "expected_onset": 7,
+      "actual_onset": 7,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,7),0.278*exp(-18*abs(t-0.200800000000)),0)':eval=frame"
+    },
+    {
+      "fps": "30",
+      "replay_rate": "1/2",
+      "replay_event": "271/2500",
+      "output_event": "271/1250",
+      "expected_onset": 7,
+      "actual_onset": 7,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,7),0.278*exp(-18*abs(t-0.216800000000)),0)':eval=frame"
+    },
+    {
+      "fps": "30",
+      "replay_rate": "1/2",
+      "replay_event": "1501/5000",
+      "output_event": "1501/2500",
+      "expected_onset": 19,
+      "actual_onset": 19,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,19),0.278*exp(-18*abs(t-0.600400000000)),0)':eval=frame"
+    },
+    {
+      "fps": "30",
+      "replay_rate": "1/2",
+      "replay_event": "1251/2500",
+      "output_event": "1251/1250",
+      "expected_onset": 31,
+      "actual_onset": 31,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,31),0.278*exp(-18*abs(t-1.000800000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60",
+      "replay_rate": "1",
+      "replay_event": "251/2500",
+      "output_event": "251/2500",
+      "expected_onset": 7,
+      "actual_onset": 7,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,7),0.278*exp(-18*abs(t-0.100400000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60",
+      "replay_rate": "1",
+      "replay_event": "271/2500",
+      "output_event": "271/2500",
+      "expected_onset": 7,
+      "actual_onset": 7,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,7),0.278*exp(-18*abs(t-0.108400000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60",
+      "replay_rate": "1",
+      "replay_event": "1501/5000",
+      "output_event": "1501/5000",
+      "expected_onset": 19,
+      "actual_onset": 19,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,19),0.278*exp(-18*abs(t-0.300200000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60",
+      "replay_rate": "1",
+      "replay_event": "1251/2500",
+      "output_event": "1251/2500",
+      "expected_onset": 31,
+      "actual_onset": 31,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,31),0.278*exp(-18*abs(t-0.500400000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60",
+      "replay_rate": "1/2",
+      "replay_event": "251/2500",
+      "output_event": "251/1250",
+      "expected_onset": 13,
+      "actual_onset": 13,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,13),0.278*exp(-18*abs(t-0.200800000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60",
+      "replay_rate": "1/2",
+      "replay_event": "271/2500",
+      "output_event": "271/1250",
+      "expected_onset": 14,
+      "actual_onset": 14,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,14),0.278*exp(-18*abs(t-0.216800000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60",
+      "replay_rate": "1/2",
+      "replay_event": "1501/5000",
+      "output_event": "1501/2500",
+      "expected_onset": 37,
+      "actual_onset": 37,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,37),0.278*exp(-18*abs(t-0.600400000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60",
+      "replay_rate": "1/2",
+      "replay_event": "1251/2500",
+      "output_event": "1251/1250",
+      "expected_onset": 61,
+      "actual_onset": 61,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,61),0.278*exp(-18*abs(t-1.000800000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60000/1001",
+      "replay_rate": "1",
+      "replay_event": "251/2500",
+      "output_event": "251/2500",
+      "expected_onset": 7,
+      "actual_onset": 7,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,7),0.278*exp(-18*abs(t-0.100400000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60000/1001",
+      "replay_rate": "1",
+      "replay_event": "271/2500",
+      "output_event": "271/2500",
+      "expected_onset": 7,
+      "actual_onset": 7,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,7),0.278*exp(-18*abs(t-0.108400000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60000/1001",
+      "replay_rate": "1",
+      "replay_event": "1501/5000",
+      "output_event": "1501/5000",
+      "expected_onset": 18,
+      "actual_onset": 18,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,18),0.278*exp(-18*abs(t-0.300200000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60000/1001",
+      "replay_rate": "1",
+      "replay_event": "1251/2500",
+      "output_event": "1251/2500",
+      "expected_onset": 30,
+      "actual_onset": 30,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,30),0.278*exp(-18*abs(t-0.500400000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60000/1001",
+      "replay_rate": "1/2",
+      "replay_event": "251/2500",
+      "output_event": "251/1250",
+      "expected_onset": 13,
+      "actual_onset": 13,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,13),0.278*exp(-18*abs(t-0.200800000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60000/1001",
+      "replay_rate": "1/2",
+      "replay_event": "271/2500",
+      "output_event": "271/1250",
+      "expected_onset": 13,
+      "actual_onset": 13,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,13),0.278*exp(-18*abs(t-0.216800000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60000/1001",
+      "replay_rate": "1/2",
+      "replay_event": "1501/5000",
+      "output_event": "1501/2500",
+      "expected_onset": 36,
+      "actual_onset": 36,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,36),0.278*exp(-18*abs(t-0.600400000000)),0)':eval=frame"
+    },
+    {
+      "fps": "60000/1001",
+      "replay_rate": "1/2",
+      "replay_event": "1251/2500",
+      "output_event": "1251/1250",
+      "expected_onset": 60,
+      "actual_onset": 60,
+      "pre_event_max_rgb_delta": 0,
+      "status": "PASS",
+      "graph": "eq=brightness='if(gte(n,60),0.278*exp(-18*abs(t-1.000800000000)),0)':eval=frame"
+    }
+  ],
+  "scope": "24 isolated V5 event terms, actual CPU RGB rendering; causal term gating at every unique event time; no enable-window/stacks; original compound tests remain FLASH_RESULTS.json"
+}

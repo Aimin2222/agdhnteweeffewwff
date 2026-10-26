@@ -1,0 +1,5 @@
+# 実際の変更と環境保護
+新規変更：work/autocine_visual_proof_20261026、outputs/autocine_visual_proof_20261026、新規配布ZIP、研究保存用の私有Git object/indexと保存検証用展開directory。研究スクリプトの不具合（JSON numpy bool等）はその新規ファイルのみ修正。既存sealed ZIPは再作成しない。
+本体・比較UI・main・素材承認は変更0。LoLアプリ起動、Replay POST、録画、GPU処理は行わない。合成映像は音声なし、動画を自動再生しない。Windowsネットワーク/セキュリティ/全体音量・ブラウザー設定・自動フック変更0。RTK未使用、クレジット削減は未測定。
+GitHub connectorはmetadata確認に使用。比較映像・画像とZIPのバイナリ送受信はconnectorが非対応のため、私有Gitと固定commitのHTTPS ZIP取得を使用。既存作業checkoutを切替しない。Workブランチへ新規研究prefixのみを追加し、expected headを確認して保存する。
+保護ファイル1251と旧sealed ZIP5件はPROTECTION/SEALED_PREVIOUS_PACKAGESでハッシュ照合。これはスナップショットの保護確認であり、他の開発者の別ブランチの更新がないことを保証する文ではない。
