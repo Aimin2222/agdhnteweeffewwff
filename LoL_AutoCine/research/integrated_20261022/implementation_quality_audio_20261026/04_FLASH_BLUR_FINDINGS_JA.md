@@ -12,3 +12,5 @@ tmixのみをRGB 64×36の固定値32/96/180と移動stepで分離し、scale=4/
 新仕様条件：①定数輝度を維持②scene/seekで履歴flush③一時停止/単frame previewにも同じ履歴契約④範囲/transferを固定⑤flatと動きの両方を計測⑥旧projectはlegacy revisionを維持。正規化で真の空間radial blurを再現したとは報告しない。
 
 生データ：FLASH_BOUNDARY_RESULTS.json / TMIX_NORMALIZATION_RESULTS.json。失敗は削除せず保存。
+
+追加の非空検査：V5が常に発光ゼロで合格している可能性を除外するため、6probeで実際の初回発光frameを確認。30fps=frame16、60fps=frame31で期待値と一致し、2回目のevent frameにも発光がある。追加12条件成立。FLASH_V5_POSITIVE_ONSET_RESULTS.jsonとv5_onset_probe.pyを参照。

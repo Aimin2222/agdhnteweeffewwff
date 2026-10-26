@@ -1,0 +1,60 @@
+{
+  "scope": "six CFR probes only; confirms effect is not always zero",
+  "cases": [
+    {
+      "fps": 30,
+      "strength": 0.15,
+      "expected_first_changed_frame": 16,
+      "actual_first_changed_frame": 16,
+      "onset_is_exact": true,
+      "second_event_frame_is_nonzero": true,
+      "decoded_frames": 60
+    },
+    {
+      "fps": 30,
+      "strength": 0.5,
+      "expected_first_changed_frame": 16,
+      "actual_first_changed_frame": 16,
+      "onset_is_exact": true,
+      "second_event_frame_is_nonzero": true,
+      "decoded_frames": 60
+    },
+    {
+      "fps": 30,
+      "strength": 0.9,
+      "expected_first_changed_frame": 16,
+      "actual_first_changed_frame": 16,
+      "onset_is_exact": true,
+      "second_event_frame_is_nonzero": true,
+      "decoded_frames": 60
+    },
+    {
+      "fps": 60,
+      "strength": 0.15,
+      "expected_first_changed_frame": 31,
+      "actual_first_changed_frame": 31,
+      "onset_is_exact": true,
+      "second_event_frame_is_nonzero": true,
+      "decoded_frames": 120
+    },
+    {
+      "fps": 60,
+      "strength": 0.5,
+      "expected_first_changed_frame": 31,
+      "actual_first_changed_frame": 31,
+      "onset_is_exact": true,
+      "second_event_frame_is_nonzero": true,
+      "decoded_frames": 120
+    },
+    {
+      "fps": 60,
+      "strength": 0.9,
+      "expected_first_changed_frame": 31,
+      "actual_first_changed_frame": 31,
+      "onset_is_exact": true,
+      "second_event_frame_is_nonzero": true,
+      "decoded_frames": 120
+    }
+  ],
+  "pass": true
+}
