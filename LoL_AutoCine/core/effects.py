@@ -435,7 +435,8 @@ def _build_video_effect_filters(t: Template, duration: float, events: list[tuple
         f.append(f"rotate='sin(2*PI*t/0.8)*{ang:.5f}':ow=iw:oh=ih:fillcolor=black")
     if e.get("zoom_blur"):
         k=e["zoom_blur"]; z=0.025+0.10*k
-        f.append(f"scale=w='1920*(1+{z:.4f}*abs(sin(2*PI*t/1.6)))':h='1080*(1+{z:.4f}*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale=4")
+        tmix_scale = "0.25" if getattr(t, "zoom_blur_revision", os.environ.get("AUTOCINE_RESEARCH_ZOOM", "legacy")) == "normalized_tmix_v1" else "4"
+        f.append(f"scale=w='1920*(1+{z:.4f}*abs(sin(2*PI*t/1.6)))':h='1080*(1+{z:.4f}*abs(sin(2*PI*t/1.6)))':eval=frame,crop=1920:1080:x='(iw-ow)/2':y='(ih-oh)/2',tmix=frames=3:weights='1 2 1':scale={tmix_scale}")
     if e.get("radial_blur"):
         k=e["radial_blur"]
         f.append(f"tmix=frames={3 if k<0.6 else 5}:weights='1 2 1'")
@@ -925,6 +926,7 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
         "cpu_video_effects": sorted(k for k, value in original_effects.items()
                                     if float(value or 0) > 0.001 and k not in consumed_gpu),
         "flash_revision": getattr(t, "flash_revision", os.environ.get("AUTOCINE_RESEARCH_FLASH", "legacy")),
+        "zoom_blur_revision": getattr(t, "zoom_blur_revision", os.environ.get("AUTOCINE_RESEARCH_ZOOM", "legacy")),
         "bloom_cpu_optimized": bool(t.bloom > 0 and 'bloom' not in consumed_gpu),
         "dof_mask_cpu_optimized": bool(t.dof_enabled and t.dof_blur > 0.01 and 'dof' not in consumed_gpu),
         "bloom_level": t.bloom,
