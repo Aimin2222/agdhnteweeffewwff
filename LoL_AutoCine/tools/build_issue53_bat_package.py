@@ -89,6 +89,11 @@ def main() -> None:
                          "sha256": hashlib.sha256(helper_data).hexdigest()})
         dest.writestr("LoL_AutoCine/BUILD_INFO.json",
                       json.dumps(info, ensure_ascii=False, indent=2).encode("utf-8"))
+        dest.writestr("LoL_AutoCine/Developer_Tools/README_JA.txt",
+                      ("補助BATを整理したフォルダです。開発用の通常起動は1階層上の"
+                       "START_ISSUE53_DEV_QA.batを使い、画面内の一括QAボタンを押してください。\n"
+                       "診断収集は1階層上のCOLLECT_DIAGNOSTICS.batを使います。\n"
+                       "補助BATは元の機能を保持しています。\n").encode("utf-8"))
         dest.writestr("README_TEST_JA.txt",
                       ("Issue #53 開発用BAT版。旧版・比較版とは別の短いパスへ展開してください。\n"
                        "LoL_AutoCine/START_ISSUE53_DEV_QA.bat を起動し、LoLリプレイ再生後、"
