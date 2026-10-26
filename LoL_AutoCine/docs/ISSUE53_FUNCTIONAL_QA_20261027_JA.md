@@ -1,5 +1,7 @@
 # Issue #53 機能試験版：2026-10-27 検証記録
 
+**2026-10-27追記：開発用の配布入口はBAT版に変更。** この文書にあるEXE起動スモークとEXE用ZIPの結果は旧試作の履歴であり、新しい開発用BAT版の実LoL一括QA合格を意味しない。v5.10.31-testと同じくアプリ内の「開発用：カメラ＋Work素材一括QA・30MB ZIP」を使う。`ISSUE53_WINDOWS_TEST_JA.md`を現行手順とする。旧EXEは友人向けUI比較EXEや現行AutoCineを置き換えるものではない。
+
 ## 判定の範囲
 
 基準は従来AutoCine `v5.10.32-test`、PR #49 の `feb895491ca4bc780da4aab91990f25177cd35ab`。Issue #53 の独立ブランチと別EXEで調査した。PR #51 の7案比較版、PR #52 の候補8〜10、既存配布EXE、`main` は変更していない。FlashとZoomは試験EXEだけで既定ONとなる研究候補で、環境変数 `AUTOCINE_RESEARCH_FLASH=legacy`、`AUTOCINE_RESEARCH_ZOOM=legacy` により従来処理へ戻せる。正式採用は未決定。
@@ -34,6 +36,7 @@ Flash/Zoom候補のFFmpegフレーム試験、UI bridge試験、CameraQAの版�
 - **A：準備**：従来機能台帳、イベント接続表、共有状態境界、UI選定後の接続手順を`ISSUE53_BASELINE_AND_UI_BRIDGE_JA.md`に保存。候補1〜10への実接続はUI選定後。
 - **B：研究試験**：FlashとZoomのみlegacy切替付きで実装。座標1458条件、カメラ12新ルール、Work652素材の品質承認、音声研究案は本体処理へ無断採用していない。
 - **C：Windows QA**：EXE起動・ZIP展開・保存済み素材のNVENC/音声合成を確認。実LoLセッション、WGC、LoL専用音声、全カメラと全UI操作はユーザー実機試験待ち。手順は`ISSUE53_WINDOWS_TEST_JA.md`。
+- **現行BAT版の追加判定**：通常候補と`legacy`のBAT`--check`は終了コード0。既存一括QA・Work素材・30MBアップロード・CameraQA版数の対象4モジュール37件はPASS。ZIP展開・構成、BATからのGUI起動は別判定。アプリ内一括QAのライブ完走、コマンド画面の点滅解消は実機試験待ち。旧EXEの起動結果をBAT版の動作合格へ流用しない。
 
 ## 配布と追試
 
