@@ -1,0 +1,25 @@
+LoL AutoCineのUI/UX全面再調査と、新しい6案の設計資料を制作しました。
+
+調査対象：DaVinci Resolve、Premiere、CapCut、Filmora、OBS、Blender、Medal、Outplayed、Lightroom Classic、Lolnam Editor。公式画面・操作資料を参照し、良い点・AutoCineでは注意する点・応用方法・配色を整理しています。10製品を実機で同一課題テストした評価ではありません。
+
+AutoCineはcodex/autocine-ui-integration-20261020、a7e1db5a205cb1dd2448f857c83ec7e53899835c（5.10.32-test）を基準に、最新UIコードと実装画面、過去2回のUI資料を確認しました。
+
+新6案：
+A Studio（映像主役）
+B Creator（プリセット主役）
+C Director（カメラ演出）
+D Highlights（シーン選別）
+E Flow（かんたん作成とStudioを分離・独自案）
+F Killbeat（キル前・瞬間・余韻で整える・独自案）
+
+推奨はE Flowを入口、A Studioを詳細の仕事場にする構成です。比較8観点の設計評価はE94、A89、B87、D86、F84.6、C68.6点。利用者の実測結果ではありません。
+
+納品は1920×1080の12画面（メイン6、上位2案の同一配置ダーク2、追加設定4）、1366×768の再配置6画面、主要UI部品16枚、比較HTML、調査・現行分析・配置仕様・実装対応表・テーマ仕様です。画像の寸法と、実測したパネル・ボタン等の寸法を記録しました。
+
+ライト／ダークは同一配置です。指定60組のコントラスト比を検査し、通常文字4.5:1／主要UI3:1の目安を満たしています。これは全実装のWCAG適合認証ではありません。上位2案はプレビュー内側の画素一致も確認。テーマはライト／ダーク／Windows追従を想定し、プロジェクトやプレビューをリセットしない設計です。ネイティブ実装と長時間使用の実機確認は採用後に行います。
+
+保存先：
+https://github.com/Aimin2222/agdhnteweeffewwff/tree/work/ui-ux-research-20261021/LoL_AutoCine/design/ui/ui_rethink_20261021
+
+コミット・GitHub読み戻し照合結果は別添GITHUB_RECEIPT.jsonを参照してください。今回は調査・デザイン・画像・実装ガイドまでの納品です。AutoCine本体、カメラ・FX開発、自動テスト、原本素材は変更していません。採用案が決まってから実装してください。
+

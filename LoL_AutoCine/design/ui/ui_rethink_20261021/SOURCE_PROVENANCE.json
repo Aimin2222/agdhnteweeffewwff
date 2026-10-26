@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-21",
+  "repository": "Aimin2222/agdhnteweeffewwff",
+  "branch": "codex/autocine-ui-integration-20261020",
+  "base_commit": "a7e1db5a205cb1dd2448f857c83ec7e53899835c",
+  "version": "5.10.32-test",
+  "read_only_sources": [
+    "legacy_app.py",
+    "ui/reference_studio.py",
+    "ui/layout_variants.py",
+    "ui/scene_timeline.py",
+    "ui/work_gallery.py",
+    "ui/kill_frame_gallery.py",
+    "ui/director_work_controls.py",
+    "docs/ui_integration_20261020/UI_SPEC_JA.md",
+    "docs/ui_integration_20261020/REFERENCE_REBUILD_STATUS_JA.md"
+  ],
+  "reviewed_current_screenshot": "LoL_AutoCine/docs/ui_integration_20261020/screenshots/reference_rebuild/reference_08_1660x940.png",
+  "prior_deliverables": [
+    "ui_mockups_20261020",
+    "test_ui_improvements_20261020"
+  ],
+  "catalog": {
+    "frames": 652,
+    "static_approved": 1,
+    "effects": 35,
+    "effects_approved": 0,
+    "legacy_layers": 311,
+    "edge_warnings": 3,
+    "below_native_2k": 31
+  },
+  "reference_assets": [
+    {
+      "id": "083/a_simple_main",
+      "source": "assets/work_kill_assets/frames/083/a_simple_main/frame.png",
+      "sha256": "b1b360c15d860e1fdd12ff01af67f5c1b9693538fa6d2b5babb9c0aa3602440f",
+      "status": "approved"
+    },
+    {
+      "id": "004/demacia_frame",
+      "source": "assets/work_kill_assets/frames/004/demacia_frame/frame.png",
+      "sha256": "9cdfd7633d1b6ebae9ec3560c7b8a81f5a2762f99fbe256075d81b99eaa4c848",
+      "status": "review"
+    },
+    {
+      "id": "004/noxus_frame",
+      "source": "assets/work_kill_assets/frames/004/noxus_frame/frame.png",
+      "sha256": "181cc6fe0a61f41ed1354f55951199d2892a70e9cbe32c5a03e2e920b3448cdf",
+      "status": "review"
+    },
+    {
+      "id": "004/bilgewater_frame",
+      "source": "assets/work_kill_assets/frames/004/bilgewater_frame/frame.png",
+      "sha256": "99c8fb70555fa2593da29f1e35b9715723991baf87779763566040a5e5ace6d3",
+      "status": "review"
+    },
+    {
+      "id": "A",
+      "source": "assets/work_kill_assets/effects/A/impact_rgba.png",
+      "sha256": "81382bb142ec17256147f534d534cc4e9c994b9f80fd170f3d040a6457a7ae32",
+      "status": "review"
+    }
+  ],
+  "generation": {
+    "tool": "built-in image_gen",
+    "scope": "preview-illustration.png only",
+    "ui_rendering": "deterministic HTML/CSS at 1920x1080; browser screenshot export",
+    "paid_api": false
+  },
+  "application_and_original_assets_modified": false
+}

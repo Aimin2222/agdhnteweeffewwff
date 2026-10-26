@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-21",
+  "scope": "Design and reference-HTML verification only",
+  "reviewed_main_plans": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F"
+  ],
+  "reviewed_top_two": [
+    "A",
+    "E"
+  ],
+  "checks": {
+    "exact_png_dimensions": true,
+    "six_distinct_main_layouts": true,
+    "same_geometry_light_dark": true,
+    "input_preservation_in_reference_html": true,
+    "emulated_system_theme_follow": true,
+    "browser_theme_preference_persisted": true,
+    "preview_interior_pixels_identical": true,
+    "contrast_pairs_passed": 60,
+    "approved_and_review_materials_separate": true,
+    "source_material_hashes_identical": true
+  },
+  "limitations": [
+    "No native Windows DPI certification",
+    "No live LoL, GPU, camera, recording, audio or export test",
+    "No ten-product hands-on comparative usability study",
+    "No fatigue or task-time study",
+    "Prototype buttons do not invoke the real app"
+  ],
+  "references": [
+    "LAYOUT_QA.json",
+    "PREVIEW_THEME_PIXEL_QA.json",
+    "CONTRAST_QA.json",
+    "SOURCE_PROVENANCE.json"
+  ]
+}

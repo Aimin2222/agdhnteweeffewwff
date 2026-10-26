@@ -1,0 +1,41 @@
+name: AutoCine UI comparison portable Windows build
+
+on:
+  push:
+    branches: [codex/autocine-ui-integration-20261020]
+  workflow_dispatch:
+
+jobs:
+  portable:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install runtime and packaging dependencies
+        run: |
+          python -m pip install -r LoL_AutoCine/requirements.txt
+          python -m pip install pyinstaller==6.22.3
+      - name: Compile native LoL audio helper
+        shell: cmd
+        working-directory: LoL_AutoCine
+        run: |
+          for /f "usebackq delims=" %%V in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSROOT=%%V"
+          if not defined VSROOT exit /b 1
+          call "%VSROOT%\VC\Auxiliary\Build\vcvars64.bat"
+          if not exist tools\bin mkdir tools\bin
+          cl /nologo /std:c++17 /EHsc /O2 /W3 /DUNICODE /D_UNICODE tools\native_audio\lol_audio_helper.cpp /Fe:tools\bin\lol_audio_helper.exe /link ole32.lib mmdevapi.lib avrt.lib
+          if errorlevel 1 exit /b 1
+      - name: Build portable UI comparison ZIP
+        run: python LoL_AutoCine/tools/build_portable_ui.py --audio-helper LoL_AutoCine/tools/bin/lol_audio_helper.exe --output "${{ runner.temp }}/autocine-ui"
+      - name: Upload Windows test build
+        uses: actions/upload-artifact@v4
+        with:
+          name: LoL_AutoCine_UI_Comparison_Portable
+          path: ${{ runner.temp }}/autocine-ui/LoL_AutoCine_UI_Comparison_Portable.zip
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30

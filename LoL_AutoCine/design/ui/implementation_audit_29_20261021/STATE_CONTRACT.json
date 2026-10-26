@@ -1,0 +1,55 @@
+{
+  "proposal": true,
+  "core_model_instances": 1,
+  "retained_fields": [
+    "projectId",
+    "replaySessionId",
+    "targetPlayerId",
+    "selectedSceneIds",
+    "checkedSceneIds",
+    "playhead",
+    "sceneSettings",
+    "cameraMode",
+    "cameraSide",
+    "cameraStyle",
+    "cameraValues",
+    "TargetLock",
+    "frameId",
+    "effectId",
+    "motionId",
+    "outputSettings",
+    "mirrorSessionId",
+    "activeJobId"
+  ],
+  "appearance": {
+    "mode": [
+      "light",
+      "dark",
+      "system"
+    ],
+    "persist": true,
+    "apply_without_model_reload": true
+  },
+  "workspace": {
+    "candidateId": "one of 12 families",
+    "viewId": "main/detail/camera/frames/library/etc in same candidate",
+    "persist_only_user_choice": true,
+    "recommended_is_not_adopted": true
+  },
+  "view_events": [
+    "selectCandidate",
+    "selectView",
+    "selectTheme",
+    "resize",
+    "scroll"
+  ],
+  "forbidden_implicit_side_effects": [
+    "loadProject",
+    "applyPreset",
+    "resetCamera",
+    "unlockTarget",
+    "restartMirror",
+    "stopRecording",
+    "startRecording"
+  ]
+}

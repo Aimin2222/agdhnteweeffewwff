@@ -1,0 +1,44 @@
+{
+  "commit": "a7e1db5a205cb1dd2448f857c83ec7e53899835c",
+  "file": "LoL_AutoCine/legacy_app.py",
+  "event_mode_lines": [
+    {
+      "line": 549,
+      "text": "self.var_event_mode = tk.StringVar(value=\"キル\")"
+    },
+    {
+      "line": 874,
+      "text": "self.var_event_mode.trace_add(\"write\", lambda *_: self._filter_scanned_for_locked() if not self.busy else None)"
+    },
+    {
+      "line": 1688,
+      "text": "for label in (\"キル\", \"アシスト\", \"キル＋アシスト\"):"
+    },
+    {
+      "line": 1689,
+      "text": "ttk.Radiobutton(mode_row,text=label,value=label,variable=self.var_event_mode,"
+    },
+    {
+      "line": 4024,
+      "text": "mode={\"キル\": \"kill\", \"アシスト\": \"assist\", \"キル＋アシスト\": \"both\"}.get(self.var_event_mode.get(), \"kill\")"
+    },
+    {
+      "line": 4027,
+      "text": "self._last_scan_mode = self.var_event_mode.get()"
+    },
+    {
+      "line": 4044,
+      "text": "self._run_bg(self._scan, self.var_event_mode.get())"
+    },
+    {
+      "line": 4310,
+      "text": "event_mode = self.var_event_mode.get()"
+    },
+    {
+      "line": 4377,
+      "text": "self._run_bg(self._make, not has_cached, template, bool(self.var_montage.get()), self.var_event_mode.get(), *scene_cfg)"
+    }
+  ],
+  "engage_text_matches": 0,
+  "evidence_scope": "UI files checked; absence of a UI binding is not proof no backend algorithm exists"
+}

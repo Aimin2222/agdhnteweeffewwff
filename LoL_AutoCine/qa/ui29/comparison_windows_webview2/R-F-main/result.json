@@ -1,0 +1,513 @@
+{
+  "screen_id": "R-F-main",
+  "family": "researchF",
+  "reference_sha256": "a46140f8fb1d9c6682b3828ea3da5765d3720bdfebf873cd7c9bcf40107856ea",
+  "reference_size": [
+    1920,
+    1080
+  ],
+  "capture_size": [
+    1920,
+    1080
+  ],
+  "size_result": "PASS",
+  "visual_result": "REVIEW",
+  "functional_result": "NOT_RUN",
+  "dynamic_image_mask": [
+    204.8888888888889,
+    361.0,
+    1014.2222222222222,
+    570.5
+  ],
+  "unmasked_rgb_mae": 3.5464,
+  "regions": [
+    {
+      "region": "header",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "theme-switch",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "export",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "subbar",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "workspace",
+      "rgb_mae": 4.3265
+    },
+    {
+      "region": "kill-ribbon",
+      "rgb_mae": 14.7299
+    },
+    {
+      "region": "scene-card-0",
+      "rgb_mae": 49.0126
+    },
+    {
+      "region": "scene-card-1",
+      "rgb_mae": 25.6104
+    },
+    {
+      "region": "scene-card-2",
+      "rgb_mae": 25.9866
+    },
+    {
+      "region": "scene-card-3",
+      "rgb_mae": 26.6401
+    },
+    {
+      "region": "preview-panel",
+      "rgb_mae": 0.4944
+    },
+    {
+      "region": "preview-stage",
+      "rgb_mae": 0.8764
+    },
+    {
+      "region": "preview-controls",
+      "rgb_mae": 0.0
+    },
+    {
+      "region": "phase-inspector",
+      "rgb_mae": 3.5573
+    },
+    {
+      "region": "phase-0",
+      "rgb_mae": 1.9939
+    },
+    {
+      "region": "phase-1",
+      "rgb_mae": 2.2637
+    },
+    {
+      "region": "phase-2",
+      "rgb_mae": 2.1401
+    },
+    {
+      "region": "footer-17",
+      "rgb_mae": 4.2662
+    }
+  ],
+  "bounds": [
+    {
+      "region": "header",
+      "result": "PASS",
+      "expected": [
+        0,
+        0,
+        1920,
+        76
+      ],
+      "actual": [
+        0,
+        0,
+        1920,
+        76
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "theme-switch",
+      "result": "PASS",
+      "expected": [
+        1207.578125,
+        17.5,
+        163,
+        40
+      ],
+      "actual": [
+        1207.578125,
+        17.5,
+        163,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "export",
+      "result": "PASS",
+      "expected": [
+        1640.765625,
+        17.5,
+        92.828125,
+        40
+      ],
+      "actual": [
+        1640.765625,
+        17.5,
+        92.828125,
+        40
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "subbar",
+      "result": "PASS",
+      "expected": [
+        0,
+        76,
+        1920,
+        64
+      ],
+      "actual": [
+        0,
+        76,
+        1920,
+        64
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "workspace",
+      "result": "PASS",
+      "expected": [
+        0,
+        140,
+        1920,
+        908
+      ],
+      "actual": [
+        0,
+        140,
+        1920,
+        908
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "kill-ribbon",
+      "result": "PASS",
+      "expected": [
+        24,
+        156,
+        1872,
+        130
+      ],
+      "actual": [
+        24,
+        156,
+        1872,
+        130
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-0",
+      "result": "FAIL",
+      "expected": [
+        45,
+        209,
+        450,
+        64
+      ],
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "delta": [
+        -45.0,
+        -209.0,
+        -450.0,
+        -64.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-1",
+      "result": "FAIL",
+      "expected": [
+        507,
+        210,
+        448,
+        62
+      ],
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "delta": [
+        -507.0,
+        -210.0,
+        -448.0,
+        -62.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-2",
+      "result": "FAIL",
+      "expected": [
+        967,
+        210,
+        448,
+        62
+      ],
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "delta": [
+        -967.0,
+        -210.0,
+        -448.0,
+        -62.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "scene-card-3",
+      "result": "FAIL",
+      "expected": [
+        1427,
+        210,
+        448,
+        62
+      ],
+      "actual": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "delta": [
+        -1427.0,
+        -210.0,
+        -448.0,
+        -62.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-panel",
+      "result": "PASS",
+      "expected": [
+        24,
+        302,
+        1376,
+        730
+      ],
+      "actual": [
+        24,
+        302,
+        1376,
+        730
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-stage",
+      "result": "PASS",
+      "expected": [
+        41,
+        361,
+        1342,
+        570.5
+      ],
+      "actual": [
+        41,
+        361,
+        1342,
+        570.5
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "preview-controls",
+      "result": "PASS",
+      "expected": [
+        41,
+        943.5,
+        1342,
+        44
+      ],
+      "actual": [
+        41,
+        943.5,
+        1342,
+        44
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "phase-inspector",
+      "result": "PASS",
+      "expected": [
+        1416,
+        302,
+        480,
+        730
+      ],
+      "actual": [
+        1416,
+        302,
+        480,
+        730
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "phase-0",
+      "result": "FAIL",
+      "expected": [
+        1437,
+        407,
+        438,
+        170.5
+      ],
+      "actual": [
+        1437,
+        407,
+        428,
+        170.5
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        -10.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "phase-1",
+      "result": "FAIL",
+      "expected": [
+        1437,
+        591.5,
+        438,
+        170.5
+      ],
+      "actual": [
+        1437,
+        591.5,
+        428,
+        170.5
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        -10.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "phase-2",
+      "result": "FAIL",
+      "expected": [
+        1437,
+        776,
+        438,
+        170.5
+      ],
+      "actual": [
+        1437,
+        776,
+        428,
+        170.5
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        -10.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    },
+    {
+      "region": "footer-17",
+      "result": "PASS",
+      "expected": [
+        0,
+        1048,
+        1920,
+        32
+      ],
+      "actual": [
+        0,
+        1048,
+        1920,
+        32
+      ],
+      "delta": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tolerance_px": 2
+    }
+  ]
+}

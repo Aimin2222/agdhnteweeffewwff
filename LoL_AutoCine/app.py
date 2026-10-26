@@ -37,14 +37,40 @@ def _ensure_dependencies() -> None:
 
 import sys
 _ensure_dependencies()
-from legacy_app import App
 
 
 def main() -> None:
+    if "--ui29-backend" in sys.argv:
+        from ui.audit29_desktop import run_backend
+        run_backend(sys.argv[sys.argv.index("--ui29-backend") + 1])
+        return
+    if "--ui29" in sys.argv:
+        from ui.audit29_desktop import run_desktop, smoke_backend
+        if "--ui29-smoke" in sys.argv:
+            smoke_backend()
+        elif "--ui29-capture-all" in sys.argv:
+            from tools.ui29_windows_webview_capture import main as capture_webview
+            raise SystemExit(capture_webview(sys.argv[sys.argv.index("--ui29-capture-all") + 1:]))
+        else:
+            run_desktop(window_smoke="--ui29-window-smoke" in sys.argv)
+        return
+    from legacy_app import App
     root = tk.Tk()
-    App(root)
+    app = App(root)
+    if "--legacy-ui" not in sys.argv:
+        from ui.reference_studio import ReferenceStudio
+        ReferenceStudio(app)
     root.mainloop()
 
 
 if __name__ == "__main__":
-    main()
+    if "--smoke-test" in sys.argv:
+        # Importing legacy_app above verifies the packaged VERSION.txt as well.
+        from pathlib import Path
+        from legacy_app import ROOT
+        required = [ROOT / "VERSION.txt", ROOT / "assets" / "work_kill_assets" / "catalog.json",
+                    ROOT / "tools" / "bin" / "lol_audio_helper.exe"]
+        if any(not path.is_file() for path in required):
+            raise SystemExit(2)
+    else:
+        main()
