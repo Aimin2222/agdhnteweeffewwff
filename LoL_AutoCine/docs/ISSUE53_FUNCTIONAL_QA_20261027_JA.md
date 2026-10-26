@@ -36,7 +36,7 @@ Flash/Zoom候補のFFmpegフレーム試験、UI bridge試験、CameraQAの版�
 - **A：準備**：従来機能台帳、イベント接続表、共有状態境界、UI選定後の接続手順を`ISSUE53_BASELINE_AND_UI_BRIDGE_JA.md`に保存。候補1〜10への実接続はUI選定後。
 - **B：研究試験**：FlashとZoomのみlegacy切替付きで実装。座標1458条件、カメラ12新ルール、Work652素材の品質承認、音声研究案は本体処理へ無断採用していない。
 - **C：Windows QA**：EXE起動・ZIP展開・保存済み素材のNVENC/音声合成を確認。実LoLセッション、WGC、LoL専用音声、全カメラと全UI操作はユーザー実機試験待ち。手順は`ISSUE53_WINDOWS_TEST_JA.md`。
-- **現行BAT版の追加判定**：通常候補と`legacy`のBAT`--check`は終了コード0。既存一括QA・Work素材・30MBアップロード・CameraQA版数の対象4モジュール37件はPASS。ZIP展開・構成、BATからのGUI起動は別判定。アプリ内一括QAのライブ完走、コマンド画面の点滅解消は実機試験待ち。旧EXEの起動結果をBAT版の動作合格へ流用しない。
+- **現行BAT版の追加判定**：通常候補と`legacy`のBAT`--check`は終了コード0。既存一括QA・Work素材・30MBアップロード・CameraQA版数の対象4モジュール37件はPASS。ZIPのCRC・展開・音声helper同梱を確認。準備済みPython環境を指定したBAT経由では展開先アプリの起動ログを確認した。新規環境の初回セットアップはサンドボックス一時フォルダの権限エラーをBAT内TEMP指定で解消したが、pipの外部DNSが拒否され完了できなかった。アプリ内一括QAのライブ完走、コマンド画面の点滅解消は実機試験待ち。旧EXEの起動結果をBAT版の動作合格へ流用しない。
 
 ## 配布と追試
 

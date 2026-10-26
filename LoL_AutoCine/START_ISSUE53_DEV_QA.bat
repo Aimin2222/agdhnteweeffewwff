@@ -38,8 +38,32 @@ if not exist "%TEMP%" (
   endlocal & exit /b 3
 )
 
+rem Reuse an already prepared v5.10.31-style Python environment when supplied.
+if defined AUTOCINE_ISSUE53_PYTHON goto RunPrepared
+
 echo [Issue53] One console stays open for diagnostics. No separate EXE is used.
 echo [Issue53] In the app, click the developer camera + Work assets one-click QA button.
 call "%~dp0START.bat"
 set "RC=%ERRORLEVEL%"
+endlocal & exit /b %RC%
+
+:RunPrepared
+if not exist "%AUTOCINE_ISSUE53_PYTHON%" (
+  echo [Issue53] AUTOCINE_ISSUE53_PYTHON does not exist.
+  endlocal & exit /b 4
+)
+"%AUTOCINE_ISSUE53_PYTHON%" -c "import numpy,PIL,imageio_ffmpeg,windows_capture,yt_dlp,pycaw,pyaudiowpatch,psutil"
+if errorlevel 1 (
+  echo [Issue53] The supplied Python environment is missing AutoCine dependencies.
+  endlocal & exit /b 5
+)
+if not exist "%~dp0tools\bin\lol_audio_helper.exe" (
+  echo [Issue53] Native LoL audio helper is missing.
+  endlocal & exit /b 6
+)
+echo [Issue53] Starting with an existing Python environment in this console.
+"%AUTOCINE_ISSUE53_PYTHON%" "%~dp0app.py"
+set "RC=%ERRORLEVEL%"
+echo [Issue53] AutoCine exited with code %RC%.
+if not defined CI pause
 endlocal & exit /b %RC%

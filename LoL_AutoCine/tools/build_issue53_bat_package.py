@@ -24,6 +24,8 @@ ROOT_BATS = {
 SKIP_PARTS = {"diagnostics", ".venv", "__pycache__", ".pytest_cache",
               "projects", "output", "outputs", "qa_tmp"}
 SKIP_SUFFIXES = {".log", ".mp4", ".mkv", ".wav", ".pyc"}
+SKIP_NAMES = {"LoL_AutoCine/issue53_launcher.py",
+              "LoL_AutoCine/tools/build_issue53_windows.py"}
 
 
 def git(*args: str) -> str:
@@ -49,7 +51,8 @@ def main() -> None:
     names = subprocess.check_output(
         ["git", "-C", str(REPO), "ls-files", "-z", "--", "LoL_AutoCine"]
     ).decode("utf-8").split("\0")
-    files = [name for name in names if name and (REPO / name).is_file()
+    files = [name for name in names if name and name not in SKIP_NAMES
+             and (REPO / name).is_file()
              and not SKIP_PARTS.intersection(Path(name).parts)
              and Path(name).name != "settings.json"
              and Path(name).suffix.lower() not in SKIP_SUFFIXES]
@@ -93,6 +96,7 @@ def main() -> None:
                        "従来Flash/Zoomと比較する場合は、このBATを引数 legacy で実行します。\n"
                        "詳しい手順と未検証範囲は LoL_AutoCine/docs/ISSUE53_WINDOWS_TEST_JA.md。\n"
                        "Python 3.12 x64と依存パッケージは既存START.batの方法で準備します。\n"
+                       "準備済み環境を再利用する場合はAUTOCINE_ISSUE53_PYTHONにそのpython.exeを指定します。\n"
                        "Native LoL音声helperは同梱しています。\n").encode("utf-8"))
     with ZipFile(archive) as reader:
         if reader.testzip() is not None:
