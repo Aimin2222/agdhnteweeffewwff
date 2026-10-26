@@ -10,6 +10,7 @@ import subprocess
 import sys
 import shutil
 from dataclasses import dataclass, field, replace, asdict
+import math
 from pathlib import Path
 from typing import Optional
 
@@ -456,9 +457,26 @@ def _build_video_effect_filters(t: Template, duration: float, events: list[tuple
     if e.get("chroma_leak"):
         px=int(4+32*e["chroma_leak"])
         f.append(f"rgbashift=rh={px}:bh=-{px}:enable={expr}")
-    if e.get("flash"):
+    if e.get("flash") and events:
         amp=0.18+0.65*e["flash"]
-        f.append(f"eq=brightness='{amp:.3f}*exp(-18*abs(t-{events[0][0]:.3f}))':eval=frame:enable={_enable_expr(events, after=0.15)}")
+        if getattr(t, "flash_revision", os.environ.get("AUTOCINE_RESEARCH_FLASH", "legacy")) == "causal_pts_v1":
+            # Compare the unrounded event time with each frame's actual PTS.
+            # For CFR this starts at ceil(event_time*fps); for VFR it uses the
+            # first real PTS >= event. max keeps simultaneous events distinct
+            # without adding their brightness or letting future kills leak.
+            onset = []
+            for start, _end in events:
+                start = float(start)
+                if not math.isfinite(start) or start < 0:
+                    raise ValueError("Flash event time must be finite and nonnegative")
+                stamp = f"{start:.9f}"
+                onset.append(f"if(gte(t,{stamp}),{amp:.3f}*exp(-18*(t-{stamp})),0)")
+            expression = onset[0]
+            for pulse in onset[1:]:
+                expression = f"max({expression},{pulse})"
+            f.append(f"eq=brightness='{expression}':eval=frame")
+        else:
+            f.append(f"eq=brightness='{amp:.3f}*exp(-18*abs(t-{events[0][0]:.3f}))':eval=frame:enable={_enable_expr(events, after=0.15)}")
     # 全体系
     if e.get("focus_blur"):
         sigma=1.0+8.0*e["focus_blur"]
@@ -906,6 +924,7 @@ def _apply_effects(src, dst, t, duration, kills, size=None, game_wav=None,
         "gpu_effects_selected": sorted(consumed_gpu),
         "cpu_video_effects": sorted(k for k, value in original_effects.items()
                                     if float(value or 0) > 0.001 and k not in consumed_gpu),
+        "flash_revision": getattr(t, "flash_revision", os.environ.get("AUTOCINE_RESEARCH_FLASH", "legacy")),
         "bloom_cpu_optimized": bool(t.bloom > 0 and 'bloom' not in consumed_gpu),
         "dof_mask_cpu_optimized": bool(t.dof_enabled and t.dof_blur > 0.01 and 'dof' not in consumed_gpu),
         "bloom_level": t.bloom,
