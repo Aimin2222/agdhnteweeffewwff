@@ -115,7 +115,8 @@ def _priority_flow(window, url: str, main_id: str) -> dict:
         raise AssertionError(f"{main_id}: camera mode click did not reach AutoCine App")
     detail_controls = window.evaluate_js('''(() => {const text=document.body.innerText;
       return {camera:!!document.querySelector('input[data-setting="third_dist"]'),
-        fx:text.includes('FX')||text.includes('エフェクト'),
+        fx:text.includes('FX')||text.includes('エフェクト')||
+          !!document.querySelector('[data-action="screen"][data-action-value="T-B-F"]'),
         material:text.includes('キルフレーム')||text.includes('素材'),
         scene:text.includes('シーン'),timeline:text.includes('タイムライン')||!!document.querySelector('[data-ui="timeline"]'),
         color:text.includes('色')||text.includes('DOF')};})()''')
