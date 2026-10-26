@@ -56,8 +56,8 @@ def main() -> None:
     status = {
         "source_commit": revision,
         "entry_point": f"{NAME}.exe",
-        "research_flash": "causal_pts_v1 opt-in",
-        "research_zoom": "normalized_tmix_v1 opt-in",
+        "research_flash": "causal_pts_v1 by default in this test EXE; AUTOCINE_RESEARCH_FLASH=legacy restores old path",
+        "research_zoom": "normalized_tmix_v1 by default in this test EXE; AUTOCINE_RESEARCH_ZOOM=legacy restores old path",
         "real_lol_test": "NOT_RUN until a replay is supplied and executed",
     }
     (bundle / "BUILD_INFO.json").write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding="utf-8")
