@@ -28,6 +28,16 @@ if not exist "%~dp0START.bat" (
   endlocal & exit /b 2
 )
 
+rem Keep first-run Python/pip temporary files inside this test copy.
+set "TEMP=%~dp0qa_tmp\bootstrap_temp"
+set "TMP=%TEMP%"
+set "PIP_CACHE_DIR=%~dp0qa_tmp\pip_cache"
+if not exist "%TEMP%" mkdir "%TEMP%"
+if not exist "%TEMP%" (
+  echo [Issue53] Cannot create a writable temporary folder.
+  endlocal & exit /b 3
+)
+
 echo [Issue53] One console stays open for diagnostics. No separate EXE is used.
 echo [Issue53] In the app, click the developer camera + Work assets one-click QA button.
 call "%~dp0START.bat"
