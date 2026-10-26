@@ -1,0 +1,121 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>AutoCine 2ソフトUI研究</title><style>body{font:17px/1.7 system-ui;color:#233349;background:#edf1f5;max-width:1440px;margin:25px auto;padding:20px}a{color:#1762a6}section{background:#fafbfc;border:1px solid #d3dce5;padding:20px;border-radius:9px;margin:18px 0}img{max-width:100%;height:auto}pre{white-space:pre-wrap;overflow-wrap:anywhere}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(460px,1fr));gap:18px}summary{cursor:pointer}</style><h1>League Director・Lolnam UI研究</h1><p>R1/R2は追加参考案。混合7＋4、比較3/5/8を維持。実LoL・録画は未接続。</p><p>Windowsで試す：ZIPを全展開し <b>体験版を起動.cmd</b> をダブルクリック。</p><p><a href="CHATGPT_COPY_REPORT.txt">ChatGPT報告文</a> / <a href="specs/70機能比較_JA.md">70機能比較</a> / <a href="specs/WINDOWS_IMPLEMENTATION_JA.md">Codex実装仕様</a></p><section><details><summary>README_JA.md</summary><pre># AutoCine｜League Director・Lolnam UI比較研究
+2026-10-27。比較対象はこの2ソフトのみ。研究提案と製品実装を分離する。
+
+## Windowsで試す
+ZIPをすべて展開し、`体験版を起動.cmd` または `windows/AutoCine_UI_Reference_v1.exe` をダブルクリックする。Pythonは不要。既存のWebView2 Runtimeと.NET Framework 4.6.2以降が必要。自動インストールは行わない。Windows x64の現在環境で実行確認した。別のクリーンPCでの配布試験は未実施。
+
+- R1 Track Desk：League Directorの数値・多段キーの俯瞰を参考に、固定3領域＋中央previewを設計。
+- R2 Shot Canvas：Lolnamの映像中心・timeline/curve切替を参考に、tool rail＋shotstripを設計。
+- 両案にメイン・かんたん・詳細・カメラ・カーブ・色・素材・出力を用意。ライト/ダーク/Windows追従。
+
+操作できるのは研究UIの状態編集。合成preview、FOV/回転の表示、数値、FOVキー/補間、scene選択、出力チェック、色のCSS近似、図形素材、Undo/Redo、JSON保存/読込。LoL/TargetLock/scan/GPU/ゲーム音/録画/実動画出力は未接続。ゲーム画面や他社素材をプレビューとして流用していない。
+
+## 成果物
+- `index.html`：自作画面20枚・比較図2枚・資料を閲覧するローカルギャラリー。
+- `research/実画面比較_JA.md` / `SOURCES.json`：公式画像4枚と原文の確認範囲・出典。第三者画像は公開物に含めない。
+- `specs/70機能比較_JA.md` / JSON：既存70機能との照合・各案の導線・不足/残件。
+- `specs/WINDOWS_IMPLEMENTATION_JA.md`：Windows/WebView2と既存処理を接続する仕様。
+- `specs/LAYOUT_TOKENS.json` / `COLOR_TOKENS.json`：寸法・色・配置の基準。
+- `tests/`：85モデル試験、19DOMイベント試験、10自己テスト、20画面の実測結果。
+- `demo/` / `windows/`：操作可能なHTML/CSS/JSとWindowsホスト、ソース、SDKのlicense/notice。
+
+## 現行候補を維持
+混合案A＝候補7メイン＋候補4詳細/素材/枠、簡単編集未決定。候補3/5/8も維持。今回のR1/R2は追加参考案であり、旧UI・UI29・比較アプリを置換しない。全候補の採点・順位付け・正式採用はしていない。
+
+## 検証の限界
+公式画面を確認したが参照2アプリは起動していない。デモは既存70機能を実行できる製品版ではない。テストには重複するモデルassertionがあり、総数を「114件の独立した実機E2E合格」としない。native pointer/keyboard/IME、OSファイルダイアログ、複数DPI、別PC、実バックエンドはNOT_RUN。P2残523、651暫定肖像形状、19原本制約と前工程の実LoL/GPU/音声/DPI残件はそのまま保持した。
+
+保存commitとZIP再取得・実展開・hashの結果は、封印後の `SAVE_RECEIPT.json` に記録する（ZIP外）。
+</pre></details></section><section><details><summary>操作ガイド_JA.md</summary><pre># 2つの参考UIの試し方
+1. ZIPを全展開し `体験版を起動.cmd` を開く。
+2. 上部R1/R2でレイアウトを切り替える。同じ研究プロジェクトを共有する。
+3. R1では左のシーン、R2では下のshotstripで焦点を選ぶ。出力対象のチェックは別。R2のチェックは「対象チェック」から変更する。
+4. カメラでFOV数値/sliderとAUTO/BLUE/RED等を変更する。距離/高さ/style/modeは状態保存のみで、LoLの3D計算は行わない。FOVとYawは合成ステージの表示へ近似反映する。
+5. カーブで点を選び時刻/値/補間を編集。「FOVキーをプレビューへ適用」で補間を表示する。キー追加で現在FOVを記録。FOV slider直接編集はベース値の表示へ切り替わる。
+6. 色調整でpreset/露出/彩度/暖かさを変更し分割比較する。CSS近似なので、製品LUTやGPU色管理の検証ではない。
+7. 素材は自作図形見本。既存652/35/37/89へ書き込まない。6motionは既存名を維持した近似表示。
+8. 保存・開くで研究JSONを保存/読込。実動画作成ボタンは未接続のため無効。設定と診断で自己テスト/ログ/画面撮影を実行できる。
+
+プロジェクト・シーン別設定・キー・出力方針・外観は専用localStorageへ保存する。再起動時は停止状態。保存領域に書けない場合は通知しJSON保存を利用する。保存先はこのパッケージの `_session/webview2` 等で、本体設定とは独立。ネットワーク/音量/OSテーマは変更しない。
+
+点は左右矢印で1/30秒・上下で1°、Enterで選択。Ctrl+Z/Ctrl+YでUndo/Redo。Escでdialogを閉じる。native入力の網羅試験は未実施なので、問題があれば操作順と設定を研究ログへ保存して比較する。
+
+`QAを実行.cmd` は合成fixtureを使う独立QAモード。既存プロジェクトを使わず `_session_qa` と自作screenshotsへ結果を書き、終了する。これは手動pointer/keyboard試験の代わりではない。
+</pre></details></section><section><details><summary>research/実画面比較_JA.md</summary><pre># 実画面と操作構造の比較
+
+2026-10-27。実アプリ起動は未実施。公式UI画像4枚を実際に見て、公式説明とLeague Director原文へ照合。第三者画像は調査用ローカルに限定し、GitHub/ZIPへ転載しない。
+
+League Directorは固定commit `6ddb4ceb45974d6518b43d14522fa9b5ea422139`。1682×896の公式画像とQMdiArea/各子窓を確認した。ドッキング枠と同一視しない。[原文](https://github.com/RiotGames/leaguedirector/blob/6ddb4ceb45974d6518b43d14522fa9b5ea422139/leaguedirector/app.py)。
+
+Lolnamは配布元の1200×675画像3枚（timeline/graph/grade）と公式サイトのgraph/timeline説明を確認。listingの版は1.0.16だが、画像撮影版は未確定。[配布元](https://www.overwolf.com/app/lolnam-lolnameditor)、[公式](https://lolnam.gg/)。
+
+|観点|League Director|Lolnam|AutoCineの提案|
+|---|---|---|---|
+|メイン|MDI子窓でRendering/Timeline/Visibility/Recording等を配置|中央Mirror Viewと下部timeline|R1は固定3領域、R2はtool rail＋shotstrip|
+|かんたん編集|専用wizardは今回未確認|専用wizardは今回未確認|AutoCine独自に3段階画面を提案|
+|カメラ|位置/回転/lock/attached/FOV等の数値|camera/rotation/FOVのキーとXYZ表示|既存10style・3制御mode・AUTO/BLUE/REDを維持|
+|タイムライン|多段パラメーターとsequence操作|mirror下のtimeline/graph切替|焦点・出力チェック・キーを分離|
+|キーフレーム|Time/Blend/Value編集|カメラ/FOV等のキー|デモはFOVだけ実編集、他trackは参照|
+|カーブ|補間選択は確認。自由曲線UIは未確認|位置/回転/FOVの曲線を公式画像で確認|時刻/値の点編集＋linear/smooth/hold、自由接線は未実装|
+|FX/描画|Particles/Visibility/Fog/DOF等|Render/Particle/Visibility入口|ゲーム粒子と後処理FX35を混同しない|
+|色調整|Fog色等。専用LUT/mixer画面は未確認|split比較・色域slider・color wheels|R2は映像固定＋右調整。デモはCSS近似|
+|録画/出力|webm/png、時刻/FPS/lossless/保存先/中止|高品質export説明。codec設定の詳細は未確認|JSON保存と実動画作成を分け、後者は無効|
+|素材/ショット|sequence保存/読込|Replay Managerの公式説明|自動ハイライトと枠/FX図鑑はAutoCine独自に維持|
+
+数値を俯瞰する構造は詳細調整向き、映像＋curve切替はショットの仕上げ向きと推論する。初回操作では選択肢を絞り、ワンクリックから必要な詳細へ進む順序を両案へ追加した。これは構造からの設計判断で、実アプリ習熟度やユーザー評価・採点の結果ではない。
+
+未観測を製品の「機能不在」と断定しない。Lolnamの録画設定詳細、両ソフトの専用簡単画面、実gesture/接続/録画は未検証。tutorial cover単体取得403は未取得のまま。動画再生、インストール、Replay/Windows設定変更は行わなかった。詳細URL/hashはSOURCES.json。
+</pre></details></section><section><details><summary>specs/WINDOWS_IMPLEMENTATION_JA.md</summary><pre># Codex向け Windows/WebView2実装仕様
+## 1. 採用範囲
+R1/R2は追加の表示層。現行混合7＋4、比較3/5/8、簡単編集未決定を保持。候補番号をR1/R2へ割り当て直さない。本体/カメラ/GPU/録音/素材承認は別工程。
+
+## 2. 再現するUI
+source of truthはdemo/app.cssとapp.js、SCREENSHOT_METRICS。1920×1080の18画面（各8画面＋dark main各1）と1366×768 main各1、計20枚。固定header66、nav54、status28、timeline270px（高さ820以下ではheader58/nav44/status26px）。高さ900以下は210、820以下は170へ縮小。R1 columns252/残り/344、gap12/padding12。幅1500以下210/残り/288。R2 rail82/残り/340、幅1500以下72/残り/288、gap16、shotstrip37（compactは縮小）。詳細値はLAYOUT_TOKENS。
+
+previewはviewport内で16:9 contain。横幅=min(領域幅,領域高×16/9)。スクロールはscene列、inspector、shotstrip横、modal内、compact track名だけ。中央preview/transport/header/timeline/statusを親scrollへ入れない。1366×768の実測previewは約649×365（R1）と同等以上のR2。1180px未満は横scrollで明示し、モバイル対応としない。
+
+button通常36px、small30px、compact24px、角丸7、panel角丸9。base15px、1500幅以下14px、title21/heading18、補助11〜13。細かい補助表示を主要操作ラベルへ転用しない。テーマはCSS tokenだけを交換し映像に適用しない。選択はcheck＋border＋ariaで示す。opaque主要色の実算比はCOLOR_TOKENS。全状態・高コントラストテーマ・screen reader適合の認証ではない。
+
+## 3. 共通モデル
+projectId/revision、stable sceneId、focusedSceneId、outputCheckedIds、sceneOverride、cameraMode/style/side、TargetLock playerId、sourcePTS/timelinePTS、selectedKeyId、outputPolicy、jobId/state、formalAssetStatusを単一storeに置く。view/variant/themeは外観state。切替でstore/backend/mirror sessionを再生成しない。再生中のlayout切替もtimeを保持する。output jobは開始時snapshotから処理し、編集中の設定を混入させない。
+
+デモschema1は独立の研究形式で、製品保存形式と同一ではない。移植時はadapterで変換し、旧scene保存形式・Undo・個別overrideの意味を保持する。FOVのベース値とキー適用を明示。preview timeとrecord source timeを混同しない。実製品では前工程の整数tick/有理数・[start,end)契約を優先し、デモの12秒/float実装をそのまま録画時刻の基準にしない。
+
+## 4. バックエンド境界（提案、今回未接続）
+UI request例：{schema:1,id,type,args,projectRevision}。reply：{id,ok,result,error,revision}。event：{subscriptionId,event,data}。型・範囲・能力・対象sceneId・revisionをnative側でも検証する。
+
+replay.prepare/status → on_quick_prepare/on_open_replay/on_play_recent
+scene.scan/cancel → on_scan、scan progressを実処理から通知
+scene.focus/check → on_scene_selection等、checked_killsとは別
+camera.mode/style/side → 既存var/adapter、採用済みthird/third_cinemaを保持
+mirror.start/stop → 既存WGC session。未接続時に合成図を実mirror成功と表示しない
+preview.play/stop → 既存演出確認、recordと停止tokenを区別
+scene.key/trim/grade → 既存scene/keyframeモデル。自由XYZ曲線がなければFOVデモから捏造しない
+asset.select → catalogの実ID/承認状態を参照。研究図形IDを製品IDへ流用しない
+job.start/cancel/retry/status → on_make_*等、実encoder/実音声/ファイルQAをeventで返す
+diagnostic.run/report → on_automatic_qa/on_dev_camera_qa/on_show_diagnostics
+
+全70のsource/handler/不足はFEATURE_COMPARISON_70.json。ENGAGE/BESTSHOT等の不足を接続済みに変えない。GPU/NVENCは方針と実使用encoderを区別。音声はLoL process treeだけが既定、他アプリ/desktop loopbackへ黙ってfallbackしない。
+
+## 5. 今回のホスト
+WinForms .NET Framework x64＋WebView2 SDK1.0.3856.49。既存Runtimeを検出し、local virtual hostへdemo/をmap。外部navigation/new window/permissionは拒否。HTML connect-src none。ブラウザーやWindowsのネットワーク/セキュリティ設定を変更しない。参照：[Microsoft local content](https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/working-with-local-content)、[Runtime配布](https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution)。全WindowsにRuntimeがあるとは仮定しない。
+
+実装済みbridgeはdemo-ready/state-snapshot/test-report/integration-report/save-json/capture-*のみ。LoLやshellの汎用実行handlerは無い。message source/sizeを検証し、capture名は固定regex、保存はOS dialog。診断dataは専用_sessionへ。SDK DLL3点のlicense/noticeを保持し、第三者UI画像/ブランド素材を同梱しない。
+
+## 6. 受入条件
+画面ID=LD/LN＋view＋theme＋sizeと原画像を対応させる。pane境界・余白・文字・固定/scrollを画像overlayで比較。全view切替でプロジェクト/カメラ/選択/チェック/time不変。drag中はpreviewが残り、pointer cancelで元へ戻る。dialogはEsc/close/焦点復帰と背景scrollを試験。保存JSONを再起動・別layoutへ読み込んで一致。native keyboard/IME、125/150/200%DPI、長い日本語path、クリーンPC、実mirror/scan/録画/音声/NVENCと異常復旧は別E2Eで行う。
+
+色のCSS近似を製品gradeと同一視しない。真のBezier接線/位置XYZ/独立回転curve、LUT/mixer/wheels、実catalog一覧、実export progressは未実装。見た目のために既存設定を削除せず、能力がない箇所は説明と導線を残す。
+</pre></details></section><section><details><summary>tests/検証結果_JA.md</summary><pre># 検証結果と限界
+- Node共有モデル：85/85 PASS。6外観組合せ×8viewの保存roundtrip、scene独立、Undo/Redo、clamp、キー、style/motion等。GUIやLoL試験ではない。
+- WebView2のDOMイベント：19/19 PASS。実HTMLコントロールのhandlerへ合成eventを与え、FOV/数値/表示、theme/variant保持、side/seek、キー/補間、Undo/Redo、scene独立、grade/split、素材、出力無効、modal焦点、70検索を確認。native pointer/keyboard/IME試験ではない。
+- WebView2自己テスト：10/10 PASS。8モデルassertion＋2 DOM確認。上記モデル試験と重複があるため合算独立件数にしない。
+- 自作画面：20/20実寸PASS（18枚1920×1080、2枚1366×768）。CapturePreviewで取得。画像を後から引き伸ばして解像度を偽装していない。DPR1/本文横overflowなし/16:9 previewを実測。
+- 機械PNG decode/hash/JSON整合/70ID一意/外部第三者画像なし/ZIP展開は納品QAで別記録。
+
+現在環境はNATIVE_ENVIRONMENTを参照。参照2アプリ起動、実LoL、録画/音声/GPU、native入力の網羅、ファイルdialog、再起動永続化の実process間完全比較、別PC、複数DPI、全既存機能の実行はNOT_RUN。前工程のP2残523等は未完のまま。
+
+native UIは起動/表示を確認したが、ウィンドウ状態変化等でpointer入力の自動試験を完了できなかった。IABのfile URL表示はポリシーで拒否され未実施。撮影/DOM検証は元々設計した独立オフラインWebView2ホストのQA機能で行った。IABの拒否を回避するproxyやbrowser設定変更は行っていない。
+
+初回撮影の1920幅はWindows枠制約で高さ1061だったため不合格とし、描画controlのサイズを明示して1920×1080を再取得した。旧画像を成功数へ含めない。現在の20枚だけを配布する。実製品DPI問題が解消したという意味ではない。
+</pre></details></section><h2>構造比較</h2><section><img src="comparisons/01_variants.png" alt="01_variants"></section><section><img src="comparisons/02_observed_structure.png" alt="02_observed_structure"></section><h2>R1 Track Desk</h2><div class="grid"><section><p>LD_camera_light_1920x1080.png</p><a href="screenshots/LD_camera_light_1920x1080.png"><img loading="lazy" src="screenshots/LD_camera_light_1920x1080.png" alt="LD_camera_light_1920x1080"></a></section><section><p>LD_color_light_1920x1080.png</p><a href="screenshots/LD_color_light_1920x1080.png"><img loading="lazy" src="screenshots/LD_color_light_1920x1080.png" alt="LD_color_light_1920x1080"></a></section><section><p>LD_curve_light_1920x1080.png</p><a href="screenshots/LD_curve_light_1920x1080.png"><img loading="lazy" src="screenshots/LD_curve_light_1920x1080.png" alt="LD_curve_light_1920x1080"></a></section><section><p>LD_detail_light_1920x1080.png</p><a href="screenshots/LD_detail_light_1920x1080.png"><img loading="lazy" src="screenshots/LD_detail_light_1920x1080.png" alt="LD_detail_light_1920x1080"></a></section><section><p>LD_easy_light_1920x1080.png</p><a href="screenshots/LD_easy_light_1920x1080.png"><img loading="lazy" src="screenshots/LD_easy_light_1920x1080.png" alt="LD_easy_light_1920x1080"></a></section><section><p>LD_export_light_1920x1080.png</p><a href="screenshots/LD_export_light_1920x1080.png"><img loading="lazy" src="screenshots/LD_export_light_1920x1080.png" alt="LD_export_light_1920x1080"></a></section><section><p>LD_main_dark_1920x1080.png</p><a href="screenshots/LD_main_dark_1920x1080.png"><img loading="lazy" src="screenshots/LD_main_dark_1920x1080.png" alt="LD_main_dark_1920x1080"></a></section><section><p>LD_main_light_1366x768.png</p><a href="screenshots/LD_main_light_1366x768.png"><img loading="lazy" src="screenshots/LD_main_light_1366x768.png" alt="LD_main_light_1366x768"></a></section><section><p>LD_main_light_1920x1080.png</p><a href="screenshots/LD_main_light_1920x1080.png"><img loading="lazy" src="screenshots/LD_main_light_1920x1080.png" alt="LD_main_light_1920x1080"></a></section><section><p>LD_material_light_1920x1080.png</p><a href="screenshots/LD_material_light_1920x1080.png"><img loading="lazy" src="screenshots/LD_material_light_1920x1080.png" alt="LD_material_light_1920x1080"></a></section></div><h2>R2 Shot Canvas</h2><div class="grid"><section><p>LN_camera_light_1920x1080.png</p><a href="screenshots/LN_camera_light_1920x1080.png"><img loading="lazy" src="screenshots/LN_camera_light_1920x1080.png" alt="LN_camera_light_1920x1080"></a></section><section><p>LN_color_light_1920x1080.png</p><a href="screenshots/LN_color_light_1920x1080.png"><img loading="lazy" src="screenshots/LN_color_light_1920x1080.png" alt="LN_color_light_1920x1080"></a></section><section><p>LN_curve_light_1920x1080.png</p><a href="screenshots/LN_curve_light_1920x1080.png"><img loading="lazy" src="screenshots/LN_curve_light_1920x1080.png" alt="LN_curve_light_1920x1080"></a></section><section><p>LN_detail_light_1920x1080.png</p><a href="screenshots/LN_detail_light_1920x1080.png"><img loading="lazy" src="screenshots/LN_detail_light_1920x1080.png" alt="LN_detail_light_1920x1080"></a></section><section><p>LN_easy_light_1920x1080.png</p><a href="screenshots/LN_easy_light_1920x1080.png"><img loading="lazy" src="screenshots/LN_easy_light_1920x1080.png" alt="LN_easy_light_1920x1080"></a></section><section><p>LN_export_light_1920x1080.png</p><a href="screenshots/LN_export_light_1920x1080.png"><img loading="lazy" src="screenshots/LN_export_light_1920x1080.png" alt="LN_export_light_1920x1080"></a></section><section><p>LN_main_dark_1920x1080.png</p><a href="screenshots/LN_main_dark_1920x1080.png"><img loading="lazy" src="screenshots/LN_main_dark_1920x1080.png" alt="LN_main_dark_1920x1080"></a></section><section><p>LN_main_light_1366x768.png</p><a href="screenshots/LN_main_light_1366x768.png"><img loading="lazy" src="screenshots/LN_main_light_1366x768.png" alt="LN_main_light_1366x768"></a></section><section><p>LN_main_light_1920x1080.png</p><a href="screenshots/LN_main_light_1920x1080.png"><img loading="lazy" src="screenshots/LN_main_light_1920x1080.png" alt="LN_main_light_1920x1080"></a></section><section><p>LN_material_light_1920x1080.png</p><a href="screenshots/LN_material_light_1920x1080.png"><img loading="lazy" src="screenshots/LN_material_light_1920x1080.png" alt="LN_material_light_1920x1080"></a></section></div><section><h2>既存候補を保持</h2><p>旧画像の再梱包・変更はせず、<a href="https://github.com/Aimin2222/agdhnteweeffewwff/tree/work/ui-implementation-audit-29-20261021/LoL_AutoCine/design/ui/implementation_audit_29_20261021">既存29画面資料</a>へ参照する。</p><p>第三者の実画面は <a href="https://github.com/RiotGames/leaguedirector">League Director公式</a> と <a href="https://www.overwolf.com/app/lolnam-lolnameditor">Lolnam配布元</a> を参照。ここへ転載していない。</p></section></html>

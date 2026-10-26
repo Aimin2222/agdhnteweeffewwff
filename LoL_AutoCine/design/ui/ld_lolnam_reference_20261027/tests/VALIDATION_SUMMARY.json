@@ -1,0 +1,33 @@
+{
+  "model": {
+    "PASS": 85,
+    "FAIL": 0,
+    "scope": "Node.js isolated shared-model tests; no browser or Windows input; not LoL/GPU/audio/recording/UI E2E"
+  },
+  "DOM_events": {
+    "PASS": 19,
+    "FAIL": 0,
+    "scope": "Actual HTML controls and their handlers driven by synthetic DOM events in isolated WebView2 fixture. Not native pointer/keyboard/IME, file dialogs, or live AutoCine backend."
+  },
+  "native_self_test": {
+    "PASS": 10,
+    "model_overlap": 8,
+    "scope": "8 isolated model assertions + 2 current-DOM checks; not live backend, not full pointer/keyboard E2E"
+  },
+  "screenshots": {
+    "PASS": 20,
+    "sizes": {
+      "1920x1080": 18,
+      "1366x768": 2
+    },
+    "scope": "Actual WebView2 CapturePreview; no bitmap resize to fake dimensions"
+  },
+  "reference_apps": "NOT_RUN",
+  "native_pointer_keyboard_IME": "NOT_RUN",
+  "OS_file_dialog": "NOT_RUN",
+  "real_LoL_GPU_audio_record_export": "NOT_RUN",
+  "different_PC_DPI_matrix": "NOT_RUN",
+  "AI_visual_review": "REVIEW; representative native screenshots and comparison graphics; not all interactive states or formal usability approval",
+  "formal_adoption": false,
+  "assets_approval_changes": 0
+}

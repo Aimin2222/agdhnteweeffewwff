@@ -1,0 +1,6 @@
+League Director・Lolnam EditorのUI比較研究を別フォルダで作成しました。現行混合案7メイン＋4詳細/素材/枠、簡単編集未決定、比較3/5/8を維持しています。正式採用・順位付け・製品UI置換はしていません。
+公式画面4枚とLeague Director原文を確認しました。参照2アプリは未起動。第三者スクリーンショットはGitHub/ZIPへ転載せず、出典と自作構造図を収録しています。
+自作追加案はR1 Track Desk（数値/キー俯瞰）とR2 Shot Canvas（映像/shot中心）。Windows WebView2で画面切替、slider/数値、FOVキー/補間、scene選択、色近似、素材図形、Undo/Redo、研究JSON保存/読込を試せます。LoL/scan/TargetLock/GPU/音声/録画/実動画出力は未接続です。
+検証はモデル85/85、DOMイベント19/19、自己テスト10/10（モデル重複あり）。実寸自作画像20枚（1920×1080が18、1366×768が2）を取得。native pointer/keyboard/IME、OS file dialog、複数DPI、別PC、実バックエンドは未検証です。
+70機能比較表、配置/色/寸法、接続仕様、操作ガイド、ソース、テスト結果を収録。本体/UI29/main/正式素材は変更なし。P2残523、651暫定形状、19原本制約、実LoL/GPU/音声/DPI残件も保持しました。
+保存コミット・ZIP再取得/実展開/hash照合はZIP外SAVE_RECEIPT.jsonを参照してください。

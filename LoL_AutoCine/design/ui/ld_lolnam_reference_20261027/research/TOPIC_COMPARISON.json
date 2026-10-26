@@ -1,0 +1,76 @@
+{
+  "items": [
+    {
+      "topic": "メイン",
+      "leagueDirector": "MDI子窓でRendering/Timeline/Visibility/Recording等を配置",
+      "lolnam": "中央Mirror Viewと下部timeline",
+      "autocine": "R1は固定3領域、R2はtool rail＋shotstrip",
+      "evidence": "LD-APP / IMAGE-1,2"
+    },
+    {
+      "topic": "かんたん編集",
+      "leagueDirector": "専用wizardは今回未確認",
+      "lolnam": "専用wizardは今回未確認",
+      "autocine": "AutoCine独自に3段階画面を提案",
+      "evidence": "新規提案"
+    },
+    {
+      "topic": "カメラ",
+      "leagueDirector": "位置/回転/lock/attached/FOV等の数値",
+      "lolnam": "camera/rotation/FOVのキーとXYZ表示",
+      "autocine": "既存10style・3制御mode・AUTO/BLUE/REDを維持",
+      "evidence": "LD-APP / IMAGE-2,3"
+    },
+    {
+      "topic": "タイムライン",
+      "leagueDirector": "多段パラメーターとsequence操作",
+      "lolnam": "mirror下のtimeline/graph切替",
+      "autocine": "焦点・出力チェック・キーを分離",
+      "evidence": "IMAGE-1,2,3"
+    },
+    {
+      "topic": "キーフレーム",
+      "leagueDirector": "Time/Blend/Value編集",
+      "lolnam": "カメラ/FOV等のキー",
+      "autocine": "デモはFOVだけ実編集、他trackは参照",
+      "evidence": "LD-SEQ / LN-STORE"
+    },
+    {
+      "topic": "カーブ",
+      "leagueDirector": "補間選択は確認。自由曲線UIは未確認",
+      "lolnam": "位置/回転/FOVの曲線を公式画像で確認",
+      "autocine": "時刻/値の点編集＋linear/smooth/hold、自由接線は未実装",
+      "evidence": "LD-SEQ / IMAGE-3"
+    },
+    {
+      "topic": "FX/描画",
+      "leagueDirector": "Particles/Visibility/Fog/DOF等",
+      "lolnam": "Render/Particle/Visibility入口",
+      "autocine": "ゲーム粒子と後処理FX35を混同しない",
+      "evidence": "LD-APP / LN-STORE"
+    },
+    {
+      "topic": "色調整",
+      "leagueDirector": "Fog色等。専用LUT/mixer画面は未確認",
+      "lolnam": "split比較・色域slider・color wheels",
+      "autocine": "R2は映像固定＋右調整。デモはCSS近似",
+      "evidence": "LD-APP / IMAGE-4"
+    },
+    {
+      "topic": "録画/出力",
+      "leagueDirector": "webm/png、時刻/FPS/lossless/保存先/中止",
+      "lolnam": "高品質export説明。codec設定の詳細は未確認",
+      "autocine": "JSON保存と実動画作成を分け、後者は無効",
+      "evidence": "LD-APP / LN-STORE"
+    },
+    {
+      "topic": "素材/ショット",
+      "leagueDirector": "sequence保存/読込",
+      "lolnam": "Replay Managerの公式説明",
+      "autocine": "自動ハイライトと枠/FX図鑑はAutoCine独自に維持",
+      "evidence": "LD-README / LN-HOME"
+    }
+  ],
+  "unseen_not_absent": true,
+  "ranking": null
+}

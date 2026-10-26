@@ -1,0 +1,76 @@
+{
+  "reference_size": [
+    1920,
+    1080
+  ],
+  "header_height": 66,
+  "navigation_height": 54,
+  "status_height": 28,
+  "timeline_height": 270,
+  "timeline_under900": 210,
+  "timeline_under820": 170,
+  "R1_columns": [
+    252,
+    "remaining",
+    344
+  ],
+  "R1_columns_under1500": [
+    210,
+    "remaining",
+    288
+  ],
+  "R1_gap": 12,
+  "R1_padding": 12,
+  "R2_columns": [
+    82,
+    "remaining",
+    340
+  ],
+  "R2_columns_under1500": [
+    72,
+    "remaining",
+    288
+  ],
+  "R2_gap": 16,
+  "R2_shotstrip_height": 37,
+  "preview": "contain16:9; width=min(viewportWidth,viewportHeight*16/9)",
+  "minimum_design": [
+    1366,
+    768
+  ],
+  "under1180": "horizontal scroll at1180; mobile not supported",
+  "scroll": [
+    "R1 scenes",
+    "inspector",
+    "R2 shotstrip horizontal",
+    "modal interior",
+    "track names"
+  ],
+  "fixed": [
+    "header",
+    "preview",
+    "transport",
+    "timeline",
+    "status"
+  ],
+  "panel_radius": 9,
+  "button_radius": 7,
+  "button_height": 36,
+  "small_button_height": 30,
+  "compact_button_height": 24,
+  "font_base": 15,
+  "font_under1500": 14,
+  "font_title": 21,
+  "font_heading": 18,
+  "font_caption": [
+    11,
+    13
+  ],
+  "source": "demo/app.css + SCREENSHOT_METRICS.json",
+  "under820_header_nav_status": [
+    58,
+    44,
+    26
+  ],
+  "viewport_sizes_exclude_window_chrome": true
+}

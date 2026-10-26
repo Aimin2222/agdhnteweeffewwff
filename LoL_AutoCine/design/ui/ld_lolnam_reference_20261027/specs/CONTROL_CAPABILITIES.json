@@ -1,0 +1,88 @@
+{
+  "items": [
+    {
+      "control": "R1/R2・view切替",
+      "status": "実操作可",
+      "scope": "同じscene/storeを保持",
+      "verification": "19 DOM event試験で一部確認"
+    },
+    {
+      "control": "theme light/dark/system",
+      "status": "実操作可",
+      "scope": "systemはprefers-color-scheme。Windows設定変更なし",
+      "verification": "モデルとdark切替確認。OSテーマ追従の実変更試験なし"
+    },
+    {
+      "control": "scene焦点/出力check",
+      "status": "実操作可",
+      "scope": "独立状態。R2チェックはdialog",
+      "verification": "焦点/チェック非連動確認"
+    },
+    {
+      "control": "FOV/Yaw",
+      "status": "合成表示へ近似反映",
+      "scope": "本来の3D座標変換ではない",
+      "verification": "FOV slider/数値/表示の連動確認"
+    },
+    {
+      "control": "距離/高さ/mode/style/side",
+      "status": "状態操作可",
+      "scope": "保存のみ。実カメラ送信なし",
+      "verification": "RED状態/10styleモデル確認"
+    },
+    {
+      "control": "timeline再生/seek/rate",
+      "status": "合成12秒を操作可",
+      "scope": "音声なし・recordなし",
+      "verification": "seek DOM確認、実再生の網羅試験なし"
+    },
+    {
+      "control": "FOV key/curve",
+      "status": "時刻/値/補間を編集可",
+      "scope": "linear/smooth/hold。自由接線なし",
+      "verification": "追加/数値/補間/Undo確認。native drag未試験"
+    },
+    {
+      "control": "XYZ/回転/Fog/DOF key",
+      "status": "実編集未実装",
+      "scope": "対応表と配置提案のみ",
+      "verification": "NOT_RUN"
+    },
+    {
+      "control": "色preset/露出/彩度/暖かさ/比較",
+      "status": "CSS近似可",
+      "scope": "LUT/GPU色管理/mixer/wheelsは未実装",
+      "verification": "preset/split連動確認"
+    },
+    {
+      "control": "素材/FX/6motion",
+      "status": "自作図形の設定可",
+      "scope": "652枠/35FX等は未接続",
+      "verification": "motion一部DOM・6種モデル確認"
+    },
+    {
+      "control": "JSON save/import",
+      "status": "実装済み",
+      "scope": "研究schemaのみ。製品設定は不使用",
+      "verification": "モデルroundtrip。native file dialog未試験"
+    },
+    {
+      "control": "LoL/scan/TargetLock",
+      "status": "未接続",
+      "scope": "説明を表示",
+      "verification": "NOT_RUN"
+    },
+    {
+      "control": "GPU/音声/録画/動画出力",
+      "status": "未接続",
+      "scope": "動画作成ボタン無効",
+      "verification": "未接続/disabled確認"
+    },
+    {
+      "control": "自己テスト/撮影",
+      "status": "実行可",
+      "scope": "QAは合成fixture、画像20枚",
+      "verification": "native10checks・20画像を実行"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "native_images_reviewed": [
+    "LD_main_light_1920x1080.png",
+    "LN_main_light_1920x1080.png",
+    "LN_curve_light_1920x1080.png",
+    "LN_color_light_1920x1080.png",
+    "LD_camera_light_1920x1080.png",
+    "LN_material_light_1920x1080.png",
+    "LD_main_light_1366x768.png",
+    "LN_main_dark_1920x1080.png",
+    "LD_easy_light_1920x1080.png",
+    "LD_detail_light_1920x1080.png",
+    "LD_export_light_1920x1080.png",
+    "LD_main_dark_1920x1080.png",
+    "LN_easy_light_1920x1080.png",
+    "LN_main_light_1366x768.png"
+  ],
+  "notes": [
+    "2案の主な配置差はR1左scene列とR2rail/shotstrip。中央previewは固定。",
+    "小画面でtrack名の折返しとSVG文字縮みを発見し、nowrap/compact高配分/resize時viewBox更新で修正した。最終R2縮小画面を再確認。",
+    "細線のcontrol境界を文字色と別tokenで濃くし、対象opaqueペアを数値確認。",
+    "詳細/素材/出力の右列はスクロール。previewは画面内へ残る。",
+    "図形preview/素材は自作見本と未接続表示。ゲーム映像や正式合格素材ではない。"
+  ],
+  "scope": "AI image inspection; not human adoption or full accessibility certification"
+}
