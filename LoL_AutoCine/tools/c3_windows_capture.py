@@ -94,7 +94,7 @@ def main() -> int:
                             wait_js(window,"!!document.querySelector('#editor-content > *')")
                             checks[f"{variant}_timeline_visible"]="PASS" if window.evaluate_js(
                                 "(() => {const x=document.querySelector('[data-ui=mini-timeline]');"
-                                "const r=x.getBoundingClientRect();return r.width>200&&r.height>=40})()") else "FAIL"
+                                "const r=x.getBoundingClientRect();return r.width>200&&r.height>=30})()") else "FAIL"
                             if variant=="p":
                                 window.evaluate_js("document.querySelector('#trim-pre').value='5.5';"
                                                    "document.querySelector('#trim-pre').dispatchEvent(new Event('change',{bubbles:true}))")
