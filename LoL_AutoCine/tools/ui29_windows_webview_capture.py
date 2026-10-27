@@ -200,6 +200,53 @@ def _priority_flow(window, url: str, main_id: str) -> dict:
             "main_detail_main": "PASS", "shared_state_retained": "PASS"}
 
 
+def _reference_flow(window, url: str, variant: str) -> dict:
+    """Exercise the new LD/LN WebView with the shared native App, offline."""
+    initial = window.evaluate_js('''(() => ({nav:document.querySelectorAll('.topnav [data-view]').length,
+      rail:document.querySelectorAll('.tool-rail [data-view]').length,
+      mirror:!!document.querySelector('[data-action="mirror_start"]'),
+      scan:!!document.querySelector('[data-action="scan"]'),
+      export:!!document.querySelector('[data-view="export"]')}))()''')
+    if initial != {"nav": 8, "rail": 8, "mirror": True, "scan": True, "export": True}:
+        raise AssertionError(f"reference controls missing: {initial}")
+    window.evaluate_js('document.querySelector(\'.topnav [data-view="camera"]\').click()')
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline:
+        if window.evaluate_js('!!document.querySelector(\'input[data-camera="third_dist"]\')'):
+            break
+        time.sleep(0.1)
+    else:
+        raise AssertionError("reference camera tab missing numeric input")
+    window.evaluate_js('''(() => {const input=document.querySelector('input[data-camera="third_dist"]');
+      input.value='920';input.dispatchEvent(new Event('change',{bubbles:true}));})()''')
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline and _state(url)["camera"]["values"].get("third_dist") != 920:
+        time.sleep(0.1)
+    if _state(url)["camera"]["values"].get("third_dist") != 920:
+        raise AssertionError("reference camera input did not reach the native App")
+    window.evaluate_js('document.querySelector(\'.topnav [data-view="material"]\').click()')
+    card = window.evaluate_js('''(() => {const x=document.querySelector('.inspector-body [data-action="frame"]');
+      if(!x)return '';const id=JSON.parse(x.dataset.data).id;x.click();return id})()''')
+    if not card:
+        raise AssertionError("real frame catalog not shown in reference inspector")
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline and _state(url)["frame"]["id"] != card:
+        time.sleep(0.1)
+    current = _state(url)
+    if current["frame"]["id"] != card or not current["frame"]["effect_id"]:
+        raise AssertionError("reference frame and paired FX did not reach native App")
+    window.evaluate_js('document.querySelector(\'.topnav [data-view="main"]\').click()')
+    other = "ln" if variant == "ld" else "ld"
+    window.evaluate_js(f'document.querySelector(\'[data-route="{other}"]\').click()')
+    _wait_path(window, f"/ui3/reference/{other}")
+    retained = _state(url)
+    if retained["camera"]["values"].get("third_dist") != 920 or retained["frame"]["id"] != card:
+        raise AssertionError("reference UI switch reset native settings")
+    return {"main_controls": "PASS", "camera_input": "PASS", "real_frame": card,
+            "paired_effect": current["frame"]["effect_id"], "cross_variant_state": "PASS",
+            "live_lol_gpu_record_audio_mp4": "NOT_RUN"}
+
+
 def _capture_webview(window, path: Path, size: tuple[int, int]) -> None:
     from System import Action
     from System.Drawing import Size
@@ -235,6 +282,8 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT / "qa" / "ui29" / "windows_webview2_offline")
     parser.add_argument("--screen", help="capture one audited screen")
+    parser.add_argument("--reference", choices=("ld", "ln"),
+                        help="capture a Work reference layout using the real UI3 backend")
     parser.add_argument("--detail-family", choices=tuple(DERIVED_DETAILS),
                         help="capture one explicitly derived comparison detail")
     parser.add_argument("--material-family", choices=("legacy02", "legacy03", "legacy05", "testA"),
@@ -250,6 +299,11 @@ def main(argv=None) -> int:
     args.output.mkdir(parents=True, exist_ok=True)
     inventory = json.loads((ROOT / "ui" / "comparison7_screens.json").read_text(encoding="utf-8"))
     screens = [screen for screen in inventory if not args.screen or screen["id"] == args.screen]
+    if args.reference:
+        if args.screen or args.detail_family or args.material_family or args.ui3_flow or args.priority_seven_flow:
+            parser.error("--reference must be used alone")
+        screens = [{"id": f"reference-{args.reference}", "main_id": "T-A-M",
+                    "family": args.reference, "resolution": [1920, 1080], "theme": "light"}]
     if args.priority_seven_flow:
         if args.screen or args.detail_family or args.material_family:
             parser.error("--priority-seven-flow cannot be combined with another selection")
@@ -334,7 +388,8 @@ def main(argv=None) -> int:
                                             previous_candidate_state["frame"]["effect_id"]):
                                         raise AssertionError(f"{sid}: settings lost when switching candidates")
                                 parsed = urlsplit(url)
-                                route_path = (f"/compare/material/{screen['family']}" if args.material_family else
+                                route_path = (f"/ui3/reference/{args.reference}" if args.reference else
+                                              f"/compare/material/{screen['family']}" if args.material_family else
                                               f"/compare/detail/{screen['family']}" if args.detail_family
                                               else f"/ui/{sid}")
                                 route = f"{parsed.scheme}://{parsed.netloc}{route_path}?{parsed.query}"
@@ -446,12 +501,14 @@ def main(argv=None) -> int:
                                         raise AssertionError("candidate 3 did not return from the real editor")
                                 flow = _priority_flow(window, url, sid) if (
                                     args.priority_seven_flow or args.ui3_flow) else None
+                                reference_flow = _reference_flow(window, url, args.reference) if args.reference else None
                                 if flow:
                                     previous_candidate_state = _state(url)
                                 results.append({"id": sid, "result": capture_result,
                                                 "capture": path.name, "size": size,
                                                 "bounds": f"bounds/{sid}.json",
                                                 "main_detail_roundtrip": ("PASS" if args.detail_family or flow else "NOT_RUN"),
+                                                **({"reference_flow": reference_flow} if reference_flow else {}),
                                                 **({"numbered_label_audit": label_audit} if label_audit else {}),
                                                 **({"priority_seven_flow": flow,
                                                     "previous_candidate_state_retained":

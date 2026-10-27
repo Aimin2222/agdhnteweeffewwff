@@ -1,0 +1,68 @@
+/* New real-backend adapter for the approved LD/LN visual references.
+   Do not import the discontinued synthetic research demo. */
+(() => {
+  'use strict';
+  const token=window.AUTOCINE_TOKEN,variant=window.AUTOCINE_VARIANT;
+  const $=s=>document.querySelector(s), all=s=>[...document.querySelectorAll(s)];
+  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let state=null,view='main',refreshing=false,frameSeq=0,frameTag=null,lastFrameRequest=0;
+  const displayedFrameTimes=[];
+  const views={main:'メイン',easy:'かんたん',detail:'詳細編集',camera:'カメラ',curve:'カーブ',color:'色調整',material:'素材',export:'出力'};
+  const url=p=>`${p}${p.includes('?')?'&':'?'}token=${encodeURIComponent(token)}`;
+  function message(text){$('#message').textContent=text;}
+  async function snapshot(){if(refreshing)return;refreshing=true;try{const r=await fetch(url('/api/state'),{cache:'no-store'});if(!r.ok)throw Error('状態を取得できません');state=await r.json();render();}catch(e){message(e.message);}finally{refreshing=false;}}
+  async function action(name,data={}){try{const r=await fetch(url('/api/action'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:name,data})});const result=await r.json();if(!r.ok)throw Error(result.error||'操作に失敗しました');state=result;render();message(`${name} を実行しました。画面の実状態を確認してください。`);}catch(e){message(`${name}: ${e.message}`);}}
+  function route(to){location.assign(url(to==='candidate3'?'/ui/T-A-M':`/ui3/reference/${to}`));}
+  function button(label,name,data={},extra=''){return `<button type="button" data-action="${name}" data-data='${esc(JSON.stringify(data))}' ${extra}>${label}</button>`;}
+  function section(title,content){return `<section class="section"><h3>${title}</h3>${content}</section>`;}
+  function modeButtons(){const current=state.camera.mode;return `<div class="stack">${[['manual','従来の手動カメラ'],['fixed_auto','固定視点＋自動構図補正'],['full_auto','フルオートシネマ']].map(([id,label])=>button(label,'camera_mode',{value:id},current===label?'class="active"':'')).join('')}</div>`;}
+  function cameraControls(){const c=state.camera,v=c.values||{};return section('カメラモード',modeButtons())+section('対象サイド・視点',`<div class="grid3">${['auto','BLUE','RED'].map(id=>button(id==='auto'?'自動':id,'camera_side',{value:id},c.side_key===id?'class="active"':'')).join('')}</div><div class="form-row"><label>既存カメラスタイル</label><select id="camera-style">${['third','third_cinema','geo_aim','cinema','fps','orbit','lolnam_cinema','follow','cinema_top','top'].map(id=>`<option value="${id}" ${c.style_key===id?'selected':''}>${id}</option>`).join('')}</select></div><small>TargetLockは実リプレイ接続後の対象プレイヤーを使います。</small>`)+section('カメラ数値',Object.entries({third_dist:['距離',500,1400],cam_height:['高さ',0,900],third_yaw:['回転角',-180,180],motion_arc:['回り込み',0,45],motion_dolly:['ドリー',0,15]}).map(([key,[label,min,max]])=>`<div class="form-row"><label for="cam-${key}">${label}</label><input id="cam-${key}" type="number" data-camera="${key}" min="${min}" max="${max}" step="0.5" value="${Number(v[key]??0)}"></div>`).join(''));
+  }
+  function frameControls(){const f=state.frame;return section('Workキルフレーム',`<div class="grid3">${(f.ui3_cards||f.cards||[]).map(x=>`<button data-action="frame" data-data='${esc(JSON.stringify({id:x.id}))}' class="${f.id===x.id?'active':''}" title="${esc(x.id)}"><strong>${esc(x.label)}</strong><br><small>${x.status==='approved'?'正式合格':'確認用'}</small></button>`).join('')}</div><p class="note">確認用素材は正式合格として扱いません。同名FXは既存の選択処理で同期します。</p>${button('素材図鑑を開く','work_gallery')}`)+section('FX・登場アニメ',`<p>現在の同名FX：${esc(f.effect_id||'なし')}</p><div class="grid2">${button('弱FX','effect_strength',{value:'weak'},f.strength==='weak'?'class="active"':'')}${button('強FX','effect_strength',{value:'strong'},f.strength==='strong'?'class="active"':'')}</div><p>${button('FX・素材の詳細設定','work_settings')}</p><div class="grid2">${['instant','slide_left','slide_right','slide_up','slide_down','pop'].map(id=>button(esc(id),'motion',{value:id})).join('')}</div>`);
+  }
+  function exportControls(){const o=state.output;return section('出力設定',`<p class="status-note">実書き出しは既存AutoCineの処理を呼びます。GPU/NVENC、音声、MP4の合格は実機検査後に判定します。</p><div class="form-row"><label>FPS</label><select id="fps"><option value="60">60 fps</option><option value="144">144 fps</option></select></div><div class="form-row"><label>エンコーダ</label><select id="encoder"><option value="auto">自動</option><option value="gpu">GPU優先 NVENC</option><option value="cpu">CPU優先</option></select></div><label class="form-row">LoLゲーム音のみ <input id="game-audio" type="checkbox" ${o.game_audio?'checked':''}></label><p>出力先：${esc(o.path)}</p>${button('出力先を選ぶ','output_folder')}`)+section('動画を作成',`<div class="stack">${button('チェックしたシーンで作成','export_checked',{},'class="primary"')}${button('選択シーンで作成','export_selected')}${button('書き出し停止','cancel_job')}</div>`)+section('診断・ログ',`${button('自動QA','automatic_qa')} ${button('診断ログ','diagnostics')}<p class="note">LoL・録画・GPU・音声の実機試験は、この画面を開いただけでは合格になりません。</p>`);
+  }
+  function prepareControls(){const r=state.replay;return section('リプレイと対象',`<p class="status-note">${r.connected?`接続中・${r.player_count}人`:'LoL未接続。シーンと映像は実データ待ちです。'}</p><div class="stack">${button('リプレイを開く','open_replay')}${button('準備','prepare')}${button('試合全体スキャン','scan')}</div><div class="form-row"><label>TargetLock対象</label><select id="target-slot"><option value="">未選択</option>${r.players.map(p=>`<option value="${Number(p.slot)}" ${r.target_slot===p.slot?'selected':''}>${esc(p.side)} ${esc(p.name)}</option>`).join('')}</select></div>`);
+  }
+  function body(){const c=state.camera,scenes=state.scenes,sel=scenes.find(s=>s.selected);if(view==='main')return section('初心者はここから',`<h2>ワンクリックで<br>見せ場を、作品へ。</h2><p class="note">スキャンした実シーンを選び、カメラと演出を確認します。</p>${button('かんたん編集へ','view',{id:'easy'},'class="primary"')}`)+section('このショットの設定',`<div class="grid2"><div class="metric"><strong>${esc(c.side_key||'自動')}</strong><small>対象サイド</small></div><div class="metric"><strong>${esc(c.style_key||'未選択')}</strong><small>カメラ</small></div><div class="metric"><strong>${state.checked_count}</strong><small>出力対象</small></div><div class="metric"><strong>${esc(state.output.fps)}</strong><small>出力FPS</small></div></div>`)+section('仕上げを選ぶ',`<div class="stack">${button('カメラ・構図を確認','view',{id:'camera'})}${button('キルフレーム・FXを選ぶ','view',{id:'material'})}${button('詳細編集へ','view',{id:'detail'})}</div>`);
+    if(view==='easy')return section('かんたん編集',`<p>シーンを選び、カメラと演出を調整します。</p>${button('詳細編集へ','view',{id:'detail'})}`)+section('カメラを選ぶ',modeButtons())+section('演出を選ぶ',`${button('キルフレームとFX','view',{id:'material'})} ${button('演出を確認','preview_play')}`);
+    if(view==='camera')return cameraControls()+prepareControls();
+    if(view==='material')return frameControls();
+    if(view==='export')return exportControls();
+    if(view==='color')return section('色調整・映像FX',`<p class="note">実FX・LUT・色補正は従来エディタの既存操作へ接続します。UIテーマは映像の色を変更しません。</p><div class="stack">${button('色調整を開く','native_editor_zone',{zone:'color'})}${button('FX設定を開く','native_editor_zone',{zone:'fx'})}${button('ミラーFXを切り替える','fx_enabled',{value:!state.preview.fx_enabled})}</div>`)+frameControls();
+    if(view==='curve'||view==='detail')return section(view==='curve'?'カーブ・キーフレーム':'詳細編集',`<p>選択シーン：${sel?esc(sel.killer||'')+' → '+esc(sel.victim||''): '未選択'}</p><p class="note">下のトラックは実シーンとキーの位置を表示します。キーフレームの高度な編集は既存エディタへ開きます。</p><div class="stack">${button('既存キーフレーム編集を開く','native_editor_zone',{zone:'camera'})}${button('シーン編集を開く','native_editor_zone',{zone:'scene'})}${button('シーン設定を保存','scene_save')}${button('元へ戻す','scene_undo')}${button('やり直す','scene_redo')}</div>`)+cameraControls()+section('色・FX・素材',`${button('色調整','view',{id:'color'})} ${button('素材','view',{id:'material'})} ${button('出力','view',{id:'export'})}`);
+    return '';
+  }
+  function render(){if(!state)return;const r=state.replay,s=state.scenes,selected=s.find(x=>x.selected);$('#connection').textContent=r.connected?'LoL 接続中':'LoL 未接続';$('#scene-count').textContent=String(s.length);$('#scan-note').textContent=state.scan.status||'未スキャン';$('#scene-title').textContent=selected?`${selected.time.toFixed(2)}秒のシーン`:'シーン未選択';$('#inspector-title').textContent=views[view];$('#inspector-status').textContent=r.connected?'実状態を表示':'未接続';
+    const cards=s.map(x=>`<div class="scene-card ${x.selected?'selected':''}"><input type="checkbox" data-check="${x.index}" ${x.checked?'checked':''} aria-label="シーン${x.index+1}を書き出す"><div data-scene="${x.index}" tabindex="0" role="button"><span class="time">${String(x.index+1).padStart(2,'0')}　${Number(x.time).toFixed(2)}秒</span><strong>${esc(x.multikill>1?`${x.multikill}連続キル`:x.role==='assist'?'アシスト':'キル')}</strong><small>${esc(x.killer)} → ${esc(x.victim)}</small></div></div>`).join('');$('#scene-list').innerHTML=cards||'<p class="empty-note">実シーンは未取得です。リプレイ接続後にスキャンしてください。</p>';$('#shot-strip').innerHTML=s.map(x=>`<button data-action="select_scene" data-data='${esc(JSON.stringify({index:x.index}))}' class="${x.selected?'active':''}">${x.index+1}　${Number(x.time).toFixed(1)}秒</button>`).join('')||'<small>ショット未取得</small>';
+    $('#inspector-body').innerHTML=body();all('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));$('#theme').value=state.workspace.theme;document.body.classList.toggle('dark',state.workspace.theme==='dark'||state.workspace.theme==='system'&&matchMedia('(prefers-color-scheme:dark)').matches);
+    $('#preview-fps').textContent=`ミラー実測 ${state.preview.measured_fps||'—'} fps / 画面 ${displayedFrameTimes.length||'—'} fps`;$('#trim-pre').value=state.trim.pre;$('#trim-post').value=state.trim.post;$('#timeline-summary').textContent=`${s.length} シーン / ${state.keyframes.length} キー / 選択 ${selected?selected.index+1:'なし'}`;
+    $('#timeline-tracks').innerHTML=[0,1,2].map((row)=>`<div class="track-row">${(row===0?state.keyframes:s).map((item,i)=>{const time=Number(row===0?item.t??item.time??0:item.time??0),duration=Math.max(1,Number(state.scan.duration||s.at(-1)?.time||60));return `<span class="track-clip" title="${esc(row===0?'キー'+(i+1):'シーン'+(i+1))}" style="left:${Math.max(0,Math.min(98,time/duration*100))}%;width:${row===0?'.6':'2'}%"></span>`}).join('')}</div>`).join('');
+    if(!state.preview.mirror_requested){$('#mirror-image').hidden=true;$('#preview-offline').hidden=false;$('#preview-offline').innerHTML=r.connected?'ミラー停止中<br><small>開始すると実映像を表示します</small>':'LoL未接続・実ミラー待機中<br><small>見本映像ではありません</small>';frameTag=null;displayedFrameTimes.length=0;}
+  }
+  async function frame(){
+    if(!state?.preview.mirror_requested||document.hidden){setTimeout(frame,200);return;}
+    const targetHz=Math.max(1,Math.min(144,parseInt(state.preview.target_hz,10)||60));
+    const remaining=1000/targetHz-(performance.now()-lastFrameRequest);
+    if(remaining>1){setTimeout(()=>requestAnimationFrame(frame),remaining);return;}
+    lastFrameRequest=performance.now();
+    try{
+      const r=await fetch(url(`/api/frame.jpg?seq=${++frameSeq}`),{cache:'no-store',
+        headers:frameTag?{'If-None-Match':frameTag}:{}});
+      if(r.status===304){requestAnimationFrame(frame);return;}
+      if(!r.ok)throw Error('frame unavailable');
+      const blob=await r.blob(),image=$('#mirror-image'),old=image.dataset.objectUrl;
+      const next=URL.createObjectURL(blob);image.src=next;image.dataset.objectUrl=next;
+      await image.decode();image.hidden=false;$('#preview-offline').hidden=true;
+      if(old)URL.revokeObjectURL(old);frameTag=r.headers.get('ETag');
+      const now=performance.now();displayedFrameTimes.push(now);
+      while(displayedFrameTimes.length&&displayedFrameTimes[0]<now-1000)displayedFrameTimes.shift();
+      $('#preview-fps').textContent=`ミラー実測 ${state.preview.measured_fps||'—'} fps / 画面 ${displayedFrameTimes.length} fps`;
+    }catch{frameTag=null;displayedFrameTimes.length=0;if($('#mirror-image').hidden){$('#preview-offline').hidden=false;$('#preview-offline').textContent='実ミラーフレーム待機中';}}
+    requestAnimationFrame(frame);
+  }
+  document.addEventListener('click',e=>{const routeButton=e.target.closest('[data-route]');if(routeButton){route(routeButton.dataset.route);return;}const tab=e.target.closest('[data-view]');if(tab){view=tab.dataset.view;render();return;}const scene=e.target.closest('[data-scene]');if(scene){action('select_scene',{index:Number(scene.dataset.scene)});return;}const cmd=e.target.closest('[data-action]');if(cmd){if(cmd.dataset.action==='view'){view=JSON.parse(cmd.dataset.data).id;render();return;}let data={};try{data=JSON.parse(cmd.dataset.data||'{}')}catch{}action(cmd.dataset.action,data);}});
+  document.addEventListener('change',e=>{const t=e.target;if(t.dataset.check!==undefined)action('check_scene',{index:Number(t.dataset.check),checked:t.checked});else if(t.dataset.camera)action('camera_number',{key:t.dataset.camera,value:Number(t.value)});else if(t.id==='camera-style')action('camera_style',{value:t.value});else if(t.id==='target-slot'&&t.value)action('target_lock',{slot:Number(t.value)});else if(t.id==='theme')action('theme',{value:t.value});else if(t.id==='trim-pre'||t.id==='trim-post')action('trim',{key:t.id==='trim-pre'?'pre':'post',value:Number(t.value)});else if(t.id==='fps')action('output_fps',{value:Number(t.value)});else if(t.id==='encoder')action('encoder_policy',{value:t.value});else if(t.id==='game-audio')action('game_audio',{value:t.checked});});
+  document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('[data-scene]'))action('select_scene',{index:Number(e.target.dataset.scene)});});
+  matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>state&&render());snapshot();setInterval(snapshot,1100);requestAnimationFrame(frame);
+})();

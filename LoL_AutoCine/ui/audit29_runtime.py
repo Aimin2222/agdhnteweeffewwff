@@ -177,6 +177,10 @@ class Audit29Runtime:
                                "paired_effect_status": effect["status"] if effect else None})
             return result
         frame_cards = cards(RESEARCH_FRAME_CARDS)
+        # The actual T-A-M source image has five material slots. The older
+        # reconstruction exposed four; provide a fifth real catalog item only
+        # to the opt-in UI3 trial without changing the seven-candidate app.
+        ui3_frame_cards = cards((*RESEARCH_FRAME_CARDS, "004/heartsteel_frame"))
         library_cards = cards(LIBRARY_FRAME_CARDS)
         testb_cards = cards(TEST_B_FRAME_CARDS)
         return {
@@ -224,6 +228,7 @@ class Audit29Runtime:
                       "review": bool(app.var_work_review.get()),
                       "strength": app.var_work_strength.get(),
                       "motion": app.var_kill_icon_motion.get(), "cards": frame_cards,
+                      "ui3_cards": ui3_frame_cards if os.environ.get("AUTOCINE_UI3_LAUNCH") == "1" else [],
                       "library_cards": library_cards, "testb_cards": testb_cards},
             "preview": {"mirror_requested": bool(app.var_mirror.get()),
                         "fx_enabled": bool(app.var_live.get()),

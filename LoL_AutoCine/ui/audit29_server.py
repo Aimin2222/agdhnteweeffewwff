@@ -22,10 +22,12 @@ from ui.legacy_reconstruct import SCREEN_IDS as RECONSTRUCTED_SCREEN_IDS, render
 from ui.comparison_detail import DERIVED_DETAILS, DERIVED_MATERIALS, render_detail, render_material
 from ui.comparison_labels import CANDIDATE_ORDER, neutralize_reference_html, public_label
 from ui.c3_compare import render as render_c3
+from ui.reference_views import render as render_reference
 
 
-DESIGN = Path(__file__).resolve().parents[1] / "design" / "ui" / "ui_rethink_20261021"
-LEGACY_DESIGN = Path(__file__).resolve().parents[1] / "design" / "ui" / "ui29_legacy"
+APP_ROOT = Path(__file__).resolve().parents[1]
+DESIGN = APP_ROOT / "design" / "ui" / "ui_rethink_20261021"
+LEGACY_DESIGN = APP_ROOT / "design" / "ui" / "ui29_legacy"
 CLIENT = Path(__file__).with_name("audit29_client.js")
 
 
@@ -185,6 +187,22 @@ document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>butt
                 if path == "/runtime/c3.css":
                     return self._send(200, Path(__file__).with_name("c3_compare.css").read_bytes(),
                                       "text/css; charset=utf-8")
+                if path == "/runtime/ui3-baseline.css" and os.environ.get("AUTOCINE_UI3_LAUNCH") == "1":
+                    return self._send(200, Path(__file__).with_name("ui3_baseline.css").read_bytes(),
+                                      "text/css; charset=utf-8")
+                if path == "/runtime/ui3-camera-reference.jpg" and os.environ.get("AUTOCINE_UI3_LAUNCH") == "1":
+                    source = APP_ROOT / "assets" / "ui_reference" / "camera_comparison_20261020.jpg"
+                    return self._send(200, source.read_bytes(), "image/jpeg")
+                if path in ("/runtime/reference.css", "/runtime/reference.js") and os.environ.get("AUTOCINE_UI3_LAUNCH") == "1":
+                    source = Path(__file__).with_name("reference_views.css" if path.endswith(".css") else "reference_views.js")
+                    return self._send(200, source.read_bytes(),
+                                      "text/css; charset=utf-8" if path.endswith(".css") else "text/javascript; charset=utf-8")
+                if path.startswith("/ui3/reference/") and os.environ.get("AUTOCINE_UI3_LAUNCH") == "1":
+                    try:
+                        html = render_reference(path.removeprefix("/ui3/reference/"), owner.token)
+                    except ValueError as exc:
+                        return self._json(404, {"error": str(exc)})
+                    return self._send(200, html.encode("utf-8"), "text/html; charset=utf-8")
                 if path.startswith("/ui3/"):
                     if os.environ.get("AUTOCINE_UI3_LAUNCH") != "1":
                         return self._json(404, {"error": "UI3 refinement is not enabled"})
@@ -230,6 +248,10 @@ document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>butt
                     html = html.replace('href="ui.css"', f'href="/static/ui.css?token={owner.token}"')
                     html = html.replace('href="ui7.css"', f'href="/static/ui7.css?token={owner.token}"')
                     html = html.replace('href="legacy.css"', f'href="/static/legacy/legacy.css?token={owner.token}"')
+                    if screen_id == "T-A-M" and os.environ.get("AUTOCINE_UI3_LAUNCH") == "1":
+                        html = html.replace('<body data-screen="T-A-M"',
+                            f'<link rel="stylesheet" href="/runtime/ui3-baseline.css?token={owner.token}">'
+                            '<body data-screen="T-A-M"')
                     html = html.replace('href="reconstructed.css"', f'href="/static/legacy/reconstructed.css?token={owner.token}"')
                     html = html.replace('src="assets/', f'src="/static/assets/')
                     if parse_qs(urlparse(self.path).query).get("measure") == ["1"]:

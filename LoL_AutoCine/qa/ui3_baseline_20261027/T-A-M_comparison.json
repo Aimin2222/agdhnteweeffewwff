@@ -1,0 +1,244 @@
+{
+  "candidate": "testA / T-A-M",
+  "source": "design/ui/implementation_audit_29_20261021/references/legacy_test/A_main.png",
+  "capture": "T-A-M.png",
+  "geometry_pass_tolerance_native_px": 2,
+  "geometry_review_tolerance_native_px": 8,
+  "geometry": {
+    "header": {
+      "result": "PASS",
+      "reference": [
+        0,
+        0,
+        1672,
+        49
+      ],
+      "actual": [
+        0,
+        0,
+        1672,
+        49
+      ],
+      "delta": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "prepare": {
+      "result": "PASS",
+      "reference": [
+        7,
+        54,
+        338,
+        608
+      ],
+      "actual": [
+        7,
+        54,
+        339.234375,
+        607.984375
+      ],
+      "delta": [
+        0,
+        0,
+        1.23,
+        -0.02
+      ]
+    },
+    "preview-panel": {
+      "result": "PASS",
+      "reference": [
+        352,
+        54,
+        902,
+        608
+      ],
+      "actual": [
+        353.234375,
+        54,
+        903.296875,
+        607.984375
+      ],
+      "delta": [
+        1.23,
+        0,
+        1.3,
+        -0.02
+      ]
+    },
+    "preview-stage": {
+      "result": "PASS",
+      "reference": [
+        355,
+        94,
+        895,
+        492
+      ],
+      "actual": [
+        356.234375,
+        93.796875,
+        896.296875,
+        491.1875
+      ],
+      "delta": [
+        1.23,
+        -0.2,
+        1.3,
+        -0.81
+      ]
+    },
+    "preview-controls": {
+      "result": "PASS",
+      "reference": [
+        355,
+        611,
+        895,
+        46
+      ],
+      "actual": [
+        356.234375,
+        610.984375,
+        896.296875,
+        47
+      ],
+      "delta": [
+        1.23,
+        -0.02,
+        1.3,
+        1
+      ]
+    },
+    "scene-list": {
+      "result": "PASS",
+      "reference": [
+        1263,
+        54,
+        400,
+        608
+      ],
+      "actual": [
+        1263.53125,
+        54,
+        401.46875,
+        607.984375
+      ],
+      "delta": [
+        0.53,
+        0,
+        1.47,
+        -0.02
+      ]
+    },
+    "timeline": {
+      "result": "PASS",
+      "reference": [
+        7,
+        735,
+        1278,
+        53
+      ],
+      "actual": [
+        8,
+        734.984375,
+        1278.4375,
+        53
+      ],
+      "delta": [
+        1,
+        -0.02,
+        0.44,
+        0
+      ]
+    },
+    "camera-detail": {
+      "result": "PASS",
+      "reference": [
+        7,
+        793,
+        588,
+        136
+      ],
+      "actual": [
+        8,
+        793.984375,
+        589.671875,
+        136.015625
+      ],
+      "delta": [
+        1,
+        0.98,
+        1.67,
+        0.02
+      ]
+    },
+    "target-side": {
+      "result": "PASS",
+      "reference": [
+        603,
+        793,
+        260,
+        136
+      ],
+      "actual": [
+        603.671875,
+        793.984375,
+        261.078125,
+        136.015625
+      ],
+      "delta": [
+        0.67,
+        0.98,
+        1.08,
+        0.02
+      ]
+    },
+    "camera-numeric": {
+      "result": "PASS",
+      "reference": [
+        871,
+        793,
+        414,
+        136
+      ],
+      "actual": [
+        871.75,
+        793.984375,
+        415.6875,
+        136.015625
+      ],
+      "delta": [
+        0.75,
+        0.98,
+        1.69,
+        0.02
+      ]
+    },
+    "materials": {
+      "result": "PASS",
+      "reference": [
+        1294,
+        735,
+        369,
+        194
+      ],
+      "actual": [
+        1295.4375,
+        734.984375,
+        368.546875,
+        195.015625
+      ],
+      "delta": [
+        1.44,
+        -0.02,
+        -0.45,
+        1.02
+      ]
+    }
+  },
+  "geometry_result": "PASS",
+  "visual_result": "REVIEW",
+  "visual_note": "原画像のゲーム映像・実試合データは模式例。未接続の実ミラーと未取得行を同一画素として合格扱いしない。文字とカードは目視再審査。",
+  "functional_result": "NOT_RUN: 実LoL・録画・音声・GPU・MP4"
+}

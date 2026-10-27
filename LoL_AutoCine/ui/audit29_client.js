@@ -192,13 +192,23 @@
       const effect=choices[2]?.querySelector('p');
       if(effect)effect.textContent=data.frame.effect_id || 'FX未選択';
     }
+    const ui3Baseline=data.workspace.ui3_mode && screenId==='T-A-M';
     const playerList=document.querySelector('[data-ui="player-list"]');
     if (playerList) {
       playerList.replaceChildren();
       if (!data.replay.players.length) {
-        const placeholder=document.createElement('p');
-        placeholder.textContent='試合接続後にプレイヤーを表示します。';
-        playerList.append(placeholder);
+        if (ui3Baseline) {
+          for (let slot=1;slot<=10;slot++) {
+            const row=document.createElement('div');
+            row.className='player-row ui3-placeholder';
+            row.textContent=`${String(slot).padStart(2,'0')}　—　未接続（取得待ち）`;
+            playerList.append(row);
+          }
+        } else {
+          const placeholder=document.createElement('p');
+          placeholder.textContent='試合接続後にプレイヤーを表示します。';
+          playerList.append(placeholder);
+        }
       }
       for (const player of data.replay.players) {
         const row=document.createElement('div');
@@ -273,9 +283,10 @@
     });
     renderTimeline(data);
     const sampleCards = [...document.querySelectorAll('[data-ui^="scene-card-"]')];
-    if (sampleCards.length && data.scenes.length > sampleCards.length) {
+    const minimumCards=ui3Baseline ? 12 : sampleCards.length;
+    if (sampleCards.length && Math.max(data.scenes.length,minimumCards) > sampleCards.length) {
       const parent = sampleCards[0].parentElement;
-      for (let index = sampleCards.length; index < data.scenes.length; index++) {
+      for (let index = sampleCards.length; index < Math.max(data.scenes.length,minimumCards); index++) {
         const clone = sampleCards[0].cloneNode(true);
         clone.dataset.ui = `scene-card-${index}`;
         parent.append(clone);
@@ -283,6 +294,14 @@
     }
     document.querySelectorAll('[data-ui^="scene-card-"]').forEach((card, position) => {
       const scene = data.scenes[position];
+      if (ui3Baseline && !card.querySelector('.ui3-row-number')) {
+        const number=document.createElement('span');
+        number.className='ui3-row-number';
+        card.querySelector('.time')?.before(number);
+      }
+      const number=card.querySelector('.ui3-row-number');
+      if (number) number.textContent=scene ? String(position+1).padStart(2,'0') : '—';
+      card.classList.toggle('ui3-placeholder',ui3Baseline && !scene);
       if (!scene) {
         // Empty slots preserve each candidate's layout without pretending a replay was scanned.
         card.style.display = '';
@@ -332,7 +351,8 @@
       if (check) { check.textContent = scene.checked ? '✓' : ''; check.classList.toggle('checked', scene.checked); }
     });
     document.querySelectorAll('[data-ui^="material-card-"]').forEach((card, index) => {
-      const entry = screenId === 'T-B-F' ? data.frame.testb_cards[index] : data.frame.cards[index];
+      const entry = screenId === 'T-B-F' ? data.frame.testb_cards[index] :
+        ui3Baseline ? data.frame.ui3_cards[index] : data.frame.cards[index];
       if (!entry) { card.style.display = 'none'; return; }
       card.style.display = '';
       card.dataset.frameId = entry.id;
@@ -723,6 +743,8 @@
     (screenId.startsWith('R-E-') ? 'researchE' : screenId.startsWith('T-B-') ? 'testB' :
       [...candidateViews].find(([,views])=>Object.values(views).includes(screenId))?.[0]);
   const currentViews=candidateViews.get(currentFamily);
+  const ui3BaselineScreen=screenId==='T-A-M' &&
+    !!document.querySelector('link[href*="ui3-baseline.css"]');
   function comparisonRoute(kind) {
     if (!currentViews) return;
     const target=currentViews[kind] || currentViews.detail;
@@ -745,14 +767,16 @@
     routeButton.type='button';
     routeButton.textContent=currentKind==='main' ? '詳細編集へ →' : '← メインへ戻る';
     routeButton.title=`${candidateNumbers.get(currentFamily)}の${currentKind==='main'?'詳細編集':'メイン'}へ移動。設定とシーンは保持`;
-    routeButton.style.cssText='position:fixed;right:0;top:27%;z-index:2000;' +
+    routeButton.style.cssText=ui3BaselineScreen ? '' : 'position:fixed;right:0;top:27%;z-index:2000;' +
       'padding:8px 10px;border:2px solid #075fe0;border-right:0;' +
       'border-radius:7px 0 0 7px;background:#fff;color:#0746a7;' +
       'font:600 13px Yu Gothic UI,Meiryo,sans-serif;box-shadow:0 3px 12px #0004;cursor:pointer';
     routeButton.addEventListener('click',event=>{
       event.stopPropagation();comparisonRoute(currentKind==='main'?'detail':'main');
     });
-    document.body.append(routeButton);
+    if(ui3BaselineScreen){routeButton.className='ui3-route-opener';
+      document.querySelector('.bottom-panel .tabs')?.append(routeButton);}
+    else document.body.append(routeButton);
   }
   if (currentFamily==='researchE' && screenId==='R-E-main' &&
       !window.AUTOCINE_DERIVED_DETAIL && !document.querySelector('[data-ui="scene-list"]')) {
@@ -793,12 +817,14 @@
   switchButton.title = 'UI比較：現在' + switchButton.textContent + '。クリックして7候補を切り替える';
   switchButton.setAttribute('aria-controls', 'ui29-switch-panel');
   switchButton.setAttribute('aria-expanded', 'false');
-  switchButton.style.cssText = 'position:fixed;right:0;top:50%;z-index:2001;' +
+  switchButton.style.cssText = ui3BaselineScreen ? '' : 'position:fixed;right:0;top:50%;z-index:2001;' +
     'transform:translateY(-50%);writing-mode:vertical-rl;padding:12px 7px;' +
     'border:2px solid #075fe0;border-right:0;border-radius:8px 0 0 8px;' +
     'background:#fff;color:#0746a7;font:600 14px Yu Gothic UI,Meiryo,sans-serif;' +
     'box-shadow:0 3px 12px #0004;cursor:pointer';
-  document.body.append(switchButton);
+  if(ui3BaselineScreen){switchButton.className='ui3-switch-opener';
+    document.querySelector('.bottom-panel .tabs')?.append(switchButton);}
+  else document.body.append(switchButton);
   const switchPanel = document.createElement('div');
   switchPanel.id = 'ui29-switch-panel';
   switchPanel.setAttribute('role', 'group');
@@ -889,12 +915,44 @@
   function setupUI3Tools() {
     if (!state.value?.workspace.ui3_mode || currentFamily !== 'testA' ||
         document.querySelector('#ui3-tools')) return;
+    const tabs=document.querySelector('.bottom-panel .tabs');
+    if (!tabs) return;
+    const sceneRows=document.querySelector('[data-ui="scene-rows"]');
+    if (sceneRows && !document.querySelector('.ui3-scene-columns')) {
+      const headings=document.createElement('div');
+      headings.className='ui3-scene-columns';
+      headings.innerHTML='<span></span><span>#</span><span>時刻</span><span>種別</span><span>詳細</span>';
+      sceneRows.before(headings);
+    }
+    document.querySelectorAll('.camera-detail .camera-card').forEach((card,index)=>{
+      if (card.querySelector('.ui3-camera-reference')) return;
+      const thumb=document.createElement('span');
+      thumb.className='ui3-camera-reference';thumb.dataset.tile=String(index);
+      thumb.title='画角参考画像。現在のライブ映像ではありません';
+      thumb.style.backgroundImage=`url("${endpoint('/runtime/ui3-camera-reference.jpg')}")`;
+      card.querySelector('small')?.before(thumb);
+    });
+    const materialList=document.querySelector('.materials .material-list');
+    if(materialList && !materialList.querySelector('[data-ui="material-card-4"]')){
+      const last=materialList.querySelector('[data-ui="material-card-3"]');
+      if(last){const fifth=last.cloneNode(true);fifth.dataset.ui='material-card-4';
+        fifth.classList.remove('selected');fifth.removeAttribute('data-frame-id');
+        fifth.querySelector('img')?.removeAttribute('src');materialList.append(fifth);}
+    }
+    const numeric=document.querySelector('.camera-numeric');
+    if(numeric && !numeric.querySelector('[data-setting="motion_arc"]')){
+      const label=document.createElement('label');label.textContent='回り込み';
+      const input=document.createElement('input');input.type='number';input.min='0';input.max='45';
+      input.step='0.5';input.dataset.setting='motion_arc';input.setAttribute('aria-label','回り込み');
+      input.addEventListener('change',()=>{
+        const value=Number(input.value);
+        if(Number.isFinite(value))invoke('camera_number',{key:'motion_arc',value});
+        else message('数値を入力してください');
+      });label.append(input);numeric.append(label);
+    }
     const opener=document.createElement('button');
-    opener.type='button';opener.textContent='全機能';
+    opener.type='button';opener.textContent='全機能';opener.className='ui3-tools-opener';
     opener.setAttribute('aria-controls','ui3-tools');opener.setAttribute('aria-expanded','false');
-    opener.style.cssText='position:fixed;right:0;top:39%;z-index:2010;padding:9px 11px;' +
-      'background:#0b63db;color:#fff;border:1px solid #0746a7;border-radius:7px 0 0 7px;' +
-      'font:600 13px Yu Gothic UI,Meiryo,sans-serif;cursor:pointer;box-shadow:0 3px 12px #0004';
     const tools=document.createElement('aside');tools.id='ui3-tools';
     tools.setAttribute('aria-label','候補3の実機能');
     tools.style.cssText='position:fixed;right:0;top:0;bottom:0;z-index:2011;' +
@@ -968,7 +1026,16 @@
     close.addEventListener('click',()=>show(false));
     opener.addEventListener('click',()=>show(tools.style.display==='none'));
     document.addEventListener('keydown',event=>{if(event.key==='Escape'&&tools.style.display!=='none')show(false)});
-    document.body.append(opener,tools);
+    for(const [label,route] of [['Lolnam参考','ln'],['League Director参考','ld']]){
+      const button=document.createElement('button');button.type='button';
+      button.className='ui3-reference-opener';button.textContent=label;
+      button.title='同じAutoCine状態を保持して参考UIへ切り替えます';
+      button.addEventListener('click',()=>location.assign(endpoint(`/ui3/reference/${route}`)));
+      tabs.append(button);
+    }
+    tabs.append(opener);
+    document.body.append(tools);
+    render();
   }
   snapshot().then(()=>{
     for (const row of state.value.workspace.screens) {

@@ -1,0 +1,90 @@
+/* UI3 BAT trial only. Keep PR #51's original T-A-M markup and legacy.css intact. */
+body[data-screen="T-A-M"] .top-layout {
+  grid-template-columns: minmax(260px,338fr) minmax(420px,900fr) minmax(310px,400fr);
+  height: calc((100vh - 49px)*.6816);
+}
+body[data-screen="T-A-M"] .preview-panel { padding-left: 2px; padding-right: 3px; padding-bottom: 3px; }
+body[data-screen="T-A-M"] .preview-panel h2 { padding-top: 9px; }
+body[data-screen="T-A-M"] .preview-status { height: 26px; }
+body[data-screen="T-A-M"] .bottom-panel { margin-top: 12px; margin-bottom: 3px; }
+body[data-screen="T-A-M"] .timeline { width: calc(100% - 3px); }
+body[data-screen="T-A-M"] .target-side { width: calc(100% - 1px); }
+body[data-screen="T-A-M"] .camera-numeric { width: calc(100% - 2px); }
+body[data-screen="T-A-M"] .tabs .ui3-route-opener,
+body[data-screen="T-A-M"] .tabs .ui3-switch-opener,
+body[data-screen="T-A-M"] .tabs .ui3-tools-opener {
+  min-width: 96px;
+  min-height: 27px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+body[data-screen="T-A-M"] .tabs .ui3-route-opener { margin-left: auto; }
+body[data-screen="T-A-M"] .tabs .ui3-tools-opener {
+  border: 1px solid #dfad42;
+  background: #fff0cb;
+  color: #714805;
+  font-weight: 700;
+}
+body[data-screen="T-A-M"] .scene-list .row:first-child .scan-status {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+body[data-screen="T-A-M"] .scene-list .scan-button {
+  flex: none;
+  min-width: 108px;
+  white-space: nowrap;
+}
+body[data-screen="T-A-M"] .ui3-scene-columns {
+  display: grid;
+  grid-template-columns: 20px 30px 53px 45px minmax(0,1fr);
+  gap: 7px;
+  padding: 3px 5px;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  background: #eef3fa;
+  color: #52647f;
+  font-size: 11px;
+  font-weight: 700;
+}
+body[data-screen="T-A-M"] .scene-list .scene-rows { margin-top: 0; }
+body[data-screen="T-A-M"] .scene-card.ui3-placeholder,
+body[data-screen="T-A-M"] .player-row.ui3-placeholder {
+  color: #73839a;
+  cursor: default;
+}
+body[data-screen="T-A-M"] .scene-card.ui3-placeholder:hover,
+body[data-screen="T-A-M"] .player-row.ui3-placeholder:hover {
+  background: inherit;
+  border-color: #dbe5ef;
+}
+body[data-screen="T-A-M"] .camera-card {
+  height: 102px;
+  overflow: hidden;
+}
+body[data-screen="T-A-M"] .ui3-camera-reference {
+  display: block;
+  height: 47px;
+  margin: 3px 0 2px;
+  border: 1px solid #aebed0;
+  background-size: 400% auto;
+  background-repeat: no-repeat;
+  background-position-y: 8%;
+}
+body[data-screen="T-A-M"] .ui3-camera-reference[data-tile="0"] { background-position-x: 0%; }
+body[data-screen="T-A-M"] .ui3-camera-reference[data-tile="1"] { background-position-x: 33.33%; }
+body[data-screen="T-A-M"] .ui3-camera-reference[data-tile="2"] { background-position-x: 66.67%; }
+body[data-screen="T-A-M"] .camera-card small { margin-top: 0; }
+body[data-screen="T-A-M"] .camera-numeric label {
+  margin-top: 2px;
+  min-height: 22px;
+}
+body[data-screen="T-A-M"] .camera-numeric input {
+  height: 22px;
+}
+@media (max-width: 1400px) {
+  body[data-screen="T-A-M"] .camera-card small { display: block; font-size: 9px; }
+  body[data-screen="T-A-M"] .ui3-camera-reference { height: 37px; }
+}

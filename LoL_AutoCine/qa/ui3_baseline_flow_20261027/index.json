@@ -1,0 +1,51 @@
+{
+  "kind": "WINDOWS_WEBVIEW2_SOURCE_HOST_OFFLINE",
+  "lol_replay": "NOT_RUN",
+  "gpu_record_audio_export": "NOT_RUN",
+  "screens": [
+    {
+      "id": "T-A-M",
+      "result": "CAPTURED_SOURCE_HOST_OFFLINE",
+      "capture": "T-A-M.png",
+      "size": [
+        1672,
+        941
+      ],
+      "bounds": "bounds/T-A-M.json",
+      "main_detail_roundtrip": "PASS",
+      "priority_seven_flow": {
+        "main_controls": {
+          "mirror": true,
+          "scan": true,
+          "scenes": true,
+          "export": true,
+          "settings": true,
+          "preview": true
+        },
+        "detail_controls": {
+          "camera": true,
+          "fx": true,
+          "material": true,
+          "scene": true,
+          "timeline": true,
+          "color": true
+        },
+        "camera_distance_input": "PASS",
+        "camera_mode_choice": "PASS",
+        "same_name_fx": {
+          "result": "PASS",
+          "id": "A"
+        },
+        "fx_strength_choice": "PASS",
+        "entrance_motion_choice": "PASS",
+        "frame_selection": {
+          "result": "PASS",
+          "id": "083/a_simple_main"
+        },
+        "main_detail_main": "PASS",
+        "shared_state_retained": "PASS"
+      },
+      "previous_candidate_state_retained": "FIRST_CANDIDATE"
+    }
+  ]
+}

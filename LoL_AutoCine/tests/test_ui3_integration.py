@@ -13,6 +13,7 @@ from urllib.request import urlopen
 from ui.audit29_runtime import Audit29Runtime
 from ui.audit29_server import UI29Server
 from ui.c3_compare import render as render_c3
+from ui.reference_views import render as render_reference
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -103,6 +104,44 @@ def test_c3_views_reuse_app_and_are_gated_from_seven_candidate_exe():
             try:
                 with __import__("pytest").raises(HTTPError) as denied:
                     urlopen(f"http://127.0.0.1:{server.http.server_port}/ui3/p?token={server.token}")
+                assert denied.value.code == 404
+            finally:
+                server.close()
+
+
+def test_ld_ln_reference_views_share_ui3_backend_and_are_opt_in():
+    import sys
+    sys.path.insert(0, str(ROOT / "tests"))
+    from test_ui29_runtime import App
+
+    for variant in ("ld", "ln"):
+        html = render_reference(variant, "test-token")
+        assert f'data-variant="{variant}"' in html
+        assert '/runtime/reference.js?token=test-token' in html
+        assert html.count('data-view="camera"') == 2
+        assert 'data-action="mirror_start"' in html
+        assert 'data-action="scan"' in html
+        assert 'data-route="candidate3"' in html
+    with TemporaryDirectory(dir=ROOT / "qa") as folder:
+        app = App()
+        with patch.dict(os.environ, {"AUTOCINE_UI3_LAUNCH": "1"}):
+            server = UI29Server(app, Path(folder) / "prefs.json")
+            base = f"http://127.0.0.1:{server.http.server_port}"
+            try:
+                for variant in ("ld", "ln"):
+                    with urlopen(f"{base}/ui3/reference/{variant}?token={server.token}") as response:
+                        assert response.status == 200
+                        assert f'data-variant="{variant}"' in response.read().decode("utf-8")
+                server.runtime.perform("camera_number", {"key": "third_dist", "value": 930})
+                assert app.sl["third_dist"].get() == 930
+                assert server.runtime.screen_id == "T-A-M"
+            finally:
+                server.close()
+        with patch.dict(os.environ, {"AUTOCINE_UI3_LAUNCH": "0"}):
+            server = UI29Server(app, Path(folder) / "other.json")
+            try:
+                with __import__("pytest").raises(HTTPError) as denied:
+                    urlopen(f"http://127.0.0.1:{server.http.server_port}/ui3/reference/ld?token={server.token}")
                 assert denied.value.code == 404
             finally:
                 server.close()
