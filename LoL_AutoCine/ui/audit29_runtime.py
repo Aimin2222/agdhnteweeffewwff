@@ -71,6 +71,10 @@ class Audit29Runtime:
         self.screen_id = DEFAULT_SCREEN
         self.theme = "system"
         self._restore_appearance()
+        if os.environ.get("AUTOCINE_UI3_LAUNCH") == "1":
+            # The trial integration opens candidate 3 directly. The comparison
+            # app and every other candidate keep their existing entry points.
+            self.screen_id = "T-A-M"
 
     def _restore_appearance(self):
         try:
@@ -143,6 +147,9 @@ class Audit29Runtime:
         testb_cards = cards(TEST_B_FRAME_CARDS)
         return {
             "workspace": {"screen_id": self.screen_id,
+                          "ui3_mode": os.environ.get("AUTOCINE_UI3_LAUNCH") == "1",
+                          "native_editor_visible": (app.root.state() == "normal"
+                                                    if hasattr(app.root, "state") else False),
                           "candidate_id": SCREENS[self.screen_id]["family"] if self.screen_id else None,
                           "theme": self.theme,
                           "screens": [{"id": x["id"], "family": x["family"],
@@ -191,6 +198,13 @@ class Audit29Runtime:
         """Dispatch whitelisted UI actions to the existing App on Tk's thread."""
         app = self.app
         data = data or {}
+        def show_native() -> None:
+            # The WebView backend starts with an alpha=0 Tk window. Restoring
+            # alpha is required before the existing editor can be operated.
+            if hasattr(app.root, "attributes"):
+                app.root.attributes("-alpha", 1.0)
+            app.root.deiconify()
+            app.root.lift()
         if action == "screen":
             return self.select_screen(str(data["id"]))
         if action == "theme":
@@ -296,6 +310,8 @@ class Audit29Runtime:
             select_frame_with_effect(app, str(data["id"]))
         elif action == "work_gallery":
             app._open_work_gallery()
+        elif action == "legacy_frame_gallery":
+            app._open_kill_frame_gallery()
         elif action == "work_settings":
             app._open_work_kill_settings()
         elif action == "effect_strength":
@@ -352,24 +368,24 @@ class Audit29Runtime:
         elif action == "scene_redo":
             app.on_scene_redo()
         elif action == "project_export":
-            app.root.deiconify()
-            app.root.lift()
+            show_native()
             app.on_scene_export()
         elif action == "project_import":
-            app.root.deiconify()
-            app.root.lift()
+            show_native()
             app.on_scene_import()
         elif action == "native_settings":
             app._focus_settings()
-            app.root.deiconify()
-            app.root.lift()
+            show_native()
+        elif action == "native_legacy_show":
+            show_native()
+        elif action == "native_legacy_hide":
+            app.root.withdraw()
         elif action == "native_editor_zone":
             zone = str(data.get("zone", data.get("value", "")))
             if zone not in ("scene", "camera", "color", "fx", "output"):
                 raise ValueError("unknown editor zone")
             app._focus_editor_zone(zone)
-            app.root.deiconify()
-            app.root.lift()
+            show_native()
         elif action == "edit_mode":
             mode = str(data["value"])
             if mode not in ("easy", "advanced"):
@@ -377,8 +393,7 @@ class Audit29Runtime:
             app.var_edit_mode.set(mode)
             app._apply_edit_mode(log=False)
             if mode == "advanced":
-                app.root.deiconify()
-                app.root.lift()
+                show_native()
         elif action == "comparison_edit_mode":
             mode = str(data["value"])
             if mode not in ("easy", "advanced"):

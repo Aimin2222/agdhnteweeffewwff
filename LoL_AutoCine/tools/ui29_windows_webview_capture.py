@@ -241,6 +241,8 @@ def main(argv=None) -> int:
                         help="capture a complemented material view")
     parser.add_argument("--priority-seven-flow", action="store_true",
                         help="capture and click through the seven comparison candidates offline")
+    parser.add_argument("--ui3-flow", action="store_true",
+                        help="click through candidate 3 only, including its integrated tools")
     parser.add_argument("--numbered-label-audit", action="store_true",
                         help="capture chooser/switchers and reject old candidate names in Windows WebView2")
     args = parser.parse_args(argv)
@@ -253,6 +255,10 @@ def main(argv=None) -> int:
             parser.error("--priority-seven-flow cannot be combined with another selection")
         wanted = {row[0] for row in PRIORITY_SEVEN}
         screens = [screen for screen in inventory if screen["id"] in wanted]
+    if args.ui3_flow:
+        if args.screen or args.detail_family or args.material_family or args.priority_seven_flow:
+            parser.error("--ui3-flow must be used alone")
+        screens = [screen for screen in inventory if screen["id"] == "T-A-M"]
     if args.detail_family:
         if args.screen or args.material_family:
             parser.error("choose exactly one screen/detail/material selector")
@@ -427,7 +433,19 @@ def main(argv=None) -> int:
                                         restored = json.load(response)
                                     if restored["camera"]["values"]["third_dist"] != 900:
                                         raise AssertionError("camera setting was lost during view switch")
-                                flow = _priority_flow(window, url, sid) if args.priority_seven_flow else None
+                                if args.ui3_flow:
+                                    tools_ready = window.evaluate_js(
+                                        "document.querySelectorAll('#ui3-tools button').length")
+                                    if tools_ready < 18:
+                                        raise AssertionError(f"candidate 3 tools missing: {tools_ready}")
+                                    _activate(url, "native_editor_zone", {"zone": "fx"})
+                                    if not _state(url)["workspace"]["native_editor_visible"]:
+                                        raise AssertionError("candidate 3 did not reveal the real FX editor")
+                                    _activate(url, "native_legacy_hide", {})
+                                    if _state(url)["workspace"]["native_editor_visible"]:
+                                        raise AssertionError("candidate 3 did not return from the real editor")
+                                flow = _priority_flow(window, url, sid) if (
+                                    args.priority_seven_flow or args.ui3_flow) else None
                                 if flow:
                                     previous_candidate_state = _state(url)
                                 results.append({"id": sid, "result": capture_result,

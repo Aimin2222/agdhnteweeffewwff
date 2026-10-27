@@ -886,12 +886,93 @@
       else action('screen',{id:target}).then(()=>openScreen(target)).catch(e=>message(e.message));
     } else message('この候補内の補助画面は原画未提供です。別候補へ自動切替しません。');
   }));
+  function setupUI3Tools() {
+    if (!state.value?.workspace.ui3_mode || currentFamily !== 'testA' ||
+        document.querySelector('#ui3-tools')) return;
+    const opener=document.createElement('button');
+    opener.type='button';opener.textContent='全機能';
+    opener.setAttribute('aria-controls','ui3-tools');opener.setAttribute('aria-expanded','false');
+    opener.style.cssText='position:fixed;right:0;top:39%;z-index:2010;padding:9px 11px;' +
+      'background:#0b63db;color:#fff;border:1px solid #0746a7;border-radius:7px 0 0 7px;' +
+      'font:600 13px Yu Gothic UI,Meiryo,sans-serif;cursor:pointer;box-shadow:0 3px 12px #0004';
+    const tools=document.createElement('aside');tools.id='ui3-tools';
+    tools.setAttribute('aria-label','候補3の実機能');
+    tools.style.cssText='position:fixed;right:0;top:0;bottom:0;z-index:2011;' +
+      'width:min(440px,95vw);box-sizing:border-box;padding:18px;overflow:auto;display:none;' +
+      'background:#f6f9fe;color:#15243d;border-left:2px solid #0b63db;' +
+      'font:14px Yu Gothic UI,Meiryo,sans-serif;box-shadow:-6px 0 22px #0004';
+    const title=document.createElement('h2');title.textContent='候補3｜全機能';
+    title.style.margin='0 0 8px';tools.append(title);
+    const note=document.createElement('p');
+    note.textContent='操作は同じAutoCine本体に反映します。細部は従来の実動作エディタを開きます。実LoL総合QAは未実施です。';
+    tools.append(note);
+    function group(heading, actions) {
+      const h=document.createElement('h3');h.textContent=heading;
+      h.style.cssText='margin:16px 0 6px;border-bottom:1px solid #b8cce7;padding-bottom:4px';
+      tools.append(h);
+      const grid=document.createElement('div');
+      grid.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px';
+      for (const [label,command] of actions) {
+        const button=document.createElement('button');button.type='button';button.textContent=label;
+        button.style.cssText='padding:9px 6px;background:white;color:#15345f;border:1px solid #a7c5ec;' +
+          'border-radius:5px;cursor:pointer;font:inherit';
+        button.addEventListener('click',()=>{
+          if (command==='main') comparisonRoute('main');
+          else if (command==='detail') comparisonRoute('detail');
+          else if (command==='material') comparisonRoute('material');
+          else if (command==='export_menu') chooseExport();
+          else if (command==='project_menu') chooseProjectOperation();
+          else if (Array.isArray(command)) invoke(command[0],command[1]);
+          else invoke(command);
+        });grid.append(button);
+      }
+      tools.append(grid);
+    }
+    group('試合・作成',[
+      ['リプレイを開く','open_replay'],['接続を更新','connect'],
+      ['試合全体スキャン','scan'],['シーン編集',['native_editor_zone',{zone:'scene'}]],
+      ['ミラー開始','mirror_start'],['ミラー停止','mirror_stop'],
+      ['動画を作成','export_menu'],['作成を停止','cancel_job']]);
+    group('編集',[
+      ['詳細編集','detail'],['カメラ',['native_editor_zone',{zone:'camera'}]],
+      ['映像FX',['native_editor_zone',{zone:'fx'}]],['色・LUT・Fog',['native_editor_zone',{zone:'color'}]],
+      ['出力・音声・GPU',['native_editor_zone',{zone:'output'}]],['素材画面','material'],
+      ['Work素材図鑑','work_gallery'],['既存37バッジ','legacy_frame_gallery'],
+      ['素材とFXの設定','work_settings'],['プロジェクト保存・読込','project_menu']]);
+    group('設定・診断',[
+      ['基本設定','native_settings'],['出力先を選択','output_folder'],
+      ['診断・ログ','diagnostics'],['自己診断','automatic_qa'],
+      ['カメラ＋素材一括QA','camera_qa'],
+      ['従来UIを開く','native_legacy_show'],['従来UIを隠す','native_legacy_hide'],
+      ['候補3メインへ','main']]);
+    const cameraLabel=document.createElement('label');
+    cameraLabel.textContent='既存カメラ10種：';cameraLabel.style.cssText='display:block;margin-top:14px';
+    const cameraSelect=document.createElement('select');cameraSelect.setAttribute('aria-label','既存カメラ10種');
+    cameraSelect.style.cssText='display:block;width:100%;padding:8px;margin-top:5px';
+    for (const [label,key] of cameraStyles) {
+      const option=document.createElement('option');option.value=key;option.textContent=label;
+      cameraSelect.append(option);
+    }
+    cameraSelect.addEventListener('change',()=>invoke('camera_style',{value:cameraSelect.value}));
+    cameraLabel.append(cameraSelect);tools.append(cameraLabel);
+    const close=document.createElement('button');close.type='button';close.textContent='閉じる';
+    close.style.cssText='margin-top:16px;padding:9px 24px;cursor:pointer';tools.append(close);
+    function show(open) {
+      tools.style.display=open?'block':'none';opener.setAttribute('aria-expanded',String(open));
+      if(open)close.focus();else opener.focus();
+    }
+    close.addEventListener('click',()=>show(false));
+    opener.addEventListener('click',()=>show(tools.style.display==='none'));
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&tools.style.display!=='none')show(false)});
+    document.body.append(opener,tools);
+  }
   snapshot().then(()=>{
     for (const row of state.value.workspace.screens) {
       const familyOption = [...picker.options].find(option => option.value === familyStart.get(row.family));
       if (familyOption) familyOption.textContent = candidateNumbers.get(row.family);
     }
     themePicker.value=state.value.workspace.theme;
+    setupUI3Tools();
   }).catch(error=>message(error.message));
   setInterval(()=>snapshot().catch(()=>{}), 1200);
   refreshFrame();
