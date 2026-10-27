@@ -102,7 +102,10 @@
         <button class="shot fx ${d.frame.strength==='weak'?'selectedcard':''}" data-effect-strength="weak"><span class="dot"></span>控えめFX</button>
         <button class="shot fx ${d.frame.strength==='strong'?'selectedcard':''}" data-effect-strength="strong"><span class="dot"></span>強いFX</button>
         <button class="shot fx" data-zone="fx" data-action="native_editor_zone"><span class="dot"></span>FX詳細</button></div>
-        <div class="editoractions"><button data-drawer="camera">カメラ設定</button><button data-drawer="asset">素材をもっと見る</button><button data-drawer="review">作成内容を確認</button></div>`;
+        <div class="editoractions"><button data-drawer="suggested">控えめなおすすめを確認</button>
+        <button data-action="ui3_suggested_undo" ${d.ui3_suggested?.can_undo?'':'disabled title="適用直後の設定のみ戻せます"'}>おすすめをUndo</button>
+        <span class="muted">${d.ui3_suggested?.state==='applied'?'おすすめ適用中':d.ui3_suggested?.state==='custom'?'手動調整後：カスタム':'現在の設定を保持'}</span>
+        <button data-drawer="camera">カメラ設定</button><button data-drawer="asset">素材をもっと見る</button><button data-drawer="review">作成内容を確認</button></div>`;
     }else if(tab==='easy'){
       html=`<div class="editgrid">
       ${card('カメラ',`<p class="muted">選択したシーンの見せ方</p><div class="choicegrid">${modeButtons()}</div><button data-drawer="camera">カメラを詳しく設定</button>`)}
@@ -157,6 +160,7 @@
     if(!current)return;
     drawer=kind;draft=null;
     if(kind==='review'){openReview();return;}
+    if(kind==='suggested'){openSuggested();return;}
     const panel=$('#drawer');$('#drawer-title').textContent=kind==='camera'?'カメラ設定（適用前は変更されません）':'キルフレーム・素材（確認用を含む）';
     if(kind==='camera'){
       const values=current.camera.values;
@@ -198,6 +202,8 @@
     }catch(e){toast(e.message);}
   }
   function openReview(){const d=current;drawer='review';const box=$('#modalback');
+    $('#modal-title').textContent='作成内容を確認';
+    $('#modal-export').textContent='チェック済みシーンから作成';
     $('#modal-body').innerHTML=`<p>チェックしたシーン：${d.checked_count}件 / ${d.scenes.length}件</p>
       <p>カメラ：${esc(d.camera.mode)} / ${esc(d.camera.side)}</p>
       <p>キルフレーム：${esc(d.frame.id||'未選択')} / FX：${esc(d.frame.effect_id||'未選択')}</p>
@@ -205,6 +211,16 @@
       <p>LoL接続：${d.replay.connected?'接続中':'未接続'} / 音声：${d.output.game_audio?'LoLゲーム音有効':'LoLゲーム音無効'}</p>
       <p class="muted">この確認画面を開くだけでは録画を開始しません。実接続・音声・GPU・出力は別途検証が必要です。</p>`;
     $('#modal-export').disabled=!d.replay.connected||!d.checked_count||d.output.busy;
+    box.hidden=false;$('#modal-cancel').focus();
+  }
+  function openSuggested(){drawer='suggested';const box=$('#modalback');
+    $('#modal-title').textContent='控えめなおすすめの変更内容';
+    $('#modal-body').innerHTML=`<p>カメラ：固定視点＋自動構図補正</p>
+      <p>スタイル：既存の三人称斜め後ろ</p><p>Work FXの強さ：控えめ</p>
+      <p class="muted">現在のカメラ数値、キーフレーム、素材、対象シーン、出力チェック、音声設定は変更しません。録画も開始しません。</p>
+      <p class="muted">適用直後ならUndoできます。後から数値などを手動変更した場合は「カスタム」と表示し、Undoでその変更を上書きしません。</p>`;
+    $('#modal-export').disabled=!!current.output.busy;
+    $('#modal-export').textContent='この3項目を適用';
     box.hidden=false;$('#modal-cancel').focus();
   }
   function closeReview(){drawer=null;$('#modalback').hidden=true;}
@@ -230,7 +246,8 @@
   });
   $('#drawer-close').onclick=closeDrawer;$('#drawer-cancel').onclick=closeDrawer;$('#drawer-apply').onclick=applyDrawer;
   $('#modal-cancel').onclick=closeReview;$('#modal-export').onclick=async()=>{
-    closeReview();try{await call('export_checked');}catch(e){toast(e.message);}};
+    const kind=drawer;closeReview();
+    try{await call(kind==='suggested'?'ui3_suggested_apply':'export_checked');}catch(e){toast(e.message);}};
   document.addEventListener('input',event=>{
     const direct=event.target.dataset.cameraNumber;
     if(direct){document.querySelectorAll(`[data-camera-number="${direct}"]`).forEach(x=>{

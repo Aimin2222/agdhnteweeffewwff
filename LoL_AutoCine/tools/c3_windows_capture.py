@@ -68,7 +68,7 @@ def main() -> int:
     output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
     import webview
     webview.settings["OPEN_EXTERNAL_LINKS_IN_BROWSER"] = False
-    results=[];checks={}
+    results=[];checks={};supplemental=[]
     with tempfile.TemporaryDirectory(prefix="c3-webview-",dir=output) as temp:
         handoff=Path(temp)/"backend.json";log_path=Path(temp)/"backend.log"
         with log_path.open("wb") as log:
@@ -127,6 +127,32 @@ def main() -> int:
                             else:
                                 window.evaluate_js("document.querySelector('[data-tab=easy]').click()")
                                 results.append(capture(window,output,"C3S_easy_light"))
+                                before_suggested=_state(backend)
+                                window.evaluate_js("document.querySelector('[data-drawer=suggested]').click()")
+                                wait_js(window,"!document.querySelector('#modalback').hidden")
+                                suggested_path=output/"C3S_suggested_confirm_windows.png"
+                                _capture_webview(window,suggested_path,(1920,1080))
+                                supplemental.append(suggested_path.name)
+                                window.evaluate_js("document.querySelector('#modal-export').click()")
+                                for _ in range(40):
+                                    if _state(backend)["ui3_suggested"]["can_undo"]:
+                                        break
+                                    time.sleep(.1)
+                                suggested_applied=_state(backend)
+                                window.evaluate_js("document.querySelector('[data-action=ui3_suggested_undo]').click()")
+                                for _ in range(40):
+                                    if _state(backend)["ui3_suggested"]["state"]=="not_applied":
+                                        break
+                                    time.sleep(.1)
+                                suggested_restored=_state(backend)
+                                keys=("mode","style")
+                                checks["suggested_confirm_and_undo"]="PASS" if (
+                                    suggested_applied["ui3_suggested"]["can_undo"] and
+                                    all(before_suggested["camera"][k]==suggested_restored["camera"][k]
+                                        for k in keys) and
+                                    before_suggested["frame"]["strength"]==suggested_restored["frame"]["strength"] and
+                                    before_suggested["keyframes"]==suggested_restored["keyframes"]
+                                ) else "FAIL"
                                 window.evaluate_js("document.querySelector('[data-tab=detail]').click()")
                                 results.append(capture(window,output,"C3S_curve_light"))
                                 window.evaluate_js("document.querySelector('[data-tab=easy]').click()")
@@ -176,7 +202,8 @@ def main() -> int:
     commit=subprocess.check_output(["git","-C",str(ROOT.parent),"rev-parse","HEAD"],text=True).strip()
     report={"kind":"C3_WINDOWS_WEBVIEW2_OFFLINE","source_commit":commit,
             "revision_ids":["C3-R01","C3-R02","C3-R03"],
-            "screens":results,"state_checks":checks,"live_lol":"NOT_RUN",
+            "screens":results,"supplemental_screens":supplemental,
+            "state_checks":checks,"live_lol":"NOT_RUN",
             "record_gpu_audio_export":"NOT_RUN"}
     for screen in results:
         if screen["screen"] not in {"C3P_main_light","C3S_main_light",

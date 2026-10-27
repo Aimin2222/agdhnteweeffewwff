@@ -74,11 +74,21 @@ def _auto_qa_summary() -> dict:
         return {"status": "NOT_RUN"}
 
 
+def _ui3_suggestion_guard(app) -> tuple:
+    """Detect manual camera/key edits made after a suggested-card application."""
+    numbers = tuple((key, float(app.sl[key].get())) for key in sorted(CAMERA_KEYS)
+                    if key in app.sl)
+    keys = json.dumps(getattr(app, "_edit_keyframes", []), ensure_ascii=False,
+                      sort_keys=True, default=str)
+    return numbers, keys
+
+
 class Audit29Runtime:
     """A single App-backed comparison session. No candidate gets its own App."""
 
     def __init__(self, app, preferences_path: Path | None = None):
         self.app = app
+        self._ui3_suggested_previous = None
         self.preferences_path = preferences_path or default_preferences_path()
         self.screen_id = DEFAULT_SCREEN
         self.theme = "system"
@@ -121,6 +131,13 @@ class Audit29Runtime:
 
     def snapshot(self) -> dict:
         app = self.app
+        suggestion = self._ui3_suggested_previous
+        suggestion_values = (app.var_camera_control_mode.get(), app.var_style.get(),
+                             app.var_work_strength.get())
+        suggestion_state = ("not_applied" if suggestion is None else
+                            "applied" if (suggestion_values == suggestion["applied"] and
+                                          _ui3_suggestion_guard(app) == suggestion["guard"])
+                            else "custom")
         scene_rows = []
         selected = app.lb_kills.curselection()
         teams = {alias: player.team for player in app.players
@@ -196,6 +213,9 @@ class Audit29Runtime:
             "event_mode": app.var_event_mode.get(),
             "edit_mode": app.var_edit_mode.get() if hasattr(app, "var_edit_mode") else "easy",
             "easy_preset": app.var_tpl.get() if hasattr(app, "var_tpl") else "",
+            "ui3_suggested": {"state": suggestion_state,
+                              "can_undo": suggestion_state == "applied",
+                              "scope": "camera mode, camera style, Work FX strength only; keyframes untouched"},
             "camera": {"mode": app.var_camera_control_mode.get(),
                        "side": app.var_camera_side.get(), "style": app.var_style.get(),
                        "side_key": side_key, "style_key": style_key,
@@ -306,6 +326,39 @@ class Audit29Runtime:
             if name not in app.templates:
                 raise ValueError("この仕上がり設定は現在のアプリにありません")
             app._choose_easy_preset(name)
+        elif action == "ui3_suggested_apply":
+            from core.camera import STYLES
+            if app.busy:
+                raise ValueError("書き出し中はおすすめ設定を変更できません")
+            applied = (MODE_LABELS["fixed_auto"], STYLES["third_cinema"], "weak")
+            current = (app.var_camera_control_mode.get(), app.var_style.get(),
+                       app.var_work_strength.get())
+            prior = self._ui3_suggested_previous
+            guard = _ui3_suggestion_guard(app)
+            old = (prior["old"] if prior is not None and current == prior["applied"]
+                   and guard == prior["guard"] else current)
+            try:
+                app.var_camera_control_mode.set(applied[0])
+                app.var_style.set(applied[1])
+                app.var_work_strength.set(applied[2])
+            except Exception:
+                app.var_camera_control_mode.set(current[0])
+                app.var_style.set(current[1])
+                app.var_work_strength.set(current[2])
+                raise
+            self._ui3_suggested_previous = {"old": old, "applied": applied, "guard": guard}
+        elif action == "ui3_suggested_undo":
+            saved = self._ui3_suggested_previous
+            if saved is None:
+                raise ValueError("戻せるおすすめ設定はありません")
+            current = (app.var_camera_control_mode.get(), app.var_style.get(),
+                       app.var_work_strength.get())
+            if current != saved["applied"] or _ui3_suggestion_guard(app) != saved["guard"]:
+                raise ValueError("追加の手動変更があるため、以前の値へ自動で戻せません")
+            for var, value in zip((app.var_camera_control_mode, app.var_style,
+                                   app.var_work_strength), saved["old"]):
+                var.set(value)
+            self._ui3_suggested_previous = None
         elif action == "camera_side":
             side = data.get("value")
             if side not in CAMERA_SIDES:

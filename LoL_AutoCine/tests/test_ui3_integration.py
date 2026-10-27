@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import csv
+import json
 import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -140,3 +141,41 @@ def test_c3_trim_uses_existing_app_values_and_rejects_invalid_seconds():
     with __import__("pytest").raises(ValueError):
         runtime.perform("trim", {"key": "pre", "value": 30})
     assert app.var_pre.get() == 5.5
+
+
+def test_c3_acceptance_keeps_all_106_cases_and_no_unverified_feature_pass():
+    result = json.loads((ROOT / "qa" / "c3_acceptance_20261027" /
+                         "UI_ACCEPTANCE_RESULTS_106.json").read_text(encoding="utf-8"))
+    rows = result["results"]
+    assert len(rows) == result["total"] == 106
+    assert len({row["id"] for row in rows}) == 106
+    assert all(row["status"] in {"PASS", "FAIL", "REVIEW", "NOT_RUN"} for row in rows)
+    assert all(row["status"] == "NOT_RUN" for row in rows if row["id"].startswith("FN-"))
+    assert all(row["evidence"] for row in rows if row["status"] == "PASS")
+
+
+def test_c3_suggested_changes_only_three_values_and_undo_respects_custom_edits():
+    import sys
+    sys.path.insert(0, str(ROOT / "tests"))
+    from test_ui29_runtime import App
+
+    app = App()
+    app._edit_keyframes = [{"time": 0, "yaw": 10, "zoom": 2, "fov": 0}]
+    runtime = Audit29Runtime(app, ROOT / "qa" / "nonexistent-ui3-suggested-prefs.json")
+    old = (app.var_camera_control_mode.get(), app.var_style.get(),
+           app.var_work_strength.get())
+    runtime.perform("ui3_suggested_apply")
+    assert runtime.snapshot()["ui3_suggested"]["can_undo"] is True
+    assert app._edit_keyframes == [{"time": 0, "yaw": 10, "zoom": 2, "fov": 0}]
+    runtime.perform("ui3_suggested_apply")
+    runtime.perform("ui3_suggested_undo")
+    assert old == (app.var_camera_control_mode.get(), app.var_style.get(),
+                   app.var_work_strength.get())
+    runtime.perform("ui3_suggested_apply")
+    app.sl["third_dist"].set(955)
+    assert runtime.snapshot()["ui3_suggested"]["state"] == "custom"
+    with __import__("pytest").raises(ValueError):
+        runtime.perform("ui3_suggested_undo")
+    assert app.sl["third_dist"].get() == 955
+    app._edit_keyframes.append({"time": 1, "yaw": 0, "zoom": 0, "fov": 0})
+    assert runtime.snapshot()["ui3_suggested"]["can_undo"] is False
