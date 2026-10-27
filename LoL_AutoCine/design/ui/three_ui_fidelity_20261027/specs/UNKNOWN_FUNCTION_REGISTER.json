@@ -1,0 +1,257 @@
+{
+  "kind": "known ambiguity/risk backlog; not fabricated Codex requests",
+  "items": [
+    {
+      "id": "U01",
+      "question": "FOV48°と選択キー64°が同時にある",
+      "original_role": "手動/キー値/補間現在値の表示",
+      "nearest_existing": "KEYFRAME",
+      "relation": "EXACT_SCOPE_CHECK",
+      "investigation_rule": "選択キー5秒64°と手動現在値48°は別。入力元と適用ON/OFFを明示",
+      "attachment": "各UIのカメラ/キー詳細",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    },
+    {
+      "id": "U02",
+      "question": "なめらか補間とBezier",
+      "original_role": "値補間と接線編集",
+      "nearest_existing": "KEYFRAME",
+      "relation": "SIMILAR_NOT_EQUIVALENT",
+      "investigation_rule": "linear/smooth/holdと自由接線を区別。接線APIが無ければ未対応",
+      "attachment": "カーブの補間方式/能力説明",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    },
+    {
+      "id": "U03",
+      "question": "XYZ/Yaw/Zoomなどの複数トラック",
+      "original_role": "パラメータ別キーフレーム",
+      "nearest_existing": "KEYFRAME",
+      "relation": "PARTIAL_MATCH",
+      "investigation_rule": "過去監査にYaw/Zoom/FOVのキーはある。XYZ姿勢/自由接線は別契約。デモの参照トラックを編集成功としない",
+      "attachment": "詳細編集/カーブの対象パラメータ",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    },
+    {
+      "id": "U04",
+      "question": "暖かさ/露出/彩度とLUT",
+      "original_role": "映像の色処理",
+      "nearest_existing": "GRADE",
+      "relation": "PARTIAL_MATCH",
+      "investigation_rule": "UIのCSS近似やルック名だけでLUT/GPU処理へ同一接続しない。実パラメータ単位を確認",
+      "attachment": "色調整 > 実パイプライン設定",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    },
+    {
+      "id": "U05",
+      "question": "Zoom Blur/放射状ブラー/時間混合",
+      "original_role": "FXごとの画像処理",
+      "nearest_existing": "FX_zoom_blur / FX_radial_blur",
+      "relation": "SIMILAR_NOT_EQUIVALENT",
+      "investigation_rule": "名称が似ていても別処理。正規化修正と本来の放射状処理も区別",
+      "attachment": "CoreFX詳細、WorkFX選択とは別",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    },
+    {
+      "id": "U06",
+      "question": "ゲーム内Fog/DOFと後処理ぼかし",
+      "original_role": "ゲーム設定と後処理",
+      "nearest_existing": "FOG / DOF / FX_focus_blur",
+      "relation": "SIMILAR_NOT_EQUIVALENT",
+      "investigation_rule": "カメラ環境のDOF/FogとFFmpeg/OpenCL等の後処理を一つのスイッチに統合しない",
+      "attachment": "カメラ環境と色・FXの相互リンク",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    },
+    {
+      "id": "U07",
+      "question": "キル前後/クリップ秒/Replay秒",
+      "original_role": "イベント基準とメディア時刻",
+      "nearest_existing": "TIMELINE / SCENE",
+      "relation": "EXACT_SCOPE_CHECK",
+      "investigation_rule": "12秒固定のデモ時刻を実Replay全体の時刻に使わない。sourcePTS/timelinePTS/表示丸めを分離",
+      "attachment": "常設タイムライン/トリム/キー時刻",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    },
+    {
+      "id": "U08",
+      "question": "保存・開く/JSON保存/ROFLを開く",
+      "original_role": "異なるデータ形式のロード",
+      "nearest_existing": "SCENE / REPLAY / LAUNCH",
+      "relation": "SIMILAR_NOT_EQUIVALENT",
+      "investigation_rule": "プロジェクト/カメラプリセット/リプレイを型別に扱う。過去研究schemaは製品schemaと同一ではない",
+      "attachment": "ヘッダー保存・開く、設定のリプレイ準備",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    },
+    {
+      "id": "U09",
+      "question": "候補3の画像選択ボタン",
+      "original_role": "選択対象を原画だけから確定できない",
+      "nearest_existing": "WORKFRAME / REFERENCE（候補）",
+      "relation": "UNRESOLVED",
+      "investigation_rule": "原画と旧監査に意味の確証がない。素材図鑑/参考画像抽出が近いが、入力対象と保存効果を確認してから接続",
+      "attachment": "配置は原画のまま、接続先は調査待ち",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    },
+    {
+      "id": "U10",
+      "question": "左下プリセットの読み込み/保存",
+      "original_role": "保存対象と適用範囲",
+      "nearest_existing": "SCENE / KEYFRAME（候補）",
+      "relation": "UNRESOLVED",
+      "investigation_rule": "カメラ単体かシーン全体かを確認。単なる名前一致でkeyframe presetへ結線しない",
+      "attachment": "候補3左下/他UI設定内のテンプレート",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    },
+    {
+      "id": "U11",
+      "question": "R1/R2のROFL選択・実スキャン",
+      "original_role": "原画にない実接続の入口",
+      "nearest_existing": "REPLAY / LAUNCH / SCAN",
+      "relation": "MISSING_UI_ENTRY",
+      "investigation_rule": "設定 > リプレイ準備/対象・スキャン詳細の追加接続案。R2の対象チェックをスキャンと混同しない",
+      "attachment": "右上設定とメインの状態表示",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    },
+    {
+      "id": "U12",
+      "question": "出力・研究JSON保存・テスト結果",
+      "original_role": "プロジェクト保存/録画/結果表示",
+      "nearest_existing": "JOB / RECORD / DIAG / SELFQA",
+      "relation": "SIMILAR_NOT_EQUIVALENT",
+      "investigation_rule": "JSON保存はMP4ではない。テスト結果は実ジョブ/診断の結果から表示",
+      "attachment": "候補3テスト結果、R1/R2出力結果/設定診断",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    },
+    {
+      "id": "U13",
+      "question": "固定＋自動構図/フルオート",
+      "original_role": "カメラ戦略の切替",
+      "nearest_existing": "FIXED / FULL",
+      "relation": "PARTIAL_MATCH",
+      "investigation_rule": "FULLは過去監査で部分実装。採用済み三人称を置換せず能力に応じて有効化",
+      "attachment": "カメラのモードと詳細",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    },
+    {
+      "id": "U14",
+      "question": "現在BAT版の劣化",
+      "original_role": "原本と実装の差の確認",
+      "nearest_existing": "UI acceptance",
+      "relation": "NEEDS_IMPLEMENTATION_EVIDENCE",
+      "investigation_rule": "ユーザー報告を保存。ビルドID/画面画像が無いので劣化箇所を検査済みにしない",
+      "attachment": "今回の3UI受入台帳",
+      "resolution": "OPEN / design policy supplied; backend validation pending",
+      "runtime": "NOT_RUN",
+      "source_references": [
+        "SOURCE_INDEX.json",
+        "FUNCTION_MAP_210.json",
+        "CONTROL_CAPABILITIES historical snapshot"
+      ],
+      "owner": "Work research",
+      "implementation_decision": "Codex with validated capability; user decides new behavior"
+    }
+  ]
+}

@@ -1,0 +1,638 @@
+{
+  "items": [
+    {
+      "id": "R1.main",
+      "family": "R1",
+      "logical_route": "proposed view key: R1/main",
+      "title": "メイン",
+      "role": "対象ショットの概要と次操作",
+      "controls": [
+        "準備/接続状態",
+        "シーン焦点/チェック",
+        "現在カメラ/FOV/音声/件数の概要",
+        "構成を作って確認",
+        "比較",
+        "再生/停止"
+      ],
+      "features": [
+        "REPLAY",
+        "LAUNCH",
+        "PLAYER",
+        "SCAN",
+        "ASSIST",
+        "SCENE",
+        "MIRROR",
+        "PREVIEW",
+        "JOB"
+      ],
+      "warning": "デモの合成5シーン/12秒を実スキャンや実LoL成功として表示しない",
+      "references": [
+        "LD_main_dark_1920x1080.png",
+        "LD_main_light_1366x768.png",
+        "LD_main_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "左シーン列",
+      "edit_region": "下部トラック固定",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R1.easy",
+      "family": "R1",
+      "logical_route": "proposed view key: R1/easy",
+      "title": "かんたん",
+      "role": "カメラ・雰囲気・キル演出の少数カードで設定",
+      "controls": [
+        "カメラ3候補",
+        "自然/暖かい/涼しい",
+        "キル演出3候補",
+        "細かく調整する"
+      ],
+      "features": [
+        "FIXED",
+        "FULL",
+        "GRADE",
+        "WORKFRAME",
+        "WORKFX",
+        "MOTION",
+        "JOB"
+      ],
+      "warning": "カードは既存能力へのプリセット。未実装処理を生成しない。数値変更後はカスタムと表示",
+      "references": [
+        "LD_easy_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "左シーン列",
+      "edit_region": "下部トラック固定",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R1.detail",
+      "family": "R1",
+      "logical_route": "proposed view key: R1/detail",
+      "title": "詳細編集",
+      "role": "選択キーとシーンの調整",
+      "controls": [
+        "キー時刻",
+        "FOV値",
+        "次キーへの補間",
+        "追加/削除",
+        "キー適用",
+        "下部タイムライン"
+      ],
+      "features": [
+        "KEYFRAME",
+        "TIMELINE",
+        "SCENE",
+        "MULTI",
+        "SMARTMONTAGE"
+      ],
+      "warning": "画像でFOVだけ編集可。Yaw/Zoomの既存接続は別確認。XYZ/自由接線がある証拠にはしない",
+      "references": [
+        "LD_detail_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "左シーン列",
+      "edit_region": "下部トラック固定",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R1.camera",
+      "family": "R1",
+      "logical_route": "proposed view key: R1/camera",
+      "title": "カメラ",
+      "role": "カメラモード・スタイル・サイド・数値",
+      "controls": [
+        "既存/固定自動/フルオート",
+        "自動/BLUE/RED",
+        "既存スタイル選択",
+        "FOV/Yaw/距離/高さ",
+        "TargetLock"
+      ],
+      "features": [
+        "PLAYER",
+        "FIXED",
+        "FULL",
+        "FOG",
+        "DOF"
+      ],
+      "warning": "画面で状態保存できたことと実カメラ送信は別。採用済み三人称斜め後ろを維持",
+      "references": [
+        "LD_camera_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "左シーン列",
+      "edit_region": "下部トラック固定",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R1.curve",
+      "family": "R1",
+      "logical_route": "proposed view key: R1/curve",
+      "title": "カーブ",
+      "role": "キー時刻/値/補間を曲線と対応させる",
+      "controls": [
+        "選択キー",
+        "時刻/値",
+        "linear/smooth/hold",
+        "追加/削除",
+        "キー適用",
+        "手動FOV"
+      ],
+      "features": [
+        "KEYFRAME",
+        "TIMELINE"
+      ],
+      "warning": "smoothは自由Bezier接線と同じではない。手動FOV48と選択キー64は入力元が別",
+      "references": [
+        "LD_curve_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "左シーン列",
+      "edit_region": "下部トラック固定",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R1.color",
+      "family": "R1",
+      "logical_route": "proposed view key: R1/color",
+      "title": "色調整",
+      "role": "映像ルックと前後比較",
+      "controls": [
+        "ニュートラル/ウォーム/クール",
+        "露出/彩度/暖かさ",
+        "比較ON/OFF",
+        "比較位置"
+      ],
+      "features": [
+        "GRADE"
+      ],
+      "warning": "CSS近似をLUT/GPU色処理の完成と扱わない。UIテーマは映像グレードと独立",
+      "references": [
+        "LD_color_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "左シーン列",
+      "edit_region": "下部トラック固定",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R1.material",
+      "family": "R1",
+      "logical_route": "proposed view key: R1/material",
+      "title": "素材",
+      "role": "枠/WorkFX/登場アニメ選択と図鑑入口",
+      "controls": [
+        "自作見本3枠",
+        "FX見本3候補",
+        "FX強度",
+        "登場6種",
+        "正式/確認用の実カタログ入口"
+      ],
+      "features": [
+        "BADGE",
+        "WORKFRAME",
+        "WORKFX",
+        "MOTION",
+        "REFERENCE"
+      ],
+      "warning": "図形のライン/リング/ツインは正式素材IDではない。652/35を3種類に削減しない",
+      "references": [
+        "LD_material_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "左シーン列",
+      "edit_region": "下部トラック固定",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R1.export",
+      "family": "R1",
+      "logical_route": "proposed view key: R1/export",
+      "title": "出力",
+      "role": "対象/出力方針・実ジョブ状態",
+      "controls": [
+        "研究JSON保存（プロジェクト保存）",
+        "解像度/fps/encoder方針",
+        "ゲーム音/HUD",
+        "実動画作成",
+        "結果/ログ"
+      ],
+      "features": [
+        "JOB",
+        "RECORD",
+        "AUDIO",
+        "AUDIOGUARD",
+        "NVENC",
+        "HUD",
+        "DIAG",
+        "SELFQA"
+      ],
+      "warning": "JSON保存はMP4作成ではない。GPU方針autoと実使用NVENCを区別。結果/診断の詳細入口は追加接続提案",
+      "references": [
+        "LD_export_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "左シーン列",
+      "edit_region": "下部トラック固定",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R2.main",
+      "family": "R2",
+      "logical_route": "proposed view key: R2/main",
+      "title": "メイン",
+      "role": "対象ショットの概要と次操作",
+      "controls": [
+        "準備/接続状態",
+        "シーン焦点/チェック",
+        "現在カメラ/FOV/音声/件数の概要",
+        "構成を作って確認",
+        "比較",
+        "再生/停止"
+      ],
+      "features": [
+        "REPLAY",
+        "LAUNCH",
+        "PLAYER",
+        "SCAN",
+        "ASSIST",
+        "SCENE",
+        "MIRROR",
+        "PREVIEW",
+        "JOB"
+      ],
+      "warning": "デモの合成5シーン/12秒を実スキャンや実LoL成功として表示しない",
+      "references": [
+        "LN_main_dark_1920x1080.png",
+        "LN_main_light_1366x768.png",
+        "LN_main_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "下部ショット列＋対象チェックダイアログ",
+      "edit_region": "ショット列の下の固定トラック",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R2.easy",
+      "family": "R2",
+      "logical_route": "proposed view key: R2/easy",
+      "title": "かんたん",
+      "role": "カメラ・雰囲気・キル演出の少数カードで設定",
+      "controls": [
+        "カメラ3候補",
+        "自然/暖かい/涼しい",
+        "キル演出3候補",
+        "細かく調整する"
+      ],
+      "features": [
+        "FIXED",
+        "FULL",
+        "GRADE",
+        "WORKFRAME",
+        "WORKFX",
+        "MOTION",
+        "JOB"
+      ],
+      "warning": "カードは既存能力へのプリセット。未実装処理を生成しない。数値変更後はカスタムと表示",
+      "references": [
+        "LN_easy_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "下部ショット列＋対象チェックダイアログ",
+      "edit_region": "ショット列の下の固定トラック",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R2.detail",
+      "family": "R2",
+      "logical_route": "proposed view key: R2/detail",
+      "title": "詳細編集",
+      "role": "選択キーとシーンの調整",
+      "controls": [
+        "キー時刻",
+        "FOV値",
+        "次キーへの補間",
+        "追加/削除",
+        "キー適用",
+        "下部タイムライン"
+      ],
+      "features": [
+        "KEYFRAME",
+        "TIMELINE",
+        "SCENE",
+        "MULTI",
+        "SMARTMONTAGE"
+      ],
+      "warning": "画像でFOVだけ編集可。Yaw/Zoomの既存接続は別確認。XYZ/自由接線がある証拠にはしない",
+      "references": [
+        "LN_detail_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "下部ショット列＋対象チェックダイアログ",
+      "edit_region": "ショット列の下の固定トラック",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R2.camera",
+      "family": "R2",
+      "logical_route": "proposed view key: R2/camera",
+      "title": "カメラ",
+      "role": "カメラモード・スタイル・サイド・数値",
+      "controls": [
+        "既存/固定自動/フルオート",
+        "自動/BLUE/RED",
+        "既存スタイル選択",
+        "FOV/Yaw/距離/高さ",
+        "TargetLock"
+      ],
+      "features": [
+        "PLAYER",
+        "FIXED",
+        "FULL",
+        "FOG",
+        "DOF"
+      ],
+      "warning": "画面で状態保存できたことと実カメラ送信は別。採用済み三人称斜め後ろを維持",
+      "references": [
+        "LN_camera_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "下部ショット列＋対象チェックダイアログ",
+      "edit_region": "ショット列の下の固定トラック",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R2.curve",
+      "family": "R2",
+      "logical_route": "proposed view key: R2/curve",
+      "title": "カーブ",
+      "role": "キー時刻/値/補間を曲線と対応させる",
+      "controls": [
+        "選択キー",
+        "時刻/値",
+        "linear/smooth/hold",
+        "追加/削除",
+        "キー適用",
+        "手動FOV"
+      ],
+      "features": [
+        "KEYFRAME",
+        "TIMELINE"
+      ],
+      "warning": "smoothは自由Bezier接線と同じではない。手動FOV48と選択キー64は入力元が別",
+      "references": [
+        "LN_curve_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "下部ショット列＋対象チェックダイアログ",
+      "edit_region": "ショット列の下の固定トラック",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R2.color",
+      "family": "R2",
+      "logical_route": "proposed view key: R2/color",
+      "title": "色調整",
+      "role": "映像ルックと前後比較",
+      "controls": [
+        "ニュートラル/ウォーム/クール",
+        "露出/彩度/暖かさ",
+        "比較ON/OFF",
+        "比較位置"
+      ],
+      "features": [
+        "GRADE"
+      ],
+      "warning": "CSS近似をLUT/GPU色処理の完成と扱わない。UIテーマは映像グレードと独立",
+      "references": [
+        "LN_color_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "下部ショット列＋対象チェックダイアログ",
+      "edit_region": "ショット列の下の固定トラック",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R2.material",
+      "family": "R2",
+      "logical_route": "proposed view key: R2/material",
+      "title": "素材",
+      "role": "枠/WorkFX/登場アニメ選択と図鑑入口",
+      "controls": [
+        "自作見本3枠",
+        "FX見本3候補",
+        "FX強度",
+        "登場6種",
+        "正式/確認用の実カタログ入口"
+      ],
+      "features": [
+        "BADGE",
+        "WORKFRAME",
+        "WORKFX",
+        "MOTION",
+        "REFERENCE"
+      ],
+      "warning": "図形のライン/リング/ツインは正式素材IDではない。652/35を3種類に削減しない",
+      "references": [
+        "LN_material_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "下部ショット列＋対象チェックダイアログ",
+      "edit_region": "ショット列の下の固定トラック",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "R2.export",
+      "family": "R2",
+      "logical_route": "proposed view key: R2/export",
+      "title": "出力",
+      "role": "対象/出力方針・実ジョブ状態",
+      "controls": [
+        "研究JSON保存（プロジェクト保存）",
+        "解像度/fps/encoder方針",
+        "ゲーム音/HUD",
+        "実動画作成",
+        "結果/ログ"
+      ],
+      "features": [
+        "JOB",
+        "RECORD",
+        "AUDIO",
+        "AUDIOGUARD",
+        "NVENC",
+        "HUD",
+        "DIAG",
+        "SELFQA"
+      ],
+      "warning": "JSON保存はMP4作成ではない。GPU方針autoと実使用NVENCを区別。結果/診断の詳細入口は追加接続提案",
+      "references": [
+        "LN_export_light_1920x1080.png"
+      ],
+      "setting_region": "右インスペクタ",
+      "selection_region": "下部ショット列＋対象チェックダイアログ",
+      "edit_region": "ショット列の下の固定トラック",
+      "preview_relationship": "同じ固定ミラー/再生列を保持し、右だけ内容を切替",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "C3.main",
+      "family": "C3",
+      "logical_route": "T-A-M semantic area/tab: main",
+      "role": "原画の領域とタブに接続",
+      "features": [
+        "REPLAY",
+        "LAUNCH",
+        "PLAYER",
+        "SCAN",
+        "ASSIST",
+        "SCENE",
+        "MIRROR",
+        "PREVIEW",
+        "JOB"
+      ],
+      "references": [
+        "T-A-M / original A_main.png"
+      ],
+      "setting_region": "原画の下段または既存の上部設定",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "C3.scene",
+      "family": "C3",
+      "logical_route": "T-A-M semantic area/tab: scene",
+      "role": "原画の領域とタブに接続",
+      "features": [
+        "TIMELINE",
+        "SCENE",
+        "MULTI",
+        "HIGHLIGHT",
+        "SMARTMONTAGE"
+      ],
+      "references": [
+        "T-A-M / original A_main.png"
+      ],
+      "setting_region": "原画の下段または既存の上部設定",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "C3.camera",
+      "family": "C3",
+      "logical_route": "T-A-M semantic area/tab: camera",
+      "role": "原画の領域とタブに接続",
+      "features": [
+        "PLAYER",
+        "FIXED",
+        "FULL",
+        "FOG",
+        "DOF"
+      ],
+      "references": [
+        "T-A-M / original A_main.png"
+      ],
+      "setting_region": "原画の下段または既存の上部設定",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "C3.color-fx",
+      "family": "C3",
+      "logical_route": "T-A-M semantic area/tab: color-fx",
+      "role": "原画の領域とタブに接続",
+      "features": [
+        "GRADE",
+        "PULSE",
+        "MONTAGEFX"
+      ],
+      "references": [
+        "T-A-M / original A_main.png"
+      ],
+      "setting_region": "原画の下段または既存の上部設定",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "C3.material",
+      "family": "C3",
+      "logical_route": "T-A-M semantic area/tab: material",
+      "role": "原画の領域とタブに接続",
+      "features": [
+        "BADGE",
+        "WORKFRAME",
+        "WORKFX",
+        "MOTION",
+        "REFERENCE"
+      ],
+      "references": [
+        "T-A-M / original A_main.png"
+      ],
+      "setting_region": "原画の下段または既存の上部設定",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "C3.export",
+      "family": "C3",
+      "logical_route": "T-A-M semantic area/tab: export",
+      "role": "原画の領域とタブに接続",
+      "features": [
+        "JOB",
+        "RECORD",
+        "AUDIO",
+        "AUDIOGUARD",
+        "NVENC",
+        "HUD"
+      ],
+      "references": [
+        "T-A-M / original A_main.png"
+      ],
+      "setting_region": "原画の下段または既存の上部設定",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "C3.test-results",
+      "family": "C3",
+      "logical_route": "T-A-M semantic area/tab: test-results",
+      "role": "原画の領域とタブに接続",
+      "features": [
+        "SELFQA",
+        "DIAG"
+      ],
+      "references": [
+        "T-A-M / original A_main.png"
+      ],
+      "setting_region": "原画の下段または既存の上部設定",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    },
+    {
+      "id": "C3.settings",
+      "family": "C3",
+      "logical_route": "T-A-M semantic area/tab: settings",
+      "role": "原画の領域とタブに接続",
+      "features": [
+        "CAPTURE",
+        "GPUFX",
+        "BGM"
+      ],
+      "references": [
+        "T-A-M / original A_main.png"
+      ],
+      "setting_region": "原画の下段または既存の上部設定",
+      "status": "PLACEMENT CONTRACT / runtime NOT_RUN"
+    }
+  ],
+  "screen_count": 24,
+  "routes_are_proposed_logical_keys_not_existing_endpoints": true
+}
