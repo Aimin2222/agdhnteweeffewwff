@@ -42,8 +42,11 @@ def main() -> None:
     names = subprocess.check_output(
         ["git", "-C", str(REPO), "ls-files", "-z", "--", "LoL_AutoCine"]
     ).decode("utf-8").split("\0")
+    # Include only the reviewed C3 acceptance evidence; all other QA/runtime
+    # folders remain excluded because they may contain replay paths or logs.
     files = [name for name in names if name and (REPO / name).is_file()
-             and not SKIP_PARTS.intersection(Path(name).parts)
+             and (not SKIP_PARTS.intersection(Path(name).parts)
+                  or name.startswith("LoL_AutoCine/qa/c3_acceptance_20261027/"))
              and Path(name).name not in SKIP_NAMES
              and Path(name).suffix.lower() not in SKIP_SUFFIXES
              and not name.startswith("LoL_AutoCine/design/ui/implementation_audit_29_")]
@@ -56,7 +59,8 @@ def main() -> None:
     info = {"source_commit": git("rev-parse", "HEAD"),
             "source_version": (APP / "VERSION.txt").read_text(encoding="utf-8").strip(),
             "entry_point": launcher, "distribution": "Windows source/BAT trial, no new EXE",
-            "work_feature_audit": "70 rows; see docs/ui3/UI3_FEATURE70_CONNECTION_20261027.csv",
+            "work_feature_audit": "70 rows; see docs/ui3/C3_ACCEPTANCE70_IMPLEMENTATION_20261027.csv",
+            "work_acceptance": "106 cases; see qa/c3_acceptance_20261027/UI_ACCEPTANCE_RESULTS_106.json",
             "live_lol_result": "NOT_RUN"}
     archive = output / "LoL_AutoCine_UI3_Trial_BAT.zip"
     manifest = []
@@ -85,6 +89,7 @@ def main() -> None:
                        "ZIPを別フォルダに展開し、LoL_AutoCine/START_AUTOCINE_UI3.batをダブルクリック。\n"
                        "Python 3.12 x64とrequirements.txtの依存が必要です。\n"
                        "詳細: LoL_AutoCine/docs/ui3/README_UI3_TEST_JA.md\n"
+                       "Work受入106件: LoL_AutoCine/qa/c3_acceptance_20261027/UI_ACCEPTANCE_RESULTS_106.json\n"
                        "旧画面はSTART.batから起動できます。\n").encode("utf-8"))
     with ZipFile(archive) as reader:
         bad = reader.testzip()
