@@ -1,0 +1,81 @@
+{
+  "version": "C3 revision proposal 1.1 / 未採用",
+  "replaces_originals": false,
+  "new_full_screen_images": 0,
+  "coordinate_format": "x1,y1,x2,y2",
+  "items": [
+    {
+      "id": "C3-R01",
+      "priority": "P0",
+      "target": "C3P/C3S main",
+      "change": "常設のシーンタイムラインと前後トリムを復帰",
+      "large": {
+        "timeline_box": [
+          24,
+          842,
+          1896,
+          878
+        ],
+        "cards_top": 890,
+        "cards_bottom": 1032
+      },
+      "compact": {
+        "timeline_box": [
+          20,
+          598,
+          1346,
+          630
+        ],
+        "cards_top": 642,
+        "cards_bottom": 728
+      },
+      "reason": "候補3の原画/HTMLに存在し、旧C3主画面では省略"
+    },
+    {
+      "id": "C3-R02",
+      "priority": "P0",
+      "target": "lower edit tabs",
+      "change": "テスト結果タブを復帰、診断/未対応機能へ接続",
+      "large": {
+        "button": [
+          608,
+          796,
+          708,
+          830
+        ]
+      },
+      "compact": {
+        "button": [
+          604,
+          556,
+          704,
+          590
+        ]
+      }
+    },
+    {
+      "id": "C3-R03",
+      "priority": "P1",
+      "target": "compact camera",
+      "change": "常設タイムライン確保のため、入力元と追加数値はカメラドロワーへ。値と単位は概要に残す"
+    },
+    {
+      "id": "C3-R04",
+      "priority": "P0",
+      "target": "mode and preset contract",
+      "change": "Pの数値/キーとSのカードが共通データを編集。キー消去の無言実行を禁止"
+    },
+    {
+      "id": "C3-R05",
+      "priority": "P1",
+      "target": "all functions",
+      "change": "詳細から全設定/図鑑/出力/診断へ到達。67実装確認/1部分/2未実装という継承状態を偽らない"
+    },
+    {
+      "id": "C3-R06",
+      "priority": "P1",
+      "target": "window/preview",
+      "change": "左右幅の変更は派生提案。原本再現モードは元の比率を使い、C3とは別検査"
+    }
+  ]
+}

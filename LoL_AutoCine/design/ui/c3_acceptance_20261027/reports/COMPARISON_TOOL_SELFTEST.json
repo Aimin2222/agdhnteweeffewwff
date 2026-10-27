@@ -1,0 +1,30 @@
+{
+  "scope": "synthetic PNGs only, NOT Codex app",
+  "checks": [
+    {
+      "id": "same-pixels-stay-REVIEW",
+      "status": "PASS"
+    },
+    {
+      "id": "shift-detected",
+      "status": "PASS"
+    },
+    {
+      "id": "size-mismatch-FAIL",
+      "status": "PASS"
+    },
+    {
+      "id": "explicit-mask-applied",
+      "status": "PASS"
+    },
+    {
+      "id": "excessive-mask-rejected",
+      "status": "PASS"
+    },
+    {
+      "id": "one-channel-one-level-change-detected",
+      "status": "PASS"
+    }
+  ],
+  "Codex_UI_test": "NOT_RUN"
+}
