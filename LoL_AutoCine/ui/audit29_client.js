@@ -920,6 +920,8 @@
           if (command==='main') comparisonRoute('main');
           else if (command==='detail') comparisonRoute('detail');
           else if (command==='material') comparisonRoute('material');
+          else if (command==='c3p') location.assign(endpoint('/ui3/p'));
+          else if (command==='c3s') location.assign(endpoint('/ui3/s'));
           else if (command==='export_menu') chooseExport();
           else if (command==='project_menu') chooseProjectOperation();
           else if (Array.isArray(command)) invoke(command[0],command[1]);
@@ -933,6 +935,8 @@
       ['試合全体スキャン','scan'],['シーン編集',['native_editor_zone',{zone:'scene'}]],
       ['ミラー開始','mirror_start'],['ミラー停止','mirror_stop'],
       ['動画を作成','export_menu'],['作成を停止','cancel_job']]);
+    group('候補3の比較ビュー',[
+      ['元の候補3','main'],['C3-P 精密編集','c3p'],['C3-S かんたん編集','c3s']]);
     group('編集',[
       ['詳細編集','detail'],['カメラ',['native_editor_zone',{zone:'camera'}]],
       ['映像FX',['native_editor_zone',{zone:'fx'}]],['色・LUT・Fog',['native_editor_zone',{zone:'color'}]],

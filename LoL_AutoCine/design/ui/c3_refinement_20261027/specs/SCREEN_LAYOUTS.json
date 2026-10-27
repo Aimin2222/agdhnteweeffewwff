@@ -1,0 +1,7035 @@
+{
+  "screens": [
+    {
+      "id": "C3P_main_light",
+      "file": "screens/C3P_main_light.png",
+      "vector": "screens/C3P_main_light.svg",
+      "size": [
+        1920,
+        1080
+      ],
+      "theme": "light",
+      "components": [
+        {
+          "id": "header-action-0",
+          "kind": "button",
+          "box": [
+            1372,
+            9,
+            1482,
+            48
+          ],
+          "label": "リプレイ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-1",
+          "kind": "button",
+          "box": [
+            1490,
+            9,
+            1562,
+            48
+          ],
+          "label": "準備",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-2",
+          "kind": "button",
+          "box": [
+            1570,
+            9,
+            1672,
+            48
+          ],
+          "label": "基本設定",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-3",
+          "kind": "button",
+          "box": [
+            1680,
+            9,
+            1746,
+            48
+          ],
+          "label": "ログ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-4",
+          "kind": "button",
+          "box": [
+            1754,
+            9,
+            1908,
+            48
+          ],
+          "label": "作成内容を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "replay-target",
+          "kind": "panel",
+          "box": [
+            12,
+            68,
+            332,
+            776
+          ],
+          "label": "1. リプレイ準備・対象",
+          "scroll": true
+        },
+        {
+          "id": "replay-file",
+          "kind": "field",
+          "box": [
+            24,
+            112,
+            320,
+            177
+          ],
+          "label": "リプレイファイル",
+          "value": "sample_match.rofl"
+        },
+        {
+          "id": "prepare",
+          "kind": "button",
+          "box": [
+            24,
+            189,
+            320,
+            227
+          ],
+          "label": "準備状態を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "preset",
+          "kind": "button",
+          "box": [
+            24,
+            738,
+            320,
+            768
+          ],
+          "label": "テンプレート・参考",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-list",
+          "kind": "panel",
+          "box": [
+            1532,
+            68,
+            1908,
+            776
+          ],
+          "label": "2. 試合全体から見せ場を選ぶ",
+          "scroll": true
+        },
+        {
+          "id": "scan",
+          "kind": "button",
+          "box": [
+            1544,
+            111,
+            1896,
+            150
+          ],
+          "label": "試合全体スキャン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-0",
+          "kind": "button",
+          "box": [
+            1544.0,
+            189,
+            1658.67,
+            221
+          ],
+          "label": "すべて",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "filter-1",
+          "kind": "button",
+          "box": [
+            1662.67,
+            189,
+            1777.33,
+            221
+          ],
+          "label": "キル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-2",
+          "kind": "button",
+          "box": [
+            1781.33,
+            189,
+            1896.0,
+            221
+          ],
+          "label": "アシスト",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-check-0",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            246,
+            1576,
+            280
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-1",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            318,
+            1576,
+            352
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-2",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            390,
+            1576,
+            424
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-3",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            462,
+            1576,
+            496
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-4",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            534,
+            1576,
+            568
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-jump",
+          "kind": "button",
+          "box": [
+            1544,
+            734,
+            1896,
+            767
+          ],
+          "label": "選択シーンへ移動",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-panel",
+          "kind": "panel",
+          "box": [
+            344,
+            68,
+            1520,
+            776
+          ],
+          "label": "ミラープレビュー",
+          "scroll": false
+        },
+        {
+          "id": "preview-compare",
+          "kind": "button",
+          "box": [
+            1381,
+            76,
+            1508,
+            106
+          ],
+          "label": "調整前と比較",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-image",
+          "kind": "fixed-preview",
+          "box": [
+            386.22,
+            108.0,
+            1477.78,
+            722.0
+          ],
+          "label": "16:9 合成図。LoL実映像ではない",
+          "aspect": 1.7777777777777777
+        },
+        {
+          "id": "transport-0",
+          "kind": "button",
+          "box": [
+            356,
+            733,
+            456,
+            767
+          ],
+          "label": "ミラー開始",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-1",
+          "kind": "button",
+          "box": [
+            463,
+            733,
+            527,
+            767
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-2",
+          "kind": "button",
+          "box": [
+            534,
+            733,
+            654,
+            767
+          ],
+          "label": "演出を再生",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "transport-3",
+          "kind": "button",
+          "box": [
+            661,
+            733,
+            787,
+            767
+          ],
+          "label": "プレビュー停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "lower-edit",
+          "kind": "panel",
+          "box": [
+            12,
+            788,
+            1908,
+            1044
+          ],
+          "label": "",
+          "scroll": false
+        },
+        {
+          "id": "easy-toggle",
+          "kind": "button",
+          "box": [
+            24,
+            796,
+            137,
+            830
+          ],
+          "label": "かんたん編集",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "detail-toggle",
+          "kind": "button",
+          "box": [
+            143,
+            796,
+            256,
+            830
+          ],
+          "label": "詳細編集",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-0",
+          "kind": "button",
+          "box": [
+            280,
+            796,
+            356,
+            830
+          ],
+          "label": "シーン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-1",
+          "kind": "button",
+          "box": [
+            362,
+            796,
+            438,
+            830
+          ],
+          "label": "カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-2",
+          "kind": "button",
+          "box": [
+            444,
+            796,
+            520,
+            830
+          ],
+          "label": "色・FX",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-3",
+          "kind": "button",
+          "box": [
+            526,
+            796,
+            602,
+            830
+          ],
+          "label": "出力",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "camera-mode-0",
+          "kind": "button",
+          "box": [
+            28.0,
+            859,
+            334.0,
+            935
+          ],
+          "label": "既存カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "camera-mode-1",
+          "kind": "button",
+          "box": [
+            346.24,
+            859,
+            652.24,
+            935
+          ],
+          "label": "固定＋自動構図",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "camera-mode-2",
+          "kind": "button",
+          "box": [
+            664.48,
+            859,
+            970.48,
+            935
+          ],
+          "label": "フルオート候補",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "side-blue",
+          "kind": "button",
+          "box": [
+            978.96,
+            877,
+            1066.96,
+            915
+          ],
+          "label": "BLUE",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "side-red",
+          "kind": "button",
+          "box": [
+            1074.96,
+            877,
+            1162.96,
+            915
+          ],
+          "label": "RED",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "fov",
+          "kind": "slider+number",
+          "box": [
+            1339.2,
+            847,
+            1609.6,
+            917
+          ],
+          "label": "FOV",
+          "value": 48,
+          "unit": "°"
+        },
+        {
+          "id": "yaw",
+          "kind": "slider+number",
+          "box": [
+            1629.6,
+            847,
+            1894,
+            917
+          ],
+          "label": "Yaw",
+          "value": 32,
+          "unit": "°"
+        },
+        {
+          "id": "parameter-source",
+          "kind": "button",
+          "box": [
+            1339.2,
+            932,
+            1894,
+            969
+          ],
+          "label": "値の入力元：手動 ／ キー適用 ▾",
+          "selected": false,
+          "disabled": false
+        }
+      ],
+      "kind": "静止デザイン。動作実装・実機検証ではない"
+    },
+    {
+      "id": "C3P_detail_light",
+      "file": "screens/C3P_detail_light.png",
+      "vector": "screens/C3P_detail_light.svg",
+      "size": [
+        1920,
+        1080
+      ],
+      "theme": "light",
+      "components": [
+        {
+          "id": "header-action-0",
+          "kind": "button",
+          "box": [
+            1372,
+            9,
+            1482,
+            48
+          ],
+          "label": "リプレイ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-1",
+          "kind": "button",
+          "box": [
+            1490,
+            9,
+            1562,
+            48
+          ],
+          "label": "準備",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-2",
+          "kind": "button",
+          "box": [
+            1570,
+            9,
+            1672,
+            48
+          ],
+          "label": "基本設定",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-3",
+          "kind": "button",
+          "box": [
+            1680,
+            9,
+            1746,
+            48
+          ],
+          "label": "ログ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-4",
+          "kind": "button",
+          "box": [
+            1754,
+            9,
+            1908,
+            48
+          ],
+          "label": "作成内容を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "replay-target",
+          "kind": "panel",
+          "box": [
+            12,
+            68,
+            332,
+            712
+          ],
+          "label": "1. リプレイ準備・対象",
+          "scroll": true
+        },
+        {
+          "id": "replay-file",
+          "kind": "field",
+          "box": [
+            24,
+            112,
+            320,
+            177
+          ],
+          "label": "リプレイファイル",
+          "value": "sample_match.rofl"
+        },
+        {
+          "id": "prepare",
+          "kind": "button",
+          "box": [
+            24,
+            189,
+            320,
+            227
+          ],
+          "label": "準備状態を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "preset",
+          "kind": "button",
+          "box": [
+            24,
+            674,
+            320,
+            704
+          ],
+          "label": "テンプレート・参考",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-list",
+          "kind": "panel",
+          "box": [
+            1532,
+            68,
+            1908,
+            712
+          ],
+          "label": "2. 試合全体から見せ場を選ぶ",
+          "scroll": true
+        },
+        {
+          "id": "scan",
+          "kind": "button",
+          "box": [
+            1544,
+            111,
+            1896,
+            150
+          ],
+          "label": "試合全体スキャン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-0",
+          "kind": "button",
+          "box": [
+            1544.0,
+            189,
+            1658.67,
+            221
+          ],
+          "label": "すべて",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "filter-1",
+          "kind": "button",
+          "box": [
+            1662.67,
+            189,
+            1777.33,
+            221
+          ],
+          "label": "キル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-2",
+          "kind": "button",
+          "box": [
+            1781.33,
+            189,
+            1896.0,
+            221
+          ],
+          "label": "アシスト",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-check-0",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            246,
+            1576,
+            280
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-1",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            318,
+            1576,
+            352
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-2",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            390,
+            1576,
+            424
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-3",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            462,
+            1576,
+            496
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-4",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            534,
+            1576,
+            568
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-jump",
+          "kind": "button",
+          "box": [
+            1544,
+            670,
+            1896,
+            703
+          ],
+          "label": "選択シーンへ移動",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-panel",
+          "kind": "panel",
+          "box": [
+            344,
+            68,
+            1520,
+            712
+          ],
+          "label": "ミラープレビュー",
+          "scroll": false
+        },
+        {
+          "id": "preview-compare",
+          "kind": "button",
+          "box": [
+            1381,
+            76,
+            1508,
+            106
+          ],
+          "label": "調整前と比較",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-image",
+          "kind": "fixed-preview",
+          "box": [
+            443.11,
+            108.0,
+            1420.89,
+            658.0
+          ],
+          "label": "16:9 合成図。LoL実映像ではない",
+          "aspect": 1.7777777777777777
+        },
+        {
+          "id": "transport-0",
+          "kind": "button",
+          "box": [
+            356,
+            669,
+            456,
+            703
+          ],
+          "label": "ミラー開始",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-1",
+          "kind": "button",
+          "box": [
+            463,
+            669,
+            527,
+            703
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-2",
+          "kind": "button",
+          "box": [
+            534,
+            669,
+            654,
+            703
+          ],
+          "label": "演出を再生",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "transport-3",
+          "kind": "button",
+          "box": [
+            661,
+            669,
+            787,
+            703
+          ],
+          "label": "プレビュー停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "timeline-editor",
+          "kind": "panel",
+          "box": [
+            12,
+            724,
+            1908,
+            1044
+          ],
+          "label": "タイムライン・詳細編集",
+          "scroll": false
+        },
+        {
+          "id": "track-switch",
+          "kind": "button",
+          "box": [
+            262,
+            731,
+            362,
+            763
+          ],
+          "label": "FOV ▾",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "add-key",
+          "kind": "button",
+          "box": [
+            1648,
+            731,
+            1768,
+            763
+          ],
+          "label": "＋ キーを追加",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "curve-toggle",
+          "kind": "button",
+          "box": [
+            1778,
+            731,
+            1896,
+            763
+          ],
+          "label": "キーフレーム",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "key-0",
+          "kind": "keyframe-hit-target",
+          "box": [
+            320.5,
+            792,
+            352.5,
+            824
+          ],
+          "label": "時刻と値を編集",
+          "time": 1,
+          "value": 40
+        },
+        {
+          "id": "key-1",
+          "kind": "keyframe-hit-target",
+          "box": [
+            778.5,
+            792,
+            810.5,
+            824
+          ],
+          "label": "時刻と値を編集",
+          "time": 5,
+          "value": 64
+        },
+        {
+          "id": "key-2",
+          "kind": "keyframe-hit-target",
+          "box": [
+            1351.0,
+            792,
+            1383.0,
+            824
+          ],
+          "label": "時刻と値を編集",
+          "time": 10,
+          "value": 48
+        },
+        {
+          "id": "key-time",
+          "kind": "field",
+          "box": [
+            1620,
+            803,
+            1894,
+            861
+          ],
+          "label": "時刻（秒）",
+          "value": "5.000"
+        },
+        {
+          "id": "key-value",
+          "kind": "field",
+          "box": [
+            1620,
+            869,
+            1894,
+            928
+          ],
+          "label": "FOV（°）",
+          "value": "64.0"
+        },
+        {
+          "id": "blend",
+          "kind": "button",
+          "box": [
+            1620,
+            940,
+            1894,
+            976
+          ],
+          "label": "補間方式を選ぶ ▾",
+          "selected": false,
+          "disabled": false
+        }
+      ],
+      "kind": "静止デザイン。動作実装・実機検証ではない"
+    },
+    {
+      "id": "C3P_camera_drawer",
+      "file": "screens/C3P_camera_drawer.png",
+      "vector": "screens/C3P_camera_drawer.svg",
+      "size": [
+        1920,
+        1080
+      ],
+      "theme": "light",
+      "components": [
+        {
+          "id": "header-action-0",
+          "kind": "button",
+          "box": [
+            1372,
+            9,
+            1482,
+            48
+          ],
+          "label": "リプレイ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-1",
+          "kind": "button",
+          "box": [
+            1490,
+            9,
+            1562,
+            48
+          ],
+          "label": "準備",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-2",
+          "kind": "button",
+          "box": [
+            1570,
+            9,
+            1672,
+            48
+          ],
+          "label": "基本設定",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-3",
+          "kind": "button",
+          "box": [
+            1680,
+            9,
+            1746,
+            48
+          ],
+          "label": "ログ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-4",
+          "kind": "button",
+          "box": [
+            1754,
+            9,
+            1908,
+            48
+          ],
+          "label": "作成内容を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "replay-target",
+          "kind": "panel",
+          "box": [
+            12,
+            68,
+            332,
+            776
+          ],
+          "label": "1. リプレイ準備・対象",
+          "scroll": true
+        },
+        {
+          "id": "replay-file",
+          "kind": "field",
+          "box": [
+            24,
+            112,
+            320,
+            177
+          ],
+          "label": "リプレイファイル",
+          "value": "sample_match.rofl"
+        },
+        {
+          "id": "prepare",
+          "kind": "button",
+          "box": [
+            24,
+            189,
+            320,
+            227
+          ],
+          "label": "準備状態を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "preset",
+          "kind": "button",
+          "box": [
+            24,
+            738,
+            320,
+            768
+          ],
+          "label": "テンプレート・参考",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-list",
+          "kind": "panel",
+          "box": [
+            1532,
+            68,
+            1908,
+            776
+          ],
+          "label": "2. 試合全体から見せ場を選ぶ",
+          "scroll": true
+        },
+        {
+          "id": "scan",
+          "kind": "button",
+          "box": [
+            1544,
+            111,
+            1896,
+            150
+          ],
+          "label": "試合全体スキャン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-0",
+          "kind": "button",
+          "box": [
+            1544.0,
+            189,
+            1658.67,
+            221
+          ],
+          "label": "すべて",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "filter-1",
+          "kind": "button",
+          "box": [
+            1662.67,
+            189,
+            1777.33,
+            221
+          ],
+          "label": "キル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-2",
+          "kind": "button",
+          "box": [
+            1781.33,
+            189,
+            1896.0,
+            221
+          ],
+          "label": "アシスト",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-check-0",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            246,
+            1576,
+            280
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-1",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            318,
+            1576,
+            352
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-2",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            390,
+            1576,
+            424
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-3",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            462,
+            1576,
+            496
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-4",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            534,
+            1576,
+            568
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-jump",
+          "kind": "button",
+          "box": [
+            1544,
+            734,
+            1896,
+            767
+          ],
+          "label": "選択シーンへ移動",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-panel",
+          "kind": "panel",
+          "box": [
+            344,
+            68,
+            1520,
+            776
+          ],
+          "label": "ミラープレビュー",
+          "scroll": false
+        },
+        {
+          "id": "preview-compare",
+          "kind": "button",
+          "box": [
+            1381,
+            76,
+            1508,
+            106
+          ],
+          "label": "調整前と比較",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-image",
+          "kind": "fixed-preview",
+          "box": [
+            386.22,
+            108.0,
+            1477.78,
+            722.0
+          ],
+          "label": "16:9 合成図。LoL実映像ではない",
+          "aspect": 1.7777777777777777
+        },
+        {
+          "id": "transport-0",
+          "kind": "button",
+          "box": [
+            356,
+            733,
+            456,
+            767
+          ],
+          "label": "ミラー開始",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-1",
+          "kind": "button",
+          "box": [
+            463,
+            733,
+            527,
+            767
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-2",
+          "kind": "button",
+          "box": [
+            534,
+            733,
+            654,
+            767
+          ],
+          "label": "演出を再生",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "transport-3",
+          "kind": "button",
+          "box": [
+            661,
+            733,
+            787,
+            767
+          ],
+          "label": "プレビュー停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "lower-edit",
+          "kind": "panel",
+          "box": [
+            12,
+            788,
+            1908,
+            1044
+          ],
+          "label": "",
+          "scroll": false
+        },
+        {
+          "id": "easy-toggle",
+          "kind": "button",
+          "box": [
+            24,
+            796,
+            137,
+            830
+          ],
+          "label": "かんたん編集",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "detail-toggle",
+          "kind": "button",
+          "box": [
+            143,
+            796,
+            256,
+            830
+          ],
+          "label": "詳細編集",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-0",
+          "kind": "button",
+          "box": [
+            280,
+            796,
+            356,
+            830
+          ],
+          "label": "シーン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-1",
+          "kind": "button",
+          "box": [
+            362,
+            796,
+            438,
+            830
+          ],
+          "label": "カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-2",
+          "kind": "button",
+          "box": [
+            444,
+            796,
+            520,
+            830
+          ],
+          "label": "色・FX",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-3",
+          "kind": "button",
+          "box": [
+            526,
+            796,
+            602,
+            830
+          ],
+          "label": "出力",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "camera-mode-0",
+          "kind": "button",
+          "box": [
+            28.0,
+            859,
+            334.0,
+            935
+          ],
+          "label": "既存カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "camera-mode-1",
+          "kind": "button",
+          "box": [
+            346.24,
+            859,
+            652.24,
+            935
+          ],
+          "label": "固定＋自動構図",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "camera-mode-2",
+          "kind": "button",
+          "box": [
+            664.48,
+            859,
+            970.48,
+            935
+          ],
+          "label": "フルオート候補",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "side-blue",
+          "kind": "button",
+          "box": [
+            978.96,
+            877,
+            1066.96,
+            915
+          ],
+          "label": "BLUE",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "side-red",
+          "kind": "button",
+          "box": [
+            1074.96,
+            877,
+            1162.96,
+            915
+          ],
+          "label": "RED",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "fov",
+          "kind": "slider+number",
+          "box": [
+            1339.2,
+            847,
+            1609.6,
+            917
+          ],
+          "label": "FOV",
+          "value": 48,
+          "unit": "°"
+        },
+        {
+          "id": "yaw",
+          "kind": "slider+number",
+          "box": [
+            1629.6,
+            847,
+            1894,
+            917
+          ],
+          "label": "Yaw",
+          "value": 32,
+          "unit": "°"
+        },
+        {
+          "id": "parameter-source",
+          "kind": "button",
+          "box": [
+            1339.2,
+            932,
+            1894,
+            969
+          ],
+          "label": "値の入力元：手動 ／ キー適用 ▾",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "camera-drawer",
+          "kind": "panel",
+          "box": [
+            1300,
+            96,
+            1908,
+            1038
+          ],
+          "label": "カメラと演出 / このシーン",
+          "scroll": true
+        },
+        {
+          "id": "drawer-close",
+          "kind": "button",
+          "box": [
+            1859,
+            104,
+            1896,
+            139
+          ],
+          "label": "×",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "drawer-mode-0",
+          "kind": "button",
+          "box": [
+            1320,
+            247,
+            1496,
+            304
+          ],
+          "label": "既存カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "drawer-mode-1",
+          "kind": "button",
+          "box": [
+            1508,
+            247,
+            1684,
+            304
+          ],
+          "label": "固定＋構図補正",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "drawer-mode-2",
+          "kind": "button",
+          "box": [
+            1696,
+            247,
+            1872,
+            304
+          ],
+          "label": "フルオート候補",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "base-source",
+          "kind": "button",
+          "box": [
+            1320,
+            366,
+            1590,
+            406
+          ],
+          "label": "手動の現在値",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "key-source",
+          "kind": "button",
+          "box": [
+            1603,
+            366,
+            1888,
+            406
+          ],
+          "label": "キーフレーム",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "drawer-fov",
+          "kind": "slider+number",
+          "box": [
+            1324,
+            438,
+            1884,
+            506
+          ],
+          "label": "FOV（手動）",
+          "value": 48,
+          "unit": "°"
+        },
+        {
+          "id": "drawer-distance",
+          "kind": "slider+number",
+          "box": [
+            1324,
+            520,
+            1884,
+            588
+          ],
+          "label": "距離",
+          "value": 850,
+          "unit": ""
+        },
+        {
+          "id": "drawer-height",
+          "kind": "slider+number",
+          "box": [
+            1324,
+            602,
+            1884,
+            670
+          ],
+          "label": "高さ",
+          "value": 350,
+          "unit": ""
+        },
+        {
+          "id": "drawer-FX",
+          "kind": "button",
+          "box": [
+            1320,
+            742,
+            1594,
+            790
+          ],
+          "label": "エフェクトを選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "drawer-motion",
+          "kind": "button",
+          "box": [
+            1606,
+            742,
+            1888,
+            790
+          ],
+          "label": "6種類の登場アニメ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "drawer-cancel",
+          "kind": "button",
+          "box": [
+            1320,
+            979,
+            1501,
+            1021
+          ],
+          "label": "キャンセル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "drawer-apply",
+          "kind": "button",
+          "box": [
+            1515,
+            979,
+            1888,
+            1021
+          ],
+          "label": "このシーンへ適用",
+          "selected": false,
+          "disabled": false
+        }
+      ],
+      "kind": "静止デザイン。動作実装・実機検証ではない"
+    },
+    {
+      "id": "C3P_main_dark",
+      "file": "screens/C3P_main_dark.png",
+      "vector": "screens/C3P_main_dark.svg",
+      "size": [
+        1920,
+        1080
+      ],
+      "theme": "dark",
+      "components": [
+        {
+          "id": "header-action-0",
+          "kind": "button",
+          "box": [
+            1372,
+            9,
+            1482,
+            48
+          ],
+          "label": "リプレイ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-1",
+          "kind": "button",
+          "box": [
+            1490,
+            9,
+            1562,
+            48
+          ],
+          "label": "準備",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-2",
+          "kind": "button",
+          "box": [
+            1570,
+            9,
+            1672,
+            48
+          ],
+          "label": "基本設定",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-3",
+          "kind": "button",
+          "box": [
+            1680,
+            9,
+            1746,
+            48
+          ],
+          "label": "ログ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-4",
+          "kind": "button",
+          "box": [
+            1754,
+            9,
+            1908,
+            48
+          ],
+          "label": "作成内容を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "replay-target",
+          "kind": "panel",
+          "box": [
+            12,
+            68,
+            332,
+            776
+          ],
+          "label": "1. リプレイ準備・対象",
+          "scroll": true
+        },
+        {
+          "id": "replay-file",
+          "kind": "field",
+          "box": [
+            24,
+            112,
+            320,
+            177
+          ],
+          "label": "リプレイファイル",
+          "value": "sample_match.rofl"
+        },
+        {
+          "id": "prepare",
+          "kind": "button",
+          "box": [
+            24,
+            189,
+            320,
+            227
+          ],
+          "label": "準備状態を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "preset",
+          "kind": "button",
+          "box": [
+            24,
+            738,
+            320,
+            768
+          ],
+          "label": "テンプレート・参考",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-list",
+          "kind": "panel",
+          "box": [
+            1532,
+            68,
+            1908,
+            776
+          ],
+          "label": "2. 試合全体から見せ場を選ぶ",
+          "scroll": true
+        },
+        {
+          "id": "scan",
+          "kind": "button",
+          "box": [
+            1544,
+            111,
+            1896,
+            150
+          ],
+          "label": "試合全体スキャン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-0",
+          "kind": "button",
+          "box": [
+            1544.0,
+            189,
+            1658.67,
+            221
+          ],
+          "label": "すべて",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "filter-1",
+          "kind": "button",
+          "box": [
+            1662.67,
+            189,
+            1777.33,
+            221
+          ],
+          "label": "キル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-2",
+          "kind": "button",
+          "box": [
+            1781.33,
+            189,
+            1896.0,
+            221
+          ],
+          "label": "アシスト",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-check-0",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            246,
+            1576,
+            280
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-1",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            318,
+            1576,
+            352
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-2",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            390,
+            1576,
+            424
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-3",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            462,
+            1576,
+            496
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-4",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            534,
+            1576,
+            568
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-jump",
+          "kind": "button",
+          "box": [
+            1544,
+            734,
+            1896,
+            767
+          ],
+          "label": "選択シーンへ移動",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-panel",
+          "kind": "panel",
+          "box": [
+            344,
+            68,
+            1520,
+            776
+          ],
+          "label": "ミラープレビュー",
+          "scroll": false
+        },
+        {
+          "id": "preview-compare",
+          "kind": "button",
+          "box": [
+            1381,
+            76,
+            1508,
+            106
+          ],
+          "label": "調整前と比較",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-image",
+          "kind": "fixed-preview",
+          "box": [
+            386.22,
+            108.0,
+            1477.78,
+            722.0
+          ],
+          "label": "16:9 合成図。LoL実映像ではない",
+          "aspect": 1.7777777777777777
+        },
+        {
+          "id": "transport-0",
+          "kind": "button",
+          "box": [
+            356,
+            733,
+            456,
+            767
+          ],
+          "label": "ミラー開始",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-1",
+          "kind": "button",
+          "box": [
+            463,
+            733,
+            527,
+            767
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-2",
+          "kind": "button",
+          "box": [
+            534,
+            733,
+            654,
+            767
+          ],
+          "label": "演出を再生",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "transport-3",
+          "kind": "button",
+          "box": [
+            661,
+            733,
+            787,
+            767
+          ],
+          "label": "プレビュー停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "lower-edit",
+          "kind": "panel",
+          "box": [
+            12,
+            788,
+            1908,
+            1044
+          ],
+          "label": "",
+          "scroll": false
+        },
+        {
+          "id": "easy-toggle",
+          "kind": "button",
+          "box": [
+            24,
+            796,
+            137,
+            830
+          ],
+          "label": "かんたん編集",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "detail-toggle",
+          "kind": "button",
+          "box": [
+            143,
+            796,
+            256,
+            830
+          ],
+          "label": "詳細編集",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-0",
+          "kind": "button",
+          "box": [
+            280,
+            796,
+            356,
+            830
+          ],
+          "label": "シーン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-1",
+          "kind": "button",
+          "box": [
+            362,
+            796,
+            438,
+            830
+          ],
+          "label": "カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-2",
+          "kind": "button",
+          "box": [
+            444,
+            796,
+            520,
+            830
+          ],
+          "label": "色・FX",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-3",
+          "kind": "button",
+          "box": [
+            526,
+            796,
+            602,
+            830
+          ],
+          "label": "出力",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "camera-mode-0",
+          "kind": "button",
+          "box": [
+            28.0,
+            859,
+            334.0,
+            935
+          ],
+          "label": "既存カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "camera-mode-1",
+          "kind": "button",
+          "box": [
+            346.24,
+            859,
+            652.24,
+            935
+          ],
+          "label": "固定＋自動構図",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "camera-mode-2",
+          "kind": "button",
+          "box": [
+            664.48,
+            859,
+            970.48,
+            935
+          ],
+          "label": "フルオート候補",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "side-blue",
+          "kind": "button",
+          "box": [
+            978.96,
+            877,
+            1066.96,
+            915
+          ],
+          "label": "BLUE",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "side-red",
+          "kind": "button",
+          "box": [
+            1074.96,
+            877,
+            1162.96,
+            915
+          ],
+          "label": "RED",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "fov",
+          "kind": "slider+number",
+          "box": [
+            1339.2,
+            847,
+            1609.6,
+            917
+          ],
+          "label": "FOV",
+          "value": 48,
+          "unit": "°"
+        },
+        {
+          "id": "yaw",
+          "kind": "slider+number",
+          "box": [
+            1629.6,
+            847,
+            1894,
+            917
+          ],
+          "label": "Yaw",
+          "value": 32,
+          "unit": "°"
+        },
+        {
+          "id": "parameter-source",
+          "kind": "button",
+          "box": [
+            1339.2,
+            932,
+            1894,
+            969
+          ],
+          "label": "値の入力元：手動 ／ キー適用 ▾",
+          "selected": false,
+          "disabled": false
+        }
+      ],
+      "kind": "静止デザイン。動作実装・実機検証ではない"
+    },
+    {
+      "id": "C3P_main_1366x768",
+      "file": "screens/C3P_main_1366x768.png",
+      "vector": "screens/C3P_main_1366x768.svg",
+      "size": [
+        1366,
+        768
+      ],
+      "theme": "light",
+      "components": [
+        {
+          "id": "header-action-0",
+          "kind": "button",
+          "box": [
+            822,
+            9,
+            932,
+            44
+          ],
+          "label": "リプレイ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-1",
+          "kind": "button",
+          "box": [
+            940,
+            9,
+            1012,
+            44
+          ],
+          "label": "準備",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-2",
+          "kind": "button",
+          "box": [
+            1020,
+            9,
+            1122,
+            44
+          ],
+          "label": "基本設定",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-3",
+          "kind": "button",
+          "box": [
+            1130,
+            9,
+            1196,
+            44
+          ],
+          "label": "ログ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-4",
+          "kind": "button",
+          "box": [
+            1204,
+            9,
+            1358,
+            44
+          ],
+          "label": "作成内容を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "replay-target",
+          "kind": "panel",
+          "box": [
+            8,
+            60,
+            240,
+            540
+          ],
+          "label": "1. リプレイ準備・対象",
+          "scroll": true
+        },
+        {
+          "id": "replay-file",
+          "kind": "field",
+          "box": [
+            20,
+            104,
+            228,
+            169
+          ],
+          "label": "リプレイファイル",
+          "value": "sample_match.rofl"
+        },
+        {
+          "id": "prepare",
+          "kind": "button",
+          "box": [
+            20,
+            181,
+            228,
+            219
+          ],
+          "label": "準備状態を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "preset",
+          "kind": "button",
+          "box": [
+            20,
+            502,
+            228,
+            532
+          ],
+          "label": "テンプレート・参考",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-list",
+          "kind": "panel",
+          "box": [
+            1074,
+            60,
+            1358,
+            540
+          ],
+          "label": "2. 試合全体から見せ場を選ぶ",
+          "scroll": true
+        },
+        {
+          "id": "scan",
+          "kind": "button",
+          "box": [
+            1086,
+            103,
+            1346,
+            142
+          ],
+          "label": "試合全体スキャン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-0",
+          "kind": "button",
+          "box": [
+            1086.0,
+            181,
+            1170.0,
+            213
+          ],
+          "label": "すべて",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "filter-1",
+          "kind": "button",
+          "box": [
+            1174.0,
+            181,
+            1258.0,
+            213
+          ],
+          "label": "キル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-2",
+          "kind": "button",
+          "box": [
+            1262.0,
+            181,
+            1346.0,
+            213
+          ],
+          "label": "アシスト",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-check-0",
+          "kind": "checkbox",
+          "box": [
+            1089,
+            238,
+            1118,
+            272
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-1",
+          "kind": "checkbox",
+          "box": [
+            1089,
+            291,
+            1118,
+            325
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-2",
+          "kind": "checkbox",
+          "box": [
+            1089,
+            344,
+            1118,
+            378
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-3",
+          "kind": "checkbox",
+          "box": [
+            1089,
+            397,
+            1118,
+            431
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-jump",
+          "kind": "button",
+          "box": [
+            1086,
+            498,
+            1346,
+            531
+          ],
+          "label": "選択シーンへ移動",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-panel",
+          "kind": "panel",
+          "box": [
+            248,
+            60,
+            1066,
+            540
+          ],
+          "label": "ミラープレビュー",
+          "scroll": false
+        },
+        {
+          "id": "preview-compare",
+          "kind": "button",
+          "box": [
+            927,
+            68,
+            1054,
+            98
+          ],
+          "label": "調整前と比較",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-image",
+          "kind": "fixed-preview",
+          "box": [
+            305.0,
+            96.0,
+            1009.0,
+            492.0
+          ],
+          "label": "16:9 合成図。LoL実映像ではない",
+          "aspect": 1.7777777777777777
+        },
+        {
+          "id": "transport-0",
+          "kind": "button",
+          "box": [
+            260,
+            497,
+            346,
+            531
+          ],
+          "label": "ミラー開始",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-1",
+          "kind": "button",
+          "box": [
+            353,
+            497,
+            407,
+            531
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-2",
+          "kind": "button",
+          "box": [
+            414,
+            497,
+            522,
+            531
+          ],
+          "label": "演出を再生",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "transport-3",
+          "kind": "button",
+          "box": [
+            529,
+            497,
+            583,
+            531
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "lower-edit",
+          "kind": "panel",
+          "box": [
+            8,
+            548,
+            1358,
+            736
+          ],
+          "label": "",
+          "scroll": false
+        },
+        {
+          "id": "easy-toggle",
+          "kind": "button",
+          "box": [
+            20,
+            556,
+            133,
+            590
+          ],
+          "label": "かんたん編集",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "detail-toggle",
+          "kind": "button",
+          "box": [
+            139,
+            556,
+            252,
+            590
+          ],
+          "label": "詳細編集",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-0",
+          "kind": "button",
+          "box": [
+            276,
+            556,
+            352,
+            590
+          ],
+          "label": "シーン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-1",
+          "kind": "button",
+          "box": [
+            358,
+            556,
+            434,
+            590
+          ],
+          "label": "カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-2",
+          "kind": "button",
+          "box": [
+            440,
+            556,
+            516,
+            590
+          ],
+          "label": "色・FX",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-3",
+          "kind": "button",
+          "box": [
+            522,
+            556,
+            598,
+            590
+          ],
+          "label": "出力",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "camera-mode-0",
+          "kind": "button",
+          "box": [
+            24.0,
+            619,
+            239.0,
+            695
+          ],
+          "label": "既存カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "camera-mode-1",
+          "kind": "button",
+          "box": [
+            247.6,
+            619,
+            462.6,
+            695
+          ],
+          "label": "固定＋自動構図",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "camera-mode-2",
+          "kind": "button",
+          "box": [
+            471.2,
+            619,
+            686.2,
+            695
+          ],
+          "label": "フルオート候補",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "side-blue",
+          "kind": "button",
+          "box": [
+            696.5,
+            637,
+            784.5,
+            675
+          ],
+          "label": "BLUE",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "side-red",
+          "kind": "button",
+          "box": [
+            792.5,
+            637,
+            880.5,
+            675
+          ],
+          "label": "RED",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "fov",
+          "kind": "slider+number",
+          "box": [
+            953.0,
+            607,
+            1141.5,
+            677
+          ],
+          "label": "FOV",
+          "value": 48,
+          "unit": "°"
+        },
+        {
+          "id": "yaw",
+          "kind": "slider+number",
+          "box": [
+            1161.5,
+            607,
+            1344,
+            677
+          ],
+          "label": "Yaw",
+          "value": 32,
+          "unit": "°"
+        },
+        {
+          "id": "parameter-source",
+          "kind": "button",
+          "box": [
+            953.0,
+            692,
+            1344,
+            728
+          ],
+          "label": "値の入力元：手動 ／ キー適用 ▾",
+          "selected": false,
+          "disabled": false
+        }
+      ],
+      "kind": "静止デザイン。動作実装・実機検証ではない"
+    },
+    {
+      "id": "C3S_main_light",
+      "file": "screens/C3S_main_light.png",
+      "vector": "screens/C3S_main_light.svg",
+      "size": [
+        1920,
+        1080
+      ],
+      "theme": "light",
+      "components": [
+        {
+          "id": "header-action-0",
+          "kind": "button",
+          "box": [
+            1372,
+            9,
+            1482,
+            48
+          ],
+          "label": "リプレイ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-1",
+          "kind": "button",
+          "box": [
+            1490,
+            9,
+            1562,
+            48
+          ],
+          "label": "準備",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-2",
+          "kind": "button",
+          "box": [
+            1570,
+            9,
+            1672,
+            48
+          ],
+          "label": "基本設定",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-3",
+          "kind": "button",
+          "box": [
+            1680,
+            9,
+            1746,
+            48
+          ],
+          "label": "ログ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-4",
+          "kind": "button",
+          "box": [
+            1754,
+            9,
+            1908,
+            48
+          ],
+          "label": "作成内容を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "replay-target",
+          "kind": "panel",
+          "box": [
+            12,
+            68,
+            332,
+            776
+          ],
+          "label": "1. リプレイ準備・対象",
+          "scroll": true
+        },
+        {
+          "id": "replay-file",
+          "kind": "field",
+          "box": [
+            24,
+            112,
+            320,
+            177
+          ],
+          "label": "リプレイファイル",
+          "value": "sample_match.rofl"
+        },
+        {
+          "id": "prepare",
+          "kind": "button",
+          "box": [
+            24,
+            189,
+            320,
+            227
+          ],
+          "label": "準備状態を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "preset",
+          "kind": "button",
+          "box": [
+            24,
+            738,
+            320,
+            768
+          ],
+          "label": "テンプレート・参考",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-list",
+          "kind": "panel",
+          "box": [
+            1532,
+            68,
+            1908,
+            776
+          ],
+          "label": "2. 試合全体から見せ場を選ぶ",
+          "scroll": true
+        },
+        {
+          "id": "scan",
+          "kind": "button",
+          "box": [
+            1544,
+            111,
+            1896,
+            150
+          ],
+          "label": "試合全体スキャン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-0",
+          "kind": "button",
+          "box": [
+            1544.0,
+            189,
+            1658.67,
+            221
+          ],
+          "label": "すべて",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "filter-1",
+          "kind": "button",
+          "box": [
+            1662.67,
+            189,
+            1777.33,
+            221
+          ],
+          "label": "キル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-2",
+          "kind": "button",
+          "box": [
+            1781.33,
+            189,
+            1896.0,
+            221
+          ],
+          "label": "アシスト",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-check-0",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            246,
+            1576,
+            280
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-1",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            318,
+            1576,
+            352
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-2",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            390,
+            1576,
+            424
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-3",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            462,
+            1576,
+            496
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-4",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            534,
+            1576,
+            568
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-jump",
+          "kind": "button",
+          "box": [
+            1544,
+            734,
+            1896,
+            767
+          ],
+          "label": "選択シーンへ移動",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-panel",
+          "kind": "panel",
+          "box": [
+            344,
+            68,
+            1520,
+            776
+          ],
+          "label": "ミラープレビュー",
+          "scroll": false
+        },
+        {
+          "id": "preview-compare",
+          "kind": "button",
+          "box": [
+            1381,
+            76,
+            1508,
+            106
+          ],
+          "label": "調整前と比較",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-image",
+          "kind": "fixed-preview",
+          "box": [
+            386.22,
+            108.0,
+            1477.78,
+            722.0
+          ],
+          "label": "16:9 合成図。LoL実映像ではない",
+          "aspect": 1.7777777777777777
+        },
+        {
+          "id": "transport-0",
+          "kind": "button",
+          "box": [
+            356,
+            733,
+            456,
+            767
+          ],
+          "label": "ミラー開始",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-1",
+          "kind": "button",
+          "box": [
+            463,
+            733,
+            527,
+            767
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-2",
+          "kind": "button",
+          "box": [
+            534,
+            733,
+            654,
+            767
+          ],
+          "label": "演出を再生",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "transport-3",
+          "kind": "button",
+          "box": [
+            661,
+            733,
+            787,
+            767
+          ],
+          "label": "プレビュー停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "lower-edit",
+          "kind": "panel",
+          "box": [
+            12,
+            788,
+            1908,
+            1044
+          ],
+          "label": "",
+          "scroll": false
+        },
+        {
+          "id": "easy-toggle",
+          "kind": "button",
+          "box": [
+            24,
+            796,
+            137,
+            830
+          ],
+          "label": "かんたん編集",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "detail-toggle",
+          "kind": "button",
+          "box": [
+            143,
+            796,
+            256,
+            830
+          ],
+          "label": "詳細編集",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-0",
+          "kind": "button",
+          "box": [
+            280,
+            796,
+            356,
+            830
+          ],
+          "label": "シーン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-1",
+          "kind": "button",
+          "box": [
+            362,
+            796,
+            438,
+            830
+          ],
+          "label": "カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-2",
+          "kind": "button",
+          "box": [
+            444,
+            796,
+            520,
+            830
+          ],
+          "label": "色・FX",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-3",
+          "kind": "button",
+          "box": [
+            526,
+            796,
+            602,
+            830
+          ],
+          "label": "出力",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "open-picker-0",
+          "kind": "button",
+          "box": [
+            552.0,
+            846,
+            640.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-0-0",
+          "kind": "thumbnail-card",
+          "box": [
+            24.0,
+            886,
+            222.67,
+            1028
+          ],
+          "label": "安定した視点",
+          "selected": true
+        },
+        {
+          "id": "quick-card-0-1",
+          "kind": "thumbnail-card",
+          "box": [
+            232.67,
+            886,
+            431.33,
+            1028
+          ],
+          "label": "寄りを作る",
+          "selected": false
+        },
+        {
+          "id": "quick-card-0-2",
+          "kind": "thumbnail-card",
+          "box": [
+            441.33,
+            886,
+            640.0,
+            1028
+          ],
+          "label": "広く見せる",
+          "selected": false
+        },
+        {
+          "id": "open-picker-1",
+          "kind": "button",
+          "box": [
+            1180.0,
+            846,
+            1268.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-1-0",
+          "kind": "thumbnail-card",
+          "box": [
+            652.0,
+            886,
+            850.67,
+            1028
+          ],
+          "label": "シンプル",
+          "selected": true
+        },
+        {
+          "id": "quick-card-1-1",
+          "kind": "thumbnail-card",
+          "box": [
+            860.67,
+            886,
+            1059.33,
+            1028
+          ],
+          "label": "明るい輪郭",
+          "selected": false
+        },
+        {
+          "id": "quick-card-1-2",
+          "kind": "thumbnail-card",
+          "box": [
+            1069.33,
+            886,
+            1268.0,
+            1028
+          ],
+          "label": "対決レイアウト",
+          "selected": false
+        },
+        {
+          "id": "open-picker-2",
+          "kind": "button",
+          "box": [
+            1808.0,
+            846,
+            1896.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-2-0",
+          "kind": "thumbnail-card",
+          "box": [
+            1280.0,
+            886,
+            1478.67,
+            1028
+          ],
+          "label": "控えめ",
+          "selected": true
+        },
+        {
+          "id": "quick-card-2-1",
+          "kind": "thumbnail-card",
+          "box": [
+            1488.67,
+            886,
+            1687.33,
+            1028
+          ],
+          "label": "輝き",
+          "selected": false
+        },
+        {
+          "id": "quick-card-2-2",
+          "kind": "thumbnail-card",
+          "box": [
+            1697.33,
+            886,
+            1896.0,
+            1028
+          ],
+          "label": "勢い",
+          "selected": false
+        }
+      ],
+      "kind": "静止デザイン。動作実装・実機検証ではない"
+    },
+    {
+      "id": "C3S_easy_light",
+      "file": "screens/C3S_easy_light.png",
+      "vector": "screens/C3S_easy_light.svg",
+      "size": [
+        1920,
+        1080
+      ],
+      "theme": "light",
+      "components": [
+        {
+          "id": "header-action-0",
+          "kind": "button",
+          "box": [
+            1372,
+            9,
+            1482,
+            48
+          ],
+          "label": "リプレイ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-1",
+          "kind": "button",
+          "box": [
+            1490,
+            9,
+            1562,
+            48
+          ],
+          "label": "準備",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-2",
+          "kind": "button",
+          "box": [
+            1570,
+            9,
+            1672,
+            48
+          ],
+          "label": "基本設定",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-3",
+          "kind": "button",
+          "box": [
+            1680,
+            9,
+            1746,
+            48
+          ],
+          "label": "ログ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-4",
+          "kind": "button",
+          "box": [
+            1754,
+            9,
+            1908,
+            48
+          ],
+          "label": "作成内容を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "replay-target",
+          "kind": "panel",
+          "box": [
+            12,
+            68,
+            332,
+            776
+          ],
+          "label": "1. リプレイ準備・対象",
+          "scroll": true
+        },
+        {
+          "id": "replay-file",
+          "kind": "field",
+          "box": [
+            24,
+            112,
+            320,
+            177
+          ],
+          "label": "リプレイファイル",
+          "value": "sample_match.rofl"
+        },
+        {
+          "id": "prepare",
+          "kind": "button",
+          "box": [
+            24,
+            189,
+            320,
+            227
+          ],
+          "label": "準備状態を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "preset",
+          "kind": "button",
+          "box": [
+            24,
+            738,
+            320,
+            768
+          ],
+          "label": "テンプレート・参考",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-list",
+          "kind": "panel",
+          "box": [
+            1532,
+            68,
+            1908,
+            776
+          ],
+          "label": "2. 試合全体から見せ場を選ぶ",
+          "scroll": true
+        },
+        {
+          "id": "scan",
+          "kind": "button",
+          "box": [
+            1544,
+            111,
+            1896,
+            150
+          ],
+          "label": "試合全体スキャン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-0",
+          "kind": "button",
+          "box": [
+            1544.0,
+            189,
+            1658.67,
+            221
+          ],
+          "label": "すべて",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "filter-1",
+          "kind": "button",
+          "box": [
+            1662.67,
+            189,
+            1777.33,
+            221
+          ],
+          "label": "キル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-2",
+          "kind": "button",
+          "box": [
+            1781.33,
+            189,
+            1896.0,
+            221
+          ],
+          "label": "アシスト",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-check-0",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            246,
+            1576,
+            280
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-1",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            318,
+            1576,
+            352
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-2",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            390,
+            1576,
+            424
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-3",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            462,
+            1576,
+            496
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-4",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            534,
+            1576,
+            568
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-jump",
+          "kind": "button",
+          "box": [
+            1544,
+            734,
+            1896,
+            767
+          ],
+          "label": "選択シーンへ移動",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-panel",
+          "kind": "panel",
+          "box": [
+            344,
+            68,
+            1520,
+            776
+          ],
+          "label": "ミラープレビュー",
+          "scroll": false
+        },
+        {
+          "id": "preview-compare",
+          "kind": "button",
+          "box": [
+            1381,
+            76,
+            1508,
+            106
+          ],
+          "label": "調整前と比較",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-image",
+          "kind": "fixed-preview",
+          "box": [
+            386.22,
+            108.0,
+            1477.78,
+            722.0
+          ],
+          "label": "16:9 合成図。LoL実映像ではない",
+          "aspect": 1.7777777777777777
+        },
+        {
+          "id": "transport-0",
+          "kind": "button",
+          "box": [
+            356,
+            733,
+            456,
+            767
+          ],
+          "label": "ミラー開始",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-1",
+          "kind": "button",
+          "box": [
+            463,
+            733,
+            527,
+            767
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-2",
+          "kind": "button",
+          "box": [
+            534,
+            733,
+            654,
+            767
+          ],
+          "label": "演出を再生",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "transport-3",
+          "kind": "button",
+          "box": [
+            661,
+            733,
+            787,
+            767
+          ],
+          "label": "プレビュー停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "lower-edit",
+          "kind": "panel",
+          "box": [
+            12,
+            788,
+            1908,
+            1044
+          ],
+          "label": "",
+          "scroll": false
+        },
+        {
+          "id": "easy-toggle",
+          "kind": "button",
+          "box": [
+            24,
+            796,
+            137,
+            830
+          ],
+          "label": "かんたん編集",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "detail-toggle",
+          "kind": "button",
+          "box": [
+            143,
+            796,
+            256,
+            830
+          ],
+          "label": "詳細編集",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-0",
+          "kind": "button",
+          "box": [
+            280,
+            796,
+            356,
+            830
+          ],
+          "label": "シーン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-1",
+          "kind": "button",
+          "box": [
+            362,
+            796,
+            438,
+            830
+          ],
+          "label": "カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-2",
+          "kind": "button",
+          "box": [
+            444,
+            796,
+            520,
+            830
+          ],
+          "label": "色・FX",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-3",
+          "kind": "button",
+          "box": [
+            526,
+            796,
+            602,
+            830
+          ],
+          "label": "出力",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "open-picker-0",
+          "kind": "button",
+          "box": [
+            552.0,
+            846,
+            640.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-0-0",
+          "kind": "thumbnail-card",
+          "box": [
+            24.0,
+            886,
+            222.67,
+            1028
+          ],
+          "label": "安定した視点",
+          "selected": true
+        },
+        {
+          "id": "quick-card-0-1",
+          "kind": "thumbnail-card",
+          "box": [
+            232.67,
+            886,
+            431.33,
+            1028
+          ],
+          "label": "寄りを作る",
+          "selected": false
+        },
+        {
+          "id": "quick-card-0-2",
+          "kind": "thumbnail-card",
+          "box": [
+            441.33,
+            886,
+            640.0,
+            1028
+          ],
+          "label": "広く見せる",
+          "selected": false
+        },
+        {
+          "id": "open-picker-1",
+          "kind": "button",
+          "box": [
+            1180.0,
+            846,
+            1268.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-1-0",
+          "kind": "thumbnail-card",
+          "box": [
+            652.0,
+            886,
+            850.67,
+            1028
+          ],
+          "label": "シンプル",
+          "selected": true
+        },
+        {
+          "id": "quick-card-1-1",
+          "kind": "thumbnail-card",
+          "box": [
+            860.67,
+            886,
+            1059.33,
+            1028
+          ],
+          "label": "明るい輪郭",
+          "selected": false
+        },
+        {
+          "id": "quick-card-1-2",
+          "kind": "thumbnail-card",
+          "box": [
+            1069.33,
+            886,
+            1268.0,
+            1028
+          ],
+          "label": "対決レイアウト",
+          "selected": false
+        },
+        {
+          "id": "open-picker-2",
+          "kind": "button",
+          "box": [
+            1808.0,
+            846,
+            1896.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-2-0",
+          "kind": "thumbnail-card",
+          "box": [
+            1280.0,
+            886,
+            1478.67,
+            1028
+          ],
+          "label": "控えめ",
+          "selected": true
+        },
+        {
+          "id": "quick-card-2-1",
+          "kind": "thumbnail-card",
+          "box": [
+            1488.67,
+            886,
+            1687.33,
+            1028
+          ],
+          "label": "輝き",
+          "selected": false
+        },
+        {
+          "id": "quick-card-2-2",
+          "kind": "thumbnail-card",
+          "box": [
+            1697.33,
+            886,
+            1896.0,
+            1028
+          ],
+          "label": "勢い",
+          "selected": false
+        }
+      ],
+      "kind": "静止デザイン。動作実装・実機検証ではない"
+    },
+    {
+      "id": "C3S_curve_light",
+      "file": "screens/C3S_curve_light.png",
+      "vector": "screens/C3S_curve_light.svg",
+      "size": [
+        1920,
+        1080
+      ],
+      "theme": "light",
+      "components": [
+        {
+          "id": "header-action-0",
+          "kind": "button",
+          "box": [
+            1372,
+            9,
+            1482,
+            48
+          ],
+          "label": "リプレイ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-1",
+          "kind": "button",
+          "box": [
+            1490,
+            9,
+            1562,
+            48
+          ],
+          "label": "準備",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-2",
+          "kind": "button",
+          "box": [
+            1570,
+            9,
+            1672,
+            48
+          ],
+          "label": "基本設定",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-3",
+          "kind": "button",
+          "box": [
+            1680,
+            9,
+            1746,
+            48
+          ],
+          "label": "ログ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-4",
+          "kind": "button",
+          "box": [
+            1754,
+            9,
+            1908,
+            48
+          ],
+          "label": "作成内容を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "replay-target",
+          "kind": "panel",
+          "box": [
+            12,
+            68,
+            332,
+            712
+          ],
+          "label": "1. リプレイ準備・対象",
+          "scroll": true
+        },
+        {
+          "id": "replay-file",
+          "kind": "field",
+          "box": [
+            24,
+            112,
+            320,
+            177
+          ],
+          "label": "リプレイファイル",
+          "value": "sample_match.rofl"
+        },
+        {
+          "id": "prepare",
+          "kind": "button",
+          "box": [
+            24,
+            189,
+            320,
+            227
+          ],
+          "label": "準備状態を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "preset",
+          "kind": "button",
+          "box": [
+            24,
+            674,
+            320,
+            704
+          ],
+          "label": "テンプレート・参考",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-list",
+          "kind": "panel",
+          "box": [
+            1532,
+            68,
+            1908,
+            712
+          ],
+          "label": "2. 試合全体から見せ場を選ぶ",
+          "scroll": true
+        },
+        {
+          "id": "scan",
+          "kind": "button",
+          "box": [
+            1544,
+            111,
+            1896,
+            150
+          ],
+          "label": "試合全体スキャン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-0",
+          "kind": "button",
+          "box": [
+            1544.0,
+            189,
+            1658.67,
+            221
+          ],
+          "label": "すべて",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "filter-1",
+          "kind": "button",
+          "box": [
+            1662.67,
+            189,
+            1777.33,
+            221
+          ],
+          "label": "キル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-2",
+          "kind": "button",
+          "box": [
+            1781.33,
+            189,
+            1896.0,
+            221
+          ],
+          "label": "アシスト",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-check-0",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            246,
+            1576,
+            280
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-1",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            318,
+            1576,
+            352
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-2",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            390,
+            1576,
+            424
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-3",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            462,
+            1576,
+            496
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-4",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            534,
+            1576,
+            568
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-jump",
+          "kind": "button",
+          "box": [
+            1544,
+            670,
+            1896,
+            703
+          ],
+          "label": "選択シーンへ移動",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-panel",
+          "kind": "panel",
+          "box": [
+            344,
+            68,
+            1520,
+            712
+          ],
+          "label": "ミラープレビュー",
+          "scroll": false
+        },
+        {
+          "id": "preview-compare",
+          "kind": "button",
+          "box": [
+            1381,
+            76,
+            1508,
+            106
+          ],
+          "label": "調整前と比較",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-image",
+          "kind": "fixed-preview",
+          "box": [
+            443.11,
+            108.0,
+            1420.89,
+            658.0
+          ],
+          "label": "16:9 合成図。LoL実映像ではない",
+          "aspect": 1.7777777777777777
+        },
+        {
+          "id": "transport-0",
+          "kind": "button",
+          "box": [
+            356,
+            669,
+            456,
+            703
+          ],
+          "label": "ミラー開始",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-1",
+          "kind": "button",
+          "box": [
+            463,
+            669,
+            527,
+            703
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-2",
+          "kind": "button",
+          "box": [
+            534,
+            669,
+            654,
+            703
+          ],
+          "label": "演出を再生",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "transport-3",
+          "kind": "button",
+          "box": [
+            661,
+            669,
+            787,
+            703
+          ],
+          "label": "プレビュー停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "timeline-editor",
+          "kind": "panel",
+          "box": [
+            12,
+            724,
+            1908,
+            1044
+          ],
+          "label": "キーフレーム・カーブ",
+          "scroll": false
+        },
+        {
+          "id": "track-switch",
+          "kind": "button",
+          "box": [
+            262,
+            731,
+            362,
+            763
+          ],
+          "label": "FOV ▾",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "add-key",
+          "kind": "button",
+          "box": [
+            1648,
+            731,
+            1768,
+            763
+          ],
+          "label": "＋ キーを追加",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "curve-toggle",
+          "kind": "button",
+          "box": [
+            1778,
+            731,
+            1896,
+            763
+          ],
+          "label": "カーブ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "key-0",
+          "kind": "keyframe-hit-target",
+          "box": [
+            320.5,
+            933.5,
+            352.5,
+            965.5
+          ],
+          "label": "時刻と値を編集",
+          "time": 1,
+          "value": 40
+        },
+        {
+          "id": "key-1",
+          "kind": "keyframe-hit-target",
+          "box": [
+            778.5,
+            874.1,
+            810.5,
+            906.1
+          ],
+          "label": "時刻と値を編集",
+          "time": 5,
+          "value": 64
+        },
+        {
+          "id": "key-2",
+          "kind": "keyframe-hit-target",
+          "box": [
+            1351.0,
+            913.7,
+            1383.0,
+            945.7
+          ],
+          "label": "時刻と値を編集",
+          "time": 10,
+          "value": 48
+        },
+        {
+          "id": "key-time",
+          "kind": "field",
+          "box": [
+            1620,
+            803,
+            1894,
+            861
+          ],
+          "label": "時刻（秒）",
+          "value": "5.000"
+        },
+        {
+          "id": "key-value",
+          "kind": "field",
+          "box": [
+            1620,
+            869,
+            1894,
+            928
+          ],
+          "label": "FOV（°）",
+          "value": "64.0"
+        },
+        {
+          "id": "blend",
+          "kind": "button",
+          "box": [
+            1620,
+            940,
+            1894,
+            976
+          ],
+          "label": "補間方式を選ぶ ▾",
+          "selected": false,
+          "disabled": false
+        }
+      ],
+      "kind": "静止デザイン。動作実装・実機検証ではない"
+    },
+    {
+      "id": "C3S_asset_drawer",
+      "file": "screens/C3S_asset_drawer.png",
+      "vector": "screens/C3S_asset_drawer.svg",
+      "size": [
+        1920,
+        1080
+      ],
+      "theme": "light",
+      "components": [
+        {
+          "id": "header-action-0",
+          "kind": "button",
+          "box": [
+            1372,
+            9,
+            1482,
+            48
+          ],
+          "label": "リプレイ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-1",
+          "kind": "button",
+          "box": [
+            1490,
+            9,
+            1562,
+            48
+          ],
+          "label": "準備",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-2",
+          "kind": "button",
+          "box": [
+            1570,
+            9,
+            1672,
+            48
+          ],
+          "label": "基本設定",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-3",
+          "kind": "button",
+          "box": [
+            1680,
+            9,
+            1746,
+            48
+          ],
+          "label": "ログ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-4",
+          "kind": "button",
+          "box": [
+            1754,
+            9,
+            1908,
+            48
+          ],
+          "label": "作成内容を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "replay-target",
+          "kind": "panel",
+          "box": [
+            12,
+            68,
+            332,
+            776
+          ],
+          "label": "1. リプレイ準備・対象",
+          "scroll": true
+        },
+        {
+          "id": "replay-file",
+          "kind": "field",
+          "box": [
+            24,
+            112,
+            320,
+            177
+          ],
+          "label": "リプレイファイル",
+          "value": "sample_match.rofl"
+        },
+        {
+          "id": "prepare",
+          "kind": "button",
+          "box": [
+            24,
+            189,
+            320,
+            227
+          ],
+          "label": "準備状態を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "preset",
+          "kind": "button",
+          "box": [
+            24,
+            738,
+            320,
+            768
+          ],
+          "label": "テンプレート・参考",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-list",
+          "kind": "panel",
+          "box": [
+            1532,
+            68,
+            1908,
+            776
+          ],
+          "label": "2. 試合全体から見せ場を選ぶ",
+          "scroll": true
+        },
+        {
+          "id": "scan",
+          "kind": "button",
+          "box": [
+            1544,
+            111,
+            1896,
+            150
+          ],
+          "label": "試合全体スキャン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-0",
+          "kind": "button",
+          "box": [
+            1544.0,
+            189,
+            1658.67,
+            221
+          ],
+          "label": "すべて",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "filter-1",
+          "kind": "button",
+          "box": [
+            1662.67,
+            189,
+            1777.33,
+            221
+          ],
+          "label": "キル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-2",
+          "kind": "button",
+          "box": [
+            1781.33,
+            189,
+            1896.0,
+            221
+          ],
+          "label": "アシスト",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-check-0",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            246,
+            1576,
+            280
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-1",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            318,
+            1576,
+            352
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-2",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            390,
+            1576,
+            424
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-3",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            462,
+            1576,
+            496
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-4",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            534,
+            1576,
+            568
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-jump",
+          "kind": "button",
+          "box": [
+            1544,
+            734,
+            1896,
+            767
+          ],
+          "label": "選択シーンへ移動",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-panel",
+          "kind": "panel",
+          "box": [
+            344,
+            68,
+            1520,
+            776
+          ],
+          "label": "ミラープレビュー",
+          "scroll": false
+        },
+        {
+          "id": "preview-compare",
+          "kind": "button",
+          "box": [
+            1381,
+            76,
+            1508,
+            106
+          ],
+          "label": "調整前と比較",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-image",
+          "kind": "fixed-preview",
+          "box": [
+            386.22,
+            108.0,
+            1477.78,
+            722.0
+          ],
+          "label": "16:9 合成図。LoL実映像ではない",
+          "aspect": 1.7777777777777777
+        },
+        {
+          "id": "transport-0",
+          "kind": "button",
+          "box": [
+            356,
+            733,
+            456,
+            767
+          ],
+          "label": "ミラー開始",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-1",
+          "kind": "button",
+          "box": [
+            463,
+            733,
+            527,
+            767
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-2",
+          "kind": "button",
+          "box": [
+            534,
+            733,
+            654,
+            767
+          ],
+          "label": "演出を再生",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "transport-3",
+          "kind": "button",
+          "box": [
+            661,
+            733,
+            787,
+            767
+          ],
+          "label": "プレビュー停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "lower-edit",
+          "kind": "panel",
+          "box": [
+            12,
+            788,
+            1908,
+            1044
+          ],
+          "label": "",
+          "scroll": false
+        },
+        {
+          "id": "easy-toggle",
+          "kind": "button",
+          "box": [
+            24,
+            796,
+            137,
+            830
+          ],
+          "label": "かんたん編集",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "detail-toggle",
+          "kind": "button",
+          "box": [
+            143,
+            796,
+            256,
+            830
+          ],
+          "label": "詳細編集",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-0",
+          "kind": "button",
+          "box": [
+            280,
+            796,
+            356,
+            830
+          ],
+          "label": "シーン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-1",
+          "kind": "button",
+          "box": [
+            362,
+            796,
+            438,
+            830
+          ],
+          "label": "カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-2",
+          "kind": "button",
+          "box": [
+            444,
+            796,
+            520,
+            830
+          ],
+          "label": "色・FX",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-3",
+          "kind": "button",
+          "box": [
+            526,
+            796,
+            602,
+            830
+          ],
+          "label": "出力",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "open-picker-0",
+          "kind": "button",
+          "box": [
+            552.0,
+            846,
+            640.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-0-0",
+          "kind": "thumbnail-card",
+          "box": [
+            24.0,
+            886,
+            222.67,
+            1028
+          ],
+          "label": "安定した視点",
+          "selected": true
+        },
+        {
+          "id": "quick-card-0-1",
+          "kind": "thumbnail-card",
+          "box": [
+            232.67,
+            886,
+            431.33,
+            1028
+          ],
+          "label": "寄りを作る",
+          "selected": false
+        },
+        {
+          "id": "quick-card-0-2",
+          "kind": "thumbnail-card",
+          "box": [
+            441.33,
+            886,
+            640.0,
+            1028
+          ],
+          "label": "広く見せる",
+          "selected": false
+        },
+        {
+          "id": "open-picker-1",
+          "kind": "button",
+          "box": [
+            1180.0,
+            846,
+            1268.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-1-0",
+          "kind": "thumbnail-card",
+          "box": [
+            652.0,
+            886,
+            850.67,
+            1028
+          ],
+          "label": "シンプル",
+          "selected": true
+        },
+        {
+          "id": "quick-card-1-1",
+          "kind": "thumbnail-card",
+          "box": [
+            860.67,
+            886,
+            1059.33,
+            1028
+          ],
+          "label": "明るい輪郭",
+          "selected": false
+        },
+        {
+          "id": "quick-card-1-2",
+          "kind": "thumbnail-card",
+          "box": [
+            1069.33,
+            886,
+            1268.0,
+            1028
+          ],
+          "label": "対決レイアウト",
+          "selected": false
+        },
+        {
+          "id": "open-picker-2",
+          "kind": "button",
+          "box": [
+            1808.0,
+            846,
+            1896.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-2-0",
+          "kind": "thumbnail-card",
+          "box": [
+            1280.0,
+            886,
+            1478.67,
+            1028
+          ],
+          "label": "控えめ",
+          "selected": true
+        },
+        {
+          "id": "quick-card-2-1",
+          "kind": "thumbnail-card",
+          "box": [
+            1488.67,
+            886,
+            1687.33,
+            1028
+          ],
+          "label": "輝き",
+          "selected": false
+        },
+        {
+          "id": "quick-card-2-2",
+          "kind": "thumbnail-card",
+          "box": [
+            1697.33,
+            886,
+            1896.0,
+            1028
+          ],
+          "label": "勢い",
+          "selected": false
+        },
+        {
+          "id": "asset-drawer",
+          "kind": "panel",
+          "box": [
+            1260,
+            96,
+            1908,
+            1038
+          ],
+          "label": "キルフレームを選ぶ",
+          "scroll": true
+        },
+        {
+          "id": "asset-close",
+          "kind": "button",
+          "box": [
+            1859,
+            104,
+            1896,
+            139
+          ],
+          "label": "×",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "asset-filter",
+          "kind": "button",
+          "box": [
+            1280,
+            199,
+            1470,
+            239
+          ],
+          "label": "正式承認済み",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "asset-review",
+          "kind": "button",
+          "box": [
+            1482,
+            199,
+            1681,
+            239
+          ],
+          "label": "確認用を表示",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "asset-card-0",
+          "kind": "material-card",
+          "box": [
+            1280,
+            307,
+            1570,
+            491
+          ],
+          "label": "Simple / 見本"
+        },
+        {
+          "id": "asset-card-1",
+          "kind": "material-card",
+          "box": [
+            1586,
+            307,
+            1876,
+            491
+          ],
+          "label": "金の輪郭 / 見本"
+        },
+        {
+          "id": "asset-card-2",
+          "kind": "material-card",
+          "box": [
+            1280,
+            511,
+            1570,
+            695
+          ],
+          "label": "青い縁 / 見本"
+        },
+        {
+          "id": "asset-card-3",
+          "kind": "material-card",
+          "box": [
+            1586,
+            511,
+            1876,
+            695
+          ],
+          "label": "対決レイアウト / 見本"
+        },
+        {
+          "id": "asset-cancel",
+          "kind": "button",
+          "box": [
+            1280,
+            979,
+            1465,
+            1021
+          ],
+          "label": "キャンセル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "asset-apply",
+          "kind": "button",
+          "box": [
+            1477,
+            979,
+            1888,
+            1021
+          ],
+          "label": "このシーンへ適用",
+          "selected": false,
+          "disabled": false
+        }
+      ],
+      "kind": "静止デザイン。動作実装・実機検証ではない"
+    },
+    {
+      "id": "C3S_export_review",
+      "file": "screens/C3S_export_review.png",
+      "vector": "screens/C3S_export_review.svg",
+      "size": [
+        1920,
+        1080
+      ],
+      "theme": "light",
+      "components": [
+        {
+          "id": "header-action-0",
+          "kind": "button",
+          "box": [
+            1372,
+            9,
+            1482,
+            48
+          ],
+          "label": "リプレイ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-1",
+          "kind": "button",
+          "box": [
+            1490,
+            9,
+            1562,
+            48
+          ],
+          "label": "準備",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-2",
+          "kind": "button",
+          "box": [
+            1570,
+            9,
+            1672,
+            48
+          ],
+          "label": "基本設定",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-3",
+          "kind": "button",
+          "box": [
+            1680,
+            9,
+            1746,
+            48
+          ],
+          "label": "ログ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-4",
+          "kind": "button",
+          "box": [
+            1754,
+            9,
+            1908,
+            48
+          ],
+          "label": "作成内容を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "replay-target",
+          "kind": "panel",
+          "box": [
+            12,
+            68,
+            332,
+            776
+          ],
+          "label": "1. リプレイ準備・対象",
+          "scroll": true
+        },
+        {
+          "id": "replay-file",
+          "kind": "field",
+          "box": [
+            24,
+            112,
+            320,
+            177
+          ],
+          "label": "リプレイファイル",
+          "value": "sample_match.rofl"
+        },
+        {
+          "id": "prepare",
+          "kind": "button",
+          "box": [
+            24,
+            189,
+            320,
+            227
+          ],
+          "label": "準備状態を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "preset",
+          "kind": "button",
+          "box": [
+            24,
+            738,
+            320,
+            768
+          ],
+          "label": "テンプレート・参考",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-list",
+          "kind": "panel",
+          "box": [
+            1532,
+            68,
+            1908,
+            776
+          ],
+          "label": "2. 試合全体から見せ場を選ぶ",
+          "scroll": true
+        },
+        {
+          "id": "scan",
+          "kind": "button",
+          "box": [
+            1544,
+            111,
+            1896,
+            150
+          ],
+          "label": "試合全体スキャン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-0",
+          "kind": "button",
+          "box": [
+            1544.0,
+            189,
+            1658.67,
+            221
+          ],
+          "label": "すべて",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "filter-1",
+          "kind": "button",
+          "box": [
+            1662.67,
+            189,
+            1777.33,
+            221
+          ],
+          "label": "キル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-2",
+          "kind": "button",
+          "box": [
+            1781.33,
+            189,
+            1896.0,
+            221
+          ],
+          "label": "アシスト",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-check-0",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            246,
+            1576,
+            280
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-1",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            318,
+            1576,
+            352
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-2",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            390,
+            1576,
+            424
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-3",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            462,
+            1576,
+            496
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-4",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            534,
+            1576,
+            568
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-jump",
+          "kind": "button",
+          "box": [
+            1544,
+            734,
+            1896,
+            767
+          ],
+          "label": "選択シーンへ移動",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-panel",
+          "kind": "panel",
+          "box": [
+            344,
+            68,
+            1520,
+            776
+          ],
+          "label": "ミラープレビュー",
+          "scroll": false
+        },
+        {
+          "id": "preview-compare",
+          "kind": "button",
+          "box": [
+            1381,
+            76,
+            1508,
+            106
+          ],
+          "label": "調整前と比較",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-image",
+          "kind": "fixed-preview",
+          "box": [
+            386.22,
+            108.0,
+            1477.78,
+            722.0
+          ],
+          "label": "16:9 合成図。LoL実映像ではない",
+          "aspect": 1.7777777777777777
+        },
+        {
+          "id": "transport-0",
+          "kind": "button",
+          "box": [
+            356,
+            733,
+            456,
+            767
+          ],
+          "label": "ミラー開始",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-1",
+          "kind": "button",
+          "box": [
+            463,
+            733,
+            527,
+            767
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-2",
+          "kind": "button",
+          "box": [
+            534,
+            733,
+            654,
+            767
+          ],
+          "label": "演出を再生",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "transport-3",
+          "kind": "button",
+          "box": [
+            661,
+            733,
+            787,
+            767
+          ],
+          "label": "プレビュー停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "lower-edit",
+          "kind": "panel",
+          "box": [
+            12,
+            788,
+            1908,
+            1044
+          ],
+          "label": "",
+          "scroll": false
+        },
+        {
+          "id": "easy-toggle",
+          "kind": "button",
+          "box": [
+            24,
+            796,
+            137,
+            830
+          ],
+          "label": "かんたん編集",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "detail-toggle",
+          "kind": "button",
+          "box": [
+            143,
+            796,
+            256,
+            830
+          ],
+          "label": "詳細編集",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-0",
+          "kind": "button",
+          "box": [
+            280,
+            796,
+            356,
+            830
+          ],
+          "label": "シーン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-1",
+          "kind": "button",
+          "box": [
+            362,
+            796,
+            438,
+            830
+          ],
+          "label": "カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-2",
+          "kind": "button",
+          "box": [
+            444,
+            796,
+            520,
+            830
+          ],
+          "label": "色・FX",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-3",
+          "kind": "button",
+          "box": [
+            526,
+            796,
+            602,
+            830
+          ],
+          "label": "出力",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "open-picker-0",
+          "kind": "button",
+          "box": [
+            552.0,
+            846,
+            640.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-0-0",
+          "kind": "thumbnail-card",
+          "box": [
+            24.0,
+            886,
+            222.67,
+            1028
+          ],
+          "label": "安定した視点",
+          "selected": true
+        },
+        {
+          "id": "quick-card-0-1",
+          "kind": "thumbnail-card",
+          "box": [
+            232.67,
+            886,
+            431.33,
+            1028
+          ],
+          "label": "寄りを作る",
+          "selected": false
+        },
+        {
+          "id": "quick-card-0-2",
+          "kind": "thumbnail-card",
+          "box": [
+            441.33,
+            886,
+            640.0,
+            1028
+          ],
+          "label": "広く見せる",
+          "selected": false
+        },
+        {
+          "id": "open-picker-1",
+          "kind": "button",
+          "box": [
+            1180.0,
+            846,
+            1268.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-1-0",
+          "kind": "thumbnail-card",
+          "box": [
+            652.0,
+            886,
+            850.67,
+            1028
+          ],
+          "label": "シンプル",
+          "selected": true
+        },
+        {
+          "id": "quick-card-1-1",
+          "kind": "thumbnail-card",
+          "box": [
+            860.67,
+            886,
+            1059.33,
+            1028
+          ],
+          "label": "明るい輪郭",
+          "selected": false
+        },
+        {
+          "id": "quick-card-1-2",
+          "kind": "thumbnail-card",
+          "box": [
+            1069.33,
+            886,
+            1268.0,
+            1028
+          ],
+          "label": "対決レイアウト",
+          "selected": false
+        },
+        {
+          "id": "open-picker-2",
+          "kind": "button",
+          "box": [
+            1808.0,
+            846,
+            1896.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-2-0",
+          "kind": "thumbnail-card",
+          "box": [
+            1280.0,
+            886,
+            1478.67,
+            1028
+          ],
+          "label": "控えめ",
+          "selected": true
+        },
+        {
+          "id": "quick-card-2-1",
+          "kind": "thumbnail-card",
+          "box": [
+            1488.67,
+            886,
+            1687.33,
+            1028
+          ],
+          "label": "輝き",
+          "selected": false
+        },
+        {
+          "id": "quick-card-2-2",
+          "kind": "thumbnail-card",
+          "box": [
+            1697.33,
+            886,
+            1896.0,
+            1028
+          ],
+          "label": "勢い",
+          "selected": false
+        },
+        {
+          "id": "export-review",
+          "kind": "panel",
+          "box": [
+            542,
+            172,
+            1380,
+            918
+          ],
+          "label": "動画を作成する前に確認",
+          "scroll": false
+        },
+        {
+          "id": "export-close",
+          "kind": "button",
+          "box": [
+            1326,
+            181,
+            1362,
+            215
+          ],
+          "label": "×",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "export-back",
+          "kind": "button",
+          "box": [
+            566,
+            850,
+            779,
+            896
+          ],
+          "label": "編集へ戻る",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "export-prepare",
+          "kind": "button",
+          "box": [
+            791,
+            850,
+            1356,
+            896
+          ],
+          "label": "接続・準備を確認",
+          "selected": false,
+          "disabled": false
+        }
+      ],
+      "kind": "静止デザイン。動作実装・実機検証ではない"
+    },
+    {
+      "id": "C3S_main_dark",
+      "file": "screens/C3S_main_dark.png",
+      "vector": "screens/C3S_main_dark.svg",
+      "size": [
+        1920,
+        1080
+      ],
+      "theme": "dark",
+      "components": [
+        {
+          "id": "header-action-0",
+          "kind": "button",
+          "box": [
+            1372,
+            9,
+            1482,
+            48
+          ],
+          "label": "リプレイ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-1",
+          "kind": "button",
+          "box": [
+            1490,
+            9,
+            1562,
+            48
+          ],
+          "label": "準備",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-2",
+          "kind": "button",
+          "box": [
+            1570,
+            9,
+            1672,
+            48
+          ],
+          "label": "基本設定",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-3",
+          "kind": "button",
+          "box": [
+            1680,
+            9,
+            1746,
+            48
+          ],
+          "label": "ログ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-4",
+          "kind": "button",
+          "box": [
+            1754,
+            9,
+            1908,
+            48
+          ],
+          "label": "作成内容を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "replay-target",
+          "kind": "panel",
+          "box": [
+            12,
+            68,
+            332,
+            776
+          ],
+          "label": "1. リプレイ準備・対象",
+          "scroll": true
+        },
+        {
+          "id": "replay-file",
+          "kind": "field",
+          "box": [
+            24,
+            112,
+            320,
+            177
+          ],
+          "label": "リプレイファイル",
+          "value": "sample_match.rofl"
+        },
+        {
+          "id": "prepare",
+          "kind": "button",
+          "box": [
+            24,
+            189,
+            320,
+            227
+          ],
+          "label": "準備状態を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "preset",
+          "kind": "button",
+          "box": [
+            24,
+            738,
+            320,
+            768
+          ],
+          "label": "テンプレート・参考",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-list",
+          "kind": "panel",
+          "box": [
+            1532,
+            68,
+            1908,
+            776
+          ],
+          "label": "2. 試合全体から見せ場を選ぶ",
+          "scroll": true
+        },
+        {
+          "id": "scan",
+          "kind": "button",
+          "box": [
+            1544,
+            111,
+            1896,
+            150
+          ],
+          "label": "試合全体スキャン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-0",
+          "kind": "button",
+          "box": [
+            1544.0,
+            189,
+            1658.67,
+            221
+          ],
+          "label": "すべて",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "filter-1",
+          "kind": "button",
+          "box": [
+            1662.67,
+            189,
+            1777.33,
+            221
+          ],
+          "label": "キル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-2",
+          "kind": "button",
+          "box": [
+            1781.33,
+            189,
+            1896.0,
+            221
+          ],
+          "label": "アシスト",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-check-0",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            246,
+            1576,
+            280
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-1",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            318,
+            1576,
+            352
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-2",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            390,
+            1576,
+            424
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-3",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            462,
+            1576,
+            496
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-4",
+          "kind": "checkbox",
+          "box": [
+            1547,
+            534,
+            1576,
+            568
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-jump",
+          "kind": "button",
+          "box": [
+            1544,
+            734,
+            1896,
+            767
+          ],
+          "label": "選択シーンへ移動",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-panel",
+          "kind": "panel",
+          "box": [
+            344,
+            68,
+            1520,
+            776
+          ],
+          "label": "ミラープレビュー",
+          "scroll": false
+        },
+        {
+          "id": "preview-compare",
+          "kind": "button",
+          "box": [
+            1381,
+            76,
+            1508,
+            106
+          ],
+          "label": "調整前と比較",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-image",
+          "kind": "fixed-preview",
+          "box": [
+            386.22,
+            108.0,
+            1477.78,
+            722.0
+          ],
+          "label": "16:9 合成図。LoL実映像ではない",
+          "aspect": 1.7777777777777777
+        },
+        {
+          "id": "transport-0",
+          "kind": "button",
+          "box": [
+            356,
+            733,
+            456,
+            767
+          ],
+          "label": "ミラー開始",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-1",
+          "kind": "button",
+          "box": [
+            463,
+            733,
+            527,
+            767
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-2",
+          "kind": "button",
+          "box": [
+            534,
+            733,
+            654,
+            767
+          ],
+          "label": "演出を再生",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "transport-3",
+          "kind": "button",
+          "box": [
+            661,
+            733,
+            787,
+            767
+          ],
+          "label": "プレビュー停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "lower-edit",
+          "kind": "panel",
+          "box": [
+            12,
+            788,
+            1908,
+            1044
+          ],
+          "label": "",
+          "scroll": false
+        },
+        {
+          "id": "easy-toggle",
+          "kind": "button",
+          "box": [
+            24,
+            796,
+            137,
+            830
+          ],
+          "label": "かんたん編集",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "detail-toggle",
+          "kind": "button",
+          "box": [
+            143,
+            796,
+            256,
+            830
+          ],
+          "label": "詳細編集",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-0",
+          "kind": "button",
+          "box": [
+            280,
+            796,
+            356,
+            830
+          ],
+          "label": "シーン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-1",
+          "kind": "button",
+          "box": [
+            362,
+            796,
+            438,
+            830
+          ],
+          "label": "カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-2",
+          "kind": "button",
+          "box": [
+            444,
+            796,
+            520,
+            830
+          ],
+          "label": "色・FX",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-3",
+          "kind": "button",
+          "box": [
+            526,
+            796,
+            602,
+            830
+          ],
+          "label": "出力",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "open-picker-0",
+          "kind": "button",
+          "box": [
+            552.0,
+            846,
+            640.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-0-0",
+          "kind": "thumbnail-card",
+          "box": [
+            24.0,
+            886,
+            222.67,
+            1028
+          ],
+          "label": "安定した視点",
+          "selected": true
+        },
+        {
+          "id": "quick-card-0-1",
+          "kind": "thumbnail-card",
+          "box": [
+            232.67,
+            886,
+            431.33,
+            1028
+          ],
+          "label": "寄りを作る",
+          "selected": false
+        },
+        {
+          "id": "quick-card-0-2",
+          "kind": "thumbnail-card",
+          "box": [
+            441.33,
+            886,
+            640.0,
+            1028
+          ],
+          "label": "広く見せる",
+          "selected": false
+        },
+        {
+          "id": "open-picker-1",
+          "kind": "button",
+          "box": [
+            1180.0,
+            846,
+            1268.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-1-0",
+          "kind": "thumbnail-card",
+          "box": [
+            652.0,
+            886,
+            850.67,
+            1028
+          ],
+          "label": "シンプル",
+          "selected": true
+        },
+        {
+          "id": "quick-card-1-1",
+          "kind": "thumbnail-card",
+          "box": [
+            860.67,
+            886,
+            1059.33,
+            1028
+          ],
+          "label": "明るい輪郭",
+          "selected": false
+        },
+        {
+          "id": "quick-card-1-2",
+          "kind": "thumbnail-card",
+          "box": [
+            1069.33,
+            886,
+            1268.0,
+            1028
+          ],
+          "label": "対決レイアウト",
+          "selected": false
+        },
+        {
+          "id": "open-picker-2",
+          "kind": "button",
+          "box": [
+            1808.0,
+            846,
+            1896.0,
+            876
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-2-0",
+          "kind": "thumbnail-card",
+          "box": [
+            1280.0,
+            886,
+            1478.67,
+            1028
+          ],
+          "label": "控えめ",
+          "selected": true
+        },
+        {
+          "id": "quick-card-2-1",
+          "kind": "thumbnail-card",
+          "box": [
+            1488.67,
+            886,
+            1687.33,
+            1028
+          ],
+          "label": "輝き",
+          "selected": false
+        },
+        {
+          "id": "quick-card-2-2",
+          "kind": "thumbnail-card",
+          "box": [
+            1697.33,
+            886,
+            1896.0,
+            1028
+          ],
+          "label": "勢い",
+          "selected": false
+        }
+      ],
+      "kind": "静止デザイン。動作実装・実機検証ではない"
+    },
+    {
+      "id": "C3S_main_1366x768",
+      "file": "screens/C3S_main_1366x768.png",
+      "vector": "screens/C3S_main_1366x768.svg",
+      "size": [
+        1366,
+        768
+      ],
+      "theme": "light",
+      "components": [
+        {
+          "id": "header-action-0",
+          "kind": "button",
+          "box": [
+            822,
+            9,
+            932,
+            44
+          ],
+          "label": "リプレイ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-1",
+          "kind": "button",
+          "box": [
+            940,
+            9,
+            1012,
+            44
+          ],
+          "label": "準備",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-2",
+          "kind": "button",
+          "box": [
+            1020,
+            9,
+            1122,
+            44
+          ],
+          "label": "基本設定",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-3",
+          "kind": "button",
+          "box": [
+            1130,
+            9,
+            1196,
+            44
+          ],
+          "label": "ログ",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "header-action-4",
+          "kind": "button",
+          "box": [
+            1204,
+            9,
+            1358,
+            44
+          ],
+          "label": "作成内容を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "replay-target",
+          "kind": "panel",
+          "box": [
+            8,
+            60,
+            240,
+            540
+          ],
+          "label": "1. リプレイ準備・対象",
+          "scroll": true
+        },
+        {
+          "id": "replay-file",
+          "kind": "field",
+          "box": [
+            20,
+            104,
+            228,
+            169
+          ],
+          "label": "リプレイファイル",
+          "value": "sample_match.rofl"
+        },
+        {
+          "id": "prepare",
+          "kind": "button",
+          "box": [
+            20,
+            181,
+            228,
+            219
+          ],
+          "label": "準備状態を確認",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "preset",
+          "kind": "button",
+          "box": [
+            20,
+            502,
+            228,
+            532
+          ],
+          "label": "テンプレート・参考",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-list",
+          "kind": "panel",
+          "box": [
+            1074,
+            60,
+            1358,
+            540
+          ],
+          "label": "2. 試合全体から見せ場を選ぶ",
+          "scroll": true
+        },
+        {
+          "id": "scan",
+          "kind": "button",
+          "box": [
+            1086,
+            103,
+            1346,
+            142
+          ],
+          "label": "試合全体スキャン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-0",
+          "kind": "button",
+          "box": [
+            1086.0,
+            181,
+            1170.0,
+            213
+          ],
+          "label": "すべて",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "filter-1",
+          "kind": "button",
+          "box": [
+            1174.0,
+            181,
+            1258.0,
+            213
+          ],
+          "label": "キル",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "filter-2",
+          "kind": "button",
+          "box": [
+            1262.0,
+            181,
+            1346.0,
+            213
+          ],
+          "label": "アシスト",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "scene-check-0",
+          "kind": "checkbox",
+          "box": [
+            1089,
+            238,
+            1118,
+            272
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-1",
+          "kind": "checkbox",
+          "box": [
+            1089,
+            291,
+            1118,
+            325
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-check-2",
+          "kind": "checkbox",
+          "box": [
+            1089,
+            344,
+            1118,
+            378
+          ],
+          "label": "",
+          "checked": true
+        },
+        {
+          "id": "scene-check-3",
+          "kind": "checkbox",
+          "box": [
+            1089,
+            397,
+            1118,
+            431
+          ],
+          "label": "",
+          "checked": false
+        },
+        {
+          "id": "scene-jump",
+          "kind": "button",
+          "box": [
+            1086,
+            498,
+            1346,
+            531
+          ],
+          "label": "選択シーンへ移動",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-panel",
+          "kind": "panel",
+          "box": [
+            248,
+            60,
+            1066,
+            540
+          ],
+          "label": "ミラープレビュー",
+          "scroll": false
+        },
+        {
+          "id": "preview-compare",
+          "kind": "button",
+          "box": [
+            927,
+            68,
+            1054,
+            98
+          ],
+          "label": "調整前と比較",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "mirror-image",
+          "kind": "fixed-preview",
+          "box": [
+            305.0,
+            96.0,
+            1009.0,
+            492.0
+          ],
+          "label": "16:9 合成図。LoL実映像ではない",
+          "aspect": 1.7777777777777777
+        },
+        {
+          "id": "transport-0",
+          "kind": "button",
+          "box": [
+            260,
+            497,
+            346,
+            531
+          ],
+          "label": "ミラー開始",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-1",
+          "kind": "button",
+          "box": [
+            353,
+            497,
+            407,
+            531
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "transport-2",
+          "kind": "button",
+          "box": [
+            414,
+            497,
+            522,
+            531
+          ],
+          "label": "演出を再生",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "transport-3",
+          "kind": "button",
+          "box": [
+            529,
+            497,
+            583,
+            531
+          ],
+          "label": "停止",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "lower-edit",
+          "kind": "panel",
+          "box": [
+            8,
+            548,
+            1358,
+            736
+          ],
+          "label": "",
+          "scroll": false
+        },
+        {
+          "id": "easy-toggle",
+          "kind": "button",
+          "box": [
+            20,
+            556,
+            133,
+            590
+          ],
+          "label": "かんたん編集",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "detail-toggle",
+          "kind": "button",
+          "box": [
+            139,
+            556,
+            252,
+            590
+          ],
+          "label": "詳細編集",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-0",
+          "kind": "button",
+          "box": [
+            276,
+            556,
+            352,
+            590
+          ],
+          "label": "シーン",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-1",
+          "kind": "button",
+          "box": [
+            358,
+            556,
+            434,
+            590
+          ],
+          "label": "カメラ",
+          "selected": true,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-2",
+          "kind": "button",
+          "box": [
+            440,
+            556,
+            516,
+            590
+          ],
+          "label": "色・FX",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "edit-tab-3",
+          "kind": "button",
+          "box": [
+            522,
+            556,
+            598,
+            590
+          ],
+          "label": "出力",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "open-picker-0",
+          "kind": "button",
+          "box": [
+            366.0,
+            606,
+            454.0,
+            636
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-0-0",
+          "kind": "thumbnail-card",
+          "box": [
+            20.0,
+            646,
+            158.0,
+            720
+          ],
+          "label": "安定した視点",
+          "selected": true
+        },
+        {
+          "id": "quick-card-0-1",
+          "kind": "thumbnail-card",
+          "box": [
+            168.0,
+            646,
+            306.0,
+            720
+          ],
+          "label": "寄りを作る",
+          "selected": false
+        },
+        {
+          "id": "quick-card-0-2",
+          "kind": "thumbnail-card",
+          "box": [
+            316.0,
+            646,
+            454.0,
+            720
+          ],
+          "label": "広く見せる",
+          "selected": false
+        },
+        {
+          "id": "open-picker-1",
+          "kind": "button",
+          "box": [
+            812.0,
+            606,
+            900.0,
+            636
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-1-0",
+          "kind": "thumbnail-card",
+          "box": [
+            466.0,
+            646,
+            604.0,
+            720
+          ],
+          "label": "シンプル",
+          "selected": true
+        },
+        {
+          "id": "quick-card-1-1",
+          "kind": "thumbnail-card",
+          "box": [
+            614.0,
+            646,
+            752.0,
+            720
+          ],
+          "label": "明るい輪郭",
+          "selected": false
+        },
+        {
+          "id": "quick-card-1-2",
+          "kind": "thumbnail-card",
+          "box": [
+            762.0,
+            646,
+            900.0,
+            720
+          ],
+          "label": "対決レイアウト",
+          "selected": false
+        },
+        {
+          "id": "open-picker-2",
+          "kind": "button",
+          "box": [
+            1258.0,
+            606,
+            1346.0,
+            636
+          ],
+          "label": "選ぶ ▸",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "id": "quick-card-2-0",
+          "kind": "thumbnail-card",
+          "box": [
+            912.0,
+            646,
+            1050.0,
+            720
+          ],
+          "label": "控えめ",
+          "selected": true
+        },
+        {
+          "id": "quick-card-2-1",
+          "kind": "thumbnail-card",
+          "box": [
+            1060.0,
+            646,
+            1198.0,
+            720
+          ],
+          "label": "輝き",
+          "selected": false
+        },
+        {
+          "id": "quick-card-2-2",
+          "kind": "thumbnail-card",
+          "box": [
+            1208.0,
+            646,
+            1346.0,
+            720
+          ],
+          "label": "勢い",
+          "selected": false
+        }
+      ],
+      "kind": "静止デザイン。動作実装・実機検証ではない"
+    }
+  ],
+  "not_interactive": true,
+  "originals_unchanged": true
+}

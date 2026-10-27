@@ -6,8 +6,12 @@ import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import Mock, patch
+from urllib.error import HTTPError
+from urllib.request import urlopen
 
 from ui.audit29_runtime import Audit29Runtime
+from ui.audit29_server import UI29Server
+from ui.c3_compare import render as render_c3
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -61,3 +65,59 @@ def test_ui3_bat_and_70_row_matrix_are_packaging_ready():
     assert {row["id"] for row in rows if row["ui3_access"] == "UNIMPLEMENTED"} == {
         "ENGAGE", "BESTSHOT"}
     assert all(row["live_lol_test"] == "NOT_RUN" for row in rows)
+
+
+def test_c3_views_reuse_app_and_are_gated_from_seven_candidate_exe():
+    import sys
+    sys.path.insert(0, str(ROOT / "tests"))
+    from test_ui29_runtime import App
+
+    for variant in ("p", "s"):
+        html = render_c3(variant, "test-token")
+        assert 'data-ui="replay-target"' in html
+        assert 'data-ui="preview"' in html
+        assert 'data-ui="scene-list"' in html
+        assert 'data-ui="editor"' in html
+        assert 'data-route="/ui/T-A-M"' in html
+    with TemporaryDirectory(dir=ROOT / "qa") as folder:
+        app = App()
+        with patch.dict(os.environ, {"AUTOCINE_UI3_LAUNCH": "1"}):
+            server = UI29Server(app, Path(folder) / "prefs.json")
+            base = f"http://127.0.0.1:{server.http.server_port}"
+            try:
+                for variant in ("p", "s"):
+                    with urlopen(f"{base}/ui3/{variant}?token={server.token}") as response:
+                        assert response.status == 200
+                        assert f'data-variant="{variant}"' in response.read().decode("utf-8")
+                server.runtime.perform("camera_number", {"key": "third_dist", "value": 930})
+                assert app.sl["third_dist"].get() == 930
+                assert server.runtime.screen_id == "T-A-M"
+            finally:
+                server.close()
+        with patch.dict(os.environ, {"AUTOCINE_UI3_LAUNCH": "0"}):
+            server = UI29Server(app, Path(folder) / "other.json")
+            try:
+                with __import__("pytest").raises(HTTPError) as denied:
+                    urlopen(f"http://127.0.0.1:{server.http.server_port}/ui3/p?token={server.token}")
+                assert denied.value.code == 404
+            finally:
+                server.close()
+
+
+def test_c3_camera_draft_validates_before_changing_existing_values():
+    import sys
+    sys.path.insert(0, str(ROOT / "tests"))
+    from test_ui29_runtime import App
+
+    app = App()
+    runtime = Audit29Runtime(app, ROOT / "qa" / "nonexistent-ui3-test-prefs.json")
+    before = (app.var_camera_control_mode.get(), app.var_camera_side.get(),
+              app.var_style.get(), app.sl["third_dist"].get())
+    with __import__("pytest").raises(ValueError):
+        runtime.perform("ui3_camera_batch", {"mode": "manual", "side": "BLUE",
+                                              "style": "third", "values": {"third_dist": 9999}})
+    assert before == (app.var_camera_control_mode.get(), app.var_camera_side.get(),
+                      app.var_style.get(), app.sl["third_dist"].get())
+    runtime.perform("ui3_camera_batch", {"mode": "manual", "side": "BLUE",
+                                         "style": "third", "values": {"third_dist": 960}})
+    assert app.sl["third_dist"].get() == 960

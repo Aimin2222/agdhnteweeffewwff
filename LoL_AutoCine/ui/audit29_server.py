@@ -10,6 +10,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import io
 import json
 import mimetypes
+import os
 from pathlib import Path
 import queue
 import secrets
@@ -20,6 +21,7 @@ from ui.audit29_runtime import Audit29Runtime, SCREENS, LEGACY_RECONSTRUCTIONS
 from ui.legacy_reconstruct import SCREEN_IDS as RECONSTRUCTED_SCREEN_IDS, render_legacy
 from ui.comparison_detail import DERIVED_DETAILS, DERIVED_MATERIALS, render_detail, render_material
 from ui.comparison_labels import CANDIDATE_ORDER, neutralize_reference_html, public_label
+from ui.c3_compare import render as render_c3
 
 
 DESIGN = Path(__file__).resolve().parents[1] / "design" / "ui" / "ui_rethink_20261021"
@@ -177,6 +179,20 @@ document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>butt
                         return self._json(404, {"error": "unknown audited asset"})
                 if path == "/runtime/client.js":
                     return self._send(200, CLIENT.read_bytes(), "text/javascript; charset=utf-8")
+                if path == "/runtime/c3.js":
+                    return self._send(200, Path(__file__).with_name("c3_compare.js").read_bytes(),
+                                      "text/javascript; charset=utf-8")
+                if path == "/runtime/c3.css":
+                    return self._send(200, Path(__file__).with_name("c3_compare.css").read_bytes(),
+                                      "text/css; charset=utf-8")
+                if path.startswith("/ui3/"):
+                    if os.environ.get("AUTOCINE_UI3_LAUNCH") != "1":
+                        return self._json(404, {"error": "UI3 refinement is not enabled"})
+                    try:
+                        return self._send(200, render_c3(path.removeprefix("/ui3/"), owner.token).encode("utf-8"),
+                                          "text/html; charset=utf-8")
+                    except ValueError as exc:
+                        return self._json(404, {"error": str(exc)})
                 if path == "/runtime/comparison-detail.css":
                     return self._send(200, Path(__file__).with_name("comparison_detail.css").read_bytes(),
                                       "text/css; charset=utf-8")

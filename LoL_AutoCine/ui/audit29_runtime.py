@@ -127,6 +127,11 @@ class Audit29Runtime:
                 "selected": bool(selected and selected[0] == index),
             })
         camera_values = {key: float(app.sl[key].get()) for key in CAMERA_KEYS if key in app.sl}
+        from core.camera import STYLES
+        style_key = next((key for key, label in STYLES.items()
+                          if label == app.var_style.get()), None)
+        side_key = next((key for key, label in CAMERA_SIDES.items()
+                         if label == app.var_camera_side.get()), None)
         wanted_frames = set(RESEARCH_FRAME_CARDS) | set(LIBRARY_FRAME_CARDS) | set(TEST_B_FRAME_CARDS)
         frame_catalog = {item["id"]: item for item in list_assets("frames", review=True)
                          if item["id"] in wanted_frames}
@@ -168,6 +173,8 @@ class Audit29Runtime:
                        "target_slot": getattr(getattr(app, "locked", None), "slot", None)},
             "scenes": scene_rows,
             "selected_scene_index": selected[0] if selected else None,
+            "keyframes": ([dict(frame) for frame in getattr(app, "_edit_keyframes", [])]
+                          if selected else []),
             "checked_count": len(app.checked_kills),
             "scan": {"status": str(app.lbl_scan.cget("text")) if hasattr(app, "lbl_scan") else "未スキャン",
                      "percent": float(app.pb_scan["value"]) if hasattr(app, "pb_scan") else 0.0,
@@ -177,6 +184,7 @@ class Audit29Runtime:
             "easy_preset": app.var_tpl.get() if hasattr(app, "var_tpl") else "",
             "camera": {"mode": app.var_camera_control_mode.get(),
                        "side": app.var_camera_side.get(), "style": app.var_style.get(),
+                       "side_key": side_key, "style_key": style_key,
                        "values": camera_values},
             "frame": {"id": app.var_work_frame.get(), "effect_id": app.var_work_effect.get(),
                       "review": bool(app.var_work_review.get()),
@@ -301,6 +309,39 @@ class Audit29Runtime:
             if not low <= value <= high:
                 raise ValueError("camera value out of range")
             app.sl[key].set(value)
+        elif action == "ui3_camera_batch":
+            from core.camera import STYLES
+            mode = str(data.get("mode", ""))
+            side = str(data.get("side", ""))
+            style = str(data.get("style", ""))
+            values = data.get("values", {})
+            if (mode not in MODE_LABELS or side not in CAMERA_SIDES
+                    or style not in STYLES or not isinstance(values, dict)):
+                raise ValueError("カメラ設定の候補が不正です")
+            validated = {}
+            for key, raw in values.items():
+                if key not in CAMERA_KEYS or key not in app.sl:
+                    raise ValueError("不明なカメラ数値です")
+                value = float(raw)
+                low, high = CAMERA_KEYS[key]
+                if not low <= value <= high:
+                    raise ValueError(f"{key} が設定範囲外です")
+                validated[key] = value
+            old = (app.var_camera_control_mode.get(), app.var_camera_side.get(),
+                   app.var_style.get(), {key: app.sl[key].get() for key in validated})
+            try:
+                app.var_camera_control_mode.set(MODE_LABELS[mode])
+                app.var_camera_side.set(CAMERA_SIDES[side])
+                app.var_style.set(STYLES[style])
+                for key, value in validated.items():
+                    app.sl[key].set(value)
+            except Exception:
+                app.var_camera_control_mode.set(old[0])
+                app.var_camera_side.set(old[1])
+                app.var_style.set(old[2])
+                for key, value in old[3].items():
+                    app.sl[key].set(value)
+                raise
         elif action == "trim":
             key, value = str(data["key"]), float(data["value"])
             if key not in ("pre", "post") or not 1 <= value <= 15:
