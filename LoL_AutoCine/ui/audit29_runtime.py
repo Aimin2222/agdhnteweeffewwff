@@ -62,6 +62,18 @@ def default_preferences_path() -> Path:
     return base / "LoL_AutoCine" / "ui29_workspace.json"
 
 
+def _auto_qa_summary() -> dict:
+    """Expose only the last saved self-test counts, never infer LoL acceptance."""
+    report = Path(__file__).resolve().parents[1] / "diagnostics" / "selftest_latest.json"
+    try:
+        data = json.loads(report.read_text(encoding="utf-8"))
+        return {"status": "RECORDED", "timestamp": str(data.get("timestamp", "")),
+                "passed": int(data["passed"]), "warnings": int(data["warnings"]),
+                "failed": int(data["failed"])}
+    except (OSError, ValueError, KeyError, TypeError):
+        return {"status": "NOT_RUN"}
+
+
 class Audit29Runtime:
     """A single App-backed comparison session. No candidate gets its own App."""
 
@@ -176,6 +188,8 @@ class Audit29Runtime:
             "keyframes": ([dict(frame) for frame in getattr(app, "_edit_keyframes", [])]
                           if selected else []),
             "checked_count": len(app.checked_kills),
+            "trim": {"pre": float(app.var_pre.get()) if hasattr(app, "var_pre") else 4.0,
+                     "post": float(app.var_post.get()) if hasattr(app, "var_post") else 3.0},
             "scan": {"status": str(app.lbl_scan.cget("text")) if hasattr(app, "lbl_scan") else "未スキャン",
                      "percent": float(app.pb_scan["value"]) if hasattr(app, "pb_scan") else 0.0,
                      "duration": float(getattr(getattr(app, "_match_scan_cache", None), "length", 0) or 0)},
@@ -198,6 +212,8 @@ class Audit29Runtime:
             "output": {"busy": bool(app.busy), "path": str(app.out_root),
                        "fps": app.var_fps_ui.get(), "encoder_policy": app.var_encoder_policy.get(),
                        "game_audio": bool(app.var_gaudio.get()), "hud": app.var_hud_mode.get()},
+            "qa": {"auto_pending": bool(getattr(app, "_auto_qa_pending", False)),
+                   "selftest": _auto_qa_summary()},
             "capabilities": {"engage": False,
                              "engage_reason": "エンゲージ専用検出・操作は未実装。キルとして扱いません"},
         }

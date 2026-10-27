@@ -78,6 +78,9 @@ def test_c3_views_reuse_app_and_are_gated_from_seven_candidate_exe():
         assert 'data-ui="preview"' in html
         assert 'data-ui="scene-list"' in html
         assert 'data-ui="editor"' in html
+        assert 'data-ui="mini-timeline"' in html
+        assert 'data-trim="pre"' in html and 'data-trim="post"' in html
+        assert 'data-tab="test"' in html
         assert 'data-route="/ui/T-A-M"' in html
     with TemporaryDirectory(dir=ROOT / "qa") as folder:
         app = App()
@@ -121,3 +124,19 @@ def test_c3_camera_draft_validates_before_changing_existing_values():
     runtime.perform("ui3_camera_batch", {"mode": "manual", "side": "BLUE",
                                          "style": "third", "values": {"third_dist": 960}})
     assert app.sl["third_dist"].get() == 960
+
+
+def test_c3_trim_uses_existing_app_values_and_rejects_invalid_seconds():
+    import sys
+    sys.path.insert(0, str(ROOT / "tests"))
+    from test_ui29_runtime import App, Variable
+
+    app = App()
+    app.var_pre, app.var_post = Variable(4.0), Variable(3.0)
+    runtime = Audit29Runtime(app, ROOT / "qa" / "nonexistent-ui3-trim-prefs.json")
+    runtime.perform("trim", {"key": "pre", "value": 5.5})
+    runtime.perform("trim", {"key": "post", "value": 4.0})
+    assert runtime.snapshot()["trim"] == {"pre": 5.5, "post": 4.0}
+    with __import__("pytest").raises(ValueError):
+        runtime.perform("trim", {"key": "pre", "value": 30})
+    assert app.var_pre.get() == 5.5

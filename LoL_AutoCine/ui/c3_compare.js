@@ -69,7 +69,23 @@
     $('#selected-scene').textContent=(()=>{const s=current.scenes.find(x=>x.selected);
       return s?`選択：${time(s.time)} ${s.role} / ${s.side||'サイド不明'}`:'選択：なし';})();
     document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('selected',b.dataset.tab===tab));
+    renderMiniTimeline();
     renderEditor();
+  }
+  function renderMiniTimeline(){
+    const scenes=current.scenes;
+    const duration=Math.max(1,Number(current.scan.duration)||0,...scenes.map(s=>Number(s.time)||0));
+    const lane=$('#mini-events');lane.replaceChildren();
+    if(!scenes.length){const empty=document.createElement('span');empty.className='mini-empty';
+      empty.textContent='スキャン後にシーンを表示';lane.append(empty);}
+    for(const scene of scenes){const point=document.createElement('button');
+      point.className=`mini-point${scene.selected?' selected':''}`;
+      point.style.left=`${Math.max(1,Math.min(99,100*Number(scene.time)/duration))}%`;
+      point.dataset.scene=String(scene.index);
+      point.title=`${time(scene.time)} ${scene.role==='assist'?'アシスト':'キル'} / ${scene.checked?'出力対象':'出力対象外'}`;
+      point.setAttribute('aria-label',`${time(scene.time)} のシーンを選択`);lane.append(point);}
+    for(const key of ['pre','post']){const input=$(`#trim-${key}`);
+      if(document.activeElement!==input)input.value=String(current.trim?.[key]??(key==='pre'?4:3));}
   }
   function card(title,body){return `<section class="editcard"><h3>${title}</h3>${body}</section>`;}
   function modeButtons(){return Object.entries(modeNames).map(([id,label])=>
@@ -110,16 +126,28 @@
       html=`<div class="editoractions"><button data-action="check_all">全件チェック</button><button data-action="uncheck_all">チェックを外す</button><button data-action="jump_selected">選択シーンへ移動</button><button data-action="scene_save">シーンを保存</button><button data-zone="scene" data-action="native_editor_zone">詳細タイムライン</button></div><div class="timeline">${d.scenes.length?d.scenes.map(s=>`<button data-scene="${s.index}" class="${s.selected?'selected':''}">${time(s.time)}<br>${esc(s.role)}</button>`).join(''):'スキャン後に実シーンを表示します。'}</div>`;
     }else if(tab==='camera'){
       const v=d.camera.values;
-      html=`<div class="editgrid">${card('カメラモード',`<div class="choicegrid">${modeButtons()}</div>`)}
+      html=`<div class="editgrid camera-grid">${card('カメラモード',`<div class="choicegrid">${modeButtons()}</div>`)}
         ${card('対象サイド・スタイル',`<div class="choicegrid">${['auto','BLUE','RED'].map(s=>
           `<button data-camera-side="${s}" class="${d.camera.side_key===s?'selected':''}">${s}</button>`).join('')}</div><button data-drawer="camera">10種・詳しい設定</button>`)}
         ${card('距離・高さ・角度',`<div class="settingrow"><label>距離</label><input type="range" data-camera-number="third_dist" min="500" max="1400" value="${v.third_dist??900}"><input type="number" data-camera-number="third_dist" min="500" max="1400" value="${v.third_dist??900}"></div>
         <div class="settingrow"><label>高さ</label><input type="range" data-camera-number="cam_height" min="0" max="900" value="${v.cam_height??350}"><input type="number" data-camera-number="cam_height" min="0" max="900" value="${v.cam_height??350}"></div>
         <div class="settingrow"><label>角度</label><input type="range" data-camera-number="third_yaw" min="-180" max="180" value="${v.third_yaw??0}"><input type="number" data-camera-number="third_yaw" min="-180" max="180" value="${v.third_yaw??0}"></div>
-        <button data-zone="camera" data-action="native_editor_zone">FOV・キーフレーム</button>`)}
+        <p class="muted small-only">狭い画面では数値をカメラ設定から開けます。</p>
+        <button data-drawer="camera">カメラ数値を詳しく設定</button><button data-zone="camera" data-action="native_editor_zone">FOV・キーフレーム</button>`)}
         </div>`;
     }else if(tab==='fx'){
       html=card('色・FX',`<div class="editoractions"><button data-zone="fx" data-action="native_editor_zone">全映像FXを開く</button><button data-zone="color" data-action="native_editor_zone">LUT・色・DOF・Fog</button><button data-drawer="asset">Work素材・FX</button><button data-action="work_settings">素材とFXの設定</button></div><p class="muted">研究段階の機能を動作済みとは表示しません。</p>`);
+    }else if(tab==='test'){
+      const qa=d.qa?.selftest||{status:'NOT_RUN'};
+      const saved=qa.status==='RECORDED'?
+        `前回の安全な自動診断 ${esc(qa.timestamp)}：成功 ${qa.passed} / 注意 ${qa.warnings} / 失敗 ${qa.failed}`:
+        '安全な自動診断：結果なし';
+      html=card('テスト結果・診断',`<p>${d.qa?.auto_pending?'自動診断を実行中':'待機中'} / ${saved}</p>
+        <p class="muted">この結果は実LoL映像・ゲーム音・録画の合格ではありません。総合試験はNOT_RUNです。</p>
+        <p class="muted">未実装：エンゲージ独立検出、画像品質によるベストショット自動選択。</p>
+        <div class="editoractions"><button data-action="diagnostics">診断ログを開く</button>
+        <button data-action="automatic_qa" ${d.qa?.auto_pending?'disabled title="自動診断中です"':''}>安全な自動診断を実行</button>
+        <button data-action="camera_qa" ${d.replay.connected?'':'disabled title="LoL接続後に実行できます"'}>カメラ＋Work素材一括QA</button></div>`);
     }else{
       html=card('動画作成・設定',`<p class="muted">出力対象 ${d.checked_count}件 / ${esc(d.output.fps)} / ${esc(d.output.encoder_policy)}</p><div class="editoractions"><button data-zone="output" data-action="native_editor_zone">GPU・音声・HUD</button><button data-action="output_folder">出力先</button><button data-drawer="review">作成内容を確認</button><button data-action="cancel_job">書き出しを停止</button></div>`);
     }
@@ -214,6 +242,9 @@
     $('#drawer-body').querySelectorAll(`[data-number="${key}"]`).forEach(x=>{if(x!==event.target)x.value=String(value);});
   });
   document.addEventListener('change',event=>{
+    if(event.target.dataset.trim){
+      run('trim',{key:event.target.dataset.trim,value:Number(event.target.value)});return;
+    }
     if(event.target.dataset.cameraNumber){
       run('camera_number',{key:event.target.dataset.cameraNumber,value:Number(event.target.value)});return;
     }

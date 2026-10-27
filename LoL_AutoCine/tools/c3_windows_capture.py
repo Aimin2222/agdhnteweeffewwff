@@ -54,8 +54,9 @@ def capture(window, output: Path, reference: str) -> dict:
         "[...document.querySelectorAll('[data-ui]')].map(e=>{const r=e.getBoundingClientRect();"
         "return [e.dataset.ui,[r.x,r.y,r.x+r.width,r.y+r.height]]})))"))
     return {"screen":reference,"size":size,"capture":target.name,
+            "revision_ids":["C3-R01","C3-R02"],
             "bounds":boxes,"visual_result":"REVIEW",
-            "reason":"Work image uses a schematic game frame; offline real mirror is blank. UI geometry requires separate review."}
+            "reason":"C3-R01/R02 add timeline and test tab after the reference; Work schematic mirror differs from offline blank live mirror. UI geometry requires separate review."}
 
 
 def main() -> int:
@@ -89,6 +90,21 @@ def main() -> int:
                             window.load_url(f"{base}/ui3/{variant}?{token}")
                             _wait_path(window,f"/ui3/{variant}")
                             wait_js(window,"!!document.querySelector('#editor-content > *')")
+                            checks[f"{variant}_timeline_visible"]="PASS" if window.evaluate_js(
+                                "(() => {const x=document.querySelector('[data-ui=mini-timeline]');"
+                                "const r=x.getBoundingClientRect();return r.width>200&&r.height>=40})()") else "FAIL"
+                            if variant=="p":
+                                window.evaluate_js("document.querySelector('#trim-pre').value='5.5';"
+                                                   "document.querySelector('#trim-pre').dispatchEvent(new Event('change',{bubbles:true}))")
+                                for _ in range(40):
+                                    if _state(backend)["trim"]["pre"]==5.5:
+                                        break
+                                    time.sleep(.1)
+                                checks["trim_from_ui"]="PASS" if _state(backend)["trim"]["pre"]==5.5 else "FAIL"
+                                window.evaluate_js("document.querySelector('[data-tab=test]').click()")
+                                checks["test_results_tab"]="PASS" if window.evaluate_js(
+                                    "document.querySelector('#editor-content').textContent.includes('診断ログ')") else "FAIL"
+                                window.evaluate_js("document.querySelector('[data-tab=camera]').click()")
                             _activate(backend,"theme",{"value":"light"})
                             wait_js(window,"document.documentElement.dataset.theme === 'light'",5)
                             results.append(capture(window,output,f"{prefix}_main_light"))
@@ -157,6 +173,7 @@ def main() -> int:
                 _stop_backend(child,backend)
     commit=subprocess.check_output(["git","-C",str(ROOT.parent),"rev-parse","HEAD"],text=True).strip()
     report={"kind":"C3_WINDOWS_WEBVIEW2_OFFLINE","source_commit":commit,
+            "revision_ids":["C3-R01","C3-R02","C3-R03"],
             "screens":results,"state_checks":checks,"live_lol":"NOT_RUN",
             "record_gpu_audio_export":"NOT_RUN"}
     (output/"index.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")

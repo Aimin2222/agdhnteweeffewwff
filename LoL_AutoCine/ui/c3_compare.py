@@ -44,7 +44,13 @@ def render(variant: str, token: str) -> str:
  </aside>
  <section class="editor panel" data-ui="editor"><div class="editbar"><button data-tab="easy">かんたん編集</button><button data-tab="detail">詳細編集</button>
   <button data-tab="scene">シーン</button><button data-tab="camera">カメラ</button><button data-tab="fx">色・FX</button><button data-tab="output">出力</button>
-  <span class="editnote" id="selected-scene">選択：なし</span></div><div id="editor-content"></div></section>
+  <button data-tab="test">テスト結果</button><span class="editnote" id="selected-scene">選択：なし</span></div>
+  <div class="mini-timeline" data-ui="mini-timeline" aria-label="常設シーンタイムラインとキル前後トリム">
+   <span class="mini-label">シーン</span><div class="mini-events" id="mini-events"></div>
+   <label>前 <input id="trim-pre" data-trim="pre" type="number" min="1" max="15" step="0.5" aria-label="キル前の秒数"></label>
+   <label>後 <input id="trim-post" data-trim="post" type="number" min="1" max="15" step="0.5" aria-label="キル後の秒数"></label>
+   <button data-tab="scene" aria-label="タイムラインを拡大">拡大</button></div>
+  <div id="editor-content"></div></section>
  <footer><span>候補3の基本構造を保持。研究案は正式採用前の比較ビューです。</span><span id="footer-state">実LoL検証 NOT_RUN</span></footer>
 </main>
 <div class="drawer" id="drawer" hidden><div class="drawerhead"><h2 id="drawer-title">設定</h2><button id="drawer-close" aria-label="閉じる">×</button></div><div id="drawer-body"></div>
