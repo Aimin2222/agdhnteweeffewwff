@@ -24,6 +24,8 @@ Workの原本12画像・未採用の改訂提案・実装後のWindows画面は�
 チェック件数保持を確認した。Work画像の映像領域は模式図であり、LoL未接続の実ミラーは空欄。
 見た目の総合判定はREVIEW。
 
+BAT試験ZIPを別の日本語・空白入りフォルダへ展開し、`START_AUTOCINE_UI3.bat --check` の依存確認と、同じ展開物の `app.py --ui3 --ui3-window-smoke` をWindowsで実行した。両方とも終了コード0。ZIP内のPython環境は同梱しないため、準備済みPythonを指定した。Codexの隔離実行ではlocalhost起動が遮断されたため、Windows側で再実行して確認した。これは実LoL接続・MP4書き出し合格を意味しない。
+
 `UI_ACCEPTANCE_RESULTS_106.json` はWorkの106件を全件保持し、PASS 3・REVIEW 11・NOT_RUN 92。
 機能別70件は実機操作を完走していないためすべてNOT_RUN。FAILをゼロに見せるための
 読み替えはしていない。`C3_ACCEPTANCE70_IMPLEMENTATION_20261027.csv` はWork配置と既存接続台帳の
@@ -33,7 +35,7 @@ Workの原本12画像・未採用の改訂提案・実装後のWindows画面は�
 
 1. C3-R04の残る全プリセット差分確認と「手動値/選択キー/全キー」の適用範囲を、既存プロジェクト編集と衝突しない形で実装する。
 2. C3-R05の従来エディタ経由35項目を個別に開いて操作し、未接続を修正する。
-3. 日本語・空白パスのBAT起動、原寸・1366・125% DPI、戻る操作と設定保持を再検査する。
+3. 日本語・空白パスの起動は確認済み。原寸・1366・125% DPI、戻る操作と設定保持を追加検査する。
 4. 機能接続後にIssue #53の実LoL、BLUE/RED、TargetLock、ミラーFPS、GPU/NVENC、ゲーム音、MP4を検証する。
 
 現時点のBAT ZIPはWindows試験版で、編集からMP4までの実機合格品ではない。mainへはマージしない。
