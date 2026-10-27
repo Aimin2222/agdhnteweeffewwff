@@ -42,6 +42,8 @@ def capture(window, output: Path, reference: str) -> dict:
     with Image.open(source) as im:
         size = im.size
     target = output / f"{reference}_windows.png"
+    # A prior interaction must not leave a transient toast on later captures.
+    window.evaluate_js("document.querySelector('#toast').hidden=true")
     _capture_webview(window, target, size)
     with Image.open(source) as original, Image.open(target) as actual:
         original = original.convert("RGB")
@@ -176,6 +178,16 @@ def main() -> int:
             "revision_ids":["C3-R01","C3-R02","C3-R03"],
             "screens":results,"state_checks":checks,"live_lol":"NOT_RUN",
             "record_gpu_audio_export":"NOT_RUN"}
+    for screen in results:
+        if screen["screen"] not in {"C3P_main_light","C3S_main_light",
+                                "C3P_main_1366x768","C3S_main_1366x768"}:
+            continue
+        expected = ([20,598,1346,630] if "1366x768" in screen["screen"]
+                    else [24,842,1896,878])
+        measured = screen["bounds"].get("mini-timeline", [])
+        report["state_checks"][screen["screen"]+"_revision_geometry"] = (
+            "PASS" if len(measured)==4 and all(abs(a-b)<=2 for a,b in zip(measured,expected))
+            else "FAIL")
     (output/"index.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
     print(json.dumps({"screens":len(results),"checks":checks},ensure_ascii=False))
     return 0 if len(results)==12 and all(x=="PASS" for x in checks.values()) else 1
