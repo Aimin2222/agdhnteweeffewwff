@@ -10,9 +10,34 @@
   let state=null,view='main',selectedKey=-1,selectedScene=null,refreshing=false,frameSeq=0,frameTag=null,lastFrameRequest=0;
   let stateEpoch=0,pendingActions=0,actionQueue=Promise.resolve();
   const frameTimes=[];
+  const numericErrors=new Set();
   function button(label,command,data={},extra=''){return `<button type="button" data-action="${command}" data-data='${esc(JSON.stringify(data))}' ${extra}>${label}</button>`;}
   function section(title,content,extra=''){return `<section class="section ${extra}"><h3>${title}</h3>${content}</section>`;}
   function note(message){$('#message').textContent=message;}
+  function numericValue(input){
+    const errorKey=input.dataset.pair||input.id;
+    const raw=input.value.trim(),value=input.valueAsNumber;
+    if(raw===''||input.validity.badInput||!Number.isFinite(value)||
+       input.validity.rangeUnderflow||input.validity.rangeOverflow||input.validity.stepMismatch){
+      input.setAttribute('aria-invalid','true');
+      numericErrors.add(errorKey);
+      input.style.outline='2px solid #d13b3b';
+      input.title='有効な範囲の数値を入力してください。空欄は設定に反映されません。';
+      note(`${input.getAttribute('aria-label')||input.closest('label')?.textContent.trim()||'数値欄'}: 空欄または範囲外です。元の設定値を保持しました。`);
+      return null;
+    }
+    numericErrors.delete(errorKey);
+    input.removeAttribute('aria-invalid');input.removeAttribute('title');input.style.outline='';
+    return value;
+  }
+  function restoreNumber(input,kind,key){
+    const previous=kind==='global_color_number'?state?.global_color?.values?.[key]:
+      kind==='trim'?state?.trim?.[key]:state?.camera?.values?.[key];
+    if(previous!==undefined&&previous!==null){
+      input.value=previous;
+      if(input.dataset.pair)$$(`[data-pair="${input.dataset.pair}"]`).forEach(mate=>mate.value=previous);
+    }
+  }
   async function snapshot(){
     if(refreshing||pendingActions)return;refreshing=true;
     const startedAt=stateEpoch;
@@ -38,7 +63,8 @@
   function route(to){location.assign(url(to==='candidate3'?'/ui/T-A-M':`/ui3/reference/${to}`));}
   function numberControl(label,key,min,max,step,value,kind='camera_number',suffix=''){
     const val=Number(value??0);
-    return `<div class="number-control"><div class="control-caption"><label for="num-${kind}-${key}">${label}</label><small>${suffix}</small></div><div class="number-fields"><input type="range" min="${min}" max="${max}" step="${step}" value="${val}" data-pair="${kind}:${key}" aria-label="${label} スライダー"><input id="num-${kind}-${key}" type="number" min="${min}" max="${max}" step="${step}" value="${val}" data-pair="${kind}:${key}" data-kind="${kind}" data-key="${key}" data-camera="${kind==='camera_number'?key:''}" aria-label="${label} 数値"></div></div>`;
+    const invalid=numericErrors.has(`${kind}:${key}`)?' aria-invalid="true" title="有効な範囲の数値を入力してください。空欄は設定に反映されません。" style="outline:2px solid #d13b3b"':'';
+    return `<div class="number-control"><div class="control-caption"><label for="num-${kind}-${key}">${label}</label><small>${suffix}</small></div><div class="number-fields"><input type="range" min="${min}" max="${max}" step="${step}" value="${val}" data-pair="${kind}:${key}" aria-label="${label} スライダー"><input id="num-${kind}-${key}" type="number" min="${min}" max="${max}" step="${step}" value="${val}" data-pair="${kind}:${key}" data-kind="${kind}" data-key="${key}" data-camera="${kind==='camera_number'?key:''}" aria-label="${label} 数値"${invalid}></div></div>`;
   }
   function modeButtons(){return `<div class="choice-grid">${[['manual','既存・手動'],['fixed_auto','固定＋自動構図'],['full_auto','フルオート']].map(([key,label])=>button(label,'camera_mode',{value:key},state.camera.mode===({manual:'従来の手動カメラ',fixed_auto:'固定視点＋自動構図補正',full_auto:'フルオートシネマ'}[key])?'class="active"':'')).join('')}</div>`;}
   function cameraControls(){
@@ -184,7 +210,12 @@
     if(target.id==='help-close'){$('#help-dialog').close();return;}
     const key=target.closest('[data-key-index]');if(key){selectedKey=Number(key.dataset.keyIndex);render();return;}
     if(target.id==='key-upsert'){
-      const data={index:selectedKey<0?null:selectedKey};for(const field of ['time','fov','yaw','zoom'])data[field]=Number($(`#key-${field}`).value);
+      const data={index:selectedKey<0?null:selectedKey};
+      for(const field of ['time','fov','yaw','zoom']){
+        const input=$(`#key-${field}`),value=numericValue(input);
+        if(value===null)return;
+        data[field]=value;
+      }
       action('keyframe_upsert',data);return;
     }
     if(target.id==='key-remove'){action('keyframe_remove',{index:selectedKey});selectedKey=-1;return;}
@@ -192,18 +223,29 @@
     const scene=target.closest('[data-scene]');if(scene){action('select_scene',{index:Number(scene.dataset.scene)});return;}
     const command=target.closest('[data-action]');if(command){let data={};try{data=JSON.parse(command.dataset.data||'{}');}catch{}action(command.dataset.action,data);}
   });
-  document.addEventListener('input',event=>{const target=event.target;if(!target.dataset.pair)return;const mate=$$(`[data-pair="${target.dataset.pair}"]`).find(x=>x!==target);if(mate)mate.value=target.value;});
+  document.addEventListener('input',event=>{const target=event.target;
+    numericErrors.delete(target.dataset.pair||target.id);
+    target.removeAttribute('aria-invalid');target.style.outline='';
+    if(!target.dataset.pair||target.value.trim()===''||target.validity.badInput)return;
+    const mate=$$(`[data-pair="${target.dataset.pair}"]`).find(x=>x!==target);if(mate)mate.value=target.value;});
   document.addEventListener('change',event=>{
     const target=event.target;
     if(target.dataset.check!==undefined){action('check_scene',{index:Number(target.dataset.check),checked:target.checked});return;}
-    if(target.dataset.kind){action(target.dataset.kind,{key:target.dataset.key,value:Number(target.value)});return;}
-    if(target.dataset.pair){const [kind,key]=target.dataset.pair.split(':');action(kind,{key,value:Number(target.value)});return;}
+    if(target.dataset.kind||target.dataset.pair){
+      const [kind,key]=target.dataset.kind?[target.dataset.kind,target.dataset.key]:target.dataset.pair.split(':');
+      const value=numericValue(target);
+      if(value===null){restoreNumber(target,kind,key);return;}
+      action(kind,{key,value});return;
+    }
     if(target.id==='fx-override')action('scene_fx_override',{value:target.checked});
     else if(target.id==='camera-style')action('camera_style',{value:target.value});
     else if(target.id==='global-grade')action('global_color_grade',{value:target.value});
     else if(target.id==='target-slot'&&target.value)action('target_lock',{slot:Number(target.value)});
     else if(target.id==='theme')action('theme',{value:target.value});
-    else if(target.id==='trim-pre'||target.id==='trim-post')action('trim',{key:target.id==='trim-pre'?'pre':'post',value:Number(target.value)});
+    else if(target.id==='trim-pre'||target.id==='trim-post'){
+      const key=target.id==='trim-pre'?'pre':'post',value=numericValue(target);
+      if(value===null)restoreNumber(target,'trim',key);else action('trim',{key,value});
+    }
     else if(target.id==='fps')action('output_fps',{value:Number(target.value)});
     else if(target.id==='encoder')action('encoder_policy',{value:target.value});
     else if(target.id==='game-audio')action('game_audio',{value:target.checked});

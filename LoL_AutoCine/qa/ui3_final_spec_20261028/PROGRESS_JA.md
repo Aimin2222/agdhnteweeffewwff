@@ -1,5 +1,10 @@
 # Work最終統合仕様の取り込み状況（2026-10-29）
 
+## Issue #3 数値入力の追加進捗
+
+- WorkレビューM01の空欄→0誤送信をR1/R2/候補3で修正し、Windows WebView2の3画面で空欄・範囲外の拒否と明示0の反映を確認。前後トリムの候補3欄も実状態と同期した。証拠: `../ui3_issue3_20261029/RESULT_JA.md` と `webview/index.json`。
+- 対象pytest 32 passed / 24 subtests passed、R1と候補3の既存操作フロー再実行PASS。物理Tab、実キーボードbadInput、実LoLなどはNOT_RUN。Work M02/M03と239件の完全受入をPASSへ繰り上げない。
+
 ## 基準と保護
 
 - PR #55 のHEAD `bd93e2caf3bdb823d52b86fead0d71fc15c41327` を確認してから作業。main、PR #49/#51/#52/#54、既存素材の承認状態は変更していない。

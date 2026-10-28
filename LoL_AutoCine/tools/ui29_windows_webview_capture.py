@@ -52,6 +52,150 @@ def _state(url: str) -> dict:
         return json.load(response)
 
 
+def _issue3_numeric(window, url: str, sid: str, output: Path) -> dict:
+    """Exercise native WebView2 numeric events against the real App state."""
+    reference = sid.startswith("reference-")
+    if reference:
+        window.evaluate_js('document.querySelector(\'.topnav [data-view="color"]\').click()')
+        selector = 'input[data-key="exposure"]'
+    else:
+        window.evaluate_js("document.querySelector('.ui3-tools-opener').click()")
+        selector = '[data-ui3-global-color="exposure"]'
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline:
+        if window.evaluate_js(f"!!document.querySelector({json.dumps(selector)})"):
+            break
+        time.sleep(0.1)
+    else:
+        raise AssertionError(f"numeric exposure field missing: {sid}")
+
+    def change(raw: str) -> dict:
+        return window.evaluate_js(f'''(() => {{
+          const input=document.querySelector({json.dumps(selector)});
+          input.value={json.dumps(raw)};
+          input.dispatchEvent(new Event('input',{{bubbles:true}}));
+          input.dispatchEvent(new Event('change',{{bubbles:true}}));
+          return {{value:input.value,badInput:input.validity.badInput,
+                  invalid:input.getAttribute('aria-invalid')}};
+        }})()''')
+
+    def await_value(expected: float) -> None:
+        deadline = time.monotonic() + 8
+        while time.monotonic() < deadline:
+            if _state(url)["global_color"]["values"].get("exposure") == expected:
+                return
+            time.sleep(0.1)
+        raise AssertionError(f"exposure did not reach {expected}")
+
+    change("0.12")
+    await_value(0.12)
+    checks = {}
+    for label, raw in (("empty", ""), ("nonnumeric_normalized_to_empty", "abc"),
+                       ("out_of_range", "9")):
+        entered = change(raw)
+        time.sleep(0.15)
+        actual = _state(url)["global_color"]["values"].get("exposure")
+        visible = window.evaluate_js(f'''(() => {{const input=document.querySelector({json.dumps(selector)});
+          return {{value:input.value,invalid:input.getAttribute('aria-invalid'),
+                  message:document.querySelector('#message')?.textContent ||
+                    document.querySelector('[role="status"]')?.textContent}};}})()''')
+        if actual != 0.12 or visible["value"] != "0.12" or visible["invalid"] != "true":
+            raise AssertionError(f"{sid} {label}: backend={actual}, entered={entered}, ui={visible}")
+        checks[label] = {"result": "PASS", "backend": actual, "visible": visible}
+        if label == "empty":
+            _capture_webview(window, output / f"issue3_{sid}_empty.png", (1920, 1080))
+    change("0")
+    await_value(0)
+    time.sleep(1.25)
+    retained = _state(url)["global_color"]["values"].get("exposure")
+    if retained != 0:
+        raise AssertionError(f"{sid}: explicit zero was not retained")
+    checks["explicit_zero"] = {"result": "PASS", "backend": retained}
+    checks["native_badInput_keystroke"] = "NOT_RUN"
+    _capture_webview(window, output / f"issue3_{sid}_zero.png", (1920, 1080))
+    if reference:
+        window.evaluate_js('document.querySelector(\'.topnav [data-view="camera"]\').click()')
+        window.evaluate_js('document.querySelector(\'.topnav [data-view="color"]\').click()')
+    else:
+        window.evaluate_js("document.querySelector('.ui3-route-opener').click()")
+        _wait_path(window, "/compare/detail/testA")
+        deadline = time.monotonic() + 8
+        while time.monotonic() < deadline:
+            if window.evaluate_js("!!document.querySelector('[data-compare=main]')"):
+                break
+            time.sleep(0.1)
+        else:
+            raise AssertionError("candidate 3 detail return button missing")
+        window.evaluate_js("document.querySelector('[data-compare=main]').click()")
+        _wait_path(window, "/ui/T-A-M")
+        window.evaluate_js("document.querySelector('.ui3-tools-opener').click()")
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline:
+        try:
+            visible = window.evaluate_js(f"document.querySelector({json.dumps(selector)})?.value")
+            if visible == "0":
+                break
+        except Exception:
+            pass
+        time.sleep(0.1)
+    else:
+        raise AssertionError(f"{sid}: zero not retained after screen transition")
+    checks["screen_switch_retains_zero"] = "PASS"
+    if reference:
+        window.evaluate_js('document.querySelector(\'.topnav [data-view="camera"]\').click()')
+        selector = 'input[data-camera="third_yaw"]'
+    else:
+        selector = 'input[data-setting="third_yaw"]'
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline:
+        if window.evaluate_js(f"!!document.querySelector({json.dumps(selector)})"):
+            break
+        time.sleep(0.1)
+    else:
+        raise AssertionError(f"{sid}: camera numeric field missing")
+    change("32")
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline:
+        if _state(url)["camera"]["values"].get("third_yaw") == 32:
+            break
+        time.sleep(0.1)
+    else:
+        raise AssertionError(f"{sid}: camera numeric value 32 was not applied")
+    change("")
+    time.sleep(0.15)
+    yaw = _state(url)["camera"]["values"].get("third_yaw")
+    if yaw != 32 or window.evaluate_js(f"document.querySelector({json.dumps(selector)})?.value") != "32":
+        raise AssertionError(f"{sid}: blank camera value replaced {yaw}")
+    checks["camera_empty_keeps_32"] = "PASS"
+    change("0")
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline:
+        if _state(url)["camera"]["values"].get("third_yaw") == 0:
+            break
+        time.sleep(0.1)
+    else:
+        raise AssertionError(f"{sid}: explicit camera zero was not applied")
+    checks["camera_explicit_zero"] = "PASS"
+    if sid == "T-A-M":
+        selector = 'input[data-setting="pre"]'
+        change("6")
+        deadline = time.monotonic() + 8
+        while time.monotonic() < deadline:
+            if _state(url)["trim"].get("pre") == 6:
+                break
+            time.sleep(0.1)
+        else:
+            raise AssertionError("candidate 3 pre-trim did not reach App")
+        change("")
+        time.sleep(1.25)
+        pre = _state(url)["trim"].get("pre")
+        visible = window.evaluate_js(f"document.querySelector({json.dumps(selector)})?.value")
+        if pre != 6 or visible != "6":
+            raise AssertionError(f"candidate 3 blank pre-trim changed value: {pre}, {visible}")
+        checks["trim_empty_keeps_6_after_poll"] = "PASS"
+    return checks
+
+
 def _wait_path(window, path: str, timeout: float = 10) -> None:
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
@@ -356,6 +500,8 @@ def main(argv=None) -> int:
                         help="capture and click through the seven comparison candidates offline")
     parser.add_argument("--ui3-flow", action="store_true",
                         help="click through candidate 3 only, including its integrated tools")
+    parser.add_argument("--issue3-numeric", action="store_true",
+                        help="regress empty, bad, out-of-range and explicit zero in WebView2")
     parser.add_argument("--numbered-label-audit", action="store_true",
                         help="capture chooser/switchers and reject old candidate names in Windows WebView2")
     args = parser.parse_args(argv)
@@ -379,6 +525,12 @@ def main(argv=None) -> int:
         if args.screen or args.detail_family or args.material_family or args.priority_seven_flow:
             parser.error("--ui3-flow must be used alone")
         screens = [screen for screen in inventory if screen["id"] == "T-A-M"]
+    if args.issue3_numeric:
+        if args.reference or args.screen or args.ui3_flow or args.detail_family or args.material_family:
+            parser.error("--issue3-numeric must be used alone")
+        screens = [{"id": sid, "main_id": "T-A-M", "family": "testA",
+                    "resolution": [1920, 1080], "theme": "light"}
+                   for sid in ("reference-ld", "reference-ln", "T-A-M")]
     if args.detail_family:
         if args.screen or args.material_family:
             parser.error("choose exactly one screen/detail/material selector")
@@ -408,7 +560,7 @@ def main(argv=None) -> int:
         with log_path.open("wb") as log:
             child_env = os.environ.copy()
             child_env["AUTOCINE_UI_COMPARE_PREFS"] = str(Path(temp) / "comparison_workspace.json")
-            if args.reference or args.ui3_flow:
+            if args.reference or args.ui3_flow or args.issue3_numeric:
                 child_env["AUTOCINE_UI3_LAUNCH"] = "1"
             child = subprocess.Popen(_child_command(handoff), cwd=ROOT, stdout=log,
                                      stderr=subprocess.STDOUT, env=child_env,
@@ -456,7 +608,9 @@ def main(argv=None) -> int:
                                             previous_candidate_state["frame"]["effect_id"]):
                                         raise AssertionError(f"{sid}: settings lost when switching candidates")
                                 parsed = urlsplit(url)
-                                route_path = (f"/ui3/reference/{args.reference}" if args.reference else
+                                route_path = (f"/ui3/reference/{sid.split('-')[1]}" if args.issue3_numeric and
+                                              sid.startswith("reference-") else
+                                              f"/ui3/reference/{args.reference}" if args.reference else
                                               f"/compare/material/{screen['family']}" if args.material_family else
                                               f"/compare/detail/{screen['family']}" if args.detail_family
                                               else f"/ui/{sid}")
@@ -475,7 +629,7 @@ def main(argv=None) -> int:
                                     time.sleep(0.1)
                                 else:
                                     raise TimeoutError(f"WebView2 route did not load: {sid}")
-                                if args.reference and not window.evaluate_js(
+                                if (args.reference or sid.startswith("reference-")) and not window.evaluate_js(
                                         "Boolean(document.querySelector('#inspector-title'))"):
                                     raise AssertionError(f"reference UI did not render: {sid}")
                                 time.sleep(0.3)
@@ -714,6 +868,7 @@ def main(argv=None) -> int:
                                         "none_material_native": "PASS", "motion_six_controls": "PASS",
                                         "global_color_native": "PASS"}
                                 reference_flow = _reference_flow(window, url, args.reference) if args.reference else None
+                                issue3_result = _issue3_numeric(window, url, sid, args.output) if args.issue3_numeric else None
                                 if flow:
                                     previous_candidate_state = _state(url)
                                 results.append({"id": sid, "result": capture_result,
@@ -726,6 +881,7 @@ def main(argv=None) -> int:
                                                 "bounds": f"bounds/{sid}.json",
                                                 "main_detail_roundtrip": ("PASS" if args.detail_family or flow else "NOT_RUN"),
                                                 **({"reference_flow": reference_flow} if reference_flow else {}),
+                                                **({"issue3_numeric": issue3_result} if issue3_result else {}),
                                                 **({"numbered_label_audit": label_audit} if label_audit else {}),
                                                 **({"priority_seven_flow": flow,
                                                     "previous_candidate_state_retained":

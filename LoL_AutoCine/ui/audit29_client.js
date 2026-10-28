@@ -27,6 +27,22 @@
     clearTimeout(noticeTimer);
     noticeTimer = setTimeout(() => notice.style.display = 'none', 5000);
   }
+  function validNumber(input) {
+    const value=input.valueAsNumber;
+    if(input.value.trim()===''||input.validity.badInput||!Number.isFinite(value)||
+       input.validity.rangeUnderflow||input.validity.rangeOverflow||input.validity.stepMismatch){
+      input.setAttribute('aria-invalid','true');
+      input.style.outline='2px solid #d13b3b';
+      input.title='有効な範囲の数値を入力してください。空欄は設定に反映されません。';
+      message(`${input.getAttribute('aria-label')||input.closest('label')?.textContent.trim()||'数値欄'}: 空欄または範囲外です。元の設定値を保持しました。`);
+      return null;
+    }
+    input.removeAttribute('aria-invalid');input.removeAttribute('title');input.style.outline='';
+    return value;
+  }
+  function restoreNumber(input, previous) {
+    if(previous!==undefined&&previous!==null)input.value=previous;
+  }
   async function snapshot() {
     if (pendingActions) return;
     const startedAt = stateEpoch;
@@ -478,7 +494,7 @@
     document.querySelectorAll('[data-setting]').forEach(input => {
       if (document.activeElement === input) return;
       const key = input.dataset.setting;
-      const value = key === 'pre' || key === 'post' ? null : data.camera.values[key];
+      const value = key === 'pre' || key === 'post' ? data.trim?.[key] : data.camera.values[key];
       if (value !== null && value !== undefined) input.value = value;
     });
     if (ui3Baseline) document.querySelectorAll('.ui3-camera-range').forEach(slider => {
@@ -780,8 +796,11 @@
     else message('この操作の実機接続は未完了です。動作済みとは扱いません。');
   });
   document.querySelectorAll('[data-setting]').forEach(input => input.addEventListener('change', () => {
-    const key = input.dataset.setting, value = Number(input.value);
-    if (!Number.isFinite(value)) return message('数値を入力してください');
+    const key = input.dataset.setting, value = validNumber(input);
+    if(value===null){
+      restoreNumber(input,key==='pre'||key==='post'?state.value?.trim?.[key]:state.value?.camera?.values?.[key]);
+      return;
+    }
     if (key === 'pre' || key === 'post') invoke('trim',{key,value});
     else invoke('camera_number',{key,value});
   }));
@@ -1020,9 +1039,9 @@
       const input=document.createElement('input');input.type='number';input.min='0';input.max='45';
       input.step='0.5';input.dataset.setting='motion_arc';input.setAttribute('aria-label','回り込み');
       input.addEventListener('change',()=>{
-        const value=Number(input.value);
-        if(Number.isFinite(value))invoke('camera_number',{key:'motion_arc',value});
-        else message('数値を入力してください');
+        const value=validNumber(input);
+        if(value===null){restoreNumber(input,state.value?.camera?.values?.motion_arc);return;}
+        invoke('camera_number',{key:'motion_arc',value});
       });label.append(input);numeric.append(label);
     }
     if (numeric && !numeric.querySelector('.ui3-camera-range')) {
@@ -1042,7 +1061,10 @@
         slider.addEventListener('input',()=>{input.value=slider.value;});
         slider.addEventListener('change',()=>invoke('camera_number',
           {key:input.dataset.setting,value:Number(slider.value)}));
-        input.addEventListener('input',()=>{slider.value=input.value;});
+        input.addEventListener('input',()=>{
+          input.removeAttribute('aria-invalid');input.style.outline='';
+          if(input.value.trim()!==''&&!input.validity.badInput)slider.value=input.value;
+        });
         label.insertBefore(slider,input);
       }
     }
@@ -1191,7 +1213,11 @@
       input.max=max;input.step=step;input.dataset.ui3GlobalColor=key;
       input.value=state.value.global_color?.values?.[key] ?? '';
       input.style.cssText='width:88px;padding:5px';
-      input.addEventListener('change',()=>invoke('global_color_number',{key,value:Number(input.value)}));
+      input.addEventListener('change',()=>{
+        const value=validNumber(input);
+        if(value===null){restoreNumber(input,state.value.global_color?.values?.[key]);return;}
+        invoke('global_color_number',{key,value});
+      });
       row.append(input);globalColor.append(row);
     }
     const colorNote=document.createElement('small');
