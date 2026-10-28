@@ -80,6 +80,35 @@ class App:
 
 
 class Audit29RuntimeTests(unittest.TestCase):
+    def test_action_revision_and_replay_generation_are_exposed(self):
+        app = App()
+        app._replay_generation = 3
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            runtime = Audit29Runtime(app, Path(directory) / "workspace.json")
+            first = runtime.snapshot()
+            self.assertEqual(first["workspace"]["action_revision"], 0)
+            self.assertEqual(first["replay"]["generation"], 3)
+            changed = runtime.perform("camera_number", {"key": "third_dist", "value": 920})
+            self.assertEqual(changed["workspace"]["action_revision"], 1)
+            app._replay_generation = 4
+            self.assertEqual(runtime.snapshot()["replay"]["generation"], 4)
+
+    def test_appearance_save_failure_restores_previous_selection(self):
+        app = App()
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            runtime = Audit29Runtime(app, Path(directory) / "workspace.json")
+            first_id = next(iter(SCREENS))
+            runtime.select_screen(first_id)
+            before = runtime.action_revision
+            with patch.object(runtime, "_save_appearance", side_effect=OSError("disk full")):
+                with self.assertRaises(OSError):
+                    runtime.select_screen("T-A-M" if first_id != "T-A-M" else "T-B-M")
+                self.assertEqual(runtime.screen_id, first_id)
+                with self.assertRaises(OSError):
+                    runtime.select_theme("dark")
+                self.assertEqual(runtime.theme, "system")
+            self.assertEqual(runtime.action_revision, before)
+
     def test_shot_focus_and_output_checks_are_independent(self):
         app = App()
         app.on_scene_selection = Mock()

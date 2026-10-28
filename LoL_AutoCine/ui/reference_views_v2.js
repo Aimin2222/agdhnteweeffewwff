@@ -9,11 +9,18 @@
   const labels={main:'メイン',easy:'かんたん',detail:'詳細編集',camera:'カメラ',curve:'カーブ',color:'色調整',material:'素材',export:'出力'};
   let state=null,view='main',selectedKey=-1,selectedScene=null,refreshing=false,frameSeq=0,frameTag=null,lastFrameRequest=0;
   let stateEpoch=0,pendingActions=0,actionQueue=Promise.resolve();
+  let acceptedReplayGeneration=-1,acceptedActionRevision=-1;
   const frameTimes=[];
   const numericErrors=new Set();
   function button(label,command,data={},extra=''){return `<button type="button" data-action="${command}" data-data='${esc(JSON.stringify(data))}' ${extra}>${label}</button>`;}
   function section(title,content,extra=''){return `<section class="section ${extra}"><h3>${title}</h3>${content}</section>`;}
   function note(message){$('#message').textContent=message;}
+  function acceptState(next){
+    const generation=Number(next.replay?.generation??0),revision=Number(next.workspace?.action_revision??0);
+    if(generation<acceptedReplayGeneration||
+       (generation===acceptedReplayGeneration&&revision<acceptedActionRevision))return false;
+    acceptedReplayGeneration=generation;acceptedActionRevision=revision;state=next;return true;
+  }
   function numericValue(input){
     const errorKey=input.dataset.pair||input.id;
     const raw=input.value.trim(),value=input.valueAsNumber;
@@ -44,7 +51,7 @@
     try{const response=await fetch(url('/api/state'),{cache:'no-store'});if(!response.ok)throw Error('状態を取得できません');
       const result=await response.json();
       if(startedAt!==stateEpoch||pendingActions)return;
-      state=result;
+      if(!acceptState(result))return;
       if(!$('#inspector-body').contains(document.activeElement))render();
     }catch(error){note(error.message);}finally{refreshing=false;}
   }
@@ -53,7 +60,8 @@
     const operation=actionQueue.then(async()=>{
       try{const response=await fetch(url('/api/action'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:command,data})});
         const result=await response.json();if(!response.ok)throw Error(result.error||'操作に失敗しました');
-        state=result;render();note(`${command} を実行しました。実状態を確認してください。`);
+        if(!acceptState(result))return;
+        render();note(`${command} を実行しました。実状態を確認してください。`);
       }catch(error){note(`${command}: ${error.message}`);}
       finally{pendingActions--;stateEpoch++;}
     });

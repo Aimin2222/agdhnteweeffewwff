@@ -16,13 +16,13 @@
 | 候補3 T-A-M | PASS | 同上。メイン→詳細→メインの切替後の0保持、前トリム6→空欄→定期更新後も6を確認。`webview/index.json`、`issue3_T-A-M_*.png`。 |
 | 既存R1操作フロー | PASS | `reference_regression/index.json`。カメラ・素材と同名FX・色・FPS/encoder設定の限定的な実App操作。実GPUエンコードは未実施。 |
 | 既存候補3操作フロー | PASS | `candidate3_regression/index.json`。候補3の限定操作と設定保持。 |
-| 対象pytest | PASS | `tests/test_ui3_integration.py`、`tests/test_ui29_runtime.py`、`tests/test_ui29_desktop.py` は32 passed、24 subtests passed。 |
+| 対象pytest | PASS | `tests/test_ui3_integration.py`、`tests/test_ui29_runtime.py`、`tests/test_ui29_desktop.py` は34 passed、24 subtests passed。 |
 
 WebView2試験は実Windowsの埋め込みWebView2で数値欄へ `input`/`change` イベントを送った。無効文字 `abc` はChromiumの `type=number` が空欄へ正規化したため、**実キーボードによる `badInput` 状態と物理Tab操作はNOT_RUN**。`validity.badInput` のコード経路は防御を入れたが、実操作PASSには含めない。初回実行でR1の定期再描画が赤枠を消す問題を検出し、修正後の再試験でPASS。テストのボタン探索ミスも修正し、最終 `index.json` は3画面とも成功。
 
 ## 残件
 
-- Work M02: server revision、replay generation、Project/Template/Sceneの型付き保存、保存失敗時の旧状態保持、Undo/Redo一般化、旧schema移行は未完了。今回の前後トリム状態同期は一部改善であり、M02全体PASSではない。
+- Work M02: 実Appの `_replay_generation` とUI `action_revision` を状態応答に追加し、R1/R2/候補3のクライアントで古い世代・改訂の応答を採用しない。候補・テーマ保存失敗時の選択復元を追加し、単体テストと既存Windows操作フローで限定PASS。リプレイAの遅延応答→Bの競合試験、Project/Template/Sceneの型付き保存と失敗復元、Undo/Redo一般化、旧schema移行は未完了。M02全体PASSではない。
 - Work M03: 70既存＋16追加能力のC3/R1/R2全画面での入力→状態→保存→出力の追跡は未完了。キーフレーム実シーン操作、LUT、scene色overrideなどは未接続またはNOT_RUN。
 - 実LoL、GPU/NVENC、音声、録画、MP4、125/150% DPI、239件の完全受入はNOT_RUN。21画面の画像忠実度はREVIEWのまま。
 - PR #55はDraftを維持し、mainへのマージは行っていない。

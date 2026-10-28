@@ -6,6 +6,15 @@
   const endpoint = (path) => `${path}?token=${encodeURIComponent(token)}`;
   const state = {value: null, frameNumber: 0};
   let stateEpoch = 0, pendingActions = 0, actionQueue = Promise.resolve();
+  let acceptedReplayGeneration = -1, acceptedActionRevision = -1;
+  function acceptState(next) {
+    const generation=Number(next.replay?.generation??0);
+    const revision=Number(next.workspace?.action_revision??0);
+    if(generation<acceptedReplayGeneration ||
+       (generation===acceptedReplayGeneration && revision<acceptedActionRevision))return false;
+    acceptedReplayGeneration=generation;acceptedActionRevision=revision;state.value=next;
+    return true;
+  }
   const systemDark = matchMedia('(prefers-color-scheme: dark)');
   function applyTheme(preference) {
     document.documentElement.dataset.theme = preference === 'system' ?
@@ -50,7 +59,7 @@
     if (!response.ok) throw new Error('状態の取得に失敗しました');
     const result = await response.json();
     if (startedAt !== stateEpoch || pendingActions) return;
-    state.value = result;
+    if(!acceptState(result))return;
     if (!document.activeElement?.matches('input, select, textarea, [contenteditable="true"]')) render();
   }
   function action(name, data={}) {
@@ -64,7 +73,7 @@
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || `${name} に失敗しました`);
-        state.value = result;
+        if(!acceptState(result))return result;
         render();
         return result;
       } finally {

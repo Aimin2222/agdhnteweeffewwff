@@ -89,6 +89,7 @@ class Audit29Runtime:
 
     def __init__(self, app, preferences_path: Path | None = None):
         self.app = app
+        self.action_revision = 0
         self._ui3_suggested_previous = None
         self.preferences_path = preferences_path or default_preferences_path()
         self.screen_id = DEFAULT_SCREEN
@@ -119,15 +120,27 @@ class Audit29Runtime:
     def select_screen(self, screen_id: str):
         if screen_id not in SCREENS:
             raise ValueError(f"unknown screen: {screen_id}")
+        old = self.screen_id
         self.screen_id = screen_id
-        self._save_appearance()
+        try:
+            self._save_appearance()
+        except Exception:
+            self.screen_id = old
+            raise
+        self.action_revision += 1
         return self.snapshot()
 
     def select_theme(self, theme: str):
         if theme not in THEMES:
             raise ValueError(f"unknown theme: {theme}")
+        old = self.theme
         self.theme = theme
-        self._save_appearance()
+        try:
+            self._save_appearance()
+        except Exception:
+            self.theme = old
+            raise
+        self.action_revision += 1
         return self.snapshot()
 
     def snapshot(self) -> dict:
@@ -202,6 +215,7 @@ class Audit29Runtime:
         testb_cards = cards(TEST_B_FRAME_CARDS)
         return {
             "workspace": {"screen_id": self.screen_id,
+                          "action_revision": self.action_revision,
                           "ui3_mode": os.environ.get("AUTOCINE_UI3_LAUNCH") == "1",
                           "native_editor_visible": (app.root.state() == "normal"
                                                     if hasattr(app.root, "state") else False),
@@ -213,7 +227,8 @@ class Audit29Runtime:
                                                       or x["id"] in RECONSTRUCTED_SCREEN_IDS,
                                        "implementation_status": "partial"}
                                       for x in SCREENS.values()]},
-            "replay": {"connected": bool(app.players),
+            "replay": {"generation": int(getattr(app, "_replay_generation", 0)),
+                       "connected": bool(app.players),
                        "player_count": len(app.players),
                        "players": [{"slot": int(player.slot), "name": player.name,
                                     "champion": player.champion,
@@ -632,4 +647,5 @@ class Audit29Runtime:
             raise NotImplementedError("エンゲージ専用検出は未実装です")
         else:
             raise ValueError(f"unknown UI action: {action}")
+        self.action_revision += 1
         return self.snapshot()

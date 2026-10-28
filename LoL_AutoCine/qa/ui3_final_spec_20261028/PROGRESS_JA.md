@@ -3,7 +3,7 @@
 ## Issue #3 数値入力の追加進捗
 
 - WorkレビューM01の空欄→0誤送信をR1/R2/候補3で修正し、Windows WebView2の3画面で空欄・範囲外の拒否と明示0の反映を確認。前後トリムの候補3欄も実状態と同期した。証拠: `../ui3_issue3_20261029/RESULT_JA.md` と `webview/index.json`。
-- 対象pytest 32 passed / 24 subtests passed、R1と候補3の既存操作フロー再実行PASS。物理Tab、実キーボードbadInput、実LoLなどはNOT_RUN。Work M02/M03と239件の完全受入をPASSへ繰り上げない。
+- 対象pytest 34 passed / 24 subtests passed、R1と候補3の既存操作フロー再実行PASS。UI応答にリプレイ世代と操作改訂を追加し、候補・テーマの保存失敗時は選択を復元する限定対策を追加。物理Tab、実キーボードbadInput、リプレイA→Bの遅延応答、実LoLなどはNOT_RUN。Work M02/M03と239件の完全受入をPASSへ繰り上げない。
 
 ## 基準と保護
 
@@ -16,7 +16,7 @@
 | 項目 | 状態 | 根拠・限界 |
 |---|---|---|
 | R1/R2回転角 `third_yaw` | 修正・Windows操作PASS | 32°を既存Appへ送信し、1.1秒pollとR1/R2切替後も保持。10スタイル×両サイドの実LoL確認はNOT_RUN。 |
-| 遅延状態応答 | UI側対策済み | 操作中の古いsnapshot破棄、操作の順序化、入力中の再描画抑制。server側revision、replay generation、保存契約は未実装。 |
+| 遅延状態応答 | 部分対策済み | 操作中の古いsnapshot破棄、操作の順序化、入力中の再描画抑制。追加でserver応答にUI操作改訂と既存Appのリプレイ世代を載せ、古い番号をクライアントで拒否。リプレイA→Bの実競合はNOT_RUN、保存契約は未完成。 |
 | R2 1366×768 | 対象条件PASS | Windows WebView2でpreview下端529px、timeline上端566px、footer上端740px、scrollHeight768px。125/150% DPIはNOT_RUN。1920版stage539pxは維持。 |
 | R1/R2ダークテーマの文字 | 部分確認PASS | 数値入力・選択中タブ・候補切替タブをWindows WebView2のcomputed styleで測定。R2のコントラストは11.75/7.63/6.29。全コントロールとポップアップのテーマ検査はNOT_RUN。 |
 | 3UI共通色設定 | 一部直接接続・Windows操作PASS | 既存Templateのgrade/strength/temperature/contrast/exposure/vibranceへ検証付き接続。候補3の全機能パネルからも露出0.12を操作確認。露出はEVではない。LUT選択、曲線、scene色override、GPU/CPU出力一致は未接続・NOT_RUN。 |
@@ -33,7 +33,7 @@
 
 ## 残件とゲート
 
-- 共通Project/Template/Sceneの型付き保存、Undo/Redo一般化、replay generation、server revision、旧schema移行。
+- 共通Project/Template/Sceneの型付き保存、Undo/Redo一般化、旧schema移行。UI操作改訂とリプレイ世代は応答に追加したが、バックグラウンド変化を含む完全な順序保証とA→Bの競合実証は未完了。
 - 3UIの36画面の内部配置・装飾・入力と全70機能の直接操作。従来エディタ経由の項目は直接接続完了と数えない。
 - 絶対FOV、linear/hold/Bezier、scene色/LUTなどの判断待ちD01〜D11は推奨を承認とみなさず、適用していない。
 - 実LoL、BLUE/RED全カメラ、GPU/NVENC、LoL音声、録画、MP4、125/150% DPI、プレビューと出力の一致はNOT_RUN。
