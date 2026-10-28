@@ -44,7 +44,7 @@ def main() -> None:
         from ui.audit29_desktop import run_backend
         run_backend(sys.argv[sys.argv.index("--ui29-backend") + 1])
         return
-    if "--ui29" in sys.argv:
+    if "--ui29" in sys.argv or "--ui3" in sys.argv:
         from ui.audit29_desktop import run_desktop, smoke_backend
         if "--ui29-smoke" in sys.argv:
             smoke_backend()
@@ -52,7 +52,8 @@ def main() -> None:
             from tools.ui29_windows_webview_capture import main as capture_webview
             raise SystemExit(capture_webview(sys.argv[sys.argv.index("--ui29-capture-all") + 1:]))
         else:
-            run_desktop(window_smoke="--ui29-window-smoke" in sys.argv)
+            run_desktop(window_smoke=("--ui29-window-smoke" in sys.argv or
+                                      "--ui3-window-smoke" in sys.argv))
         return
     from legacy_app import App
     root = tk.Tk()

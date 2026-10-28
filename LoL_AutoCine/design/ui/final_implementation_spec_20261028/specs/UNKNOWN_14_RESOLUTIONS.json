@@ -1,0 +1,290 @@
+{
+  "items": [
+    {
+      "id": "U01",
+      "question": "FOV48°と選択キー64°",
+      "classification": "部分対応・値モデルが異なる",
+      "current_fact": "既存Shotは相対fov±15°、baseはstyleと時刻で変動。camera.fov_atは制限も行う。現在UIは絶対FOV未接続を表示している。",
+      "implementation": "D02：選択キーの要求値/補正量/評価後現在値を別表示。実baseで逆変換可能範囲だけadapter。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/core/camera.py",
+          "line": 360,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/camera.py#L360",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [
+        "D02"
+      ],
+      "research_status": "SOURCE_RECONCILED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "U02",
+      "question": "なめらか補間とBezier",
+      "classification": "既存評価あり／選択モード・自由接線は新規",
+      "current_fact": "2点はsmoothstep、3点以上は調和平均傾きの形状保存Hermite、端点傾き0。キー外は端点値。linear/hold/Bezierの選択APIはない。",
+      "implementation": "まず同じ評価器を曲線描画へ。D03後にmode/tangentをversion付き保存、CPU/実カメラで同じ評価。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/core/camera.py",
+          "line": 297,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/camera.py#L297",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [
+        "D03"
+      ],
+      "research_status": "SOURCE_RECONCILED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "U03",
+      "question": "XYZ/Yaw/Zoomの複数トラック",
+      "classification": "既存3channel／XYZ新規",
+      "current_fact": "Yaw/Zoom/FOVはShot.keyframesで束ねて保存。XYZや自由姿勢trackはこのschemaにない。THIRD_STYLES以外はkeyframe delta0。",
+      "implementation": "既存3channelを表示・数値・drag同期。XYZはD04、geometryと軸/遮蔽検査なしでは無効。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/ui/scene_project.py",
+          "line": 16,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/scene_project.py#L16",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [
+        "D04"
+      ],
+      "research_status": "SOURCE_RECONCILED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "U04",
+      "question": "露出/彩度/色温度/LUT",
+      "classification": "既存エンジン＋UI/API/schema拡張",
+      "current_fact": "Template.exposure/vibrance/lut_path/temperature/grade/curveは実在。露出はeq brightnessへの係数、Kelvin/EVではない。既存scene APIはtemperature/bloom/focus_blur/dof_blur/highlight_pulseのみ。",
+      "implementation": "global接続とscene拡張を別work item。均一彩度とvibranceを区別。D07/D11。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/core/effects.py",
+          "line": 511,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L511",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [
+        "D07",
+        "D11"
+      ],
+      "research_status": "SOURCE_RECONCILED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "U05",
+      "question": "Zoom Blur/放射状/時間混合",
+      "classification": "既存候補コードあり／空間radialは新規",
+      "current_fact": "zoom_blurはscale/crop+tmix。normalized_tmix_v1は既に実装。radial_blur名の既存処理もtmixで空間radialではない。Flash causal_pts_v1も実装済み。",
+      "implementation": "再実装せずrevision/save/GPU互換/境界を検査。真のradialは別ID。D10。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/core/effects.py",
+          "line": 438,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L438",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [
+        "D10"
+      ],
+      "research_status": "SOURCE_RECONCILED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "U06",
+      "question": "ゲームFog/DOFと後処理",
+      "classification": "類似非同一",
+      "current_fact": "Replay render環境とTemplate/FFmpeg/OpenCLの画像ぼかしは別経路。focus_blurとdof_blurも別入力。",
+      "implementation": "カメラ環境/映像FXの別section。影響scope/単位/実接続能力を表示、テーマへ連動しない。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/core/render_fx.py",
+          "line": 15,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/render_fx.py#L15",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [],
+      "research_status": "SOURCE_RECONCILED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "U07",
+      "question": "Replay秒/クリップ秒/キー秒",
+      "classification": "型変換が必要",
+      "current_fact": "現行キーはkill相対秒、scene_keyには2桁時刻を含む。UI表示丸めをFX因果判定へ流用できない。",
+      "implementation": "整数tick/time_baseとTimeMap、半開区間/continuity IDを導入。既存IDはmigration alias。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/ui/scene_project.py",
+          "line": 45,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/scene_project.py#L45",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [],
+      "research_status": "SOURCE_RECONCILED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "U08",
+      "question": "project/Template/ROFL保存",
+      "classification": "既存型が異なる",
+      "current_fact": "project_export/importはon_scene_export/importからSceneProject v3のshots/sequenceを扱う。Template.to_dictやROFL準備とは別。全セッション丸ごと保存ではない。",
+      "implementation": "型表示と必要ならProjectBundle新schema。現行v1/2/3読み込みを保持。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/ui/scene_project.py",
+          "line": 243,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/scene_project.py#L243",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [],
+      "research_status": "SOURCE_RECONCILED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "U09",
+      "question": "画像選択",
+      "classification": "原制作意図は推定・用途は未確定",
+      "current_fact": "A_main制作指示は素材視覚chooserと6アニメ入口。独立importの形式/保存効果は定義されていない。BのcaptionをAのAPI根拠にしない。",
+      "implementation": "D01推奨は既存図鑑。決定まで位置保持/disabled理由。自由画像取込へ勝手に接続しない。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/ui/audit29_client.js",
+          "line": 1155,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_client.js#L1155",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [
+        "D01"
+      ],
+      "research_status": "ROLE_OPTIONS_DEFINED_NOT_ADOPTED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "U10",
+      "question": "プリセット読み込み/保存",
+      "classification": "保存scope未確定",
+      "current_fact": "既存全体Template/参考映像TemplateとSceneProject/キーpresetは保存対象が違う。現在左下ボタンで同じものと見なせない。",
+      "implementation": "D05の型付き保存。camera-onlyをside/style単位で独立、FXプリセットと共有dictにしない。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/core/effects.py",
+          "line": 226,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L226",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [
+        "D05"
+      ],
+      "research_status": "ROLE_OPTIONS_DEFINED_NOT_ADOPTED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "U11",
+      "question": "ROFL/実スキャン入口",
+      "classification": "既存actionあり・専用画面整理",
+      "current_fact": "R1/R2 prepareControlsはopen_replay/prepare/scan/target_lockを呼ぶ。ROFLを選んだだけではLoL接続やscan成功ではない。",
+      "implementation": "各UI設定→リプレイ準備の専用子画面と状態表示。未接続時に入口が消えない。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/ui/reference_views_v2.js",
+          "line": 85,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/reference_views_v2.js#L85",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [],
+      "research_status": "SOURCE_RECONCILED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "U12",
+      "question": "保存/録画/テスト結果",
+      "classification": "既存処理別系統",
+      "current_fact": "project_exportはJSON、export_checked/selectedは実job、diagnostics/automatic_qaは別処理。UI3の結果は自動QA概要が中心。",
+      "implementation": "job_id/実encoder/audio source/出力/失敗理由を表示。MP4成功はdecode/PTS/音声QA後、JSON保存で動画成功にしない。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 553,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L553",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [],
+      "research_status": "SOURCE_RECONCILED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "U13",
+      "question": "固定＋自動構図/フルオート",
+      "classification": "既存部分実装・承認gateあり",
+      "current_fact": "smart_camera_directorはclip境界でstyle決定し、side別approved/excludedを使う。enemy geometryは推定しない。full modeのmulti wide補正はあるが遮蔽最適化の証明ではない。",
+      "implementation": "既存thirdを保護。mode/side/style別preset。geometryが無ければ安全baselineと理由。自動切替はclip境界。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/core/smart_camera_director.py",
+          "line": 27,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/smart_camera_director.py#L27",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [],
+      "research_status": "SOURCE_RECONCILED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "U14",
+      "question": "BAT版の劣化",
+      "classification": "差分監査へ置換済み／live受入は未実施",
+      "current_fact": "初期台帳の画面不足は20画面と差分監査により解消。26親IDの差分結果は完了。原画基準は維持し、製品操作はNOT_RUN。",
+      "implementation": "同じ監査を再実施しない。26残件と284更新案を今回の実装完了条件へ継承。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/ui/reference_views.css",
+          "line": 11,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/reference_views.css#L11",
+          "verified_readonly": true
+        }
+      ],
+      "decision_ids": [],
+      "research_status": "SOURCE_RECONCILED",
+      "runtime": "NOT_RUN"
+    }
+  ],
+  "count": 14,
+  "C3_10": {
+    "meaning": "すべてとキル＋アシストはboth alias=対象のkill OR assist。全員/全イベントやANDではない",
+    "sources": [
+      {
+        "path": "LoL_AutoCine/ui/audit29_client.js",
+        "line": 1,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_client.js#L1",
+        "verified_readonly": true
+      },
+      {
+        "path": "LoL_AutoCine/core/scanner.py",
+        "line": 169,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/scanner.py#L169",
+        "verified_readonly": true
+      }
+    ],
+    "decision": "D08"
+  }
+}

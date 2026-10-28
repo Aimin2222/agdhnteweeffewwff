@@ -5,6 +5,16 @@
   const screenId = window.AUTOCINE_SCREEN;
   const endpoint = (path) => `${path}?token=${encodeURIComponent(token)}`;
   const state = {value: null, frameNumber: 0};
+  let stateEpoch = 0, pendingActions = 0, actionQueue = Promise.resolve();
+  let acceptedReplayGeneration = -1, acceptedActionRevision = -1;
+  function acceptState(next) {
+    const generation=Number(next.replay?.generation??0);
+    const revision=Number(next.workspace?.action_revision??0);
+    if(generation<acceptedReplayGeneration ||
+       (generation===acceptedReplayGeneration && revision<acceptedActionRevision))return false;
+    acceptedReplayGeneration=generation;acceptedActionRevision=revision;state.value=next;
+    return true;
+  }
   const systemDark = matchMedia('(prefers-color-scheme: dark)');
   function applyTheme(preference) {
     document.documentElement.dataset.theme = preference === 'system' ?
@@ -26,22 +36,53 @@
     clearTimeout(noticeTimer);
     noticeTimer = setTimeout(() => notice.style.display = 'none', 5000);
   }
+  function validNumber(input) {
+    const value=input.valueAsNumber;
+    if(input.value.trim()===''||input.validity.badInput||!Number.isFinite(value)||
+       input.validity.rangeUnderflow||input.validity.rangeOverflow||input.validity.stepMismatch){
+      input.setAttribute('aria-invalid','true');
+      input.style.outline='2px solid #d13b3b';
+      input.title='有効な範囲の数値を入力してください。空欄は設定に反映されません。';
+      message(`${input.getAttribute('aria-label')||input.closest('label')?.textContent.trim()||'数値欄'}: 空欄または範囲外です。元の設定値を保持しました。`);
+      return null;
+    }
+    input.removeAttribute('aria-invalid');input.removeAttribute('title');input.style.outline='';
+    return value;
+  }
+  function restoreNumber(input, previous) {
+    if(previous!==undefined&&previous!==null)input.value=previous;
+  }
   async function snapshot() {
+    if (pendingActions) return;
+    const startedAt = stateEpoch;
     const response = await fetch(endpoint('/api/state'), {cache: 'no-store'});
     if (!response.ok) throw new Error('状態の取得に失敗しました');
-    state.value = await response.json();
-    render();
-  }
-  async function action(name, data={}) {
-    const response = await fetch(endpoint('/api/action'), {
-      method: 'POST', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({action:name,data})
-    });
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error || `${name} に失敗しました`);
-    state.value = result;
-    render();
-    return result;
+    if (startedAt !== stateEpoch || pendingActions) return;
+    if(!acceptState(result))return;
+    if (!document.activeElement?.matches('input, select, textarea, [contenteditable="true"]')) render();
+  }
+  function action(name, data={}) {
+    pendingActions++;
+    stateEpoch++;
+    const operation = actionQueue.then(async () => {
+      try {
+        const response = await fetch(endpoint('/api/action'), {
+          method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({action:name,data})
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || `${name} に失敗しました`);
+        if(!acceptState(result))return result;
+        render();
+        return result;
+      } finally {
+        pendingActions--;
+        stateEpoch++;
+      }
+    });
+    actionQueue = operation.catch(() => {});
+    return operation;
   }
   function invoke(name, data) { action(name,data).catch(error => message(error.message)); }
   const image = document.querySelector('.preview-stage img.game-image');
@@ -192,13 +233,23 @@
       const effect=choices[2]?.querySelector('p');
       if(effect)effect.textContent=data.frame.effect_id || 'FX未選択';
     }
+    const ui3Baseline=data.workspace.ui3_mode && screenId==='T-A-M';
     const playerList=document.querySelector('[data-ui="player-list"]');
     if (playerList) {
       playerList.replaceChildren();
       if (!data.replay.players.length) {
-        const placeholder=document.createElement('p');
-        placeholder.textContent='試合接続後にプレイヤーを表示します。';
-        playerList.append(placeholder);
+        if (ui3Baseline) {
+          for (let slot=1;slot<=10;slot++) {
+            const row=document.createElement('div');
+            row.className='player-row ui3-placeholder';
+            row.textContent=`${String(slot).padStart(2,'0')}　—　未接続（取得待ち）`;
+            playerList.append(row);
+          }
+        } else {
+          const placeholder=document.createElement('p');
+          placeholder.textContent='試合接続後にプレイヤーを表示します。';
+          playerList.append(placeholder);
+        }
       }
       for (const player of data.replay.players) {
         const row=document.createElement('div');
@@ -231,6 +282,22 @@
         name==='自動' && data.camera.side.includes('自動');
       button.classList.toggle('selected',active);
     });
+    if (ui3Baseline) {
+      const selector=document.querySelector('.ui3-target-picker');
+      if (selector && document.activeElement !== selector) {
+        selector.replaceChildren();
+        const empty=document.createElement('option');empty.value='';
+        empty.textContent=data.replay.players.length?'注目するプレイヤーを選択':'試合接続後に選択';
+        selector.append(empty);
+        for(const player of data.replay.players){
+          const option=document.createElement('option');option.value=String(player.slot);
+          option.textContent=`${player.side} ${player.champion} ${player.name}`;
+          selector.append(option);
+        }
+        selector.value=String(data.replay.target_slot ?? '');
+        selector.disabled=!data.replay.players.length;
+      }
+    }
     document.querySelectorAll('.edit-mode button').forEach(button=>{
       if (button.closest('.legacy3-edit-mode')) {
         button.classList.toggle('selected',button.dataset.actionValue===screenId);
@@ -273,9 +340,10 @@
     });
     renderTimeline(data);
     const sampleCards = [...document.querySelectorAll('[data-ui^="scene-card-"]')];
-    if (sampleCards.length && data.scenes.length > sampleCards.length) {
+    const minimumCards=ui3Baseline ? 12 : sampleCards.length;
+    if (sampleCards.length && Math.max(data.scenes.length,minimumCards) > sampleCards.length) {
       const parent = sampleCards[0].parentElement;
-      for (let index = sampleCards.length; index < data.scenes.length; index++) {
+      for (let index = sampleCards.length; index < Math.max(data.scenes.length,minimumCards); index++) {
         const clone = sampleCards[0].cloneNode(true);
         clone.dataset.ui = `scene-card-${index}`;
         parent.append(clone);
@@ -283,6 +351,14 @@
     }
     document.querySelectorAll('[data-ui^="scene-card-"]').forEach((card, position) => {
       const scene = data.scenes[position];
+      if (ui3Baseline && !card.querySelector('.ui3-row-number')) {
+        const number=document.createElement('span');
+        number.className='ui3-row-number';
+        card.querySelector('.time')?.before(number);
+      }
+      const number=card.querySelector('.ui3-row-number');
+      if (number) number.textContent=scene ? String(position+1).padStart(2,'0') : '—';
+      card.classList.toggle('ui3-placeholder',ui3Baseline && !scene);
       if (!scene) {
         // Empty slots preserve each candidate's layout without pretending a replay was scanned.
         card.style.display = '';
@@ -332,7 +408,21 @@
       if (check) { check.textContent = scene.checked ? '✓' : ''; check.classList.toggle('checked', scene.checked); }
     });
     document.querySelectorAll('[data-ui^="material-card-"]').forEach((card, index) => {
-      const entry = screenId === 'T-B-F' ? data.frame.testb_cards[index] : data.frame.cards[index];
+      if (ui3Baseline && index === 0) {
+        card.style.display = '';
+        card.dataset.ui3None = '1';
+        delete card.dataset.frameId;
+        card.classList.toggle('selected', !data.frame.id);
+        const image = card.querySelector('img.frame-thumb');
+        if (image) image.style.visibility = 'hidden';
+        const label = card.querySelector('h3');
+        if (label) label.textContent = 'なし';
+        const badge = card.querySelector('.badge');
+        if (badge) badge.textContent = '枠を表示しない';
+        return;
+      }
+      const entry = screenId === 'T-B-F' ? data.frame.testb_cards[index] :
+        ui3Baseline ? data.frame.ui3_cards[index - 1] : data.frame.cards[index];
       if (!entry) { card.style.display = 'none'; return; }
       card.style.display = '';
       card.dataset.frameId = entry.id;
@@ -356,6 +446,7 @@
       }
       const thumbnail = card.querySelector('img.frame-thumb');
       if (thumbnail && thumbnail.dataset.frameId !== entry.id) {
+        thumbnail.style.visibility = 'visible';
         thumbnail.src = endpoint(`/api/asset/${encodeURIComponent(entry.id)}`);
         thumbnail.alt = `${entry.label} の監査済み原本`;
         thumbnail.dataset.frameId = entry.id;
@@ -412,9 +503,31 @@
     document.querySelectorAll('[data-setting]').forEach(input => {
       if (document.activeElement === input) return;
       const key = input.dataset.setting;
-      const value = key === 'pre' || key === 'post' ? null : data.camera.values[key];
+      const value = key === 'pre' || key === 'post' ? data.trim?.[key] : data.camera.values[key];
       if (value !== null && value !== undefined) input.value = value;
     });
+    if (ui3Baseline) document.querySelectorAll('.ui3-camera-range').forEach(slider => {
+      if (document.activeElement === slider) return;
+      const value = data.camera.values[slider.dataset.cameraKey];
+      if (value !== undefined) slider.value = value;
+    });
+    if (ui3Baseline) {
+      document.querySelectorAll('[data-ui3-global-color]').forEach(input => {
+        if (document.activeElement === input) return;
+        const value = data.global_color?.values?.[input.dataset.ui3GlobalColor];
+        if (value !== undefined) input.value = value;
+      });
+      const grade = document.querySelector('#ui3-global-grade');
+      if (grade && document.activeElement !== grade)
+        grade.value = Object.entries(data.global_color?.grades || {})
+          .find(([,label]) => label === data.global_color?.grade)?.[0] || '';
+    }
+    if (ui3Baseline) {
+      const effectLabel = document.querySelector('.ui3-effect-status');
+      if (effectLabel) effectLabel.textContent = `同名FX：${data.frame.effect_id || 'なし'} / ${data.frame.strength || '控えめ'}`;
+      document.querySelectorAll('.ui3-motion-choice').forEach(button =>
+        button.classList.toggle('selected', button.dataset.motionName === data.frame.motion));
+    }
     const hudToggle=document.querySelector('[data-hud-toggle]');
     if (hudToggle) hudToggle.checked = data.output.hud !== 'full';
     const hudVisible=document.querySelector('[data-hud-visible]');
@@ -633,6 +746,10 @@
       return;
     }
     const frameCard = event.target.closest('[data-ui^="material-card-"]');
+    if (frameCard?.dataset.ui3None === '1') {
+      invoke('frame_none');
+      return;
+    }
     if (frameCard?.dataset.frameId) {
       invoke('frame',{id:frameCard.dataset.frameId});
       return;
@@ -688,8 +805,11 @@
     else message('この操作の実機接続は未完了です。動作済みとは扱いません。');
   });
   document.querySelectorAll('[data-setting]').forEach(input => input.addEventListener('change', () => {
-    const key = input.dataset.setting, value = Number(input.value);
-    if (!Number.isFinite(value)) return message('数値を入力してください');
+    const key = input.dataset.setting, value = validNumber(input);
+    if(value===null){
+      restoreNumber(input,key==='pre'||key==='post'?state.value?.trim?.[key]:state.value?.camera?.values?.[key]);
+      return;
+    }
     if (key === 'pre' || key === 'post') invoke('trim',{key,value});
     else invoke('camera_number',{key,value});
   }));
@@ -723,6 +843,8 @@
     (screenId.startsWith('R-E-') ? 'researchE' : screenId.startsWith('T-B-') ? 'testB' :
       [...candidateViews].find(([,views])=>Object.values(views).includes(screenId))?.[0]);
   const currentViews=candidateViews.get(currentFamily);
+  const ui3BaselineScreen=screenId==='T-A-M' &&
+    !!document.querySelector('link[href*="ui3-baseline.css"]');
   function comparisonRoute(kind) {
     if (!currentViews) return;
     const target=currentViews[kind] || currentViews.detail;
@@ -745,14 +867,16 @@
     routeButton.type='button';
     routeButton.textContent=currentKind==='main' ? '詳細編集へ →' : '← メインへ戻る';
     routeButton.title=`${candidateNumbers.get(currentFamily)}の${currentKind==='main'?'詳細編集':'メイン'}へ移動。設定とシーンは保持`;
-    routeButton.style.cssText='position:fixed;right:0;top:27%;z-index:2000;' +
+    routeButton.style.cssText=ui3BaselineScreen ? '' : 'position:fixed;right:0;top:27%;z-index:2000;' +
       'padding:8px 10px;border:2px solid #075fe0;border-right:0;' +
       'border-radius:7px 0 0 7px;background:#fff;color:#0746a7;' +
       'font:600 13px Yu Gothic UI,Meiryo,sans-serif;box-shadow:0 3px 12px #0004;cursor:pointer';
     routeButton.addEventListener('click',event=>{
       event.stopPropagation();comparisonRoute(currentKind==='main'?'detail':'main');
     });
-    document.body.append(routeButton);
+    if(ui3BaselineScreen){routeButton.className='ui3-route-opener';
+      document.querySelector('.bottom-panel .tabs')?.append(routeButton);}
+    else document.body.append(routeButton);
   }
   if (currentFamily==='researchE' && screenId==='R-E-main' &&
       !window.AUTOCINE_DERIVED_DETAIL && !document.querySelector('[data-ui="scene-list"]')) {
@@ -793,12 +917,14 @@
   switchButton.title = 'UI比較：現在' + switchButton.textContent + '。クリックして7候補を切り替える';
   switchButton.setAttribute('aria-controls', 'ui29-switch-panel');
   switchButton.setAttribute('aria-expanded', 'false');
-  switchButton.style.cssText = 'position:fixed;right:0;top:50%;z-index:2001;' +
+  switchButton.style.cssText = ui3BaselineScreen ? '' : 'position:fixed;right:0;top:50%;z-index:2001;' +
     'transform:translateY(-50%);writing-mode:vertical-rl;padding:12px 7px;' +
     'border:2px solid #075fe0;border-right:0;border-radius:8px 0 0 8px;' +
     'background:#fff;color:#0746a7;font:600 14px Yu Gothic UI,Meiryo,sans-serif;' +
     'box-shadow:0 3px 12px #0004;cursor:pointer';
-  document.body.append(switchButton);
+  if(ui3BaselineScreen){switchButton.className='ui3-switch-opener';
+    document.querySelector('.bottom-panel .tabs')?.append(switchButton);}
+  else document.body.append(switchButton);
   const switchPanel = document.createElement('div');
   switchPanel.id = 'ui29-switch-panel';
   switchPanel.setAttribute('role', 'group');
@@ -886,12 +1012,256 @@
       else action('screen',{id:target}).then(()=>openScreen(target)).catch(e=>message(e.message));
     } else message('この候補内の補助画面は原画未提供です。別候補へ自動切替しません。');
   }));
+  function setupUI3Tools() {
+    if (!state.value?.workspace.ui3_mode || currentFamily !== 'testA' ||
+        document.querySelector('#ui3-tools')) return;
+    const tabs=document.querySelector('.bottom-panel .tabs');
+    if (!tabs) return;
+    const headerButtons=[...document.querySelectorAll('.titlebar nav button')];
+    ['▣ リプレイを開く','✓ 準備','⚙ GPU・音声・HUD設定','▤ ログ','▣ 動画を作成']
+      .forEach((label,index)=>{if(headerButtons[index])headerButtons[index].textContent=label;});
+    const sceneRows=document.querySelector('[data-ui="scene-rows"]');
+    if (sceneRows && !document.querySelector('.ui3-scene-columns')) {
+      const headings=document.createElement('div');
+      headings.className='ui3-scene-columns';
+      headings.innerHTML='<span></span><span>#</span><span>時刻</span><span>種別</span><span>詳細</span>';
+      sceneRows.before(headings);
+    }
+    document.querySelectorAll('.camera-detail .camera-card').forEach((card,index)=>{
+      if (card.querySelector('.ui3-camera-reference')) return;
+      const thumb=document.createElement('span');
+      thumb.className='ui3-camera-reference';thumb.dataset.tile=String(index);
+      thumb.title='画角参考画像。現在のライブ映像ではありません';
+      thumb.style.backgroundImage=`url("${endpoint('/runtime/ui3-camera-reference.jpg')}")`;
+      card.querySelector('small')?.before(thumb);
+    });
+    const materialList=document.querySelector('.materials .material-list');
+    if(materialList && !materialList.querySelector('[data-ui="material-card-4"]')){
+      const last=materialList.querySelector('[data-ui="material-card-3"]');
+      if(last){const fifth=last.cloneNode(true);fifth.dataset.ui='material-card-4';
+        fifth.classList.remove('selected');fifth.removeAttribute('data-frame-id');
+        fifth.querySelector('img')?.removeAttribute('src');materialList.append(fifth);}
+    }
+    const numeric=document.querySelector('.camera-numeric');
+    if(numeric && !numeric.querySelector('[data-setting="motion_arc"]')){
+      const label=document.createElement('label');label.textContent='回り込み';
+      const input=document.createElement('input');input.type='number';input.min='0';input.max='45';
+      input.step='0.5';input.dataset.setting='motion_arc';input.setAttribute('aria-label','回り込み');
+      input.addEventListener('change',()=>{
+        const value=validNumber(input);
+        if(value===null){restoreNumber(input,state.value?.camera?.values?.motion_arc);return;}
+        invoke('camera_number',{key:'motion_arc',value});
+      });label.append(input);numeric.append(label);
+    }
+    if (numeric && !numeric.querySelector('.ui3-camera-range')) {
+      const reset=document.createElement('button');
+      reset.type='button';reset.className='ui3-camera-reset';reset.textContent='リセット';
+      reset.title='既存の安全な三人称基準値（距離950・高さ170・回転0・回り込み10）に戻します';
+      reset.addEventListener('click',event=>{event.stopPropagation();invoke('ui3_camera_reset');});
+      numeric.querySelector('strong')?.after(reset);
+      for (const label of numeric.querySelectorAll('label')) {
+        const input=label.querySelector('input[data-setting]');
+        if (!input) continue;
+        const slider=document.createElement('input');slider.type='range';
+        slider.className='ui3-camera-range';slider.dataset.cameraKey=input.dataset.setting;
+        slider.min=input.min;slider.max=input.max;slider.step=input.step || '1';
+        slider.value=input.value;
+        slider.setAttribute('aria-label',`${label.textContent.trim()} スライダー`);
+        slider.addEventListener('input',()=>{input.value=slider.value;});
+        slider.addEventListener('change',()=>invoke('camera_number',
+          {key:input.dataset.setting,value:Number(slider.value)}));
+        input.addEventListener('input',()=>{
+          input.removeAttribute('aria-invalid');input.style.outline='';
+          if(input.value.trim()!==''&&!input.validity.badInput)slider.value=input.value;
+        });
+        label.insertBefore(slider,input);
+      }
+    }
+    const targetSide=document.querySelector('.target-side');
+    if(targetSide && !targetSide.querySelector('.ui3-target-picker')){
+      const selector=document.createElement('select');selector.className='ui3-target-picker';
+      selector.setAttribute('aria-label','注目プレイヤー');selector.disabled=true;
+      selector.title='実LoLリプレイ接続後に対象を選択します';
+      selector.addEventListener('change',()=>{
+        if(selector.value)invoke('target_lock',{slot:Number(selector.value)});
+      });
+      targetSide.append(selector);
+    }
+    const materials=document.querySelector('.materials');
+    if (materials && !materials.querySelector('.ui3-material-tabs')) {
+      const tabbar=document.createElement('div');tabbar.className='ui3-material-tabs';
+      const list=materials.querySelector('.material-list');
+      const extra=document.createElement('div');extra.className='ui3-material-extra';extra.hidden=true;
+      const renderMaterialTab=(tab)=>{
+        tabbar.querySelectorAll('button').forEach(button=>button.classList.toggle('selected',button.dataset.tab===tab));
+        list.hidden=tab!=='frame';extra.hidden=tab==='frame';
+        if(tab==='effect'){
+          extra.replaceChildren();
+          const status=document.createElement('div');status.className='ui3-effect-status';
+          status.textContent=`同名FX：${state.value?.frame?.effect_id || 'なし'}`;
+          extra.append(status);
+          for(const [name,value] of [['控えめ','weak'],['強め','strong']]){
+            const button=document.createElement('button');button.textContent=name;
+            button.addEventListener('click',event=>{event.stopPropagation();invoke('effect_strength',{value});});
+            extra.append(button);
+          }
+          const opener=document.createElement('button');opener.textContent='FX設定';
+          opener.addEventListener('click',event=>{event.stopPropagation();invoke('work_settings');});
+          extra.append(opener);
+        }else if(tab==='motion'){
+          extra.replaceChildren();
+          for(const [label,value] of [['一気に表示','instant'],['左から登場','slide_left'],['右から登場','slide_right'],
+            ['下から登場','slide_up'],['上から登場','slide_down'],['パッと飛び出す','pop']]){
+            const button=document.createElement('button');button.className='ui3-motion-choice';
+            button.dataset.motionName=label;button.textContent=label;
+            button.addEventListener('click',event=>{event.stopPropagation();invoke('motion',{value});});
+            extra.append(button);
+          }
+        }
+      };
+      for(const [tab,label] of [['frame','フレーム'],['effect','エフェクト'],['motion','アニメーション']]){
+        const button=document.createElement('button');button.type='button';button.dataset.tab=tab;
+        button.textContent=label;button.addEventListener('click',event=>{event.stopPropagation();renderMaterialTab(tab);});
+        tabbar.append(button);
+      }
+      list.before(tabbar);list.after(extra);renderMaterialTab('frame');
+    }
+    const opener=document.createElement('button');
+    opener.type='button';opener.textContent='全機能';opener.className='ui3-tools-opener';
+    opener.setAttribute('aria-controls','ui3-tools');opener.setAttribute('aria-expanded','false');
+    const tools=document.createElement('aside');tools.id='ui3-tools';
+    tools.setAttribute('aria-label','候補3の実機能');
+    tools.style.cssText='position:fixed;right:0;top:0;bottom:0;z-index:2011;' +
+      'width:min(440px,95vw);box-sizing:border-box;padding:18px;overflow:auto;display:none;' +
+      'background:#f6f9fe;color:#15243d;border-left:2px solid #0b63db;' +
+      'font:14px Yu Gothic UI,Meiryo,sans-serif;box-shadow:-6px 0 22px #0004';
+    const title=document.createElement('h2');title.textContent='候補3｜全機能';
+    title.style.margin='0 0 8px';tools.append(title);
+    const note=document.createElement('p');
+    note.textContent='操作は同じAutoCine本体に反映します。細部は従来の実動作エディタを開きます。実LoL総合QAは未実施です。';
+    tools.append(note);
+    function group(heading, actions) {
+      const h=document.createElement('h3');h.textContent=heading;
+      h.style.cssText='margin:16px 0 6px;border-bottom:1px solid #b8cce7;padding-bottom:4px';
+      tools.append(h);
+      const grid=document.createElement('div');
+      grid.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px';
+      for (const [label,command] of actions) {
+        const button=document.createElement('button');button.type='button';button.textContent=label;
+        button.style.cssText='padding:9px 6px;background:white;color:#15345f;border:1px solid #a7c5ec;' +
+          'border-radius:5px;cursor:pointer;font:inherit';
+        button.addEventListener('click',()=>{
+          if (command==='main') comparisonRoute('main');
+          else if (command==='detail') comparisonRoute('detail');
+          else if (command==='material') comparisonRoute('material');
+          else if (command==='c3p') location.assign(endpoint('/ui3/p'));
+          else if (command==='c3s') location.assign(endpoint('/ui3/s'));
+          else if (command==='export_menu') chooseExport();
+          else if (command==='project_menu') chooseProjectOperation();
+          else if (command==='ln') location.assign(endpoint('/ui3/reference/ln'));
+          else if (command==='ld') location.assign(endpoint('/ui3/reference/ld'));
+          else if (Array.isArray(command)) invoke(command[0],command[1]);
+          else invoke(command);
+        });grid.append(button);
+      }
+      tools.append(grid);
+    }
+    group('試合・作成',[
+      ['リプレイを開く','open_replay'],['接続を更新','connect'],
+      ['試合全体スキャン','scan'],['シーン編集',['native_editor_zone',{zone:'scene'}]],
+      ['ミラー開始','mirror_start'],['ミラー停止','mirror_stop'],
+      ['動画を作成','export_menu'],['作成を停止','cancel_job']]);
+    group('候補3の比較ビュー',[
+      ['元の候補3','main'],['C3-P 精密編集','c3p'],['C3-S かんたん編集','c3s'],
+      ['Lolnam参考','ln'],['League Director参考','ld']]);
+    group('編集',[
+      ['詳細編集','detail'],['カメラ',['native_editor_zone',{zone:'camera'}]],
+      ['映像FX',['native_editor_zone',{zone:'fx'}]],['色・LUT・Fog',['native_editor_zone',{zone:'color'}]],
+      ['出力・音声・GPU',['native_editor_zone',{zone:'output'}]],['素材画面','material'],
+      ['Work素材図鑑','work_gallery'],['既存37バッジ','legacy_frame_gallery'],
+      ['自動サイド',['camera_side',{value:'auto'}]],
+      ['素材とFXの設定','work_settings'],['プロジェクト保存・読込','project_menu']]);
+    group('設定・診断',[
+      ['基本設定','native_settings'],['出力先を選択','output_folder'],
+      ['診断・ログ','diagnostics'],['自己診断','automatic_qa'],
+      ['カメラ＋素材一括QA','camera_qa'],
+      ['従来UIを開く','native_legacy_show'],['従来UIを隠す','native_legacy_hide'],
+      ['候補3メインへ','main']]);
+    const cameraLabel=document.createElement('label');
+    cameraLabel.textContent='既存カメラ10種：';cameraLabel.style.cssText='display:block;margin-top:14px';
+    const cameraSelect=document.createElement('select');cameraSelect.setAttribute('aria-label','既存カメラ10種');
+    cameraSelect.style.cssText='display:block;width:100%;padding:8px;margin-top:5px';
+    for (const [label,key] of cameraStyles) {
+      const option=document.createElement('option');option.value=key;option.textContent=label;
+      cameraSelect.append(option);
+    }
+    cameraSelect.addEventListener('change',()=>invoke('camera_style',{value:cameraSelect.value}));
+    cameraLabel.append(cameraSelect);tools.append(cameraLabel);
+    const globalColor=document.createElement('section');
+    globalColor.className='ui3-global-color';
+    globalColor.style.cssText='margin-top:16px;border-top:1px solid #b8cce7;padding-top:10px';
+    const colorTitle=document.createElement('h3');colorTitle.textContent='共通の色調整';
+    globalColor.append(colorTitle);
+    const gradeLabel=document.createElement('label');gradeLabel.textContent='カラーグレード';
+    gradeLabel.style.cssText='display:block;margin:8px 0';
+    const gradeSelect=document.createElement('select');gradeSelect.id='ui3-global-grade';
+    gradeSelect.style.cssText='display:block;width:100%;padding:8px;margin-top:4px';
+    for (const [key,label] of Object.entries(state.value.global_color?.grades || {})) {
+      const option=document.createElement('option');option.value=key;option.textContent=label;
+      gradeSelect.append(option);
+    }
+    gradeSelect.addEventListener('change',()=>invoke('global_color_grade',{value:gradeSelect.value}));
+    gradeLabel.append(gradeSelect);globalColor.append(gradeLabel);
+    for (const [key,label,min,max,step] of [
+      ['grade_strength','色の強さ',0,1.4,.05],['temperature','色温度',-1,1,.05],
+      ['contrast','コントラスト',.6,1.6,.05],['exposure','露出',-.3,.3,.01],
+      ['vibrance','自然な彩度',-1,1.5,.05]]) {
+      const row=document.createElement('label');row.textContent=label;
+      row.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:8px;margin:7px 0';
+      const input=document.createElement('input');input.type='number';input.min=min;
+      input.max=max;input.step=step;input.dataset.ui3GlobalColor=key;
+      input.value=state.value.global_color?.values?.[key] ?? '';
+      input.style.cssText='width:88px;padding:5px';
+      input.addEventListener('change',()=>{
+        const value=validNumber(input);
+        if(value===null){restoreNumber(input,state.value.global_color?.values?.[key]);return;}
+        invoke('global_color_number',{key,value});
+      });
+      row.append(input);globalColor.append(row);
+    }
+    const colorNote=document.createElement('small');
+    colorNote.textContent='露出はEV値ではありません。LUTと曲線は従来の色設定で操作します。';
+    globalColor.append(colorNote);tools.append(globalColor);
+    const close=document.createElement('button');close.type='button';close.textContent='閉じる';
+    close.style.cssText='margin-top:16px;padding:9px 24px;cursor:pointer';tools.append(close);
+    function show(open) {
+      tools.style.display=open?'block':'none';opener.setAttribute('aria-expanded',String(open));
+      if(open)close.focus();else opener.focus();
+    }
+    close.addEventListener('click',()=>show(false));
+    opener.addEventListener('click',()=>show(tools.style.display==='none'));
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&tools.style.display!=='none')show(false)});
+    // Keep the original lower-tab area for the source image's image-selection
+    // entry. Its exact operation is unconfirmed, so do not route it to an
+    // unrelated material picker and pretend that capability exists.
+    const imageEntry=document.createElement('button');imageEntry.type='button';
+    imageEntry.className='ui3-image-unavailable';imageEntry.textContent='画像選択';
+    imageEntry.title='原画像の操作意味は確認中です。別機能へ誤接続しないため現在は操作できません。';
+    imageEntry.disabled=true;tabs.append(imageEntry);
+    switchButton.textContent='候補3 / UI比較';
+    switchButton.title='7候補の比較一覧。設定とシーンを保持して切り替えます。';
+    tools.append(switchButton);
+    tabs.append(opener);
+    document.body.append(tools);
+    render();
+  }
   snapshot().then(()=>{
     for (const row of state.value.workspace.screens) {
       const familyOption = [...picker.options].find(option => option.value === familyStart.get(row.family));
       if (familyOption) familyOption.textContent = candidateNumbers.get(row.family);
     }
     themePicker.value=state.value.workspace.theme;
+    setupUI3Tools();
   }).catch(error=>message(error.message));
   setInterval(()=>snapshot().catch(()=>{}), 1200);
   refreshFrame();

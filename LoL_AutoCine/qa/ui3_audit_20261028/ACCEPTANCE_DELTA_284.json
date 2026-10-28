@@ -1,0 +1,417 @@
+{
+  "scope": "Current remediation progress crosswalk; not formal acceptance",
+  "work_audit_commit": "8fa9050d64aaa77ee74cb604f8c1793fc9718c7c",
+  "proposed_284_counts": {
+    "REVIEW": 17,
+    "NOT_RUN": 250,
+    "FAIL": 17
+  },
+  "formal_284_status": "UNCHANGED",
+  "finding_progress_counts": {
+    "修正済み": 7,
+    "対応中": 17,
+    "要調査": 1,
+    "追加修正": 1
+  },
+  "findings": [
+    {
+      "finding": "C3-01",
+      "priority": "P0",
+      "progress": "修正済み",
+      "note": "4スライダーと数値、実App同期、既存安全値へのリセット。Windows操作と単体テスト通過。",
+      "related_cases": [
+        {
+          "id": "C3-M17",
+          "work_fixed_commit_proposal": "FAIL"
+        },
+        {
+          "id": "C3-NUMBER",
+          "work_fixed_commit_proposal": "FAIL"
+        }
+      ]
+    },
+    {
+      "finding": "C3-02",
+      "priority": "P0",
+      "progress": "対応中",
+      "note": "3切替、なしを含む5枠、同名FX、6アニメ入口を追加。原画との細部と全6動作は未合格。",
+      "related_cases": [
+        {
+          "id": "C3-M18",
+          "work_fixed_commit_proposal": "FAIL"
+        }
+      ]
+    },
+    {
+      "finding": "C3-03",
+      "priority": "P1",
+      "progress": "対応中",
+      "note": "ヘッダー5ボタンの順序・幅・内容を原画へ近づけた。アイコン・版情報の差は残る。",
+      "related_cases": [
+        {
+          "id": "C3-M02",
+          "work_fixed_commit_proposal": "FAIL"
+        }
+      ]
+    },
+    {
+      "finding": "C3-04",
+      "priority": "P1",
+      "progress": "対応中",
+      "note": "ミラー操作4ボタンの幅を調整。原画との色・字形・配置の再審査が必要。",
+      "related_cases": [
+        {
+          "id": "C3-M08",
+          "work_fixed_commit_proposal": "REVIEW"
+        }
+      ]
+    },
+    {
+      "finding": "C3-05",
+      "priority": "P1",
+      "progress": "対応中",
+      "note": "カメラカード選択印を追加。画像、2行説明、下段スクロール差が残る。",
+      "related_cases": [
+        {
+          "id": "C3-M15",
+          "work_fixed_commit_proposal": "FAIL"
+        }
+      ]
+    },
+    {
+      "finding": "C3-06",
+      "priority": "P1",
+      "progress": "対応中",
+      "note": "BLUE/REDとTargetLock選択を原画位置に配置、自動サイドは全機能欄へ。実LoL対象選択未試験。",
+      "related_cases": [
+        {
+          "id": "C3-M16",
+          "work_fixed_commit_proposal": "FAIL"
+        }
+      ]
+    },
+    {
+      "finding": "C3-07",
+      "priority": "P1",
+      "progress": "修正済み",
+      "note": "23px行で未スキャン表示12枠を同時表示。実スキャン12件の表示は未試験。",
+      "related_cases": [
+        {
+          "id": "C3-M10",
+          "work_fixed_commit_proposal": "FAIL"
+        }
+      ]
+    },
+    {
+      "finding": "C3-08",
+      "priority": "P1",
+      "progress": "対応中",
+      "note": "プリセット欄と保存3ボタンを均等配置。保存対象の意味は既存処理に従う。",
+      "related_cases": [
+        {
+          "id": "C3-M05",
+          "work_fixed_commit_proposal": "FAIL"
+        }
+      ]
+    },
+    {
+      "finding": "C3-09",
+      "priority": "P2",
+      "progress": "対応中",
+      "note": "原画位置へ「画像選択」を復帰し、意味未確定のため理由付き無効表示。UI比較切替とR1/R2入口は全機能ドロワーへ移動。Windowsで配置と無効状態を確認。画像選択の実処理はWorkのU09確認待ち。",
+      "related_cases": [
+        {
+          "id": "C3-M19",
+          "work_fixed_commit_proposal": "FAIL"
+        }
+      ]
+    },
+    {
+      "finding": "C3-10",
+      "priority": "P1",
+      "progress": "要調査",
+      "note": "4フィルターの「すべて」と「キル＋アシスト」は現バックエンドでは同じbothへ接続。別意味を捏造せず仕様確認が必要。",
+      "related_cases": [
+        {
+          "id": "C3-M09",
+          "work_fixed_commit_proposal": "FAIL"
+        }
+      ]
+    },
+    {
+      "finding": "R-01",
+      "priority": "P0",
+      "progress": "対応中",
+      "note": "既存相対キーの時刻・Yaw・寄り・FOV補正を直接追加/更新/削除、タイムライン点へ反映。絶対FOV、linear/hold/自由Bezierは既存能力と異なり未接続。",
+      "related_cases": [
+        {
+          "id": "R1-TRACK",
+          "work_fixed_commit_proposal": "FAIL"
+        },
+        {
+          "id": "R1-FN-KEYFRAME",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        },
+        {
+          "id": "R2-FN-KEYFRAME",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        },
+        {
+          "id": "R1-FN-TIMELINE",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        },
+        {
+          "id": "R2-FN-TIMELINE",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "finding": "R-02",
+      "priority": "P0",
+      "progress": "修正済み",
+      "note": "「調整前と比較」を演出再生から外し、理由付きで無効表示。実比較機能は未実装。Windows UIで無効状態確認。",
+      "related_cases": [
+        {
+          "id": "R1-FN-GRADE",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        },
+        {
+          "id": "R2-FN-GRADE",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "finding": "R2-01",
+      "priority": "P0",
+      "progress": "修正済み",
+      "note": "ショット列を下段タイムラインへ移動。追加調整後のWindows再撮影で映像面は539px、原画の539pxと一致。`r2_stage_refined/` に撮影・重ね合わせ・差分を保存。文字と映像内容を含む画面全体は引き続きREVIEW。",
+      "related_cases": [
+        {
+          "id": "R2-SHELL",
+          "work_fixed_commit_proposal": "FAIL"
+        },
+        {
+          "id": "R2-PREVIEW-METRIC",
+          "work_fixed_commit_proposal": "FAIL"
+        }
+      ]
+    },
+    {
+      "finding": "R2-02",
+      "priority": "P0",
+      "progress": "対応中",
+      "note": "ショット列に独立の出力対象ダイアログを追加。Windowsで開閉確認。実シーンのチェック変更は未試験。",
+      "related_cases": [
+        {
+          "id": "R2-SHOT",
+          "work_fixed_commit_proposal": "FAIL"
+        },
+        {
+          "id": "R2-CHECK",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "finding": "R-03",
+      "priority": "P1",
+      "progress": "対応中",
+      "note": "簡単編集の3群を再構成。原画の横カードとプリセット範囲が不足。",
+      "related_cases": [
+        {
+          "id": "R1-BEGIN",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        },
+        {
+          "id": "R2-BEGIN",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "finding": "R-04",
+      "priority": "P1",
+      "progress": "対応中",
+      "note": "カメラ数値とスライダーは実App接続済み。絶対FOVは未接続。",
+      "related_cases": [
+        {
+          "id": "R1-CAMERA",
+          "work_fixed_commit_proposal": "FAIL"
+        },
+        {
+          "id": "R1-NUMBER",
+          "work_fixed_commit_proposal": "FAIL"
+        },
+        {
+          "id": "R2-NUMBER",
+          "work_fixed_commit_proposal": "FAIL"
+        }
+      ]
+    },
+    {
+      "finding": "R-05",
+      "priority": "P1",
+      "progress": "対応中",
+      "note": "色タブから素材を分離し、既存の色温度/ブルーム/DOF等を直接操作。露出/彩度/LUTは同一能力ではない。",
+      "related_cases": [
+        {
+          "id": "R1-FN-GRADE",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        },
+        {
+          "id": "R2-FN-GRADE",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "finding": "R-06",
+      "priority": "P1",
+      "progress": "対応中",
+      "note": "実素材サムネイル選択と6アニメ3列配置を用意。原画装飾と個別アニメ操作確認が不足。",
+      "related_cases": [
+        {
+          "id": "R1-ASSET",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        },
+        {
+          "id": "R2-ASSET",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "finding": "R-07",
+      "priority": "P1",
+      "progress": "対応中",
+      "note": "FPS、エンコーダ、音声、HUD、出力先と診断は実設定へ接続。解像度選択は既存出力が1080p固定で未対応。",
+      "related_cases": [
+        {
+          "id": "R1-FN-RECORD",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        },
+        {
+          "id": "R2-FN-RECORD",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "finding": "R-08",
+      "priority": "P1",
+      "progress": "対応中",
+      "note": "概要をサイド/FOV/出力対象/LoL音へ戻した。絶対FOVは未接続として「—」表示。",
+      "related_cases": [
+        {
+          "id": "R1-REF",
+          "work_fixed_commit_proposal": "REVIEW"
+        },
+        {
+          "id": "R2-REF",
+          "work_fixed_commit_proposal": "REVIEW"
+        }
+      ]
+    },
+    {
+      "finding": "R2-03",
+      "priority": "P1",
+      "progress": "修正済み",
+      "note": "操作レールを7項目＋アイコンに変更。メインは上部タブから移動可能。実画面の最終重畳確認は残る。",
+      "related_cases": [
+        {
+          "id": "R2-SHELL",
+          "work_fixed_commit_proposal": "FAIL"
+        },
+        {
+          "id": "R2-NAV",
+          "work_fixed_commit_proposal": "REVIEW"
+        }
+      ]
+    },
+    {
+      "finding": "R-09",
+      "priority": "P1",
+      "progress": "追加修正",
+      "note": "transportの現在/総時刻・再生倍率は実リプレイ値の取得経路を確認後に追加。架空の時刻は出さない。",
+      "related_cases": [
+        {
+          "id": "R1-FN-PREVIEW",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        },
+        {
+          "id": "R2-FN-PREVIEW",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "finding": "R-10",
+      "priority": "P2",
+      "progress": "対応中",
+      "note": "Undo/Redoを既存シーン操作へ、操作ガイドを説明ダイアログへ接続。文字・装飾は未再現。",
+      "related_cases": [
+        {
+          "id": "R1-REF",
+          "work_fixed_commit_proposal": "REVIEW"
+        },
+        {
+          "id": "R2-REF",
+          "work_fixed_commit_proposal": "REVIEW"
+        }
+      ]
+    },
+    {
+      "finding": "R-11",
+      "priority": "P1",
+      "progress": "対応中",
+      "note": "入力フォーカス中は1.1秒更新でインスペクタを置換せず、スクロール位置も復元。IME長時間入力のWindows実試験は未実施。",
+      "related_cases": [
+        {
+          "id": "R1-NUMBER",
+          "work_fixed_commit_proposal": "FAIL"
+        },
+        {
+          "id": "R2-NUMBER",
+          "work_fixed_commit_proposal": "FAIL"
+        }
+      ]
+    },
+    {
+      "finding": "R-12",
+      "priority": "P1",
+      "progress": "修正済み",
+      "note": "FPSとエンコーダ選択をstateへ反映。Windows UIで144/GPUを選択→タブ往復後の保持を確認。実NVENCは未試験。",
+      "related_cases": [
+        {
+          "id": "R1-FN-NVENC",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        },
+        {
+          "id": "R2-FN-NVENC",
+          "work_fixed_commit_proposal": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "finding": "QA-01",
+      "priority": "P1",
+      "progress": "修正済み",
+      "note": "候補3寸法比較をL/T/R/Bの辺で判定し、幅/高さ差を別記録。今回の11領域総合はREVIEW。",
+      "related_cases": [
+        {
+          "id": "C3-REF",
+          "work_fixed_commit_proposal": "REVIEW"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    "RECONCILIATION_JA.md",
+    "../ui3_fidelity_v2_20261028/RESULT_JA.md",
+    "c3_flow/index.json",
+    "r2_stage_refined/index.json",
+    "c3_image_entry_refined/index.json"
+  ]
+}

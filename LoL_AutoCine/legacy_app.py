@@ -571,7 +571,9 @@ class App:
         self._preview_fx_during_camera = False
         self._photo = None
         self._checked_watchdog_active = False
-        self.out_root = Path(os.path.expanduser("~")) / "Videos" / "LoL_AutoCine"
+        ui3_output = os.environ.get("AUTOCINE_UI3_OUTPUT_DEFAULT")
+        self.out_root = (Path(ui3_output) if ui3_output else
+                         Path(os.path.expanduser("~")) / "Videos" / "LoL_AutoCine")
         self.var_left_width = tk.IntVar(value=280)
         self.var_right_width = tk.IntVar(value=310)
         self.var_format = tk.StringVar(value="MP4（1080p）")

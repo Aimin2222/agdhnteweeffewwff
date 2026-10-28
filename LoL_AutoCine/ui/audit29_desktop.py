@@ -7,6 +7,7 @@ Both processes ship in the same portable EXE, and no external browser opens.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -53,6 +54,9 @@ def run_backend(handoff_file: str) -> None:
     # the shared mirror compositor down to its 160x90 fallback.
     root.attributes("-alpha", 0.0)
     app = App(root)
+    if os.environ.get("AUTOCINE_UI3_LAUNCH") == "1":
+        root.title("LoL AutoCine — 従来の詳細編集（閉じると候補3に戻る）")
+        root.protocol("WM_DELETE_WINDOW", root.withdraw)
     root.update()
     root.withdraw()
     server = UI29Server(app)
@@ -129,7 +133,8 @@ def _launch(*, smoke: bool, window_smoke: bool = False) -> None:
                 import webview
                 _configure_webview2_runtime(webview)
                 webview.settings["OPEN_EXTERNAL_LINKS_IN_BROWSER"] = False
-                if window_smoke:
+                ui3_mode = os.environ.get("AUTOCINE_UI3_LAUNCH") == "1"
+                if window_smoke and not ui3_mode:
                     parsed = urlsplit(url)
                     view_url = f"{parsed.scheme}://{parsed.netloc}/choose?{parsed.query}"
                 else:
@@ -146,6 +151,7 @@ def _launch(*, smoke: bool, window_smoke: bool = False) -> None:
                             while time.monotonic() < deadline:
                                 try:
                                     count = window.evaluate_js(
+                                        "document.querySelectorAll('#ui3-tools').length" if ui3_mode else
                                         "document.querySelectorAll('button[data-id]').length")
                                     if count:
                                         result["count"] = count
@@ -153,8 +159,9 @@ def _launch(*, smoke: bool, window_smoke: bool = False) -> None:
                                 except Exception:
                                     pass
                                 time.sleep(0.3)
-                            if result["count"] != 7:
-                                result["error"] = f"candidate chooser rendered {result['count']} groups"
+                            expected = 1 if ui3_mode else 7
+                            if result["count"] != expected:
+                                result["error"] = f"desktop rendered {result['count']} groups/tools, expected {expected}"
                         finally:
                             window.destroy()
 

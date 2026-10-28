@@ -1,0 +1,565 @@
+{
+  "reference_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+  "candidate3": {
+    "candidate_number": 3,
+    "family": "testA",
+    "screen_id": "T-A-M",
+    "name": "旧テストA 現行整理",
+    "route": "/candidates/testA/T-A-M",
+    "PR": 51,
+    "PR_head": "ee700835efe25c1aa65670d73e57f1fd9373bac2",
+    "original_image": {
+      "path": "LoL_AutoCine/design/ui/implementation_audit_29_20261021/references/legacy_test/A_main.png",
+      "native": [
+        1672,
+        941
+      ],
+      "logical": [
+        1920,
+        1080
+      ],
+      "sha256": "b05abe6a04732069729abd58fc4e7aca3b09c19e8d2703c5d9af3e5a5ed01a13",
+      "git_blob": "3a68a05c72f9f9c3c4f63e032cb6b227697938a0"
+    },
+    "numbering_url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/ee700835efe25c1aa65670d73e57f1fd9373bac2/LoL_AutoCine/qa/ui7_20261026/NUMBERING_JA.md",
+    "labels_blob": "12b55123d48303f988d1270e882c0acea000be70",
+    "html": {
+      "PR": 51,
+      "head": "ee700835efe25c1aa65670d73e57f1fd9373bac2",
+      "html_blob": "0d2d632aacc240c7128af6a0485bc3759fb83b0b",
+      "html_path": "LoL_AutoCine/design/ui/ui29_legacy/T-A-M.html",
+      "body": "<body data-screen=\"T-A-M\" data-plan=\"testA\">",
+      "section_order": [
+        {
+          "class": "panel prepare",
+          "data_ui": "prepare"
+        },
+        {
+          "class": "panel preview-panel",
+          "data_ui": "preview-panel"
+        },
+        {
+          "class": "panel scene-list",
+          "data_ui": "scene-list"
+        },
+        {
+          "class": "timeline",
+          "data_ui": "timeline"
+        },
+        {
+          "class": "materials",
+          "data_ui": "materials"
+        },
+        {
+          "class": "camera-detail",
+          "data_ui": "camera-detail"
+        },
+        {
+          "class": "target-side",
+          "data_ui": "target-side"
+        },
+        {
+          "class": "camera-numeric",
+          "data_ui": "camera-numeric"
+        }
+      ],
+      "tabs": [
+        "リプレイを開く",
+        "準備",
+        "基本設定",
+        "ログ",
+        "動画を作成",
+        "リプレイを開く",
+        "更新",
+        "読み込み",
+        "保存",
+        "別名保存",
+        "ミラー開始",
+        "ミラー停止",
+        "▶ 演出を確認",
+        "■ 停止",
+        "シーンを検出",
+        "すべて",
+        "キル",
+        "アシスト",
+        "キル＋アシスト",
+        "選択シーンへ移動",
+        "チェックしたシーンで動画を作成",
+        "簡単編集",
+        "詳細編集",
+        "シーン",
+        "カメラ",
+        "色・FX",
+        "出力",
+        "テスト結果",
+        "図鑑の全候補を見る",
+        "BLUE",
+        "RED",
+        "自動"
+      ],
+      "css_blob": "203c39722a795a0c1a5812f9b52b07bf492e2c46",
+      "css_grid": "minmax(260px,338fr) minmax(420px,902fr) minmax(310px,400fr)",
+      "html_is_reconstruction": true,
+      "executed": false,
+      "redistributed_html": false
+    },
+    "not_candidate3": [
+      {
+        "id": "L03-N",
+        "candidate": 2,
+        "family": "legacy03"
+      },
+      {
+        "id": "R-A-main",
+        "family": "researchA",
+        "name": "新A Studio"
+      }
+    ],
+    "current_application_started": false
+  },
+  "reference_UIs": [
+    {
+      "family": "R1",
+      "name": "LD_camera_light_1920x1080.png",
+      "view": "camera",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "a9780b6356d68b07b52e6cc9ea21f9762d5af6339fb42530d7d0f66832341096",
+      "git_blob": "a11594d1c5dc1ff58eb824446aa752c880ff5370",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_camera_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_camera_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 436.671875,
+        "y": 176,
+        "width": 954.65625,
+        "height": 537
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R1",
+      "name": "LD_color_light_1920x1080.png",
+      "view": "color",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "02de4ff7a20a8b3074e22704013e5e5a90c47ad05727e9f56c5f6de7e845f800",
+      "git_blob": "a46c4e6355d7847f0496b2a4a07655ff8ca0f298",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_color_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_color_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 436.671875,
+        "y": 176,
+        "width": 954.65625,
+        "height": 537
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R1",
+      "name": "LD_curve_light_1920x1080.png",
+      "view": "curve",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "a8b17a34e2a2954606cd79a4cb64d8309b7a2c65fd15bf320d11e85d3bdb8599",
+      "git_blob": "7f85392dd699729658133e14bb13ae18058e0306",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_curve_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_curve_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 436.671875,
+        "y": 176,
+        "width": 954.65625,
+        "height": 537
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R1",
+      "name": "LD_detail_light_1920x1080.png",
+      "view": "detail",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "0937db52dfa2040532893195dc7171df31420126584e464e33debaf579cb211b",
+      "git_blob": "be630e542ba6998bc6aa47565e8231e58d54f687",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_detail_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_detail_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 436.671875,
+        "y": 176,
+        "width": 954.65625,
+        "height": 537
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R1",
+      "name": "LD_easy_light_1920x1080.png",
+      "view": "easy",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "b9e26765b59406fe29358b8bc9281d0d3f2a783af70237d96fd8021e782c5fff",
+      "git_blob": "902b6459190697ae949d53457784eb6c7c7a6079",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_easy_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_easy_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 436.671875,
+        "y": 176,
+        "width": 954.65625,
+        "height": 537
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R1",
+      "name": "LD_export_light_1920x1080.png",
+      "view": "export",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "ee2b775af782199b86abb36b117fd21820564b39c9c90e74c6761878af2d511c",
+      "git_blob": "4ff2a5064814cfd5e5bd1eb83ab8391bc80fc7c0",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_export_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_export_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 436.671875,
+        "y": 176,
+        "width": 954.65625,
+        "height": 537
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R1",
+      "name": "LD_main_dark_1920x1080.png",
+      "view": "main",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "2249dfe40db8261ef9bf9949ef202903463d845e4fc59039f99767782ffa1c4f",
+      "git_blob": "c7ebafa72de22da6807bf5075240e131ba3205cb",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_main_dark_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_main_dark_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 436.671875,
+        "y": 176,
+        "width": 954.65625,
+        "height": 537
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R1",
+      "name": "LD_main_light_1366x768.png",
+      "view": "main",
+      "size": [
+        1366,
+        768
+      ],
+      "sha256": "86253af9f454854bc5037aad272359e21b39870de80090d9e56f923ee5f6090f",
+      "git_blob": "ecb484136187de161937f450216f11abef3018e8",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_main_light_1366x768.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_main_light_1366x768.png",
+      "historical_preview_metrics": {
+        "x": 319.5625,
+        "y": 149,
+        "width": 648.875,
+        "height": 365
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R1",
+      "name": "LD_main_light_1920x1080.png",
+      "view": "main",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "e5cb0797955480bbf1da4e66104c80948ba9a76028a3a95abc9a622d152e8dd4",
+      "git_blob": "77f1eec8f42b784a89f0bfe1516def9b0a4e3d24",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_main_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_main_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 436.671875,
+        "y": 176,
+        "width": 954.65625,
+        "height": 537
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R1",
+      "name": "LD_material_light_1920x1080.png",
+      "view": "material",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "cc889a1ce0444407585af2ce9357f8d5e906a90465c3b060c3a22109c72f4900",
+      "git_blob": "1669b0ea220997535cd57f1ee61d7a7006e8663c",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_material_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LD_material_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 436.671875,
+        "y": 176,
+        "width": 954.65625,
+        "height": 537
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R2",
+      "name": "LN_camera_light_1920x1080.png",
+      "view": "camera",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "a452f9f81aa794a5bc6c0974925756e5fc734f4eb39a77724ac87da1b1aa0c1a",
+      "git_blob": "23e2f0049dd3a442273c9fa5fbac9626fa9c8742",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_camera_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_camera_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 345.890625,
+        "y": 175,
+        "width": 958.21875,
+        "height": 539
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R2",
+      "name": "LN_color_light_1920x1080.png",
+      "view": "color",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "ca4cbfd3488a09ce818b0ee38f754ff2313272cf22f3ebcedb90234a821e2cb1",
+      "git_blob": "f2e4664fe67099ace6421fce5a1593012cfe3359",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_color_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_color_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 345.890625,
+        "y": 175,
+        "width": 958.21875,
+        "height": 539
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R2",
+      "name": "LN_curve_light_1920x1080.png",
+      "view": "curve",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "d6119cb82d250b8f859265355d6324d4fc05e8c8761391874025846d7c217efe",
+      "git_blob": "e6ab6848dc0904db00590f4683d6e54878c6c954",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_curve_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_curve_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 345.890625,
+        "y": 175,
+        "width": 958.21875,
+        "height": 539
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R2",
+      "name": "LN_detail_light_1920x1080.png",
+      "view": "detail",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "48c6e03c3444780694d2adb8926e869ab65e12a960b2e0d2d5e41dd56ce9759d",
+      "git_blob": "cb6952627ca1468e91a691e150bf5a4ae23be463",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_detail_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_detail_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 345.890625,
+        "y": 175,
+        "width": 958.21875,
+        "height": 539
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R2",
+      "name": "LN_easy_light_1920x1080.png",
+      "view": "easy",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "5445676961474197870d4068960cb0094d3f539c11021bbd5b9b2326da52619d",
+      "git_blob": "c03cf33f1f929d2da4c8fb0e206b72037e935f4c",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_easy_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_easy_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 345.890625,
+        "y": 175,
+        "width": 958.21875,
+        "height": 539
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R2",
+      "name": "LN_export_light_1920x1080.png",
+      "view": "export",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "607d28e6c98208419c008b36a7dae7172e6f1facd41e0bc6b935ef985f2da76d",
+      "git_blob": "4eb20c082ccadbd253b949b7c2fe81a0429d55c5",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_export_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_export_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 345.890625,
+        "y": 175,
+        "width": 958.21875,
+        "height": 539
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R2",
+      "name": "LN_main_dark_1920x1080.png",
+      "view": "main",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "32c29d122b612a767708edb3b8137a7e1dfcb545a181f2f26fd20b3afd22f4d6",
+      "git_blob": "814e538d0c78f94a7999ae3931458d6373214c31",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_main_dark_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_main_dark_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 345.890625,
+        "y": 175,
+        "width": 958.21875,
+        "height": 539
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R2",
+      "name": "LN_main_light_1366x768.png",
+      "view": "main",
+      "size": [
+        1366,
+        768
+      ],
+      "sha256": "6cadbde300ba9c2859e47877adbb414ec3ca7f50495409f6421521ba6bc7fd7c",
+      "git_blob": "fb9e797d713191614f9745b87f4b2eb0199a17c9",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_main_light_1366x768.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_main_light_1366x768.png",
+      "historical_preview_metrics": {
+        "x": 226.5,
+        "y": 148,
+        "width": 688,
+        "height": 387
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R2",
+      "name": "LN_main_light_1920x1080.png",
+      "view": "main",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "148f28ed7d681472f24c4b1c0d400aa72de5304924b3a5fea917d881e826f5c8",
+      "git_blob": "367c728422691e3f6765b42bbcbb602e1270e55d",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_main_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_main_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 345.890625,
+        "y": 175,
+        "width": 958.21875,
+        "height": 539
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    },
+    {
+      "family": "R2",
+      "name": "LN_material_light_1920x1080.png",
+      "view": "material",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "00d23e0e2d5802c27e3616614ef3b86f7e0bc13b47111198f06e1c6a2be00045",
+      "git_blob": "d9a1aa08636cbe5adc3989de4ee465aa2f021891",
+      "path": "LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_material_light_1920x1080.png",
+      "source_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/3fdda5405f5acac1188ea7be70a07239df06e08b/LoL_AutoCine/design/ui/ld_lolnam_reference_20261027/screenshots/LN_material_light_1920x1080.png",
+      "historical_preview_metrics": {
+        "x": 345.890625,
+        "y": 175,
+        "width": 958.21875,
+        "height": 539
+      },
+      "historical_body_overflow": false,
+      "runtime_verification": "NOT_RUN / static provenance only"
+    }
+  ],
+  "source_policy": "PNG governs appearance. JSON/metrics govern measured geometry. Old demo code is not an implementation source; distribution remains paused.",
+  "selected_primary": "C3 image chosen by user; C3-P/S not substitutes",
+  "BAT_regression": "user report; actual BAT build not inspected"
+}

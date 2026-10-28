@@ -1,0 +1,2170 @@
+{
+  "kind": "Codex implementation acceptance / pending",
+  "total": 106,
+  "all_status": "MIXED",
+  "results": [
+    {
+      "id": "ID01",
+      "area": "identity",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "開発情報を取得",
+      "expected": "candidate3/testA/T-A-Mと原画像SHA一致",
+      "measurement": "ID完全一致",
+      "severity": "blocker",
+      "status": "REVIEW",
+      "actual": "testA/T-A-MをPR51と照合。DPI実測記録が未取得。",
+      "evidence": [
+        "docs/ui3/CANDIDATE3_IDENTITY_AUDIT_20261027_JA.md",
+        "qa/c3_acceptance_20261027/index.json"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "ID02",
+      "area": "identity",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "候補2と新A Studioを開いて戻る",
+      "expected": "L03-N/R-A-mainを候補3の代替にしない",
+      "measurement": "route/ID",
+      "severity": "blocker",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "VIS01",
+      "area": "visual-original",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "原本再現モードを原寸比較",
+      "expected": "3カラム役割、下部タブ・タイムライン・素材を維持",
+      "measurement": "旧計測辺±8原画pxは測定不確かさ。差分を個別確認",
+      "severity": "major",
+      "status": "REVIEW",
+      "actual": "元候補3のWindows画面は撮影済み。原画への視覚総合合格は未判定。",
+      "evidence": [
+        "qa/c3_20261027/index.json"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "VIS02",
+      "area": "visual-P",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "C3-P参照と同寸法で比較",
+      "expected": "専用のC3-P画像/JSONに合致",
+      "measurement": "パネル辺±2px、主要文字±1px",
+      "severity": "major",
+      "status": "REVIEW",
+      "actual": "C3-Pの原画像・重ね合わせ・差分を保存。タイムラインは改訂IDで別判定。",
+      "evidence": [
+        "qa/c3_acceptance_20261027/C3P_main_light_overlay.png",
+        "qa/c3_acceptance_20261027/index.json"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "VIS03",
+      "area": "visual-S",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "C3-S参照と同寸法で比較",
+      "expected": "専用のC3-S画像/JSONに合致",
+      "measurement": "パネル辺±2px、主要文字±1px",
+      "severity": "major",
+      "status": "REVIEW",
+      "actual": "C3-Sの原画像・重ね合わせ・差分を保存。タイムラインは改訂IDで別判定。",
+      "evidence": [
+        "qa/c3_acceptance_20261027/C3S_main_light_overlay.png",
+        "qa/c3_acceptance_20261027/index.json"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "VIS04",
+      "area": "visual-revision",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "修正提案の有効版を記録",
+      "expected": "元画像との差分を改訂IDで列挙。未採用差分を原本一致扱いしない",
+      "measurement": "参照バージョン固定",
+      "severity": "major",
+      "status": "PASS",
+      "actual": "C3-R01/R02/R03を記録。常設タイムライン矩形は両サイズのP/Sで指定値±2px以内。",
+      "evidence": [
+        "qa/c3_acceptance_20261027/index.json",
+        "design/ui/c3_acceptance_20261027/specs/REVISION_PROPOSAL.json"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "PRE01",
+      "area": "preview",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "左右/下部を各々スクロール",
+      "expected": "ミラーと再生列が固定",
+      "measurement": "矩形変位0px",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "PRE02",
+      "area": "preview",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "ミラー/演出の開始・停止を別々に操作",
+      "expected": "録画を開始せず、それぞれ実状態に一致",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "PRE03",
+      "area": "preview",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "テーマ切替・詳細切替",
+      "expected": "映像色/セッション/時刻を保持",
+      "measurement": "映像にテーマ処理なし",
+      "severity": "major",
+      "status": "REVIEW",
+      "actual": "ライト/ダークと詳細切替を撮影し、カメラ値保持を確認。プレビュー時刻保持は未検証。",
+      "evidence": [
+        "qa/c3_acceptance_20261027/index.json"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "SIZE01",
+      "area": "size",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "1366×768の主画面/詳細/図鑑を表示",
+      "expected": "主要操作が到達可能、画面外への恒久見切れなし",
+      "measurement": "全主要コントロール境界・スクロール範囲",
+      "severity": "major",
+      "status": "REVIEW",
+      "actual": "1366×768のP/Sメインを撮影。詳細と図鑑の同条件検査は未実施。",
+      "evidence": [
+        "qa/c3_acceptance_20261027/C3P_main_1366x768_windows.png",
+        "qa/c3_acceptance_20261027/C3S_main_1366x768_windows.png"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "SIZE02",
+      "area": "size",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "100/125/150%DPIの証拠を取得",
+      "expected": "DPI二重適用なし、狭幅時は明示ドロワー",
+      "measurement": "物理pxと論理pxを記録",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "SIZE03",
+      "area": "size",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "ミラー領域を測る",
+      "expected": "原本派生の下限480×270目標とC3主画面640×360目標を混同せず記録",
+      "measurement": "16:9 contain、目標未達時は退避/理由を記録",
+      "severity": "major",
+      "status": "PASS",
+      "actual": "中央ミラー領域の実DOM矩形を1920×1080と1366×768で記録。",
+      "evidence": [
+        "qa/c3_acceptance_20261027/index.json"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "THEME01",
+      "area": "theme",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "ライト/ダーク/Windows追従を順に選ぶ",
+      "expected": "配置・編集値・選択・再生状態不変",
+      "measurement": "",
+      "severity": "major",
+      "status": "REVIEW",
+      "actual": "ライト/ダークの画面を撮影。Windowsテーマ追従の切替は未実施。",
+      "evidence": [
+        "qa/c3_acceptance_20261027/index.json"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "THEME02",
+      "area": "theme",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "設定保存して再起動",
+      "expected": "テーマ選択を保持、追従は指定時のみ",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "THEME03",
+      "area": "theme",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "各テーマの選択/無効/警告を見る",
+      "expected": "色以外の印・説明、主要文字と操作境界を確認",
+      "measurement": "文字4.5:1、主要操作3:1を目安",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "SCR01",
+      "area": "scroll",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "非フォーカス数値欄上でホイール",
+      "expected": "意図せぬ値変更なし。ポインター下パネルだけスクロール",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "SCR02",
+      "area": "scroll",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "ドロワー/モーダル内でTabとホイール",
+      "expected": "フォーカス/背景操作が仕様に従う。閉じると起点に戻る",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "NUM01",
+      "area": "numeric",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "スライダーと数値欄を相互に変更",
+      "expected": "値・単位・有効範囲が同期",
+      "measurement": "",
+      "severity": "major",
+      "status": "REVIEW",
+      "actual": "カメラ数値960をWindows UIから適用。スライダーからの逆方向操作は未検証。",
+      "evidence": [
+        "qa/c3_acceptance_20261027/index.json"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "NUM02",
+      "area": "numeric",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "空欄/範囲外/不正入力/小数を入力",
+      "expected": "理由付き補正/拒否、確定前に予期せず送信しない",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "NUM03",
+      "area": "numeric",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "手動48°とキー64°を切り替える",
+      "expected": "入力元を明示、値を保持、現在補間値と選択キー値を区別",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "KEY01",
+      "area": "keyframe",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "キーを追加/移動/削除/Undo",
+      "expected": "時刻・値と実モデルが一致。重複時刻の方針を明示",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "KEY02",
+      "area": "curve",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "補間方式を変更・数値で時刻移動",
+      "expected": "カーブがキーを通り、実評価値を表示。未実装は理由表示",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "KEY03",
+      "area": "keyframe",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "キーをキーボードで操作",
+      "expected": "選択・移動・数値入力が可能",
+      "measurement": "キー操作領域32×32目標",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "ASSET01",
+      "area": "material",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "正式/確認用/未審査/不採用を確認",
+      "expected": "区分はカタログ実値、承認変更なし",
+      "measurement": "素材/承認ファイルのSHA保持",
+      "severity": "blocker",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "ASSET02",
+      "area": "material",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "図鑑で一時選択→キャンセル→適用",
+      "expected": "キャンセルで元に戻り、適用範囲だけ更新",
+      "measurement": "",
+      "severity": "major",
+      "status": "REVIEW",
+      "actual": "実素材と同名FXの適用を確認。一時選択後のキャンセルは未検証。",
+      "evidence": [
+        "qa/c3_acceptance_20261027/index.json"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "ASSET03",
+      "area": "material",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "枠/FX/6アニメを切り替える",
+      "expected": "別の能力・区分として接続、枠の承認をFXに継承しない",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "MODE01",
+      "area": "mode",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "簡単→詳細→簡単",
+      "expected": "シーン・キー・素材・チェック・時刻・TargetLockを保持",
+      "measurement": "",
+      "severity": "major",
+      "status": "PASS",
+      "actual": "C3-Sでかんたん→詳細→かんたんを切り替え、Windows画面を撮影。",
+      "evidence": [
+        "qa/c3_acceptance_20261027/index.json"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "MODE02",
+      "area": "mode",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "プリセット後に数値を変更",
+      "expected": "カスタム表示、Undo、キーを無言で削除しない",
+      "measurement": "",
+      "severity": "major",
+      "status": "REVIEW",
+      "actual": "控えめおすすめの適用確認・UndoをWindowsで操作。後から数値/キーを変更した際のUndo禁止は単体試験で確認。全プリセットと選択キー適用範囲は未検証。",
+      "evidence": [
+        "qa/c3_acceptance_20261027/index.json",
+        "tests/test_ui3_integration.py"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "SCENE01",
+      "area": "scene",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "行選択と出力チェックを別々に変更",
+      "expected": "焦点と対象集合が独立",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "STATE01",
+      "area": "state",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "ドラフト変更→別シーンへ移動",
+      "expected": "適用/破棄/戻るがあり誤適用なし",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "BTN01",
+      "area": "controls",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "全表示ボタンを列挙して各起点で操作",
+      "expected": "孤立/空操作なし。無効は理由と必要条件を表示",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "BTN02",
+      "area": "controls",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "スキャン/録画実行中に連打",
+      "expected": "二重ジョブなし、操作競合の理由を表示",
+      "measurement": "job IDを追跡",
+      "severity": "blocker",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "BEGIN01",
+      "area": "beginner",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "初心者フロー6段階を1周する",
+      "expected": "迷子にならずMP4作成まで到達。未接続は開始しない",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "BACK01",
+      "area": "backend",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "実LoL環境でBLUE/REDとTargetLockを確認",
+      "expected": "実サイド・追従対象が正しい。模擬成功を使わない",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "BACK02",
+      "area": "backend",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "NVENC/CPU・LoLゲーム音で書き出す",
+      "expected": "実出力とログで確認。無音/失敗は合格にしない",
+      "measurement": "",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "REG01",
+      "area": "regression",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "既存候補・原本・承認状態を照合",
+      "expected": "1〜10/混合7＋4/R1/R2を保持、main無変更",
+      "measurement": "変更ファイル一覧/SHA",
+      "severity": "blocker",
+      "status": "REVIEW",
+      "actual": "元T-A-Mと他候補を変更せず独立ルートを追加。正式素材の承認状態の全数照合は未実施。",
+      "evidence": [
+        "docs/ui3/CANDIDATE3_IDENTITY_AUDIT_20261027_JA.md",
+        "qa/c3_acceptance_20261027/index.json"
+      ],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": "Codex offline QA"
+    },
+    {
+      "id": "FN-REPLAY",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > シーン/接続状態を開き操作する",
+      "expected": "Replay API接続：接続先・リプレイ状態と10人取得を実結果で表示。設定準備と実接続成功を分ける。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-LAUNCH",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > シーン/接続状態を開き操作する",
+      "expected": "ROFL起動・最近のリプレイ：接続先・リプレイ状態と10人取得を実結果で表示。設定準備と実接続成功を分ける。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-PLAYER",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > シーン/接続状態を開き操作する",
+      "expected": "対象プレイヤー固定：選択プレイヤーIDを保持。BLUE/REDは実サイド。テーマ切替で解除しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-SCAN",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > シーン/接続状態を開き操作する",
+      "expected": "試合全体スキャン：進捗・失敗・キャンセルを処理から購読。押下直後に成功を表示しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-ASSIST",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > シーン/接続状態を開き操作する",
+      "expected": "キル／アシスト／両方：キル／アシスト／キル＋アシスト。絞込と出力チェックを別管理。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-MULTI",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > シーン/出力 > 対象・連続処理を開き操作する",
+      "expected": "連続キル判定：安定シーンIDを共有。行の選択と書き出しチェックを別にする。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-SCENE",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > シーン/接続状態を開き操作する",
+      "expected": "シーン編集・保存：簡単／詳細と候補切替で値を初期化しない。画像の分割／削除は既存機能との意味を明示して実装。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-TIMELINE",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > タイムライン > キー/カーブを開き操作する",
+      "expected": "シーンタイムライン：イベント選択と前後トリム1〜15秒・0.5秒刻み。4トラックは自由な多重動画編集エンジンを意味しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-KEYFRAME",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > タイムライン > キー/カーブを開き操作する",
+      "expected": "相対yaw/zoom/FOVキーフレーム：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-HIGHLIGHT",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > シーン/出力 > 対象・連続処理を開き操作する",
+      "expected": "既存おまかせ演出：対象1件／チェック分／全検出を明示。標準とスマートを選別。演出確認と録画を書き分ける。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-SMARTMONTAGE",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > シーン/出力 > 対象・連続処理を開き操作する",
+      "expected": "既存シーン採点・並べ替え：対象1件／チェック分／全検出を明示。標準とスマートを選別。演出確認と録画を書き分ける。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-HUD",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 出力/テスト結果 > 基本設定・診断を開き操作する",
+      "expected": "HUD非表示・復元：ゲーム音・BGM・HUD全設定への導線を維持。テーマは映像の色設定から独立。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-MIRROR",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > シーン/接続状態を開き操作する",
+      "expected": "ミラー・表示FPS：既存WGCの同一セッションを表示。未接続は明示。静止イラストで実接続成功を装わない。目標Hzと実測FPSを分ける。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-CAPTURE",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 出力/テスト結果 > 基本設定・診断を開き操作する",
+      "expected": "WGC/共有メモリ取得：既存WGCの同一セッションを表示。未接続は明示。静止イラストで実接続成功を装わない。目標Hzと実測FPSを分ける。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-RECORD",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 出力 > 作成内容確認 > 実録画を開き操作する",
+      "expected": "録画・時刻整合：設定方針と実際に使用したエンコーダを区別。NVENC成功は実ログ・出力で検証。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-JOB",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > シーン/出力 > 対象・連続処理を開き操作する",
+      "expected": "チェック済み・複数クリップ作成：対象1件／チェック分／全検出を明示。標準とスマートを選別。演出確認と録画を書き分ける。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-AUDIO",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 出力/テスト結果 > 基本設定・診断を開き操作する",
+      "expected": "LoLプロセス専用録音：ゲーム音・BGM・HUD全設定への導線を維持。テーマは映像の色設定から独立。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-AUDIOGUARD",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 出力/テスト結果 > 基本設定・診断を開き操作する",
+      "expected": "音声必須時の失敗伝播：ゲーム音・BGM・HUD全設定への導線を維持。テーマは映像の色設定から独立。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-BGM",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 出力/テスト結果 > 基本設定・診断を開き操作する",
+      "expected": "BGMミックス・音量：ゲーム音・BGM・HUD全設定への導線を維持。テーマは映像の色設定から独立。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-NVENC",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 出力/テスト結果 > 基本設定・診断を開き操作する",
+      "expected": "GPUエンコード・CPU代替：設定方針と実際に使用したエンコーダを区別。NVENC成功は実ログ・出力で検証。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-GPUFX",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 出力/テスト結果 > 基本設定・診断を開き操作する",
+      "expected": "OpenCL全体FX経路：設定方針と実際に使用したエンコーダを区別。NVENC成功は実ログ・出力で検証。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-GRADE",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "16グレード・LUT・カーブ：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FOG",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "ゲーム内Fog：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-DOF",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "ゲーム内DOFと後段焦点表現：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-PULSE",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "キル時ハイライト：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-BADGE",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 素材/登場アニメ > 図鑑を開き操作する",
+      "expected": "既存37キルバッジ：Work652候補と分離。89原本と37バッジの素材は変更禁止。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-WORKFRAME",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 素材/登場アニメ > 図鑑を開き操作する",
+      "expected": "Workフレーム候補：参照時点は正式合格No.083/a_simple_mainの1件、確認用651件。実装時はカタログ実値を表示。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-WORKFX",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 素材/登場アニメ > 図鑑を開き操作する",
+      "expected": "Workエフェクト候補：35点はすべて確認用。枠合格を同名FXに継承しない。確認用使用チェックは承認ではない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-MOTION",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 素材/登場アニメ > 図鑑を開き操作する",
+      "expected": "登場アニメ6種：instant／slide_left／slide_right／slide_up／slide_down／pop。popは既存の横方向減衰位置ずれ。未実装の拡縮等を追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-REFERENCE",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 素材 > 参考画像・局所抽出（既存能力の範囲）を開き操作する",
+      "expected": "参考映像の局所特徴抽出：既存保存形式を保持。プリセット適用は明示操作。テーマや候補切替では適用しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-PREVIEW",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > シーン/接続状態を開き操作する",
+      "expected": "近似プレビューと厳密静止画：録画しない確認操作。stop_ev共用があるため録画中の停止競合を実装段階で検証する。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-MONTAGEFX",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 色・FX > 連続キル/トランジションを開き操作する",
+      "expected": "連結後の明暗トランジション：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-SELFQA",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 出力/テスト結果 > 基本設定・診断を開き操作する",
+      "expected": "既存自己診断：一括QAは動画・診断ZIPを作る。未実行・失敗・合格・要確認を実データで表示。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-DIAG",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > 出力/テスト結果 > 基本設定・診断を開き操作する",
+      "expected": "性能診断・QAパッケージ：一括QAは動画・診断ZIPを作る。未実行・失敗・合格・要確認を実データで表示。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-CAM_third_cinema",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "third_cinema：third_cinema, third, geo_aim, cinema, fps, orbit, lolnam_cinema, follow, cinema_top, top。カード文言と内部値を分離。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-CAM_third",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "third：third_cinema, third, geo_aim, cinema, fps, orbit, lolnam_cinema, follow, cinema_top, top。カード文言と内部値を分離。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-CAM_geo_aim",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "geo_aim：third_cinema, third, geo_aim, cinema, fps, orbit, lolnam_cinema, follow, cinema_top, top。カード文言と内部値を分離。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-CAM_cinema",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "cinema：third_cinema, third, geo_aim, cinema, fps, orbit, lolnam_cinema, follow, cinema_top, top。カード文言と内部値を分離。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-CAM_fps",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "fps：third_cinema, third, geo_aim, cinema, fps, orbit, lolnam_cinema, follow, cinema_top, top。カード文言と内部値を分離。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-CAM_orbit",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "orbit：third_cinema, third, geo_aim, cinema, fps, orbit, lolnam_cinema, follow, cinema_top, top。カード文言と内部値を分離。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-CAM_lolnam_cinema",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "lolnam_cinema：third_cinema, third, geo_aim, cinema, fps, orbit, lolnam_cinema, follow, cinema_top, top。カード文言と内部値を分離。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-CAM_follow",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "follow：third_cinema, third, geo_aim, cinema, fps, orbit, lolnam_cinema, follow, cinema_top, top。カード文言と内部値を分離。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-CAM_cinema_top",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "cinema_top：third_cinema, third, geo_aim, cinema, fps, orbit, lolnam_cinema, follow, cinema_top, top。カード文言と内部値を分離。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-CAM_top",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "top：third_cinema, third, geo_aim, cinema, fps, orbit, lolnam_cinema, follow, cinema_top, top。カード文言と内部値を分離。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FIXED",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "固定自動：manual / fixed_auto / full_auto / 既存維持None。サイドは自動・BLUE・RED。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FULL",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "フルオートシネマ：manual / fixed_auto / full_auto / 既存維持None。サイドは自動・BLUE・RED。 未対応時は理由を表示。",
+      "measurement": "部分実装",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_motion_camera",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "motion_camera：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_radial_blur",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "radial_blur：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_zoom_blur",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "zoom_blur：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_glitch",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "glitch：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_kaleidoscope",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "kaleidoscope：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_vhs_damage",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "vhs_damage：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_block_motion",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "block_motion：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_spin_motion",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "spin_motion：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_chroma_leak",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "chroma_leak：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_flash",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "flash：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_focus_blur",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "focus_blur：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_vignette_fx",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "vignette_fx：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_glint",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "glint：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_camera_shake",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "camera_shake：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_wiggle",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "wiggle：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_vr_blur",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "vr_blur：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_vr_light_leak",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "vr_light_leak：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_sphere_blur",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "sphere_blur：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_panel_wipe",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "panel_wipe：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_stretch_wipe",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "stretch_wipe：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_mirror",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "mirror：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-FX_slice",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > カメラ または 色・FX > 専用設定を開き操作する",
+      "expected": "slice：CのグラフやFの3フェーズは既存モデルの表示層。新しいカメラ計算を暗黙追加しない。 未対応時は理由を表示。",
+      "measurement": "実装確認・今回実機未検証",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-ENGAGE",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > テスト結果 > 研究・未対応機能（説明のみ）を開き操作する",
+      "expected": "エンゲージ独立検出：参照UIの対応モード・専用ハンドラーは確認できない。killへ偽装接続しない。能力がない時は「エンゲージ未対応」を説明付き表示。全案の受入は実能力追加後に別検証。 未対応時は理由を表示。",
+      "measurement": "未実装（監査範囲で該当処理なし）",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    },
+    {
+      "id": "FN-BESTSHOT",
+      "area": "70-feature",
+      "precondition": "Codex比較版のビルドID・コミット・画面ID・DPIを記録",
+      "steps": "詳細編集 > テスト結果 > 研究・未対応機能（説明のみ）を開き操作する",
+      "expected": "画像品質によるベストショット選択：一括QAは動画・診断ZIPを作る。未実行・失敗・合格・要確認を実データで表示。 未対応時は理由を表示。",
+      "measurement": "未実装（監査範囲で該当処理なし）",
+      "severity": "major",
+      "status": "NOT_RUN",
+      "actual": "このビルドで当該受入操作を完走していません。",
+      "evidence": [],
+      "environment": {
+        "build_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+        "candidate": "testA/T-A-M",
+        "variant": "C3-P/C3-S",
+        "dpi": "NOT_MEASURED",
+        "live_lol": "NOT_RUN"
+      },
+      "reviewer": null
+    }
+  ],
+  "preference_results_separate": true,
+  "source_work_commit": "3fdda5405f5acac1188ea7be70a07239df06e08b",
+  "implementation_commit": "e3e592a553e7efc878f0f1ceb999e307b2854f20",
+  "counts": {
+    "REVIEW": 11,
+    "NOT_RUN": 92,
+    "PASS": 3
+  }
+}

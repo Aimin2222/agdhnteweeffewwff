@@ -7,6 +7,7 @@ changes only alter presentation state; they never invoke render handlers.
 from __future__ import annotations
 
 import json
+import math
 import os
 from pathlib import Path
 
@@ -62,15 +63,42 @@ def default_preferences_path() -> Path:
     return base / "LoL_AutoCine" / "ui29_workspace.json"
 
 
+def _auto_qa_summary() -> dict:
+    """Expose only the last saved self-test counts, never infer LoL acceptance."""
+    report = Path(__file__).resolve().parents[1] / "diagnostics" / "selftest_latest.json"
+    try:
+        data = json.loads(report.read_text(encoding="utf-8"))
+        return {"status": "RECORDED", "timestamp": str(data.get("timestamp", "")),
+                "passed": int(data["passed"]), "warnings": int(data["warnings"]),
+                "failed": int(data["failed"])}
+    except (OSError, ValueError, KeyError, TypeError):
+        return {"status": "NOT_RUN"}
+
+
+def _ui3_suggestion_guard(app) -> tuple:
+    """Detect manual camera/key edits made after a suggested-card application."""
+    numbers = tuple((key, float(app.sl[key].get())) for key in sorted(CAMERA_KEYS)
+                    if key in app.sl)
+    keys = json.dumps(getattr(app, "_edit_keyframes", []), ensure_ascii=False,
+                      sort_keys=True, default=str)
+    return numbers, keys
+
+
 class Audit29Runtime:
     """A single App-backed comparison session. No candidate gets its own App."""
 
     def __init__(self, app, preferences_path: Path | None = None):
         self.app = app
+        self.action_revision = 0
+        self._ui3_suggested_previous = None
         self.preferences_path = preferences_path or default_preferences_path()
         self.screen_id = DEFAULT_SCREEN
         self.theme = "system"
         self._restore_appearance()
+        if os.environ.get("AUTOCINE_UI3_LAUNCH") == "1":
+            # The trial integration opens candidate 3 directly. The comparison
+            # app and every other candidate keep their existing entry points.
+            self.screen_id = "T-A-M"
 
     def _restore_appearance(self):
         try:
@@ -92,19 +120,38 @@ class Audit29Runtime:
     def select_screen(self, screen_id: str):
         if screen_id not in SCREENS:
             raise ValueError(f"unknown screen: {screen_id}")
+        old = self.screen_id
         self.screen_id = screen_id
-        self._save_appearance()
+        try:
+            self._save_appearance()
+        except Exception:
+            self.screen_id = old
+            raise
+        self.action_revision += 1
         return self.snapshot()
 
     def select_theme(self, theme: str):
         if theme not in THEMES:
             raise ValueError(f"unknown theme: {theme}")
+        old = self.theme
         self.theme = theme
-        self._save_appearance()
+        try:
+            self._save_appearance()
+        except Exception:
+            self.theme = old
+            raise
+        self.action_revision += 1
         return self.snapshot()
 
     def snapshot(self) -> dict:
         app = self.app
+        suggestion = self._ui3_suggested_previous
+        suggestion_values = (app.var_camera_control_mode.get(), app.var_style.get(),
+                             app.var_work_strength.get())
+        suggestion_state = ("not_applied" if suggestion is None else
+                            "applied" if (suggestion_values == suggestion["applied"] and
+                                          _ui3_suggestion_guard(app) == suggestion["guard"])
+                            else "custom")
         scene_rows = []
         selected = app.lb_kills.curselection()
         teams = {alias: player.team for player in app.players
@@ -123,6 +170,27 @@ class Audit29Runtime:
                 "selected": bool(selected and selected[0] == index),
             })
         camera_values = {key: float(app.sl[key].get()) for key in CAMERA_KEYS if key in app.sl}
+        from core.camera import CameraPlan, STYLES, THIRD_STYLES
+        from core.effects import GRADE_JP
+        style_key = next((key for key, label in STYLES.items()
+                          if label == app.var_style.get()), None)
+        side_key = next((key for key, label in CAMERA_SIDES.items()
+                         if label == app.var_camera_side.get()), None)
+        edit_frames = ([dict(frame) for frame in getattr(app, "_edit_keyframes", [])]
+                       if selected else [])
+        curve = {"channel": "relative_fov_delta_degrees",
+                 "interpolation": ("smoothstep" if len(edit_frames) == 2 else
+                                   "shape_preserving_hermite" if len(edit_frames) >= 3
+                                   else "constant"),
+                 "applied_by_style": style_key in THIRD_STYLES,
+                 "samples": []}
+        if edit_frames:
+            plan = CameraPlan(style=style_key or "cinema", scene_keyframes=tuple(edit_frames))
+            times = sorted({round(-15 + index * 0.5, 2) for index in range(61)} |
+                           {float(frame["time"]) for frame in edit_frames})
+            curve["samples"] = [{"time": time,
+                                  "value": round(plan.keyframe_values(time)[2], 4)}
+                                 for time in times]
         wanted_frames = set(RESEARCH_FRAME_CARDS) | set(LIBRARY_FRAME_CARDS) | set(TEST_B_FRAME_CARDS)
         frame_catalog = {item["id"]: item for item in list_assets("frames", review=True)
                          if item["id"] in wanted_frames}
@@ -139,10 +207,18 @@ class Audit29Runtime:
                                "paired_effect_status": effect["status"] if effect else None})
             return result
         frame_cards = cards(RESEARCH_FRAME_CARDS)
+        # The actual T-A-M source image has five material slots. The older
+        # reconstruction exposed four; provide a fifth real catalog item only
+        # to the opt-in UI3 trial without changing the seven-candidate app.
+        ui3_frame_cards = cards((*RESEARCH_FRAME_CARDS, "004/heartsteel_frame"))
         library_cards = cards(LIBRARY_FRAME_CARDS)
         testb_cards = cards(TEST_B_FRAME_CARDS)
         return {
             "workspace": {"screen_id": self.screen_id,
+                          "action_revision": self.action_revision,
+                          "ui3_mode": os.environ.get("AUTOCINE_UI3_LAUNCH") == "1",
+                          "native_editor_visible": (app.root.state() == "normal"
+                                                    if hasattr(app.root, "state") else False),
                           "candidate_id": SCREENS[self.screen_id]["family"] if self.screen_id else None,
                           "theme": self.theme,
                           "screens": [{"id": x["id"], "family": x["family"],
@@ -151,7 +227,8 @@ class Audit29Runtime:
                                                       or x["id"] in RECONSTRUCTED_SCREEN_IDS,
                                        "implementation_status": "partial"}
                                       for x in SCREENS.values()]},
-            "replay": {"connected": bool(app.players),
+            "replay": {"generation": int(getattr(app, "_replay_generation", 0)),
+                       "connected": bool(app.players),
                        "player_count": len(app.players),
                        "players": [{"slot": int(player.slot), "name": player.name,
                                     "champion": player.champion,
@@ -161,20 +238,40 @@ class Audit29Runtime:
                        "target_slot": getattr(getattr(app, "locked", None), "slot", None)},
             "scenes": scene_rows,
             "selected_scene_index": selected[0] if selected else None,
+            "keyframes": edit_frames,
+            "key_curve": curve,
+            "scene_fx": {"override": bool(app.var_scene_fx_enabled.get()),
+                         "values": {key: float(var.get()) for key, var in app.scene_fx_vars.items()}}
+                        if selected and hasattr(app, "var_scene_fx_enabled")
+                        and hasattr(app, "scene_fx_vars") else {"override": False, "values": {}},
+            "global_color": {
+                "grade": app.var_grade.get() if hasattr(app, "var_grade") else "",
+                "grades": GRADE_JP,
+                "values": {key: float(app.sl[key].get()) for key in
+                           ("grade_strength", "temperature", "contrast", "exposure", "vibrance")
+                           if key in app.sl},
+                "lut_path": app.var_lut.get() if hasattr(app, "var_lut") else ""},
             "checked_count": len(app.checked_kills),
+            "trim": {"pre": float(app.var_pre.get()) if hasattr(app, "var_pre") else 4.0,
+                     "post": float(app.var_post.get()) if hasattr(app, "var_post") else 3.0},
             "scan": {"status": str(app.lbl_scan.cget("text")) if hasattr(app, "lbl_scan") else "未スキャン",
                      "percent": float(app.pb_scan["value"]) if hasattr(app, "pb_scan") else 0.0,
                      "duration": float(getattr(getattr(app, "_match_scan_cache", None), "length", 0) or 0)},
             "event_mode": app.var_event_mode.get(),
             "edit_mode": app.var_edit_mode.get() if hasattr(app, "var_edit_mode") else "easy",
             "easy_preset": app.var_tpl.get() if hasattr(app, "var_tpl") else "",
+            "ui3_suggested": {"state": suggestion_state,
+                              "can_undo": suggestion_state == "applied",
+                              "scope": "camera mode, camera style, Work FX strength only; keyframes untouched"},
             "camera": {"mode": app.var_camera_control_mode.get(),
                        "side": app.var_camera_side.get(), "style": app.var_style.get(),
+                       "side_key": side_key, "style_key": style_key,
                        "values": camera_values},
             "frame": {"id": app.var_work_frame.get(), "effect_id": app.var_work_effect.get(),
                       "review": bool(app.var_work_review.get()),
                       "strength": app.var_work_strength.get(),
                       "motion": app.var_kill_icon_motion.get(), "cards": frame_cards,
+                      "ui3_cards": ui3_frame_cards if os.environ.get("AUTOCINE_UI3_LAUNCH") == "1" else [],
                       "library_cards": library_cards, "testb_cards": testb_cards},
             "preview": {"mirror_requested": bool(app.var_mirror.get()),
                         "fx_enabled": bool(app.var_live.get()),
@@ -183,6 +280,8 @@ class Audit29Runtime:
             "output": {"busy": bool(app.busy), "path": str(app.out_root),
                        "fps": app.var_fps_ui.get(), "encoder_policy": app.var_encoder_policy.get(),
                        "game_audio": bool(app.var_gaudio.get()), "hud": app.var_hud_mode.get()},
+            "qa": {"auto_pending": bool(getattr(app, "_auto_qa_pending", False)),
+                   "selftest": _auto_qa_summary()},
             "capabilities": {"engage": False,
                              "engage_reason": "エンゲージ専用検出・操作は未実装。キルとして扱いません"},
         }
@@ -191,6 +290,13 @@ class Audit29Runtime:
         """Dispatch whitelisted UI actions to the existing App on Tk's thread."""
         app = self.app
         data = data or {}
+        def show_native() -> None:
+            # The WebView backend starts with an alpha=0 Tk window. Restoring
+            # alpha is required before the existing editor can be operated.
+            if hasattr(app.root, "attributes"):
+                app.root.attributes("-alpha", 1.0)
+            app.root.deiconify()
+            app.root.lift()
         if action == "screen":
             return self.select_screen(str(data["id"]))
         if action == "theme":
@@ -268,6 +374,39 @@ class Audit29Runtime:
             if name not in app.templates:
                 raise ValueError("この仕上がり設定は現在のアプリにありません")
             app._choose_easy_preset(name)
+        elif action == "ui3_suggested_apply":
+            from core.camera import STYLES
+            if app.busy:
+                raise ValueError("書き出し中はおすすめ設定を変更できません")
+            applied = (MODE_LABELS["fixed_auto"], STYLES["third_cinema"], "weak")
+            current = (app.var_camera_control_mode.get(), app.var_style.get(),
+                       app.var_work_strength.get())
+            prior = self._ui3_suggested_previous
+            guard = _ui3_suggestion_guard(app)
+            old = (prior["old"] if prior is not None and current == prior["applied"]
+                   and guard == prior["guard"] else current)
+            try:
+                app.var_camera_control_mode.set(applied[0])
+                app.var_style.set(applied[1])
+                app.var_work_strength.set(applied[2])
+            except Exception:
+                app.var_camera_control_mode.set(current[0])
+                app.var_style.set(current[1])
+                app.var_work_strength.set(current[2])
+                raise
+            self._ui3_suggested_previous = {"old": old, "applied": applied, "guard": guard}
+        elif action == "ui3_suggested_undo":
+            saved = self._ui3_suggested_previous
+            if saved is None:
+                raise ValueError("戻せるおすすめ設定はありません")
+            current = (app.var_camera_control_mode.get(), app.var_style.get(),
+                       app.var_work_strength.get())
+            if current != saved["applied"] or _ui3_suggestion_guard(app) != saved["guard"]:
+                raise ValueError("追加の手動変更があるため、以前の値へ自動で戻せません")
+            for var, value in zip((app.var_camera_control_mode, app.var_style,
+                                   app.var_work_strength), saved["old"]):
+                var.set(value)
+            self._ui3_suggested_previous = None
         elif action == "camera_side":
             side = data.get("value")
             if side not in CAMERA_SIDES:
@@ -287,15 +426,129 @@ class Audit29Runtime:
             if not low <= value <= high:
                 raise ValueError("camera value out of range")
             app.sl[key].set(value)
+        elif action == "ui3_camera_reset":
+            # Match the existing safe third-person pose without changing its
+            # camera calculation or discarding per-scene keyframes.
+            for key, value in (("third_dist", 950.0), ("cam_height", 170.0),
+                               ("third_yaw", 0.0), ("motion_arc", 10.0)):
+                if key not in app.sl:
+                    raise ValueError(f"カメラ設定 {key} が見つかりません")
+                app.sl[key].set(value)
+        elif action == "ui3_camera_batch":
+            from core.camera import STYLES
+            mode = str(data.get("mode", ""))
+            side = str(data.get("side", ""))
+            style = str(data.get("style", ""))
+            values = data.get("values", {})
+            if (mode not in MODE_LABELS or side not in CAMERA_SIDES
+                    or style not in STYLES or not isinstance(values, dict)):
+                raise ValueError("カメラ設定の候補が不正です")
+            validated = {}
+            for key, raw in values.items():
+                if key not in CAMERA_KEYS or key not in app.sl:
+                    raise ValueError("不明なカメラ数値です")
+                value = float(raw)
+                low, high = CAMERA_KEYS[key]
+                if not low <= value <= high:
+                    raise ValueError(f"{key} が設定範囲外です")
+                validated[key] = value
+            old = (app.var_camera_control_mode.get(), app.var_camera_side.get(),
+                   app.var_style.get(), {key: app.sl[key].get() for key in validated})
+            try:
+                app.var_camera_control_mode.set(MODE_LABELS[mode])
+                app.var_camera_side.set(CAMERA_SIDES[side])
+                app.var_style.set(STYLES[style])
+                for key, value in validated.items():
+                    app.sl[key].set(value)
+            except Exception:
+                app.var_camera_control_mode.set(old[0])
+                app.var_camera_side.set(old[1])
+                app.var_style.set(old[2])
+                for key, value in old[3].items():
+                    app.sl[key].set(value)
+                raise
         elif action == "trim":
             key, value = str(data["key"]), float(data["value"])
             if key not in ("pre", "post") or not 1 <= value <= 15:
                 raise ValueError("invalid trim")
             (app.var_pre if key == "pre" else app.var_post).set(value)
+        elif action == "keyframe_upsert":
+            # The existing scene editor stores offsets relative to the kill,
+            # including an additive FOV delta. The Work reference's absolute
+            # FOV/time values must never be sent here as if they were identical.
+            from ui.scene_project import validate_keyframes
+            if app.busy or not app.lb_kills.curselection():
+                raise ValueError("シーンを選択し、書き出し停止後にキーを編集してください")
+            frame = {}
+            for field, low, high in (("time", -15, 15), ("yaw", -70, 70),
+                                     ("zoom", -30, 30), ("fov", -15, 15)):
+                value = float(data[field])
+                if not math.isfinite(value) or not low <= value <= high:
+                    raise ValueError(f"{field} は {low}～{high} の範囲で指定してください")
+                frame[field] = value
+            frames = [dict(item) for item in app._edit_keyframes]
+            index = data.get("index")
+            if index is not None:
+                index = int(index)
+                if not 0 <= index < len(frames):
+                    raise ValueError("選択したキーが見つかりません")
+                frames.pop(index)
+            app._edit_keyframes = validate_keyframes([*frames, frame])
+            app._refresh_keyframe_list(select_time=round(frame["time"], 2))
+        elif action == "keyframe_remove":
+            if app.busy or not app.lb_kills.curselection():
+                raise ValueError("シーンを選択し、書き出し停止後にキーを編集してください")
+            index = int(data["index"])
+            if not 0 <= index < len(app._edit_keyframes):
+                raise ValueError("選択したキーが見つかりません")
+            frames = [dict(item) for item in app._edit_keyframes]
+            frames.pop(index)
+            app._edit_keyframes = frames
+            app._refresh_keyframe_list()
+        elif action == "keyframe_preview":
+            app.on_keyframe_preview()
+        elif action == "scene_fx_number":
+            key = str(data["key"])
+            limits = {"temperature": (-1.0, 1.0), "bloom": (0.0, 1.0),
+                      "focus_blur": (0.0, 1.0), "dof_blur": (0.0, 20.0),
+                      "highlight_pulse": (0.0, 1.0)}
+            value = float(data["value"])
+            if (app.busy or not app.lb_kills.curselection() or key not in limits
+                    or key not in app.scene_fx_vars or not math.isfinite(value)
+                    or not limits[key][0] <= value <= limits[key][1]):
+                raise ValueError("シーンFXの対象または数値が不正です")
+            app.scene_fx_vars[key].set(value)
+            app.var_scene_fx_enabled.set(True)
+        elif action == "global_color_number":
+            key = str(data["key"])
+            limits = {"grade_strength": (0.0, 1.4), "temperature": (-1.0, 1.0),
+                      "contrast": (0.6, 1.6), "exposure": (-0.3, 0.3),
+                      "vibrance": (-1.0, 1.5)}
+            value = float(data["value"])
+            if (app.busy or key not in limits or key not in app.sl or
+                    not math.isfinite(value) or not limits[key][0] <= value <= limits[key][1]):
+                raise ValueError("共通の色設定または数値が不正です")
+            app.sl[key].set(value)
+        elif action == "global_color_grade":
+            from core.effects import GRADE_JP
+            key = str(data["value"])
+            if app.busy or key not in GRADE_JP or not hasattr(app, "var_grade"):
+                raise ValueError("共通のカラーグレードが不正です")
+            app.var_grade.set(GRADE_JP[key])
+        elif action == "scene_fx_override":
+            if app.busy or not app.lb_kills.curselection():
+                raise ValueError("先にシーンを選択してください")
+            app.var_scene_fx_enabled.set(bool(data["value"]))
         elif action == "frame":
             select_frame_with_effect(app, str(data["id"]))
+        elif action == "frame_none":
+            app.var_work_frame.set("")
+            app.var_work_effect.set("")
+            app.var_work_review.set(False)
         elif action == "work_gallery":
             app._open_work_gallery()
+        elif action == "legacy_frame_gallery":
+            app._open_kill_frame_gallery()
         elif action == "work_settings":
             app._open_work_kill_settings()
         elif action == "effect_strength":
@@ -352,24 +605,24 @@ class Audit29Runtime:
         elif action == "scene_redo":
             app.on_scene_redo()
         elif action == "project_export":
-            app.root.deiconify()
-            app.root.lift()
+            show_native()
             app.on_scene_export()
         elif action == "project_import":
-            app.root.deiconify()
-            app.root.lift()
+            show_native()
             app.on_scene_import()
         elif action == "native_settings":
             app._focus_settings()
-            app.root.deiconify()
-            app.root.lift()
+            show_native()
+        elif action == "native_legacy_show":
+            show_native()
+        elif action == "native_legacy_hide":
+            app.root.withdraw()
         elif action == "native_editor_zone":
             zone = str(data.get("zone", data.get("value", "")))
             if zone not in ("scene", "camera", "color", "fx", "output"):
                 raise ValueError("unknown editor zone")
             app._focus_editor_zone(zone)
-            app.root.deiconify()
-            app.root.lift()
+            show_native()
         elif action == "edit_mode":
             mode = str(data["value"])
             if mode not in ("easy", "advanced"):
@@ -377,8 +630,7 @@ class Audit29Runtime:
             app.var_edit_mode.set(mode)
             app._apply_edit_mode(log=False)
             if mode == "advanced":
-                app.root.deiconify()
-                app.root.lift()
+                show_native()
         elif action == "comparison_edit_mode":
             mode = str(data["value"])
             if mode not in ("easy", "advanced"):
@@ -395,4 +647,5 @@ class Audit29Runtime:
             raise NotImplementedError("エンゲージ専用検出は未実装です")
         else:
             raise ValueError(f"unknown UI action: {action}")
+        self.action_revision += 1
         return self.snapshot()

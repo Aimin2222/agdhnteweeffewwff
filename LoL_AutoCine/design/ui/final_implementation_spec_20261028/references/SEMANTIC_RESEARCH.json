@@ -1,0 +1,132 @@
+{
+  "items": [
+    {
+      "id": "C3-10",
+      "conclusion": "現在「すべて」と「キル＋アシスト」は同じboth。対象プレイヤーのkill OR assistであり、両条件ANDや全プレイヤー全イベントではない。",
+      "classification": "ALIAS / LABEL_SPECIFICATION",
+      "needed": "現在の別名であることを説明。独立した意味が必要ならイベント型/対象範囲の追加仕様。架空のengage処理を割り当てない。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/ui/audit29_client.js",
+          "line": 679,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_client.js#L679"
+        },
+        {
+          "path": "LoL_AutoCine/core/scanner.py",
+          "line": 169,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/scanner.py#L169"
+        },
+        {
+          "path": "LoL_AutoCine/legacy_app.py",
+          "line": 4022,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/legacy_app.py#L4022"
+        }
+      ]
+    },
+    {
+      "id": "U09",
+      "conclusion": "A_mainの原制作指示は下段に枠/FX/アニメの視覚的chooserを置き、最終修正は6アニメを見る入口を指定。「画像選択」という独立した入力/保存操作は定義されていない。同系列Bのcaption指定をAのAPI仕様とは扱わない。",
+      "classification": "SOURCE_INTENT_INFERRED / OPERATION_UNRESOLVED",
+      "needed": "最も近いのは演出素材図鑑への視覚選択導線。ただし取込/参考画像抽出へ断定しない。既存work_galleryを使う役割と承認区分・適用対象を合意すれば表示層の接続で済む可能性。自由画像取込なら型/保存/承認等の新仕様が必要。disabledは未実装の正直な表示として維持。",
+      "sources": [
+        {
+          "path": "outputs/test_ui_improvements_20261020/PROMPTS.json",
+          "JSON_paths": [
+            "final_prompts_and_revision_history[2].content[0]:A_main initial",
+            "final_prompts_and_revision_history[0].content[0]:A_main final text corrections"
+          ],
+          "sha256": "276f1161e02b31d61bed85a24cf659674e95083a38d512dd89ad3de00af58c2b"
+        },
+        {
+          "path": "LoL_AutoCine/ui/audit29_client.js",
+          "line": 1157,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_client.js#L1157"
+        }
+      ]
+    },
+    {
+      "id": "COMPARE",
+      "conclusion": "調整前後比較は同一時刻のbefore/after表示。演出再生は時刻を進めて動きを見る処理。最新版は誤接続を除去しただけで実比較はない。",
+      "classification": "MISBINDING_REMOVED / COMPARE_NEW_CONNECTION_REQUIRED",
+      "needed": "同じフレーム/時刻・処理ON/OFFの画像を取得し分割/切替する表示経路が必要。実ミラー/preview/outputで同等性を検証。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/ui/reference_views.py",
+          "line": 51,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/reference_views.py#L51"
+        }
+      ]
+    },
+    {
+      "id": "FOV",
+      "conclusion": "SceneProjectはキル相対秒、fovは−15〜+15°の加算補正。実角度は時変base＋補正を制限範囲へclampし、モードによる追加制限もある。絶対64°とは同一でない。",
+      "classification": "DIFFERENT_COORDINATE_AND_VALUE_MODEL",
+      "needed": "補正量UIとして明記すれば既存機能に接続可能。絶対指定なら同時刻のbaseを評価/表示して逆算し、clamp/モード/対象styleを扱う新アダプターが必要。48から64は+16で補正限界超過の例になり得る。無断で64を補正欄へ送らない。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/ui/scene_project.py",
+          "line": 16,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/scene_project.py#L16"
+        },
+        {
+          "path": "LoL_AutoCine/core/camera.py",
+          "line": 360,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/camera.py#L360"
+        },
+        {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 437,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L437"
+        }
+      ]
+    },
+    {
+      "id": "COLOR",
+      "conclusion": "既存Templateにexposure/vibrance/lut_pathが存在し、color_filtersが露出由来brightness・grade saturation・lut3dを生成。新UIのscene_fx_numberはtemperature/bloom/focus_blur/dof_blur/highlight_pulseの5種のみ。",
+      "classification": "EXISTING_ENGINE / ADAPTER_AND_SCOPE_GAPS",
+      "needed": "既存の全体設定へ接続するなら新処理エンジンは不要な部分がある。シーン別露出/LUTなら保存schema/override追加が必要。exposureはbrightnessへ0.5係数で加算する既存量で、写真のEVではない。vibranceと一律彩度は別。独立saturationはプリセット内部値があるだけで専用保存パラメータの追加を要し得る。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/core/effects.py",
+          "line": 511,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L511"
+        },
+        {
+          "path": "LoL_AutoCine/core/effects.py",
+          "line": 141,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L141"
+        },
+        {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 472,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L472"
+        },
+        {
+          "path": "LoL_AutoCine/legacy_app.py",
+          "line": 3630,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/legacy_app.py#L3630"
+        }
+      ]
+    },
+    {
+      "id": "INTERPOLATION",
+      "conclusion": "2キーはsmoothstep、3キー以上は内部勾配を調整した形状維持cubic Hermite。範囲外は端点値。キー/対象styleがなければゼロ補正。選べるlinear/hold/自由Bezierモードはない。",
+      "classification": "EXISTING_DETERMINISTIC_SMOOTH_MODEL / NO_SELECTABLE_MODES",
+      "needed": "グラフ表示は現行評価式をサンプルして描けばエンジンを変更せず一致可能。linear/hold/自由接線を追加するならモデル/保存/再生側の開発と試験が必要。ファイル冒頭の古い「smoothstepのみ」説明より実分岐を優先。",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/core/camera.py",
+          "line": 297,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/camera.py#L297"
+        },
+        {
+          "path": "LoL_AutoCine/core/camera.py",
+          "line": 323,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/camera.py#L323"
+        }
+      ]
+    }
+  ],
+  "runtime": "NOT_RUN",
+  "source_commit": "bd93e2caf3bdb823d52b86fead0d71fc15c41327"
+}

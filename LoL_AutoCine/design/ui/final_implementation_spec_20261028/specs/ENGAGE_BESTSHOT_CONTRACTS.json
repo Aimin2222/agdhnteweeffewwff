@@ -1,0 +1,36 @@
+{
+  "items": [
+    {
+      "id": "ENGAGE",
+      "baseline": "UNIMPLEMENTED; current capabilities.engage=False",
+      "input": "replay hash/patch, timestamped combat participants/positions/damage or verified annotated combat intervals, sample confidence/coverage",
+      "processing": "有効な連続coverage内で敵対damage/距離等の開始根拠を結合し戦闘区間候補化。kill/assistとの関連IDは付与するが、同一eventへ変換しない。距離/休止時間閾値は明示configで正解付き映像から決める。欠測区間は補間して戦闘なしと断定しない",
+      "output": "engage_id/start/end/participants/source evidence/confidence/unknown intervals/rejection reasons",
+      "storage": "versioned event extension, existing kill events immutable",
+      "entrances": {
+        "C3": "C3.settings > 検出種別(能力gate) → C3.main/scene list",
+        "R1": "R1.settings > 検出種別(能力gate) → R1.main/scene list",
+        "R2": "R2.settings > 検出種別(能力gate) → R2.main/scene list"
+      },
+      "tests": "annotated matchesでprecision/recall/境界誤差、missing coverage/視界制約、同時別戦闘/長射程/killなし戦闘。数値合格閾値はD09でデータ規模と共に決定",
+      "unknown": "利用可能Replay APIが必要dataを供給できるかの取得実証。未達はNOT_RUN、kill filterへ偽接続禁止"
+    },
+    {
+      "id": "BESTSHOT",
+      "baseline": "UNIMPLEMENTED; smart_montage.score is metadata score only",
+      "input": "permissioned actual frames+PTS/candidate takes/target geometry or masks/visibility evidence/quality metrics",
+      "processing": "無映像/遮蔽不明を除外/unknown。frame鮮明さ・対象可視・構図・飽和・移動安定を別指標化し、時系列連続性と手動pinを保持。単一最高frameだけでclipを決定しない",
+      "output": "candidate_id/time interval/quality vector/confidence/reason/manual override; raw evidence refs",
+      "storage": "analysis revision+input hashes+scores; existing scene sequence untouched until apply",
+      "entrances": {
+        "C3": "C3.detail > 自動候補比較 / C3.diagnostics > 根拠",
+        "R1": "R1.detail > 自動候補比較 / R1.diagnostics > 根拠",
+        "R2": "R2.detail > 自動候補比較 / R2.diagnostics > 根拠"
+      },
+      "tests": "正解付き映像でtopK一致/target消失/明暗/FXなし/FXあり/同点/欠測/計算時間。品質の好みと機械欠損を分離、閾値はD09で決定",
+      "unknown": "対象認識/遮蔽/映像取得/計算budget。metadata kill数だけで完成扱い禁止"
+    }
+  ],
+  "status": "DATA_FEASIBILITY_AND_ACCEPTANCE_DECISION_REQUIRED",
+  "runtime": "NOT_RUN"
+}

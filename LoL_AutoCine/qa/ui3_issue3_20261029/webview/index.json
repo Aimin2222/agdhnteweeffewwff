@@ -1,0 +1,155 @@
+{
+  "kind": "WINDOWS_WEBVIEW2_SOURCE_HOST_OFFLINE",
+  "lol_replay": "NOT_RUN",
+  "gpu_record_audio_export": "NOT_RUN",
+  "screens": [
+    {
+      "id": "reference-ld",
+      "result": "CAPTURED_SOURCE_HOST_OFFLINE",
+      "capture": "reference-ld.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "reference_captures": [],
+      "bounds": "bounds/reference-ld.json",
+      "main_detail_roundtrip": "NOT_RUN",
+      "issue3_numeric": {
+        "empty": {
+          "result": "PASS",
+          "backend": 0.12,
+          "visible": {
+            "value": "0.12",
+            "invalid": "true",
+            "message": "露出 数値: 空欄または範囲外です。元の設定値を保持しました。"
+          }
+        },
+        "nonnumeric_normalized_to_empty": {
+          "result": "PASS",
+          "backend": 0.12,
+          "visible": {
+            "value": "0.12",
+            "invalid": "true",
+            "message": "露出 数値: 空欄または範囲外です。元の設定値を保持しました。"
+          }
+        },
+        "out_of_range": {
+          "result": "PASS",
+          "backend": 0.12,
+          "visible": {
+            "value": "0.12",
+            "invalid": "true",
+            "message": "露出 数値: 空欄または範囲外です。元の設定値を保持しました。"
+          }
+        },
+        "explicit_zero": {
+          "result": "PASS",
+          "backend": 0.0
+        },
+        "native_badInput_keystroke": "NOT_RUN",
+        "screen_switch_retains_zero": "PASS",
+        "camera_empty_keeps_32": "PASS",
+        "camera_explicit_zero": "PASS"
+      }
+    },
+    {
+      "id": "reference-ln",
+      "result": "CAPTURED_SOURCE_HOST_OFFLINE",
+      "capture": "reference-ln.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "reference_captures": [],
+      "bounds": "bounds/reference-ln.json",
+      "main_detail_roundtrip": "NOT_RUN",
+      "issue3_numeric": {
+        "empty": {
+          "result": "PASS",
+          "backend": 0.12,
+          "visible": {
+            "value": "0.12",
+            "invalid": "true",
+            "message": "露出 数値: 空欄または範囲外です。元の設定値を保持しました。"
+          }
+        },
+        "nonnumeric_normalized_to_empty": {
+          "result": "PASS",
+          "backend": 0.12,
+          "visible": {
+            "value": "0.12",
+            "invalid": "true",
+            "message": "露出 数値: 空欄または範囲外です。元の設定値を保持しました。"
+          }
+        },
+        "out_of_range": {
+          "result": "PASS",
+          "backend": 0.12,
+          "visible": {
+            "value": "0.12",
+            "invalid": "true",
+            "message": "露出 数値: 空欄または範囲外です。元の設定値を保持しました。"
+          }
+        },
+        "explicit_zero": {
+          "result": "PASS",
+          "backend": 0.0
+        },
+        "native_badInput_keystroke": "NOT_RUN",
+        "screen_switch_retains_zero": "PASS",
+        "camera_empty_keeps_32": "PASS",
+        "camera_explicit_zero": "PASS"
+      }
+    },
+    {
+      "id": "T-A-M",
+      "result": "CAPTURED_SOURCE_HOST_OFFLINE",
+      "capture": "T-A-M.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "reference_captures": [],
+      "bounds": "bounds/T-A-M.json",
+      "main_detail_roundtrip": "NOT_RUN",
+      "issue3_numeric": {
+        "empty": {
+          "result": "PASS",
+          "backend": 0.12,
+          "visible": {
+            "value": "0.12",
+            "invalid": "true",
+            "message": "露出: 空欄または範囲外です。元の設定値を保持しました。"
+          }
+        },
+        "nonnumeric_normalized_to_empty": {
+          "result": "PASS",
+          "backend": 0.12,
+          "visible": {
+            "value": "0.12",
+            "invalid": "true",
+            "message": "露出: 空欄または範囲外です。元の設定値を保持しました。"
+          }
+        },
+        "out_of_range": {
+          "result": "PASS",
+          "backend": 0.12,
+          "visible": {
+            "value": "0.12",
+            "invalid": "true",
+            "message": "露出: 空欄または範囲外です。元の設定値を保持しました。"
+          }
+        },
+        "explicit_zero": {
+          "result": "PASS",
+          "backend": 0.0
+        },
+        "native_badInput_keystroke": "NOT_RUN",
+        "screen_switch_retains_zero": "PASS",
+        "camera_empty_keeps_32": "PASS",
+        "camera_explicit_zero": "PASS",
+        "trim_empty_keeps_6_after_poll": "PASS"
+      }
+    }
+  ]
+}

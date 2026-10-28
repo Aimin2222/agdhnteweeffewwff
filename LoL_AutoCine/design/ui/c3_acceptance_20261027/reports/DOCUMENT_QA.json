@@ -1,0 +1,42 @@
+{
+  "checks": [
+    {
+      "id": "identity-PR51-source-image",
+      "status": "PASS"
+    },
+    {
+      "id": "all70-unique-placement",
+      "status": "PASS",
+      "total": 70,
+      "by_category": {
+        "MAIN": 8,
+        "EASY": 4,
+        "DETAIL": 2,
+        "SETTINGS": 12,
+        "SPECIAL": 39,
+        "LIBRARY": 5
+      }
+    },
+    {
+      "id": "all70-have-detail-entry",
+      "status": "PASS"
+    },
+    {
+      "id": "pending-acceptance-stays-NOT_RUN",
+      "status": "PASS",
+      "total": 106
+    },
+    {
+      "id": "old-C3-artifacts-unchanged",
+      "status": "PASS",
+      "files": 45
+    },
+    {
+      "id": "new-full-screen-count",
+      "status": "PASS",
+      "count": 0
+    }
+  ],
+  "ui_runtime_acceptance": "NOT_RUN",
+  "new_design_adoption": "REVIEW"
+}

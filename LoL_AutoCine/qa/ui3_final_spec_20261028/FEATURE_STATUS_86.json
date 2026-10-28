@@ -1,0 +1,797 @@
+{
+  "existing_count": 70,
+  "additional_count": 16,
+  "features": [
+    {
+      "id": "REPLAY",
+      "name": "Replay API接続",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "LAUNCH",
+      "name": "ROFL起動・最近のリプレイ",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "PLAYER",
+      "name": "対象プレイヤー固定",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "SCAN",
+      "name": "試合全体スキャン",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "ASSIST",
+      "name": "キル／アシスト／両方",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "MULTI",
+      "name": "連続キル判定",
+      "kind": "existing",
+      "work_baseline_access": "BACKEND_AUTOMATIC",
+      "current_access": "BACKEND_AUTOMATIC",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "SCENE",
+      "name": "シーン編集・保存",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "TIMELINE",
+      "name": "シーンタイムライン",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "KEYFRAME",
+      "name": "相対yaw/zoom/FOVキーフレーム",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "HIGHLIGHT",
+      "name": "既存おまかせ演出",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "SMARTMONTAGE",
+      "name": "既存シーン採点・並べ替え",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "HUD",
+      "name": "HUD非表示・復元",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "MIRROR",
+      "name": "ミラー・表示FPS",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "CAPTURE",
+      "name": "WGC/共有メモリ取得",
+      "kind": "existing",
+      "work_baseline_access": "BACKEND_AUTOMATIC",
+      "current_access": "BACKEND_AUTOMATIC",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "RECORD",
+      "name": "録画・時刻整合",
+      "kind": "existing",
+      "work_baseline_access": "BACKEND_AUTOMATIC",
+      "current_access": "BACKEND_AUTOMATIC",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "JOB",
+      "name": "チェック済み・複数クリップ作成",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "AUDIO",
+      "name": "LoLプロセス専用録音",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "AUDIOGUARD",
+      "name": "音声必須時の失敗伝播",
+      "kind": "existing",
+      "work_baseline_access": "BACKEND_AUTOMATIC",
+      "current_access": "BACKEND_AUTOMATIC",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "BGM",
+      "name": "BGMミックス・音量",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "NVENC",
+      "name": "GPUエンコード・CPU代替",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "GPUFX",
+      "name": "OpenCL全体FX経路",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "GRADE",
+      "name": "16グレード・LUT・カーブ",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "PARTIAL_DIRECT_GLOBAL_COLOR",
+      "verification": "PARTIAL_WINDOWS_OFFLINE",
+      "remaining": "LUT, curve, scene scope and output parity"
+    },
+    {
+      "id": "FOG",
+      "name": "ゲーム内Fog",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "DOF",
+      "name": "ゲーム内DOFと後段焦点表現",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "PULSE",
+      "name": "キル時ハイライト",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "BADGE",
+      "name": "既存37キルバッジ",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "WORKFRAME",
+      "name": "Workフレーム候補",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "WORKFX",
+      "name": "Workエフェクト候補",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "MOTION",
+      "name": "登場アニメ6種",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "REFERENCE",
+      "name": "参考映像の局所特徴抽出",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "PREVIEW",
+      "name": "近似プレビューと厳密静止画",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "MONTAGEFX",
+      "name": "連結後の明暗トランジション",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "SELFQA",
+      "name": "既存自己診断",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "DIAG",
+      "name": "性能診断・QAパッケージ",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "CAM_third_cinema",
+      "name": "third_cinema",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "CAM_third",
+      "name": "third",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "CAM_geo_aim",
+      "name": "geo_aim",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "CAM_cinema",
+      "name": "cinema",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "CAM_fps",
+      "name": "fps",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "CAM_orbit",
+      "name": "orbit",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "CAM_lolnam_cinema",
+      "name": "lolnam_cinema",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "CAM_follow",
+      "name": "follow",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "CAM_cinema_top",
+      "name": "cinema_top",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "CAM_top",
+      "name": "top",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FIXED",
+      "name": "固定自動",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FULL",
+      "name": "フルオートシネマ",
+      "kind": "existing",
+      "work_baseline_access": "DIRECT_UI3",
+      "current_access": "DIRECT_UI3",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_motion_camera",
+      "name": "motion_camera",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_radial_blur",
+      "name": "radial_blur",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_zoom_blur",
+      "name": "zoom_blur",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_glitch",
+      "name": "glitch",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_kaleidoscope",
+      "name": "kaleidoscope",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_vhs_damage",
+      "name": "vhs_damage",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_block_motion",
+      "name": "block_motion",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_spin_motion",
+      "name": "spin_motion",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_chroma_leak",
+      "name": "chroma_leak",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_flash",
+      "name": "flash",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_focus_blur",
+      "name": "focus_blur",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_vignette_fx",
+      "name": "vignette_fx",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_glint",
+      "name": "glint",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_camera_shake",
+      "name": "camera_shake",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_wiggle",
+      "name": "wiggle",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_vr_blur",
+      "name": "vr_blur",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_vr_light_leak",
+      "name": "vr_light_leak",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_sphere_blur",
+      "name": "sphere_blur",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_panel_wipe",
+      "name": "panel_wipe",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_stretch_wipe",
+      "name": "stretch_wipe",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_mirror",
+      "name": "mirror",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "FX_slice",
+      "name": "slice",
+      "kind": "existing",
+      "work_baseline_access": "NATIVE_EDITOR",
+      "current_access": "NATIVE_EDITOR",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "ENGAGE",
+      "name": "エンゲージ独立検出",
+      "kind": "existing",
+      "work_baseline_access": "UNIMPLEMENTED",
+      "current_access": "UNIMPLEMENTED",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "BESTSHOT",
+      "name": "画像品質によるベストショット選択",
+      "kind": "existing",
+      "work_baseline_access": "UNIMPLEMENTED",
+      "current_access": "UNIMPLEMENTED",
+      "verification": "NOT_RUN",
+      "remaining": "Work matrix requirements and real operation need verification"
+    },
+    {
+      "id": "N01",
+      "name": "絶対FOVの表示・adapter",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "D02",
+      "remaining": "baseとclampを公開、到達不可を拒否。独立absolute trackは別schema"
+    },
+    {
+      "id": "N02",
+      "name": "実評価器によるカーブ表示・ドラッグ",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "PARTIAL_REAL_INTERPOLATOR_CURVE",
+      "verification": "PARTIAL_UNIT_ONLY",
+      "decision_gate": "none",
+      "remaining": "既存Hermite/smoothstepの同じ評価器。表示だけのBezier禁止"
+    },
+    {
+      "id": "N03",
+      "name": "linear/hold補間",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "D03",
+      "remaining": "version付きmode。旧projectはlegacy_smoothへ"
+    },
+    {
+      "id": "N04",
+      "name": "自由Bezier接線",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "D03",
+      "remaining": "x(u)を単調逆解、overshoot/限界を検証。接線保存と評価共有"
+    },
+    {
+      "id": "N05",
+      "name": "XYZ姿勢トラック",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "D04",
+      "remaining": "地形/TargetLock/軸/遮蔽が必要。既存deltaをXYZに偽装しない"
+    },
+    {
+      "id": "N06",
+      "name": "既存global色へのUI接続",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "PARTIAL_GLOBAL_COLOR_ADAPTER",
+      "verification": "PARTIAL_WINDOWS_OFFLINE",
+      "decision_gate": "none",
+      "remaining": "新renderer不要、validated bridge/dirty state/preview sync"
+    },
+    {
+      "id": "N07",
+      "name": "シーン別色拡張・均一彩度",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "D07/D11",
+      "remaining": "継承/解除/undo/migration/CPU-GPU LUT bakeを一致"
+    },
+    {
+      "id": "N08",
+      "name": "同一フレーム調整前後比較",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "D06",
+      "remaining": "compose_compareとexactStill再利用。時間FX比較は別capability"
+    },
+    {
+      "id": "N09",
+      "name": "独立カメラプリセット",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "D05",
+      "remaining": "色/音/素材/対象IDを変更しない。deep-copy/typed schema"
+    },
+    {
+      "id": "N10",
+      "name": "真の空間radial blur",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "D10",
+      "remaining": "旧radial_blur/tmixと別ID。GPU kernelとCPUの色/alpha共通化"
+    },
+    {
+      "id": "N11",
+      "name": "共有OverlayPlan",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "none",
+      "remaining": "独立plannerと同RGBA合成器を別検証。既存renderer regressionを保持"
+    },
+    {
+      "id": "N12",
+      "name": "処理revisionと時計の永続化",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "D10",
+      "remaining": "既存Flash/Zoom候補を再実装しない。env/project優先順位と互換migration"
+    },
+    {
+      "id": "N13",
+      "name": "初心者ワンクリック統合導線",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "none",
+      "remaining": "準備済みなら重複scanなし。失敗段/取消/手動override保持"
+    },
+    {
+      "id": "N14",
+      "name": "実素材の視覚選択・FX独立選択",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "D01",
+      "remaining": "素材原本は改変せず。35候補とCore22FXを分離"
+    },
+    {
+      "id": "N15",
+      "name": "参加者/長射程/遮蔽を用いる自動構図",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "D09",
+      "remaining": "欠測baseline、style切替clip境界、既存accepted cameraを優先"
+    },
+    {
+      "id": "N16",
+      "name": "型付きProjectBundle",
+      "kind": "additional",
+      "work_baseline_access": "NOT_IMPLEMENTED_AS_COMPLETE_CAPABILITY",
+      "current_access": "NOT_COMPLETE",
+      "verification": "NOT_RUN",
+      "decision_gate": "D05",
+      "remaining": "既存SceneProject v1/2/3は別型import。JSON保存とMP4を分離"
+    }
+  ],
+  "note": "Baseline access is not an end-to-end PASS."
+}
