@@ -487,6 +487,17 @@
       if (value !== undefined) slider.value = value;
     });
     if (ui3Baseline) {
+      document.querySelectorAll('[data-ui3-global-color]').forEach(input => {
+        if (document.activeElement === input) return;
+        const value = data.global_color?.values?.[input.dataset.ui3GlobalColor];
+        if (value !== undefined) input.value = value;
+      });
+      const grade = document.querySelector('#ui3-global-grade');
+      if (grade && document.activeElement !== grade)
+        grade.value = Object.entries(data.global_color?.grades || {})
+          .find(([,label]) => label === data.global_color?.grade)?.[0] || '';
+    }
+    if (ui3Baseline) {
       const effectLabel = document.querySelector('.ui3-effect-status');
       if (effectLabel) effectLabel.textContent = `同名FX：${data.frame.effect_id || 'なし'} / ${data.frame.strength || '控えめ'}`;
       document.querySelectorAll('.ui3-motion-choice').forEach(button =>
@@ -1155,6 +1166,37 @@
     }
     cameraSelect.addEventListener('change',()=>invoke('camera_style',{value:cameraSelect.value}));
     cameraLabel.append(cameraSelect);tools.append(cameraLabel);
+    const globalColor=document.createElement('section');
+    globalColor.className='ui3-global-color';
+    globalColor.style.cssText='margin-top:16px;border-top:1px solid #b8cce7;padding-top:10px';
+    const colorTitle=document.createElement('h3');colorTitle.textContent='共通の色調整';
+    globalColor.append(colorTitle);
+    const gradeLabel=document.createElement('label');gradeLabel.textContent='カラーグレード';
+    gradeLabel.style.cssText='display:block;margin:8px 0';
+    const gradeSelect=document.createElement('select');gradeSelect.id='ui3-global-grade';
+    gradeSelect.style.cssText='display:block;width:100%;padding:8px;margin-top:4px';
+    for (const [key,label] of Object.entries(state.value.global_color?.grades || {})) {
+      const option=document.createElement('option');option.value=key;option.textContent=label;
+      gradeSelect.append(option);
+    }
+    gradeSelect.addEventListener('change',()=>invoke('global_color_grade',{value:gradeSelect.value}));
+    gradeLabel.append(gradeSelect);globalColor.append(gradeLabel);
+    for (const [key,label,min,max,step] of [
+      ['grade_strength','色の強さ',0,1.4,.05],['temperature','色温度',-1,1,.05],
+      ['contrast','コントラスト',.6,1.6,.05],['exposure','露出',-.3,.3,.01],
+      ['vibrance','自然な彩度',-1,1.5,.05]]) {
+      const row=document.createElement('label');row.textContent=label;
+      row.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:8px;margin:7px 0';
+      const input=document.createElement('input');input.type='number';input.min=min;
+      input.max=max;input.step=step;input.dataset.ui3GlobalColor=key;
+      input.value=state.value.global_color?.values?.[key] ?? '';
+      input.style.cssText='width:88px;padding:5px';
+      input.addEventListener('change',()=>invoke('global_color_number',{key,value:Number(input.value)}));
+      row.append(input);globalColor.append(row);
+    }
+    const colorNote=document.createElement('small');
+    colorNote.textContent='露出はEV値ではありません。LUTと曲線は従来の色設定で操作します。';
+    globalColor.append(colorNote);tools.append(globalColor);
     const close=document.createElement('button');close.type='button';close.textContent='閉じる';
     close.style.cssText='margin-top:16px;padding:9px 24px;cursor:pointer';tools.append(close);
     function show(open) {

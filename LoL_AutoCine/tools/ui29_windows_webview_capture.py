@@ -484,6 +484,7 @@ def main(argv=None) -> int:
                                 _capture_webview(window, path, size)
                                 reference_captures = []
                                 reference_compact_bounds = None
+                                reference_dark_contrast = None
                                 if args.reference_all:
                                     prefix = args.reference.upper()
                                     for view_id in ("main", "easy", "detail", "camera", "curve",
@@ -514,6 +515,23 @@ def main(argv=None) -> int:
                                         time.sleep(0.1)
                                     else:
                                         raise TimeoutError("reference dark theme did not apply")
+                                    reference_dark_contrast = window.evaluate_js('''(() => {
+                                      const luminance = text => {
+                                        const values=text.match(/[\\d.]+/g)?.slice(0,3).map(Number);
+                                        if(!values || values.length!==3)return null;
+                                        const channel=values.map(v=>v/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
+                                        return .2126*channel[0]+.7152*channel[1]+.0722*channel[2];
+                                      };
+                                      return ['.timeline-foot input','.topnav button.active','.variants button.active']
+                                        .map(selector=>{const node=document.querySelector(selector);
+                                          if(!node)return {selector,contrast:null};
+                                          const style=getComputedStyle(node),a=luminance(style.color),b=luminance(style.backgroundColor);
+                                          return {selector,color:style.color,background:style.backgroundColor,
+                                            contrast:a===null||b===null?null:Math.round((Math.max(a,b)+.05)/(Math.min(a,b)+.05)*100)/100};});
+                                    })()''')
+                                    if any(row["contrast"] is None or row["contrast"] < 4.5
+                                           for row in reference_dark_contrast):
+                                        raise AssertionError(f"dark controls have low contrast: {reference_dark_contrast}")
                                     name = f"{prefix}_main_dark_1920x1080.png"
                                     _capture_webview(window, args.output / name, (1920, 1080))
                                     reference_captures.append(name)
@@ -679,9 +697,22 @@ def main(argv=None) -> int:
                                 flow = _priority_flow(window, url, sid) if (
                                     args.priority_seven_flow or args.ui3_flow) else None
                                 if args.ui3_flow and flow is not None:
+                                    window.evaluate_js("document.querySelector('.ui3-tools-opener')?.click()")
+                                    if not window.evaluate_js("!!document.querySelector('[data-ui3-global-color=exposure]')"):
+                                        raise AssertionError("candidate 3 global color control is missing")
+                                    window.evaluate_js('''(() => {const input=document.querySelector(
+                                      '[data-ui3-global-color=exposure]');input.value='0.12';
+                                      input.dispatchEvent(new Event('change',{bubbles:true}));})()''')
+                                    deadline = time.monotonic() + 8
+                                    while (time.monotonic() < deadline and
+                                           _state(url)["global_color"]["values"].get("exposure") != 0.12):
+                                        time.sleep(0.1)
+                                    if _state(url)["global_color"]["values"].get("exposure") != 0.12:
+                                        raise AssertionError("candidate 3 color did not reach native App")
                                     flow["candidate_p0"] = {**candidate_p0,
                                         "camera_slider_native": "PASS", "camera_reset_native": "PASS",
-                                        "none_material_native": "PASS", "motion_six_controls": "PASS"}
+                                        "none_material_native": "PASS", "motion_six_controls": "PASS",
+                                        "global_color_native": "PASS"}
                                 reference_flow = _reference_flow(window, url, args.reference) if args.reference else None
                                 if flow:
                                     previous_candidate_state = _state(url)
@@ -690,6 +721,8 @@ def main(argv=None) -> int:
                                                 "reference_captures": reference_captures,
                                                 **({"reference_compact_bounds": reference_compact_bounds}
                                                    if reference_compact_bounds else {}),
+                                                **({"reference_dark_contrast": reference_dark_contrast}
+                                                   if reference_dark_contrast else {}),
                                                 "bounds": f"bounds/{sid}.json",
                                                 "main_detail_roundtrip": ("PASS" if args.detail_family or flow else "NOT_RUN"),
                                                 **({"reference_flow": reference_flow} if reference_flow else {}),

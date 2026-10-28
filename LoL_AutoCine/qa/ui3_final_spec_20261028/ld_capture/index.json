@@ -42,6 +42,26 @@
         "viewportHeight": 768,
         "scrollHeight": 768
       },
+      "reference_dark_contrast": [
+        {
+          "selector": ".timeline-foot input",
+          "color": "rgb(232, 241, 251)",
+          "background": "rgb(31, 48, 69)",
+          "contrast": 11.75
+        },
+        {
+          "selector": ".topnav button.active",
+          "color": "rgb(232, 241, 251)",
+          "background": "rgb(50, 77, 108)",
+          "contrast": 7.63
+        },
+        {
+          "selector": ".variants button.active",
+          "color": "rgb(232, 241, 251)",
+          "background": "rgb(55, 90, 126)",
+          "contrast": 6.29
+        }
+      ],
       "bounds": "bounds/reference-ld.json",
       "main_detail_roundtrip": "NOT_RUN",
       "reference_flow": {
