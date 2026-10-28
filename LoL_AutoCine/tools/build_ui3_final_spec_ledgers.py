@@ -50,10 +50,13 @@ def main() -> None:
                              else "Work matrix requirements and real operation need verification"})
     for item in matrix["additional"]:
         n06 = item["id"] == "N06"
+        n02 = item["id"] == "N02"
         feature_rows.append({"id": item["id"], "name": item["name"], "kind": "additional",
                              "work_baseline_access": item["baseline_status"],
                              "current_access": "PARTIAL_GLOBAL_COLOR_ADAPTER" if n06
+                             else "PARTIAL_REAL_INTERPOLATOR_CURVE" if n02
                              else "NOT_COMPLETE", "verification": "PARTIAL_WINDOWS_OFFLINE" if n06
+                             else "PARTIAL_UNIT_ONLY" if n02
                              else "NOT_RUN", "decision_gate": item.get("decision"),
                              "remaining": item["required_work"]})
     save("FEATURE_STATUS_86.json", {"existing_count": 70, "additional_count": 16,
@@ -66,6 +69,7 @@ def main() -> None:
         "COMPACT-NO-OVERLAP": "R2 1366x768 and 1920x1080 checked; DPI125/150 not run",
         "COLOR-ROUNDTRIP": "Existing global exposure=0.12 reached App; save/reload, LUT, CPU/GPU not run",
         "STATE-SWITCH": "Selected camera/frame/color values survived R1/R2 switch; draft/project/replay not run",
+        "KEY-INTERPOLATION": "Existing CameraPlan samples match the R1/R2 curve data at 2/3 keys; Windows drag and full edge cases not run",
     }
     test_rows = [{"id": case["id"], "status": "NOT_RUN",
                   "related": case.get("related", []),

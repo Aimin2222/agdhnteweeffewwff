@@ -66,6 +66,17 @@
       section('保存と確認',`<label class="form-row">補間方式 <select disabled><option>既存の連続曲線</option></select></label><p class="note">linear／hold／自由Bezier接線は未対応。画像の選択肢を成功扱いしません。</p>
         <div class="inline-actions">${button('このシーンに保存','scene_save')}${button('実LoLで動きを確認','keyframe_preview')}${button('元に戻す','scene_undo')}</div>`);
   }
+  function curveGraph(){
+    const curve=state.key_curve||{samples:[],applied_by_style:false,interpolation:'constant'};
+    if(!state.scenes.some(scene=>scene.selected))return '';
+    const x=time=>10+(Number(time)+15)/30*300;
+    const y=value=>160-(Number(value)+15)/30*140;
+    const line=curve.samples.map((point,index)=>`${index?'L':'M'}${x(point.time).toFixed(1)},${y(point.value).toFixed(1)}`).join(' ');
+    const marks=state.keyframes.map(frame=>`<circle cx="${x(frame.time).toFixed(1)}" cy="${y(frame.fov).toFixed(1)}" r="4" class="curve-key"><title>${Number(frame.time).toFixed(1)}秒 / 設定FOV補正 ${Number(frame.fov).toFixed(1)}°</title></circle>`).join('');
+    return section('実カメラ補間のFOV曲線',`<p class="note">${curve.applied_by_style?'現在のカメラスタイルに適用':'現在のスタイルには相対キーが適用されません。線は0°を表示します。'} 補間：${esc(curve.interpolation)}。橙の点は保存したキーです。</p>
+      <svg class="fov-curve" viewBox="0 0 320 180" role="img" aria-label="既存カメラの相対FOV補正曲線"><line x1="10" y1="90" x2="310" y2="90" class="curve-zero"/><line x1="160" y1="20" x2="160" y2="160" class="curve-zero"/><path d="${line}" class="curve-line"/>${marks}<text x="10" y="175">-15秒</text><text x="145" y="175">キル</text><text x="282" y="175">+15秒</text></svg>
+      <p class="note">縦軸は−15°～＋15°の相対補正。絶対FOVや自由Bezierの編集ではありません。</p>`);
+  }
   function frameControls(){
     const f=state.frame,cards=f.ui3_cards||f.cards||[], motions=[['instant','一気に表示'],['slide_left','左から'],['slide_right','右から'],['slide_up','下から'],['slide_down','上から'],['pop','ポップ']];
     return section('キルフレーム <small>実素材カタログ</small>',`<div class="asset-grid">${cards.map(item=>`<button type="button" class="asset-card ${f.id===item.id?'active':''}" data-action="frame" data-data='${esc(JSON.stringify({id:item.id}))}'><img src="${url(`/api/asset/${encodeURIComponent(item.id)}`)}" alt="${esc(item.label)}の実素材"><strong>${esc(item.label)}</strong><small>${item.status==='approved'?'正式合格':'確認用'}</small></button>`).join('')}</div><p class="note">この画像は実カタログの素材。承認状態は各カードに表示しています。</p>${button('素材図鑑の全候補','work_gallery')} ${button('既存37バッジ','legacy_frame_gallery')}`)+
@@ -89,7 +100,7 @@
         numberControl('Focus Blur','focus_blur',0,1,.05,v.focus_blur,'scene_fx_number','0～1')+
         numberControl('DOFぼかし','dof_blur',0,20,.5,v.dof_blur,'scene_fx_number','0～20')+
         numberControl('キル瞬間の強調','highlight_pulse',0,1,.05,v.highlight_pulse,'scene_fx_number','0～1')+
-        `<p class="note">露出・彩度・LUT・比較スプリットはこの画面から実処理へ未接続です。</p><div class="inline-actions">${button('このシーンに保存','scene_save')}${button('既存の色設定を開く','native_editor_zone',{zone:'color'})}</div>`);
+        `<p class="note">このシーンだけの露出・彩度・LUTと調整前後の比較は未接続です。上の共通色設定とは適用範囲が異なります。</p><div class="inline-actions">${button('このシーンに保存','scene_save')}${button('既存の色設定を開く','native_editor_zone',{zone:'color'})}</div>`);
   }
   function exportControls(){
     const o=state.output,qa=state.qa.selftest;
@@ -113,7 +124,7 @@
       section('01 カメラ',modeButtons())+section('02 雰囲気',`<p class="note">色プリセットは映像処理への対応が未確認です。既存の実FXを調整できます。</p><button data-view="color">色・FXを調整</button>`)+
       section('03 キル演出',`<button data-view="material">キルフレームと同名FXを選ぶ</button> ${button('演出を確認','preview_play')}`);
     if(view==='camera')return cameraControls()+prepareControls();
-    if(view==='detail'||view==='curve')return section(view==='curve'?'カーブ':'詳細編集',`<p class="note">選択シーン：${selected?`${esc(selected.killer)} → ${esc(selected.victim)}`:'なし'}。下のトラックとキーを操作できます。</p>`)+keyControls()+section('関連する調整',`<div class="inline-actions"><button data-view="camera">カメラ</button><button data-view="color">色・FX</button><button data-view="material">素材</button></div>`);
+    if(view==='detail'||view==='curve')return section(view==='curve'?'カーブ':'詳細編集',`<p class="note">選択シーン：${selected?`${esc(selected.killer)} → ${esc(selected.victim)}`:'なし'}。下のトラックとキーを操作できます。</p>`)+(view==='curve'?curveGraph():'')+keyControls()+section('関連する調整',`<div class="inline-actions"><button data-view="camera">カメラ</button><button data-view="color">色・FX</button><button data-view="material">素材</button></div>`);
     if(view==='color')return colorControls();
     if(view==='material')return frameControls();
     if(view==='export')return exportControls();

@@ -178,6 +178,37 @@ def test_reference_global_color_changes_existing_template_values_only():
             runtime.perform("global_color_number", {"key": "exposure", "value": 0.2})
 
 
+def test_reference_curve_samples_use_real_camera_interpolator():
+    import sys
+    sys.path.insert(0, str(ROOT / "tests"))
+    from test_ui29_runtime import App, Variable
+    from core.camera import CameraPlan, STYLES
+
+    app = App()
+    frames = [{"time": -1.0, "yaw": 0.0, "zoom": 0.0, "fov": 0.0},
+              {"time": 1.0, "yaw": 0.0, "zoom": 0.0, "fov": 10.0}]
+    app._edit_keyframes = frames
+    app.var_style = Variable(STYLES["third"])
+    runtime = Audit29Runtime(app, ROOT / "qa" / "nonexistent-curve-test-prefs.json")
+    curve = runtime.snapshot()["key_curve"]
+    samples = {item["time"]: item["value"] for item in curve["samples"]}
+    plan = CameraPlan(style="third", scene_keyframes=tuple(frames))
+    assert curve["interpolation"] == "smoothstep"
+    assert curve["applied_by_style"] is True
+    assert samples[-0.5] == round(plan.keyframe_values(-0.5)[2], 4)
+    assert samples[0] == 5.0
+    frames.insert(1, {"time": 0.0, "yaw": 0.0, "zoom": 0.0, "fov": 3.0})
+    curve = runtime.snapshot()["key_curve"]
+    samples = {item["time"]: item["value"] for item in curve["samples"]}
+    plan = CameraPlan(style="third", scene_keyframes=tuple(frames))
+    assert curve["interpolation"] == "shape_preserving_hermite"
+    assert samples[0.5] == round(plan.keyframe_values(0.5)[2], 4)
+    app.var_style.set(STYLES["cinema"])
+    curve = runtime.snapshot()["key_curve"]
+    assert curve["applied_by_style"] is False
+    assert all(item["value"] == 0 for item in curve["samples"])
+
+
 def test_c3_camera_draft_validates_before_changing_existing_values():
     import sys
     sys.path.insert(0, str(ROOT / "tests"))

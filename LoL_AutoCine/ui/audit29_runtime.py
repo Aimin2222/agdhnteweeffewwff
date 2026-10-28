@@ -157,12 +157,27 @@ class Audit29Runtime:
                 "selected": bool(selected and selected[0] == index),
             })
         camera_values = {key: float(app.sl[key].get()) for key in CAMERA_KEYS if key in app.sl}
-        from core.camera import STYLES
+        from core.camera import CameraPlan, STYLES, THIRD_STYLES
         from core.effects import GRADE_JP
         style_key = next((key for key, label in STYLES.items()
                           if label == app.var_style.get()), None)
         side_key = next((key for key, label in CAMERA_SIDES.items()
                          if label == app.var_camera_side.get()), None)
+        edit_frames = ([dict(frame) for frame in getattr(app, "_edit_keyframes", [])]
+                       if selected else [])
+        curve = {"channel": "relative_fov_delta_degrees",
+                 "interpolation": ("smoothstep" if len(edit_frames) == 2 else
+                                   "shape_preserving_hermite" if len(edit_frames) >= 3
+                                   else "constant"),
+                 "applied_by_style": style_key in THIRD_STYLES,
+                 "samples": []}
+        if edit_frames:
+            plan = CameraPlan(style=style_key or "cinema", scene_keyframes=tuple(edit_frames))
+            times = sorted({round(-15 + index * 0.5, 2) for index in range(61)} |
+                           {float(frame["time"]) for frame in edit_frames})
+            curve["samples"] = [{"time": time,
+                                  "value": round(plan.keyframe_values(time)[2], 4)}
+                                 for time in times]
         wanted_frames = set(RESEARCH_FRAME_CARDS) | set(LIBRARY_FRAME_CARDS) | set(TEST_B_FRAME_CARDS)
         frame_catalog = {item["id"]: item for item in list_assets("frames", review=True)
                          if item["id"] in wanted_frames}
@@ -208,8 +223,8 @@ class Audit29Runtime:
                        "target_slot": getattr(getattr(app, "locked", None), "slot", None)},
             "scenes": scene_rows,
             "selected_scene_index": selected[0] if selected else None,
-            "keyframes": ([dict(frame) for frame in getattr(app, "_edit_keyframes", [])]
-                          if selected else []),
+            "keyframes": edit_frames,
+            "key_curve": curve,
             "scene_fx": {"override": bool(app.var_scene_fx_enabled.get()),
                          "values": {key: float(var.get()) for key, var in app.scene_fx_vars.items()}}
                         if selected and hasattr(app, "var_scene_fx_enabled")
