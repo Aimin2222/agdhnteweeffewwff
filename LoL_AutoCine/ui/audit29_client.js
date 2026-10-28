@@ -5,6 +5,7 @@
   const screenId = window.AUTOCINE_SCREEN;
   const endpoint = (path) => `${path}?token=${encodeURIComponent(token)}`;
   const state = {value: null, frameNumber: 0};
+  let stateEpoch = 0, pendingActions = 0, actionQueue = Promise.resolve();
   const systemDark = matchMedia('(prefers-color-scheme: dark)');
   function applyTheme(preference) {
     document.documentElement.dataset.theme = preference === 'system' ?
@@ -27,21 +28,36 @@
     noticeTimer = setTimeout(() => notice.style.display = 'none', 5000);
   }
   async function snapshot() {
+    if (pendingActions) return;
+    const startedAt = stateEpoch;
     const response = await fetch(endpoint('/api/state'), {cache: 'no-store'});
     if (!response.ok) throw new Error('状態の取得に失敗しました');
-    state.value = await response.json();
-    render();
-  }
-  async function action(name, data={}) {
-    const response = await fetch(endpoint('/api/action'), {
-      method: 'POST', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({action:name,data})
-    });
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error || `${name} に失敗しました`);
+    if (startedAt !== stateEpoch || pendingActions) return;
     state.value = result;
-    render();
-    return result;
+    if (!document.activeElement?.matches('input, select, textarea, [contenteditable="true"]')) render();
+  }
+  function action(name, data={}) {
+    pendingActions++;
+    stateEpoch++;
+    const operation = actionQueue.then(async () => {
+      try {
+        const response = await fetch(endpoint('/api/action'), {
+          method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({action:name,data})
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || `${name} に失敗しました`);
+        state.value = result;
+        render();
+        return result;
+      } finally {
+        pendingActions--;
+        stateEpoch++;
+      }
+    });
+    actionQueue = operation.catch(() => {});
+    return operation;
   }
   function invoke(name, data) { action(name,data).catch(error => message(error.message)); }
   const image = document.querySelector('.preview-stage img.game-image');

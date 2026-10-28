@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "id": "R-04/YAW",
+      "parent_finding": "R-04",
+      "priority": "P1",
+      "conclusion": "UI reads v.third_y but runtime supplies third_yaw; input fallback makes the displayed value 0 even if state has a nonzero yaw.",
+      "fix": "v.third_y→v.third_yaw。32°等でsnapshot→タブ往復→pollを検査。",
+      "runtime": "NOT_RUN",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/ui/reference_views_v2.js",
+          "line": 41,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/reference_views_v2.js#L41"
+        },
+        {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 159,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L159"
+        }
+      ]
+    },
+    {
+      "id": "R2-01/COMPACT",
+      "parent_finding": "R2-01",
+      "priority": "P0",
+      "fix": "ln固有height270/266とmargin-left98を小画面用170/元画像の左位置へ正しく上書き。7レールのmin-contentも含めgrid rowの収まりを確認。",
+      "evidence": "comparison20/LN_main_light_1366x768/full_pair.png",
+      "sources": [
+        {
+          "path": "LoL_AutoCine/ui/reference_views.css",
+          "line": 29,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/reference_views.css#L29"
+        }
+      ],
+      "runtime": "NOT_RUN"
+    }
+  ],
+  "new_parent_finding_ids": 0
+}

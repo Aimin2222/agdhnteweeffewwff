@@ -1,0 +1,615 @@
+{
+  "checks": [
+    {
+      "id": "FEATURE70",
+      "status": "PASS",
+      "detail": "既存70 ID保持、欠落/重複なし"
+    },
+    {
+      "id": "ADDITIONAL16",
+      "status": "PASS",
+      "detail": "ENGAGE/BESTSHOTは既存70内で重複加算なし"
+    },
+    {
+      "id": "SCREENS36",
+      "status": "PASS",
+      "detail": "各12画面/子画面。独立原画なしの追加仕様を明示"
+    },
+    {
+      "id": "CONTROLS",
+      "status": "PASS",
+      "detail": "86定義のscreen参照に欠落なし"
+    },
+    {
+      "id": "ROUTES210",
+      "status": "PASS",
+      "detail": "70×3=210入口のscreen ID解決"
+    },
+    {
+      "id": "SOURCE70",
+      "status": "PASS",
+      "detail": "70行の現行source pathを確認。実行成功ではない"
+    },
+    {
+      "id": "DEPENDENCY_LINKS",
+      "status": "PASS",
+      "detail": "全依存IDが定義済み"
+    },
+    {
+      "id": "DAG_STEP_0",
+      "status": "PASS",
+      "detail": "依存cycleなし"
+    },
+    {
+      "id": "DAG_STEP_1",
+      "status": "PASS",
+      "detail": "依存cycleなし"
+    },
+    {
+      "id": "DAG_STEP_4",
+      "status": "PASS",
+      "detail": "依存cycleなし"
+    },
+    {
+      "id": "DAG_STEP_11",
+      "status": "PASS",
+      "detail": "依存cycleなし"
+    },
+    {
+      "id": "DAG_STEP_19",
+      "status": "PASS",
+      "detail": "依存cycleなし"
+    },
+    {
+      "id": "DAG_STEP_23",
+      "status": "PASS",
+      "detail": "依存cycleなし"
+    },
+    {
+      "id": "DAG_STEP_27",
+      "status": "PASS",
+      "detail": "依存cycleなし"
+    },
+    {
+      "id": "MATRIX_DEPENDENCIES",
+      "status": "PASS",
+      "detail": "70+16の全依存IDをDAGへ解決"
+    },
+    {
+      "id": "UNKNOWN14",
+      "status": "PASS",
+      "detail": "U01〜U14を保持"
+    },
+    {
+      "id": "AUDIT26",
+      "status": "PASS",
+      "detail": "26親IDを保持、差分調査を再実行せず残件を継承"
+    },
+    {
+      "id": "AUDIT_DELTA_UNCHANGED",
+      "status": "PASS",
+      "detail": "解消6/継続18/追加1/仕様1の原判定不変"
+    },
+    {
+      "id": "DECISIONS_PENDING",
+      "status": "PASS",
+      "detail": "11判断事項を正式採用扱いしていない"
+    },
+    {
+      "id": "PLANNED_NOT_RUN",
+      "status": "PASS",
+      "detail": "239ケースは計画のみ"
+    },
+    {
+      "id": "CONTRAST_PAIRS",
+      "status": "PASS",
+      "detail": "18色対の数値基準のみPASS。製品全画面合格ではない"
+    },
+    {
+      "id": "FIELD90",
+      "status": "PASS",
+      "detail": "Template宣言field90を網羅、未確定rangeを明示"
+    },
+    {
+      "id": "ORIGINAL_LD_camera_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LD_color_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LD_curve_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LD_detail_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LD_easy_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LD_export_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LD_main_dark_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LD_main_light_1366x768.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LD_main_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LD_material_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LN_camera_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LN_color_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LN_curve_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LN_detail_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LN_easy_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LN_export_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LN_main_dark_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LN_main_light_1366x768.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LN_main_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "ORIGINAL_LN_material_light_1920x1080.png",
+      "status": "PASS",
+      "detail": "Work原画像SHA一致"
+    },
+    {
+      "id": "C3_ORIGINAL",
+      "status": "PASS",
+      "detail": "ユーザー候補3原画像hash一致"
+    },
+    {
+      "id": "ORIGINAL_IMAGES21",
+      "status": "PASS",
+      "detail": "正本画像21枚"
+    },
+    {
+      "id": "SOURCE74",
+      "status": "PASS",
+      "detail": "baseline source manifest74 files"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/audio.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/audio_log.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/audio_worker.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/camera.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/camera_clock.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/camera_geometry.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/camera_tuning.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/capture.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/capture_process.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/capture_worker.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/effects.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/focus_fx.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/gpu_binary.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/gpu_bloom.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/gpu_full.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/gpu_mirror.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/gpu_pipeline.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/highlight_pulse.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/hud.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/jobs.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/kill_icons.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/launcher.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/montage_fx.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/paths.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/performance_diagnostics.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/players.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/preview.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/procloop.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/recorder.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/reference_safe.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/render_fx.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/replay_api.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/scanner.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/smart_camera_director.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/ui_bridge.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/work_kill_assets.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/AutoCine_v5.10.15_実装仕様書.md",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/CAMERA_WORK_HANDOFF_20261019_JA.md",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/CODEX_ARCHITECTURE_JA.md",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/CODEX_INTEGRATION_CONTRACT_JA.md",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/ui3/C3_ACCEPTANCE_PROGRESS_20261027_JA.md",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/ui3/C3_COMPARISON_QA_20261027_JA.md",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/ui3/CANDIDATE3_IDENTITY_AUDIT_20261027_JA.md",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/ui3/INTEGRATION_STATUS_20261027_JA.md",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/ui3/README_UI3_TEST_JA.md",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/legacy_app.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/audit29_client.js",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/audit29_desktop.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/audit29_runtime.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/audit29_server.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/director_work_controls.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/kill_frame_gallery.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/reference_views.css",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/reference_views.js",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/reference_views.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/reference_views_v2.js",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/scene_project.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/scene_timeline.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/work_gallery.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/ui3/C3_ACCEPTANCE70_IMPLEMENTATION_20261027.csv",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/ui3/C3_FEATURE70_CONNECTION_20261027.csv",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/ui3/UI3_FEATURE70_CONNECTION_20261027.csv",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/ui3/WORK_70_BINDINGS_BASELINE_V4.csv",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/ui3/WORK_70_FEATURE_BASELINE_V4.csv",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/template_gallery.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/ui3_baseline.css",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/highlight_director.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/hud_presets.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/ui/smart_montage.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/START_AUTOCINE_UI3.bat",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/START_ISSUE53_DEV_QA.bat",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/ISSUE53_FUNCTIONAL_QA_20261027_JA.md",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/docs/ISSUE53_WINDOWS_TEST_JA.md",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "BLOB_LoL_AutoCine/core/auto_qa.py",
+      "status": "PASS",
+      "detail": "Git blob/bytes一致"
+    },
+    {
+      "id": "REQUESTED9",
+      "status": "PASS",
+      "detail": "指定9成果物あり"
+    },
+    {
+      "id": "NO_CODE_DISTRIBUTION",
+      "status": "PASS",
+      "detail": "実行code/BAT/EXE/停止demoなし"
+    }
+  ],
+  "status": "PASS",
+  "scope": "仕様のID/参照/原画像hash/source blob/DAG/数値paletteのみ。製品実行なし",
+  "planned_product_cases": 239,
+  "all_product_tests": "NOT_RUN",
+  "runtime_app_started": false,
+  "Windows_settings_changed": false
+}

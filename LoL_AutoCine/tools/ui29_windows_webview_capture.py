@@ -244,6 +244,16 @@ def _reference_flow(window, url: str, variant: str) -> dict:
         time.sleep(0.1)
     if _state(url)["camera"]["values"].get("third_dist") != 920:
         raise AssertionError("reference camera input did not reach the native App")
+    window.evaluate_js('''(() => {const input=document.querySelector('input[data-camera="third_yaw"]');
+      input.value='32';input.dispatchEvent(new Event('change',{bubbles:true}));})()''')
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline and _state(url)["camera"]["values"].get("third_yaw") != 32:
+        time.sleep(0.1)
+    if _state(url)["camera"]["values"].get("third_yaw") != 32:
+        raise AssertionError("reference yaw input did not reach the native App")
+    time.sleep(1.3)
+    if window.evaluate_js('document.querySelector(\'input[data-camera="third_yaw"]\')?.value') != "32":
+        raise AssertionError("reference yaw reset after the 1100ms state poll")
     window.evaluate_js('document.querySelector(\'.topnav [data-view="material"]\').click()')
     card = window.evaluate_js('''(() => {const x=document.querySelector('.inspector-body [data-action="frame"]');
       if(!x)return '';const id=JSON.parse(x.dataset.data).id;x.click();return id})()''')
@@ -255,6 +265,14 @@ def _reference_flow(window, url: str, variant: str) -> dict:
     current = _state(url)
     if current["frame"]["id"] != card or not current["frame"]["effect_id"]:
         raise AssertionError("reference frame and paired FX did not reach native App")
+    window.evaluate_js('document.querySelector(\'.topnav [data-view="color"]\').click()')
+    window.evaluate_js('''(() => {const input=document.querySelector('input[data-key="exposure"]');
+      input.value='0.12';input.dispatchEvent(new Event('change',{bubbles:true}));})()''')
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline and _state(url)["global_color"]["values"].get("exposure") != 0.12:
+        time.sleep(0.1)
+    if _state(url)["global_color"]["values"].get("exposure") != 0.12:
+        raise AssertionError("global exposure did not reach the native Template value")
     window.evaluate_js('document.querySelector(\'.topnav [data-view="export"]\').click()')
     window.evaluate_js('''(() => {for(const [id,value] of [['fps','144'],['encoder','gpu']]){
       const input=document.getElementById(id);input.value=value;
@@ -278,9 +296,14 @@ def _reference_flow(window, url: str, variant: str) -> dict:
     window.evaluate_js(f'document.querySelector(\'[data-route="{other}"]\').click()')
     _wait_path(window, f"/ui3/reference/{other}")
     retained = _state(url)
-    if retained["camera"]["values"].get("third_dist") != 920 or retained["frame"]["id"] != card:
+    if (retained["camera"]["values"].get("third_dist") != 920 or
+            retained["camera"]["values"].get("third_yaw") != 32 or
+            retained["global_color"]["values"].get("exposure") != 0.12 or
+            retained["frame"]["id"] != card):
         raise AssertionError("reference UI switch reset native settings")
     return {"main_controls": "PASS", "audit_p0": audit, "camera_input": "PASS",
+            "camera_yaw_roundtrip": "PASS",
+            "global_exposure_roundtrip": "PASS",
             "fps_encoder_retained": "PASS", "real_frame": card,
             "paired_effect": current["frame"]["effect_id"], "cross_variant_state": "PASS",
             "live_lol_gpu_record_audio_mp4": "NOT_RUN"}
@@ -385,6 +408,8 @@ def main(argv=None) -> int:
         with log_path.open("wb") as log:
             child_env = os.environ.copy()
             child_env["AUTOCINE_UI_COMPARE_PREFS"] = str(Path(temp) / "comparison_workspace.json")
+            if args.reference or args.ui3_flow:
+                child_env["AUTOCINE_UI3_LAUNCH"] = "1"
             child = subprocess.Popen(_child_command(handoff), cwd=ROOT, stdout=log,
                                      stderr=subprocess.STDOUT, env=child_env,
                                      creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
@@ -450,11 +475,15 @@ def main(argv=None) -> int:
                                     time.sleep(0.1)
                                 else:
                                     raise TimeoutError(f"WebView2 route did not load: {sid}")
+                                if args.reference and not window.evaluate_js(
+                                        "Boolean(document.querySelector('#inspector-title'))"):
+                                    raise AssertionError(f"reference UI did not render: {sid}")
                                 time.sleep(0.3)
                                 size = tuple(screen["resolution"])
                                 path = args.output / f"{sid}.png"
                                 _capture_webview(window, path, size)
                                 reference_captures = []
+                                reference_compact_bounds = None
                                 if args.reference_all:
                                     prefix = args.reference.upper()
                                     for view_id in ("main", "easy", "detail", "camera", "curve",
@@ -499,6 +528,23 @@ def main(argv=None) -> int:
                                     name = f"{prefix}_main_light_1366x768.png"
                                     _capture_webview(window, args.output / name, (1366, 768))
                                     reference_captures.append(name)
+                                    reference_compact_bounds = window.evaluate_js('''(() => {
+                                      const box = selector => {
+                                        const node=document.querySelector(selector);
+                                        if (!node) return null;
+                                        const rect=node.getBoundingClientRect();
+                                        return {top:rect.top,bottom:rect.bottom,height:rect.height};
+                                      };
+                                      return {stage:box('.preview-stage'),timeline:box('.timeline'),
+                                        footer:box('footer'),viewportHeight:innerHeight,
+                                        scrollHeight:document.documentElement.scrollHeight};
+                                    })()''')
+                                    if args.reference == "ln":
+                                        bounds = reference_compact_bounds
+                                        if (not bounds["stage"] or not bounds["timeline"] or
+                                                bounds["stage"]["bottom"] > bounds["timeline"]["top"] + 1 or
+                                                bounds["timeline"]["bottom"] > bounds["footer"]["top"] + 1):
+                                            raise AssertionError(f"compact LN layout overlaps: {bounds}")
                                     _capture_webview(window, args.output / path.name, size)
                                 label_audit = None
                                 if args.numbered_label_audit:
@@ -642,6 +688,8 @@ def main(argv=None) -> int:
                                 results.append({"id": sid, "result": capture_result,
                                                 "capture": path.name, "size": size,
                                                 "reference_captures": reference_captures,
+                                                **({"reference_compact_bounds": reference_compact_bounds}
+                                                   if reference_compact_bounds else {}),
                                                 "bounds": f"bounds/{sid}.json",
                                                 "main_detail_roundtrip": ("PASS" if args.detail_family or flow else "NOT_RUN"),
                                                 **({"reference_flow": reference_flow} if reference_flow else {}),

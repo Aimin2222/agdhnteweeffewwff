@@ -49,7 +49,8 @@ def main() -> None:
                   or name.startswith("LoL_AutoCine/qa/c3_acceptance_20261027/")
                   or name.startswith("LoL_AutoCine/qa/ui3_three_views_20261028/")
                   or name.startswith("LoL_AutoCine/qa/ui3_fidelity_v2_20261028/")
-                  or name.startswith("LoL_AutoCine/qa/ui3_audit_20261028/"))
+                  or name.startswith("LoL_AutoCine/qa/ui3_audit_20261028/")
+                  or name.startswith("LoL_AutoCine/qa/ui3_final_spec_20261028/"))
              and Path(name).name not in SKIP_NAMES
              and Path(name).suffix.lower() not in SKIP_SUFFIXES
              and not name.startswith("LoL_AutoCine/design/ui/implementation_audit_29_")]
@@ -66,6 +67,8 @@ def main() -> None:
             "work_acceptance": "284 cases; see qa/ui3_three_views_20261028/ACCEPTANCE_RESULTS_284.json",
             "independent_audit": "26 findings; see qa/ui3_audit_20261028/RECONCILIATION_JA.md",
             "visual_fidelity": "20 R1/R2 states REVIEW; see qa/ui3_fidelity_v2_20261028/RESULT_JA.md",
+            "final_work_spec": "design/ui/final_implementation_spec_20261028/; 239 planned cases",
+            "final_spec_progress": "qa/ui3_final_spec_20261028/PROGRESS_JA.md; 21 visuals REVIEW",
             "ui_variants": "candidate3 T-A-M, League Director R1, Lolnam R2",
             "live_lol_result": "NOT_RUN"}
     archive = output / "LoL_AutoCine_UI3_Trial_BAT.zip"

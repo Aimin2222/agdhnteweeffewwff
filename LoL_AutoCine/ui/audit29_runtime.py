@@ -158,6 +158,7 @@ class Audit29Runtime:
             })
         camera_values = {key: float(app.sl[key].get()) for key in CAMERA_KEYS if key in app.sl}
         from core.camera import STYLES
+        from core.effects import GRADE_JP
         style_key = next((key for key, label in STYLES.items()
                           if label == app.var_style.get()), None)
         side_key = next((key for key, label in CAMERA_SIDES.items()
@@ -213,6 +214,13 @@ class Audit29Runtime:
                          "values": {key: float(var.get()) for key, var in app.scene_fx_vars.items()}}
                         if selected and hasattr(app, "var_scene_fx_enabled")
                         and hasattr(app, "scene_fx_vars") else {"override": False, "values": {}},
+            "global_color": {
+                "grade": app.var_grade.get() if hasattr(app, "var_grade") else "",
+                "grades": GRADE_JP,
+                "values": {key: float(app.sl[key].get()) for key in
+                           ("grade_strength", "temperature", "contrast", "exposure", "vibrance")
+                           if key in app.sl},
+                "lut_path": app.var_lut.get() if hasattr(app, "var_lut") else ""},
             "checked_count": len(app.checked_kills),
             "trim": {"pre": float(app.var_pre.get()) if hasattr(app, "var_pre") else 4.0,
                      "post": float(app.var_post.get()) if hasattr(app, "var_post") else 3.0},
@@ -481,6 +489,22 @@ class Audit29Runtime:
                 raise ValueError("シーンFXの対象または数値が不正です")
             app.scene_fx_vars[key].set(value)
             app.var_scene_fx_enabled.set(True)
+        elif action == "global_color_number":
+            key = str(data["key"])
+            limits = {"grade_strength": (0.0, 1.4), "temperature": (-1.0, 1.0),
+                      "contrast": (0.6, 1.6), "exposure": (-0.3, 0.3),
+                      "vibrance": (-1.0, 1.5)}
+            value = float(data["value"])
+            if (app.busy or key not in limits or key not in app.sl or
+                    not math.isfinite(value) or not limits[key][0] <= value <= limits[key][1]):
+                raise ValueError("共通の色設定または数値が不正です")
+            app.sl[key].set(value)
+        elif action == "global_color_grade":
+            from core.effects import GRADE_JP
+            key = str(data["value"])
+            if app.busy or key not in GRADE_JP or not hasattr(app, "var_grade"):
+                raise ValueError("共通のカラーグレードが不正です")
+            app.var_grade.set(GRADE_JP[key])
         elif action == "scene_fx_override":
             if app.busy or not app.lb_kills.curselection():
                 raise ValueError("先にシーンを選択してください")

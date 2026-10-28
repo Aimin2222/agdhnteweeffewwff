@@ -8,22 +8,32 @@
   const url=p=>`${p}${p.includes('?')?'&':'?'}token=${encodeURIComponent(token)}`;
   const labels={main:'メイン',easy:'かんたん',detail:'詳細編集',camera:'カメラ',curve:'カーブ',color:'色調整',material:'素材',export:'出力'};
   let state=null,view='main',selectedKey=-1,selectedScene=null,refreshing=false,frameSeq=0,frameTag=null,lastFrameRequest=0;
+  let stateEpoch=0,pendingActions=0,actionQueue=Promise.resolve();
   const frameTimes=[];
   function button(label,command,data={},extra=''){return `<button type="button" data-action="${command}" data-data='${esc(JSON.stringify(data))}' ${extra}>${label}</button>`;}
   function section(title,content,extra=''){return `<section class="section ${extra}"><h3>${title}</h3>${content}</section>`;}
   function note(message){$('#message').textContent=message;}
   async function snapshot(){
-    if(refreshing)return;refreshing=true;
+    if(refreshing||pendingActions)return;refreshing=true;
+    const startedAt=stateEpoch;
     try{const response=await fetch(url('/api/state'),{cache:'no-store'});if(!response.ok)throw Error('状態を取得できません');
-      state=await response.json();
+      const result=await response.json();
+      if(startedAt!==stateEpoch||pendingActions)return;
+      state=result;
       if(!$('#inspector-body').contains(document.activeElement))render();
     }catch(error){note(error.message);}finally{refreshing=false;}
   }
-  async function action(command,data={}){
-    try{const response=await fetch(url('/api/action'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:command,data})});
-      const result=await response.json();if(!response.ok)throw Error(result.error||'操作に失敗しました');
-      state=result;render();note(`${command} を実行しました。実状態を確認してください。`);
-    }catch(error){note(`${command}: ${error.message}`);}
+  function action(command,data={}){
+    pendingActions++;stateEpoch++;
+    const operation=actionQueue.then(async()=>{
+      try{const response=await fetch(url('/api/action'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:command,data})});
+        const result=await response.json();if(!response.ok)throw Error(result.error||'操作に失敗しました');
+        state=result;render();note(`${command} を実行しました。実状態を確認してください。`);
+      }catch(error){note(`${command}: ${error.message}`);}
+      finally{pendingActions--;stateEpoch++;}
+    });
+    actionQueue=operation.catch(()=>{});
+    return operation;
   }
   function route(to){location.assign(url(to==='candidate3'?'/ui/T-A-M':`/ui3/reference/${to}`));}
   function numberControl(label,key,min,max,step,value,kind='camera_number',suffix=''){
@@ -38,7 +48,7 @@
       section('視点スタイル',`<select id="camera-style" aria-label="視点スタイル">${['third','third_cinema','geo_aim','cinema','fps','orbit','lolnam_cinema','follow','cinema_top','top'].map(key=>`<option value="${key}" ${c.style_key===key?'selected':''}>${key}</option>`).join('')}</select>`)+
       section('画角とポジション',numberControl('距離','third_dist',500,1400,1,v.third_dist,'camera_number','ゲーム内単位')+
         numberControl('高さ','cam_height',0,900,1,v.cam_height,'camera_number','ゲーム内単位')+
-        numberControl('回転角','third_yaw',-180,180,.5,v.third_y,'camera_number','°')+
+        numberControl('回転角','third_yaw',-180,180,.5,v.third_yaw,'camera_number','°')+
         numberControl('回り込み','motion_arc',0,45,.5,v.motion_arc,'camera_number','°')+
         numberControl('ドリー','motion_dolly',0,15,.5,v.motion_dolly,'camera_number','%')+
         `<p class="note">Work画像の絶対FOV入力は、この既存カメラ設定APIと別です。値を偽装しません。</p>`);
@@ -64,7 +74,16 @@
   }
   function colorControls(){
     const fx=state.scene_fx||{override:false,values:{}},v=fx.values;
-    return section('映像の色・FX <small>選択シーン</small>',`<p class="note">ここは実シーンFX値です。Work画像の露出・彩度・LUTとは別の処理です。</p><label><input id="fx-override" type="checkbox" ${fx.override?'checked':''} ${state.selected_scene_index===null?'disabled':''}> このシーンだけ色・FXを上書き</label>`)+
+    const global=state.global_color||{grade:'',grades:{},values:{},lut_path:''},g=global.values;
+    return section('共通カラーグレード <small>実Template値</small>',
+      `<label class="form-row">カラーグレード <select id="global-grade" aria-label="共通カラーグレード">${Object.entries(global.grades).map(([key,label])=>`<option value="${esc(key)}" ${label===global.grade?'selected':''}>${esc(label)}</option>`).join('')}</select></label>`+
+      numberControl('色補正の強さ','grade_strength',0,1.4,.05,g.grade_strength,'global_color_number')+
+      numberControl('色温度','temperature',-1,1,.05,g.temperature,'global_color_number','−1～＋1')+
+      numberControl('コントラスト','contrast',.6,1.6,.05,g.contrast,'global_color_number')+
+      numberControl('露出','exposure',-.3,.3,.01,g.exposure,'global_color_number','既存brightness補正・EVではありません')+
+      numberControl('自然な彩度','vibrance',-1,1.5,.05,g.vibrance,'global_color_number')+
+      `<p class="note">LUT：${esc(global.lut_path||'未設定')}。LUTファイルの選択と曲線は現在、既存の色設定から操作します。</p>${button('既存の色設定を開く','native_editor_zone',{zone:'color'})}`)+
+      section('映像の色・FX <small>選択シーン</small>',`<p class="note">以下は選択シーンの実FX値です。露出・彩度・LUTとは別の処理です。</p><label><input id="fx-override" type="checkbox" ${fx.override?'checked':''} ${state.selected_scene_index===null?'disabled':''}> このシーンだけ色・FXを上書き</label>`)+
       section('既存の映像処理',numberControl('色温度','temperature',-1,1,.05,v.temperature,'scene_fx_number','−1～＋1')+
         numberControl('ブルーム','bloom',0,1,.05,v.bloom,'scene_fx_number','0～1')+
         numberControl('Focus Blur','focus_blur',0,1,.05,v.focus_blur,'scene_fx_number','0～1')+
@@ -170,6 +189,7 @@
     if(target.dataset.pair){const [kind,key]=target.dataset.pair.split(':');action(kind,{key,value:Number(target.value)});return;}
     if(target.id==='fx-override')action('scene_fx_override',{value:target.checked});
     else if(target.id==='camera-style')action('camera_style',{value:target.value});
+    else if(target.id==='global-grade')action('global_color_grade',{value:target.value});
     else if(target.id==='target-slot'&&target.value)action('target_lock',{slot:Number(target.value)});
     else if(target.id==='theme')action('theme',{value:target.value});
     else if(target.id==='trim-pre'||target.id==='trim-post')action('trim',{key:target.id==='trim-pre'?'pre':'post',value:Number(target.value)});

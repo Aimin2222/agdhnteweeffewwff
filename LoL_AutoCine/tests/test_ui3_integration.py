@@ -147,6 +147,37 @@ def test_ld_ln_reference_views_share_ui3_backend_and_are_opt_in():
                 server.close()
 
 
+def test_reference_global_color_changes_existing_template_values_only():
+    import sys
+    import pytest
+    sys.path.insert(0, str(ROOT / "tests"))
+    from test_ui29_runtime import App, Variable
+    from core.effects import GRADE_JP
+
+    app = App()
+    app.sl.update({"temperature": Variable(0.0), "contrast": Variable(1.0),
+                   "exposure": Variable(0.0), "vibrance": Variable(0.0),
+                   "grade_strength": Variable(0.5)})
+    app.var_grade = Variable(GRADE_JP["default"])
+    app.var_lut = Variable("")
+    runtime = Audit29Runtime(app, ROOT / "qa" / "nonexistent-color-test-prefs.json")
+    with patch.object(runtime, "snapshot", return_value={}):
+        runtime.perform("global_color_number", {"key": "exposure", "value": 0.12})
+        runtime.perform("global_color_number", {"key": "temperature", "value": -0.4})
+        runtime.perform("global_color_grade", {"value": "film"})
+        assert app.sl["exposure"].get() == 0.12
+        assert app.sl["temperature"].get() == -0.4
+        assert app.var_grade.get() == GRADE_JP["film"]
+        with pytest.raises(ValueError):
+            runtime.perform("global_color_number", {"key": "exposure", "value": 5})
+        with pytest.raises(ValueError):
+            runtime.perform("global_color_grade", {"value": "unapproved"})
+        assert app.sl["exposure"].get() == 0.12
+        app.busy = True
+        with pytest.raises(ValueError):
+            runtime.perform("global_color_number", {"key": "exposure", "value": 0.2})
+
+
 def test_c3_camera_draft_validates_before_changing_existing_values():
     import sys
     sys.path.insert(0, str(ROOT / "tests"))
