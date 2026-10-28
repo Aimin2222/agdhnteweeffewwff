@@ -1,0 +1,420 @@
+[
+  {
+    "id": "third_dist",
+    "label": "距離",
+    "min": 500,
+    "max": 1400,
+    "step": 1,
+    "unit": "ゲーム内距離単位",
+    "storage": "Template.third_dist",
+    "action": "camera_number",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 42,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L42",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "cam_height",
+    "label": "高さ補正",
+    "min": 0,
+    "max": 900,
+    "step": 1,
+    "unit": "ゲーム内距離単位・FPS系補正。三人称仰角ではない",
+    "storage": "Template.cam_height",
+    "action": "camera_number",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 42,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L42",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "third_yaw",
+    "label": "回転角",
+    "min": -180,
+    "max": 180,
+    "step": 0.5,
+    "unit": "度・基準方向への加算",
+    "storage": "Template.third_yaw",
+    "action": "camera_number",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 42,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L42",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "motion_arc",
+    "label": "回り込み",
+    "min": 0,
+    "max": 45,
+    "step": 0.5,
+    "unit": "度",
+    "storage": "Template.motion_arc",
+    "action": "camera_number",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 42,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L42",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "motion_dolly",
+    "label": "ドリー",
+    "min": 0,
+    "max": 15,
+    "step": 0.5,
+    "unit": "%",
+    "storage": "Template.motion_dolly",
+    "action": "camera_number",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 42,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L42",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "pre",
+    "label": "キル前",
+    "min": 1,
+    "max": 15,
+    "step": 0.1,
+    "unit": "Replay秒",
+    "storage": "Template.pre / Shot.pre",
+    "action": "trim",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 432,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L432",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "post",
+    "label": "キル後",
+    "min": 1,
+    "max": 15,
+    "step": 0.1,
+    "unit": "Replay秒",
+    "storage": "Template.post / Shot.post",
+    "action": "trim",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 432,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L432",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "key_time",
+    "label": "キー時刻",
+    "min": -15,
+    "max": 15,
+    "step": 0.01,
+    "unit": "キル相対Replay秒",
+    "storage": "Shot.keyframes[].time",
+    "action": "keyframe_upsert",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 437,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L437",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "key_yaw",
+    "label": "回転補正",
+    "min": -70,
+    "max": 70,
+    "step": 0.5,
+    "unit": "度",
+    "storage": "Shot.keyframes[].yaw",
+    "action": "keyframe_upsert",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 437,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L437",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "key_zoom",
+    "label": "距離ズーム補正",
+    "min": -30,
+    "max": 30,
+    "step": 0.5,
+    "unit": "%・正値は距離を縮める",
+    "storage": "Shot.keyframes[].zoom",
+    "action": "keyframe_upsert",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 437,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L437",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "key_fov",
+    "label": "FOV補正",
+    "min": -15,
+    "max": 15,
+    "step": 0.5,
+    "unit": "加算する度・絶対FOVではない",
+    "storage": "Shot.keyframes[].fov",
+    "action": "keyframe_upsert",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 437,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L437",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "temperature",
+    "label": "色温度",
+    "min": -1,
+    "max": 1,
+    "step": 0.05,
+    "unit": "正規化量・Kelvinではない",
+    "storage": "Template.temperature / Shot.temperature",
+    "action": "scene_fx_number",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 472,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L472",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "bloom",
+    "label": "ブルーム",
+    "min": 0,
+    "max": 1,
+    "step": 0.05,
+    "unit": "正規化強度",
+    "storage": "Template.bloom / Shot.bloom",
+    "action": "scene_fx_number",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 472,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L472",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "focus_blur",
+    "label": "焦点ぼかし",
+    "min": 0,
+    "max": 1,
+    "step": 0.05,
+    "unit": "正規化強度",
+    "storage": "Template.video_effects.focus_blur / Shot.focus_blur",
+    "action": "scene_fx_number",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 472,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L472",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "dof_blur",
+    "label": "DOFぼかし",
+    "min": 0,
+    "max": 20,
+    "step": 0.5,
+    "unit": "処理強度・実レンズ距離ではない",
+    "storage": "Template.dof_blur / Shot.dof_blur",
+    "action": "scene_fx_number",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 472,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L472",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "highlight_pulse",
+    "label": "キル強調",
+    "min": 0,
+    "max": 1,
+    "step": 0.05,
+    "unit": "正規化強度",
+    "storage": "Template.highlight_pulse / Shot.highlight_pulse",
+    "action": "scene_fx_number",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 472,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L472",
+      "verified_readonly": true
+    },
+    "contract_kind": "existing range",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "exposure",
+    "label": "既存露出",
+    "min": -0.3,
+    "max": 0.3,
+    "step": 0.01,
+    "unit": "既存の明るさ係数。EVではない",
+    "storage": "Template.exposure",
+    "action": "NEW color_global_set",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/core/effects.py",
+      "line": 118,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L118",
+      "verified_readonly": true
+    },
+    "contract_kind": "UI/API extension proposal using existing field; compare_split is new session field",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "vibrance",
+    "label": "自然な彩度",
+    "min": -1,
+    "max": 1.5,
+    "step": 0.01,
+    "unit": "既存vibrance強度。均一彩度とは別",
+    "storage": "Template.vibrance",
+    "action": "NEW color_global_set",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/core/effects.py",
+      "line": 118,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L118",
+      "verified_readonly": true
+    },
+    "contract_kind": "UI/API extension proposal using existing field; compare_split is new session field",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "grade_strength",
+    "label": "グレード強度",
+    "min": 0,
+    "max": 1.4,
+    "step": 0.01,
+    "unit": "複数色係数の補間",
+    "storage": "Template.grade_strength",
+    "action": "NEW color_global_set",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/core/effects.py",
+      "line": 118,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L118",
+      "verified_readonly": true
+    },
+    "contract_kind": "UI/API extension proposal using existing field; compare_split is new session field",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "contrast",
+    "label": "コントラスト",
+    "min": 0.6,
+    "max": 1.6,
+    "step": 0.01,
+    "unit": "倍率",
+    "storage": "Template.contrast",
+    "action": "NEW color_global_set",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/core/effects.py",
+      "line": 118,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L118",
+      "verified_readonly": true
+    },
+    "contract_kind": "UI/API extension proposal using existing field; compare_split is new session field",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "video_effect",
+    "label": "各既存映像FX",
+    "min": 0,
+    "max": 1,
+    "step": 0.01,
+    "unit": "0はOFF",
+    "storage": "Template.video_effects[effect_id]",
+    "action": "NEW video_fx_set",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/core/effects.py",
+      "line": 118,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L118",
+      "verified_readonly": true
+    },
+    "contract_kind": "UI/API extension proposal using existing field; compare_split is new session field",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  },
+  {
+    "id": "compare_split",
+    "label": "比較位置",
+    "min": 0,
+    "max": 1,
+    "step": 0.01,
+    "unit": "映像幅に対する割合",
+    "storage": "session.comparison.split",
+    "action": "NEW compare_set",
+    "finite_only": true,
+    "source": {
+      "path": "LoL_AutoCine/core/effects.py",
+      "line": 118,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L118",
+      "verified_readonly": true
+    },
+    "contract_kind": "UI/API extension proposal using existing field; compare_split is new session field",
+    "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+  }
+]

@@ -1,0 +1,375 @@
+{
+  "commit": "bd93e2caf3bdb823d52b86fead0d71fc15c41327",
+  "files": [
+    {
+      "path": "LoL_AutoCine/core/audio.py",
+      "git_blob": "a3ea7dca215a344b7f035ab84522cbe449696879",
+      "bytes": 10907
+    },
+    {
+      "path": "LoL_AutoCine/core/audio_log.py",
+      "git_blob": "0458363db183f585c9ee65fb29d8fd97d226b016",
+      "bytes": 920
+    },
+    {
+      "path": "LoL_AutoCine/core/audio_worker.py",
+      "git_blob": "cd7eaa3dfa1b9fffe5f5e161014cff9e9c6657de",
+      "bytes": 1121
+    },
+    {
+      "path": "LoL_AutoCine/core/camera.py",
+      "git_blob": "cf1db90e0060cd3b2526be6056861bd0146970f9",
+      "bytes": 69282
+    },
+    {
+      "path": "LoL_AutoCine/core/camera_clock.py",
+      "git_blob": "f06951b2e1506112ba3f1869a381744f37da075e",
+      "bytes": 1940
+    },
+    {
+      "path": "LoL_AutoCine/core/camera_geometry.py",
+      "git_blob": "09dc6f7f0a2192ca0083f25410a06fe191382142",
+      "bytes": 2390
+    },
+    {
+      "path": "LoL_AutoCine/core/camera_tuning.py",
+      "git_blob": "6d89062911c64ba201f94b163bf7d67dfebadd06",
+      "bytes": 4398
+    },
+    {
+      "path": "LoL_AutoCine/core/capture.py",
+      "git_blob": "7252073a424aa3162d009037ce907645959164f1",
+      "bytes": 5957
+    },
+    {
+      "path": "LoL_AutoCine/core/capture_process.py",
+      "git_blob": "a1841d80514b89c4672b7992f7df62ad8656350a",
+      "bytes": 14028
+    },
+    {
+      "path": "LoL_AutoCine/core/capture_worker.py",
+      "git_blob": "1d53817558179caefb93411a53bb5b663b109651",
+      "bytes": 4155
+    },
+    {
+      "path": "LoL_AutoCine/core/effects.py",
+      "git_blob": "610f0bfcfdc5cb2ea900bc1c7c6af12bd8ae7096",
+      "bytes": 66229
+    },
+    {
+      "path": "LoL_AutoCine/core/focus_fx.py",
+      "git_blob": "e25087fb84e78c578e1c9b10ec55ce3d0a0add39",
+      "bytes": 2197
+    },
+    {
+      "path": "LoL_AutoCine/core/gpu_binary.py",
+      "git_blob": "a6d541dc45d1b7c9f723891692df4c800001873f",
+      "bytes": 1625
+    },
+    {
+      "path": "LoL_AutoCine/core/gpu_bloom.py",
+      "git_blob": "bc3deb3af91d83c66a99d065940eff5c2445c41f",
+      "bytes": 6066
+    },
+    {
+      "path": "LoL_AutoCine/core/gpu_full.py",
+      "git_blob": "6d866fd2ea55a62400d4e224666e0796f6da852e",
+      "bytes": 29771
+    },
+    {
+      "path": "LoL_AutoCine/core/gpu_mirror.py",
+      "git_blob": "8dff4c95db01d9491abf13507244333996716116",
+      "bytes": 12216
+    },
+    {
+      "path": "LoL_AutoCine/core/gpu_pipeline.py",
+      "git_blob": "e928f29a15e0f6faebeb3d039ad45887bb0e06b0",
+      "bytes": 6960
+    },
+    {
+      "path": "LoL_AutoCine/core/highlight_pulse.py",
+      "git_blob": "f206922597cdb3f13f00ec04506fae6bedd268a5",
+      "bytes": 919
+    },
+    {
+      "path": "LoL_AutoCine/core/hud.py",
+      "git_blob": "3643a68a318f64a4aac56fd839dc2dbb89c9ebdf",
+      "bytes": 1976
+    },
+    {
+      "path": "LoL_AutoCine/core/jobs.py",
+      "git_blob": "e99c2832682fcda15e3e3f519c43dcb20889c26b",
+      "bytes": 38651
+    },
+    {
+      "path": "LoL_AutoCine/core/kill_icons.py",
+      "git_blob": "c82b0e2b836974b2f215405a04d34bedc59efe87",
+      "bytes": 37497
+    },
+    {
+      "path": "LoL_AutoCine/core/launcher.py",
+      "git_blob": "5ba585d7af93a732f65e3cb346fe11b706d5fdb3",
+      "bytes": 2002
+    },
+    {
+      "path": "LoL_AutoCine/core/montage_fx.py",
+      "git_blob": "ff9494264456152af7e7af971ecc98c27322d341",
+      "bytes": 7633
+    },
+    {
+      "path": "LoL_AutoCine/core/paths.py",
+      "git_blob": "a9cff36c2a894b9b0bfe137d2411e17ca3edecd9",
+      "bytes": 4639
+    },
+    {
+      "path": "LoL_AutoCine/core/performance_diagnostics.py",
+      "git_blob": "4a2896475243b47c18dc3798aa40cb646f3d1658",
+      "bytes": 9949
+    },
+    {
+      "path": "LoL_AutoCine/core/players.py",
+      "git_blob": "bd726035030f446fe82873d2c7df3b1af7af7316",
+      "bytes": 1963
+    },
+    {
+      "path": "LoL_AutoCine/core/preview.py",
+      "git_blob": "19c7b533886acda20da3d3feb25087265c3c7f69",
+      "bytes": 16057
+    },
+    {
+      "path": "LoL_AutoCine/core/procloop.py",
+      "git_blob": "f0dde7e70bfc3fd46351e82a6863fa4c065a464e",
+      "bytes": 17885
+    },
+    {
+      "path": "LoL_AutoCine/core/recorder.py",
+      "git_blob": "56493f3bebbd4d49b2d6e6787eb4db2df95eefed",
+      "bytes": 10686
+    },
+    {
+      "path": "LoL_AutoCine/core/reference_safe.py",
+      "git_blob": "13f2f42256f5b6b2e370ea65bcad21254d8da469",
+      "bytes": 6792
+    },
+    {
+      "path": "LoL_AutoCine/core/render_fx.py",
+      "git_blob": "0813c4433164a808de44cb76acef7312e4697964",
+      "bytes": 2388
+    },
+    {
+      "path": "LoL_AutoCine/core/replay_api.py",
+      "git_blob": "7f97b227d7e92772ad5928c9920864cf27c8ec23",
+      "bytes": 5562
+    },
+    {
+      "path": "LoL_AutoCine/core/scanner.py",
+      "git_blob": "61c31cc5fe72f0e5c6c30955b066b3f06fc0fbc2",
+      "bytes": 9461
+    },
+    {
+      "path": "LoL_AutoCine/core/smart_camera_director.py",
+      "git_blob": "d55f1f0c34dcc7015099b01440f7eae15aa0023a",
+      "bytes": 3923
+    },
+    {
+      "path": "LoL_AutoCine/core/ui_bridge.py",
+      "git_blob": "7dd691c2f98fefff493c3205a6d944eca946fdae",
+      "bytes": 3952
+    },
+    {
+      "path": "LoL_AutoCine/core/work_kill_assets.py",
+      "git_blob": "a72b67ba120305f4e59f9ffbf9c384a97455aff1",
+      "bytes": 17265
+    },
+    {
+      "path": "LoL_AutoCine/docs/AutoCine_v5.10.15_実装仕様書.md",
+      "git_blob": "a2150c50b39c1f55c1fdbca452c0a86251965d57",
+      "bytes": 5500
+    },
+    {
+      "path": "LoL_AutoCine/docs/CAMERA_WORK_HANDOFF_20261019_JA.md",
+      "git_blob": "c991e9242ceccc96ad20926d5b894f0bdc2b0f6f",
+      "bytes": 4355
+    },
+    {
+      "path": "LoL_AutoCine/docs/CODEX_ARCHITECTURE_JA.md",
+      "git_blob": "4ee2e47053c6c6120a609aa3c25312040c0d5ed6",
+      "bytes": 7568
+    },
+    {
+      "path": "LoL_AutoCine/docs/CODEX_INTEGRATION_CONTRACT_JA.md",
+      "git_blob": "05cf178b7d5b1723cfa69ae0e5aef1face9b2c43",
+      "bytes": 4626
+    },
+    {
+      "path": "LoL_AutoCine/docs/ui3/C3_ACCEPTANCE_PROGRESS_20261027_JA.md",
+      "git_blob": "3f34e364887e2576342030aa04bfa77a0a1a1fee",
+      "bytes": 4065
+    },
+    {
+      "path": "LoL_AutoCine/docs/ui3/C3_COMPARISON_QA_20261027_JA.md",
+      "git_blob": "75c46cc82cfbc37cc4a165f56b6767cebe8e726a",
+      "bytes": 3335
+    },
+    {
+      "path": "LoL_AutoCine/docs/ui3/CANDIDATE3_IDENTITY_AUDIT_20261027_JA.md",
+      "git_blob": "9878fb4b1063e167f4e6cf83809d19a0705c53bb",
+      "bytes": 3680
+    },
+    {
+      "path": "LoL_AutoCine/docs/ui3/INTEGRATION_STATUS_20261027_JA.md",
+      "git_blob": "f0983ad7831f2867cc89fa32e14eb6f1cbbd355e",
+      "bytes": 3545
+    },
+    {
+      "path": "LoL_AutoCine/docs/ui3/README_UI3_TEST_JA.md",
+      "git_blob": "aa2ff2d3ac8984b0ecd49bb78b401411f1810e1b",
+      "bytes": 6204
+    },
+    {
+      "path": "LoL_AutoCine/legacy_app.py",
+      "git_blob": "b2e518a5c41e83eaccd2642d87b79c886cb58066",
+      "bytes": 284000
+    },
+    {
+      "path": "LoL_AutoCine/ui/audit29_client.js",
+      "git_blob": "144468989a4dcbf46d10c47cf68e74c108ec2e41",
+      "bytes": 65541
+    },
+    {
+      "path": "LoL_AutoCine/ui/audit29_desktop.py",
+      "git_blob": "4ebcddf2fe559bec5eeabeafb57fd0206129c830",
+      "bytes": 7627
+    },
+    {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "git_blob": "371b189e971301f347e56316051d073136fede35",
+      "bytes": 30608
+    },
+    {
+      "path": "LoL_AutoCine/ui/audit29_server.py",
+      "git_blob": "2beffb6522ec9d33b709edd072c5b7c476bd74ac",
+      "bytes": 18649
+    },
+    {
+      "path": "LoL_AutoCine/ui/director_work_controls.py",
+      "git_blob": "c839edbfbe1131a4d57971af02af6e4651406762",
+      "bytes": 16208
+    },
+    {
+      "path": "LoL_AutoCine/ui/kill_frame_gallery.py",
+      "git_blob": "cce890765adbcf3ab09c82b66e6764c3ba6c79bc",
+      "bytes": 14404
+    },
+    {
+      "path": "LoL_AutoCine/ui/reference_views.css",
+      "git_blob": "16e97c722f0be8f03b29839d3590775f00deeedb",
+      "bytes": 14002
+    },
+    {
+      "path": "LoL_AutoCine/ui/reference_views.js",
+      "git_blob": "89334ae5de47c5ae2bd8bce2ea855d78a5c18317",
+      "bytes": 15637
+    },
+    {
+      "path": "LoL_AutoCine/ui/reference_views.py",
+      "git_blob": "95e61d3eda36290948aa2547d36b7c63b1a5f04b",
+      "bytes": 7218
+    },
+    {
+      "path": "LoL_AutoCine/ui/reference_views_v2.js",
+      "git_blob": "4b8966f1e1cef8f2fcc971f9dcb8a96ddf472b3d",
+      "bytes": 23684
+    },
+    {
+      "path": "LoL_AutoCine/ui/scene_project.py",
+      "git_blob": "2ae36c7d6d2f3b1d1c0b3b6192a0be5a4cc72a7a",
+      "bytes": 10824
+    },
+    {
+      "path": "LoL_AutoCine/ui/scene_timeline.py",
+      "git_blob": "b3553904cd9bf2e222d1416aab5dd3ced4c55ff0",
+      "bytes": 4152
+    },
+    {
+      "path": "LoL_AutoCine/ui/work_gallery.py",
+      "git_blob": "033050e45e201ae7ab26c1b621a6be1950a02396",
+      "bytes": 16849
+    },
+    {
+      "path": "LoL_AutoCine/docs/ui3/C3_ACCEPTANCE70_IMPLEMENTATION_20261027.csv",
+      "git_blob": "6d5e809e93728ab42001b972466304121d65e7cd",
+      "bytes": 35259
+    },
+    {
+      "path": "LoL_AutoCine/docs/ui3/C3_FEATURE70_CONNECTION_20261027.csv",
+      "git_blob": "4056e2b191e9070313587d65d9f8662229f2b4e0",
+      "bytes": 28074
+    },
+    {
+      "path": "LoL_AutoCine/docs/ui3/UI3_FEATURE70_CONNECTION_20261027.csv",
+      "git_blob": "84210cfb81049b809c55e2dfdf1c180151ecb959",
+      "bytes": 12709
+    },
+    {
+      "path": "LoL_AutoCine/docs/ui3/WORK_70_BINDINGS_BASELINE_V4.csv",
+      "git_blob": "0b1abeac24a8a32132296493c578f53cf5c13773",
+      "bytes": 34945
+    },
+    {
+      "path": "LoL_AutoCine/docs/ui3/WORK_70_FEATURE_BASELINE_V4.csv",
+      "git_blob": "e49332be1e8228fd4ce7b06641619f2de5c87fa7",
+      "bytes": 79318
+    },
+    {
+      "path": "LoL_AutoCine/ui/template_gallery.py",
+      "git_blob": "357c11936638913c20f46adccd42f5b7b303180d",
+      "bytes": 17811
+    },
+    {
+      "path": "LoL_AutoCine/ui/ui3_baseline.css",
+      "git_blob": "4427c834e1ab4a177d949ed2f0de15bc92c30030",
+      "bytes": 7084
+    },
+    {
+      "path": "LoL_AutoCine/ui/highlight_director.py",
+      "git_blob": "48c33f1987104abdbf1f9baa7188b594ef1b611c",
+      "bytes": 2768
+    },
+    {
+      "path": "LoL_AutoCine/ui/hud_presets.py",
+      "git_blob": "91ee7c628309ebae120f2c529c7f10c86f6b713f",
+      "bytes": 1468
+    },
+    {
+      "path": "LoL_AutoCine/ui/smart_montage.py",
+      "git_blob": "9ee700be22c88ed9f05b860047e818bacbad9ac5",
+      "bytes": 2118
+    },
+    {
+      "path": "LoL_AutoCine/START_AUTOCINE_UI3.bat",
+      "git_blob": "6b14fb186fce5a5412a508706aedee499656aa90",
+      "bytes": 2745
+    },
+    {
+      "path": "LoL_AutoCine/START_ISSUE53_DEV_QA.bat",
+      "git_blob": "1e977f10f035e29cf33467d5aa636b9f80118f0b",
+      "bytes": 2367
+    },
+    {
+      "path": "LoL_AutoCine/docs/ISSUE53_FUNCTIONAL_QA_20261027_JA.md",
+      "git_blob": "28193e3d1570d2b38e62ce49c29795fa0e6a67a8",
+      "bytes": 7341
+    },
+    {
+      "path": "LoL_AutoCine/docs/ISSUE53_WINDOWS_TEST_JA.md",
+      "git_blob": "698d2191dd24d74fe66869fd25f2ec94a6be1821",
+      "bytes": 6513
+    },
+    {
+      "path": "LoL_AutoCine/core/auto_qa.py",
+      "git_blob": "eddecf25357c225767dd76a25cb7a5a0f2f42db6",
+      "bytes": 7310
+    }
+  ]
+}

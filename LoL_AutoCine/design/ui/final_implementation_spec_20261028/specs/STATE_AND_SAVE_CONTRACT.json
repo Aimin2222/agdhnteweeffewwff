@@ -1,0 +1,89 @@
+{
+  "current": {
+    "source": {
+      "path": "LoL_AutoCine/ui/scene_project.py",
+      "line": 12,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/scene_project.py#L12",
+      "verified_readonly": true
+    },
+    "scene_schema": 3,
+    "scene_persists": [
+      "shots",
+      "sequence"
+    ],
+    "template": {
+      "path": "LoL_AutoCine/core/effects.py",
+      "line": 118,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L118",
+      "verified_readonly": true
+    },
+    "appearance": {
+      "path": "LoL_AutoCine/ui/audit29_runtime.py",
+      "line": 112,
+      "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L112",
+      "verified_readonly": true
+    },
+    "appearance_persists": [
+      "screen_id",
+      "theme"
+    ],
+    "runtime_snapshot": "selected_scene_index/checked flags are session presentation; do not claim all are already persisted"
+  },
+  "proposed_ProjectBundle": {
+    "type": "autocine-project-bundle",
+    "schema_version": 1,
+    "replay_reference": [
+      "content_hash",
+      "patch",
+      "local_path_hint (optional/user-controlled)"
+    ],
+    "template": "validated Template dict, no transient kill_icon_players",
+    "scene_project": "validated v3 or migrated copy",
+    "focused_scene_key": "stable event/replay key",
+    "checked_scene_keys": "independent set",
+    "processing_revisions": [
+      "flash",
+      "zoom",
+      "overlay",
+      "color",
+      "time"
+    ],
+    "resources": "external IDs/hash/status/LUT reference, no reapproval or embedded master images",
+    "ui_state": "per-UI route/selected tab/scroll/expanded sections stored as preferences, not render settings"
+  },
+  "proposed_command_envelope": {
+    "request_id": "unique id",
+    "expected_state_revision": "integer",
+    "replay_generation": "prevents stale result",
+    "action": "whitelisted existing/new registered command",
+    "params": "validated typed values"
+  },
+  "behavior": [
+    "adapter mutates existing App on Tk/main owning thread; no second App per UI",
+    "UI action success requires returned state revision; poll older revision must not overwrite pending edits",
+    "busy job uses immutable config/input/hash snapshot",
+    "before leaving dirty scene prompt save/discard/cancel, UI theme route changes keep draft",
+    "atomic temp+replace; failed import validates all first, leaves previous state intact",
+    "unknown schema/type is rejected explicitly; existing v1/2/3 scene imports still supported",
+    "Windows theme system observation only; no Windows settings write"
+  ],
+  "unit_boundaries": [
+    "sourceReplayTicks/time_base",
+    "capture_wallclock",
+    "outputPTS/time_base",
+    "audioSampleIndex/sample_rate",
+    "nativeAssetRect",
+    "referenceRect1920",
+    "outputVideoRect",
+    "previewContentRect",
+    "DPI deviceRect"
+  ],
+  "persistence_tests": [
+    "full bundle roundtrip",
+    "scene-only legacy import",
+    "camera-only preset no color mutation",
+    "same scene stable across scan reorder",
+    "corrupt JSON/type/version/LUT missing",
+    "cancel import/save error retains previous project"
+  ]
+}

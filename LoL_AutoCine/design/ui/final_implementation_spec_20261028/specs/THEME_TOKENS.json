@@ -1,0 +1,212 @@
+{
+  "palettes": {
+    "light": {
+      "bg": "#edf1f5",
+      "panel": "#fafbfc",
+      "raised": "#ffffff",
+      "line": "#d3dce5",
+      "text": "#233349",
+      "muted": "#56677c",
+      "accent": "#1762a6",
+      "selected": "#e3eef9",
+      "teal": "#137c77",
+      "control": "#7c8da1",
+      "primary_bg": "#1762a6",
+      "primary_text": "#ffffff",
+      "error_text": "#a51c30",
+      "error_bg": "#fff0f2",
+      "success_text": "#176343",
+      "success_bg": "#eef8f1",
+      "focus": "#1762a6",
+      "input_bg": "#ffffff",
+      "input_text": "#233349",
+      "disabled_text": "#56677c",
+      "header_bg": "#173650",
+      "header_text": "#f2f6fb"
+    },
+    "dark": {
+      "bg": "#1d2632",
+      "panel": "#252f3d",
+      "raised": "#2c3848",
+      "line": "#47586b",
+      "text": "#e6edf5",
+      "muted": "#b2c0d1",
+      "accent": "#8ec5ff",
+      "selected": "#354d66",
+      "teal": "#8edbd4",
+      "control": "#8292a6",
+      "primary_bg": "#8ec5ff",
+      "primary_text": "#142b42",
+      "error_text": "#ffb3bd",
+      "error_bg": "#442932",
+      "success_text": "#a2dfba",
+      "success_bg": "#213b30",
+      "focus": "#8ec5ff",
+      "input_bg": "#2c3848",
+      "input_text": "#e6edf5",
+      "disabled_text": "#b2c0d1",
+      "header_bg": "#182a3c",
+      "header_text": "#f2f6fb"
+    }
+  },
+  "pairs": [
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "panel",
+      "ratio": 12.35,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "foreground": "muted",
+      "background": "panel",
+      "ratio": 5.589,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "foreground": "input_text",
+      "background": "input_bg",
+      "ratio": 12.795,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "foreground": "accent",
+      "background": "selected",
+      "ratio": 5.358,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "foreground": "primary_text",
+      "background": "primary_bg",
+      "ratio": 6.298,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "foreground": "control",
+      "background": "input_bg",
+      "ratio": 3.397,
+      "target": 3,
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "foreground": "error_text",
+      "background": "error_bg",
+      "ratio": 6.764,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "foreground": "success_text",
+      "background": "success_bg",
+      "ratio": 6.661,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "foreground": "header_text",
+      "background": "header_bg",
+      "ratio": 11.519,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "panel",
+      "ratio": 11.462,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "muted",
+      "background": "panel",
+      "ratio": 7.312,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "input_text",
+      "background": "input_bg",
+      "ratio": 10.076,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "accent",
+      "background": "selected",
+      "ratio": 4.816,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "primary_text",
+      "background": "primary_bg",
+      "ratio": 7.965,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "control",
+      "background": "input_bg",
+      "ratio": 3.743,
+      "target": 3,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "error_text",
+      "background": "error_bg",
+      "ratio": 7.728,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "success_text",
+      "background": "success_bg",
+      "ratio": 7.964,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "header_text",
+      "background": "header_bg",
+      "ratio": 13.482,
+      "target": 4.5,
+      "status": "PASS"
+    }
+  ],
+  "theme_modes": [
+    "light",
+    "dark",
+    "system"
+  ],
+  "C3_header_override": "header_bg/header_text; preserve original navy hierarchy",
+  "scope": "色対の数値確認のみ。Windows部品/透過/hover/全画面のアクセシビリティ合格ではない",
+  "policy": [
+    "各入力/button/select/option/popupのforegroundとbackgroundを同じtheme tokenで同時指定",
+    "disabledはopacityで白文字だけ残さない。理由とdisabled属性を併用",
+    "選択はチェック/枠/aria-selected。フォーカスは2px outline+2px offset",
+    "UIテーマをpreview RGB/grade/LUTへ渡さない",
+    "systemはWindows設定を読むだけ。変更せず、編集中も外観だけ更新"
+  ]
+}

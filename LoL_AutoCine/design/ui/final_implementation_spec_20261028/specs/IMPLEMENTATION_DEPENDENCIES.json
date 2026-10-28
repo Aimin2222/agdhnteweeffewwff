@@ -1,0 +1,249 @@
+{
+  "tasks": [
+    {
+      "id": "STATE",
+      "depends": [],
+      "work": "共通App状態/型/保存契約・stale応答対策",
+      "gate": "必須"
+    },
+    {
+      "id": "CAPABILITY",
+      "depends": [
+        "STATE"
+      ],
+      "work": "既存/接続不足/新規/実機未検証の能力表示",
+      "gate": "必須"
+    },
+    {
+      "id": "THEME_LAYOUT",
+      "depends": [
+        "STATE"
+      ],
+      "work": "3UI構造・dark token・R2compact重なり",
+      "gate": "必須"
+    },
+    {
+      "id": "CAMERA_BINDING",
+      "depends": [
+        "STATE",
+        "CAPABILITY"
+      ],
+      "work": "third_yaw/side/style/既存数値を正しく接続",
+      "gate": "必須"
+    },
+    {
+      "id": "KEY_ADAPTER",
+      "depends": [
+        "CAMERA_BINDING"
+      ],
+      "work": "既存キー編集/保存/実評価器のcurve描画",
+      "gate": "必須"
+    },
+    {
+      "id": "N01",
+      "depends": [
+        "KEY_ADAPTER"
+      ],
+      "work": "絶対FOV adapter。D02後",
+      "gate": "判断ゲート"
+    },
+    {
+      "id": "N02",
+      "depends": [
+        "KEY_ADAPTER"
+      ],
+      "work": "値軸/曲線/ドラッグ/キーボード",
+      "gate": "必須"
+    },
+    {
+      "id": "N03",
+      "depends": [
+        "N02"
+      ],
+      "work": "linear/hold schemaと評価。D03後",
+      "gate": "判断ゲート"
+    },
+    {
+      "id": "N04",
+      "depends": [
+        "N03"
+      ],
+      "work": "自由接線。D03後",
+      "gate": "追加候補"
+    },
+    {
+      "id": "N06",
+      "depends": [
+        "STATE",
+        "CAPABILITY"
+      ],
+      "work": "既存global色とLUTのUI接続",
+      "gate": "必須"
+    },
+    {
+      "id": "N07",
+      "depends": [
+        "N06"
+      ],
+      "work": "scene色override/均一彩度。D07/D11後",
+      "gate": "判断ゲート"
+    },
+    {
+      "id": "N08",
+      "depends": [
+        "N06",
+        "TIME_MAP"
+      ],
+      "work": "同じframe before/after比較",
+      "gate": "必須・scope D06"
+    },
+    {
+      "id": "N09",
+      "depends": [
+        "CAMERA_BINDING"
+      ],
+      "work": "独立カメラpreset。D05後",
+      "gate": "判断ゲート"
+    },
+    {
+      "id": "TIME_MAP",
+      "depends": [
+        "STATE"
+      ],
+      "work": "Replay/capture/output/音声の明示時刻写像",
+      "gate": "必須"
+    },
+    {
+      "id": "N12",
+      "depends": [
+        "TIME_MAP"
+      ],
+      "work": "Flash/Zoom実revision永続化・境界試験",
+      "gate": "必須・既定変更D10"
+    },
+    {
+      "id": "OVERLAY_PLAN",
+      "depends": [
+        "TIME_MAP"
+      ],
+      "work": "共有配置/activation/6motion/alpha契約",
+      "gate": "必須"
+    },
+    {
+      "id": "N11",
+      "depends": [
+        "OVERLAY_PLAN"
+      ],
+      "work": "CPU/preview/GPUへ同planを接続",
+      "gate": "必須"
+    },
+    {
+      "id": "N14",
+      "depends": [
+        "CAPABILITY",
+        "THEME_LAYOUT"
+      ],
+      "work": "素材/FX/6motion図鑑を実catalogへ接続",
+      "gate": "必須・U09のみD01"
+    },
+    {
+      "id": "N10",
+      "depends": [
+        "TIME_MAP",
+        "N12"
+      ],
+      "work": "真の空間radialを別IDで実装",
+      "gate": "追加候補"
+    },
+    {
+      "id": "EXPORT",
+      "depends": [
+        "STATE",
+        "TIME_MAP",
+        "CAPABILITY"
+      ],
+      "work": "実job/出力/音声/encoder/結果を3UIへ",
+      "gate": "必須"
+    },
+    {
+      "id": "N13",
+      "depends": [
+        "EXPORT",
+        "N06",
+        "KEY_ADAPTER",
+        "N14"
+      ],
+      "work": "初心者の一貫した作成フロー",
+      "gate": "必須"
+    },
+    {
+      "id": "N16",
+      "depends": [
+        "STATE",
+        "N12"
+      ],
+      "work": "ProjectBundle/旧schema移行",
+      "gate": "判断ゲートD05"
+    },
+    {
+      "id": "CAMERA_QA",
+      "depends": [
+        "CAMERA_BINDING",
+        "KEY_ADAPTER"
+      ],
+      "work": "BLUE/RED×style×mode/反転回帰を実LoL確認",
+      "gate": "実機ゲート"
+    },
+    {
+      "id": "N05",
+      "depends": [
+        "CAMERA_QA"
+      ],
+      "work": "XYZ姿勢data供給・track",
+      "gate": "追加候補"
+    },
+    {
+      "id": "ENGAGE",
+      "depends": [
+        "CAPABILITY",
+        "TIME_MAP"
+      ],
+      "work": "combat data取得実証→区間推定",
+      "gate": "追加候補D09"
+    },
+    {
+      "id": "BESTSHOT",
+      "depends": [
+        "EXPORT",
+        "CAPABILITY"
+      ],
+      "work": "実frame/target quality取得→候補比較",
+      "gate": "追加候補D09"
+    },
+    {
+      "id": "N15",
+      "depends": [
+        "CAMERA_QA",
+        "ENGAGE"
+      ],
+      "work": "複数対象/長射程/遮蔽の新camera候補",
+      "gate": "追加候補・geometry必須"
+    },
+    {
+      "id": "FINAL_QA",
+      "depends": [
+        "THEME_LAYOUT",
+        "N02",
+        "N06",
+        "N08",
+        "N11",
+        "N12",
+        "N13",
+        "CAMERA_QA"
+      ],
+      "work": "70機能×3UIの実操作・実LoL/AV/GPU・29/旧UI回帰",
+      "gate": "実機ゲート"
+    }
+  ],
+  "optional_new_features_do_not_block_existing_fix_delivery": true
+}

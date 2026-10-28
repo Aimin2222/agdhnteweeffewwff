@@ -1,0 +1,4749 @@
+{
+  "count": 239,
+  "cases": [
+    {
+      "id": "UT-REPLAY",
+      "level": "UNIT",
+      "input": "session.replay_id/hash/patch; target_slot; connected capability。ROFL自体は編集しない",
+      "procedure": "未接続→選択→接続→対象10人→切断→再接続。古い応答/別Replay対象を混ぜない",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "REPLAY"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-REPLAY",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "session.replay_id/hash/patch; target_slot; connected capability。ROFL自体は編集しない",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。未接続→選択→接続→対象10人→切断→再接続。古い応答/別Replay対象を混ぜない",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "REPLAY"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-LAUNCH",
+      "level": "UNIT",
+      "input": "session.replay_id/hash/patch; target_slot; connected capability。ROFL自体は編集しない",
+      "procedure": "未接続→選択→接続→対象10人→切断→再接続。古い応答/別Replay対象を混ぜない",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "LAUNCH"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-LAUNCH",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "session.replay_id/hash/patch; target_slot; connected capability。ROFL自体は編集しない",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。未接続→選択→接続→対象10人→切断→再接続。古い応答/別Replay対象を混ぜない",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "LAUNCH"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-PLAYER",
+      "level": "UNIT",
+      "input": "session.replay_id/hash/patch; target_slot; connected capability。ROFL自体は編集しない",
+      "procedure": "未接続→選択→接続→対象10人→切断→再接続。古い応答/別Replay対象を混ぜない",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "PLAYER"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-PLAYER",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "session.replay_id/hash/patch; target_slot; connected capability。ROFL自体は編集しない",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。未接続→選択→接続→対象10人→切断→再接続。古い応答/別Replay対象を混ぜない",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "PLAYER"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-SCAN",
+      "level": "UNIT",
+      "input": "SceneProject.shots/sequence; focused_scene_key と checked_scene_keys は独立。scan cacheは再生成可能",
+      "procedure": "2シーンに異なる値を保存→切替→再スキャン→import→export対象一致。空・同時刻別victim・assistを含む",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "SCAN"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-SCAN",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "SceneProject.shots/sequence; focused_scene_key と checked_scene_keys は独立。scan cacheは再生成可能",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。2シーンに異なる値を保存→切替→再スキャン→import→export対象一致。空・同時刻別victim・assistを含む",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "SCAN"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-ASSIST",
+      "level": "UNIT",
+      "input": "SceneProject.shots/sequence; focused_scene_key と checked_scene_keys は独立。scan cacheは再生成可能",
+      "procedure": "2シーンに異なる値を保存→切替→再スキャン→import→export対象一致。空・同時刻別victim・assistを含む",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "ASSIST"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-ASSIST",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "SceneProject.shots/sequence; focused_scene_key と checked_scene_keys は独立。scan cacheは再生成可能",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。2シーンに異なる値を保存→切替→再スキャン→import→export対象一致。空・同時刻別victim・assistを含む",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "ASSIST"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-MULTI",
+      "level": "UNIT",
+      "input": "SceneProject.shots/sequence; focused_scene_key と checked_scene_keys は独立。scan cacheは再生成可能",
+      "procedure": "2シーンに異なる値を保存→切替→再スキャン→import→export対象一致。空・同時刻別victim・assistを含む",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "MULTI"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-MULTI",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "SceneProject.shots/sequence; focused_scene_key と checked_scene_keys は独立。scan cacheは再生成可能",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。2シーンに異なる値を保存→切替→再スキャン→import→export対象一致。空・同時刻別victim・assistを含む",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "MULTI"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-SCENE",
+      "level": "UNIT",
+      "input": "SceneProject.shots/sequence; focused_scene_key と checked_scene_keys は独立。scan cacheは再生成可能",
+      "procedure": "2シーンに異なる値を保存→切替→再スキャン→import→export対象一致。空・同時刻別victim・assistを含む",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "SCENE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-SCENE",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "SceneProject.shots/sequence; focused_scene_key と checked_scene_keys は独立。scan cacheは再生成可能",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。2シーンに異なる値を保存→切替→再スキャン→import→export対象一致。空・同時刻別victim・assistを含む",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "SCENE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-TIMELINE",
+      "level": "UNIT",
+      "input": "SceneProject.shots/sequence; focused_scene_key と checked_scene_keys は独立。scan cacheは再生成可能",
+      "procedure": "2シーンに異なる値を保存→切替→再スキャン→import→export対象一致。空・同時刻別victim・assistを含む",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "TIMELINE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-TIMELINE",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "SceneProject.shots/sequence; focused_scene_key と checked_scene_keys は独立。scan cacheは再生成可能",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。2シーンに異なる値を保存→切替→再スキャン→import→export対象一致。空・同時刻別victim・assistを含む",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "TIMELINE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-KEYFRAME",
+      "level": "UNIT",
+      "input": "Shot.keyframes(time,yaw,zoom,fov); scene undo/redo。既存v3を移行元とする",
+      "procedure": "0/1/2/3/40キー、重複時刻、範囲外/NaN、ドラッグ/数値/Undo、補間端点/中間/適用style比較",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "KEYFRAME"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-KEYFRAME",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Shot.keyframes(time,yaw,zoom,fov); scene undo/redo。既存v3を移行元とする",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/1/2/3/40キー、重複時刻、範囲外/NaN、ドラッグ/数値/Undo、補間端点/中間/適用style比較",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "KEYFRAME"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-HIGHLIGHT",
+      "level": "UNIT",
+      "input": "Template.smart_highlight_* / smart_montage; Shot手動override/sequenceを保護",
+      "procedure": "同一入力で同一計画、手動順序/override保持、実動画生成後に結果QA",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "HIGHLIGHT"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-HIGHLIGHT",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.smart_highlight_* / smart_montage; Shot手動override/sequenceを保護",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。同一入力で同一計画、手動順序/override保持、実動画生成後に結果QA",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "HIGHLIGHT"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-SMARTMONTAGE",
+      "level": "UNIT",
+      "input": "Template.smart_highlight_* / smart_montage; Shot手動override/sequenceを保護",
+      "procedure": "同一入力で同一計画、手動順序/override保持、実動画生成後に結果QA",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "SMARTMONTAGE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-SMARTMONTAGE",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.smart_highlight_* / smart_montage; Shot手動override/sequenceを保護",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。同一入力で同一計画、手動順序/override保持、実動画生成後に結果QA",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "SMARTMONTAGE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-HUD",
+      "level": "UNIT",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "HUD"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-HUD",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "HUD"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-MIRROR",
+      "level": "UNIT",
+      "input": "session.capture/mirror/preview clock。preview targetHz設定と実測fpsは別",
+      "procedure": "同じsourcePTS・Template・OverlayPlanのrawframe比較、テーマ切替で映像RGB不変",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "MIRROR"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-MIRROR",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "session.capture/mirror/preview clock。preview targetHz設定と実測fpsは別",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。同じsourcePTS・Template・OverlayPlanのrawframe比較、テーマ切替で映像RGB不変",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "MIRROR"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-CAPTURE",
+      "level": "UNIT",
+      "input": "session.capture/mirror/preview clock。preview targetHz設定と実測fpsは別",
+      "procedure": "同じsourcePTS・Template・OverlayPlanのrawframe比較、テーマ切替で映像RGB不変",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "CAPTURE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-CAPTURE",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "session.capture/mirror/preview clock。preview targetHz設定と実測fpsは別",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。同じsourcePTS・Template・OverlayPlanのrawframe比較、テーマ切替で映像RGB不変",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "CAPTURE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-RECORD",
+      "level": "UNIT",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "RECORD"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-RECORD",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "RECORD"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-JOB",
+      "level": "UNIT",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "JOB"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-JOB",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "JOB"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-AUDIO",
+      "level": "UNIT",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "AUDIO"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-AUDIO",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "AUDIO"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-AUDIOGUARD",
+      "level": "UNIT",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "AUDIOGUARD"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-AUDIOGUARD",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "AUDIOGUARD"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-BGM",
+      "level": "UNIT",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "BGM"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-BGM",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "BGM"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-NVENC",
+      "level": "UNIT",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "NVENC"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-NVENC",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Templateのfps/capture_fps/encoder_policy/game_audio/game_volume/bgm_path/bgm_volume/HUD; job snapshot",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。CPU/NVENC各方針、必須音声有無、取消/失敗、実MP4decode/PTS/音声/出力先・日本語path",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "NVENC"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-GPUFX",
+      "level": "UNIT",
+      "input": "Template grade/grade_strength/exposure/vibrance/temperature/contrast/lut_path/curve_*/fog_*/dof_*/montage_fx; Shotは現行5FXのみ",
+      "procedure": "明暗/RGBパッチと実動画でCPU/GPU/近似/厳密を別比較。LUT欠損/不正を通知",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "GPUFX"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-GPUFX",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template grade/grade_strength/exposure/vibrance/temperature/contrast/lut_path/curve_*/fog_*/dof_*/montage_fx; Shotは現行5FXのみ",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。明暗/RGBパッチと実動画でCPU/GPU/近似/厳密を別比較。LUT欠損/不正を通知",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "GPUFX"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-GRADE",
+      "level": "UNIT",
+      "input": "Template grade/grade_strength/exposure/vibrance/temperature/contrast/lut_path/curve_*/fog_*/dof_*/montage_fx; Shotは現行5FXのみ",
+      "procedure": "明暗/RGBパッチと実動画でCPU/GPU/近似/厳密を別比較。LUT欠損/不正を通知",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "GRADE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-GRADE",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template grade/grade_strength/exposure/vibrance/temperature/contrast/lut_path/curve_*/fog_*/dof_*/montage_fx; Shotは現行5FXのみ",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。明暗/RGBパッチと実動画でCPU/GPU/近似/厳密を別比較。LUT欠損/不正を通知",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "GRADE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FOG",
+      "level": "UNIT",
+      "input": "Template grade/grade_strength/exposure/vibrance/temperature/contrast/lut_path/curve_*/fog_*/dof_*/montage_fx; Shotは現行5FXのみ",
+      "procedure": "明暗/RGBパッチと実動画でCPU/GPU/近似/厳密を別比較。LUT欠損/不正を通知",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FOG"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FOG",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template grade/grade_strength/exposure/vibrance/temperature/contrast/lut_path/curve_*/fog_*/dof_*/montage_fx; Shotは現行5FXのみ",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。明暗/RGBパッチと実動画でCPU/GPU/近似/厳密を別比較。LUT欠損/不正を通知",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FOG"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-DOF",
+      "level": "UNIT",
+      "input": "Template grade/grade_strength/exposure/vibrance/temperature/contrast/lut_path/curve_*/fog_*/dof_*/montage_fx; Shotは現行5FXのみ",
+      "procedure": "明暗/RGBパッチと実動画でCPU/GPU/近似/厳密を別比較。LUT欠損/不正を通知",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "DOF"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-DOF",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template grade/grade_strength/exposure/vibrance/temperature/contrast/lut_path/curve_*/fog_*/dof_*/montage_fx; Shotは現行5FXのみ",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。明暗/RGBパッチと実動画でCPU/GPU/近似/厳密を別比較。LUT欠損/不正を通知",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "DOF"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-PULSE",
+      "level": "UNIT",
+      "input": "Template grade/grade_strength/exposure/vibrance/temperature/contrast/lut_path/curve_*/fog_*/dof_*/montage_fx; Shotは現行5FXのみ",
+      "procedure": "明暗/RGBパッチと実動画でCPU/GPU/近似/厳密を別比較。LUT欠損/不正を通知",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "PULSE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-PULSE",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template grade/grade_strength/exposure/vibrance/temperature/contrast/lut_path/curve_*/fog_*/dof_*/montage_fx; Shotは現行5FXのみ",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。明暗/RGBパッチと実動画でCPU/GPU/近似/厳密を別比較。LUT欠損/不正を通知",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "PULSE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-BADGE",
+      "level": "UNIT",
+      "input": "Template work_kill_frame_id/work_kill_effect_id/work_kill_review/work_kill_strength/kill_icon_*/motion; asset hashと承認区分",
+      "procedure": "正式/確認用/未審査を選択・戻す、原本hash不変。明暗背景×6motion×1/2/3段×3解像度",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "BADGE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-BADGE",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template work_kill_frame_id/work_kill_effect_id/work_kill_review/work_kill_strength/kill_icon_*/motion; asset hashと承認区分",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。正式/確認用/未審査を選択・戻す、原本hash不変。明暗背景×6motion×1/2/3段×3解像度",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "BADGE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-WORKFRAME",
+      "level": "UNIT",
+      "input": "Template work_kill_frame_id/work_kill_effect_id/work_kill_review/work_kill_strength/kill_icon_*/motion; asset hashと承認区分",
+      "procedure": "正式/確認用/未審査を選択・戻す、原本hash不変。明暗背景×6motion×1/2/3段×3解像度",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "WORKFRAME"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-WORKFRAME",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template work_kill_frame_id/work_kill_effect_id/work_kill_review/work_kill_strength/kill_icon_*/motion; asset hashと承認区分",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。正式/確認用/未審査を選択・戻す、原本hash不変。明暗背景×6motion×1/2/3段×3解像度",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "WORKFRAME"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-WORKFX",
+      "level": "UNIT",
+      "input": "Template work_kill_frame_id/work_kill_effect_id/work_kill_review/work_kill_strength/kill_icon_*/motion; asset hashと承認区分",
+      "procedure": "正式/確認用/未審査を選択・戻す、原本hash不変。明暗背景×6motion×1/2/3段×3解像度",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "WORKFX"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-WORKFX",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template work_kill_frame_id/work_kill_effect_id/work_kill_review/work_kill_strength/kill_icon_*/motion; asset hashと承認区分",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。正式/確認用/未審査を選択・戻す、原本hash不変。明暗背景×6motion×1/2/3段×3解像度",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "WORKFX"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-MOTION",
+      "level": "UNIT",
+      "input": "Template work_kill_frame_id/work_kill_effect_id/work_kill_review/work_kill_strength/kill_icon_*/motion; asset hashと承認区分",
+      "procedure": "正式/確認用/未審査を選択・戻す、原本hash不変。明暗背景×6motion×1/2/3段×3解像度",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "MOTION"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-MOTION",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template work_kill_frame_id/work_kill_effect_id/work_kill_review/work_kill_strength/kill_icon_*/motion; asset hashと承認区分",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。正式/確認用/未審査を選択・戻す、原本hash不変。明暗背景×6motion×1/2/3段×3解像度",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "MOTION"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-REFERENCE",
+      "level": "UNIT",
+      "input": "Template work_kill_frame_id/work_kill_effect_id/work_kill_review/work_kill_strength/kill_icon_*/motion; asset hashと承認区分",
+      "procedure": "正式/確認用/未審査を選択・戻す、原本hash不変。明暗背景×6motion×1/2/3段×3解像度",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "REFERENCE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-REFERENCE",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template work_kill_frame_id/work_kill_effect_id/work_kill_review/work_kill_strength/kill_icon_*/motion; asset hashと承認区分",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。正式/確認用/未審査を選択・戻す、原本hash不変。明暗背景×6motion×1/2/3段×3解像度",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "REFERENCE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-PREVIEW",
+      "level": "UNIT",
+      "input": "session.capture/mirror/preview clock。preview targetHz設定と実測fpsは別",
+      "procedure": "同じsourcePTS・Template・OverlayPlanのrawframe比較、テーマ切替で映像RGB不変",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "PREVIEW"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-PREVIEW",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "session.capture/mirror/preview clock。preview targetHz設定と実測fpsは別",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。同じsourcePTS・Template・OverlayPlanのrawframe比較、テーマ切替で映像RGB不変",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "PREVIEW"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-MONTAGEFX",
+      "level": "UNIT",
+      "input": "Template grade/grade_strength/exposure/vibrance/temperature/contrast/lut_path/curve_*/fog_*/dof_*/montage_fx; Shotは現行5FXのみ",
+      "procedure": "明暗/RGBパッチと実動画でCPU/GPU/近似/厳密を別比較。LUT欠損/不正を通知",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "MONTAGEFX"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-MONTAGEFX",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template grade/grade_strength/exposure/vibrance/temperature/contrast/lut_path/curve_*/fog_*/dof_*/montage_fx; Shotは現行5FXのみ",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。明暗/RGBパッチと実動画でCPU/GPU/近似/厳密を別比較。LUT欠損/不正を通知",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "MONTAGEFX"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-SELFQA",
+      "level": "UNIT",
+      "input": "job_id/build/環境/実測/結果/証拠path。診断ログはprojectの成功状態ではない",
+      "procedure": "成功/失敗/取消ジョブと権限不足の実ログ照合。古い結果を現在jobへ流用しない",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "SELFQA"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-SELFQA",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "job_id/build/環境/実測/結果/証拠path。診断ログはprojectの成功状態ではない",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。成功/失敗/取消ジョブと権限不足の実ログ照合。古い結果を現在jobへ流用しない",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "SELFQA"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-DIAG",
+      "level": "UNIT",
+      "input": "job_id/build/環境/実測/結果/証拠path。診断ログはprojectの成功状態ではない",
+      "procedure": "成功/失敗/取消ジョブと権限不足の実ログ照合。古い結果を現在jobへ流用しない",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "DIAG"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-DIAG",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "job_id/build/環境/実測/結果/証拠path。診断ログはprojectの成功状態ではない",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。成功/失敗/取消ジョブと権限不足の実ログ照合。古い結果を現在jobへ流用しない",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "DIAG"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-CAM_third_cinema",
+      "level": "UNIT",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "CAM_third_cinema"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-CAM_third_cinema",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "CAM_third_cinema"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-CAM_third",
+      "level": "UNIT",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "CAM_third"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-CAM_third",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "CAM_third"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-CAM_geo_aim",
+      "level": "UNIT",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "CAM_geo_aim"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-CAM_geo_aim",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "CAM_geo_aim"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-CAM_cinema",
+      "level": "UNIT",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "CAM_cinema"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-CAM_cinema",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "CAM_cinema"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-CAM_fps",
+      "level": "UNIT",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "CAM_fps"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-CAM_fps",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "CAM_fps"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-CAM_orbit",
+      "level": "UNIT",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "CAM_orbit"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-CAM_orbit",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "CAM_orbit"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-CAM_lolnam_cinema",
+      "level": "UNIT",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "CAM_lolnam_cinema"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-CAM_lolnam_cinema",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "CAM_lolnam_cinema"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-CAM_follow",
+      "level": "UNIT",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "CAM_follow"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-CAM_follow",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "CAM_follow"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-CAM_cinema_top",
+      "level": "UNIT",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "CAM_cinema_top"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-CAM_cinema_top",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "CAM_cinema_top"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-CAM_top",
+      "level": "UNIT",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "CAM_top"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-CAM_top",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "CAM_top"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FIXED",
+      "level": "UNIT",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FIXED"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FIXED",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FIXED"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FULL",
+      "level": "UNIT",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FULL"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FULL",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template style/camera_side/camera_control_mode/third_*/cam_height/motion_*/camera_auto_*; camera presetは別型",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。BLUE/RED×style×0/90/180°×manual/fixed/full、切替/seek/対象変更の実LoL録画と数値log",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FULL"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_motion_camera",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_motion_camera"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_motion_camera",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_motion_camera"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_radial_blur",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_radial_blur"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_radial_blur",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_radial_blur"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_zoom_blur",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_zoom_blur"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_zoom_blur",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_zoom_blur"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_glitch",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_glitch"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_glitch",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_glitch"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_kaleidoscope",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_kaleidoscope"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_kaleidoscope",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_kaleidoscope"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_vhs_damage",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_vhs_damage"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_vhs_damage",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_vhs_damage"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_block_motion",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_block_motion"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_block_motion",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_block_motion"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_spin_motion",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_spin_motion"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_spin_motion",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_spin_motion"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_chroma_leak",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_chroma_leak"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_chroma_leak",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_chroma_leak"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_flash",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_flash"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_flash",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_flash"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_focus_blur",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_focus_blur"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_focus_blur",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_focus_blur"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_vignette_fx",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_vignette_fx"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_vignette_fx",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_vignette_fx"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_glint",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_glint"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_glint",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_glint"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_camera_shake",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_camera_shake"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_camera_shake",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_camera_shake"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_wiggle",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_wiggle"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_wiggle",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_wiggle"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_vr_blur",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_vr_blur"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_vr_blur",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_vr_blur"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_vr_light_leak",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_vr_light_leak"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_vr_light_leak",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_vr_light_leak"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_sphere_blur",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_sphere_blur"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_sphere_blur",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_sphere_blur"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_panel_wipe",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_panel_wipe"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_panel_wipe",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_panel_wipe"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_stretch_wipe",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_stretch_wipe"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_stretch_wipe",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_stretch_wipe"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_mirror",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_mirror"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_mirror",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_mirror"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-FX_slice",
+      "level": "UNIT",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "FX_slice"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-FX_slice",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "Template.video_effects[ID]; scene override拡張は追加schemaが必要",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。0/.15/.5/1×明暗/動き/cut/seek。イベント前差0、輝度/alpha/残像とGPU別測定",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "FX_slice"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-ENGAGE",
+      "level": "UNIT",
+      "input": "version付き新規結果。入力provenance/confidence/欠測/reasonを保持",
+      "procedure": "欠測ではNOT_RUN/unknown。正解付きリプレイデータ/実フレームで精度・誤選択・再現性を検証",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "ENGAGE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-ENGAGE",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "version付き新規結果。入力provenance/confidence/欠測/reasonを保持",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。欠測ではNOT_RUN/unknown。正解付きリプレイデータ/実フレームで精度・誤選択・再現性を検証",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "ENGAGE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "UT-BESTSHOT",
+      "level": "UNIT",
+      "input": "version付き新規結果。入力provenance/confidence/欠測/reasonを保持",
+      "procedure": "欠測ではNOT_RUN/unknown。正解付きリプレイデータ/実フレームで精度・誤選択・再現性を検証",
+      "expected": "不正値拒否・旧挙動維持・有効値の正しい処理",
+      "requires": "isolated fixture",
+      "related": [
+        "BESTSHOT"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "WIN-BESTSHOT",
+      "level": "WINDOWS_INTEGRATION",
+      "input": "version付き新規結果。入力provenance/confidence/欠測/reasonを保持",
+      "procedure": "C3/R1/R2の入口を順に操作し、同一state/保存/結果を照合。欠測ではNOT_RUN/unknown。正解付きリプレイデータ/実フレームで精度・誤選択・再現性を検証",
+      "expected": "3UIの入口→同じ状態/処理→保存再読込→実証拠。既存機能欠落なし、原本hash不変。実行していない段はNOT_RUN",
+      "requires": "Windows WebView2; LoL/GPU/audio where applicable",
+      "related": [
+        "BESTSHOT"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-C3.main",
+      "level": "WINDOWS_UI",
+      "input": "C3.main reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "C3.main"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-C3.easy",
+      "level": "WINDOWS_UI",
+      "input": "C3.easy reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "C3.easy"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-C3.detail",
+      "level": "WINDOWS_UI",
+      "input": "C3.detail reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "C3.detail"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-C3.camera",
+      "level": "WINDOWS_UI",
+      "input": "C3.camera reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "C3.camera"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-C3.keys",
+      "level": "WINDOWS_UI",
+      "input": "C3.keys reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "C3.keys"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-C3.curve",
+      "level": "WINDOWS_UI",
+      "input": "C3.curve reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "C3.curve"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-C3.color",
+      "level": "WINDOWS_UI",
+      "input": "C3.color reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "C3.color"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-C3.effects",
+      "level": "WINDOWS_UI",
+      "input": "C3.effects reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "C3.effects"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-C3.material",
+      "level": "WINDOWS_UI",
+      "input": "C3.material reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "C3.material"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-C3.export",
+      "level": "WINDOWS_UI",
+      "input": "C3.export reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "C3.export"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-C3.settings",
+      "level": "WINDOWS_UI",
+      "input": "C3.settings reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "C3.settings"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-C3.diagnostics",
+      "level": "WINDOWS_UI",
+      "input": "C3.diagnostics reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "C3.diagnostics"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R1.main",
+      "level": "WINDOWS_UI",
+      "input": "R1.main reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R1.main"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R1.easy",
+      "level": "WINDOWS_UI",
+      "input": "R1.easy reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R1.easy"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R1.detail",
+      "level": "WINDOWS_UI",
+      "input": "R1.detail reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R1.detail"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R1.camera",
+      "level": "WINDOWS_UI",
+      "input": "R1.camera reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R1.camera"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R1.keys",
+      "level": "WINDOWS_UI",
+      "input": "R1.keys reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R1.keys"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R1.curve",
+      "level": "WINDOWS_UI",
+      "input": "R1.curve reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R1.curve"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R1.color",
+      "level": "WINDOWS_UI",
+      "input": "R1.color reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R1.color"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R1.effects",
+      "level": "WINDOWS_UI",
+      "input": "R1.effects reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R1.effects"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R1.material",
+      "level": "WINDOWS_UI",
+      "input": "R1.material reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R1.material"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R1.export",
+      "level": "WINDOWS_UI",
+      "input": "R1.export reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R1.export"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R1.settings",
+      "level": "WINDOWS_UI",
+      "input": "R1.settings reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R1.settings"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R1.diagnostics",
+      "level": "WINDOWS_UI",
+      "input": "R1.diagnostics reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R1.diagnostics"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R2.main",
+      "level": "WINDOWS_UI",
+      "input": "R2.main reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R2.main"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R2.easy",
+      "level": "WINDOWS_UI",
+      "input": "R2.easy reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R2.easy"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R2.detail",
+      "level": "WINDOWS_UI",
+      "input": "R2.detail reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R2.detail"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R2.camera",
+      "level": "WINDOWS_UI",
+      "input": "R2.camera reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R2.camera"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R2.keys",
+      "level": "WINDOWS_UI",
+      "input": "R2.keys reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R2.keys"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R2.curve",
+      "level": "WINDOWS_UI",
+      "input": "R2.curve reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R2.curve"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R2.color",
+      "level": "WINDOWS_UI",
+      "input": "R2.color reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R2.color"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R2.effects",
+      "level": "WINDOWS_UI",
+      "input": "R2.effects reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R2.effects"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R2.material",
+      "level": "WINDOWS_UI",
+      "input": "R2.material reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R2.material"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R2.export",
+      "level": "WINDOWS_UI",
+      "input": "R2.export reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R2.export"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R2.settings",
+      "level": "WINDOWS_UI",
+      "input": "R2.settings reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R2.settings"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCREEN-R2.diagnostics",
+      "level": "WINDOWS_UI",
+      "input": "R2.diagnostics reference or added child contract",
+      "procedure": "1920/1366×light/darkで全controlを操作しstate/save/固定previewを確認",
+      "expected": "原画役割を保持、control欠落/不可視/重なり0",
+      "requires": "Windows WebView2",
+      "related": [
+        "R2.diagnostics"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-C3-01",
+      "level": "REGRESSION",
+      "input": "C3-01 4スライダー/数値/リセットが復帰。同期処理が既存camera_numberへ接続。",
+      "procedure": "原画の灰/青の描画、設定同期/Undo/リセットの独立実操作はNOT_RUN。4操作の欠落解消だけを静的確認。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "C3-01"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-C3-02",
+      "level": "REGRESSION",
+      "input": "C3-02 素材3タブ、なしを含む5枠、6アニメのボタン生成が復帰。",
+      "procedure": "エフェクト/アニメを開いた実画面は未提供。原画の画像型選択/区分要約、6種類の適用動作は未合格。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "C3-02"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-C3-03",
+      "level": "REGRESSION",
+      "input": "C3-03 ヘッダー5ボタンの幅/順序/設定内容は原画に近付いた。",
+      "procedure": "版情報/アイコン/字形の差。前回の+402px配置ずれを引き続き未修正とは扱わない。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "C3-03"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-C3-04",
+      "level": "REGRESSION",
+      "input": "C3-04 ミラー4操作の幅を調整。",
+      "procedure": "原画と開始位置/文言/アイコンの差が残る。停止の意味は独立して保持。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "C3-04"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-C3-05",
+      "level": "REGRESSION",
+      "input": "C3-05 3カードにラジオ相当の選択印が復帰。",
+      "procedure": "カメラ見本の比率、説明2行、下段の縦位置とスクロールが原画と異なる。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "C3-05"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-C3-06",
+      "level": "REGRESSION",
+      "input": "C3-06 BLUE/REDの2ボタンと対象セレクタが復帰、自動は別導線へ。",
+      "procedure": "実対象選択は未試験。原画と余白/ラベル/サイズの最終照合が残る。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "C3-06"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-C3-07",
+      "level": "REGRESSION",
+      "input": "C3-07 行高23pxへ変更し、12の未取得枠が提供画面の一覧に収まる。",
+      "procedure": "実スキャン12件の文字幅/役割表示はNOT_RUN。0件を12検出と偽っていない点は維持。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "C3-07"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-C3-08",
+      "level": "REGRESSION",
+      "input": "C3-08 プリセット選択幅と3等分保存ボタンが復帰。",
+      "procedure": "保存対象と実保存/再読込、細部の原画像一致は未検証。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "C3-08"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-C3-09",
+      "level": "REGRESSION",
+      "input": "C3-09 画像選択が原画付近へ復帰し、理由付きdisabled。比較切替は全機能ドロワーへ。",
+      "procedure": "U09の用途確定は未完。ボタン復帰を画像選択機能完成としない。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "C3-09"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-C3-10",
+      "level": "REGRESSION",
+      "input": "C3-10 現在の両ラベルが同じbothを送ることをコードで確定。",
+      "procedure": "現在の対象のキル∪アシストという重複ラベル。異なる意味は未定義。原画のチェック表示も未再現。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "C3-10"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R-01",
+      "level": "REGRESSION",
+      "input": "R-01 相対時刻/Yaw/寄り/FOV補正の追加・更新・削除とキー点選択が画面内へ追加。",
+      "procedure": "絶対FOV64°とは別。drawTimelineに値の縦軸や曲線描画がなく、curve/detailで同じキー点列。キー有りの独立操作はNOT_RUN。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R-01"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R-02",
+      "level": "REGRESSION",
+      "input": "R-02 compare-viewからpreview_playが除去され、説明付きdisabledに変更。",
+      "procedure": "調整前後比較は未実装。誤接続解消と比較機能完成を別に判定する。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R-02"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R2-01",
+      "level": "REGRESSION",
+      "input": "R2-01 後撮り1920版はステージ539px、ショット列が下段へ移動。前回485pxから改善。",
+      "procedure": "1366×768では下段がプレビュー/transportと重なり残件。ln固有270pxが小画面170pxを上書き。20状態集合の1920は533px、後撮り539pxを混同しない。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R2-01"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R2-02",
+      "level": "REGRESSION",
+      "input": "R2-02 ショット列に対象チェック入口とダイアログ、独立check_sceneハンドラーを追加。",
+      "procedure": "0シーンのため、実シーンで焦点とチェックが独立することはNOT_RUN。入口は原画より右端で位置差がある。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R2-02"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R-03",
+      "level": "REGRESSION",
+      "input": "R-03 簡単編集に3グループの見出しと横カメラ3ボタンが復帰。",
+      "procedure": "雰囲気/キル演出の原画カードをリンクに置換したまま。プリセット能力/範囲の定義が必要。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R-03"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R-04",
+      "level": "REGRESSION",
+      "input": "R-04 カメラにスライダー/数値/横3モードが復帰。",
+      "procedure": "絶対FOV欄は未接続。v.third_y参照によりthird_yawが表示0へ戻るソース上の結線誤りがある。実再現はNOT_RUN。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R-04"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R-05",
+      "level": "REGRESSION",
+      "input": "R-05 素材を色タブから分離し、temperature等5種類を画面内操作へ。",
+      "procedure": "露出/彩度/LUTそのものはバックエンドに一部存在。新API/スコープの未接続と処理不存在を混同しない。原画のルック/露出/彩度/比較の配置は未達。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R-05"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R-06",
+      "level": "REGRESSION",
+      "input": "R-06 実素材サムネイル/状態と6アニメ3列のコードが復帰。",
+      "procedure": "2行の枠一覧で下部群が原画より下へ。FXの画像選択/強度/アニメ全動作とスクロール後画面はNOT_RUN。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R-06"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R-07",
+      "level": "REGRESSION",
+      "input": "R-07 出力にHUD、実fps/encoder選択、保存/出力/診断を追加。",
+      "procedure": "解像度選択と原画の縦の情報階層は残件。出力が1080p固定というCodex報告は実MP4で独立確認していない。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R-07"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R-08",
+      "level": "REGRESSION",
+      "input": "R-08 概要をサイド/FOV/対象件数/ゲーム音へ戻し、絶対FOVを—と正直に表示。",
+      "procedure": "主操作は小さいナビゲーションボタンのまま、原画のまとまりと全幅主操作に差。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R-08"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R2-03",
+      "level": "REGRESSION",
+      "input": "R2-03 レールを7項目＋アイコンに戻し、mainは上部タブのみ。",
+      "procedure": "字形/色/compact位置の忠実度はR-10/R2-01の残件。項目数/順序の元の欠落は解消。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R2-03"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R-09",
+      "level": "REGRESSION",
+      "input": "R-09 まだ取得しない時刻を捏造していない。",
+      "procedure": "現在/総時刻と再生倍率が未追加。既存Replayの取得/制御アダプターを確認して接続が必要。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R-09"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R-10",
+      "level": "REGRESSION",
+      "input": "R-10 Undo/Redo/操作ガイドの入口が復帰。",
+      "procedure": "原画の文字/装飾差、darkの一部の低コントラスト、白いトリム入力の読みづらさが残る。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R-10"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R-11",
+      "level": "REGRESSION",
+      "input": "R-11 フォーカスがinspector内ならpollでrenderしないガードとscroll復帰を追加。",
+      "procedure": "独立のIME/長時間入力はNOT_RUN。操作POST後のrender経路、body外入力、範囲操作なども検査が必要。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R-11"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-R-12",
+      "level": "REGRESSION",
+      "input": "R-12 fps/encoderのselectedがstateから生成されるよう修正。",
+      "procedure": "Codexは144/GPU保持を報告。Workの実操作と実NVENCはNOT_RUN。先頭固定の元の生成不具合は静的解消。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "R-12"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AUD-QA-01",
+      "level": "REGRESSION",
+      "input": "QA-01 比較をL/T/R/Bに変更、size_deltaも別記録。",
+      "procedure": "新しい比較判定が見た目全体や操作をPASSにするものではない。",
+      "expected": "改善済みを維持し残件に実証拠。未実施をPASSへ繰り上げない",
+      "requires": "Windows WebView2/required backend",
+      "related": [
+        "QA-01"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "THEME-ALL",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "全3UI・全control・light/dark/system",
+      "procedure": "paletteの文字/背景、selected/hover/focus/disabled/native select/popupを実測、Windows設定は変更しない",
+      "expected": "通常文字>=4.5、主要UI境界>=3を目安。previewRGB不変。computed styleと画像を保存",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "STATE-SWITCH",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "2sceneに異なるkeys/FX、focus A/check B、未確定draft",
+      "procedure": "3UI/12画面/theme往復→保存→再起動/再読込",
+      "expected": "focus/check/draft/Templateの適切なscopeが保持、camera無命令",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "COMPACT-NO-OVERLAP",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "1366×768/1920×1080 content viewport、DPI100/125/150%",
+      "procedure": "preview/transport/shotstrip/timeline bboxとscroll、input focusを測定",
+      "expected": "重なり面積0、transport全表示。native outer windowとcontent viewportを別記",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "YAW-32",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "state.third_yaw=32、他数値非0",
+      "procedure": "poll→camera→R1/R2/C3→theme→scene復帰",
+      "expected": "32表示/送信一致。欠損はunknownで0偽装しない",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "KEY-INTERPOLATION",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "0/1/2/3/40keysと非均一間隔、極値",
+      "procedure": "実評価器の端点/中間/キー外をcurve samplingと比較",
+      "expected": "legacy2点smoothstep/3点Hermite一致。style非適用時delta0",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "FOV-SEMANTICS",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "複数style/時刻/baseとrequested64°/delta±15",
+      "procedure": "raw base/effective clamp/fullauto multi下限を比較",
+      "expected": "絶対/相対を区別、到達不能を拒否、変更なし",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "COMPARE-SAME-FRAME",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "1rawframe+PTS+Template+processing revision",
+      "procedure": "before/after splitと近似/厳密を別生成。playhead監視",
+      "expected": "比較で時刻が進まず、左右同じinput、時間FX未対応を表示",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "SCENE-CHECK",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "2実scene、focus A/checked B",
+      "procedure": "Bチェック→A選択→対象dialog→scan再読込→export_checked",
+      "expected": "export Bのみ。選択変更でcheck不変。0件は明示",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "FLASH-CAUSAL",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "30/60/60000÷1001fps×単/連/同時×.5/1/2rate",
+      "procedure": "revision別全frameRGB/PTSを比較、seek/pause/cutを含む",
+      "expected": "event前Flash差0、event後非0、全ID保持。輝度/飽和は別REVIEW",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "ZOOM-NORMALIZE",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "明暗/RGBパッチ・動き×弱/中/強",
+      "procedure": "legacy/candidate時間tmix/spatial別にDC gain/残像を測定",
+      "expected": "時間候補のgain正常、cut/seek後履歴なし。空間blurと混同しない",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "OVERLAY-FRAMES",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "3解像度×6motion×1/2/3段×FXoff/on",
+      "procedure": "全frameのactiveID/alpha/bbox/RGB差、独立plannerと共通rasterを分け比較",
+      "expected": "raw bbox<=2px/RGB<=2階調の契約、missingbboxは理由。圧縮は別測定",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "CAMERA-SIDES",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "BLUE/RED×10style×manual/fixed/full×0/90/180°",
+      "procedure": "キャリブレーション/seek/target変更/切替を録画・姿勢log",
+      "expected": "TargetLock維持/反転なし、保護RED経路不変。可視性は実画像で判定",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "COLOR-ROUNDTRIP",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "global/scene exposure/temp/vibrance/LUTとoverride解除",
+      "procedure": "3UI入力→保存再読込→CPU/GPU/厳密比較",
+      "expected": "値・scope・処理順一致。EV/Kelvin/均一彩度の誤表示なし",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "ASSET-IMMUTABLE",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "37/89/652/35の既存manifest",
+      "procedure": "選択/適用/取消/図鑑/書出し前後hashとformal status照合",
+      "expected": "原本/承認不変。P2残523/暫定651/制約19を保持",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "AV-GPU-E2E",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "許可済み実LoL replay/音声、CPU/NVENC/OpenCL機",
+      "procedure": "実録画→可変速→concat→decode/actualPTS/sample count測定",
+      "expected": "LoL音声だけ、必須失敗伝播。実encoderとFX経路別表示。A/V drift基準は用途別明記",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "PROJECT-TYPES",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "SceneProject v1/2/3、Template、camera-preset、bundle、不正JSON",
+      "procedure": "import/save/取消/失敗/日本語pathを実行",
+      "expected": "型違い拒否・atomic保存・旧読込保持・MP4と別結果",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "POPUP-FOCUS",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "設定/図鑑/出力確認/エラーpopup",
+      "procedure": "Tab/ShiftTab/Esc/Enter/閉じる/背景wheelを操作",
+      "expected": "focus trap/復帰、背景誤操作なし、取消は未適用",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "ONECLICK-REAL",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "実Replay・既存target・手動overrideあり",
+      "procedure": "選択→scan→check→おまかせ→preview→MP4→検証",
+      "expected": "全段実結果、手動値保護、失敗段で再試行可能。出力QA後に成功",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "OLD-REGRESSION",
+      "level": "SYSTEM_OR_TARGETED",
+      "input": "旧UI29/候補1〜10/元C3/従来カメラ",
+      "procedure": "変更file範囲と旧入口/テンプレート保存/起動を回帰",
+      "expected": "既存導線・原本不変。配布停止研究demoは復元/再配布しない",
+      "requires": "Windows/real data where described",
+      "related": [],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N01",
+      "level": "NEW_CAPABILITY",
+      "input": "選択scene/time/requested_deg",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。baseとclampを公開、到達不可を拒否。独立absolute trackは別schema",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: D02",
+      "related": [
+        "N01"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N02",
+      "level": "NEW_CAPABILITY",
+      "input": "Shot keys/channel/time",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。既存Hermite/smoothstepの同じ評価器。表示だけのBezier禁止",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: none",
+      "related": [
+        "N02"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N03",
+      "level": "NEW_CAPABILITY",
+      "input": "key segments/mode",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。version付きmode。旧projectはlegacy_smoothへ",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: D03",
+      "related": [
+        "N03"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N04",
+      "level": "NEW_CAPABILITY",
+      "input": "time-monotone handles/channel",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。x(u)を単調逆解、overshoot/限界を検証。接線保存と評価共有",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: D03",
+      "related": [
+        "N04"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N05",
+      "level": "NEW_CAPABILITY",
+      "input": "verified world geometry/time/axes",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。地形/TargetLock/軸/遮蔽が必要。既存deltaをXYZに偽装しない",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: D04",
+      "related": [
+        "N05"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N06",
+      "level": "NEW_CAPABILITY",
+      "input": "Template grade/exposure/vibrance/temperature/LUT",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。新renderer不要、validated bridge/dirty state/preview sync",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: none",
+      "related": [
+        "N06"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N07",
+      "level": "NEW_CAPABILITY",
+      "input": "scene override map / optional saturation scalar",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。継承/解除/undo/migration/CPU-GPU LUT bakeを一致",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: D07/D11",
+      "related": [
+        "N07"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N08",
+      "level": "NEW_CAPABILITY",
+      "input": "rawframe/PTS/Template/history/split",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。compose_compareとexactStill再利用。時間FX比較は別capability",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: D06",
+      "related": [
+        "N08"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N09",
+      "level": "NEW_CAPABILITY",
+      "input": "camera-preset type/side/style/numbers",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。色/音/素材/対象IDを変更しない。deep-copy/typed schema",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: D05",
+      "related": [
+        "N09"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N10",
+      "level": "NEW_CAPABILITY",
+      "input": "same-frame samples/center/weights/edge mode",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。旧radial_blur/tmixと別ID。GPU kernelとCPUの色/alpha共通化",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: D10",
+      "related": [
+        "N10"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N11",
+      "level": "NEW_CAPABILITY",
+      "input": "event/assets/geometry/PTS/outputrect",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。独立plannerと同RGBA合成器を別検証。既存renderer regressionを保持",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: none",
+      "related": [
+        "N11"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N12",
+      "level": "NEW_CAPABILITY",
+      "input": "TimeMap/tick base/continuity/revision",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。既存Flash/Zoom候補を再実装しない。env/project優先順位と互換migration",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: D10",
+      "related": [
+        "N12"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N13",
+      "level": "NEW_CAPABILITY",
+      "input": "replay/target/scan/checks/preset",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。準備済みなら重複scanなし。失敗段/取消/手動override保持",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: none",
+      "related": [
+        "N13"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N14",
+      "level": "NEW_CAPABILITY",
+      "input": "catalog IDs/status/thumbnail",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。素材原本は改変せず。35候補とCore22FXを分離",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: D01",
+      "related": [
+        "N14"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N15",
+      "level": "NEW_CAPABILITY",
+      "input": "synchronized participant/projectile/depth geometry",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。欠測baseline、style切替clip境界、既存accepted cameraを優先",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: D09",
+      "related": [
+        "N15"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-N16",
+      "level": "NEW_CAPABILITY",
+      "input": "Template+SceneProject+replayref+selection+revision",
+      "procedure": "追加境界/不正入力/旧形式/mode OFFを検査。既存SceneProject v1/2/3は別型import。JSON保存とMP4を分離",
+      "expected": "必要な判断/データが揃い入出力の実証拠が存在。未実施はNOT_RUN。旧動作の回帰差分が説明可能",
+      "requires": "decision/data gates: D05",
+      "related": [
+        "N16"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-ENGAGE",
+      "level": "NEW_CAPABILITY",
+      "input": "replay hash/patch, timestamped combat participants/positions/damage or verified annotated combat intervals, sample confidence/coverage",
+      "procedure": "annotated matchesでprecision/recall/境界誤差、missing coverage/視界制約、同時別戦闘/長射程/killなし戦闘。数値合格閾値はD09でデータ規模と共に決定",
+      "expected": "検出data根拠/coverage/精度判定、欠測はunknown",
+      "requires": "approved replay/combat annotations",
+      "related": [
+        "ENGAGE"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    },
+    {
+      "id": "NEW-BESTSHOT",
+      "level": "NEW_CAPABILITY",
+      "input": "permissioned actual frames+PTS/candidate takes/target geometry or masks/visibility evidence/quality metrics",
+      "procedure": "正解付き映像でtopK一致/target消失/明暗/FXなし/FXあり/同点/欠測/計算時間。品質の好みと機械欠損を分離、閾値はD09で決定",
+      "expected": "metadata採点と実映像品質評価の区別",
+      "requires": "actual permissioned frames/annotations",
+      "related": [
+        "BESTSHOT"
+      ],
+      "status": "NOT_RUN",
+      "evidence_required": [
+        "build SHA",
+        "input hashes",
+        "config/revision",
+        "environment",
+        "raw result",
+        "image/log path"
+      ]
+    }
+  ],
+  "product_test_execution": "NOT_RUN",
+  "existing_284": "references/ACCEPTANCE_284_DELTA_PROPOSED.jsonを旧IDごと保持。この新test ID集合と合算して完了件数を水増ししない"
+}

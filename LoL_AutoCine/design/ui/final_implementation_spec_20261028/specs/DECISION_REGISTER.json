@@ -1,0 +1,116 @@
+{
+  "items": [
+    {
+      "id": "D01",
+      "topic": "画像選択の入力対象",
+      "option_a": "素材図鑑を開き現在のframe/FX/animationタブに適用",
+      "option_b": "自由PNG取込／参考映像特徴抽出への入口",
+      "recommendation": "推奨は既存素材図鑑。原制作指示に独立import仕様がなく、正式決定まではdisabled。",
+      "related": "U09",
+      "status": "USER_OR_PRODUCT_DECISION_PENDING",
+      "safe_until_decided": "既存の意味を維持。新しい動作を自動有効化せず、能力/理由を表示"
+    },
+    {
+      "id": "D02",
+      "topic": "原画の絶対FOV",
+      "option_a": "既存相対モデルを保持し、計算後の絶対値表示＋到達可能範囲内の逆変換adapter",
+      "option_b": "独立absoluteFOV trackを新schemaで追加",
+      "recommendation": "推奨はadapter。rawBase評価を提供し、requested−baseが±15を超える/最終clamp/多キル制限なら理由を表示して拒否。64°を+64へ送らない。",
+      "related": "U01",
+      "status": "USER_OR_PRODUCT_DECISION_PENDING",
+      "safe_until_decided": "既存の意味を維持。新しい動作を自動有効化せず、能力/理由を表示"
+    },
+    {
+      "id": "D03",
+      "topic": "追加補間モード",
+      "option_a": "既存2点smoothstep/3点以上Hermiteを既定として明示。linear/holdをversion付き任意追加",
+      "option_b": "自由Bezierを同時追加／既存だけに限定",
+      "recommendation": "推奨は既存表示→linear/hold拡張→自由接線の順。原画の選択肢は能力が出るまで理由付き無効。",
+      "related": "U02",
+      "status": "USER_OR_PRODUCT_DECISION_PENDING",
+      "safe_until_decided": "既存の意味を維持。新しい動作を自動有効化せず、能力/理由を表示"
+    },
+    {
+      "id": "D04",
+      "topic": "自由XYZ/カメラ軌道",
+      "option_a": "既存yaw/zoom/FOVのみを初期接続",
+      "option_b": "検証済み世界座標供給＋XYZ姿勢trackを新設",
+      "recommendation": "推奨は前者。Replay world軸・target追従と独立座標の意味・地形検査なしにXYZ成功を作らない。",
+      "related": "U03",
+      "status": "USER_OR_PRODUCT_DECISION_PENDING",
+      "safe_until_decided": "既存の意味を維持。新しい動作を自動有効化せず、能力/理由を表示"
+    },
+    {
+      "id": "D05",
+      "topic": "候補3プリセットの保存範囲",
+      "option_a": "型選択つきcamera-only / effect-only / 全体Templateを明示",
+      "option_b": "左下をSceneProject専用にする",
+      "recommendation": "推奨は型付き。既存画像の文言だけで型を断定しない。camera-onlyは色/FX/音声/対象IDを変えない。",
+      "related": "U10",
+      "status": "USER_OR_PRODUCT_DECISION_PENDING",
+      "safe_until_decided": "既存の意味を維持。新しい動作を自動有効化せず、能力/理由を表示"
+    },
+    {
+      "id": "D06",
+      "topic": "調整前後比較の範囲",
+      "option_a": "近似色比較と厳密静止画比較を段階別に明示",
+      "option_b": "時系列FX/カメラ変更を含む同期2take比較",
+      "recommendation": "推奨は静止/色の接続から。時間系はbuffer/historyを揃えた別能力。カメラを動かし直した2画像は同一rawframe比較ではない。",
+      "related": "COMPARE",
+      "status": "USER_OR_PRODUCT_DECISION_PENDING",
+      "safe_until_decided": "既存の意味を維持。新しい動作を自動有効化せず、能力/理由を表示"
+    },
+    {
+      "id": "D07",
+      "topic": "色の単位と範囲",
+      "option_a": "既存露出係数−.3..+.3と自然な彩度を正しい名前で接続、均一彩度は別field",
+      "option_b": "EV露出を新しいlinear-light処理として追加",
+      "recommendation": "推奨は既存互換。均一彩度0..2(1中立)は追加案で、gradeの彩度へ乗算する場合はCPU/GPU/保存のrevisionが必要。",
+      "related": "U04",
+      "status": "USER_OR_PRODUCT_DECISION_PENDING",
+      "safe_until_decided": "既存の意味を維持。新しい動作を自動有効化せず、能力/理由を表示"
+    },
+    {
+      "id": "D08",
+      "topic": "すべての意味",
+      "option_a": "現行both aliasとして注記し機能保持",
+      "option_b": "全プレイヤーのkill/assistやENGAGE等を含む全イベントへ拡張",
+      "recommendation": "推奨は現行alias維持。別意味は対象scopeとevent typesを別設定として承認後に導入。",
+      "related": "C3-10",
+      "status": "USER_OR_PRODUCT_DECISION_PENDING",
+      "safe_until_decided": "既存の意味を維持。新しい動作を自動有効化せず、能力/理由を表示"
+    },
+    {
+      "id": "D09",
+      "topic": "ENGAGE/BESTSHOTの今回の開発範囲",
+      "option_a": "データ契約・取得可否を実証してから任意追加",
+      "option_b": "今回必須として収集/推定/評価まで新規実装",
+      "recommendation": "推奨は段階ゲート。正解付き入力と実フレームが無ければschema/検証器まででNOT_RUN。kill数採点を代用しない。",
+      "related": "ENGAGE/BESTSHOT",
+      "status": "USER_OR_PRODUCT_DECISION_PENDING",
+      "safe_until_decided": "既存の意味を維持。新しい動作を自動有効化せず、能力/理由を表示"
+    },
+    {
+      "id": "D10",
+      "topic": "研究FX revisionの正式既定化",
+      "option_a": "BATの現行candidate/legacy切替を保持し永続revisionの設計だけ追加",
+      "option_b": "合格後に新revisionを新規projectの既定へ",
+      "recommendation": "推奨は現行維持。過去projectの出力を黙って変えない。正式採用判断はユーザー。",
+      "related": "U05",
+      "status": "USER_OR_PRODUCT_DECISION_PENDING",
+      "safe_until_decided": "既存の意味を維持。新しい動作を自動有効化せず、能力/理由を表示"
+    },
+    {
+      "id": "D11",
+      "topic": "シーン別色設定の範囲",
+      "option_a": "既存5項目を維持し、露出/LUT/彩度のoverride schemaを追加",
+      "option_b": "グローバル色だけ接続して個別は従来エディタへ",
+      "recommendation": "推奨は個別拡張。ただしglobal inheritance/clear/reset/undo/importを同時実装。",
+      "related": "U04",
+      "status": "USER_OR_PRODUCT_DECISION_PENDING",
+      "safe_until_decided": "既存の意味を維持。新しい動作を自動有効化せず、能力/理由を表示"
+    }
+  ],
+  "not_approved": true,
+  "pending_does_not_block_existing_repairs": true
+}

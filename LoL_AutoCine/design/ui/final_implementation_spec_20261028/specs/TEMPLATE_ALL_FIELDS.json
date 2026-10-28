@@ -1,0 +1,2573 @@
+{
+  "count": 90,
+  "fields": [
+    {
+      "id": "name",
+      "type": "str",
+      "baseline_default": "カスタム",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 119,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L119",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > name",
+        "R1": "R1.color > Template詳細 > name",
+        "R2": "R2.color > Template詳細 > name"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "style",
+      "type": "str",
+      "baseline_default": "cinema",
+      "baseline_comment": "camera.STYLES",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 120,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L120",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > style",
+        "R1": "R1.camera > Template詳細 > style",
+        "R2": "R2.camera > Template詳細 > style"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "intensity",
+      "type": "str",
+      "baseline_default": "standard",
+      "baseline_comment": "natural / standard / strong",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 121,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L121",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > intensity",
+        "R1": "R1.color > Template詳細 > intensity",
+        "R2": "R2.color > Template詳細 > intensity"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "grade",
+      "type": "str",
+      "baseline_default": "default",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 122,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L122",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > grade",
+        "R1": "R1.color > Template詳細 > grade",
+        "R2": "R2.color > Template詳細 > grade"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "grade_strength",
+      "type": "float",
+      "baseline_default": 0.8,
+      "baseline_comment": "0-1.4",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 123,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L123",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > grade_strength",
+        "R1": "R1.color > Template詳細 > grade_strength",
+        "R2": "R2.color > Template詳細 > grade_strength"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "grade_strength",
+        "label": "グレード強度",
+        "min": 0,
+        "max": 1.4,
+        "step": 0.01,
+        "unit": "複数色係数の補間",
+        "storage": "Template.grade_strength",
+        "action": "NEW color_global_set",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/core/effects.py",
+          "line": 118,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L118",
+          "verified_readonly": true
+        },
+        "contract_kind": "UI/API extension proposal using existing field; compare_split is new session field",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "temperature",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": "-1..1 (暖色+)",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 124,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L124",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > temperature",
+        "R1": "R1.color > Template詳細 > temperature",
+        "R2": "R2.color > Template詳細 > temperature"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "temperature",
+        "label": "色温度",
+        "min": -1,
+        "max": 1,
+        "step": 0.05,
+        "unit": "正規化量・Kelvinではない",
+        "storage": "Template.temperature / Shot.temperature",
+        "action": "scene_fx_number",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 472,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L472",
+          "verified_readonly": true
+        },
+        "contract_kind": "existing range",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "contrast",
+      "type": "float",
+      "baseline_default": 1.0,
+      "baseline_comment": "0.6..1.6 (追加)",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 125,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L125",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > contrast",
+        "R1": "R1.color > Template詳細 > contrast",
+        "R2": "R2.color > Template詳細 > contrast"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "contrast",
+        "label": "コントラスト",
+        "min": 0.6,
+        "max": 1.6,
+        "step": 0.01,
+        "unit": "倍率",
+        "storage": "Template.contrast",
+        "action": "NEW color_global_set",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/core/effects.py",
+          "line": 118,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L118",
+          "verified_readonly": true
+        },
+        "contract_kind": "UI/API extension proposal using existing field; compare_split is new session field",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "vignette",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": "0-1; no forced dark corners before explicit preset",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 126,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L126",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > vignette",
+        "R1": "R1.color > Template詳細 > vignette",
+        "R2": "R2.color > Template詳細 > vignette"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "grain",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": "0-1; disabled until selected",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 127,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L127",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > grain",
+        "R1": "R1.color > Template詳細 > grain",
+        "R2": "R2.color > Template詳細 > grain"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "bloom",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": "0-1; disabled until selected",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 128,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L128",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > bloom",
+        "R1": "R1.color > Template詳細 > bloom",
+        "R2": "R2.color > Template詳細 > bloom"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "bloom",
+        "label": "ブルーム",
+        "min": 0,
+        "max": 1,
+        "step": 0.05,
+        "unit": "正規化強度",
+        "storage": "Template.bloom / Shot.bloom",
+        "action": "scene_fx_number",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 472,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L472",
+          "verified_readonly": true
+        },
+        "contract_kind": "existing range",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "bars",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": "0-1 (シネマ枠 最大 約 12%)",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 129,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L129",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > bars",
+        "R1": "R1.color > Template詳細 > bars",
+        "R2": "R2.color > Template詳細 > bars"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "transition",
+      "type": "str",
+      "baseline_default": "cut",
+      "baseline_comment": "cut/fade/flash, no auto flash",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 130,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L130",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.effects > Template詳細 > transition",
+        "R1": "R1.effects > Template詳細 > transition",
+        "R2": "R2.effects > Template詳細 > transition"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "title_auto",
+      "type": "bool",
+      "baseline_default": false,
+      "baseline_comment": "キル数/対戦相手を自動タイトル化",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 131,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L131",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.effects > Template詳細 > title_auto",
+        "R1": "R1.effects > Template詳細 > title_auto",
+        "R2": "R2.effects > Template詳細 > title_auto"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "title_text",
+      "type": "str",
+      "baseline_default": "",
+      "baseline_comment": "手入力タイトル (空なら文字なし)",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 132,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L132",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.effects > Template詳細 > title_text",
+        "R1": "R1.effects > Template詳細 > title_text",
+        "R2": "R2.effects > Template詳細 > title_text"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "bpm",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": ">0 ならビートに合わせた明滅",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 133,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L133",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.effects > Template詳細 > bpm",
+        "R1": "R1.effects > Template詳細 > bpm",
+        "R2": "R2.effects > Template詳細 > bpm"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "bgm_path",
+      "type": "str",
+      "baseline_default": "",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 134,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L134",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.export > Template詳細 > bgm_path",
+        "R1": "R1.export > Template詳細 > bgm_path",
+        "R2": "R2.export > Template詳細 > bgm_path"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "pre",
+      "type": "float",
+      "baseline_default": 4.0,
+      "baseline_comment": "キル前秒数",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 135,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L135",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.main > Template詳細 > pre",
+        "R1": "R1.main > Template詳細 > pre",
+        "R2": "R2.main > Template詳細 > pre"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "pre",
+        "label": "キル前",
+        "min": 1,
+        "max": 15,
+        "step": 0.1,
+        "unit": "Replay秒",
+        "storage": "Template.pre / Shot.pre",
+        "action": "trim",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 432,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L432",
+          "verified_readonly": true
+        },
+        "contract_kind": "existing range",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "post",
+      "type": "float",
+      "baseline_default": 3.0,
+      "baseline_comment": "キル後秒数",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 136,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L136",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.main > Template詳細 > post",
+        "R1": "R1.main > Template詳細 > post",
+        "R2": "R2.main > Template詳細 > post"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "post",
+        "label": "キル後",
+        "min": 1,
+        "max": 15,
+        "step": 0.1,
+        "unit": "Replay秒",
+        "storage": "Template.post / Shot.post",
+        "action": "trim",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 432,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L432",
+          "verified_readonly": true
+        },
+        "contract_kind": "existing range",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "merge_multikill",
+      "type": "bool",
+      "baseline_default": true,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 137,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L137",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.main > Template詳細 > merge_multikill",
+        "R1": "R1.main > Template詳細 > merge_multikill",
+        "R2": "R2.main > Template詳細 > merge_multikill"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "lut_path",
+      "type": "str",
+      "baseline_default": "",
+      "baseline_comment": ".cube",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 138,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L138",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > lut_path",
+        "R1": "R1.color > Template詳細 > lut_path",
+        "R2": "R2.color > Template詳細 > lut_path"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "fps",
+      "type": "int",
+      "baseline_default": 60,
+      "baseline_comment": "最終出力FPS",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 139,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L139",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.export > Template詳細 > fps",
+        "R1": "R1.export > Template詳細 > fps",
+        "R2": "R2.export > Template詳細 > fps"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "capture_fps",
+      "type": "int",
+      "baseline_default": 144,
+      "baseline_comment": "内部キャプチャFPS（LoLミラー/カメラ制御は144Hz優先）",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 140,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L140",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.export > Template詳細 > capture_fps",
+        "R1": "R1.export > Template詳細 > capture_fps",
+        "R2": "R2.export > Template詳細 > capture_fps"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "exposure",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": "-0.3..0.3 (露出)",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 141,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L141",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > exposure",
+        "R1": "R1.color > Template詳細 > exposure",
+        "R2": "R2.color > Template詳細 > exposure"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "exposure",
+        "label": "既存露出",
+        "min": -0.3,
+        "max": 0.3,
+        "step": 0.01,
+        "unit": "既存の明るさ係数。EVではない",
+        "storage": "Template.exposure",
+        "action": "NEW color_global_set",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/core/effects.py",
+          "line": 118,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L118",
+          "verified_readonly": true
+        },
+        "contract_kind": "UI/API extension proposal using existing field; compare_split is new session field",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "vibrance",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": "-1..1.5 (自然な彩度)",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 142,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L142",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > vibrance",
+        "R1": "R1.color > Template詳細 > vibrance",
+        "R2": "R2.color > Template詳細 > vibrance"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "vibrance",
+        "label": "自然な彩度",
+        "min": -1,
+        "max": 1.5,
+        "step": 0.01,
+        "unit": "既存vibrance強度。均一彩度とは別",
+        "storage": "Template.vibrance",
+        "action": "NEW color_global_set",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/core/effects.py",
+          "line": 118,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L118",
+          "verified_readonly": true
+        },
+        "contract_kind": "UI/API extension proposal using existing field; compare_split is new session field",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "game_audio",
+      "type": "bool",
+      "baseline_default": true,
+      "baseline_comment": "ゲーム音を録音して入れる",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 143,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L143",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.export > Template詳細 > game_audio",
+        "R1": "R1.export > Template詳細 > game_audio",
+        "R2": "R2.export > Template詳細 > game_audio"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "game_volume",
+      "type": "float",
+      "baseline_default": 1.0,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 144,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L144",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.export > Template詳細 > game_volume",
+        "R1": "R1.export > Template詳細 > game_volume",
+        "R2": "R2.export > Template詳細 > game_volume"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "bgm_volume",
+      "type": "float",
+      "baseline_default": 0.4,
+      "baseline_comment": "BGMを足す時の音量 (ゲーム音が鳴る間は自動で下がる)",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 145,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L145",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.export > Template詳細 > bgm_volume",
+        "R1": "R1.export > Template詳細 > bgm_volume",
+        "R2": "R2.export > Template詳細 > bgm_volume"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "hide_hud",
+      "type": "bool",
+      "baseline_default": true,
+      "baseline_comment": "録画時にHUDを全部隠す（v2.2安全ミラー経路）",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 146,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L146",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.export > Template詳細 > hide_hud",
+        "R1": "R1.export > Template詳細 > hide_hud",
+        "R2": "R2.export > Template詳細 > hide_hud"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "keep_champion_bars",
+      "type": "bool",
+      "baseline_default": false,
+      "baseline_comment": "HUD非表示でもチャンピオンのHPバーだけ残す",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 147,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L147",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.export > Template詳細 > keep_champion_bars",
+        "R1": "R1.export > Template詳細 > keep_champion_bars",
+        "R2": "R2.export > Template詳細 > keep_champion_bars"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "cam_height",
+      "type": "float",
+      "baseline_default": 170.0,
+      "baseline_comment": "カメラの高さ補正 (地面に埋まる時は上げる)",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 148,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L148",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > cam_height",
+        "R1": "R1.camera > Template詳細 > cam_height",
+        "R2": "R2.camera > Template詳細 > cam_height"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "cam_height",
+        "label": "高さ補正",
+        "min": 0,
+        "max": 900,
+        "step": 1,
+        "unit": "ゲーム内距離単位・FPS系補正。三人称仰角ではない",
+        "storage": "Template.cam_height",
+        "action": "camera_number",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 42,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L42",
+          "verified_readonly": true
+        },
+        "contract_kind": "existing range",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "dist_scale",
+      "type": "float",
+      "baseline_default": 0.8,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 149,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L149",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > dist_scale",
+        "R1": "R1.camera > Template詳細 > dist_scale",
+        "R2": "R2.camera > Template詳細 > dist_scale"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "third_elev",
+      "type": "float",
+      "baseline_default": 28.0,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 150,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L150",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > third_elev",
+        "R1": "R1.camera > Template詳細 > third_elev",
+        "R2": "R2.camera > Template詳細 > third_elev"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "third_dist",
+      "type": "float",
+      "baseline_default": 950.0,
+      "baseline_comment": "FPS風カメラの距離 (小さいほど寄る)",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 151,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L151",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > third_dist",
+        "R1": "R1.camera > Template詳細 > third_dist",
+        "R2": "R2.camera > Template詳細 > third_dist"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "third_dist",
+        "label": "距離",
+        "min": 500,
+        "max": 1400,
+        "step": 1,
+        "unit": "ゲーム内距離単位",
+        "storage": "Template.third_dist",
+        "action": "camera_number",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 42,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L42",
+          "verified_readonly": true
+        },
+        "contract_kind": "existing range",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "third_yaw",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": "三人称の水平回転角（度）",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 152,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L152",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > third_yaw",
+        "R1": "R1.camera > Template詳細 > third_yaw",
+        "R2": "R2.camera > Template詳細 > third_yaw"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "third_yaw",
+        "label": "回転角",
+        "min": -180,
+        "max": 180,
+        "step": 0.5,
+        "unit": "度・基準方向への加算",
+        "storage": "Template.third_yaw",
+        "action": "camera_number",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 42,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L42",
+          "verified_readonly": true
+        },
+        "contract_kind": "existing range",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "motion_arc",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": "自動カメラ回り込み角（度）",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 153,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L153",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > motion_arc",
+        "R1": "R1.camera > Template詳細 > motion_arc",
+        "R2": "R2.camera > Template詳細 > motion_arc"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "motion_arc",
+        "label": "回り込み",
+        "min": 0,
+        "max": 45,
+        "step": 0.5,
+        "unit": "度",
+        "storage": "Template.motion_arc",
+        "action": "camera_number",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 42,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L42",
+          "verified_readonly": true
+        },
+        "contract_kind": "existing range",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "motion_dolly",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": "自動ドリー量（%）",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 154,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L154",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > motion_dolly",
+        "R1": "R1.camera > Template詳細 > motion_dolly",
+        "R2": "R2.camera > Template詳細 > motion_dolly"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "motion_dolly",
+        "label": "ドリー",
+        "min": 0,
+        "max": 15,
+        "step": 0.5,
+        "unit": "%",
+        "storage": "Template.motion_dolly",
+        "action": "camera_number",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 42,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L42",
+          "verified_readonly": true
+        },
+        "contract_kind": "existing range",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "motion_profile",
+      "type": "str",
+      "baseline_default": "cinematic",
+      "baseline_comment": "smooth / cinematic / dynamic / auto",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 155,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L155",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > motion_profile",
+        "R1": "R1.camera > Template詳細 > motion_profile",
+        "R2": "R2.camera > Template詳細 > motion_profile"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "fog_enabled",
+      "type": "bool",
+      "baseline_default": false,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 156,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L156",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > fog_enabled",
+        "R1": "R1.color > Template詳細 > fog_enabled",
+        "R2": "R2.color > Template詳細 > fog_enabled"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "fog_preset",
+      "type": "str",
+      "baseline_default": "teal",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 157,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L157",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > fog_preset",
+        "R1": "R1.color > Template詳細 > fog_preset",
+        "R2": "R2.color > Template詳細 > fog_preset"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "fog_strength",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 158,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L158",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > fog_strength",
+        "R1": "R1.color > Template詳細 > fog_strength",
+        "R2": "R2.color > Template詳細 > fog_strength"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "curve_enabled",
+      "type": "bool",
+      "baseline_default": false,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 159,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L159",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > curve_enabled",
+        "R1": "R1.color > Template詳細 > curve_enabled",
+        "R2": "R2.color > Template詳細 > curve_enabled"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "curve_points",
+      "type": "str",
+      "baseline_default": "0/0 0.25/0.20 0.50/0.50 0.75/0.80 1/1",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 160,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L160",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > curve_points",
+        "R1": "R1.color > Template詳細 > curve_points",
+        "R2": "R2.color > Template詳細 > curve_points"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "dof_enabled",
+      "type": "bool",
+      "baseline_default": false,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 161,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L161",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > dof_enabled",
+        "R1": "R1.color > Template詳細 > dof_enabled",
+        "R2": "R2.color > Template詳細 > dof_enabled"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "dof_preview",
+      "type": "bool",
+      "baseline_default": false,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 162,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L162",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > dof_preview",
+        "R1": "R1.color > Template詳細 > dof_preview",
+        "R2": "R2.color > Template詳細 > dof_preview"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "dof_blur",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 163,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L163",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > dof_blur",
+        "R1": "R1.color > Template詳細 > dof_blur",
+        "R2": "R2.color > Template詳細 > dof_blur"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "dof_blur",
+        "label": "DOFぼかし",
+        "min": 0,
+        "max": 20,
+        "step": 0.5,
+        "unit": "処理強度・実レンズ距離ではない",
+        "storage": "Template.dof_blur / Shot.dof_blur",
+        "action": "scene_fx_number",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 472,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L472",
+          "verified_readonly": true
+        },
+        "contract_kind": "existing range",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "dof_focus_distance",
+      "type": "float",
+      "baseline_default": 5510.0,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 164,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L164",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > dof_focus_distance",
+        "R1": "R1.color > Template詳細 > dof_focus_distance",
+        "R2": "R2.color > Template詳細 > dof_focus_distance"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "dof_near_distance",
+      "type": "float",
+      "baseline_default": 10000.0,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 165,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L165",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > dof_near_distance",
+        "R1": "R1.color > Template詳細 > dof_near_distance",
+        "R2": "R2.color > Template詳細 > dof_near_distance"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "dof_far_distance",
+      "type": "float",
+      "baseline_default": 10000.0,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 166,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L166",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > dof_far_distance",
+        "R1": "R1.color > Template詳細 > dof_far_distance",
+        "R2": "R2.color > Template詳細 > dof_far_distance"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "video_effects",
+      "type": "dict",
+      "baseline_default": "field(default_factory=lambda: {k: 0.0 for k in VIDEO_EFFECT_DEFAULTS})",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 168,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L168",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.effects > Template詳細 > video_effects",
+        "R1": "R1.effects > Template詳細 > video_effects",
+        "R2": "R2.effects > Template詳細 > video_effects"
+      },
+      "input_kind": "typed list/map dedicated editor",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "effect_preset",
+      "type": "str",
+      "baseline_default": "なし",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 169,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L169",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.effects > Template詳細 > effect_preset",
+        "R1": "R1.effects > Template詳細 > effect_preset",
+        "R2": "R2.effects > Template詳細 > effect_preset"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "reference_dna",
+      "type": "dict",
+      "baseline_default": "field(default_factory=dict)",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 171,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L171",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > reference_dna",
+        "R1": "R1.color > Template詳細 > reference_dna",
+        "R2": "R2.color > Template詳細 > reference_dna"
+      },
+      "input_kind": "typed list/map dedicated editor",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "reference_sources",
+      "type": "list",
+      "baseline_default": "field(default_factory=list)",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 172,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L172",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > reference_sources",
+        "R1": "R1.color > Template詳細 > reference_sources",
+        "R2": "R2.color > Template詳細 > reference_sources"
+      },
+      "input_kind": "typed list/map dedicated editor",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "template_origin",
+      "type": "str",
+      "baseline_default": "builtin",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 173,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L173",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > template_origin",
+        "R1": "R1.color > Template詳細 > template_origin",
+        "R2": "R2.color > Template詳細 > template_origin"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "scene_keyframes",
+      "type": "list",
+      "baseline_default": "field(default_factory=list)",
+      "baseline_comment": "append to preserve legacy positional fields",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 174,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L174",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.keys > Template詳細 > scene_keyframes",
+        "R1": "R1.keys > Template詳細 > scene_keyframes",
+        "R2": "R2.keys > Template詳細 > scene_keyframes"
+      },
+      "input_kind": "typed list/map dedicated editor",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "montage_fx",
+      "type": "str",
+      "baseline_default": "cut",
+      "baseline_comment": "append; optional final montage effect, legacy defaults unchanged",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 175,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L175",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.effects > Template詳細 > montage_fx",
+        "R1": "R1.effects > Template詳細 > montage_fx",
+        "R2": "R2.effects > Template詳細 > montage_fx"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "smart_highlight_enabled",
+      "type": "bool",
+      "baseline_default": false,
+      "baseline_comment": "explicit automatic planning only",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 176,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L176",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.easy > Template詳細 > smart_highlight_enabled",
+        "R1": "R1.easy > Template詳細 > smart_highlight_enabled",
+        "R2": "R2.easy > Template詳細 > smart_highlight_enabled"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "smart_highlight_style",
+      "type": "str",
+      "baseline_default": "auto",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 177,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L177",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.easy > Template詳細 > smart_highlight_style",
+        "R1": "R1.easy > Template詳細 > smart_highlight_style",
+        "R2": "R2.easy > Template詳細 > smart_highlight_style"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "highlight_pulse",
+      "type": "float",
+      "baseline_default": 0.0,
+      "baseline_comment": "kill-timed accent, legacy graph unchanged when zero",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 178,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L178",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.effects > Template詳細 > highlight_pulse",
+        "R1": "R1.effects > Template詳細 > highlight_pulse",
+        "R2": "R2.effects > Template詳細 > highlight_pulse"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "id": "highlight_pulse",
+        "label": "キル強調",
+        "min": 0,
+        "max": 1,
+        "step": 0.05,
+        "unit": "正規化強度",
+        "storage": "Template.highlight_pulse / Shot.highlight_pulse",
+        "action": "scene_fx_number",
+        "finite_only": true,
+        "source": {
+          "path": "LoL_AutoCine/ui/audit29_runtime.py",
+          "line": 472,
+          "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/ui/audit29_runtime.py#L472",
+          "verified_readonly": true
+        },
+        "contract_kind": "existing range",
+        "validation": "編集中の空欄/−を許し、確定時に検証。範囲外は理由表示し旧値維持。pollで編集中の値を上書きしない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_icon_style",
+      "type": "str",
+      "baseline_default": "off",
+      "baseline_comment": "off/simple/cinema/neon/impact",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 179,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L179",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_icon_style",
+        "R1": "R1.material > Template詳細 > kill_icon_style",
+        "R2": "R2.material > Template詳細 > kill_icon_style"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_icon_position",
+      "type": "str",
+      "baseline_default": "right-top",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 180,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L180",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_icon_position",
+        "R1": "R1.material > Template詳細 > kill_icon_position",
+        "R2": "R2.material > Template詳細 > kill_icon_position"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_icon_scale",
+      "type": "float",
+      "baseline_default": 1.0,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 181,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L181",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_icon_scale",
+        "R1": "R1.material > Template詳細 > kill_icon_scale",
+        "R2": "R2.material > Template詳細 > kill_icon_scale"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_icon_duration",
+      "type": "float",
+      "baseline_default": 1.55,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 182,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L182",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_icon_duration",
+        "R1": "R1.material > Template詳細 > kill_icon_duration",
+        "R2": "R2.material > Template詳細 > kill_icon_duration"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_icon_opacity",
+      "type": "float",
+      "baseline_default": 1.0,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 183,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L183",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_icon_opacity",
+        "R1": "R1.material > Template詳細 > kill_icon_opacity",
+        "R2": "R2.material > Template詳細 > kill_icon_opacity"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "smart_composition",
+      "type": "bool",
+      "baseline_default": false,
+      "baseline_comment": "safer distance/elevation around the locked player",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 184,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L184",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > smart_composition",
+        "R1": "R1.camera > Template詳細 > smart_composition",
+        "R2": "R2.camera > Template詳細 > smart_composition"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "smart_montage",
+      "type": "bool",
+      "baseline_default": false,
+      "baseline_comment": "only smart auto-edit reorders unpinned scenes",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 185,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L185",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.easy > Template詳細 > smart_montage",
+        "R1": "R1.easy > Template詳細 > smart_montage",
+        "R2": "R2.easy > Template詳細 > smart_montage"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_icon_players",
+      "type": "list",
+      "baseline_default": "field(default_factory=list)",
+      "baseline_comment": "transient replay roster for real champion portraits",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 186,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L186",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {},
+      "input_kind": "runtime-only roster, no editable input",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "transient; exclude from ProjectBundle",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "encoder_policy",
+      "type": "str",
+      "baseline_default": "auto",
+      "baseline_comment": "auto/gpu/cpu; GPU refers to *encoding*, not the FX graph",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 188,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L188",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.export > Template詳細 > encoder_policy",
+        "R1": "R1.export > Template詳細 > encoder_policy",
+        "R2": "R2.export > Template詳細 > encoder_policy"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_frame_color",
+      "type": "str",
+      "baseline_default": "",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 189,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L189",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_frame_color",
+        "R1": "R1.material > Template詳細 > kill_frame_color",
+        "R2": "R2.material > Template詳細 > kill_frame_color"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_glow_color",
+      "type": "str",
+      "baseline_default": "",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 190,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L190",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_glow_color",
+        "R1": "R1.material > Template詳細 > kill_glow_color",
+        "R2": "R2.material > Template詳細 > kill_glow_color"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_glow_enabled",
+      "type": "bool",
+      "baseline_default": true,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 191,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L191",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_glow_enabled",
+        "R1": "R1.material > Template詳細 > kill_glow_enabled",
+        "R2": "R2.material > Template詳細 > kill_glow_enabled"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_glow_strength",
+      "type": "float",
+      "baseline_default": 0.65,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 192,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L192",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_glow_strength",
+        "R1": "R1.material > Template詳細 > kill_glow_strength",
+        "R2": "R2.material > Template詳細 > kill_glow_strength"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_frame_width",
+      "type": "int",
+      "baseline_default": 3,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 193,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L193",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_frame_width",
+        "R1": "R1.material > Template詳細 > kill_frame_width",
+        "R2": "R2.material > Template詳細 > kill_frame_width"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_mark_style",
+      "type": "str",
+      "baseline_default": "auto",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 194,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L194",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_mark_style",
+        "R1": "R1.material > Template詳細 > kill_mark_style",
+        "R2": "R2.material > Template詳細 > kill_mark_style"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "dof_shape",
+      "type": "str",
+      "baseline_default": "circle",
+      "baseline_comment": "circle (default) or band (old height approximation)",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 196,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L196",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > dof_shape",
+        "R1": "R1.color > Template詳細 > dof_shape",
+        "R2": "R2.color > Template詳細 > dof_shape"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "dof_center_x",
+      "type": "float",
+      "baseline_default": 0.5,
+      "baseline_comment": "0..1, approx TargetLock subject's screen position",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 197,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L197",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > dof_center_x",
+        "R1": "R1.color > Template詳細 > dof_center_x",
+        "R2": "R2.color > Template詳細 > dof_center_x"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "dof_center_y",
+      "type": "float",
+      "baseline_default": 0.54,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 198,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L198",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > dof_center_y",
+        "R1": "R1.color > Template詳細 > dof_center_y",
+        "R2": "R2.color > Template詳細 > dof_center_y"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "dof_radius",
+      "type": "float",
+      "baseline_default": 0.29,
+      "baseline_comment": "normalized by screen height, not screen width",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 199,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L199",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > dof_radius",
+        "R1": "R1.color > Template詳細 > dof_radius",
+        "R2": "R2.color > Template詳細 > dof_radius"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "dof_feather",
+      "type": "float",
+      "baseline_default": 0.12,
+      "baseline_comment": "soft circular edge",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 200,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L200",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.color > Template詳細 > dof_feather",
+        "R1": "R1.color > Template詳細 > dof_feather",
+        "R2": "R2.color > Template詳細 > dof_feather"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "camera_side",
+      "type": "str",
+      "baseline_default": "auto",
+      "baseline_comment": "v5.10.5: auto / blue / red (append: old positional templates safe)",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 201,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L201",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > camera_side",
+        "R1": "R1.camera > Template詳細 > camera_side",
+        "R2": "R2.camera > Template詳細 > camera_side"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_sparkle_intensity",
+      "type": "float",
+      "baseline_default": 1.0,
+      "baseline_comment": "v5.10.8: corner rays/star flares",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 202,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L202",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_sparkle_intensity",
+        "R1": "R1.material > Template詳細 > kill_sparkle_intensity",
+        "R2": "R2.material > Template詳細 > kill_sparkle_intensity"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_stack_gap",
+      "type": "int",
+      "baseline_default": 4,
+      "baseline_comment": "v5.10.8: additional pixels between simultaneous kills",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 203,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L203",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_stack_gap",
+        "R1": "R1.material > Template詳細 > kill_stack_gap",
+        "R2": "R2.material > Template詳細 > kill_stack_gap"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "kill_icon_motion",
+      "type": "str",
+      "baseline_default": "instant",
+      "baseline_comment": "badge entrance, legacy behavior by default",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 204,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L204",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > kill_icon_motion",
+        "R1": "R1.material > Template詳細 > kill_icon_motion",
+        "R2": "R2.material > Template詳細 > kill_icon_motion"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "auto_director_strength",
+      "type": "float | None",
+      "baseline_default": null,
+      "baseline_comment": "appended; None preserves legacy camera motion",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 206,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L206",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > auto_director_strength",
+        "R1": "R1.camera > Template詳細 > auto_director_strength",
+        "R2": "R2.camera > Template詳細 > auto_director_strength"
+      },
+      "input_kind": "numeric input with backend validation",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "camera_control_mode",
+      "type": "str | None",
+      "baseline_default": null,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 207,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L207",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > camera_control_mode",
+        "R1": "R1.camera > Template詳細 > camera_control_mode",
+        "R2": "R2.camera > Template詳細 > camera_control_mode"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "camera_auto_excluded",
+      "type": "list",
+      "baseline_default": "field(default_factory=list)",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 208,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L208",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > camera_auto_excluded",
+        "R1": "R1.camera > Template詳細 > camera_auto_excluded",
+        "R2": "R2.camera > Template詳細 > camera_auto_excluded"
+      },
+      "input_kind": "typed list/map dedicated editor",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "camera_auto_qa_approved",
+      "type": "dict",
+      "baseline_default": "field(default_factory=dict)",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 209,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L209",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.camera > Template詳細 > camera_auto_qa_approved",
+        "R1": "R1.camera > Template詳細 > camera_auto_qa_approved",
+        "R2": "R2.camera > Template詳細 > camera_auto_qa_approved"
+      },
+      "input_kind": "typed list/map dedicated editor",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "work_kill_frame_id",
+      "type": "str",
+      "baseline_default": "",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 210,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L210",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > work_kill_frame_id",
+        "R1": "R1.material > Template詳細 > work_kill_frame_id",
+        "R2": "R2.material > Template詳細 > work_kill_frame_id"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "work_kill_effect_id",
+      "type": "str",
+      "baseline_default": "",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 211,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L211",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > work_kill_effect_id",
+        "R1": "R1.material > Template詳細 > work_kill_effect_id",
+        "R2": "R2.material > Template詳細 > work_kill_effect_id"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "work_kill_review",
+      "type": "bool",
+      "baseline_default": false,
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 212,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L212",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > work_kill_review",
+        "R1": "R1.material > Template詳細 > work_kill_review",
+        "R2": "R2.material > Template詳細 > work_kill_review"
+      },
+      "input_kind": "boolean checkbox",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    },
+    {
+      "id": "work_kill_strength",
+      "type": "str",
+      "baseline_default": "strong",
+      "baseline_comment": "",
+      "current_source": {
+        "path": "LoL_AutoCine/core/effects.py",
+        "line": 213,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L213",
+        "verified_readonly": true
+      },
+      "runtime_status": "NOT_RUN",
+      "entrances": {
+        "C3": "C3.material > Template詳細 > work_kill_strength",
+        "R1": "R1.material > Template詳細 > work_kill_strength",
+        "R2": "R2.material > Template詳細 > work_kill_strength"
+      },
+      "input_kind": "ID selector/path picker/text based on type",
+      "numeric_contract": {
+        "range_status": "EXISTING_FIELD_VALIDATOR_REQUIRES_DEDICATED_ADAPTER_CONFIRMATION",
+        "policy": "未確定rangeを任意sliderで作らず、現行専用control/validatorと同じ範囲をbridgeで公開。宣言commentと実検証を混同しない。"
+      },
+      "save_policy": "Template.to_dict field; proposed bundle includes validated dict. per-scene supported fields only; additional overrides require schema",
+      "capability": "既存field/engine。独立新UI setterは現行performに無いものがありadapterが必要",
+      "note": "field inventory, not a claim that every field already has an operable WebView control"
+    }
+  ],
+  "current_template_source": {
+    "path": "LoL_AutoCine/core/effects.py",
+    "line": 118,
+    "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/bd93e2caf3bdb823d52b86fead0d71fc15c41327/LoL_AutoCine/core/effects.py#L118",
+    "verified_readonly": true
+  },
+  "unconfirmed_ranges_are_explicit": true
+}
