@@ -24,6 +24,7 @@
 
 - Windows WebView2 source hostで、候補3の4スライダー/リセット/素材なし/6アニメ入口、メイン→詳細→素材→メイン、カメラ・同名FX・設定保持を確認した。証拠は `qa/ui3_audit_20261028/c3_flow/index.json`。
 - R1/R2のWindows WebView2で、比較ボタン無効、カメラ数値、実素材＋同名FX、144fps/GPUポリシーのタブ往復後保持、UI切替後の設定保持、入力中1.5秒のフォーカス保持を確認した。R2は下段ショット列と出力対象ダイアログ開閉も確認。証拠は各 `index.json`。
+- 候補3の「画像選択」入口を原画位置へ復帰し、意味未確定のため理由付き無効とした。UI比較とR1/R2切替は全機能ドロワーへ移動。Windows再撮影・追加のDOM検査・同寸法重ね合わせを `qa/ui3_audit_20261028/c3_image_entry_refined/` に保存。画像選択の実処理は未接続。
 - `pytest tests/test_ui3_integration.py tests/test_ui29_runtime.py tests/test_ui29_desktop.py -q`：30件＋24サブテスト通過。
 - 実LoL接続、BLUE/RED実カメラ送信、GPU/NVENC、ゲーム音、録画、MP4書き出し、125% DPIはNOT_RUN。WindowsのUI撮影をそれらの合格と混同しない。
 

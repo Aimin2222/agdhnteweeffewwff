@@ -1100,6 +1100,8 @@
           else if (command==='c3s') location.assign(endpoint('/ui3/s'));
           else if (command==='export_menu') chooseExport();
           else if (command==='project_menu') chooseProjectOperation();
+          else if (command==='ln') location.assign(endpoint('/ui3/reference/ln'));
+          else if (command==='ld') location.assign(endpoint('/ui3/reference/ld'));
           else if (Array.isArray(command)) invoke(command[0],command[1]);
           else invoke(command);
         });grid.append(button);
@@ -1112,7 +1114,8 @@
       ['ミラー開始','mirror_start'],['ミラー停止','mirror_stop'],
       ['動画を作成','export_menu'],['作成を停止','cancel_job']]);
     group('候補3の比較ビュー',[
-      ['元の候補3','main'],['C3-P 精密編集','c3p'],['C3-S かんたん編集','c3s']]);
+      ['元の候補3','main'],['C3-P 精密編集','c3p'],['C3-S かんたん編集','c3s'],
+      ['Lolnam参考','ln'],['League Director参考','ld']]);
     group('編集',[
       ['詳細編集','detail'],['カメラ',['native_editor_zone',{zone:'camera'}]],
       ['映像FX',['native_editor_zone',{zone:'fx'}]],['色・LUT・Fog',['native_editor_zone',{zone:'color'}]],
@@ -1145,13 +1148,16 @@
     close.addEventListener('click',()=>show(false));
     opener.addEventListener('click',()=>show(tools.style.display==='none'));
     document.addEventListener('keydown',event=>{if(event.key==='Escape'&&tools.style.display!=='none')show(false)});
-    for(const [label,route] of [['Lolnam参考','ln'],['League Director参考','ld']]){
-      const button=document.createElement('button');button.type='button';
-      button.className='ui3-reference-opener';button.textContent=label;
-      button.title='同じAutoCine状態を保持して参考UIへ切り替えます';
-      button.addEventListener('click',()=>location.assign(endpoint(`/ui3/reference/${route}`)));
-      tabs.append(button);
-    }
+    // Keep the original lower-tab area for the source image's image-selection
+    // entry. Its exact operation is unconfirmed, so do not route it to an
+    // unrelated material picker and pretend that capability exists.
+    const imageEntry=document.createElement('button');imageEntry.type='button';
+    imageEntry.className='ui3-image-unavailable';imageEntry.textContent='画像選択';
+    imageEntry.title='原画像の操作意味は確認中です。別機能へ誤接続しないため現在は操作できません。';
+    imageEntry.disabled=true;tabs.append(imageEntry);
+    switchButton.textContent='候補3 / UI比較';
+    switchButton.title='7候補の比較一覧。設定とシーンを保持して切り替えます。';
+    tools.append(switchButton);
     tabs.append(opener);
     document.body.append(tools);
     render();

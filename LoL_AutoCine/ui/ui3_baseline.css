@@ -18,6 +18,17 @@ body[data-screen="T-A-M"] .tabs .ui3-tools-opener {
   border-radius: 4px;
   font-size: 12px;
 }
+body[data-screen="T-A-M"] .tabs .ui3-image-unavailable {
+  min-width: 116px;
+  min-height: 27px;
+  border: 1px solid #dfad42;
+  border-radius: 4px;
+  background: #fff0cb;
+  color: #714805;
+  font-size: 12px;
+  opacity: 1;
+  cursor: not-allowed;
+}
 body[data-screen="T-A-M"] .tabs .ui3-route-opener { margin-left: auto; }
 body[data-screen="T-A-M"] .tabs .ui3-tools-opener {
   border: 1px solid #dfad42;

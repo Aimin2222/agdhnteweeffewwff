@@ -582,9 +582,15 @@ def main(argv=None) -> int:
                                       sliders:document.querySelectorAll('.ui3-camera-range').length,
                                       reset:!!document.querySelector('.ui3-camera-reset'),
                                       materialTabs:document.querySelectorAll('.ui3-material-tabs button').length,
-                                      none:!!document.querySelector('[data-ui3-none="1"]')}))()''')
+                                      none:!!document.querySelector('[data-ui3-none="1"]'),
+                                      imageEntryDisabled:document.querySelector('.tabs .ui3-image-unavailable')?.disabled,
+                                      switchInTools:!!document.querySelector('#ui3-tools .ui3-switch-opener'),
+                                      referenceInTabs:document.querySelectorAll('.tabs .ui3-reference-opener').length}))()''')
                                     if candidate_p0 != {"sliders": 4, "reset": True,
-                                                        "materialTabs": 3, "none": True}:
+                                                        "materialTabs": 3, "none": True,
+                                                        "imageEntryDisabled": True,
+                                                        "switchInTools": True,
+                                                        "referenceInTabs": 0}:
                                         raise AssertionError(f"candidate 3 P0 controls missing: {candidate_p0}")
                                     window.evaluate_js('''(() => {const slider=document.querySelector(
                                       '.ui3-camera-range[data-camera-key="third_dist"]');slider.value='930';
