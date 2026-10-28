@@ -1,0 +1,122 @@
+{
+  "palettes": {
+    "light": {
+      "bg": "#edf1f5",
+      "panel": "#fafbfc",
+      "raised": "#ffffff",
+      "line": "#d3dce5",
+      "text": "#233349",
+      "muted": "#56677c",
+      "accent": "#1762a6",
+      "selected": "#e3eef9",
+      "teal": "#137c77",
+      "control": "#7c8da1"
+    },
+    "dark": {
+      "bg": "#1d2632",
+      "panel": "#252f3d",
+      "raised": "#2c3848",
+      "line": "#47586b",
+      "text": "#e6edf5",
+      "muted": "#b2c0d1",
+      "accent": "#8ec5ff",
+      "selected": "#354d66",
+      "teal": "#8edbd4",
+      "control": "#8292a6"
+    }
+  },
+  "computed_pairs": [
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "panel",
+      "ratio": 12.350282609878727,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "foreground": "muted",
+      "background": "panel",
+      "ratio": 5.588712051543209,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "foreground": "accent",
+      "background": "selected",
+      "ratio": 5.3578753877134355,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "foreground": "teal",
+      "background": "panel",
+      "ratio": 4.852450437017343,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "light",
+      "foreground": "control",
+      "background": "raised",
+      "ratio": 3.3971734644358693,
+      "target": 3,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "panel",
+      "ratio": 11.462177016934731,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "muted",
+      "background": "panel",
+      "ratio": 7.312346849813343,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "accent",
+      "background": "selected",
+      "ratio": 4.815663657756346,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "teal",
+      "background": "panel",
+      "ratio": 8.52312376133852,
+      "target": 4.5,
+      "status": "PASS"
+    },
+    {
+      "theme": "dark",
+      "foreground": "control",
+      "background": "raised",
+      "ratio": 3.7429682565474796,
+      "target": 3,
+      "status": "PASS"
+    }
+  ],
+  "scope": "selected opaque text/boundary pairs only; not an accessibility certification or all platform-native controls",
+  "theme_modes": [
+    "light",
+    "dark",
+    "system"
+  ],
+  "selection_cues": [
+    "checkmark",
+    "border",
+    "aria-pressed/selected"
+  ],
+  "preview_theme_independent": true
+}

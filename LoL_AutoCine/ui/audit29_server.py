@@ -194,7 +194,7 @@ document.querySelectorAll('button[data-id]:not(:disabled)').forEach(button=>butt
                     source = APP_ROOT / "assets" / "ui_reference" / "camera_comparison_20261020.jpg"
                     return self._send(200, source.read_bytes(), "image/jpeg")
                 if path in ("/runtime/reference.css", "/runtime/reference.js") and os.environ.get("AUTOCINE_UI3_LAUNCH") == "1":
-                    source = Path(__file__).with_name("reference_views.css" if path.endswith(".css") else "reference_views.js")
+                    source = Path(__file__).with_name("reference_views.css" if path.endswith(".css") else "reference_views_v2.js")
                     return self._send(200, source.read_bytes(),
                                       "text/css; charset=utf-8" if path.endswith(".css") else "text/javascript; charset=utf-8")
                 if path.startswith("/ui3/reference/") and os.environ.get("AUTOCINE_UI3_LAUNCH") == "1":

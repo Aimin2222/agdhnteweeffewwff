@@ -80,9 +80,89 @@ body[data-screen="T-A-M"] .camera-card small { margin-top: 0; }
 body[data-screen="T-A-M"] .camera-numeric label {
   margin-top: 2px;
   min-height: 22px;
+  gap: 5px;
 }
 body[data-screen="T-A-M"] .camera-numeric input {
   height: 22px;
+}
+body[data-screen="T-A-M"] .camera-numeric {
+  position: relative;
+  overflow: hidden;
+}
+body[data-screen="T-A-M"] .camera-numeric label input[type="number"] {
+  width: 55px;
+  flex: none;
+}
+body[data-screen="T-A-M"] .ui3-camera-range {
+  flex: 1;
+  min-width: 30px;
+  accent-color: #1269dc;
+}
+body[data-screen="T-A-M"] .ui3-camera-reset {
+  position: absolute;
+  top: 1px;
+  right: 3px;
+  min-height: 22px;
+  font-size: 10px;
+  padding: 1px 6px;
+}
+body[data-screen="T-A-M"] .materials .material-list[hidden],
+body[data-screen="T-A-M"] .materials .ui3-material-extra[hidden] { display: none; }
+body[data-screen="T-A-M"] .ui3-material-tabs {
+  display: flex;
+  gap: 2px;
+  margin-top: 4px;
+}
+body[data-screen="T-A-M"] .ui3-material-tabs button {
+  flex: 1;
+  min-width: 0;
+  min-height: 23px;
+  padding: 1px 2px;
+  font-size: 10px;
+}
+body[data-screen="T-A-M"] .materials .material-list { margin-top: 4px; }
+body[data-screen="T-A-M"] .materials .material-card { height: 100px;overflow: hidden; }
+body[data-screen="T-A-M"] .materials .material-card img { height: 54px; }
+body[data-screen="T-A-M"] .materials .material-card .badge { display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+body[data-screen="T-A-M"] .materials>button { margin-top: 2px;min-height:25px; }
+body[data-screen="T-A-M"] .ui3-material-extra {
+  margin-top: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+body[data-screen="T-A-M"] .ui3-material-extra button {
+  min-height: 26px;
+  padding: 2px 5px;
+  font-size: 10px;
+}
+body[data-screen="T-A-M"] .ui3-effect-status { width: 100%;font-size: 11px; }
+body[data-screen="T-A-M"] .target-side .row button:nth-child(3) { display:none; }
+body[data-screen="T-A-M"] .target-side .row { margin-top:10px; }
+body[data-screen="T-A-M"] .target-side p { margin:8px 0 2px; }
+body[data-screen="T-A-M"] .ui3-target-picker { width:100%;min-height:25px;font-size:11px; }
+body[data-screen="T-A-M"] .prepare .pad>.row:has(select[aria-label="プリセット"]) label { flex:none; }
+body[data-screen="T-A-M"] .prepare .pad>.row select[aria-label="プリセット"] { flex:1;min-width:0; }
+body[data-screen="T-A-M"] .prepare .pad>.row:last-child { gap:6px; }
+body[data-screen="T-A-M"] .prepare .pad>.row:last-child button { flex:1;min-width:0; }
+body[data-screen="T-A-M"] .titlebar nav { margin-right: 112px; gap: 8px; }
+body[data-screen="T-A-M"] .titlebar nav button:nth-child(1) { width: 140px; }
+body[data-screen="T-A-M"] .titlebar nav button:nth-child(2) { width: 80px; }
+body[data-screen="T-A-M"] .titlebar nav button:nth-child(3) { width: 190px; }
+body[data-screen="T-A-M"] .titlebar nav button:nth-child(4) { width: 82px; }
+body[data-screen="T-A-M"] .titlebar nav button:nth-child(5) { width: 150px; }
+body[data-screen="T-A-M"] .playbar { gap: 10px; }
+body[data-screen="T-A-M"] .playbar button:nth-child(1) { width: 147px; }
+body[data-screen="T-A-M"] .playbar button:nth-child(2) { width: 130px; }
+body[data-screen="T-A-M"] .playbar button:nth-child(3) { width: 248px; }
+body[data-screen="T-A-M"] .playbar button:nth-child(4) { width: 150px; }
+body[data-screen="T-A-M"] .scene-card { height: 23px; }
+body[data-screen="T-A-M"] .camera-card.selected::before { content: '◉';color:#075ad7;margin-right:3px; }
+body[data-screen="T-A-M"] .camera-card:not(.selected)::before { content: '◯';color:#667e9a;margin-right:3px; }
+@media(max-width:1500px){
+  body[data-screen="T-A-M"] .titlebar nav { margin-right: 0; gap: 4px; }
+  body[data-screen="T-A-M"] .titlebar nav button { width:auto!important;min-width:0;padding:3px 5px;font-size:11px; }
+  body[data-screen="T-A-M"] .playbar button { width:auto!important; }
 }
 @media (max-width: 1400px) {
   body[data-screen="T-A-M"] .camera-card small { display: block; font-size: 9px; }

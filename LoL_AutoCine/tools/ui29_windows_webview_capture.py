@@ -207,8 +207,21 @@ def _reference_flow(window, url: str, variant: str) -> dict:
       mirror:!!document.querySelector('[data-action="mirror_start"]'),
       scan:!!document.querySelector('[data-action="scan"]'),
       export:!!document.querySelector('[data-view="export"]')}))()''')
-    if initial != {"nav": 8, "rail": 8, "mirror": True, "scan": True, "export": True}:
+    if initial != {"nav": 8, "rail": 7, "mirror": True, "scan": True, "export": True}:
         raise AssertionError(f"reference controls missing: {initial}")
+    audit = window.evaluate_js('''(() => ({compareDisabled:document.querySelector('#compare-view')?.disabled,
+      shotInTimeline:document.querySelector('.timeline #shot-strip')!==null,
+      shotCheck:document.querySelector('#open-shot-checks')!==null,
+      stageHeight:document.querySelector('.preview-stage')?.getBoundingClientRect().height}))()''')
+    if audit["compareDisabled"] is not True:
+        raise AssertionError("unimplemented before/after comparison appears active")
+    if variant == "ln":
+        if not audit["shotInTimeline"] or not audit["shotCheck"] or audit["stageHeight"] < 525:
+            raise AssertionError(f"Lolnam lower stack or selection entrance missing: {audit}")
+        window.evaluate_js("document.querySelector('#open-shot-checks').click()")
+        if not window.evaluate_js("document.querySelector('#shot-check-dialog').open"):
+            raise AssertionError("shot output checklist did not open")
+        window.evaluate_js("document.querySelector('#shot-check-close').click()")
     window.evaluate_js('document.querySelector(\'.topnav [data-view="camera"]\').click()')
     deadline = time.monotonic() + 8
     while time.monotonic() < deadline:
@@ -217,6 +230,13 @@ def _reference_flow(window, url: str, variant: str) -> dict:
         time.sleep(0.1)
     else:
         raise AssertionError("reference camera tab missing numeric input")
+    window.evaluate_js('''(() => {const input=document.querySelector('input[data-camera="third_dist"]');
+      input.focus();input.value='937';input.dispatchEvent(new Event('input',{bubbles:true}));})()''')
+    time.sleep(1.5)
+    kept_draft = window.evaluate_js('''(() => {const input=document.querySelector('input[data-camera="third_dist"]');
+      return input?.value==='937' && document.activeElement===input})()''')
+    if not kept_draft:
+        raise AssertionError("1100ms snapshot replaced an active numeric draft")
     window.evaluate_js('''(() => {const input=document.querySelector('input[data-camera="third_dist"]');
       input.value='920';input.dispatchEvent(new Event('change',{bubbles:true}));})()''')
     deadline = time.monotonic() + 8
@@ -235,6 +255,24 @@ def _reference_flow(window, url: str, variant: str) -> dict:
     current = _state(url)
     if current["frame"]["id"] != card or not current["frame"]["effect_id"]:
         raise AssertionError("reference frame and paired FX did not reach native App")
+    window.evaluate_js('document.querySelector(\'.topnav [data-view="export"]\').click()')
+    window.evaluate_js('''(() => {for(const [id,value] of [['fps','144'],['encoder','gpu']]){
+      const input=document.getElementById(id);input.value=value;
+      input.dispatchEvent(new Event('change',{bubbles:true}));}})()''')
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline:
+        output = _state(url)["output"]
+        if str(output["fps"]).startswith("144") and str(output["encoder_policy"]).startswith("GPU"):
+            break
+        time.sleep(0.1)
+    else:
+        raise AssertionError("fps/encoder settings did not reach native App")
+    window.evaluate_js('document.querySelector(\'.topnav [data-view="camera"]\').click()')
+    window.evaluate_js('document.querySelector(\'.topnav [data-view="export"]\').click()')
+    selected_output = window.evaluate_js('''(() => ({fps:document.querySelector('#fps')?.value,
+      encoder:document.querySelector('#encoder')?.value}))()''')
+    if selected_output != {"fps": "144", "encoder": "gpu"}:
+        raise AssertionError(f"fps/encoder controls lost saved values: {selected_output}")
     window.evaluate_js('document.querySelector(\'.topnav [data-view="main"]\').click()')
     other = "ln" if variant == "ld" else "ld"
     window.evaluate_js(f'document.querySelector(\'[data-route="{other}"]\').click()')
@@ -242,7 +280,8 @@ def _reference_flow(window, url: str, variant: str) -> dict:
     retained = _state(url)
     if retained["camera"]["values"].get("third_dist") != 920 or retained["frame"]["id"] != card:
         raise AssertionError("reference UI switch reset native settings")
-    return {"main_controls": "PASS", "camera_input": "PASS", "real_frame": card,
+    return {"main_controls": "PASS", "audit_p0": audit, "camera_input": "PASS",
+            "fps_encoder_retained": "PASS", "real_frame": card,
             "paired_effect": current["frame"]["effect_id"], "cross_variant_state": "PASS",
             "live_lol_gpu_record_audio_mp4": "NOT_RUN"}
 
@@ -284,6 +323,8 @@ def main(argv=None) -> int:
     parser.add_argument("--screen", help="capture one audited screen")
     parser.add_argument("--reference", choices=("ld", "ln"),
                         help="capture a Work reference layout using the real UI3 backend")
+    parser.add_argument("--reference-all", action="store_true",
+                        help="with --reference, capture all eight tabs, dark and 1366x768")
     parser.add_argument("--detail-family", choices=tuple(DERIVED_DETAILS),
                         help="capture one explicitly derived comparison detail")
     parser.add_argument("--material-family", choices=("legacy02", "legacy03", "legacy05", "testA"),
@@ -295,6 +336,8 @@ def main(argv=None) -> int:
     parser.add_argument("--numbered-label-audit", action="store_true",
                         help="capture chooser/switchers and reject old candidate names in Windows WebView2")
     args = parser.parse_args(argv)
+    if args.reference_all and not args.reference:
+        parser.error("--reference-all requires --reference")
     args.output = args.output.resolve()
     args.output.mkdir(parents=True, exist_ok=True)
     inventory = json.loads((ROOT / "ui" / "comparison7_screens.json").read_text(encoding="utf-8"))
@@ -411,6 +454,52 @@ def main(argv=None) -> int:
                                 size = tuple(screen["resolution"])
                                 path = args.output / f"{sid}.png"
                                 _capture_webview(window, path, size)
+                                reference_captures = []
+                                if args.reference_all:
+                                    prefix = args.reference.upper()
+                                    for view_id in ("main", "easy", "detail", "camera", "curve",
+                                                    "color", "material", "export"):
+                                        if view_id != "main":
+                                            window.evaluate_js(
+                                                f'document.querySelector(\'.topnav [data-view="{view_id}"]\').click()')
+                                        deadline = time.monotonic() + 8
+                                        while time.monotonic() < deadline:
+                                            if window.evaluate_js("document.querySelector('#inspector-title').textContent") == {
+                                                "main": "メイン", "easy": "かんたん", "detail": "詳細編集",
+                                                "camera": "カメラ", "curve": "カーブ", "color": "色調整",
+                                                "material": "素材", "export": "出力"}[view_id]:
+                                                break
+                                            time.sleep(0.1)
+                                        else:
+                                            raise TimeoutError(f"reference tab failed: {view_id}")
+                                        time.sleep(0.15)
+                                        name = f"{prefix}_{view_id}_light_1920x1080.png"
+                                        _capture_webview(window, args.output / name, (1920, 1080))
+                                        reference_captures.append(name)
+                                    window.evaluate_js('document.querySelector(\'.topnav [data-view="main"]\').click()')
+                                    _activate(url, "theme", {"value": "dark"})
+                                    deadline = time.monotonic() + 8
+                                    while time.monotonic() < deadline:
+                                        if window.evaluate_js("document.body.classList.contains('dark')"):
+                                            break
+                                        time.sleep(0.1)
+                                    else:
+                                        raise TimeoutError("reference dark theme did not apply")
+                                    name = f"{prefix}_main_dark_1920x1080.png"
+                                    _capture_webview(window, args.output / name, (1920, 1080))
+                                    reference_captures.append(name)
+                                    _activate(url, "theme", {"value": "light"})
+                                    deadline = time.monotonic() + 8
+                                    while time.monotonic() < deadline:
+                                        if not window.evaluate_js("document.body.classList.contains('dark')"):
+                                            break
+                                        time.sleep(0.1)
+                                    else:
+                                        raise TimeoutError("reference light theme did not restore")
+                                    name = f"{prefix}_main_light_1366x768.png"
+                                    _capture_webview(window, args.output / name, (1366, 768))
+                                    reference_captures.append(name)
+                                    _capture_webview(window, args.output / path.name, size)
                                 label_audit = None
                                 if args.numbered_label_audit:
                                     label_audit = window.evaluate_js('''(() => {
@@ -489,6 +578,42 @@ def main(argv=None) -> int:
                                     if restored["camera"]["values"]["third_dist"] != 900:
                                         raise AssertionError("camera setting was lost during view switch")
                                 if args.ui3_flow:
+                                    candidate_p0 = window.evaluate_js('''(() => ({
+                                      sliders:document.querySelectorAll('.ui3-camera-range').length,
+                                      reset:!!document.querySelector('.ui3-camera-reset'),
+                                      materialTabs:document.querySelectorAll('.ui3-material-tabs button').length,
+                                      none:!!document.querySelector('[data-ui3-none="1"]')}))()''')
+                                    if candidate_p0 != {"sliders": 4, "reset": True,
+                                                        "materialTabs": 3, "none": True}:
+                                        raise AssertionError(f"candidate 3 P0 controls missing: {candidate_p0}")
+                                    window.evaluate_js('''(() => {const slider=document.querySelector(
+                                      '.ui3-camera-range[data-camera-key="third_dist"]');slider.value='930';
+                                      slider.dispatchEvent(new Event('change',{bubbles:true}));})()''')
+                                    deadline = time.monotonic() + 8
+                                    while time.monotonic() < deadline and _state(url)["camera"]["values"].get("third_dist") != 930:
+                                        time.sleep(0.1)
+                                    if _state(url)["camera"]["values"].get("third_dist") != 930:
+                                        raise AssertionError("candidate 3 slider did not update native camera")
+                                    window.evaluate_js("document.querySelector('.ui3-camera-reset').click()")
+                                    deadline = time.monotonic() + 8
+                                    while time.monotonic() < deadline and _state(url)["camera"]["values"].get("third_dist") != 950:
+                                        time.sleep(0.1)
+                                    if _state(url)["camera"]["values"].get("third_dist") != 950:
+                                        raise AssertionError("candidate 3 camera reset did not apply")
+                                    window.evaluate_js("document.querySelector('[data-ui3-none=\"1\"]').click()")
+                                    deadline = time.monotonic() + 8
+                                    while time.monotonic() < deadline and _state(url)["frame"]["id"]:
+                                        time.sleep(0.1)
+                                    if _state(url)["frame"]["id"]:
+                                        raise AssertionError("candidate 3 none material did not clear frame")
+                                    motion_controls = window.evaluate_js('''(() => {
+                                      document.querySelector('.ui3-material-tabs [data-tab="motion"]').click();
+                                      return document.querySelectorAll('.ui3-motion-choice').length})()''')
+                                    if motion_controls != 6:
+                                        raise AssertionError(f"candidate 3 entrance motion controls: {motion_controls}")
+                                    window.evaluate_js('''(() => {
+                                      document.querySelector('.ui3-material-tabs [data-tab="effect"]').click();
+                                      document.querySelector('.ui3-material-tabs [data-tab="frame"]').click();})()''')
                                     tools_ready = window.evaluate_js(
                                         "document.querySelectorAll('#ui3-tools button').length")
                                     if tools_ready < 18:
@@ -501,11 +626,16 @@ def main(argv=None) -> int:
                                         raise AssertionError("candidate 3 did not return from the real editor")
                                 flow = _priority_flow(window, url, sid) if (
                                     args.priority_seven_flow or args.ui3_flow) else None
+                                if args.ui3_flow and flow is not None:
+                                    flow["candidate_p0"] = {**candidate_p0,
+                                        "camera_slider_native": "PASS", "camera_reset_native": "PASS",
+                                        "none_material_native": "PASS", "motion_six_controls": "PASS"}
                                 reference_flow = _reference_flow(window, url, args.reference) if args.reference else None
                                 if flow:
                                     previous_candidate_state = _state(url)
                                 results.append({"id": sid, "result": capture_result,
                                                 "capture": path.name, "size": size,
+                                                "reference_captures": reference_captures,
                                                 "bounds": f"bounds/{sid}.json",
                                                 "main_detail_roundtrip": ("PASS" if args.detail_family or flow else "NOT_RUN"),
                                                 **({"reference_flow": reference_flow} if reference_flow else {}),

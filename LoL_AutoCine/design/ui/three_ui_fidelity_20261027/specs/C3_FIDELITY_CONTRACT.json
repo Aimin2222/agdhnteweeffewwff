@@ -1,0 +1,626 @@
+{
+  "identity": {
+    "candidate_number": 3,
+    "family": "testA",
+    "screen_id": "T-A-M",
+    "name": "旧テストA 現行整理",
+    "route": "/candidates/testA/T-A-M",
+    "PR": 51,
+    "PR_head": "ee700835efe25c1aa65670d73e57f1fd9373bac2",
+    "original_image": {
+      "path": "LoL_AutoCine/design/ui/implementation_audit_29_20261021/references/legacy_test/A_main.png",
+      "native": [
+        1672,
+        941
+      ],
+      "logical": [
+        1920,
+        1080
+      ],
+      "sha256": "b05abe6a04732069729abd58fc4e7aca3b09c19e8d2703c5d9af3e5a5ed01a13",
+      "git_blob": "3a68a05c72f9f9c3c4f63e032cb6b227697938a0"
+    },
+    "numbering_url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/ee700835efe25c1aa65670d73e57f1fd9373bac2/LoL_AutoCine/qa/ui7_20261026/NUMBERING_JA.md",
+    "labels_blob": "12b55123d48303f988d1270e882c0acea000be70",
+    "html": {
+      "PR": 51,
+      "head": "ee700835efe25c1aa65670d73e57f1fd9373bac2",
+      "html_blob": "0d2d632aacc240c7128af6a0485bc3759fb83b0b",
+      "html_path": "LoL_AutoCine/design/ui/ui29_legacy/T-A-M.html",
+      "body": "<body data-screen=\"T-A-M\" data-plan=\"testA\">",
+      "section_order": [
+        {
+          "class": "panel prepare",
+          "data_ui": "prepare"
+        },
+        {
+          "class": "panel preview-panel",
+          "data_ui": "preview-panel"
+        },
+        {
+          "class": "panel scene-list",
+          "data_ui": "scene-list"
+        },
+        {
+          "class": "timeline",
+          "data_ui": "timeline"
+        },
+        {
+          "class": "materials",
+          "data_ui": "materials"
+        },
+        {
+          "class": "camera-detail",
+          "data_ui": "camera-detail"
+        },
+        {
+          "class": "target-side",
+          "data_ui": "target-side"
+        },
+        {
+          "class": "camera-numeric",
+          "data_ui": "camera-numeric"
+        }
+      ],
+      "tabs": [
+        "リプレイを開く",
+        "準備",
+        "基本設定",
+        "ログ",
+        "動画を作成",
+        "リプレイを開く",
+        "更新",
+        "読み込み",
+        "保存",
+        "別名保存",
+        "ミラー開始",
+        "ミラー停止",
+        "▶ 演出を確認",
+        "■ 停止",
+        "シーンを検出",
+        "すべて",
+        "キル",
+        "アシスト",
+        "キル＋アシスト",
+        "選択シーンへ移動",
+        "チェックしたシーンで動画を作成",
+        "簡単編集",
+        "詳細編集",
+        "シーン",
+        "カメラ",
+        "色・FX",
+        "出力",
+        "テスト結果",
+        "図鑑の全候補を見る",
+        "BLUE",
+        "RED",
+        "自動"
+      ],
+      "css_blob": "203c39722a795a0c1a5812f9b52b07bf492e2c46",
+      "css_grid": "minmax(260px,338fr) minmax(420px,902fr) minmax(310px,400fr)",
+      "html_is_reconstruction": true,
+      "executed": false,
+      "redistributed_html": false
+    },
+    "not_candidate3": [
+      {
+        "id": "L03-N",
+        "candidate": 2,
+        "family": "legacy03"
+      },
+      {
+        "id": "R-A-main",
+        "family": "researchA",
+        "name": "新A Studio"
+      }
+    ],
+    "current_application_started": false
+  },
+  "authority_order": [
+    "user-selected PNG b05abe6a...",
+    "current visual measurements and mandatory roles",
+    "historical region contract / PR51 reconstructed HTML",
+    "prior improvement proposals only as history"
+  ],
+  "required": [
+    {
+      "id": "C3-M01",
+      "area": "配色と全体",
+      "keep": "濃い青系ヘッダー＋明るいパネルの原画の階層。白い巨大ホームへ変更しない"
+    },
+    {
+      "id": "C3-M02",
+      "area": "上部操作",
+      "keep": "リプレイを開く→準備→GPU/音声/HUD設定→ログ→動画を作成の順と右寄せ位置"
+    },
+    {
+      "id": "C3-M03",
+      "area": "左上の準備",
+      "keep": "ROFL欄、試合情報の領域、対象更新、未接続時の正直な状態を維持"
+    },
+    {
+      "id": "C3-M04",
+      "area": "プレイヤー一覧",
+      "keep": "対象10人とアイコン/チーム/TargetLockを一覧表示。大きいカード数人へ置換しない"
+    },
+    {
+      "id": "C3-M05",
+      "area": "テンプレート",
+      "keep": "左下のプリセットと読み込み/保存/別名保存を維持。保存対象の型は調査して明示"
+    },
+    {
+      "id": "C3-M06",
+      "area": "中央ミラー",
+      "keep": "中央の大きい固定映像。実LoL映像と未接続表示を区別。説明ページで置換しない"
+    },
+    {
+      "id": "C3-M07",
+      "area": "ミラー状態",
+      "keep": "目標Hzと実測fpsを別表示。画像の144Hzを実測値や強制設定にしない"
+    },
+    {
+      "id": "C3-M08",
+      "area": "中央の操作列",
+      "keep": "ミラー開始/停止、演出プレビュー再生/停止の4操作をミラー直下に残す"
+    },
+    {
+      "id": "C3-M09",
+      "area": "右スキャン",
+      "keep": "解析状態・検出操作、すべて/キル/アシスト/キル＋アシストの4フィルター"
+    },
+    {
+      "id": "C3-M10",
+      "area": "右の表形式一覧",
+      "keep": "チェック・番号・時刻・種別・詳細の列。行の焦点と出力チェックは独立"
+    },
+    {
+      "id": "C3-M11",
+      "area": "右下の操作",
+      "keep": "選択シーンへジャンプとチェックしたシーンで作成を一覧下に残す"
+    },
+    {
+      "id": "C3-M12",
+      "area": "編集モード",
+      "keep": "簡単編集/詳細編集の2タブを下段入口に残す。別の巨大ホームへ移さない"
+    },
+    {
+      "id": "C3-M13",
+      "area": "下段5タブ",
+      "keep": "シーン/カメラ/色・FX/出力/テスト結果をこの順で維持"
+    },
+    {
+      "id": "C3-M14",
+      "area": "常設タイムライン",
+      "keep": "選択キルの時刻・前後トリムを小型横長列で常設。詳細画面だけに退避しない"
+    },
+    {
+      "id": "C3-M15",
+      "area": "下段カメラ",
+      "keep": "従来/固定視点＋自動構図/フルオートの3カード、画像・説明・選択印"
+    },
+    {
+      "id": "C3-M16",
+      "area": "下段対象",
+      "keep": "BLUE/RED、注目プレイヤー/TargetLockをカメラカードの右に配置"
+    },
+    {
+      "id": "C3-M17",
+      "area": "下段数値",
+      "keep": "三人称距離/高さ/回転角/回り込みの4行、スライダー＋数値、リセット"
+    },
+    {
+      "id": "C3-M18",
+      "area": "下段右の素材",
+      "keep": "フレーム/エフェクト/アニメの3切替、なしを含む5サムネイル枠、区分と図鑑入口"
+    },
+    {
+      "id": "C3-M19",
+      "area": "画像選択入口",
+      "keep": "原画の画像選択ボタンの役割を未確認のまま別機能へ接続しない。調査ID U09"
+    },
+    {
+      "id": "C3-M20",
+      "area": "情報と機能",
+      "keep": "70項目への導線を保持。原画の表示情報を消して余白だけ増やさない"
+    }
+  ],
+  "regions": [
+    {
+      "id": "header",
+      "rect": [
+        0,
+        0,
+        1672,
+        49
+      ],
+      "role": "上部バー／出力・基本設定",
+      "scroll": false,
+      "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source",
+      "canvas_percent": [
+        0.0,
+        0.0,
+        100.0,
+        5.207226
+      ]
+    },
+    {
+      "id": "prepare",
+      "rect": [
+        7,
+        54,
+        338,
+        608
+      ],
+      "role": "リプレイ準備・選手・テンプレート",
+      "scroll": true,
+      "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source",
+      "canvas_percent": [
+        0.41866,
+        5.738576,
+        20.215311,
+        64.612115
+      ]
+    },
+    {
+      "id": "preview-panel",
+      "rect": [
+        352,
+        54,
+        902,
+        608
+      ],
+      "role": "固定ミラーパネル",
+      "scroll": false,
+      "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source",
+      "canvas_percent": [
+        21.052632,
+        5.738576,
+        53.947368,
+        64.612115
+      ]
+    },
+    {
+      "id": "preview-stage",
+      "rect": [
+        355,
+        94,
+        895,
+        492
+      ],
+      "role": "ライブ映像の表示面",
+      "scroll": false,
+      "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source",
+      "canvas_percent": [
+        21.232057,
+        9.989373,
+        53.528708,
+        52.284803
+      ]
+    },
+    {
+      "id": "preview-controls",
+      "rect": [
+        355,
+        611,
+        895,
+        46
+      ],
+      "role": "ミラー／演出の操作",
+      "scroll": false,
+      "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source",
+      "canvas_percent": [
+        21.232057,
+        64.930925,
+        53.528708,
+        4.888417
+      ]
+    },
+    {
+      "id": "scene-list",
+      "rect": [
+        1263,
+        54,
+        400,
+        608
+      ],
+      "role": "検出シーン・スキャン",
+      "scroll": true,
+      "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source",
+      "canvas_percent": [
+        75.538278,
+        5.738576,
+        23.923445,
+        64.612115
+      ]
+    },
+    {
+      "id": "detail-tabs",
+      "rect": [
+        7,
+        674,
+        1656,
+        56
+      ],
+      "role": "シーン／カメラ／FX／出力／テスト",
+      "scroll": false,
+      "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source",
+      "canvas_percent": [
+        0.41866,
+        71.62593,
+        99.043062,
+        5.951116
+      ]
+    },
+    {
+      "id": "timeline",
+      "rect": [
+        7,
+        735,
+        1278,
+        53
+      ],
+      "role": "固定タイムライン／トリム",
+      "scroll": false,
+      "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source",
+      "canvas_percent": [
+        0.41866,
+        78.108395,
+        76.435407,
+        5.632306
+      ]
+    },
+    {
+      "id": "camera-detail",
+      "rect": [
+        7,
+        793,
+        588,
+        136
+      ],
+      "role": "詳細カメラ選択",
+      "scroll": true,
+      "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source",
+      "canvas_percent": [
+        0.41866,
+        84.272051,
+        35.167464,
+        14.45271
+      ]
+    },
+    {
+      "id": "target-side",
+      "rect": [
+        603,
+        793,
+        260,
+        136
+      ],
+      "role": "対象・TargetLock",
+      "scroll": false,
+      "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source",
+      "canvas_percent": [
+        36.064593,
+        84.272051,
+        15.550239,
+        14.45271
+      ]
+    },
+    {
+      "id": "camera-numeric",
+      "rect": [
+        871,
+        793,
+        414,
+        136
+      ],
+      "role": "スライダーと数値入力",
+      "scroll": true,
+      "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source",
+      "canvas_percent": [
+        52.093301,
+        84.272051,
+        24.760766,
+        14.45271
+      ]
+    },
+    {
+      "id": "materials",
+      "rect": [
+        1294,
+        735,
+        369,
+        194
+      ],
+      "role": "フレーム／FX／登場",
+      "scroll": true,
+      "evidence": "raster manual measurement; coordinates are explicit reconstruction contract, not recovered vector source",
+      "canvas_percent": [
+        77.392344,
+        78.108395,
+        22.069378,
+        20.616366
+      ]
+    }
+  ],
+  "region_format": "native x,y,width,height; original hand measurement uncertainty up to 8px",
+  "native_button_anchors": [
+    {
+      "id": "header-open",
+      "label": "リプレイを開く",
+      "native_xywh": [
+        869,
+        6,
+        140,
+        35
+      ],
+      "uncertainty_px": 4,
+      "evidence": "current PNG visual measurement; header x additionally sampled at rows8/39",
+      "verification": "Codex overlay pending"
+    },
+    {
+      "id": "header-prepare",
+      "label": "準備",
+      "native_xywh": [
+        1017,
+        6,
+        80,
+        35
+      ],
+      "uncertainty_px": 4,
+      "evidence": "current PNG visual measurement; header x additionally sampled at rows8/39",
+      "verification": "Codex overlay pending"
+    },
+    {
+      "id": "header-settings",
+      "label": "GPU・音声・HUD設定",
+      "native_xywh": [
+        1105,
+        6,
+        190,
+        35
+      ],
+      "uncertainty_px": 4,
+      "evidence": "current PNG visual measurement; header x additionally sampled at rows8/39",
+      "verification": "Codex overlay pending"
+    },
+    {
+      "id": "header-log",
+      "label": "ログ",
+      "native_xywh": [
+        1303,
+        6,
+        82,
+        35
+      ],
+      "uncertainty_px": 4,
+      "evidence": "current PNG visual measurement; header x additionally sampled at rows8/39",
+      "verification": "Codex overlay pending"
+    },
+    {
+      "id": "header-export",
+      "label": "動画を作成",
+      "native_xywh": [
+        1394,
+        6,
+        150,
+        35
+      ],
+      "uncertainty_px": 4,
+      "evidence": "current PNG visual measurement; header x additionally sampled at rows8/39",
+      "verification": "Codex overlay pending"
+    },
+    {
+      "id": "mirror-start",
+      "label": "ミラー開始",
+      "native_xywh": [
+        465,
+        618,
+        147,
+        38
+      ],
+      "uncertainty_px": 4,
+      "evidence": "current PNG visual measurement; header x additionally sampled at rows8/39",
+      "verification": "Codex overlay pending"
+    },
+    {
+      "id": "mirror-stop",
+      "label": "ミラー停止",
+      "native_xywh": [
+        623,
+        618,
+        130,
+        38
+      ],
+      "uncertainty_px": 4,
+      "evidence": "current PNG visual measurement; header x additionally sampled at rows8/39",
+      "verification": "Codex overlay pending"
+    },
+    {
+      "id": "effect-play",
+      "label": "演出プレビュー再生",
+      "native_xywh": [
+        780,
+        618,
+        248,
+        38
+      ],
+      "uncertainty_px": 4,
+      "evidence": "current PNG visual measurement; header x additionally sampled at rows8/39",
+      "verification": "Codex overlay pending"
+    },
+    {
+      "id": "effect-stop",
+      "label": "プレビュー停止",
+      "native_xywh": [
+        1036,
+        618,
+        150,
+        38
+      ],
+      "uncertainty_px": 4,
+      "evidence": "current PNG visual measurement; header x additionally sampled at rows8/39",
+      "verification": "Codex overlay pending"
+    },
+    {
+      "id": "scan",
+      "label": "シーンを検出",
+      "native_xywh": [
+        1531,
+        113,
+        121,
+        37
+      ],
+      "uncertainty_px": 4,
+      "evidence": "current PNG visual measurement; header x additionally sampled at rows8/39",
+      "verification": "Codex overlay pending"
+    },
+    {
+      "id": "scene-jump",
+      "label": "選択シーンへジャンプ",
+      "native_xywh": [
+        1275,
+        559,
+        378,
+        38
+      ],
+      "uncertainty_px": 4,
+      "evidence": "current PNG visual measurement; header x additionally sampled at rows8/39",
+      "verification": "Codex overlay pending"
+    },
+    {
+      "id": "checked-export",
+      "label": "チェックしたシーンで動画を作成",
+      "native_xywh": [
+        1275,
+        603,
+        378,
+        38
+      ],
+      "uncertainty_px": 4,
+      "evidence": "current PNG visual measurement; header x additionally sampled at rows8/39",
+      "verification": "Codex overlay pending"
+    }
+  ],
+  "density": {
+    "reference_viewport": [
+      1672,
+      941
+    ],
+    "logical": [
+      1920,
+      1080
+    ],
+    "player_rows": 10,
+    "scene_table_rows": 12,
+    "camera_cards": 3,
+    "camera_numeric_rows": 4,
+    "material_tabs": 3,
+    "material_slots_including_none": 5,
+    "scene_filter_options": 4,
+    "edit_modes": 2,
+    "detail_tabs": 5
+  },
+  "fixture_condition": "reference-sized populated layout; real empty state must not fabricate records",
+  "legacy_control_rectangles": "not authoritative: old aggregate controls have coarse/misleading positions; use PNG/updated anchors",
+  "C3PS_are_not_replacements": true
+}

@@ -7,6 +7,7 @@ changes only alter presentation state; they never invoke render handlers.
 from __future__ import annotations
 
 import json
+import math
 import os
 from pathlib import Path
 
@@ -208,6 +209,10 @@ class Audit29Runtime:
             "selected_scene_index": selected[0] if selected else None,
             "keyframes": ([dict(frame) for frame in getattr(app, "_edit_keyframes", [])]
                           if selected else []),
+            "scene_fx": {"override": bool(app.var_scene_fx_enabled.get()),
+                         "values": {key: float(var.get()) for key, var in app.scene_fx_vars.items()}}
+                        if selected and hasattr(app, "var_scene_fx_enabled")
+                        and hasattr(app, "scene_fx_vars") else {"override": False, "values": {}},
             "checked_count": len(app.checked_kills),
             "trim": {"pre": float(app.var_pre.get()) if hasattr(app, "var_pre") else 4.0,
                      "post": float(app.var_post.get()) if hasattr(app, "var_post") else 3.0},
@@ -383,6 +388,14 @@ class Audit29Runtime:
             if not low <= value <= high:
                 raise ValueError("camera value out of range")
             app.sl[key].set(value)
+        elif action == "ui3_camera_reset":
+            # Match the existing safe third-person pose without changing its
+            # camera calculation or discarding per-scene keyframes.
+            for key, value in (("third_dist", 950.0), ("cam_height", 170.0),
+                               ("third_yaw", 0.0), ("motion_arc", 10.0)):
+                if key not in app.sl:
+                    raise ValueError(f"カメラ設定 {key} が見つかりません")
+                app.sl[key].set(value)
         elif action == "ui3_camera_batch":
             from core.camera import STYLES
             mode = str(data.get("mode", ""))
@@ -421,8 +434,63 @@ class Audit29Runtime:
             if key not in ("pre", "post") or not 1 <= value <= 15:
                 raise ValueError("invalid trim")
             (app.var_pre if key == "pre" else app.var_post).set(value)
+        elif action == "keyframe_upsert":
+            # The existing scene editor stores offsets relative to the kill,
+            # including an additive FOV delta. The Work reference's absolute
+            # FOV/time values must never be sent here as if they were identical.
+            from ui.scene_project import validate_keyframes
+            if app.busy or not app.lb_kills.curselection():
+                raise ValueError("シーンを選択し、書き出し停止後にキーを編集してください")
+            frame = {}
+            for field, low, high in (("time", -15, 15), ("yaw", -70, 70),
+                                     ("zoom", -30, 30), ("fov", -15, 15)):
+                value = float(data[field])
+                if not math.isfinite(value) or not low <= value <= high:
+                    raise ValueError(f"{field} は {low}～{high} の範囲で指定してください")
+                frame[field] = value
+            frames = [dict(item) for item in app._edit_keyframes]
+            index = data.get("index")
+            if index is not None:
+                index = int(index)
+                if not 0 <= index < len(frames):
+                    raise ValueError("選択したキーが見つかりません")
+                frames.pop(index)
+            app._edit_keyframes = validate_keyframes([*frames, frame])
+            app._refresh_keyframe_list(select_time=round(frame["time"], 2))
+        elif action == "keyframe_remove":
+            if app.busy or not app.lb_kills.curselection():
+                raise ValueError("シーンを選択し、書き出し停止後にキーを編集してください")
+            index = int(data["index"])
+            if not 0 <= index < len(app._edit_keyframes):
+                raise ValueError("選択したキーが見つかりません")
+            frames = [dict(item) for item in app._edit_keyframes]
+            frames.pop(index)
+            app._edit_keyframes = frames
+            app._refresh_keyframe_list()
+        elif action == "keyframe_preview":
+            app.on_keyframe_preview()
+        elif action == "scene_fx_number":
+            key = str(data["key"])
+            limits = {"temperature": (-1.0, 1.0), "bloom": (0.0, 1.0),
+                      "focus_blur": (0.0, 1.0), "dof_blur": (0.0, 20.0),
+                      "highlight_pulse": (0.0, 1.0)}
+            value = float(data["value"])
+            if (app.busy or not app.lb_kills.curselection() or key not in limits
+                    or key not in app.scene_fx_vars or not math.isfinite(value)
+                    or not limits[key][0] <= value <= limits[key][1]):
+                raise ValueError("シーンFXの対象または数値が不正です")
+            app.scene_fx_vars[key].set(value)
+            app.var_scene_fx_enabled.set(True)
+        elif action == "scene_fx_override":
+            if app.busy or not app.lb_kills.curselection():
+                raise ValueError("先にシーンを選択してください")
+            app.var_scene_fx_enabled.set(bool(data["value"]))
         elif action == "frame":
             select_frame_with_effect(app, str(data["id"]))
+        elif action == "frame_none":
+            app.var_work_frame.set("")
+            app.var_work_effect.set("")
+            app.var_work_review.set(False)
         elif action == "work_gallery":
             app._open_work_gallery()
         elif action == "legacy_frame_gallery":

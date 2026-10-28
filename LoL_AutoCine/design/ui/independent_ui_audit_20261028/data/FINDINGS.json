@@ -1,0 +1,799 @@
+{
+  "target_commit": "4a00871f3009475dbdd1586e5bf05f78117b8907",
+  "items": [
+    {
+      "id": "C3-01",
+      "priority": "P0",
+      "UIs": [
+        "C3"
+      ],
+      "screen_views": [
+        "T-A-M"
+      ],
+      "reference_ROI_xywh": [
+        866,
+        777,
+        421,
+        158
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "4行の数値欄はあるが、原画の4スライダーとリセットがない。値950/170と原画900/420の違い自体は不具合としない。",
+      "required_change": "距離/高さ/回転角/回り込みの各スライダー＋数値を同じ行に復帰し、リセットを右上へ戻す。既存値・範囲・Undoと双方向同期。従来UI原本は編集せずUI3限定で追加する。",
+      "evidence_kind": "CAPTURE_CONFIRMED",
+      "evidence": [
+        "crops/C3_numeric.png"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/ui3_baseline.css",
+        "line": 80,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/ui3_baseline.css#L80",
+        "local_sha256": "3083b0337ce93faff01841cc8539786417fbba44e6d8a25fc8493f0c811afd75"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "C3-02",
+      "priority": "P0",
+      "UIs": [
+        "C3"
+      ],
+      "screen_views": [
+        "T-A-M"
+      ],
+      "reference_ROI_xywh": [
+        1287,
+        735,
+        385,
+        203
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "演出素材欄が枠カード5枚だけになり、フレーム/エフェクト/アニメの3切替、なし枠、登場6種入口、一覧の状態要約がない。",
+      "required_change": "右下の3タブ、なしを含む5表示枠、図鑑と6アニメ入口を原画位置で復帰。実素材の絵柄差と承認状態は実カタログのまま。素材を原画の合成絵へ差し替える指示ではない。",
+      "evidence_kind": "CAPTURE_CONFIRMED",
+      "evidence": [
+        "crops/C3_materials.png"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/audit29_client.js",
+        "line": 935,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/audit29_client.js#L935",
+        "local_sha256": "aff8f79000af28186a4fd404fbcee1698ffb829c90b919944549e4d207c0c69c"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "C3-03",
+      "priority": "P1",
+      "UIs": [
+        "C3"
+      ],
+      "screen_views": [
+        "T-A-M"
+      ],
+      "reference_ROI_xywh": [
+        850,
+        0,
+        822,
+        49
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "上部操作が短い文言・狭い幅で極端に右へ寄った。リプレイ白面の左端は原画870、実画面1272で+402px。GPU/音声/HUDという設定の内容も見えない。",
+      "required_change": "上部操作を原画の幅と順序へ。リプレイ約[869,6,140,35]、準備[1017,6,80,35]、設定[1105,6,190,35]、ログ[1303,6,82,35]、作成[1394,6,150,35]を目標にする。版番号等の可変文言は固定しない。",
+      "evidence_kind": "CAPTURE_CONFIRMED",
+      "evidence": [
+        "crops/C3_header.png"
+      ],
+      "source": null,
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "C3-04",
+      "priority": "P1",
+      "UIs": [
+        "C3"
+      ],
+      "screen_views": [
+        "T-A-M"
+      ],
+      "reference_ROI_xywh": [
+        355,
+        611,
+        895,
+        46
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "4操作は存在するが中央寄せ・幅・文言・アイコンが原画と異なる。実画面の開始は約x549、原画はx465。",
+      "required_change": "ミラー開始[465,618,147,38]、ミラー停止[623,618,130,38]、演出再生[780,618,248,38]、プレビュー停止[1036,618,150,38]へ近づける。ミラー停止・プレビュー停止・録画停止を共用しない。",
+      "evidence_kind": "CAPTURE_CONFIRMED",
+      "evidence": [
+        "comparisons/C3/overlay50.png"
+      ],
+      "source": null,
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "C3-05",
+      "priority": "P1",
+      "UIs": [
+        "C3"
+      ],
+      "screen_views": [
+        "T-A-M"
+      ],
+      "reference_ROI_xywh": [
+        0,
+        773,
+        865,
+        162
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "カメラカードの選択印がなく、見出し/画像が小さく、説明が1行へ減っている。下段が約20px下へずれ、固定領域に不要な縦スクロールがある。",
+      "required_change": "原画の見出しy約780、カード上端y約798を目標に再配置。3カードにラジオ/選択枠、画像と2行説明を復帰。手計測のため原画重畳で最終調整し、古いy793の集約矩形だけを正解にしない。",
+      "evidence_kind": "CAPTURE_CONFIRMED",
+      "evidence": [
+        "crops/C3_camera.png"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/ui3_baseline.css",
+        "line": 64,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/ui3_baseline.css#L64",
+        "local_sha256": "3083b0337ce93faff01841cc8539786417fbba44e6d8a25fc8493f0c811afd75"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "C3-06",
+      "priority": "P1",
+      "UIs": [
+        "C3"
+      ],
+      "screen_views": [
+        "T-A-M"
+      ],
+      "reference_ROI_xywh": [
+        626,
+        778,
+        240,
+        147
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "原画のBLUE/RED 2ボタンに自動を加えた3ボタンで、注目対象のドロップダウンも表示されず未選択文だけになっている。",
+      "required_change": "原画位置にBLUE/REDと対象セレクタを維持。自動という既存機能は削除せず詳細設定へ移す。未接続時は対象セレクタを理由付き無効にして形を維持。",
+      "evidence_kind": "CAPTURE_CONFIRMED",
+      "evidence": [
+        "crops/C3_camera.png"
+      ],
+      "source": null,
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "C3-07",
+      "priority": "P1",
+      "UIs": [
+        "C3"
+      ],
+      "screen_views": [
+        "T-A-M"
+      ],
+      "reference_ROI_xywh": [
+        1276,
+        270,
+        376,
+        299
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "12個の行要素は用意されるが行高27pxで12行目の大半がスクロール外。原画は12行を同時表示している。",
+      "required_change": "同じ枠に12行が収まる行高（原画目標22〜24px程度）/paddingへ調整し、10人・12シーンの明示した配置検査fixtureで確認。実未スキャン0件を12件の検出成功に捏造しない。",
+      "evidence_kind": "CAPTURE_AND_BOUNDS",
+      "evidence": [
+        "crops/C3_scene-list.png",
+        "data/C3_EDGE_RECHECK.json"
+      ],
+      "source": null,
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "C3-08",
+      "priority": "P1",
+      "UIs": [
+        "C3"
+      ],
+      "screen_views": [
+        "T-A-M"
+      ],
+      "reference_ROI_xywh": [
+        19,
+        553,
+        315,
+        96
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "左下プリセット選択が狭く、保存3操作が小さく離れており、原画の幅のある選択欄と均等な3ボタンの構成を失っている。",
+      "required_change": "プリセットをほぼ列幅で表示し、読み込み/保存/別名保存を約100pxずつの3等分で整列。保存対象がプロジェクトかプリセットかは既存U10の調査を踏まえる。",
+      "evidence_kind": "CAPTURE_CONFIRMED",
+      "evidence": [
+        "comparisons/C3/overlay50.png"
+      ],
+      "source": null,
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "C3-09",
+      "priority": "P2",
+      "UIs": [
+        "C3"
+      ],
+      "screen_views": [
+        "T-A-M"
+      ],
+      "reference_ROI_xywh": [
+        1470,
+        706,
+        177,
+        33
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "原画の画像選択入口がなく、比較UIへの追加ボタンが下段タブの右を占有している。3UI切替の追加自体は必要な統合差分。",
+      "required_change": "比較UIの切替は共通メニュー等へ整理し、画像選択の場所を保持する。意味未確定U09なので別処理へ勝手に結線せず、未対応理由を明示する。",
+      "evidence_kind": "CAPTURE_CONFIRMED",
+      "evidence": [
+        "comparisons/C3/actual.png"
+      ],
+      "source": null,
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "C3-10",
+      "priority": "P1",
+      "UIs": [
+        "C3"
+      ],
+      "screen_views": [
+        "T-A-M"
+      ],
+      "reference_ROI_xywh": [
+        1275,
+        212,
+        379,
+        35
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "原画はチェック付き4フィルター、実画面は細い4テキストボタン。選択状態・操作領域の視認性が弱い。",
+      "required_change": "原画相当のチェックとラベル間隔を復帰。既存フィルターAPIの複合条件を確認し、見た目だけのチェックや同じ処理の重複接続を作らない。",
+      "evidence_kind": "CAPTURE_CONFIRMED",
+      "evidence": [
+        "crops/C3_scene-list.png"
+      ],
+      "source": null,
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R-01",
+      "priority": "P0",
+      "UIs": [
+        "R1",
+        "R2"
+      ],
+      "screen_views": [
+        "detail",
+        "curve"
+      ],
+      "reference_ROI_xywh": [
+        1580,
+        207,
+        310,
+        510
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "詳細/カーブは既存エディタを開くボタン＋カメラ数値に置換。選択キーの時刻/FOV/補間/追加削除/適用、直接カーブがこの画面内にない。",
+      "required_change": "右インスペクタへ原画のキー編集を復帰し、下部に秒ルーラー/選択点/再生ヘッドとキー・カーブの別描画を実装。既存キーアダプターを使用。自由XYZ/Bezierを勝手に実装済みにしない。",
+      "evidence_kind": "SOURCE_CONFIRMED_NO_VIEW_CAPTURE",
+      "evidence": [
+        "data/R1_R2_COVERAGE_20.json"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.js",
+        "line": 33,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.js#L33",
+        "local_sha256": "c96613ee37fe0ed333c6081c1d45b4a238c1d88313716a6c4ab38e2494340041"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R-02",
+      "priority": "P0",
+      "UIs": [
+        "R1",
+        "R2"
+      ],
+      "screen_views": [
+        "main",
+        "color",
+        "all preview headers"
+      ],
+      "reference_ROI_xywh": [
+        1440,
+        140,
+        100,
+        32
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "原画の「調整前と比較」に相当する#compare-viewは、現コードでpreview_playを呼ぶ演出再生ボタンになっている。",
+      "required_change": "比較ボタンの役割と位置を復帰し、調整前後の表示stateへ接続する。演出再生はtransportから。比較能力未接続なら理由付き無効とし、別処理へ偽装しない。",
+      "evidence_kind": "CAPTURE_AND_SOURCE",
+      "evidence": [
+        "comparisons/R1/actual.png",
+        "comparisons/R2/actual.png"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.py",
+        "line": 42,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.py#L42",
+        "local_sha256": "ddf5340475a0171a9c9841aa3a03a91ca686d270b4c8304d42ee30ec580547e4"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R2-01",
+      "priority": "P0",
+      "UIs": [
+        "R2"
+      ],
+      "screen_views": [
+        "reference-ln / main"
+      ],
+      "reference_ROI_xywh": [
+        98,
+        175,
+        1454,
+        539
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "ショット列を.center内に入れ、270pxの全幅timelineを別に足している。映像面の高さ539→485（-54px）、timeline左端12（原画98）、timeline上端約779（原画819）。",
+      "required_change": "#shot-stripを中心映像から分離し、下段をx98からのshotstrip y782/h37＋timeline y819/h233、全体270pxの構造へ。中央映像面y175/h539を復帰する。画面の一括拡大縮小で直さない。",
+      "evidence_kind": "CAPTURE_AND_SOURCE",
+      "evidence": [
+        "data/STAGE_SPANS.json",
+        "crops/R2_lower-stack.png"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.py",
+        "line": 45,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.py#L45",
+        "local_sha256": "ddf5340475a0171a9c9841aa3a03a91ca686d270b4c8304d42ee30ec580547e4"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R2-02",
+      "priority": "P0",
+      "UIs": [
+        "R2"
+      ],
+      "screen_views": [
+        "main / shot strip"
+      ],
+      "reference_ROI_xywh": [
+        730,
+        786,
+        95,
+        30
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "原画の対象チェック入口がない。ショット列はselect_sceneボタンだけで、チェックボックスはR2で非表示の.scene-pane内にしかない。",
+      "required_change": "ショット列末尾へ対象チェックを復帰し、焦点とは独立のチェック集合を選択するダイアログへ接続。他UIでチェックしてから戻ることを前提にしない。",
+      "evidence_kind": "SOURCE_CONFIRMED_NO_POPUP_CAPTURE",
+      "evidence": [
+        "comparisons/R2/actual.png"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.js",
+        "line": 37,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.js#L37",
+        "local_sha256": "c96613ee37fe0ed333c6081c1d45b4a238c1d88313716a6c4ab38e2494340041"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R-03",
+      "priority": "P1",
+      "UIs": [
+        "R1",
+        "R2"
+      ],
+      "screen_views": [
+        "easy"
+      ],
+      "reference_ROI_xywh": [
+        1580,
+        207,
+        310,
+        540
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "簡単編集の原画はカメラ/雰囲気/キル演出の3群カード。現body(easy)は縦モードボタンと素材画面へのリンクだけ。",
+      "required_change": "3群の横カードと細かく調整する入口を復帰。カード選択は既存プリセットのドラフトへ、適用範囲/Undoを明示し、録画を自動開始しない。",
+      "evidence_kind": "SOURCE_CONFIRMED_NO_VIEW_CAPTURE",
+      "evidence": [
+        "data/R1_R2_COVERAGE_20.json"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.js",
+        "line": 28,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.js#L28",
+        "local_sha256": "c96613ee37fe0ed333c6081c1d45b4a238c1d88313716a6c4ab38e2494340041"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R-04",
+      "priority": "P1",
+      "UIs": [
+        "R1",
+        "R2"
+      ],
+      "screen_views": [
+        "camera"
+      ],
+      "reference_ROI_xywh": [
+        1580,
+        207,
+        310,
+        540
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "モードが縦3ボタン、数値はnumberのみでFOVスライダー/数値がない。原画のモード横3カード、FOV/Yaw等のスライダー＋数値と異なる。",
+      "required_change": "モードを横3カードへ戻し、FOVを含む数値を対応スライダーと併設。サイド/スタイル/TargetLockと実能力の説明は維持。既存パラメータ範囲をUI都合で変えない。",
+      "evidence_kind": "SOURCE_CONFIRMED_NO_VIEW_CAPTURE",
+      "evidence": [
+        "data/R1_R2_COVERAGE_20.json"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.js",
+        "line": 19,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.js#L19",
+        "local_sha256": "c96613ee37fe0ed333c6081c1d45b4a238c1d88313716a6c4ab38e2494340041"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R-05",
+      "priority": "P1",
+      "UIs": [
+        "R1",
+        "R2"
+      ],
+      "screen_views": [
+        "color"
+      ],
+      "reference_ROI_xywh": [
+        1580,
+        207,
+        310,
+        540
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "色調整が既存色/FX設定へ飛ぶ3ボタン＋frameControlsになり、ルック3枚・露出/彩度/暖かさ・分割比較がない。素材の設定が色タブへ混入。",
+      "required_change": "色インスペクタを原画の役割へ復帰し、素材選択は素材タブに置く。実グレード能力/単位へアダプター接続し、CSS近似を実LUT/GPU処理の成功としない。",
+      "evidence_kind": "SOURCE_CONFIRMED_NO_VIEW_CAPTURE",
+      "evidence": [
+        "data/R1_R2_COVERAGE_20.json"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.js",
+        "line": 32,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.js#L32",
+        "local_sha256": "c96613ee37fe0ed333c6081c1d45b4a238c1d88313716a6c4ab38e2494340041"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R-06",
+      "priority": "P1",
+      "UIs": [
+        "R1",
+        "R2"
+      ],
+      "screen_views": [
+        "material"
+      ],
+      "reference_ROI_xywh": [
+        1580,
+        207,
+        310,
+        540
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "frameControlsは文字/状態のみのボタンで素材画像がなく、登場6種も2列。原画の大きな画像カード、FXの見た目/強度、登場3列×2行と違う。",
+      "required_change": "実カタログのサムネイル・選択枠・状態を画像カードへ。6アニメは3列×2行で視覚選択。原画の自作見本を正式素材IDへ転用しない。",
+      "evidence_kind": "SOURCE_CONFIRMED_NO_VIEW_CAPTURE",
+      "evidence": [
+        "data/R1_R2_COVERAGE_20.json"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.js",
+        "line": 21,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.js#L21",
+        "local_sha256": "c96613ee37fe0ed333c6081c1d45b4a238c1d88313716a6c4ab38e2494340041"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R-07",
+      "priority": "P1",
+      "UIs": [
+        "R1",
+        "R2"
+      ],
+      "screen_views": [
+        "export"
+      ],
+      "reference_ROI_xywh": [
+        1580,
+        207,
+        310,
+        540
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "出力内に原画の解像度選択/HUD欄がなく、項目順と作成前の確認パネルも変わっている。",
+      "required_change": "解像度→fps→エンコーダ→LoL音/HUD→作成前確認の情報階層を復帰。出力先や実ジョブ情報の追加は同じインスペクタ内で整理し、JSON保存とMP4を混同しない。",
+      "evidence_kind": "SOURCE_CONFIRMED_NO_VIEW_CAPTURE",
+      "evidence": [
+        "data/R1_R2_COVERAGE_20.json"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.js",
+        "line": 23,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.js#L23",
+        "local_sha256": "c96613ee37fe0ed333c6081c1d45b4a238c1d88313716a6c4ab38e2494340041"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R-08",
+      "priority": "P1",
+      "UIs": [
+        "R1",
+        "R2"
+      ],
+      "screen_views": [
+        "main"
+      ],
+      "reference_ROI_xywh": [
+        1564,
+        132,
+        344,
+        638
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "概要カードのFOVがカメラ名に、ゲーム音のみが出力FPSに置き換わった。初心者パネル/主ボタンも小さくなり、原画の全幅ボタンと背景のまとまりがない。",
+      "required_change": "概要4枠をサイド/FOV/出力対象/音声へ戻し、状態が無ければ—を表示。原画の幅一杯の主操作とまとまりを再現。カメラスタイル/fpsは専用画面に保持する。",
+      "evidence_kind": "CAPTURE_AND_SOURCE",
+      "evidence": [
+        "crops/R1_inspector.png"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.js",
+        "line": 27,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.js#L27",
+        "local_sha256": "c96613ee37fe0ed333c6081c1d45b4a238c1d88313716a6c4ab38e2494340041"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R2-03",
+      "priority": "P1",
+      "UIs": [
+        "R2"
+      ],
+      "screen_views": [
+        "main / all tool rail"
+      ],
+      "reference_ROI_xywh": [
+        0,
+        120,
+        82,
+        650
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "左レールは原画の7項目＋アイコンに対し、メインを加えた8項目の文字のみ。レール開始も原画y120に対し約132。",
+      "required_change": "7つのツール/アイコン/順序へ戻し、メインは上部タブから。同じviewId同期を維持し、レール上端をnav下に揃える。",
+      "evidence_kind": "CAPTURE_AND_SOURCE",
+      "evidence": [
+        "crops/R2_rail.png"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.py",
+        "line": 41,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.py#L41",
+        "local_sha256": "ddf5340475a0171a9c9841aa3a03a91ca686d270b4c8304d42ee30ec580547e4"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R-09",
+      "priority": "P1",
+      "UIs": [
+        "R1",
+        "R2"
+      ],
+      "screen_views": [
+        "main / transport"
+      ],
+      "reference_ROI_xywh": [
+        290,
+        714,
+        1250,
+        56
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "原画の現在/総時刻と再生倍率の表示・操作がtransportにない。ミラー4操作を置いたことは接続要件上の追加だが、元の時間確認が失われている。",
+      "required_change": "現在時刻/総時間・倍率をtransportに復帰。Replay時刻とclip局所時刻を区別し、取得できなければ—と理由。ミラー/プレビューの独立操作は補助群として整理し録画と混同しない。",
+      "evidence_kind": "CAPTURE_AND_SOURCE",
+      "evidence": [
+        "comparisons/R1/actual.png",
+        "comparisons/R2/actual.png"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.py",
+        "line": 44,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.py#L44",
+        "local_sha256": "ddf5340475a0171a9c9841aa3a03a91ca686d270b4c8304d42ee30ec580547e4"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R-10",
+      "priority": "P2",
+      "UIs": [
+        "R1",
+        "R2"
+      ],
+      "screen_views": [
+        "main / header"
+      ],
+      "reference_ROI_xywh": [
+        0,
+        0,
+        1920,
+        132
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "ヘッダーのUndo/Redo/操作ガイド、ツールのアイコンがなく、body14px/見出し19px等で原画より小さい。3UI切替の追加は統合差分として分ける。",
+      "required_change": "原画の15px基調・タイトル21px・見出し18px等と同じ見え方へ。Undo/Redo/ヘルプを既存状態へ結び付け、ラベルを消して収めない。3UI切替は合意した追加差分に記録。",
+      "evidence_kind": "CAPTURE_AND_SOURCE",
+      "evidence": [
+        "comparisons/R1/overlay50.png",
+        "comparisons/R2/overlay50.png"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.css",
+        "line": 4,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.css#L4",
+        "local_sha256": "f4c70b9519314a0f1edf662a61f1dd68f224300a60af185779a8c8f3b3721d09"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R-11",
+      "priority": "P1",
+      "UIs": [
+        "R1",
+        "R2"
+      ],
+      "screen_views": [
+        "all inputs"
+      ],
+      "reference_ROI_xywh": [
+        1564,
+        132,
+        344,
+        638
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "1100msごとのsnapshot→renderがinspector-body.innerHTMLを置換するため、入力中のフォーカス/未確定文字/選択が失われるリスクがある。実Windows操作は未再試験。",
+      "required_change": "差分更新と編集中のローカルドラフトを使い、フォーカス中のDOMを置換しない。1.1秒をまたぐ数値入力・IME・スクロール位置の実試験を追加。",
+      "evidence_kind": "SOURCE_RISK_RUNTIME_NOT_RUN",
+      "evidence": [],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.js",
+        "line": 38,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.js#L38",
+        "local_sha256": "c96613ee37fe0ed333c6081c1d45b4a238c1d88313716a6c4ab38e2494340041"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "R-12",
+      "priority": "P1",
+      "UIs": [
+        "R1",
+        "R2"
+      ],
+      "screen_views": [
+        "export / fps and encoder"
+      ],
+      "reference_ROI_xywh": [
+        1580,
+        207,
+        310,
+        540
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "fps/encoderのselect生成でstateに対応するselectedがなく、render後は先頭の60/autoを表示する疑い。theme/trim以外は後段代入もない。実操作再現は未試験。",
+      "required_change": "o.fps/encoder方針へ明示的にvalueを反映し、144やGPUを選択→poll→タブ往復して表示と実設定が一致するか確認。実NVENC使用成否とは別検査。",
+      "evidence_kind": "SOURCE_RISK_RUNTIME_NOT_RUN",
+      "evidence": [],
+      "source": {
+        "path": "LoL_AutoCine/ui/reference_views.js",
+        "line": 23,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/ui/reference_views.js#L23",
+        "local_sha256": "c96613ee37fe0ed333c6081c1d45b4a238c1d88313716a6c4ab38e2494340041"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    },
+    {
+      "id": "QA-01",
+      "priority": "P1",
+      "UIs": [
+        "C3"
+      ],
+      "screen_views": [
+        "measurement script"
+      ],
+      "reference_ROI_xywh": [
+        0,
+        0,
+        1672,
+        941
+      ],
+      "coordinate_unit": "native screenshot px: C3 1672x941, R1/R2 1920x1080",
+      "finding": "xywh個別差の最大値で判定しており、位置差と幅差が合算する右辺ずれを見落とす。独立再計算は11領域中6 PASS/5 REVIEW。",
+      "required_change": "比較を[L,T,R,B]=[x,y,x+w,y+h]で実行し、幅/高さ差も別記録。細部の見た目や固定動作の合格へ拡大しない。古い手計測領域の限界も明記。",
+      "evidence_kind": "JSON_AND_SOURCE_CONFIRMED",
+      "evidence": [
+        "data/C3_EDGE_RECHECK.json"
+      ],
+      "source": {
+        "path": "LoL_AutoCine/tools/compare_ui3_baseline.py",
+        "line": 52,
+        "url": "https://github.com/Aimin2222/agdhnteweeffewwff/blob/4a00871f3009475dbdd1586e5bf05f78117b8907/LoL_AutoCine/tools/compare_ui3_baseline.py#L52",
+        "local_sha256": "9d0af47c611fd6db75ab4966f5542d981974ed3238bd35f5ea6417753cf872f3"
+      },
+      "runtime_execution": "NOT_RUN",
+      "acceptance": "same-size capture/overlay plus focused control test; do not fake data or bypass capability checks"
+    }
+  ],
+  "priority_counts": {
+    "P0": 6,
+    "P1": 18,
+    "P2": 2
+  },
+  "runtime_tests": "NOT_RUN",
+  "coordinate_note": "ROIs are target/reference native boxes; main actual regions/crops are directly inspected, unprovided subview ROI is a restoration target, NOT a measured actual screenshot box"
+}

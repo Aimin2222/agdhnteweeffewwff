@@ -1,0 +1,227 @@
+{
+  "main_captures": 2,
+  "reference_states": 20,
+  "unprovided_states": 18,
+  "items": [
+    {
+      "ui": "R1",
+      "reference": "LD_camera_light_1920x1080.png",
+      "view": "camera",
+      "reference_sha256": "a9780b6356d68b07b52e6cc9ea21f9762d5af6339fb42530d7d0f66832341096",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R1",
+      "reference": "LD_color_light_1920x1080.png",
+      "view": "color",
+      "reference_sha256": "02de4ff7a20a8b3074e22704013e5e5a90c47ad05727e9f56c5f6de7e845f800",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R1",
+      "reference": "LD_curve_light_1920x1080.png",
+      "view": "curve",
+      "reference_sha256": "a8b17a34e2a2954606cd79a4cb64d8309b7a2c65fd15bf320d11e85d3bdb8599",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R1",
+      "reference": "LD_detail_light_1920x1080.png",
+      "view": "detail",
+      "reference_sha256": "0937db52dfa2040532893195dc7171df31420126584e464e33debaf579cb211b",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R1",
+      "reference": "LD_easy_light_1920x1080.png",
+      "view": "easy",
+      "reference_sha256": "b9e26765b59406fe29358b8bc9281d0d3f2a783af70237d96fd8021e782c5fff",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R1",
+      "reference": "LD_export_light_1920x1080.png",
+      "view": "export",
+      "reference_sha256": "ee2b775af782199b86abb36b117fd21820564b39c9c90e74c6761878af2d511c",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R1",
+      "reference": "LD_main_dark_1920x1080.png",
+      "view": "main",
+      "reference_sha256": "2249dfe40db8261ef9bf9949ef202903463d845e4fc59039f99767782ffa1c4f",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "see main comparison",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R1",
+      "reference": "LD_main_light_1366x768.png",
+      "view": "main",
+      "reference_sha256": "86253af9f454854bc5037aad272359e21b39870de80090d9e56f923ee5f6090f",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "see main comparison",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R1",
+      "reference": "LD_main_light_1920x1080.png",
+      "view": "main",
+      "reference_sha256": "e5cb0797955480bbf1da4e66104c80948ba9a76028a3a95abc9a622d152e8dd4",
+      "screenshot_evidence": "comparisons/R1/actual.png",
+      "visual_status": "FAIL",
+      "source_review": "see main comparison",
+      "functional_status": "NOT_RUN",
+      "reason": "inspected original-size supplied capture"
+    },
+    {
+      "ui": "R1",
+      "reference": "LD_material_light_1920x1080.png",
+      "view": "material",
+      "reference_sha256": "cc889a1ce0444407585af2ce9357f8d5e906a90465c3b060c3a22109c72f4900",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R2",
+      "reference": "LN_camera_light_1920x1080.png",
+      "view": "camera",
+      "reference_sha256": "a452f9f81aa794a5bc6c0974925756e5fc734f4eb39a77724ac87da1b1aa0c1a",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R2",
+      "reference": "LN_color_light_1920x1080.png",
+      "view": "color",
+      "reference_sha256": "ca4cbfd3488a09ce818b0ee38f754ff2313272cf22f3ebcedb90234a821e2cb1",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R2",
+      "reference": "LN_curve_light_1920x1080.png",
+      "view": "curve",
+      "reference_sha256": "d6119cb82d250b8f859265355d6324d4fc05e8c8761391874025846d7c217efe",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R2",
+      "reference": "LN_detail_light_1920x1080.png",
+      "view": "detail",
+      "reference_sha256": "48c6e03c3444780694d2adb8926e869ab65e12a960b2e0d2d5e41dd56ce9759d",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R2",
+      "reference": "LN_easy_light_1920x1080.png",
+      "view": "easy",
+      "reference_sha256": "5445676961474197870d4068960cb0094d3f539c11021bbd5b9b2326da52619d",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R2",
+      "reference": "LN_export_light_1920x1080.png",
+      "view": "export",
+      "reference_sha256": "607d28e6c98208419c008b36a7dae7172e6f1facd41e0bc6b935ef985f2da76d",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R2",
+      "reference": "LN_main_dark_1920x1080.png",
+      "view": "main",
+      "reference_sha256": "32c29d122b612a767708edb3b8137a7e1dfcb545a181f2f26fd20b3afd22f4d6",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "see main comparison",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R2",
+      "reference": "LN_main_light_1366x768.png",
+      "view": "main",
+      "reference_sha256": "6cadbde300ba9c2859e47877adbb414ec3ca7f50495409f6421521ba6bc7fd7c",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "see main comparison",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    },
+    {
+      "ui": "R2",
+      "reference": "LN_main_light_1920x1080.png",
+      "view": "main",
+      "reference_sha256": "148f28ed7d681472f24c4b1c0d400aa72de5304924b3a5fea917d881e826f5c8",
+      "screenshot_evidence": "comparisons/R2/actual.png",
+      "visual_status": "FAIL",
+      "source_review": "see main comparison",
+      "functional_status": "NOT_RUN",
+      "reason": "inspected original-size supplied capture"
+    },
+    {
+      "ui": "R2",
+      "reference": "LN_material_light_1920x1080.png",
+      "view": "material",
+      "reference_sha256": "00d23e0e2d5802c27e3616614ef3b86f7e0bc13b47111198f06e1c6a2be00045",
+      "screenshot_evidence": null,
+      "visual_status": "NOT_RUN",
+      "source_review": "view renderer exists but differs from original; see findings",
+      "functional_status": "NOT_RUN",
+      "reason": "only main light1920 capture supplied"
+    }
+  ]
+}

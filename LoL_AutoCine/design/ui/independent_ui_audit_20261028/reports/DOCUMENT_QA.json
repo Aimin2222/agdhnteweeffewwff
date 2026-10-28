@@ -1,0 +1,75 @@
+{
+  "checks": [
+    {
+      "id": "same-size-no-resize",
+      "status": "PASS",
+      "count": 3
+    },
+    {
+      "id": "edge-check-not-xywh",
+      "status": "PASS",
+      "regions": 11
+    },
+    {
+      "id": "20-state-coverage-accounting",
+      "status": "PASS",
+      "captured": 2,
+      "unprovided": 18
+    },
+    {
+      "id": "ledger-284-IDs-preserved",
+      "status": "PASS",
+      "count": 284
+    },
+    {
+      "id": "no-independent-runtime-PASS",
+      "status": "PASS"
+    },
+    {
+      "id": "protected-original-hashes-match",
+      "status": "PASS",
+      "count": 34
+    }
+  ],
+  "runtime": "NOT_RUN",
+  "product_files_changed": 0,
+  "main_changed": false,
+  "old_demo_restored": false,
+  "Windows_settings_changed": false,
+  "protection_hashes": {
+    "outputs\\ui_implementation_audit_29_20261021\\references\\legacy_test\\A_main.png": "b05abe6a04732069729abd58fc4e7aca3b09c19e8d2703c5d9af3e5a5ed01a13",
+    "outputs\\ld_lolnam_ui_20261027\\screenshots\\LD_main_light_1920x1080.png": "e5cb0797955480bbf1da4e66104c80948ba9a76028a3a95abc9a622d152e8dd4",
+    "outputs\\ld_lolnam_ui_20261027\\screenshots\\LN_main_light_1920x1080.png": "148f28ed7d681472f24c4b1c0d400aa72de5304924b3a5fea917d881e826f5c8",
+    "outputs\\three_ui_fidelity_20261027\\AutoCine_Three_UI_Fidelity_20261027.zip": "fb27c9b211abd1b2668e606cbe6b528b17fc21ef25c606ba3016979cd12439e2",
+    "outputs\\three_ui_fidelity_20261027\\Codexへの実装基準追記.txt": "61f42448ba5fdfb451e7085c274263df400d1c475b63f8dd980f15d9216a8df6",
+    "outputs\\three_ui_fidelity_20261027\\CONTENT_MANIFEST.json": "2e834d8deadff47668e93b1aedcc1b1251356a7ca9da185d24d59f87bf4459c4",
+    "outputs\\three_ui_fidelity_20261027\\PACKAGE.json": "a94b047b6ab0a7082785b95ddfa2365041f52370c31cf8363c6856251ff56e61",
+    "outputs\\three_ui_fidelity_20261027\\README_JA.md": "931cff2bdb3d619191a90d1b0fbbcc88619b7db7fff3a2b9f471cbd6eb8356e6",
+    "outputs\\three_ui_fidelity_20261027\\SAVE_RECEIPT.json": "9113849d742567a2c3bf6ee97b9c71a60874f16027fda45161564788a5a9cd26",
+    "outputs\\three_ui_fidelity_20261027\\SOURCE_OF_TRUTH_JA.md": "9fb0844938a14077c7471fcc65b665965ec6f4ef306a392566788c25bbfaf478",
+    "outputs\\three_ui_fidelity_20261027\\references\\Candidate3_T-A-M_ORIGINAL.png": "b05abe6a04732069729abd58fc4e7aca3b09c19e8d2703c5d9af3e5a5ed01a13",
+    "outputs\\three_ui_fidelity_20261027\\references\\LeagueDirector_R1_TrackDesk_ORIGINAL.png": "e5cb0797955480bbf1da4e66104c80948ba9a76028a3a95abc9a622d152e8dd4",
+    "outputs\\three_ui_fidelity_20261027\\references\\Lolnam_R2_ShotCanvas_ORIGINAL.png": "148f28ed7d681472f24c4b1c0d400aa72de5304924b3a5fea917d881e826f5c8",
+    "outputs\\three_ui_fidelity_20261027\\reports\\01_C3_FIDELITY_JA.md": "3b410ba3603923dbfaf603c9d2d95f0aa180482f39215b8fdb42e5842f32829f",
+    "outputs\\three_ui_fidelity_20261027\\reports\\02_C3_MUST_KEEP_JA.md": "0b7d64372b9dac091ce212c5579e7b1d3a27487053e78c8769e132b72b481971",
+    "outputs\\three_ui_fidelity_20261027\\reports\\03_R2_LOLNAM_MAP_JA.md": "f3b8e678a5941602df0539701fe7a4be09b57c2cfdd0c027cfb6f516fe4fc3fa",
+    "outputs\\three_ui_fidelity_20261027\\reports\\04_R1_LEAGUE_DIRECTOR_MAP_JA.md": "4174b7cc75472f3bc9c2a6424ae7e0e7d098f6ed1bf9e02d05e3545f9c077abe",
+    "outputs\\three_ui_fidelity_20261027\\reports\\05_UNKNOWN_FUNCTION_RESEARCH_JA.md": "c579a5f6caba4ebc41309812762e8d6854275a7912e11957be55fe97cafc80b4",
+    "outputs\\three_ui_fidelity_20261027\\reports\\06_ATTACHMENT_POLICY_JA.md": "7cae4ccd610712246e6fc484ae9f84132c3812b1cf39cb0a1d7f3a01df9c77d1",
+    "outputs\\three_ui_fidelity_20261027\\reports\\07_ACCEPTANCE_JA.md": "11dbee703acc222505f15e995168ba9509f90ee78ac06f8d26737b1ce63a9194",
+    "outputs\\three_ui_fidelity_20261027\\reports\\08_REPORT_JA.md": "1a951cc570531174c34c7660c47842bf8a856f5540635d379392e58c663f9b80",
+    "outputs\\three_ui_fidelity_20261027\\reports\\ACCEPTANCE_TABLE_JA.md": "a77f1da16329e51d05abde86ffcc1247cc12f6043490f7b654cc82845ebe2e35",
+    "outputs\\three_ui_fidelity_20261027\\reports\\ALL_FUNCTION_ROUTES_JA.md": "5e3f8291cf8eff991c9327366d8dd2495923abb19c6878bc742b2ad79f96e01d",
+    "outputs\\three_ui_fidelity_20261027\\reports\\DOCUMENT_QA.json": "bc8e909593de2e9dc56d77d08841950599e1397ab38aa18e50c08aa0387e3e62",
+    "outputs\\three_ui_fidelity_20261027\\reports\\PRESERVATION.json": "508183830b4a6197516d9aced515729e73625bd3bd1280dc3c46b22d2c1b68a4",
+    "outputs\\three_ui_fidelity_20261027\\specs\\ACCEPTANCE_CHECKLIST.json": "da76d2c2683793ffac51346a425d4a09fe067cd1eeb93a8386019fa2eb966779",
+    "outputs\\three_ui_fidelity_20261027\\specs\\C3_FIDELITY_CONTRACT.json": "f189c36e39a1d00de3f7c028c1684a36679cb60706967c12f500e0ad320e120e",
+    "outputs\\three_ui_fidelity_20261027\\specs\\EVIDENCE_TEMPLATE.json": "e89b141a01a818c050591e23999fd59373a1ad30d76759f20c08e1ae567672d5",
+    "outputs\\three_ui_fidelity_20261027\\specs\\FUNCTION_MAP_210.json": "e201cd65db1bde35e19b29e6390ff12de587d1bd4eb963ee7872649aac5d74a1",
+    "outputs\\three_ui_fidelity_20261027\\specs\\LAYOUT_FIXTURES.json": "021f9817892a59f3550afe84a400274296b622123dea05843216d9557c37ec6b",
+    "outputs\\three_ui_fidelity_20261027\\specs\\RESEARCH_REQUEST_TEMPLATE.json": "3512757d6dc3b202c527c2ad90b4db4c297dd0963adbab186f7ca1438f00a97c",
+    "outputs\\three_ui_fidelity_20261027\\specs\\SCREEN_FUNCTION_MAP.json": "6ec8067cc58d09111142713d47184e65181f1b7a4362e57c2cfbe93312c10d34",
+    "outputs\\three_ui_fidelity_20261027\\specs\\SOURCE_INDEX.json": "2ced472cf204940002d33df033e09622bc329db0ef92dd7abc60840b6e49692c",
+    "outputs\\three_ui_fidelity_20261027\\specs\\UNKNOWN_FUNCTION_REGISTER.json": "7049d18ddb35f20969b7f00ce528f5f2a8ebdf8fd7cdee405f8940cd68e3f0ed"
+  }
+}

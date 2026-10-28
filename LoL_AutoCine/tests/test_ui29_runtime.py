@@ -6,7 +6,7 @@ import re
 import sys
 from tempfile import TemporaryDirectory
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
@@ -80,6 +80,50 @@ class App:
 
 
 class Audit29RuntimeTests(unittest.TestCase):
+    def test_shot_focus_and_output_checks_are_independent(self):
+        app = App()
+        app.on_scene_selection = Mock()
+        app._rebuild_kills_keep_position = Mock()
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            runtime = Audit29Runtime(app, Path(directory) / "workspace.json")
+            with patch.object(runtime, "snapshot", return_value={}):
+                runtime.perform("check_scene", {"index": 1, "checked": True})
+                self.assertEqual(app.checked_kills, {0, 1})
+                self.assertEqual(app.lb_kills.curselection(), (1,))
+                runtime.perform("select_scene", {"index": 0})
+                self.assertEqual(app.lb_kills.curselection(), (0,))
+                self.assertEqual(app.checked_kills, {0, 1})
+                runtime.perform("check_scene", {"index": 0, "checked": False})
+                self.assertEqual(app.lb_kills.curselection(), (0,))
+                self.assertEqual(app.checked_kills, {1})
+
+    def test_ui3_camera_reset_frame_none_and_existing_key_adapter(self):
+        app = App()
+        app.sl.update({"cam_height": Variable(420), "third_yaw": Variable(18),
+                       "motion_arc": Variable(25)})
+        app._edit_keyframes = []
+        app._refresh_keyframe_list = Mock()
+        app.scene_fx_vars = {"bloom": Variable(0.0)}
+        app.var_scene_fx_enabled = Variable(False)
+        with TemporaryDirectory(dir=ROOT / "qa") as directory:
+            runtime = Audit29Runtime(app, Path(directory) / "workspace.json")
+            with patch.object(runtime, "snapshot", return_value={}):
+                runtime.perform("ui3_camera_reset")
+                self.assertEqual({key: app.sl[key].get() for key in
+                                  ("third_dist", "cam_height", "third_yaw", "motion_arc")},
+                                 {"third_dist": 950, "cam_height": 170,
+                                  "third_yaw": 0, "motion_arc": 10})
+                runtime.perform("frame_none")
+                self.assertEqual((app.var_work_frame.get(), app.var_work_effect.get()), ("", ""))
+                runtime.perform("keyframe_upsert", {"time": 0, "yaw": 2, "zoom": 3, "fov": 4})
+                self.assertEqual(len(app._edit_keyframes), 1)
+                self.assertEqual(app._edit_keyframes[0]["fov"], 4)
+                runtime.perform("scene_fx_number", {"key": "bloom", "value": 0.35})
+                self.assertEqual(app.scene_fx_vars["bloom"].get(), 0.35)
+                self.assertTrue(app.var_scene_fx_enabled.get())
+                runtime.perform("keyframe_remove", {"index": 0})
+                self.assertEqual(app._edit_keyframes, [])
+
     def test_friend_facing_pages_use_only_numbered_candidate_names(self):
         forbidden = ("旧テスト", "旧案", "新E", "Flow", "Studio", "ハイブリッド",
                      "現行UI整理型", "標準編集", "ウィザード", "A案", "B案", "E案")

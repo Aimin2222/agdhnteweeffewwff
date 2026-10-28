@@ -12,3 +12,33 @@ body[data-variant=ln] .workspace{grid-template-columns:82px minmax(420px,1fr) 34
 body.dark{--bg:#172333;--panel:#243249;--ink:#e8f1fb;--muted:#a7b9cb;--line:#40536b;--soft:#324d6c;--blue:#83bdff;background:var(--bg)}body.dark .topbar,body.dark .navrow{background:#243249}body.dark .connection{background:#4c2e37;color:#ffacb9}body.dark .variants{background:#1e3045}body.dark .track-canvas{background:repeating-linear-gradient(90deg,#243249 0,#243249 calc(10% - 1px),#41546b calc(10% - 1px),#41546b 10%)}
 @media(max-width:1500px){.topbar{height:58px}.navrow{height:44px}.timeline{height:210px}.workspace{grid-template-columns:210px minmax(420px,1fr) 288px;gap:9px;padding:8px}body[data-variant=ln] .workspace{grid-template-columns:72px minmax(420px,1fr) 288px;gap:9px}.view-title small{display:none}.topnav button{padding:3px 7px}.project{display:none}}
 @media(max-height:820px){.timeline{height:170px}.timeline-head{height:35px}.timeline-foot{height:32px}.track-labels span{padding:8px}.scene-card{min-height:55px}.section{padding:9px 12px}}
+/* Work's 20 LD/LN images put dense, directly operable controls inside the
+   inspector.  The preview remains a real mirror and has no synthetic match. */
+.inspector{display:flex;flex-direction:column}.inspector>.pane-head{flex:none}.inspector-body{flex:1;min-height:0;overflow:auto}
+.inspector-body .section{padding:18px 18px 20px}.inspector-body .section h3{font-size:15px;margin:0 0 14px;display:flex;justify-content:space-between;align-items:center;gap:5px}.inspector-body .section h3 small{font-size:11px;font-weight:400}
+.inspector-body .section p.note{font-size:11px;line-height:1.55;margin:9px 0;color:var(--muted)}.inspector-body .status-note{border-radius:5px;padding:10px;margin:4px 0 13px}
+.choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.choice-grid button{min-height:64px;white-space:normal;padding:7px 4px;font-size:12px}.choice-grid button.active{background:#e5f1fb;border-color:#1767a8}
+.number-control{margin:13px 0 18px}.control-caption{display:flex;justify-content:space-between;gap:7px;margin-bottom:6px}.control-caption label{font-size:13px}.control-caption small{font-size:10px}.number-fields{display:flex;gap:10px;align-items:center}.number-fields input[type=range]{flex:1;min-width:0;accent-color:#1c71ad}.number-fields input[type=number]{width:73px;height:36px;border:1px solid #9fb2c8;border-radius:5px;padding:5px 8px;background:var(--panel)}
+.key-list{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0 12px}.key-list button{font-size:11px;min-height:28px}.key-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.key-fields label{font-size:11px}.key-fields input{display:block;width:100%;height:35px;margin-top:4px;border:1px solid #9fb2c8;border-radius:5px;padding:5px 8px;background:var(--panel)}.inline-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}.inline-actions button{font-size:12px}.asset-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.asset-card{min-height:94px;display:flex;flex-direction:column;justify-content:center;gap:7px;overflow:hidden}.asset-card strong{font-size:11px;overflow:hidden;text-overflow:ellipsis}.asset-card small{font-size:10px}.motion-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.motion-grid button{min-height:48px}
+.inspector-body .form-row{margin:12px 0}.inspector-body .form-row select{min-width:130px}.inspector-body .stack button{width:100%}.inspector-body input[type=checkbox]{accent-color:#1767a8}
+.asset-card{min-height:116px;justify-content:flex-start;gap:4px;padding:5px}
+.asset-card img{width:100%;height:56px;object-fit:contain;background:#eff4f9;border-radius:3px}
+.asset-card strong{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.timeline-ticks{position:absolute;left:0;right:0;top:0;height:18px;pointer-events:none;z-index:1}.timeline-tick{position:absolute;font-size:10px;color:#5e738a;transform:translateX(-50%)}.track-row{min-height:0}.key-marker{position:absolute;z-index:2;top:45%;width:13px;height:13px;min-height:0;padding:0;border-radius:50%;background:#277cbd;border:2px solid #eef7ff;transform:translate(-50%,-50%)}.key-marker.active{background:#eead69;border:3px solid #244364}.track-reference{position:absolute;top:45%;left:12px;color:#879ab0;font-size:11px}.track-row:nth-child(2){border-top:1px dashed #d37c91}.track-row:nth-child(3){border-top:1px dashed #83bfb0}
+body.dark .choice-grid button.active{background:#244d72}body.dark .number-fields input[type=number],body.dark .key-fields input{color:var(--ink);background:#1f3045;border-color:var(--line)}body.dark .track-reference,body.dark .timeline-tick{color:#b4c5d9}
+body[data-variant=ln] .timeline{margin-left:98px;height:270px}
+body[data-variant=ln] .timeline .shot-strip{display:flex;min-height:37px;height:37px;flex:none;padding:3px 10px;border-bottom:1px solid var(--line);gap:6px}
+body[data-variant=ln] .timeline .shot-strip button{min-height:28px;padding:2px 7px;font-size:11px}
+body[data-variant=ln] .timeline .shot-strip #open-shot-checks{margin-left:auto;position:sticky;right:0;background:var(--soft)}
+body[data-variant=ln] .tool-rail{transform:translateY(-12px);height:calc(100% + 12px)}
+body[data-variant=ln] .tool-rail button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+body[data-variant=ln] .tool-rail button span{font-size:20px;line-height:1;color:#346b9d}
+#shot-check-dialog{min-width:min(550px,90vw);max-height:75vh;border:1px solid var(--line);border-radius:8px;padding:20px;background:var(--panel);color:var(--ink);box-shadow:0 15px 45px #0005}
+#shot-check-dialog::backdrop,#help-dialog::backdrop{background:#13253a88}
+#help-dialog{max-width:min(600px,90vw);border:1px solid var(--line);border-radius:8px;padding:20px;background:var(--panel);color:var(--ink);box-shadow:0 15px 45px #0005}
+#help-dialog li{margin:8px 0}
+#shot-check-dialog h2{margin:0 0 8px}
+#shot-check-list{max-height:50vh;overflow:auto;margin:15px 0}
+.shot-check-row{display:block;padding:7px;border-bottom:1px solid var(--line)}
+.shot-check-row input{margin-right:8px;accent-color:var(--blue)}
+@media(max-width:1500px){.inspector-body .section{padding:10px 11px 13px}.choice-grid button{min-height:53px;font-size:11px}.number-control{margin:8px 0 11px}.asset-card{min-height:68px}}

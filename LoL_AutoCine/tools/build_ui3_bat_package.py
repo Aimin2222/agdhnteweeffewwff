@@ -47,7 +47,9 @@ def main() -> None:
     files = [name for name in names if name and (REPO / name).is_file()
              and (not SKIP_PARTS.intersection(Path(name).parts)
                   or name.startswith("LoL_AutoCine/qa/c3_acceptance_20261027/")
-                  or name.startswith("LoL_AutoCine/qa/ui3_three_views_20261028/"))
+                  or name.startswith("LoL_AutoCine/qa/ui3_three_views_20261028/")
+                  or name.startswith("LoL_AutoCine/qa/ui3_fidelity_v2_20261028/")
+                  or name.startswith("LoL_AutoCine/qa/ui3_audit_20261028/"))
              and Path(name).name not in SKIP_NAMES
              and Path(name).suffix.lower() not in SKIP_SUFFIXES
              and not name.startswith("LoL_AutoCine/design/ui/implementation_audit_29_")]
@@ -62,6 +64,8 @@ def main() -> None:
             "entry_point": launcher, "distribution": "Windows source/BAT trial, no new EXE",
             "work_feature_audit": "70 rows; see docs/ui3/C3_ACCEPTANCE70_IMPLEMENTATION_20261027.csv",
             "work_acceptance": "284 cases; see qa/ui3_three_views_20261028/ACCEPTANCE_RESULTS_284.json",
+            "independent_audit": "26 findings; see qa/ui3_audit_20261028/RECONCILIATION_JA.md",
+            "visual_fidelity": "20 R1/R2 states REVIEW; see qa/ui3_fidelity_v2_20261028/RESULT_JA.md",
             "ui_variants": "candidate3 T-A-M, League Director R1, Lolnam R2",
             "live_lol_result": "NOT_RUN"}
     archive = output / "LoL_AutoCine_UI3_Trial_BAT.zip"
@@ -92,6 +96,8 @@ def main() -> None:
                        "Python 3.12 x64とrequirements.txtの依存が必要です。\n"
                        "詳細: LoL_AutoCine/docs/ui3/README_UI3_TEST_JA.md\n"
                        "Work受入284件: LoL_AutoCine/qa/ui3_three_views_20261028/ACCEPTANCE_RESULTS_284.json\n"
+                       "独立監査26件: LoL_AutoCine/qa/ui3_audit_20261028/RECONCILIATION_JA.md\n"
+                       "3UI比較結果: LoL_AutoCine/qa/ui3_fidelity_v2_20261028/RESULT_JA.md\n"
                        "旧画面はSTART.batから起動できます。\n").encode("utf-8"))
     with ZipFile(archive) as reader:
         bad = reader.testzip()

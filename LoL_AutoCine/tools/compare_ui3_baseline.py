@@ -49,10 +49,16 @@ def main() -> int:
         if actual is None:
             geometry[key] = {"result": "NOT_FOUND", "reference": target}
             continue
-        delta = [round(actual[i] - target[i], 2) for i in range(4)]
+        # Judge the visible edges, not independent x/y/w/h deltas.  A small
+        # origin and width error can add up at the far edge.
+        target_edges = (target[0], target[1], target[0] + target[2], target[1] + target[3])
+        actual_edges = (actual[0], actual[1], actual[0] + actual[2], actual[1] + actual[3])
+        delta = [round(actual_edges[i] - target_edges[i], 2) for i in range(4)]
+        size_delta = [round(actual[i] - target[i], 2) for i in (2, 3)]
         largest = max(abs(value) for value in delta)
         geometry[key] = {"result": "PASS" if largest <= 2 else "REVIEW" if largest <= 8 else "FAIL",
-                         "reference": target, "actual": actual, "delta": delta}
+                         "reference": target, "actual": actual, "edge_delta_ltrb": delta,
+                         "size_delta_wh": size_delta}
     report = {
         "candidate": "testA / T-A-M",
         "source": str(REFERENCE.relative_to(ROOT)).replace("\\", "/"),
