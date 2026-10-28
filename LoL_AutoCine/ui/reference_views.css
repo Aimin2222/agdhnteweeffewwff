@@ -27,6 +27,9 @@ body.dark{--bg:#172333;--panel:#243249;--ink:#e8f1fb;--muted:#a7b9cb;--line:#405
 .timeline-ticks{position:absolute;left:0;right:0;top:0;height:18px;pointer-events:none;z-index:1}.timeline-tick{position:absolute;font-size:10px;color:#5e738a;transform:translateX(-50%)}.track-row{min-height:0}.key-marker{position:absolute;z-index:2;top:45%;width:13px;height:13px;min-height:0;padding:0;border-radius:50%;background:#277cbd;border:2px solid #eef7ff;transform:translate(-50%,-50%)}.key-marker.active{background:#eead69;border:3px solid #244364}.track-reference{position:absolute;top:45%;left:12px;color:#879ab0;font-size:11px}.track-row:nth-child(2){border-top:1px dashed #d37c91}.track-row:nth-child(3){border-top:1px dashed #83bfb0}
 body.dark .choice-grid button.active{background:#244d72}body.dark .number-fields input[type=number],body.dark .key-fields input{color:var(--ink);background:#1f3045;border-color:var(--line)}body.dark .track-reference,body.dark .timeline-tick{color:#b4c5d9}
 body[data-variant=ln] .timeline{margin-left:98px;height:270px}
+/* At the 1920x1080 reference size, restore the 539px video stage while
+   keeping the shot strip in the lower stack. */
+@media(min-height:821px){body[data-variant=ln] .workspace{padding-bottom:10px}body[data-variant=ln] .timeline{height:266px}}
 body[data-variant=ln] .timeline .shot-strip{display:flex;min-height:37px;height:37px;flex:none;padding:3px 10px;border-bottom:1px solid var(--line);gap:6px}
 body[data-variant=ln] .timeline .shot-strip button{min-height:28px;padding:2px 7px;font-size:11px}
 body[data-variant=ln] .timeline .shot-strip #open-shot-checks{margin-left:auto;position:sticky;right:0;background:var(--soft)}
