@@ -707,15 +707,21 @@ def main(argv=None) -> int:
                                         const rect=node.getBoundingClientRect();
                                         return {top:rect.top,bottom:rect.bottom,height:rect.height};
                                       };
-                                      return {stage:box('.preview-stage'),timeline:box('.timeline'),
-                                        footer:box('footer'),viewportHeight:innerHeight,
+                                      return {stage:box('.preview-stage'),transport:box('.transport'),
+                                        shot:box('.timeline #shot-strip'),timelineHead:box('.timeline-head'),
+                                        timeline:box('.timeline'),footer:box('footer'),
+                                        viewportHeight:innerHeight,
                                         scrollHeight:document.documentElement.scrollHeight};
                                     })()''')
                                     if args.reference == "ln":
                                         bounds = reference_compact_bounds
-                                        if (not bounds["stage"] or not bounds["timeline"] or
-                                                bounds["stage"]["bottom"] > bounds["timeline"]["top"] + 1 or
-                                                bounds["timeline"]["bottom"] > bounds["footer"]["top"] + 1):
+                                        if (not all(bounds.get(key) for key in
+                                                    ("stage", "transport", "shot", "timelineHead", "timeline", "footer"))
+                                                or bounds["stage"]["bottom"] > bounds["transport"]["top"] + 1
+                                                or bounds["transport"]["bottom"] > bounds["shot"]["top"] + 1
+                                                or bounds["shot"]["bottom"] > bounds["timelineHead"]["top"] + 1
+                                                or bounds["timeline"]["bottom"] > bounds["footer"]["top"] + 1
+                                                or bounds["scrollHeight"] > bounds["viewportHeight"] + 1):
                                             raise AssertionError(f"compact LN layout overlaps: {bounds}")
                                     _capture_webview(window, args.output / path.name, size)
                                 label_audit = None

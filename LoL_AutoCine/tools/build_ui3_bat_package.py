@@ -50,7 +50,8 @@ def main() -> None:
                   or name.startswith("LoL_AutoCine/qa/ui3_three_views_20261028/")
                   or name.startswith("LoL_AutoCine/qa/ui3_fidelity_v2_20261028/")
                   or name.startswith("LoL_AutoCine/qa/ui3_audit_20261028/")
-                  or name.startswith("LoL_AutoCine/qa/ui3_final_spec_20261028/"))
+                  or name.startswith("LoL_AutoCine/qa/ui3_final_spec_20261028/")
+                  or name.startswith("LoL_AutoCine/qa/ui3_regression_20261029/"))
              and Path(name).name not in SKIP_NAMES
              and Path(name).suffix.lower() not in SKIP_SUFFIXES
              and not name.startswith("LoL_AutoCine/design/ui/implementation_audit_29_")]
@@ -101,6 +102,7 @@ def main() -> None:
                        "Work受入284件: LoL_AutoCine/qa/ui3_three_views_20261028/ACCEPTANCE_RESULTS_284.json\n"
                        "独立監査26件: LoL_AutoCine/qa/ui3_audit_20261028/RECONCILIATION_JA.md\n"
                        "3UI比較結果: LoL_AutoCine/qa/ui3_fidelity_v2_20261028/RESULT_JA.md\n"
+                       "今回のR2修正・対象テスト: LoL_AutoCine/qa/ui3_regression_20261029/RESULT_JA.md\n"
                        "旧画面はSTART.batから起動できます。\n").encode("utf-8"))
     with ZipFile(archive) as reader:
         bad = reader.testzip()
