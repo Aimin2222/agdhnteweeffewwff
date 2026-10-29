@@ -49,3 +49,6 @@ body[data-variant=ln] .tool-rail button span{font-size:20px;line-height:1;color:
 .shot-check-row{display:block;padding:7px;border-bottom:1px solid var(--line)}
 .shot-check-row input{margin-right:8px;accent-color:var(--blue)}
 @media(max-width:1500px){.inspector-body .section{padding:10px 11px 13px}.choice-grid button{min-height:53px;font-size:11px}.number-control{margin:8px 0 11px}.asset-card{min-height:68px}}
+/* On a 768px desktop the seven rail buttons must fit the grid row. Their
+   68px minimum previously forced the workspace 20px under the shot strip. */
+@media(max-height:820px){body[data-variant=ln] .tool-rail{min-height:0;overflow:hidden}body[data-variant=ln] .tool-rail button{flex:1;min-height:0;padding:4px 6px}}
