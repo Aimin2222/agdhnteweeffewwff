@@ -14,11 +14,15 @@
 | R2 1366×768、操作列とショット列の重なり | PASS | [修正前](ln_before/LN_main_light_1366x768.png)、[修正後](ln_after/LN_main_light_1366x768.png)。操作列bottom=558、ショット列top=567、タイムライン見出しtop=604。文書高さ=768。 |
 | R2 1920×1080の中央プレビュー高さ | PASS | [修正後](ln_after/LN_main_light_1920x1080.png)、撮影データで539px。 |
 | R2カメラ回転角のUI→設定→再表示 | PASS | Windows WebView2撮影フローの`camera_yaw_roundtrip`。画面は`third_yaw`を使用し、ランタイムの同じキーに送る。 |
+| 候補3 T-A-Mの基本操作 | PASS（オフライン） | [操作記録](ui3_flow/index.json)、[実画面](ui3_flow/T-A-M.png)。メイン⇄詳細、4スライダー、リセット、素材3切替、「なし」、6モーション、カメラ距離、素材と同名FX、設定保持を確認。 |
+| R1 League Directorの基本操作 | PASS（オフライン） | [操作記録](ld_flow/index.json)、[実画面](ld_flow/LD_main_light_1920x1080.png)。回転角往復、露出、FPS/エンコーダ、素材と同名FX、UI切替状態保持を確認。 |
 | カメラ・FX・UI3対象回帰 | PASS | Windowsで75件PASS。対象はcamera axes、mode isolation、BLUE6、Orbit TargetLock、Flash、Zoom、UI3 integration。 |
 | UI29既存回帰 | PASS | Windowsで23件PASS、24 subtests PASS。 |
 | 候補3の4スライダー・リセット・素材3切替・比較ボタン | REVIEW | PR #55起点に実装がある。今回の差分では変更せず、個々の実機受入は未完了。比較ボタンは真の比較が未接続のため理由付き無効化を維持。 |
 | Work素材 | REVIEW | `AUDIT_20261019.json`で静止フレーム正式合格1/652、FX35件は確認用。正式承認状態は変更していない。 |
 | LoL接続・GPU/NVENC・音声・録画・MP4・125% DPI | NOT_RUN | 今回の対象外。 |
+
+配布ZIPはコミットから生成し、CRCとSHA-256を確認した。日本語・空白を含む別フォルダへ展開した同梱BATの`--check`はPASS。フルアプリ起動と実LoL映像の出力はこの確認に含まない。
 
 最初のサンドボックス内テストでは一時フォルダ作成とlocalhostソケットが拒否された。Windows権限で同じ対象を再実行し、上記98件＋24 subtestsを確認した。エラー原文はローカルのみ保存し、GitHubには載せない。
 
