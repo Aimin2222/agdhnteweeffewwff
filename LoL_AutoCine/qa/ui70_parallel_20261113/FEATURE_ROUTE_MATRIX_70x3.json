@@ -1,0 +1,1907 @@
+{
+  "schema": "AC_UI70_210_ROUTE_PLANNED_MATRIX_V1",
+  "date": "2026-11-13",
+  "source_ref": "PR56 fixed b4f8b0af7633da5f362ab84b901b5cde69c8adc0",
+  "scope": "C3(T-A-M) / R1 / R2 proposed UI entrances; NOT confirmed clickable runtime",
+  "count": 70,
+  "route_edges": 210,
+  "product_test_cases": "239 specified; all NOT_RUN",
+  "unimplemented_features": [
+    "ENGAGE",
+    "BESTSHOT"
+  ],
+  "all_current_runtime_tests": "NOT_RUN",
+  "formal_release_ready": false,
+  "rows": [
+    {
+      "id": "REPLAY",
+      "name": "Replay API接続",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "MAIN",
+      "proposed_source_path": "LoL_AutoCine/core/replay_api.py",
+      "section_id": "feature-REPLAY",
+      "routes": {
+        "C3": {
+          "screen": "C3.main",
+          "section": "feature-REPLAY"
+        },
+        "R1": {
+          "screen": "R1.main",
+          "section": "feature-REPLAY"
+        },
+        "R2": {
+          "screen": "R2.main",
+          "section": "feature-REPLAY"
+        }
+      },
+      "unit_test_id": "UT-REPLAY",
+      "windows_test_id": "WIN-REPLAY",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "LAUNCH",
+      "name": "ROFL起動・最近のリプレイ",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "MAIN",
+      "proposed_source_path": "LoL_AutoCine/core/launcher.py",
+      "section_id": "feature-LAUNCH",
+      "routes": {
+        "C3": {
+          "screen": "C3.main",
+          "section": "feature-LAUNCH"
+        },
+        "R1": {
+          "screen": "R1.main",
+          "section": "feature-LAUNCH"
+        },
+        "R2": {
+          "screen": "R2.main",
+          "section": "feature-LAUNCH"
+        }
+      },
+      "unit_test_id": "UT-LAUNCH",
+      "windows_test_id": "WIN-LAUNCH",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "PLAYER",
+      "name": "対象プレイヤー固定",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "MAIN",
+      "proposed_source_path": "LoL_AutoCine/core/players.py",
+      "section_id": "feature-PLAYER",
+      "routes": {
+        "C3": {
+          "screen": "C3.main",
+          "section": "feature-PLAYER"
+        },
+        "R1": {
+          "screen": "R1.main",
+          "section": "feature-PLAYER"
+        },
+        "R2": {
+          "screen": "R2.main",
+          "section": "feature-PLAYER"
+        }
+      },
+      "unit_test_id": "UT-PLAYER",
+      "windows_test_id": "WIN-PLAYER",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "SCAN",
+      "name": "試合全体スキャン",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "MAIN",
+      "proposed_source_path": "LoL_AutoCine/core/scanner.py",
+      "section_id": "feature-SCAN",
+      "routes": {
+        "C3": {
+          "screen": "C3.main",
+          "section": "feature-SCAN"
+        },
+        "R1": {
+          "screen": "R1.main",
+          "section": "feature-SCAN"
+        },
+        "R2": {
+          "screen": "R2.main",
+          "section": "feature-SCAN"
+        }
+      },
+      "unit_test_id": "UT-SCAN",
+      "windows_test_id": "WIN-SCAN",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "ASSIST",
+      "name": "キル／アシスト／両方",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "MAIN",
+      "proposed_source_path": "LoL_AutoCine/core/scanner.py",
+      "section_id": "feature-ASSIST",
+      "routes": {
+        "C3": {
+          "screen": "C3.main",
+          "section": "feature-ASSIST"
+        },
+        "R1": {
+          "screen": "R1.main",
+          "section": "feature-ASSIST"
+        },
+        "R2": {
+          "screen": "R2.main",
+          "section": "feature-ASSIST"
+        }
+      },
+      "unit_test_id": "UT-ASSIST",
+      "windows_test_id": "WIN-ASSIST",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "MULTI",
+      "name": "連続キル判定",
+      "access_class": "BACKEND_AUTOMATIC",
+      "placement_category": "EASY",
+      "proposed_source_path": "LoL_AutoCine/core/scanner.py",
+      "section_id": "feature-MULTI",
+      "routes": {
+        "C3": {
+          "screen": "C3.main",
+          "section": "feature-MULTI"
+        },
+        "R1": {
+          "screen": "R1.main",
+          "section": "feature-MULTI"
+        },
+        "R2": {
+          "screen": "R2.main",
+          "section": "feature-MULTI"
+        }
+      },
+      "unit_test_id": "UT-MULTI",
+      "windows_test_id": "WIN-MULTI",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "SCENE",
+      "name": "シーン編集・保存",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "MAIN",
+      "proposed_source_path": "LoL_AutoCine/ui/scene_project.py",
+      "section_id": "feature-SCENE",
+      "routes": {
+        "C3": {
+          "screen": "C3.detail",
+          "section": "feature-SCENE"
+        },
+        "R1": {
+          "screen": "R1.detail",
+          "section": "feature-SCENE"
+        },
+        "R2": {
+          "screen": "R2.detail",
+          "section": "feature-SCENE"
+        }
+      },
+      "unit_test_id": "UT-SCENE",
+      "windows_test_id": "WIN-SCENE",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "TIMELINE",
+      "name": "シーンタイムライン",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "DETAIL",
+      "proposed_source_path": "LoL_AutoCine/ui/scene_timeline.py",
+      "section_id": "feature-TIMELINE",
+      "routes": {
+        "C3": {
+          "screen": "C3.main",
+          "section": "feature-TIMELINE"
+        },
+        "R1": {
+          "screen": "R1.main",
+          "section": "feature-TIMELINE"
+        },
+        "R2": {
+          "screen": "R2.main",
+          "section": "feature-TIMELINE"
+        }
+      },
+      "unit_test_id": "UT-TIMELINE",
+      "windows_test_id": "WIN-TIMELINE",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "KEYFRAME",
+      "name": "相対yaw/zoom/FOVキーフレーム",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "DETAIL",
+      "proposed_source_path": "LoL_AutoCine/ui/scene_project.py",
+      "section_id": "feature-KEYFRAME",
+      "routes": {
+        "C3": {
+          "screen": "C3.keys",
+          "section": "feature-KEYFRAME"
+        },
+        "R1": {
+          "screen": "R1.keys",
+          "section": "feature-KEYFRAME"
+        },
+        "R2": {
+          "screen": "R2.keys",
+          "section": "feature-KEYFRAME"
+        }
+      },
+      "unit_test_id": "UT-KEYFRAME",
+      "windows_test_id": "WIN-KEYFRAME",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "HIGHLIGHT",
+      "name": "既存おまかせ演出",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "EASY",
+      "proposed_source_path": "LoL_AutoCine/ui/highlight_director.py",
+      "section_id": "feature-HIGHLIGHT",
+      "routes": {
+        "C3": {
+          "screen": "C3.easy",
+          "section": "feature-HIGHLIGHT"
+        },
+        "R1": {
+          "screen": "R1.easy",
+          "section": "feature-HIGHLIGHT"
+        },
+        "R2": {
+          "screen": "R2.easy",
+          "section": "feature-HIGHLIGHT"
+        }
+      },
+      "unit_test_id": "UT-HIGHLIGHT",
+      "windows_test_id": "WIN-HIGHLIGHT",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "SMARTMONTAGE",
+      "name": "既存シーン採点・並べ替え",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "EASY",
+      "proposed_source_path": "LoL_AutoCine/ui/smart_montage.py",
+      "section_id": "feature-SMARTMONTAGE",
+      "routes": {
+        "C3": {
+          "screen": "C3.easy",
+          "section": "feature-SMARTMONTAGE"
+        },
+        "R1": {
+          "screen": "R1.easy",
+          "section": "feature-SMARTMONTAGE"
+        },
+        "R2": {
+          "screen": "R2.easy",
+          "section": "feature-SMARTMONTAGE"
+        }
+      },
+      "unit_test_id": "UT-SMARTMONTAGE",
+      "windows_test_id": "WIN-SMARTMONTAGE",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "HUD",
+      "name": "HUD非表示・復元",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SETTINGS",
+      "proposed_source_path": "LoL_AutoCine/core/hud.py",
+      "section_id": "feature-HUD",
+      "routes": {
+        "C3": {
+          "screen": "C3.export",
+          "section": "feature-HUD"
+        },
+        "R1": {
+          "screen": "R1.export",
+          "section": "feature-HUD"
+        },
+        "R2": {
+          "screen": "R2.export",
+          "section": "feature-HUD"
+        }
+      },
+      "unit_test_id": "UT-HUD",
+      "windows_test_id": "WIN-HUD",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "MIRROR",
+      "name": "ミラー・表示FPS",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "MAIN",
+      "proposed_source_path": "LoL_AutoCine/core/gpu_mirror.py",
+      "section_id": "feature-MIRROR",
+      "routes": {
+        "C3": {
+          "screen": "C3.main",
+          "section": "feature-MIRROR"
+        },
+        "R1": {
+          "screen": "R1.main",
+          "section": "feature-MIRROR"
+        },
+        "R2": {
+          "screen": "R2.main",
+          "section": "feature-MIRROR"
+        }
+      },
+      "unit_test_id": "UT-MIRROR",
+      "windows_test_id": "WIN-MIRROR",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "CAPTURE",
+      "name": "WGC/共有メモリ取得",
+      "access_class": "BACKEND_AUTOMATIC",
+      "placement_category": "SETTINGS",
+      "proposed_source_path": "LoL_AutoCine/core/capture_process.py",
+      "section_id": "feature-CAPTURE",
+      "routes": {
+        "C3": {
+          "screen": "C3.main",
+          "section": "feature-CAPTURE"
+        },
+        "R1": {
+          "screen": "R1.main",
+          "section": "feature-CAPTURE"
+        },
+        "R2": {
+          "screen": "R2.main",
+          "section": "feature-CAPTURE"
+        }
+      },
+      "unit_test_id": "UT-CAPTURE",
+      "windows_test_id": "WIN-CAPTURE",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "RECORD",
+      "name": "録画・時刻整合",
+      "access_class": "BACKEND_AUTOMATIC",
+      "placement_category": "SETTINGS",
+      "proposed_source_path": "LoL_AutoCine/core/recorder.py",
+      "section_id": "feature-RECORD",
+      "routes": {
+        "C3": {
+          "screen": "C3.export",
+          "section": "feature-RECORD"
+        },
+        "R1": {
+          "screen": "R1.export",
+          "section": "feature-RECORD"
+        },
+        "R2": {
+          "screen": "R2.export",
+          "section": "feature-RECORD"
+        }
+      },
+      "unit_test_id": "UT-RECORD",
+      "windows_test_id": "WIN-RECORD",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "JOB",
+      "name": "チェック済み・複数クリップ作成",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "EASY",
+      "proposed_source_path": "LoL_AutoCine/core/jobs.py",
+      "section_id": "feature-JOB",
+      "routes": {
+        "C3": {
+          "screen": "C3.export",
+          "section": "feature-JOB"
+        },
+        "R1": {
+          "screen": "R1.export",
+          "section": "feature-JOB"
+        },
+        "R2": {
+          "screen": "R2.export",
+          "section": "feature-JOB"
+        }
+      },
+      "unit_test_id": "UT-JOB",
+      "windows_test_id": "WIN-JOB",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "AUDIO",
+      "name": "LoLプロセス専用録音",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SETTINGS",
+      "proposed_source_path": "LoL_AutoCine/core/audio.py",
+      "section_id": "feature-AUDIO",
+      "routes": {
+        "C3": {
+          "screen": "C3.export",
+          "section": "feature-AUDIO"
+        },
+        "R1": {
+          "screen": "R1.export",
+          "section": "feature-AUDIO"
+        },
+        "R2": {
+          "screen": "R2.export",
+          "section": "feature-AUDIO"
+        }
+      },
+      "unit_test_id": "UT-AUDIO",
+      "windows_test_id": "WIN-AUDIO",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "AUDIOGUARD",
+      "name": "音声必須時の失敗伝播",
+      "access_class": "BACKEND_AUTOMATIC",
+      "placement_category": "SETTINGS",
+      "proposed_source_path": "LoL_AutoCine/core/jobs.py",
+      "section_id": "feature-AUDIOGUARD",
+      "routes": {
+        "C3": {
+          "screen": "C3.export",
+          "section": "feature-AUDIOGUARD"
+        },
+        "R1": {
+          "screen": "R1.export",
+          "section": "feature-AUDIOGUARD"
+        },
+        "R2": {
+          "screen": "R2.export",
+          "section": "feature-AUDIOGUARD"
+        }
+      },
+      "unit_test_id": "UT-AUDIOGUARD",
+      "windows_test_id": "WIN-AUDIOGUARD",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "BGM",
+      "name": "BGMミックス・音量",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SETTINGS",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-BGM",
+      "routes": {
+        "C3": {
+          "screen": "C3.export",
+          "section": "feature-BGM"
+        },
+        "R1": {
+          "screen": "R1.export",
+          "section": "feature-BGM"
+        },
+        "R2": {
+          "screen": "R2.export",
+          "section": "feature-BGM"
+        }
+      },
+      "unit_test_id": "UT-BGM",
+      "windows_test_id": "WIN-BGM",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "NVENC",
+      "name": "GPUエンコード・CPU代替",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SETTINGS",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-NVENC",
+      "routes": {
+        "C3": {
+          "screen": "C3.export",
+          "section": "feature-NVENC"
+        },
+        "R1": {
+          "screen": "R1.export",
+          "section": "feature-NVENC"
+        },
+        "R2": {
+          "screen": "R2.export",
+          "section": "feature-NVENC"
+        }
+      },
+      "unit_test_id": "UT-NVENC",
+      "windows_test_id": "WIN-NVENC",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "GPUFX",
+      "name": "OpenCL全体FX経路",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SETTINGS",
+      "proposed_source_path": "LoL_AutoCine/core/gpu_full.py",
+      "section_id": "feature-GPUFX",
+      "routes": {
+        "C3": {
+          "screen": "C3.settings",
+          "section": "feature-GPUFX"
+        },
+        "R1": {
+          "screen": "R1.settings",
+          "section": "feature-GPUFX"
+        },
+        "R2": {
+          "screen": "R2.settings",
+          "section": "feature-GPUFX"
+        }
+      },
+      "unit_test_id": "UT-GPUFX",
+      "windows_test_id": "WIN-GPUFX",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "GRADE",
+      "name": "16グレード・LUT・カーブ",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-GRADE",
+      "routes": {
+        "C3": {
+          "screen": "C3.color",
+          "section": "feature-GRADE"
+        },
+        "R1": {
+          "screen": "R1.color",
+          "section": "feature-GRADE"
+        },
+        "R2": {
+          "screen": "R2.color",
+          "section": "feature-GRADE"
+        }
+      },
+      "unit_test_id": "UT-GRADE",
+      "windows_test_id": "WIN-GRADE",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FOG",
+      "name": "ゲーム内Fog",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/render_fx.py",
+      "section_id": "feature-FOG",
+      "routes": {
+        "C3": {
+          "screen": "C3.color",
+          "section": "feature-FOG"
+        },
+        "R1": {
+          "screen": "R1.color",
+          "section": "feature-FOG"
+        },
+        "R2": {
+          "screen": "R2.color",
+          "section": "feature-FOG"
+        }
+      },
+      "unit_test_id": "UT-FOG",
+      "windows_test_id": "WIN-FOG",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "DOF",
+      "name": "ゲーム内DOFと後段焦点表現",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/focus_fx.py",
+      "section_id": "feature-DOF",
+      "routes": {
+        "C3": {
+          "screen": "C3.color",
+          "section": "feature-DOF"
+        },
+        "R1": {
+          "screen": "R1.color",
+          "section": "feature-DOF"
+        },
+        "R2": {
+          "screen": "R2.color",
+          "section": "feature-DOF"
+        }
+      },
+      "unit_test_id": "UT-DOF",
+      "windows_test_id": "WIN-DOF",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "PULSE",
+      "name": "キル時ハイライト",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/highlight_pulse.py",
+      "section_id": "feature-PULSE",
+      "routes": {
+        "C3": {
+          "screen": "C3.color",
+          "section": "feature-PULSE"
+        },
+        "R1": {
+          "screen": "R1.color",
+          "section": "feature-PULSE"
+        },
+        "R2": {
+          "screen": "R2.color",
+          "section": "feature-PULSE"
+        }
+      },
+      "unit_test_id": "UT-PULSE",
+      "windows_test_id": "WIN-PULSE",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "BADGE",
+      "name": "既存37キルバッジ",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "LIBRARY",
+      "proposed_source_path": "LoL_AutoCine/core/kill_icons.py",
+      "section_id": "feature-BADGE",
+      "routes": {
+        "C3": {
+          "screen": "C3.material",
+          "section": "feature-BADGE"
+        },
+        "R1": {
+          "screen": "R1.material",
+          "section": "feature-BADGE"
+        },
+        "R2": {
+          "screen": "R2.material",
+          "section": "feature-BADGE"
+        }
+      },
+      "unit_test_id": "UT-BADGE",
+      "windows_test_id": "WIN-BADGE",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "WORKFRAME",
+      "name": "Workフレーム候補",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "LIBRARY",
+      "proposed_source_path": "LoL_AutoCine/core/work_kill_assets.py",
+      "section_id": "feature-WORKFRAME",
+      "routes": {
+        "C3": {
+          "screen": "C3.material",
+          "section": "feature-WORKFRAME"
+        },
+        "R1": {
+          "screen": "R1.material",
+          "section": "feature-WORKFRAME"
+        },
+        "R2": {
+          "screen": "R2.material",
+          "section": "feature-WORKFRAME"
+        }
+      },
+      "unit_test_id": "UT-WORKFRAME",
+      "windows_test_id": "WIN-WORKFRAME",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "WORKFX",
+      "name": "Workエフェクト候補",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "LIBRARY",
+      "proposed_source_path": "LoL_AutoCine/core/work_kill_assets.py",
+      "section_id": "feature-WORKFX",
+      "routes": {
+        "C3": {
+          "screen": "C3.material",
+          "section": "feature-WORKFX"
+        },
+        "R1": {
+          "screen": "R1.material",
+          "section": "feature-WORKFX"
+        },
+        "R2": {
+          "screen": "R2.material",
+          "section": "feature-WORKFX"
+        }
+      },
+      "unit_test_id": "UT-WORKFX",
+      "windows_test_id": "WIN-WORKFX",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "MOTION",
+      "name": "登場アニメ6種",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "LIBRARY",
+      "proposed_source_path": "LoL_AutoCine/core/kill_icons.py",
+      "section_id": "feature-MOTION",
+      "routes": {
+        "C3": {
+          "screen": "C3.material",
+          "section": "feature-MOTION"
+        },
+        "R1": {
+          "screen": "R1.material",
+          "section": "feature-MOTION"
+        },
+        "R2": {
+          "screen": "R2.material",
+          "section": "feature-MOTION"
+        }
+      },
+      "unit_test_id": "UT-MOTION",
+      "windows_test_id": "WIN-MOTION",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "REFERENCE",
+      "name": "参考映像の局所特徴抽出",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "LIBRARY",
+      "proposed_source_path": "LoL_AutoCine/core/reference_safe.py",
+      "section_id": "feature-REFERENCE",
+      "routes": {
+        "C3": {
+          "screen": "C3.material",
+          "section": "feature-REFERENCE"
+        },
+        "R1": {
+          "screen": "R1.material",
+          "section": "feature-REFERENCE"
+        },
+        "R2": {
+          "screen": "R2.material",
+          "section": "feature-REFERENCE"
+        }
+      },
+      "unit_test_id": "UT-REFERENCE",
+      "windows_test_id": "WIN-REFERENCE",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "PREVIEW",
+      "name": "近似プレビューと厳密静止画",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "MAIN",
+      "proposed_source_path": "LoL_AutoCine/core/preview.py",
+      "section_id": "feature-PREVIEW",
+      "routes": {
+        "C3": {
+          "screen": "C3.main",
+          "section": "feature-PREVIEW"
+        },
+        "R1": {
+          "screen": "R1.main",
+          "section": "feature-PREVIEW"
+        },
+        "R2": {
+          "screen": "R2.main",
+          "section": "feature-PREVIEW"
+        }
+      },
+      "unit_test_id": "UT-PREVIEW",
+      "windows_test_id": "WIN-PREVIEW",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "MONTAGEFX",
+      "name": "連結後の明暗トランジション",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/montage_fx.py",
+      "section_id": "feature-MONTAGEFX",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-MONTAGEFX"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-MONTAGEFX"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-MONTAGEFX"
+        }
+      },
+      "unit_test_id": "UT-MONTAGEFX",
+      "windows_test_id": "WIN-MONTAGEFX",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "SELFQA",
+      "name": "既存自己診断",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SETTINGS",
+      "proposed_source_path": "LoL_AutoCine/core/auto_qa.py",
+      "section_id": "feature-SELFQA",
+      "routes": {
+        "C3": {
+          "screen": "C3.diagnostics",
+          "section": "feature-SELFQA"
+        },
+        "R1": {
+          "screen": "R1.diagnostics",
+          "section": "feature-SELFQA"
+        },
+        "R2": {
+          "screen": "R2.diagnostics",
+          "section": "feature-SELFQA"
+        }
+      },
+      "unit_test_id": "UT-SELFQA",
+      "windows_test_id": "WIN-SELFQA",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "DIAG",
+      "name": "性能診断・QAパッケージ",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SETTINGS",
+      "proposed_source_path": "LoL_AutoCine/core/performance_diagnostics.py",
+      "section_id": "feature-DIAG",
+      "routes": {
+        "C3": {
+          "screen": "C3.diagnostics",
+          "section": "feature-DIAG"
+        },
+        "R1": {
+          "screen": "R1.diagnostics",
+          "section": "feature-DIAG"
+        },
+        "R2": {
+          "screen": "R2.diagnostics",
+          "section": "feature-DIAG"
+        }
+      },
+      "unit_test_id": "UT-DIAG",
+      "windows_test_id": "WIN-DIAG",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "CAM_third_cinema",
+      "name": "third_cinema",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/camera.py",
+      "section_id": "feature-CAM_third_cinema",
+      "routes": {
+        "C3": {
+          "screen": "C3.camera",
+          "section": "feature-CAM_third_cinema"
+        },
+        "R1": {
+          "screen": "R1.camera",
+          "section": "feature-CAM_third_cinema"
+        },
+        "R2": {
+          "screen": "R2.camera",
+          "section": "feature-CAM_third_cinema"
+        }
+      },
+      "unit_test_id": "UT-CAM_third_cinema",
+      "windows_test_id": "WIN-CAM_third_cinema",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "CAM_third",
+      "name": "third",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/camera.py",
+      "section_id": "feature-CAM_third",
+      "routes": {
+        "C3": {
+          "screen": "C3.camera",
+          "section": "feature-CAM_third"
+        },
+        "R1": {
+          "screen": "R1.camera",
+          "section": "feature-CAM_third"
+        },
+        "R2": {
+          "screen": "R2.camera",
+          "section": "feature-CAM_third"
+        }
+      },
+      "unit_test_id": "UT-CAM_third",
+      "windows_test_id": "WIN-CAM_third",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "CAM_geo_aim",
+      "name": "geo_aim",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/camera.py",
+      "section_id": "feature-CAM_geo_aim",
+      "routes": {
+        "C3": {
+          "screen": "C3.camera",
+          "section": "feature-CAM_geo_aim"
+        },
+        "R1": {
+          "screen": "R1.camera",
+          "section": "feature-CAM_geo_aim"
+        },
+        "R2": {
+          "screen": "R2.camera",
+          "section": "feature-CAM_geo_aim"
+        }
+      },
+      "unit_test_id": "UT-CAM_geo_aim",
+      "windows_test_id": "WIN-CAM_geo_aim",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "CAM_cinema",
+      "name": "cinema",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/camera.py",
+      "section_id": "feature-CAM_cinema",
+      "routes": {
+        "C3": {
+          "screen": "C3.camera",
+          "section": "feature-CAM_cinema"
+        },
+        "R1": {
+          "screen": "R1.camera",
+          "section": "feature-CAM_cinema"
+        },
+        "R2": {
+          "screen": "R2.camera",
+          "section": "feature-CAM_cinema"
+        }
+      },
+      "unit_test_id": "UT-CAM_cinema",
+      "windows_test_id": "WIN-CAM_cinema",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "CAM_fps",
+      "name": "fps",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/camera.py",
+      "section_id": "feature-CAM_fps",
+      "routes": {
+        "C3": {
+          "screen": "C3.camera",
+          "section": "feature-CAM_fps"
+        },
+        "R1": {
+          "screen": "R1.camera",
+          "section": "feature-CAM_fps"
+        },
+        "R2": {
+          "screen": "R2.camera",
+          "section": "feature-CAM_fps"
+        }
+      },
+      "unit_test_id": "UT-CAM_fps",
+      "windows_test_id": "WIN-CAM_fps",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "CAM_orbit",
+      "name": "orbit",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/camera.py",
+      "section_id": "feature-CAM_orbit",
+      "routes": {
+        "C3": {
+          "screen": "C3.camera",
+          "section": "feature-CAM_orbit"
+        },
+        "R1": {
+          "screen": "R1.camera",
+          "section": "feature-CAM_orbit"
+        },
+        "R2": {
+          "screen": "R2.camera",
+          "section": "feature-CAM_orbit"
+        }
+      },
+      "unit_test_id": "UT-CAM_orbit",
+      "windows_test_id": "WIN-CAM_orbit",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "CAM_lolnam_cinema",
+      "name": "lolnam_cinema",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/camera.py",
+      "section_id": "feature-CAM_lolnam_cinema",
+      "routes": {
+        "C3": {
+          "screen": "C3.camera",
+          "section": "feature-CAM_lolnam_cinema"
+        },
+        "R1": {
+          "screen": "R1.camera",
+          "section": "feature-CAM_lolnam_cinema"
+        },
+        "R2": {
+          "screen": "R2.camera",
+          "section": "feature-CAM_lolnam_cinema"
+        }
+      },
+      "unit_test_id": "UT-CAM_lolnam_cinema",
+      "windows_test_id": "WIN-CAM_lolnam_cinema",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "CAM_follow",
+      "name": "follow",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/camera.py",
+      "section_id": "feature-CAM_follow",
+      "routes": {
+        "C3": {
+          "screen": "C3.camera",
+          "section": "feature-CAM_follow"
+        },
+        "R1": {
+          "screen": "R1.camera",
+          "section": "feature-CAM_follow"
+        },
+        "R2": {
+          "screen": "R2.camera",
+          "section": "feature-CAM_follow"
+        }
+      },
+      "unit_test_id": "UT-CAM_follow",
+      "windows_test_id": "WIN-CAM_follow",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "CAM_cinema_top",
+      "name": "cinema_top",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/camera.py",
+      "section_id": "feature-CAM_cinema_top",
+      "routes": {
+        "C3": {
+          "screen": "C3.camera",
+          "section": "feature-CAM_cinema_top"
+        },
+        "R1": {
+          "screen": "R1.camera",
+          "section": "feature-CAM_cinema_top"
+        },
+        "R2": {
+          "screen": "R2.camera",
+          "section": "feature-CAM_cinema_top"
+        }
+      },
+      "unit_test_id": "UT-CAM_cinema_top",
+      "windows_test_id": "WIN-CAM_cinema_top",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "CAM_top",
+      "name": "top",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/camera.py",
+      "section_id": "feature-CAM_top",
+      "routes": {
+        "C3": {
+          "screen": "C3.camera",
+          "section": "feature-CAM_top"
+        },
+        "R1": {
+          "screen": "R1.camera",
+          "section": "feature-CAM_top"
+        },
+        "R2": {
+          "screen": "R2.camera",
+          "section": "feature-CAM_top"
+        }
+      },
+      "unit_test_id": "UT-CAM_top",
+      "windows_test_id": "WIN-CAM_top",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FIXED",
+      "name": "固定自動",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/smart_camera_director.py",
+      "section_id": "feature-FIXED",
+      "routes": {
+        "C3": {
+          "screen": "C3.camera",
+          "section": "feature-FIXED"
+        },
+        "R1": {
+          "screen": "R1.camera",
+          "section": "feature-FIXED"
+        },
+        "R2": {
+          "screen": "R2.camera",
+          "section": "feature-FIXED"
+        }
+      },
+      "unit_test_id": "UT-FIXED",
+      "windows_test_id": "WIN-FIXED",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FULL",
+      "name": "フルオートシネマ",
+      "access_class": "DIRECT_UI3",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/smart_camera_director.py",
+      "section_id": "feature-FULL",
+      "routes": {
+        "C3": {
+          "screen": "C3.camera",
+          "section": "feature-FULL"
+        },
+        "R1": {
+          "screen": "R1.camera",
+          "section": "feature-FULL"
+        },
+        "R2": {
+          "screen": "R2.camera",
+          "section": "feature-FULL"
+        }
+      },
+      "unit_test_id": "UT-FULL",
+      "windows_test_id": "WIN-FULL",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_motion_camera",
+      "name": "motion_camera",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_motion_camera",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_motion_camera"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_motion_camera"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_motion_camera"
+        }
+      },
+      "unit_test_id": "UT-FX_motion_camera",
+      "windows_test_id": "WIN-FX_motion_camera",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_radial_blur",
+      "name": "radial_blur",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_radial_blur",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_radial_blur"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_radial_blur"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_radial_blur"
+        }
+      },
+      "unit_test_id": "UT-FX_radial_blur",
+      "windows_test_id": "WIN-FX_radial_blur",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_zoom_blur",
+      "name": "zoom_blur",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_zoom_blur",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_zoom_blur"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_zoom_blur"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_zoom_blur"
+        }
+      },
+      "unit_test_id": "UT-FX_zoom_blur",
+      "windows_test_id": "WIN-FX_zoom_blur",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_glitch",
+      "name": "glitch",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_glitch",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_glitch"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_glitch"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_glitch"
+        }
+      },
+      "unit_test_id": "UT-FX_glitch",
+      "windows_test_id": "WIN-FX_glitch",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_kaleidoscope",
+      "name": "kaleidoscope",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_kaleidoscope",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_kaleidoscope"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_kaleidoscope"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_kaleidoscope"
+        }
+      },
+      "unit_test_id": "UT-FX_kaleidoscope",
+      "windows_test_id": "WIN-FX_kaleidoscope",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_vhs_damage",
+      "name": "vhs_damage",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_vhs_damage",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_vhs_damage"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_vhs_damage"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_vhs_damage"
+        }
+      },
+      "unit_test_id": "UT-FX_vhs_damage",
+      "windows_test_id": "WIN-FX_vhs_damage",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_block_motion",
+      "name": "block_motion",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_block_motion",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_block_motion"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_block_motion"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_block_motion"
+        }
+      },
+      "unit_test_id": "UT-FX_block_motion",
+      "windows_test_id": "WIN-FX_block_motion",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_spin_motion",
+      "name": "spin_motion",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_spin_motion",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_spin_motion"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_spin_motion"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_spin_motion"
+        }
+      },
+      "unit_test_id": "UT-FX_spin_motion",
+      "windows_test_id": "WIN-FX_spin_motion",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_chroma_leak",
+      "name": "chroma_leak",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_chroma_leak",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_chroma_leak"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_chroma_leak"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_chroma_leak"
+        }
+      },
+      "unit_test_id": "UT-FX_chroma_leak",
+      "windows_test_id": "WIN-FX_chroma_leak",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_flash",
+      "name": "flash",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_flash",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_flash"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_flash"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_flash"
+        }
+      },
+      "unit_test_id": "UT-FX_flash",
+      "windows_test_id": "WIN-FX_flash",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_focus_blur",
+      "name": "focus_blur",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_focus_blur",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_focus_blur"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_focus_blur"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_focus_blur"
+        }
+      },
+      "unit_test_id": "UT-FX_focus_blur",
+      "windows_test_id": "WIN-FX_focus_blur",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_vignette_fx",
+      "name": "vignette_fx",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_vignette_fx",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_vignette_fx"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_vignette_fx"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_vignette_fx"
+        }
+      },
+      "unit_test_id": "UT-FX_vignette_fx",
+      "windows_test_id": "WIN-FX_vignette_fx",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_glint",
+      "name": "glint",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_glint",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_glint"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_glint"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_glint"
+        }
+      },
+      "unit_test_id": "UT-FX_glint",
+      "windows_test_id": "WIN-FX_glint",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_camera_shake",
+      "name": "camera_shake",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_camera_shake",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_camera_shake"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_camera_shake"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_camera_shake"
+        }
+      },
+      "unit_test_id": "UT-FX_camera_shake",
+      "windows_test_id": "WIN-FX_camera_shake",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_wiggle",
+      "name": "wiggle",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_wiggle",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_wiggle"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_wiggle"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_wiggle"
+        }
+      },
+      "unit_test_id": "UT-FX_wiggle",
+      "windows_test_id": "WIN-FX_wiggle",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_vr_blur",
+      "name": "vr_blur",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_vr_blur",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_vr_blur"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_vr_blur"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_vr_blur"
+        }
+      },
+      "unit_test_id": "UT-FX_vr_blur",
+      "windows_test_id": "WIN-FX_vr_blur",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_vr_light_leak",
+      "name": "vr_light_leak",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_vr_light_leak",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_vr_light_leak"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_vr_light_leak"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_vr_light_leak"
+        }
+      },
+      "unit_test_id": "UT-FX_vr_light_leak",
+      "windows_test_id": "WIN-FX_vr_light_leak",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_sphere_blur",
+      "name": "sphere_blur",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_sphere_blur",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_sphere_blur"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_sphere_blur"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_sphere_blur"
+        }
+      },
+      "unit_test_id": "UT-FX_sphere_blur",
+      "windows_test_id": "WIN-FX_sphere_blur",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_panel_wipe",
+      "name": "panel_wipe",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_panel_wipe",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_panel_wipe"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_panel_wipe"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_panel_wipe"
+        }
+      },
+      "unit_test_id": "UT-FX_panel_wipe",
+      "windows_test_id": "WIN-FX_panel_wipe",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_stretch_wipe",
+      "name": "stretch_wipe",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_stretch_wipe",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_stretch_wipe"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_stretch_wipe"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_stretch_wipe"
+        }
+      },
+      "unit_test_id": "UT-FX_stretch_wipe",
+      "windows_test_id": "WIN-FX_stretch_wipe",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_mirror",
+      "name": "mirror",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_mirror",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_mirror"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_mirror"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_mirror"
+        }
+      },
+      "unit_test_id": "UT-FX_mirror",
+      "windows_test_id": "WIN-FX_mirror",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "FX_slice",
+      "name": "slice",
+      "access_class": "NATIVE_EDITOR",
+      "placement_category": "SPECIAL",
+      "proposed_source_path": "LoL_AutoCine/core/effects.py",
+      "section_id": "feature-FX_slice",
+      "routes": {
+        "C3": {
+          "screen": "C3.effects",
+          "section": "feature-FX_slice"
+        },
+        "R1": {
+          "screen": "R1.effects",
+          "section": "feature-FX_slice"
+        },
+        "R2": {
+          "screen": "R2.effects",
+          "section": "feature-FX_slice"
+        }
+      },
+      "unit_test_id": "UT-FX_slice",
+      "windows_test_id": "WIN-FX_slice",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "ENGAGE",
+      "name": "エンゲージ独立検出",
+      "access_class": "UNIMPLEMENTED",
+      "placement_category": "SETTINGS",
+      "proposed_source_path": "LoL_AutoCine/core/scanner.py",
+      "section_id": "feature-ENGAGE",
+      "routes": {
+        "C3": {
+          "screen": "C3.settings",
+          "section": "feature-ENGAGE"
+        },
+        "R1": {
+          "screen": "R1.settings",
+          "section": "feature-ENGAGE"
+        },
+        "R2": {
+          "screen": "R2.settings",
+          "section": "feature-ENGAGE"
+        }
+      },
+      "unit_test_id": "UT-ENGAGE",
+      "windows_test_id": "WIN-ENGAGE",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    },
+    {
+      "id": "BESTSHOT",
+      "name": "画像品質によるベストショット選択",
+      "access_class": "UNIMPLEMENTED",
+      "placement_category": "SETTINGS",
+      "proposed_source_path": "LoL_AutoCine/core/smart_camera_director.py",
+      "section_id": "feature-BESTSHOT",
+      "routes": {
+        "C3": {
+          "screen": "C3.settings",
+          "section": "feature-BESTSHOT"
+        },
+        "R1": {
+          "screen": "R1.settings",
+          "section": "feature-BESTSHOT"
+        },
+        "R2": {
+          "screen": "R2.settings",
+          "section": "feature-BESTSHOT"
+        }
+      },
+      "unit_test_id": "UT-BESTSHOT",
+      "windows_test_id": "WIN-BESTSHOT",
+      "runtime_status": "NOT_RUN",
+      "implementation_status": "UNVERIFIED",
+      "production_acceptance": false
+    }
+  ]
+}
