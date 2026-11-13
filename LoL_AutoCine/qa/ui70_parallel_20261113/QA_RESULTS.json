@@ -1,0 +1,103 @@
+{
+  "schema": "AC_UI70_TAM_INDEPENDENT_OFFLINE_QA_20261113_V1",
+  "date_jst": "2026-11-13",
+  "status": "SPEC_LINKS_PASS_70_OF_70_AND_210_OF_210_MUTATION_REJECTION_30_OF_30_RUNTIME_NOT_RUN",
+  "source_commit": "b4f8b0af7633da5f362ab84b901b5cde69c8adc0",
+  "source_pr": "Draft PR #56 inherited only; no protected PR or main writes",
+  "branch": "chat/ui70-readonly-qa-20261113",
+  "checked": {
+    "engine": "Pure JavaScript auditUi70 function executed inside isolated V8 connector orchestration",
+    "repo_source": "GitHub source fetched from fixed PR56 commit and 6,063 tracked entries",
+    "source_contracts": 8,
+    "git_source_blobs": {
+      "ledger": "3815395f03c94681565da07e33fcc7d2408e0600",
+      "sections": "af824c4c5d42c09ca621efc9ba783cf6560f125f",
+      "screens": "3b1d5b36670a6e84c9131ec2b70022de613c78e4",
+      "controls": "aa9b7f04e35fe83eb22e159806a46264bd7b8a84",
+      "product_test_specs": "27c9db1ecf2c95c302cd2f1d5f67c65c09c44a09",
+      "placement": "bb74402c70956111c172d2303dc28c65b99b5db9",
+      "bindings": "97faab8f713b9f66cd3ff7901cd5c63dac9c94a5",
+      "c3_original_fidelity": "8760ed0fd11f1750d7e476cf0015272585eaa69e"
+    },
+    "normal_spec_audit": {
+      "status": "PASS_OFFLINE_SCHEMA_CROSS_LINK_ONLY",
+      "feature_ids": 70,
+      "sections": 70,
+      "placements": 70,
+      "bindings": 70,
+      "screen_specs": 36,
+      "controls": 86,
+      "feature_to_ui_routes": 210,
+      "product_test_specs": 239,
+      "missing_source_paths": 0,
+      "missing_control_refs": 0,
+      "missing_test_links": 0
+    },
+    "negative_mutations": {
+      "cases": 30,
+      "rejected": 30,
+      "failed": 0,
+      "examples": [
+        "removed feature",
+        "duplicate feature ID",
+        "wrong C3/R1/R2 screen",
+        "wrong section",
+        "fake product test PASS",
+        "fake Windows PASS",
+        "unsafe path traversal",
+        "wrong fidelity candidate",
+        "source absent",
+        "missing control/test"
+      ]
+    }
+  },
+  "feature_categories": {
+    "MAIN": 8,
+    "EASY": 4,
+    "DETAIL": 2,
+    "SETTINGS": 12,
+    "SPECIAL": 39,
+    "LIBRARY": 5
+  },
+  "access_classes": {
+    "DIRECT_UI3": 29,
+    "NATIVE_EDITOR": 35,
+    "BACKEND_AUTOMATIC": 4,
+    "UNIMPLEMENTED": 2
+  },
+  "not_implemented": [
+    {
+      "id": "ENGAGE",
+      "name": "エンゲージ独立検出"
+    },
+    {
+      "id": "BESTSHOT",
+      "name": "画像品質によるベストショット選択"
+    }
+  ],
+  "node_cli_source": "LoL_AutoCine/qa/ui70_parallel_20261113/run_offline_audit.mjs",
+  "core_source": "LoL_AutoCine/qa/ui70_parallel_20261113/audit_ui70_core.mjs",
+  "node_mutation_test_source": "LoL_AutoCine/qa/ui70_parallel_20261113/test_ui70_contract.mjs",
+  "route_matrix": "LoL_AutoCine/qa/ui70_parallel_20261113/FEATURE_ROUTE_MATRIX_70x3.json",
+  "node_cli_executed": false,
+  "node_selftest_executed": false,
+  "windows_native_executed": false,
+  "application_started": false,
+  "render_previewed": false,
+  "gpu_encoder_tested": false,
+  "game_audio_tested": false,
+  "live_lol_replay_tested": false,
+  "product_test_cases_executed": 0,
+  "product_test_cases_not_run": 239,
+  "screen_ui3_actual_click_verified": false,
+  "formal_app_acceptance": false,
+  "output_interpretation": "PASS only means preserved and internally consistent pinned planning JSON and tracked source paths; no actual integration/operation/GPU/audio/UI correctness proven",
+  "safety": {
+    "work_stage5_phase1b_out_of_scope": true,
+    "protected_video_prs_unchanged": true,
+    "main_unchanged": true,
+    "model_autostart_unchanged": true,
+    "windows_settings_unchanged": true,
+    "extra_cost_yen": 0
+  }
+}
